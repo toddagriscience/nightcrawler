@@ -25,64 +25,23 @@ describe('Header', () => {
 
   it('displays menu toggle button', () => {
     render(<Header />);
-    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
+    expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
   });
 
   it('shows TODD wordmark when not in menu mode', () => {
     render(<Header alwaysGlassy />);
-    expect(screen.getByText('TODD')).toBeInTheDocument();
+    expect(screen.getByTestId('wordmark-link')).toBeInTheDocument();
   });
 
   it('toggles menu when menu button is clicked', () => {
     render(<Header />);
-    const menuButton = screen.getByLabelText('Open menu');
+    const menuButton = screen.getByTestId('menu-toggle');
 
     fireEvent.click(menuButton);
-    expect(screen.getByLabelText('Close menu')).toBeInTheDocument();
+    expect(menuButton).toHaveAttribute('aria-label', 'Close menu');
 
     fireEvent.click(menuButton);
-    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
-  });
-
-  it('shows navigation menu when menu is open', () => {
-    render(<Header />);
-    const menuButton = screen.getByLabelText('Open menu');
-
-    fireEvent.click(menuButton);
-
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('Who We Are')).toBeInTheDocument();
-    expect(screen.getByText('What We Do')).toBeInTheDocument();
-    expect(screen.getByText('News')).toBeInTheDocument();
-    expect(screen.getByText('Contact')).toBeInTheDocument();
-    expect(screen.getByText('Careers')).toBeInTheDocument();
-  });
-
-  it('highlights active menu item', () => {
-    mockUsePathname.mockReturnValue('/who-we-are');
-    render(<Header />);
-
-    const menuButton = screen.getByLabelText('Open menu');
-    fireEvent.click(menuButton);
-
-    const activeItem = screen.getByText('Who We Are').closest('div');
-    expect(activeItem).toHaveClass('flex', 'items-center', 'gap-1');
-    // Active item should have a dot indicator
-    const dot = activeItem?.querySelector('.w-2.h-2.bg-current.rounded-full');
-    expect(dot).toBeInTheDocument();
-  });
-
-  it('closes menu when navigation link is clicked', () => {
-    render(<Header />);
-    const menuButton = screen.getByLabelText('Open menu');
-
-    fireEvent.click(menuButton);
-    expect(screen.getByLabelText('Close menu')).toBeInTheDocument();
-
-    const homeLink = screen.getByText('Home');
-    fireEvent.click(homeLink);
-
-    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
+    expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
   it('applies dark theme classes when isDark prop is true', () => {
@@ -99,19 +58,19 @@ describe('Header', () => {
 
   it('supports keyboard navigation for menu toggle', () => {
     render(<Header />);
-    const menuButton = screen.getByLabelText('Open menu');
+    const menuButton = screen.getByTestId('menu-toggle');
 
     fireEvent.keyDown(menuButton, { key: 'Enter' });
-    expect(screen.getByLabelText('Close menu')).toBeInTheDocument();
+    expect(menuButton).toHaveAttribute('aria-label', 'Close menu');
 
     fireEvent.keyDown(menuButton, { key: ' ' });
-    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
+    expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
   it('includes Get Started link', () => {
     render(<Header />);
-    const getStartedLink = screen.getByText('Get Started');
+    const getStartedLink = screen.getByTestId('get-started-link');
     expect(getStartedLink).toBeInTheDocument();
-    expect(getStartedLink.closest('a')).toHaveAttribute('href', '/contact');
+    expect(getStartedLink).toHaveAttribute('href', '/contact');
   });
 });

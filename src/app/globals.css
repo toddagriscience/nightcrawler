@@ -104,58 +104,6 @@ body {
   }
 }
 
-/* Custom cursor styles */
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transition:
-    width 0.3s,
-    height 0.3s,
-    border-radius 0.3s;
-}
-
-.custom-cursor.hover {
-  width: 80px;
-  height: 40px;
-  border-radius: 20px;
-}
-
-.custom-cursor-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.custom-cursor.hover .custom-cursor-text {
-  opacity: 1;
-}
-
-.custom-cursor-arrow {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.custom-cursor.hover .custom-cursor-arrow {
-  opacity: 1;
-}
-
 /* Font utility classes */
 .font-haas {
   font-family: var(--font-haas);
@@ -176,4 +124,53 @@ body {
 .impactCard:focus {
   background-color: var(--chalk);
   box-shadow: inset 0px 0px 50px rgba(176, 170, 164, 0.25);
+}
+
+/* Custom thick underline styles */
+.thick-underline {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 3px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+}
+
+.hover\:thick-underline:hover {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 3px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+}
+
+/* Custom navigation hover cursor */
+.nav-hover-cursor {
+  cursor: none;
+}
+
+/* Footer underline animation - expands from center */
+.footer-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.footer-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: currentColor;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.footer-underline:hover::after {
+  width: 100%;
+}
+
+/* Active state for navigation items */
+.footer-underline-active::after {
+  width: 100%;
 }

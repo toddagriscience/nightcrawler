@@ -1,0 +1,80 @@
+# Notice: Collection of data on https://toddagriscience.com through automated means is
+# prohibited unless you have express written permission from Todd Agriscience, Inc.
+# and may only be conducted for the limited purpose contained in said permission.
+# See: http://toddagriscience.com/automated-data-collection-terms.txt
+
+# --- Global Directives (for all crawlers) ---
+User-agent: *
+Crawl-delay: 1
+Allow: /
+Disallow: /admin/
+Disallow: /cdn-cgi/
+Disallow: /login/
+Disallow: /api/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /apple-app-site-association
+Disallow: /en-us*data=route*
+
+User-agent: Google-extended
+Crawl-delay: 1
+Allow: /*?llm=true
+Disallow: /admin/
+Disallow: /cdn-cgi/
+Disallow: /login/
+Disallow: /api/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /apple-app-site-association
+Disallow: /en-us*data=route*
+
+User-agent: ChatGPT-user
+Crawl-delay: 1
+Allow: /*?llm=true
+Disallow: /admin/
+Disallow: /cdn-cgi/
+Disallow: /login/
+Disallow: /api/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /apple-app-site-association
+Disallow: /en-us*data=route*
+
+User-agent: Nutch
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+Disallow: /admin/
+Disallow: /cdn-cgi/
+Disallow: /login/
+Disallow: /api/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /apple-app-site-association
+Disallow: /en-us*data=route*
+
+User-agent: AhrefsSiteAudit
+Crawl-delay: 10
+Disallow: /admin/
+Disallow: /cdn-cgi/
+Disallow: /login/
+Disallow: /api/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /apple-app-site-association
+Disallow: /en-us*data=route*
+
+User-agent: MJ12bot
+Crawl-Delay: 10
+
+User-agent: Pinterest
+Crawl-delay: 1
+
+# --- Sitemap Locations ---
+Sitemap: https://toddagriscience.com/sitemap.xml

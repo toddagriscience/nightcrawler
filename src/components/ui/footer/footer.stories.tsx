@@ -48,36 +48,15 @@ export const WithScrolledView: Story = {
       >
         <div style={{ flex: 1, background: '#fff', padding: '2rem' }}>
           <h1>Page Content</h1>
-          <p>This represents the main page content above the footer.</p>
+          <div style={{ height: '70vh' }}>
+            <p>
+              This represents the main page content above the footer. Scroll to
+              the bottom to see the footer.
+            </p>
+          </div>
         </div>
         <Story />
       </div>
     ),
   ],
-};
-
-export const Mobile: Story = {
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-    docs: {
-      description: {
-        story: 'Footer optimized for mobile devices with responsive layout.',
-      },
-    },
-  },
-};
-
-export const Tablet: Story = {
-  parameters: {
-    viewport: {
-      defaultViewport: 'tablet',
-    },
-    docs: {
-      description: {
-        story: 'Footer layout on tablet devices showing the grid adaptation.',
-      },
-    },
-  },
 };

@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { fontVariables } from '@/lib/fonts';
+import { defaultMetadata, defaultViewport } from '@/lib/metadata';
 import { Cursor, Header, Footer, SmoothScroll } from '@/components/ui';
 import './globals.css';
 
@@ -14,10 +14,8 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'Todd Agriscience',
-  description: 'Todd Agriscience - Leading agricultural science and innovation',
-};
+export const metadata = defaultMetadata;
+export const viewport = defaultViewport;
 
 export default function RootLayout({
   children,

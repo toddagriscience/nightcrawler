@@ -9,7 +9,6 @@ const Cursor = () => {
   const pointer = useRef({ x: 0, y: 0 }).current;
   const raf = useRef<number | null>(null);
 
-  const [isHovered, setIsHovered] = useState(false);
   const [cursorColor, setCursorColor] = useState('#2A2727'); // Default to dark
   const [isVisible, setIsVisible] = useState(true);
 
@@ -149,19 +148,6 @@ const Cursor = () => {
       const linkElements = document.querySelectorAll(
         'a, button, [role="button"], input[type="submit"], input[type="button"]'
       );
-
-      linkElements.forEach((el) => {
-        el.addEventListener('mouseenter', (e) => {
-          setIsHovered(true);
-          const target = e.target as Element;
-          const color = getElementColor(target);
-          setCursorColor(color);
-        });
-        el.addEventListener('mouseleave', () => {
-          setIsHovered(false);
-          setCursorColor(getElementColor(document.body));
-        });
-      });
     };
 
     const updateCursorColor = (e: MouseEvent) => {
@@ -209,7 +195,7 @@ const Cursor = () => {
         translateX: -4,
         translateY: -4,
         backgroundColor: cursorColor,
-        opacity: isHovered || !isVisible ? 0 : 0.8,
+        opacity: !isVisible ? 0 : 0.8,
         display: 'block',
         pointerEvents: 'none',
       }}

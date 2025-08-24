@@ -106,23 +106,6 @@ export const WithMenuOpen: Story = {
   },
 };
 
-export const Mobile: Story = {
-  args: {
-    alwaysGlassy: true,
-    isDark: false,
-  },
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-    docs: {
-      description: {
-        story: 'Header optimized for mobile devices.',
-      },
-    },
-  },
-};
-
 export const OnLightBackground: Story = {
   args: {
     alwaysGlassy: true,
