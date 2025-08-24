@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Footer from './footer';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta: Meta<typeof Footer> = {
   title: 'UI/Footer',
@@ -13,6 +17,8 @@ const meta: Meta<typeof Footer> = {
       },
     },
   },
+  argTypes: storybookControls,
+  args: storybookArgs,
   tags: ['autodocs'],
 };
 

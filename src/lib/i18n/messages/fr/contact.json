@@ -1,0 +1,10 @@
+{
+  "title": "Entrer en Contact",
+  "description": "Merci pour votre intérêt pour Todd. Veuillez remplir le formulaire pour nous contacter.",
+  "nameLabel": "Nom Complet",
+  "emailLabel": "Email",
+  "messageLabel": "Votre Message",
+  "submitButton": "Envoyer le Message",
+  "submissionSuccess": "Votre message a été envoyé avec succès !",
+  "submissionError": "Échec de l'envoi de votre message : {error}"
+}

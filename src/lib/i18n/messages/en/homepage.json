@@ -1,0 +1,16 @@
+{
+  "welcome": "Welcome to Todd",
+  "hero": {
+    "title": "Creating the next-generation organic farms",
+    "subtitle": "Pioneering regenerative farming solutions for a better tomorrow"
+  },
+  "newsHighlights": {
+    "title": "News Highlights",
+    "viewAll": "View All",
+    "placeholder": "Carousel component will be implemented here"
+  },
+  "quote": {
+    "text": "At Todd, we combine our deep experiance in sustainable agriculture, managing farms and engaging consumers.",
+    "button": "About"
+  }
+}

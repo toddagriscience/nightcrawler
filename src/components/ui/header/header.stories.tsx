@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Header from './header';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { LocaleProvider } from '@/context/LocaleContext';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta: Meta<typeof Header> = {
   title: 'UI/Header',
@@ -16,6 +18,7 @@ const meta: Meta<typeof Header> = {
     },
   },
   argTypes: {
+    ...storybookControls,
     alwaysGlassy: {
       control: 'boolean',
       description: 'Always show the glassmorphism background effect',
@@ -25,16 +28,12 @@ const meta: Meta<typeof Header> = {
       description: 'Use dark theme colors',
     },
   },
+  args: {
+    ...storybookArgs,
+    alwaysGlassy: false,
+    isDark: false,
+  },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <Story />
-        </LocaleProvider>
-      </ThemeProvider>
-    ),
-  ],
 };
 
 export default meta;
@@ -87,37 +86,9 @@ export const DarkTheme: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div style={{ background: '#2A2727', minHeight: '100vh' }}>
-          <Story />
-        </div>
-      </ThemeProvider>
-    ),
-  ],
-};
-
-export const OnLightBackground: Story = {
-  args: {
-    alwaysGlassy: true,
-    isDark: false,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Header on a light background showing proper contrast.',
-      },
-    },
-    backgrounds: {
-      default: 'light',
-    },
-  },
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <div style={{ background: '#f8f5ee', minHeight: '100vh' }}>
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div style={{ background: '#2A2727', minHeight: '100vh' }}>
+        <Story />
+      </div>
     ),
   ],
 };

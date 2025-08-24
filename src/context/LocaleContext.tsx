@@ -5,17 +5,31 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
   ReactNode,
 } from 'react';
 import { defaultLocale, locales, type Locale } from '@/lib/i18n/config';
-
-type Messages = Record<string, string | Record<string, string>>;
+import {
+  translationManager,
+  type ModuleName,
+} from '@/lib/i18n/translation-manager';
+import { getHydrationFallback } from '@/lib/i18n/hydration-fallbacks';
+import type {
+  TranslationMessages,
+  TranslationKey,
+  TranslationParams,
+  TranslationFunction,
+} from '@/lib/i18n/types';
 
 interface LocaleContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  messages: Messages;
-  t: (key: string, params?: Record<string, string | number>) => string;
+  messages: Partial<TranslationMessages>;
+  t: TranslationFunction;
+  isLoading: boolean;
+  loadModule: (moduleName: ModuleName) => Promise<void>;
+  loadModules: (moduleNames: ModuleName[]) => Promise<void>;
+  preloadCritical: () => Promise<void>;
 }
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
@@ -34,114 +48,142 @@ interface LocaleProviderProps {
 
 export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children }) => {
   const [locale, setLocale] = useState<Locale>(defaultLocale);
-  const [messages, setMessages] = useState<Messages>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load messages when locale changes
+  // Preload English modules immediately on component creation
+  React.useMemo(() => {
+    const essentialModules: ModuleName[] = ['common', 'navigation', 'homepage'];
+    essentialModules.forEach((module) => {
+      translationManager.loadModule('en', module).catch(console.warn);
+    });
+  }, []);
+
+  // Detect user's preferred locale and preload modules on mount
   useEffect(() => {
-    const loadMessages = async () => {
-      try {
-        const messageModule = await import(
-          `@/lib/i18n/messages/${locale}.json`
-        );
-        setMessages(messageModule.default);
-      } catch (error) {
-        console.warn(`Failed to load messages for locale: ${locale}`, error);
-        // Fallback to English if locale messages don't exist
-        if (locale !== defaultLocale) {
-          try {
-            const fallbackModule = await import(
-              `@/lib/i18n/messages/${defaultLocale}.json`
-            );
-            setMessages(fallbackModule.default);
-          } catch (fallbackError) {
-            console.error('Failed to load fallback messages', fallbackError);
-            setMessages({});
-          }
-        }
-      }
-    };
+    const initializeLocale = async () => {
+      let detectedLocale = defaultLocale;
 
-    loadMessages();
-  }, [locale]);
-
-  // Detect user's preferred locale from browser settings and localStorage
-  useEffect(() => {
-    const detectLocale = () => {
       // First check localStorage for saved preference
       const savedLocale = localStorage.getItem('preferred-locale') as Locale;
       if (savedLocale && locales.includes(savedLocale)) {
-        return savedLocale;
-      }
-
-      // Then check browser language settings
-      const browserLangs = navigator.languages || [navigator.language];
-
-      for (const lang of browserLangs) {
-        // Get the primary language code (e.g., 'en' from 'en-US')
-        const primaryLang = lang.split('-')[0].toLowerCase();
-
-        // Check if we support this language
-        if (locales.includes(primaryLang as Locale)) {
-          return primaryLang as Locale;
+        detectedLocale = savedLocale;
+      } else {
+        // Then check browser language settings
+        const browserLangs = navigator.languages || [navigator.language];
+        for (const lang of browserLangs) {
+          const primaryLang = lang.split('-')[0].toLowerCase();
+          if (locales.includes(primaryLang as Locale)) {
+            detectedLocale = primaryLang as Locale;
+            break;
+          }
         }
       }
 
-      // Fallback to default locale
-      return defaultLocale;
-    };
-
-    // Only update if we're on the client side
-    if (typeof window !== 'undefined') {
-      const detectedLocale = detectLocale();
-      if (detectedLocale !== locale) {
+      // Only update locale if it's different from default
+      if (detectedLocale !== defaultLocale) {
         setLocale(detectedLocale);
       }
-    }
-  }, [locale]);
 
-  // Save locale preference
-  const handleSetLocale = (newLocale: Locale) => {
-    setLocale(newLocale);
-    localStorage.setItem('preferred-locale', newLocale);
-  };
-
-  // Simple translation function
-  const t = (key: string, params?: Record<string, string | number>): string => {
-    const keys = key.split('.');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let value: any = messages;
-
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k];
-      } else {
-        console.warn(`Translation key not found: ${key}`);
-        return key; // Return the key if translation not found
+      // Preload detected locale modules if different from English
+      if (detectedLocale !== 'en') {
+        const essentialModules: ModuleName[] = [
+          'common',
+          'navigation',
+          'homepage',
+        ];
+        try {
+          await Promise.all(
+            essentialModules.map((module) =>
+              translationManager.loadModule(detectedLocale, module)
+            )
+          );
+        } catch (error) {
+          console.warn('Failed to preload locale modules:', error);
+        }
       }
+
+      setIsHydrated(true);
+    };
+
+    initializeLocale();
+  }, []);
+
+  // Save locale preference when changed and preload modules
+  const handleSetLocale = useCallback(async (newLocale: Locale) => {
+    setIsLoading(true);
+    setLocale(newLocale);
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferred-locale', newLocale);
     }
 
-    if (typeof value !== 'string') {
-      console.warn(`Translation value is not a string for key: ${key}`);
-      return key;
-    }
+    // Start timer to ensure minimum loading time for smooth UX
+    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Simple parameter replacement
-    if (params) {
-      return value.replace(/\{(\w+)\}/g, (match, paramKey) => {
-        return params[paramKey] !== undefined
-          ? String(params[paramKey])
-          : match;
-      });
-    }
+    // Preload essential modules for the new locale
+    const essentialModules: ModuleName[] = ['common', 'navigation', 'homepage'];
+    const loadModules = Promise.all(
+      essentialModules.map((module) =>
+        translationManager.loadModule(newLocale, module)
+      )
+    );
 
-    return value;
-  };
+    try {
+      // Wait for both the modules to load AND minimum time to pass
+      await Promise.all([loadModules, minLoadingTime]);
+    } catch (error) {
+      console.warn('Failed to preload modules for new locale:', error);
+      // Still wait for minimum time even if modules fail
+      await minLoadingTime;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Simple translation function that fetches fresh translations
+  const t = useCallback(
+    (key: TranslationKey, params?: TranslationParams): string => {
+      // During hydration, use synchronously imported English fallbacks
+      if (!isHydrated) {
+        return getHydrationFallback(key);
+      }
+
+      try {
+        const translation = translationManager.getTranslation(
+          locale,
+          key,
+          params
+        );
+
+        // Log missing translation keys for debugging
+        if (translation === key && process.env.NODE_ENV === 'development') {
+          console.warn(`Translation key not found: ${key}`);
+        }
+
+        return translation;
+      } catch (error) {
+        console.warn(`Translation error for key ${key}:`, error);
+        return getHydrationFallback(key);
+      }
+    },
+    [locale, isHydrated]
+  );
+
+  // Simplified no-op functions for compatibility
+  const loadModule = useCallback(async () => {}, []);
+  const loadModules = useCallback(async () => {}, []);
+  const preloadCritical = useCallback(async () => {}, []);
 
   const value = {
     locale,
     setLocale: handleSetLocale,
-    messages,
+    messages: {}, // Empty since we fetch fresh each time
     t,
+    isLoading,
+    loadModule,
+    loadModules,
+    preloadCritical,
   };
 
   return (

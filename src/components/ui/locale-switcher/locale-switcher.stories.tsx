@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import LocaleSwitcher from './locale-switcher';
-import { LocaleProvider } from '@/context/LocaleContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta = {
   title: 'UI/LocaleSwitcher',
@@ -10,68 +12,64 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    ...storybookControls,
+    className: {
+      control: 'text',
+      description: 'Additional CSS classes',
+    },
+  },
+  args: {
+    ...storybookArgs,
+    className: '',
+  },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <div className="p-8 bg-gray-50">
-            <Story />
-          </div>
-        </LocaleProvider>
-      </ThemeProvider>
-    ),
-  ],
-} satisfies Meta<typeof LocaleSwitcher>;
+} satisfies Meta<typeof LocaleSwitcher & { isDark?: boolean }>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-
-export const LightMode: Story = {
+export const Default: Story = {
+  args: {
+    className: '',
+  },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <div className="p-8 bg-[#F8F5EE]">
-            <Story />
-          </div>
-        </LocaleProvider>
-      </ThemeProvider>
+      <div
+        className="fixed inset-0 p-8 flex items-center justify-center"
+        style={{
+          backgroundColor: '#f8f5ee',
+          color: '#2A2727',
+        }}
+      >
+        <Story />
+      </div>
     ),
   ],
 };
 
-export const DarkMode: Story = {
+export const Dark: Story = {
+  args: {
+    className: '',
+    // @ts-expect-error - isDark is handled by StorybookProvider decorator
+    isDark: true,
+  },
+  parameters: {
+    storybook: {
+      isDark: true,
+    },
+  },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <div className="p-8 bg-[#2A2727]" data-theme="dark">
-            <Story />
-          </div>
-        </LocaleProvider>
-      </ThemeProvider>
-    ),
-  ],
-};
-
-export const InHeader: Story = {
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <div className="w-full">
-            <header className="bg-white/10 backdrop-blur-md rounded-2xl p-4">
-              <div className="flex justify-between items-center">
-                <div className="text-xl font-bold">Logo</div>
-                <Story />
-              </div>
-            </header>
-          </div>
-        </LocaleProvider>
-      </ThemeProvider>
+      <div
+        className="fixed inset-0 p-8 flex items-center justify-center"
+        style={{
+          backgroundColor: '#2A2727',
+          color: '#FDFDFB',
+        }}
+      >
+        <Story />
+      </div>
     ),
   ],
 };

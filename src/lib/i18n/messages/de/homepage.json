@@ -1,0 +1,16 @@
+{
+  "welcome": "Willkommen bei Todd",
+  "hero": {
+    "title": "Die nächste Generation ökologischer Farmen schaffen",
+    "subtitle": "Wegweisende regenerative Landwirtschaftslösungen für ein besseres Morgen"
+  },
+  "newsHighlights": {
+    "title": "News-Highlights",
+    "viewAll": "Alle Anzeigen",
+    "placeholder": "Die Karussell-Komponente wird hier implementiert"
+  },
+  "quote": {
+    "text": "Bei Todd kombinieren wir unsere tiefe Erfahrung in nachhaltiger Landwirtschaft, Betriebsführung und Verbraucherengagement.",
+    "button": "Über uns"
+  }
+}

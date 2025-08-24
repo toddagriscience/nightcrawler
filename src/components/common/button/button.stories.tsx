@@ -1,14 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Button from './button';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta = {
-  title: 'UI/Common/Button',
+  title: 'Common/Button',
   component: Button,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
+    ...storybookControls,
     variant: {
       control: { type: 'select' },
       options: ['default', 'outline'],
@@ -23,6 +28,12 @@ const meta = {
     isDark: {
       control: { type: 'boolean' },
     },
+  },
+  args: {
+    ...storybookArgs,
+    text: 'Get In Touch',
+    href: '/contact',
+    isDark: false,
   },
 } satisfies Meta<typeof Button>;
 

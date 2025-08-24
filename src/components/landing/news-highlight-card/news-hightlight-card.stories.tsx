@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import NewsHighlightCard from './news-hightlight-card';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { LocaleProvider } from '@/context/LocaleContext';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta = {
   title: 'Landing/NewsHighlightCard',
@@ -10,16 +12,18 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  argTypes: {
+    ...storybookControls,
+    isDark: {
+      control: 'boolean',
+      description: 'Use dark theme colors',
+    },
+  },
+  args: {
+    ...storybookArgs,
+    isDark: false,
+  },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <LocaleProvider>
-          <Story />
-        </LocaleProvider>
-      </ThemeProvider>
-    ),
-  ],
 } satisfies Meta<typeof NewsHighlightCard>;
 
 export default meta;
@@ -28,19 +32,15 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div
-          style={{
-            backgroundColor: '#F8F5EE',
-            minHeight: '100vh',
-            padding: '2rem',
-          }}
-        >
-          <LocaleProvider>
-            <Story />
-          </LocaleProvider>
-        </div>
-      </ThemeProvider>
+      <div
+        style={{
+          backgroundColor: '#F8F5EE',
+          minHeight: '100vh',
+          padding: '2rem',
+        }}
+      >
+        <Story />
+      </div>
     ),
   ],
 };
@@ -51,20 +51,9 @@ export const DarkMode: Story = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div
-          style={{
-            backgroundColor: '#2A2727',
-            color: '#FDFDFB',
-            minHeight: '100vh',
-            padding: '2rem',
-          }}
-        >
-          <LocaleProvider>
-            <Story />
-          </LocaleProvider>
-        </div>
-      </ThemeProvider>
+      <div>
+        <Story />
+      </div>
     ),
   ],
 };

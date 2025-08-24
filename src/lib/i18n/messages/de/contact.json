@@ -1,0 +1,10 @@
+{
+  "title": "Kontakt aufnehmen",
+  "description": "Vielen Dank für Ihr Interesse an Todd. Bitte füllen Sie das Formular aus, um uns zu kontaktieren.",
+  "nameLabel": "Vollständiger Name",
+  "emailLabel": "E-Mail",
+  "messageLabel": "Ihre Nachricht",
+  "submitButton": "Nachricht senden",
+  "submissionSuccess": "Ihre Nachricht wurde erfolgreich gesendet!",
+  "submissionError": "Fehler beim Senden Ihrer Nachricht: {error}"
+}

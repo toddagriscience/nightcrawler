@@ -1,0 +1,16 @@
+{
+  "welcome": "Bienvenue chez Todd",
+  "hero": {
+    "title": "Création des exploitations organiques de la prochaine génération",
+    "subtitle": "Pionniers dans les solutions agricoles régénératives pour un avenir meilleur"
+  },
+  "newsHighlights": {
+    "title": "Actualités en Vedette",
+    "viewAll": "Voir Tout",
+    "placeholder": "Le composant carrousel sera implémenté ici"
+  },
+  "quote": {
+    "text": "Chez Todd, nous combinons notre profonde expérience en agriculture durable, gestion d'exploitations et engagement des consommateurs.",
+    "button": "À propos"
+  }
+}

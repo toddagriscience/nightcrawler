@@ -4,9 +4,17 @@ import Header from './header';
 import '@testing-library/jest-dom';
 
 const customTranslations = {
-  'Header.getStarted': 'Get Started',
-  'Header.menu.open': 'Open menu',
-  'Header.menu.close': 'Close menu',
+  'navigation.header.actions.getStarted': 'Get Started',
+  'navigation.header.menu.open': 'Open menu',
+  'navigation.header.menu.close': 'Close menu',
+  'navigation.header.navigation.home': 'Home',
+  'navigation.header.navigation.about': 'About',
+  'navigation.header.navigation.offerings': 'Offerings',
+  'navigation.header.navigation.approach': 'Approach',
+  'navigation.header.navigation.impact': 'Impact',
+  'navigation.header.navigation.news': 'News',
+  'common.actions.close': 'Close',
+  'common.actions.menu': 'Menu',
 } satisfies Translations;
 
 describe('Header', () => {
@@ -64,5 +72,11 @@ describe('Header', () => {
     const getStartedLink = screen.getByTestId('get-started-link');
     expect(getStartedLink).toBeInTheDocument();
     expect(getStartedLink).toHaveAttribute('href', '/contact');
+  });
+
+  it('displays loading spinners when isLoading is true', async () => {
+    await renderWithAct(<Header />, { isLoading: true });
+    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getAllByTestId('loading-spinner').length).toBeGreaterThan(0);
   });
 });

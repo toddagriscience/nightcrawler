@@ -1,10 +1,11 @@
 import type { Preview } from '@storybook/nextjs-vite';
 import { withFonts } from './decorators/withFonts';
 import { withCursor } from './decorators/withCursor';
+import { withStorybookProvider } from './decorators/withStorybookProvider';
 import '../src/app/globals.css';
 
 const preview: Preview = {
-  decorators: [withCursor, withFonts],
+  decorators: [withStorybookProvider, withCursor, withFonts],
   parameters: {
     backgrounds: {
       default: 'light',

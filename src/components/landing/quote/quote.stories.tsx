@@ -1,7 +1,10 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Quote from './quote';
-import { ThemeProvider } from '@/context/ThemeContext';
+import {
+  storybookControls,
+  storybookArgs,
+} from '../../../../.storybook/utils/storybookControls';
 
 const meta = {
   title: 'Landing/Quote',
@@ -9,14 +12,18 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  argTypes: {
+    ...storybookControls,
+    isDark: {
+      control: 'boolean',
+      description: 'Use dark theme colors',
+    },
+  },
+  args: {
+    ...storybookArgs,
+    isDark: false,
+  },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
 } satisfies Meta<typeof Quote>;
 
 export default meta;
@@ -32,19 +39,6 @@ export const Default: Story = {
   ],
 };
 
-export const LightMode: Story = {
-  args: {
-    isDark: false,
-  },
-  decorators: [
-    (Story) => (
-      <div className="bg-[#CCC5B5] min-h-screen p-8">
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const DarkMode: Story = {
   args: {
     isDark: true,
@@ -53,36 +47,6 @@ export const DarkMode: Story = {
     (Story) => (
       <div className="bg-[#2A2727] text-[#FDFDFB] min-h-screen p-8">
         <Story />
-      </div>
-    ),
-  ],
-};
-
-export const WithCardBackground: Story = {
-  args: {
-    isDark: false,
-  },
-  decorators: [
-    (Story) => (
-      <div className="bg-[#F8F5EE] min-h-screen p-8">
-        <div className="bg-[#CCC5B5] rounded-2xl p-8">
-          <Story />
-        </div>
-      </div>
-    ),
-  ],
-};
-
-export const DarkModeWithCard: Story = {
-  args: {
-    isDark: true,
-  },
-  decorators: [
-    (Story) => (
-      <div className="bg-[#F8F5EE] min-h-screen p-8">
-        <div className="bg-[#2A2727] text-[#FDFDFB] rounded-2xl p-8">
-          <Story />
-        </div>
       </div>
     ),
   ],

@@ -1,0 +1,10 @@
+{
+  "title": "Ponte en Contacto",
+  "description": "Gracias por tu interés en Todd. Por favor completa el formulario para contactarnos.",
+  "nameLabel": "Nombre Completo",
+  "emailLabel": "Correo Electrónico",
+  "messageLabel": "Tu Mensaje",
+  "submitButton": "Enviar Mensaje",
+  "submissionSuccess": "¡Tu mensaje ha sido enviado exitosamente!",
+  "submissionError": "No se pudo enviar tu mensaje: {error}"
+}

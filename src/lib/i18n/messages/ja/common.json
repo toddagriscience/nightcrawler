@@ -1,0 +1,24 @@
+{
+  "buttons": {
+    "viewAll": "すべて表示",
+    "about": "私たちについて",
+    "sendMessage": "メッセージを送信",
+    "getInTouch": "お問い合わせ",
+    "getStarted": "はじめる"
+  },
+  "actions": {
+    "close": "閉じる",
+    "open": "開く",
+    "menu": "メニュー"
+  },
+  "errors": {
+    "submissionError": "メッセージの送信に失敗しました: {error}",
+    "translationKeyNotFound": "翻訳キーが見つかりません: {key}"
+  },
+  "success": {
+    "submissionSuccess": "メッセージが正常に送信されました！"
+  },
+  "accessibility": {
+    "privacy": "プライバシー"
+  }
+}

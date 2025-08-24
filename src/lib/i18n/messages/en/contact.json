@@ -1,0 +1,10 @@
+{
+  "title": "Get In Touch",
+  "description": "Thank you for your interest in Todd. Please fill out the form to contact us.",
+  "nameLabel": "Full Name",
+  "emailLabel": "Email",
+  "messageLabel": "Your Message",
+  "submitButton": "Send Message",
+  "submissionSuccess": "Your message has been sent successfully!",
+  "submissionError": "Failed to send your message: {error}"
+}

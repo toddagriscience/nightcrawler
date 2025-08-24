@@ -1,0 +1,10 @@
+{
+  "title": "お問い合わせ",
+  "description": "Toddにご興味をお持ちいただき、ありがとうございます。お問い合わせフォームにご記入ください。",
+  "nameLabel": "フルネーム",
+  "emailLabel": "メールアドレス",
+  "messageLabel": "メッセージ",
+  "submitButton": "メッセージを送信",
+  "submissionSuccess": "メッセージが正常に送信されました！",
+  "submissionError": "メッセージの送信に失敗しました：{error}"
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   AnimatePresence,
@@ -12,7 +12,9 @@ import {
 import { Menu, X } from 'lucide-react';
 import { themeUtils } from '@/lib/theme';
 import { useTheme } from '@/context/ThemeContext';
+import { useLocale } from '@/context/LocaleContext';
 import { LocaleSwitcher } from '@/components/ui';
+import { LoadingSpinner } from '@/components/common';
 
 interface HeaderProps {
   alwaysGlassy?: boolean;
@@ -30,6 +32,12 @@ const Header: React.FC<HeaderProps> = ({
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const { isDark: contextIsDark } = useTheme();
+  const { t, loadModule, isLoading } = useLocale();
+
+  useEffect(() => {
+    loadModule('navigation').catch(console.warn);
+    loadModule('common').catch(console.warn);
+  }, [loadModule]);
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
@@ -65,12 +73,12 @@ const Header: React.FC<HeaderProps> = ({
   });
 
   const menuItems = [
-    { href: '/', label: 'Home' },
-    { href: '/About', label: 'About' },
-    { href: '/Offerings', label: 'Offerings' },
-    { href: '/Approach', label: 'Approach' },
-    { href: '/Impact', label: 'Impact' },
-    { href: '/News', label: 'News' },
+    { href: '/', label: t('navigation.header.navigation.home') },
+    { href: '/About', label: t('navigation.header.navigation.about') },
+    { href: '/Offerings', label: t('navigation.header.navigation.offerings') },
+    { href: '/Approach', label: t('navigation.header.navigation.approach') },
+    { href: '/Impact', label: t('navigation.header.navigation.impact') },
+    { href: '/News', label: t('navigation.header.navigation.news') },
   ];
 
   const showGlassy =
@@ -153,7 +161,11 @@ const Header: React.FC<HeaderProps> = ({
                 }
               }}
               data-testid="menu-toggle"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={
+                menuOpen
+                  ? t('navigation.header.menu.close')
+                  : t('navigation.header.menu.open')
+              }
             >
               <div className="flex items-center justify-center">
                 <AnimatePresence mode="wait">
@@ -181,7 +193,13 @@ const Header: React.FC<HeaderProps> = ({
                 </AnimatePresence>
               </div>
               <span className="ml-2 tracking-tight hidden md:block leading-none pb-0.5">
-                {menuOpen ? 'Close' : 'Menu'}
+                {isLoading ? (
+                  <LoadingSpinner size="sm" />
+                ) : menuOpen ? (
+                  t('common.actions.close')
+                ) : (
+                  t('common.actions.menu')
+                )}
               </span>
             </div>
 
@@ -252,7 +270,11 @@ const Header: React.FC<HeaderProps> = ({
                           }`}
                           data-testid={`nav-link-${item.label.toLowerCase()}`}
                         >
-                          {item.label}
+                          {isLoading ? (
+                            <LoadingSpinner size="sm" />
+                          ) : (
+                            item.label
+                          )}
                         </Link>
                       </motion.div>
                     );
@@ -268,7 +290,11 @@ const Header: React.FC<HeaderProps> = ({
                 className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-none nav-hover-cursor"
                 data-testid="get-started-link"
               >
-                Get Started
+                {isLoading ? (
+                  <LoadingSpinner size="sm" />
+                ) : (
+                  t('navigation.header.actions.getStarted')
+                )}
               </Link>
               <LocaleSwitcher className="hidden md:block" />
             </div>
@@ -308,7 +334,11 @@ const Header: React.FC<HeaderProps> = ({
                             }`}
                             data-testid={`mobile-nav-link-${item.label.toLowerCase()}`}
                           >
-                            {item.label}
+                            {isLoading ? (
+                              <LoadingSpinner size="sm" />
+                            ) : (
+                              item.label
+                            )}
                           </Link>
                         </motion.div>
                       );
@@ -332,7 +362,11 @@ const Header: React.FC<HeaderProps> = ({
                         className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-none nav-hover-cursor"
                         data-testid="mobile-get-started-link"
                       >
-                        Get Started
+                        {isLoading ? (
+                          <LoadingSpinner size="sm" />
+                        ) : (
+                          t('navigation.header.actions.getStarted')
+                        )}
                       </Link>
                     </motion.div>
                   </nav>

@@ -1,0 +1,16 @@
+{
+  "welcome": "Benvenuto a Todd",
+  "hero": {
+    "title": "Leader del futuro dell'agricoltura sostenibile",
+    "subtitle": "Soluzioni agricole rigenerative pionieristiche per un domani migliore"
+  },
+  "newsHighlights": {
+    "title": "Notizie in Evidenza",
+    "viewAll": "Vedi Tutto",
+    "placeholder": "Il componente carosello sarà implementato qui"
+  },
+  "quote": {
+    "text": "Da Todd, combiniamo la nostra profonda esperienza nell'agricoltura sostenibile, gestione delle aziende agricole e coinvolgimento dei consumatori.",
+    "button": "Chi siamo"
+  }
+}

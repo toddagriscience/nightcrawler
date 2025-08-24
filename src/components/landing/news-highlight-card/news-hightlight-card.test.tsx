@@ -3,9 +3,9 @@ import NewsHighlightCard from './news-hightlight-card';
 import '@testing-library/jest-dom';
 
 const customTranslations = {
-  'HomePage.newsHighlights.title': 'News Highlights',
-  'HomePage.newsHighlights.viewAll': 'View All',
-  'HomePage.newsHighlights.placeholder':
+  'homepage.newsHighlights.title': 'News Highlights',
+  'homepage.newsHighlights.viewAll': 'View All',
+  'homepage.newsHighlights.placeholder':
     'Carousel component will be implemented here',
 } satisfies Translations;
 
@@ -47,5 +47,18 @@ describe('NewsHighlightCard', () => {
     expect(
       screen.getByText('Carousel component will be implemented here')
     ).toBeInTheDocument();
+  });
+
+  it('displays loading spinner when isLoading is true', async () => {
+    await renderWithAct(<NewsHighlightCard />, { isLoading: true });
+    const sections = screen.getAllByRole('region');
+    const newsSection = sections.find(
+      (section) => section.getAttribute('id') === 'news-carousel'
+    );
+    expect(newsSection).toBeInTheDocument();
+    expect(screen.getAllByTestId('loading-spinner')).toHaveLength(2); // One for news, one for quote
+    expect(
+      screen.queryByRole('heading', { name: 'News Highlights' })
+    ).not.toBeInTheDocument();
   });
 });

@@ -13,12 +13,21 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
 
+### Internationalization
+
+- **Multi-language support** (en, de, es, fr, it, ja, pt)
+- **Smart locale detection** from browser settings and localStorage
+- **Type-safe translations** with parameter interpolation
+- **Fallback system** to English for missing translations
+
 ### Animation & UX
 
-- **Framer Motion** for component animations
+- **Framer Motion** for component animations and scroll-based effects
 - **Lenis** for buttery smooth scrolling (matching original feel)
 - **Custom cursor** with hover interactions
 - **Dynamic header** with scroll-based state changes
+- **Advanced theme system** with smooth transitions and scroll-based dark mode
+- **Centralized theme context** with debounced state management
 
 ### Development Infrastructure
 
@@ -40,26 +49,43 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 ```
 src/
   app/                    # Pages and API routes only
-    [locale]/            # Internationalized pages
+    [locale]/            # Internationalized pages (future)
     api/                 # API routes
-    globals.css          # Global styles
-    layout.tsx           # Root layout
+    globals.css          # Global styles with Lenis setup
+    layout.tsx           # Root layout with providers
+    not-found.tsx        # Custom 404 page
   components/             # All React components
+    common/              # Reusable components (Button, etc.)
+    landing/             # Homepage-specific components
+      hero/              # Hero section component
+      news-highlight-card/ # Combined news + quote card
+      quote/             # Quote/About section
+      scroll-shrink-wrapper/ # Scroll animation wrapper
+    ui/                  # UI components (Header, Footer, etc.)
+      header/            # Navigation header
+      footer/            # Site footer
+      locale-switcher/   # Language selection component
+      common/            # Common UI utilities (Cursor)
   context/               # React contexts
-  hooks/                 # Custom hooks
+    LocaleContext.tsx    # Internationalization context
+    ThemeContext.tsx     # Theme and dark mode context
   lib/                   # Utility functions
-  types/                 # TypeScript type definitions
-  svgs/                  # SVG components
+    i18n/                # Internationalization config
+      config.ts          # Locale configuration
+      messages/          # Translation JSON files
+      request.ts         # Server-side i18n utilities
+    theme.ts             # Centralized theme system
+  test/                  # Testing utilities
+    test-utils.tsx       # React Testing Library setup
 public/                  # Static assets
-  fonts/                 # Custom fonts
+  fonts/                 # Custom fonts (Neue Haas, Utah WGL)
   publications/          # PDF documents
+  images/                # Static images
 scripts/                 # Build and utility scripts
-docs/                    # Documentation
-i18n/                    # Internationalization config
-slices/                  # Prismic slices
 e2e/                     # End-to-end tests
 .github/workflows/       # CI/CD pipelines
 .storybook/             # Storybook configuration
+  decorators/            # Custom Storybook decorators
 ```
 
 ### Future Enhancements (Optional)
@@ -125,14 +151,38 @@ e2e/                     # End-to-end tests
 - Type-checking runs on commit
 - Prevents commits if linting/type errors exist
 
+## Architecture Patterns
+
+### Theme Management
+
+- **Context-based theme system** with `ThemeContext`
+- **Smooth transitions** with 300ms debounced state changes
+- **Scroll-based dark mode** detection with performance optimization
+- **Centralized theme tokens** in `lib/theme.ts` with TypeScript support
+- **CSS custom properties** generation for runtime theme switching
+
+### Component Patterns
+
+- **Flexible prop/context pattern**: Components accept `isDark` prop OR use theme context
+- **Compound components**: `NewsHighlightCard` contains both news and quote sections
+- **Motion animations**: Framer Motion for smooth color transitions and scroll effects
+- **Barrel exports**: Each component directory has `index.ts` for clean imports
+
+### State Management
+
+- **Scroll detection**: Optimized with `requestAnimationFrame` throttling
+- **Theme transitions**: Debounced to prevent rapid state changes
+- **Locale management**: Persistent in localStorage with browser fallback
+
 ## Important Notes
 
-- Keep the same visual design as the original website
-- Focus on scalability and maintainability
-- Use TypeScript throughout
-- Follow Next.js App Router best practices
-- Write tests alongside components (co-located)
-- Use Storybook for component documentation
-- All code must pass lint/type checks before commit
-- Before making changes, ask questions to get full context of the user
-- Before migrating & making changes, list out multiple ways to do so, from the efficient to least. If the original implementation is best, state that.
+- **Design fidelity**: Keep the same visual design as the original website
+- **Performance first**: Use optimized scroll listeners and smooth transitions
+- **Type safety**: Comprehensive TypeScript throughout with strict checking
+- **Accessibility**: Proper ARIA roles, semantic HTML, and keyboard navigation
+- **Internationalization**: Full i18n support with fallback handling
+- **Testing**: Write tests alongside components (co-located)
+- **Documentation**: Use Storybook for component documentation
+- **Code quality**: All code must pass lint/type checks before commit
+- **Context first**: Ask questions to get full context before making changes
+- **Multiple approaches**: List implementation options from most to least efficient

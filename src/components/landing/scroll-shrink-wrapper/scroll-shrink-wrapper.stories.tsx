@@ -7,6 +7,12 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  argTypes: {
+    children: {
+      control: 'text',
+      description: 'Content to be wrapped',
+    },
+  },
   tags: ['autodocs'],
 } satisfies Meta<typeof ScrollShrinkWrapper>;
 

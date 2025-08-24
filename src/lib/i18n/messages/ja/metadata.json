@@ -1,0 +1,53 @@
+{
+  "header": {
+    "menu": {
+      "open": "メニューを開く",
+      "close": "メニューを閉じる",
+      "label": "メニュー"
+    },
+    "navigation": {
+      "home": "ホーム",
+      "about": "私たちについて",
+      "offerings": "提供",
+      "approach": "アプローチ",
+      "impact": "影響",
+      "news": "ニュース"
+    },
+    "actions": {
+      "getStarted": "はじめる"
+    }
+  },
+  "footer": {
+    "sections": {
+      "todd": "Todd",
+      "connect": "接続",
+      "legal": "法的"
+    },
+    "links": {
+      "home": "ホーム",
+      "about": "私たちについて",
+      "offerings": "提供",
+      "approach": "アプローチ",
+      "impact": "影響",
+      "news": "ニュース",
+      "careers": "キャリア",
+      "contact": "連絡先",
+      "journal": "ジャーナル",
+      "investorRelations": "投資家関係",
+      "foundation": "財団",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "accessibility": "アクセシビリティ",
+      "privacy": "プライバシー",
+      "terms": "利用規約",
+      "trustCenter": "信頼センター"
+    },
+    "cta": {
+      "letsTalk": "話しましょう",
+      "getInTouch": "お問い合わせ",
+      "privacyOptions": "データを販売したり共有しない"
+    },
+    "copyright": "© Todd Agriscience, Inc. {year}"
+  }
+}

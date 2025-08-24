@@ -28,6 +28,7 @@ const config: StorybookConfig = {
         '@/lib': '/src/lib',
         '@/components': '/src/components',
         '@/svgs': '/src/svgs',
+        '@/storybook': '/.storybook',
       };
     }
     return config;

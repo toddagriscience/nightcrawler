@@ -4,25 +4,45 @@ import { ThemeProvider } from '@/context/ThemeContext';
 
 // Default translations for common UI elements
 export const defaultTranslations: Record<string, string> = {
-  // Header translations
-  'Header.getStarted': 'Get Started',
-  'Header.menu.open': 'Open menu',
-  'Header.menu.close': 'Close menu',
+  // Header translations (new modular keys)
+  'navigation.header.actions.getStarted': 'Get Started',
+  'navigation.header.menu.open': 'Open menu',
+  'navigation.header.menu.close': 'Close menu',
+  'navigation.header.navigation.home': 'Home',
+  'navigation.header.navigation.about': 'About',
+  'navigation.header.navigation.offerings': 'Offerings',
+  'navigation.header.navigation.approach': 'Approach',
+  'navigation.header.navigation.impact': 'Impact',
+  'navigation.header.navigation.news': 'News',
 
-  // HomePage translations
-  'HomePage.quote.text':
+  // Homepage translations (new modular keys)
+  'homepage.hero.title': 'Creating the next-generation organic farms',
+  'homepage.quote.text':
     'At Todd, we combine our deep experiance in sustainable agriculture, managing farms and engaging consumers.',
-  'HomePage.quote.button': 'About',
-  'HomePage.newsHighlights.title': 'News Highlights',
-  'HomePage.newsHighlights.viewAll': 'View All',
-  'HomePage.newsHighlights.placeholder':
+  'homepage.quote.button': 'About',
+  'homepage.newsHighlights.title': 'News Highlights',
+  'homepage.newsHighlights.viewAll': 'View All',
+  'homepage.newsHighlights.placeholder':
     'Carousel component will be implemented here',
+
+  // Common translations
+  'common.actions.close': 'Close',
+  'common.actions.menu': 'Menu',
+  'common.buttons.about': 'About',
+  'common.buttons.viewAll': 'View All',
+
+  // Navigation translations
+  'navigation.footer.copyright':
+    '© {year} Todd Agriscience. All rights reserved.',
 };
 
 export type Translations = Partial<Record<string, string>>;
 
 // Mock LocaleContext with dynamic translations
-const mockLocaleContext = (translations: Translations = {}) => {
+const mockLocaleContext = (
+  translations: Translations = {},
+  isLoading: boolean = false
+) => {
   const mergedTranslations: Record<string, string> = { ...defaultTranslations };
 
   // Only merge defined translations
@@ -35,7 +55,12 @@ const mockLocaleContext = (translations: Translations = {}) => {
   return {
     locale: 'en',
     setLocale: jest.fn(),
+    messages: mergedTranslations,
     t: (key: string) => mergedTranslations[key] || key,
+    isLoading,
+    loadModule: jest.fn().mockResolvedValue({}),
+    loadModules: jest.fn().mockResolvedValue({}),
+    preloadCritical: jest.fn().mockResolvedValue(undefined),
   };
 };
 
@@ -83,8 +108,9 @@ const LocaleContext = React.createContext<
 const MockLocaleProvider: React.FC<{
   children: React.ReactNode;
   translations?: Translations;
-}> = ({ children, translations = {} }) => {
-  const context = mockLocaleContext(translations);
+  isLoading?: boolean;
+}> = ({ children, translations = {}, isLoading = false }) => {
+  const context = mockLocaleContext(translations, isLoading);
   return (
     <LocaleContext.Provider value={context}>{children}</LocaleContext.Provider>
   );
@@ -105,6 +131,7 @@ jest.mock('@/context/LocaleContext', () => ({
 interface AllTheProvidersProps {
   children: React.ReactNode;
   translations?: Translations;
+  isLoading?: boolean;
 }
 
 /**
@@ -113,10 +140,11 @@ interface AllTheProvidersProps {
 const AllTheProviders = ({
   children,
   translations = {},
+  isLoading = false,
 }: AllTheProvidersProps) => {
   return (
     <ThemeProvider>
-      <MockLocaleProvider translations={translations}>
+      <MockLocaleProvider translations={translations} isLoading={isLoading}>
         {children}
       </MockLocaleProvider>
     </ThemeProvider>
@@ -128,12 +156,19 @@ const AllTheProviders = ({
  */
 const customRender = (
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'> & { translations?: Translations }
+  options?: Omit<RenderOptions, 'wrapper'> & {
+    translations?: Translations;
+    isLoading?: boolean;
+  }
 ) => {
-  const { translations, ...renderOptions } = options || {};
+  const { translations, isLoading, ...renderOptions } = options || {};
   return render(ui, {
     wrapper: (props) => (
-      <AllTheProviders {...props} translations={translations} />
+      <AllTheProviders
+        {...props}
+        translations={translations}
+        isLoading={isLoading}
+      />
     ),
     ...renderOptions,
   });
@@ -146,6 +181,7 @@ const renderWithAct = async (
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'> & {
     translations?: Record<string, string>;
+    isLoading?: boolean;
   }
 ) => {
   let result: ReturnType<typeof customRender>;

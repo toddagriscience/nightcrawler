@@ -1,0 +1,16 @@
+{
+  "welcome": "Bienvenido a Todd",
+  "hero": {
+    "title": "Creando las granjas orgánicas de la próxima generación",
+    "subtitle": "Pioneros en soluciones de agricultura regenerativa para un mañana mejor"
+  },
+  "newsHighlights": {
+    "title": "Noticias Destacadas",
+    "viewAll": "Ver Todo",
+    "placeholder": "El componente de carrusel se implementará aquí"
+  },
+  "quote": {
+    "text": "En Todd, combinamos nuestra profunda experiencia en agricultura sostenible, gestión de granjas e interacción con consumidores.",
+    "button": "Acerca de"
+  }
+}

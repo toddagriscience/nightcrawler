@@ -1,0 +1,24 @@
+{
+  "buttons": {
+    "viewAll": "View All",
+    "about": "About",
+    "sendMessage": "Send Message",
+    "getInTouch": "Get In Touch",
+    "getStarted": "Get Started"
+  },
+  "actions": {
+    "close": "Close",
+    "open": "Open",
+    "menu": "Menu"
+  },
+  "errors": {
+    "submissionError": "Failed to send your message: {error}",
+    "translationKeyNotFound": "Translation key not found: {key}"
+  },
+  "success": {
+    "submissionSuccess": "Your message has been sent successfully!"
+  },
+  "accessibility": {
+    "privacy": "Privacy"
+  }
+}

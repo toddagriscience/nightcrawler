@@ -3,9 +3,9 @@ import Quote from './quote';
 import '@testing-library/jest-dom';
 
 const customTranslations = {
-  'HomePage.quote.text':
+  'homepage.quote.text':
     'At Todd, we combine our deep experiance in sustainable agriculture, managing farms and engaging consumers.',
-  'HomePage.quote.button': 'About',
+  'homepage.quote.button': 'About',
 } satisfies Translations;
 
 describe('Quote', () => {
@@ -35,5 +35,12 @@ describe('Quote', () => {
     expect(aboutLink).toBeInTheDocument();
     expect(aboutLink).toHaveAttribute('href', '/about');
     expect(aboutLink).toHaveTextContent('About');
+  });
+
+  it('displays loading spinner when isLoading is true', async () => {
+    await renderWithAct(<Quote />, { isLoading: true });
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 });

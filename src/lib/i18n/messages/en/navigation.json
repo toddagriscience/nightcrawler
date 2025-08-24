@@ -1,0 +1,53 @@
+{
+  "header": {
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "label": "Menu"
+    },
+    "navigation": {
+      "home": "Home",
+      "about": "About",
+      "offerings": "Offerings",
+      "approach": "Approach",
+      "impact": "Impact",
+      "news": "News"
+    },
+    "actions": {
+      "getStarted": "Get Started"
+    }
+  },
+  "footer": {
+    "sections": {
+      "todd": "Todd",
+      "connect": "Connect",
+      "legal": "Legal"
+    },
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "offerings": "Offerings",
+      "approach": "Approach",
+      "impact": "Impact",
+      "news": "News",
+      "careers": "Careers",
+      "contact": "Contact",
+      "journal": "Journal",
+      "investorRelations": "Investor Relations",
+      "foundation": "Foundation",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "accessibility": "Accessibility",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "trustCenter": "Trust Center"
+    },
+    "cta": {
+      "letsTalk": "Let's Talk",
+      "getInTouch": "Get In Touch",
+      "privacyOptions": "Do Not Sell or Share My Data"
+    },
+    "copyright": "© Todd Agriscience, Inc. {year}"
+  }
+}

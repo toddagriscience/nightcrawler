@@ -1,0 +1,16 @@
+{
+  "welcome": "Bem-vindo à Todd",
+  "hero": {
+    "title": "Criando as fazendas orgânicas da próxima geração",
+    "subtitle": "Pioneiros em soluções de agricultura regenerativa para um amanhã melhor"
+  },
+  "newsHighlights": {
+    "title": "Destaques de Notícias",
+    "viewAll": "Ver Tudo",
+    "placeholder": "O componente carrossel será implementado aqui"
+  },
+  "quote": {
+    "text": "Na Todd, combinamos nossa profunda experiência em agricultura sustentável, gestão de fazendas e engajamento do consumidor.",
+    "button": "Sobre nós"
+  }
+}

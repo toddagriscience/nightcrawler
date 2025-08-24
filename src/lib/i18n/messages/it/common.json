@@ -1,0 +1,24 @@
+{
+  "buttons": {
+    "viewAll": "Visualizza Tutto",
+    "about": "Chi siamo",
+    "sendMessage": "Invia Messaggio",
+    "getInTouch": "Contattaci",
+    "getStarted": "Inizia"
+  },
+  "actions": {
+    "close": "Chiudi",
+    "open": "Apri",
+    "menu": "Menù"
+  },
+  "errors": {
+    "submissionError": "Impossibile inviare il tuo messaggio: {error}",
+    "translationKeyNotFound": "Chiave di traduzione non trovata: {key}"
+  },
+  "success": {
+    "submissionSuccess": "Il tuo messaggio è stato inviato con successo!"
+  },
+  "accessibility": {
+    "privacy": "Privacy"
+  }
+}
