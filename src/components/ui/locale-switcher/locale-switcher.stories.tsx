@@ -24,7 +24,7 @@ const meta = {
     className: '',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof LocaleSwitcher & { isDark?: boolean }>;
+} satisfies Meta<typeof LocaleSwitcher>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -50,14 +50,10 @@ export const Default: Story = {
 
 export const Dark: Story = {
   args: {
-    className: '',
+    ...storybookArgs,
     // @ts-expect-error - isDark is handled by StorybookProvider decorator
     isDark: true,
-  },
-  parameters: {
-    storybook: {
-      isDark: true,
-    },
+    className: '',
   },
   decorators: [
     (Story) => (
