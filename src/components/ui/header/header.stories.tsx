@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Header from './header';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { LocaleProvider } from '@/context/LocaleContext';
 
 const meta: Meta<typeof Header> = {
   title: 'UI/Header',
@@ -24,6 +26,15 @@ const meta: Meta<typeof Header> = {
     },
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <LocaleProvider>
+          <Story />
+        </LocaleProvider>
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default meta;
@@ -76,34 +87,13 @@ export const DarkTheme: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ background: '#2A2727', minHeight: '100vh' }}>
-        <Story />
-      </div>
+      <ThemeProvider>
+        <div style={{ background: '#2A2727', minHeight: '100vh' }}>
+          <Story />
+        </div>
+      </ThemeProvider>
     ),
   ],
-};
-
-export const WithMenuOpen: Story = {
-  args: {
-    alwaysGlassy: true,
-    isDark: false,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Header showing the open navigation menu state.',
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = canvasElement;
-    const menuButton = canvas.querySelector(
-      '[aria-label="Open menu"]'
-    ) as HTMLElement;
-    if (menuButton) {
-      menuButton.click();
-    }
-  },
 };
 
 export const OnLightBackground: Story = {
@@ -123,9 +113,11 @@ export const OnLightBackground: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ background: '#f8f5ee', minHeight: '100vh' }}>
-        <Story />
-      </div>
+      <ThemeProvider>
+        <div style={{ background: '#f8f5ee', minHeight: '100vh' }}>
+          <Story />
+        </div>
+      </ThemeProvider>
     ),
   ],
 };

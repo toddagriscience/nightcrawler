@@ -1,74 +1,66 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { usePathname } from 'next/navigation';
+import { screen, fireEvent, renderWithAct } from '@/test/test-utils';
+import type { Translations } from '@/test/test-utils';
 import Header from './header';
+import '@testing-library/jest-dom';
 
-// Mock Next.js router
-jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(),
-}));
-
-const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
+const customTranslations = {
+  'Header.getStarted': 'Get Started',
+  'Header.menu.open': 'Open menu',
+  'Header.menu.close': 'Close menu',
+} satisfies Translations;
 
 describe('Header', () => {
-  beforeEach(() => {
-    mockUsePathname.mockReturnValue('/');
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders without crashing', () => {
-    render(<Header />);
+  it('renders without crashing', async () => {
+    await renderWithAct(<Header />);
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 
-  it('displays menu toggle button', () => {
-    render(<Header />);
+  it('displays menu toggle button', async () => {
+    await renderWithAct(<Header />);
     expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
   });
 
-  it('shows TODD wordmark when not in menu mode', () => {
-    render(<Header alwaysGlassy />);
+  it('shows TODD wordmark when not in menu mode', async () => {
+    await renderWithAct(<Header alwaysGlassy />);
     expect(screen.getByTestId('wordmark-link')).toBeInTheDocument();
   });
 
-  it('toggles menu when menu button is clicked', () => {
-    render(<Header />);
+  it('toggles menu when menu button is clicked', async () => {
+    await renderWithAct(<Header />, { translations: customTranslations });
     const menuButton = screen.getByTestId('menu-toggle');
 
-    fireEvent.click(menuButton);
+    await fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute('aria-label', 'Close menu');
 
-    fireEvent.click(menuButton);
+    await fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
-  it('applies dark theme classes when isDark prop is true', () => {
-    render(<Header isDark alwaysGlassy />);
-    const headerContent = screen.getByRole('banner').querySelector('div > div');
-    expect(headerContent).toHaveClass('bg-white/10', 'text-[#FDFDFB]');
+  it('applies dark theme classes when isDark prop is true', async () => {
+    await renderWithAct(<Header isDark alwaysGlassy />);
+    const headerElement = screen.getByRole('banner');
+    expect(headerElement).toHaveAttribute('data-theme', 'dark');
   });
 
-  it('applies light theme classes when isDark prop is false', () => {
-    render(<Header isDark={false} alwaysGlassy />);
-    const headerContent = screen.getByRole('banner').querySelector('div > div');
-    expect(headerContent).toHaveClass('bg-black/10', 'text-[#2A2727]');
+  it('applies light theme classes when isDark prop is false', async () => {
+    await renderWithAct(<Header isDark={false} alwaysGlassy />);
+    const headerElement = screen.getByRole('banner');
+    expect(headerElement).toHaveAttribute('data-theme', 'light');
   });
 
-  it('supports keyboard navigation for menu toggle', () => {
-    render(<Header />);
+  it('supports keyboard navigation for menu toggle', async () => {
+    await renderWithAct(<Header />);
     const menuButton = screen.getByTestId('menu-toggle');
 
-    fireEvent.keyDown(menuButton, { key: 'Enter' });
+    await fireEvent.keyDown(menuButton, { key: 'Enter' });
     expect(menuButton).toHaveAttribute('aria-label', 'Close menu');
 
-    fireEvent.keyDown(menuButton, { key: ' ' });
+    await fireEvent.keyDown(menuButton, { key: ' ' });
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
-  it('includes Get Started link', () => {
-    render(<Header />);
+  it('includes Get Started link', async () => {
+    await renderWithAct(<Header />);
     const getStartedLink = screen.getByTestId('get-started-link');
     expect(getStartedLink).toBeInTheDocument();
     expect(getStartedLink).toHaveAttribute('href', '/contact');

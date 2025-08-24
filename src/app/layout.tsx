@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { fontVariables } from '@/lib/fonts';
 import { defaultMetadata, defaultViewport } from '@/lib/metadata';
 import { Cursor, Header, Footer, SmoothScroll } from '@/components/ui';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { LocaleProvider } from '@/context/LocaleContext';
 import './globals.css';
 
 const geistSans = Geist({
@@ -27,12 +29,16 @@ export default function RootLayout({
       <body
         className={`${fontVariables} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SmoothScroll>
-          <Cursor />
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <ThemeProvider>
+          <LocaleProvider>
+            <SmoothScroll>
+              <Cursor />
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </SmoothScroll>
+          </LocaleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

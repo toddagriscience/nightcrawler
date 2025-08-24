@@ -10,6 +10,9 @@ import {
   useMotionValueEvent,
 } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { themeUtils } from '@/lib/theme';
+import { useTheme } from '@/context/ThemeContext';
+import { LocaleSwitcher } from '@/components/ui';
 
 interface HeaderProps {
   alwaysGlassy?: boolean;
@@ -18,19 +21,46 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   alwaysGlassy = false,
-  isDark = false,
+  isDark: propIsDark,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const pathname = usePathname();
   const { scrollY } = useScroll();
+  const { isDark: contextIsDark } = useTheme();
+
+  // Use prop isDark if provided, otherwise use context
+  const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
+
+  // Get theme values for current mode
+  const headerTheme = themeUtils.getComponentTheme('header', isDark);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     if (alwaysGlassy) return;
-    const shouldBeScrolled = latest > 80;
-    if (shouldBeScrolled !== scrolled) {
-      setScrolled(shouldBeScrolled);
+
+    // Much slower, more staggered scroll transition
+    // Start transitioning at 20px, fully transitioned at 200px
+    const scrollThreshold = 10;
+    const fullTransitionThreshold = 50;
+
+    if (latest > scrollThreshold) {
+      // Calculate linear progress (0 to 1)
+      const linearProgress = Math.min(
+        (latest - scrollThreshold) /
+          (fullTransitionThreshold - scrollThreshold),
+        1
+      );
+
+      // Apply easing curve for more staggered effect (ease-out curve)
+      const easedProgress = 1 - Math.pow(1 - linearProgress, 3);
+
+      setScrollProgress(easedProgress);
+      setScrolled(easedProgress > 0.6); // Only set scrolled to true when 60% through transition
+    } else {
+      setScrollProgress(0);
+      setScrolled(false);
     }
   });
 
@@ -49,18 +79,53 @@ const Header: React.FC<HeaderProps> = ({
     (menuOpen && typeof window !== 'undefined' && window.innerWidth < 768);
   const showWordmark = showGlassy;
 
+  // Create gradual background color based on scroll progress
+  const getGradualBackground = () => {
+    if (alwaysGlassy || menuOpen) return headerTheme.background;
+
+    // Extract RGB values from theme background (assumes rgba format)
+    const bgColor = headerTheme.background;
+    // For rgba(0,0,0,0.1) format, increase the alpha based on scroll progress
+    if (bgColor.includes('rgba')) {
+      const match = bgColor.match(
+        /rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/
+      );
+      if (match) {
+        const [, r, g, b, originalAlpha] = match;
+        // Ensure minimum alpha of 0, maximum of original alpha
+        const newAlpha = Math.max(
+          0,
+          Math.min(
+            parseFloat(originalAlpha) * scrollProgress,
+            parseFloat(originalAlpha)
+          )
+        );
+        return `rgba(${r}, ${g}, ${b}, ${newAlpha})`;
+      }
+    }
+
+    // Fallback for non-rgba colors - use opacity based approach
+    if (scrollProgress <= 0) {
+      return 'rgba(0, 0, 0, 0)'; // Fully transparent
+    }
+
+    return bgColor;
+  };
+
   return (
-    <header className="fixed top-0 z-40 w-full">
+    <header
+      className="fixed top-0 z-40 w-full"
+      data-theme={isDark ? 'dark' : 'light'}
+    >
       <div className="max-w-[107rem] mx-auto mt-3 px-4 sm:px-6 lg:px-8">
         <motion.div
-          className={`relative flex flex-col rounded-2xl px-4 transition-colors duration-500 overflow-hidden
-            ${showGlassy ? 'backdrop-blur-md' : 'bg-transparent'}
-            ${
-              isDark
-                ? 'bg-white/10 text-[#FDFDFB]'
-                : 'bg-black/10 text-[#2A2727]'
-            }`}
+          className="relative flex flex-col rounded-2xl px-4 overflow-hidden"
+          style={{
+            color: headerTheme.text,
+          }}
           animate={{
+            backgroundColor: getGradualBackground(),
+            backdropFilter: `blur(${scrollProgress * 16}px)`,
             height:
               menuOpen &&
               typeof window !== 'undefined' &&
@@ -68,7 +133,11 @@ const Header: React.FC<HeaderProps> = ({
                 ? 'auto'
                 : '3.25rem', // h-13 = 3.25rem
           }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={{
+            backgroundColor: { duration: 1.2, ease: 'easeInOut' },
+            backdropFilter: { duration: 1.5, ease: 'easeInOut' },
+            height: { duration: 0.3, ease: 'easeInOut' },
+          }}
         >
           {/* Header Top Section */}
           <div className="relative flex items-center justify-between h-13">
@@ -192,7 +261,7 @@ const Header: React.FC<HeaderProps> = ({
               )}
             </AnimatePresence>
 
-            {/* Right: Future auth links placeholder */}
+            {/* Right: Locale Switcher and Get Started */}
             <div className="flex items-center gap-4">
               <Link
                 href="/contact"
@@ -201,6 +270,7 @@ const Header: React.FC<HeaderProps> = ({
               >
                 Get Started
               </Link>
+              <LocaleSwitcher className="hidden md:block" />
             </div>
           </div>
 
@@ -244,7 +314,7 @@ const Header: React.FC<HeaderProps> = ({
                       );
                     })}
 
-                    {/* Mobile Get Started Button */}
+                    {/* Mobile Locale Switcher and Get Started */}
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
@@ -253,8 +323,9 @@ const Header: React.FC<HeaderProps> = ({
                         transition: { delay: menuItems.length * 0.1 },
                       }}
                       exit={{ opacity: 0, x: -20 }}
-                      className="flex justify-center pt-4 border-t border-current/20"
+                      className="flex flex-col items-center gap-4 pt-4 border-t border-current/20"
                     >
+                      <LocaleSwitcher />
                       <Link
                         href="/contact"
                         onClick={() => setMenuOpen(false)}

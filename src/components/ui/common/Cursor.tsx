@@ -4,11 +4,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, animate } from 'framer-motion';
 
 const Cursor = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
   const cursorRef = useRef<HTMLDivElement>(null);
   const pointer = useRef({ x: 0, y: 0 }).current;
   const raf = useRef<number | null>(null);
-
+  const [mounted, setMounted] = useState(false);
   const [cursorColor, setCursorColor] = useState('#2A2727'); // Default to dark
   const [isVisible, setIsVisible] = useState(true);
 
@@ -32,12 +32,12 @@ const Cursor = () => {
   }, [pointer]);
 
   useEffect(() => {
+    // Set mounted to true after first render to prevent hydration mismatch
+    setMounted(true);
+
     const checkIsMobile = () => {
       setIsMobile(
-        typeof window !== 'undefined'
-          ? window.innerWidth <= 768 ||
-              /Mobi|Android/i.test(navigator.userAgent)
-          : true
+        window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent)
       );
     };
 
@@ -144,10 +144,6 @@ const Cursor = () => {
           el.style.cursor = 'none';
         }
       });
-
-      const linkElements = document.querySelectorAll(
-        'a, button, [role="button"], input[type="submit"], input[type="button"]'
-      );
     };
 
     const updateCursorColor = (e: MouseEvent) => {
@@ -161,7 +157,7 @@ const Cursor = () => {
       }
     };
 
-    if (!isMobile) {
+    if (!isMobile && mounted) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mousemove', updateCursorColor);
       raf.current = requestAnimationFrame(move);
@@ -169,7 +165,7 @@ const Cursor = () => {
     }
 
     return () => {
-      if (!isMobile) {
+      if (!isMobile && mounted) {
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mousemove', updateCursorColor);
         if (raf.current) {
@@ -179,16 +175,17 @@ const Cursor = () => {
         document.body.style.cursor = '';
       }
     };
-  }, [isMobile, move, pointer]);
+  }, [isMobile, mounted, move, pointer]);
 
-  if (isMobile) {
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted || isMobile) {
     return null;
   }
 
   return (
     <motion.div
       ref={cursorRef}
-      className="fixed top-0 left-0 z-50 rounded-full pointer-events-none"
+      className="fixed top-0 left-0 z-[9999] rounded-full pointer-events-none"
       style={{
         width: 8,
         height: 8,

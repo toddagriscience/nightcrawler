@@ -7,21 +7,18 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 ## Tech Stack
 
 ### Core Framework
-
 - **Next.js 15** with App Router & Turbopack
 - **TypeScript** with strict type checking
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
 
 ### Animation & UX
-
 - **Framer Motion** for component animations
 - **Lenis** for buttery smooth scrolling (matching original feel)
 - **Custom cursor** with hover interactions
 - **Dynamic header** with scroll-based state changes
 
 ### Development Infrastructure
-
 - **Jest + React Testing Library** (unit testing)
 - **Playwright** (E2E testing)
 - **Storybook 8** with accessibility addon
@@ -29,7 +26,6 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 - **GitHub Actions** CI/CD pipeline
 
 ### SEO & Performance
-
 - **Comprehensive metadata** (OpenGraph, Twitter cards, structured data)
 - **Custom fonts** (next/font/local with Neue Haas Unica, Utah WGL)
 - **Optimized assets** (favicons, social images, robots.txt)
@@ -63,7 +59,6 @@ e2e/                     # End-to-end tests
 ```
 
 ### Future Enhancements (Optional)
-
 - [ ] **Analytics setup** - Google Analytics, GTM, Hotjar (IDs available)
 - [ ] **Authentication system** - NextAuth integration (when needed)
 - [ ] **CMS integration** - Prismic or other headless CMS (when needed)
@@ -82,13 +77,14 @@ e2e/                     # End-to-end tests
 - Accessibility
 - Terms & Privacy
 
+
 ### File Organization
 
 - **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) should live alongside their components
 - **Component structure**: Each component should have its own directory with:
   - `component.tsx` - Main component
   - `component.test.tsx` - Unit tests
-  - `component.stories.tsx` - Storybook stories
+  - `component.stories.tsx` - Storybook stories 
   - separately:
     - `index.ts` - located in the parent directory as a Barrel export
 - **Import paths**: Use `@/` alias for src imports (configured in tsconfig and Jest)

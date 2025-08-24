@@ -43,8 +43,9 @@ describe('Footer', () => {
 
   it('includes Get In Touch button', () => {
     render(<Footer />);
-    const getInTouchLink = screen.getByTestId('get-in-touch-link');
-    expect(getInTouchLink).toHaveAttribute('href', '/contact');
+    const getInTouchButton = screen.getByTestId('button-component');
+    expect(getInTouchButton).toHaveAttribute('href', '/contact');
+    expect(getInTouchButton).toHaveTextContent('Get In Touch');
   });
 
   it('displays copyright information', () => {

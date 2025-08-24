@@ -18,15 +18,21 @@
     "test:e2e:ui": "playwright test --ui",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "ci": "npm run type-check && npm run lint && npm run test && npm run build",
+    "validate": "npm run format:check && npm run ci"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
+    "@types/ua-parser-js": "^0.7.39",
+    "class-variance-authority": "^0.7.1",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.541.0",
     "next": "15.5.0",
+    "next-intl": "^4.3.5",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "ua-parser-js": "^2.0.4"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",

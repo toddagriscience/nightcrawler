@@ -7,24 +7,6 @@
 }
 
 :root {
-  /* Brand Colors */
-  --foreground: #333333;
-  --background: #f8f5ee;
-  --chalk: #ffffff;
-  --slate: #333333;
-  --slate-secondary: #555555;
-  --slate-tertiary: #777777;
-  --slate-quaternary: #999999;
-  --sage: #afb5ad;
-  --stone: #8a8a8a;
-  --stone-secondary: #666666;
-  --stone-tertiary: #444444;
-  --ash: #dddddd;
-  --chalk20: rgba(255, 255, 255, 0.2);
-  --headerHeight: 80px;
-  --100dvh: 100dvh;
-  --svh: 1svh;
-
   /* Font variables */
   --font-haas: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
@@ -49,6 +31,18 @@ body {
   background: var(--background);
   overflow-x: hidden;
   font-family: var(--font-haas);
+}
+
+/* Remove default cursor pointer from all links */
+a,
+button,
+[role='button'] {
+  cursor: none !important;
+}
+
+/* Remove pointer cursor from all interactive elements */
+* {
+  cursor: none !important;
 }
 
 /* Hide scrollbars globally */
@@ -146,6 +140,33 @@ body {
 /* Custom navigation hover cursor */
 .nav-hover-cursor {
   cursor: none;
+}
+
+/* Smooth theme transitions */
+:root {
+  transition: all 1.2s ease-in-out;
+}
+
+/* Header theme transitions */
+header {
+  transition:
+    background-color 1.2s ease-in-out,
+    color 1.2s ease-in-out;
+}
+
+/* Header hover effects - adapts to theme */
+.nav-hover-cursor {
+  transition:
+    background-color 0.6s ease-in-out,
+    color 0.6s ease-in-out;
+}
+
+.nav-hover-cursor:hover {
+  background-color: var(--header-hover-light);
+}
+
+[data-theme='dark'] .nav-hover-cursor:hover {
+  background-color: var(--header-hover-dark);
 }
 
 /* Footer underline animation - expands from center */

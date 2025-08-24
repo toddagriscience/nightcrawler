@@ -1,0 +1,55 @@
+{
+  "Metadata": {
+    "Global": {
+      "title": "Todd",
+      "description": "Liderando o futuro da agricultura sustentável, regenerativa e dos sistemas alimentares.",
+      "keywords": "ciência agrícola, agricultura, generativa, sustentável, cultivo, sistemas alimentares, Todd, inovação",
+      "siteName": "Todd",
+      "ogImageAlt": "Logotipo da empresa Todd em fundo de campo verde"
+    },
+    "About": {
+      "title": "Sobre nós",
+      "description": "Saiba mais sobre nossa abordagem pioneira na agricultura generativa, nossa história e nossos valores impulsionando a produção alimentar sustentável.",
+      "keywords": "sobre nós, história da empresa, patrimônio, agricultura generativa, missão Todd, sustentabilidade, inovação agrícola",
+      "ogTitle": "Descubra a Todd Agriscience: Nossa História e Missão na Agricultura Generativa",
+      "ogDescription": "Todd é uma empresa de agricultura generativa de primeira geração que se associa com fazendas de alta qualidade e marca para cultivar um futuro sustentável.",
+      "ogImageAlt": "Membros da equipe colaborando em uma instalação agrícola moderna",
+      "twitterTitle": "Todd Agriscience: Pioneiros na Agricultura Generativa",
+      "twitterDescription": "Explore nossa missão de revolucionar a agricultura para um futuro verdadeiramente sustentável e abundante."
+    }
+  },
+  "HomePage": {
+    "welcome": "Bem-vindo à Todd",
+    "hero": {
+      "title": "Liderando o futuro da agricultura sustentável",
+      "subtitle": "Soluções pioneiras de agricultura regenerativa para um amanhã melhor"
+    },
+    "newsHighlights": {
+      "title": "Destaques de Notícias",
+      "viewAll": "Ver Tudo",
+      "placeholder": "O componente carrossel será implementado aqui"
+    },
+    "quote": {
+      "text": "Na Todd, combinamos nossa profunda experiência em agricultura sustentável, gestão de fazendas e engajamento do consumidor.",
+      "button": "Sobre nós"
+    }
+  },
+  "AboutPage": {
+    "title": "Sobre nós",
+    "description": "Todd é uma empresa de agricultura generativa de primeira geração que visa fazer parceria com fazendas regenerativas de alto crescimento e marca.",
+    "teamAltText": "Colaboração da equipe"
+  },
+  "ContactPage": {
+    "title": "Entre em Contato",
+    "description": "Obrigado pelo seu interesse na Todd. Por favor, preencha o formulário para entrar em contato conosco.",
+    "nameLabel": "Nome Completo",
+    "emailLabel": "Email",
+    "messageLabel": "Sua Mensagem",
+    "submitButton": "Enviar Mensagem",
+    "submissionSuccess": "Sua mensagem foi enviada com sucesso!",
+    "submissionError": "Falha ao enviar sua mensagem: {error}"
+  },
+  "Footer": {
+    "copyright": "© {year} Todd Agriscience. Todos os direitos reservados."
+  }
+}

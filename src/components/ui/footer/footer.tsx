@@ -3,7 +3,80 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/common';
+
+// Footer navigation data structure
+interface FooterLink {
+  href: string;
+  label: string;
+  external?: boolean;
+  testId?: string;
+}
+
+interface FooterSection {
+  title: string;
+  testId: string;
+  links: FooterLink[];
+}
+
+const footerSections: FooterSection[] = [
+  {
+    title: 'Todd',
+    testId: 'todd-section-heading',
+    links: [
+      { href: '/', label: 'Home' },
+      { href: '/About', label: 'About' },
+      { href: '/Offerings', label: 'Offerings' },
+      { href: '/Approach', label: 'Approach' },
+      { href: '/Impact', label: 'Impact' },
+      { href: '/News', label: 'News' },
+      { href: '/Careers', label: 'Careers' },
+    ],
+  },
+  {
+    title: 'Connect',
+    testId: 'connect-section-heading',
+    links: [
+      { href: '/contact', label: 'Contact' },
+      { href: '/Journal', label: 'Journal' },
+      { href: '/Investor Relations', label: 'Investor Relations' },
+      { href: '/Foundation', label: 'Foundation' },
+      {
+        href: 'https://instagram.com/toddagriscience',
+        label: 'Instagram',
+        external: true,
+        testId: 'social-link-instagram',
+      },
+      {
+        href: 'https://linkedin.com/company/toddagriscience',
+        label: 'LinkedIn',
+        external: true,
+        testId: 'social-link-linkedin',
+      },
+      {
+        href: 'https://x.com/toddagriscience',
+        label: 'X',
+        external: true,
+        testId: 'social-link-x',
+      },
+    ],
+  },
+  {
+    title: 'Legal',
+    testId: 'legal-section-heading',
+    links: [
+      { href: '/accessibility', label: 'Accessibility' },
+      { href: '/privacy', label: 'Privacy' },
+      { href: '/terms', label: 'Terms' },
+      {
+        href: 'https://toddagriscience.safebase.us',
+        label: 'Trust Center',
+        external: true,
+        testId: 'trust-center-link',
+      },
+    ],
+  },
+];
 
 const Footer = () => {
   return (
@@ -19,150 +92,45 @@ const Footer = () => {
             >
               Let&apos;s Talk
             </h1>
-            <Link
+            <Button
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-[#2A2727] text-lg md:text-xl lg:text-2xl px-5 py-2 hover:bg-[#2A2727] hover:text-[#FDFDFB] duration-300 ease-in-out transition-all"
-              data-testid="get-in-touch-link"
-            >
-              Get In Touch{' '}
-              <ArrowRight color="currentColor" className="text-2xl" />
-            </Link>
+              text="Get In Touch"
+              variant="outline"
+              size="lg"
+              isDark={false}
+              data-testid="get-in-touch-button"
+            />
           </div>
         </div>
 
         {/* Navigation links section */}
         <div className="lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-4 lg:gap-8">
-          {/* Todd links */}
-          <div className="flex flex-col">
-            <p
-              className="font-semibold md:font-thin text-lg md:text-xl mb-4 md:mb-6 lg:mb-8"
-              data-testid="todd-section-heading"
-            >
-              Todd
-            </p>
-            <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-thin flex flex-col gap-2 md:gap-3">
-              <Link
-                href="/"
-                className="footer-underline duration-300 ease-in-out transition-all"
+          {footerSections.map((section) => (
+            <div key={section.title} className="flex flex-col">
+              <p
+                className="font-semibold md:font-thin text-lg md:text-xl mb-4 md:mb-6 lg:mb-8"
+                data-testid={section.testId}
               >
-                Home
-              </Link>
-              <Link
-                href="/who-we-are"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                About
-              </Link>
-              <Link
-                href="/what-we-do"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                What We Do
-              </Link>
-              <Link
-                href="/news"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                News
-              </Link>
-              <Link
-                href="/careers"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Careers
-              </Link>
+                {section.title}
+              </p>
+              <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-thin flex flex-col gap-2 md:gap-3">
+                {section.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="footer-underline duration-300 ease-in-out transition-all"
+                    {...(link.external && {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    })}
+                    {...(link.testId && { 'data-testid': link.testId })}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Connect links */}
-          <div className="flex flex-col">
-            <p
-              className="font-semibold md:font-thin text-lg md:text-xl mb-4 md:mb-6 lg:mb-8"
-              data-testid="connect-section-heading"
-            >
-              Connect
-            </p>
-            <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-thin flex flex-col gap-2 md:gap-3">
-              <Link
-                href="/contact"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Contact
-              </Link>
-              <Link
-                href="/investors"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Investor Relations
-              </Link>
-              <Link
-                href="https://instagram.com/toddagriscience"
-                className="footer-underline duration-300 ease-in-out transition-all"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="social-link-instagram"
-              >
-                Instagram
-              </Link>
-              <Link
-                href="https://linkedin.com/company/toddagriscience"
-                className="footer-underline duration-300 ease-in-out transition-all"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="social-link-linkedin"
-              >
-                LinkedIn
-              </Link>
-              <Link
-                href="https://x.com/toddagriscience"
-                className="footer-underline duration-300 ease-in-out transition-all"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="social-link-x"
-              >
-                X
-              </Link>
-            </div>
-          </div>
-
-          {/* Legal links */}
-          <div className="flex flex-col">
-            <p
-              className="font-semibold md:font-thin text-lg md:text-xl mb-4 md:mb-6 lg:mb-8"
-              data-testid="legal-section-heading"
-            >
-              Legal
-            </p>
-            <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-thin flex flex-col gap-2 md:gap-3">
-              <Link
-                href="/accessibility"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Accessibility
-              </Link>
-              <Link
-                href="/privacy"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="footer-underline duration-300 ease-in-out transition-all"
-              >
-                Terms
-              </Link>
-              <Link
-                href="https://toddagriscience.safebase.us"
-                className="footer-underline duration-300 ease-in-out transition-all"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="trust-center-link"
-              >
-                Trust Center
-              </Link>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
