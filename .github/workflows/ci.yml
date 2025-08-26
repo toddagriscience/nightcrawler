@@ -1,8 +1,7 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: ['*']
+  # Run on pull requests to dev or main (required for merge)
   pull_request:
     branches: ['dev', 'main']
 
