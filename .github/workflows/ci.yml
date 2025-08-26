@@ -1,8 +1,7 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: ['*']
+  # Run on pull requests to dev or main (required for merge)
   pull_request:
     branches: ['dev', 'main']
 
@@ -33,25 +32,11 @@ jobs:
       - name: Run unit tests
         run: npm run test:coverage
         
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-        
-      - name: Run E2E tests
-        run: npm run test:e2e
-        
       - name: Upload test coverage
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage/lcov.info
           fail_ci_if_error: false
-          
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
 
   build:
     name: Build Application

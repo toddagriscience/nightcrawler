@@ -4,15 +4,59 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+- **Node.js**: 18.0.0 or higher
+- **npm**: 8.0.0 or higher
+
+### Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd toddagriscience
+   ```
+
+2. **Use correct Node.js version** (if using nvm)
+
+   ```bash
+   nvm use
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+4. **Setup environment variables**
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+5. **Start development server**
+
+   ```bash
+   npm run dev
+   ```
+
+6. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
+
+### First-Time Setup Verification
+
+Run the full validation pipeline to ensure everything works:
+
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Open http://localhost:3000
+npm run validate
 ```
+
+This will run: format check → type check → lint → unit tests → build
 
 ## 📦 Development Scripts
 
@@ -24,7 +68,7 @@ npm run dev
 
 ### Quality Assurance
 
-- `npm run ci` - **Complete validation**: type-check → lint → test → build
+- `npm run ci` - **Complete validation**: type-check → lint → unit tests → build
 - `npm run validate` - **Full pipeline**: format:check → ci
 - `npm run type-check` - TypeScript type checking
 - `npm run lint` - ESLint code quality check
@@ -84,7 +128,6 @@ npm run dev
 #### Testing Stack
 
 - **Unit Testing**: Jest v30 + React Testing Library v16.3
-- **E2E Testing**: Playwright v1.55 with UI mode
 - **Component Testing**: Storybook v9.1 with interaction testing
 - **Coverage**: Jest coverage reports with comprehensive collection
 - **Test Setup**: Custom test utilities with i18n support
@@ -178,7 +221,6 @@ src/
 
 - **Unit Tests**: 9 comprehensive test suites covering components and utilities
 - **Component Tests**: Co-located test files with React Testing Library
-- **E2E Tests**: Playwright for user journey and internationalization testing
 - **Integration Tests**: Middleware and context testing
 - **Accessibility**: Built-in a11y testing in Storybook
 
@@ -211,11 +253,20 @@ npm run validate
 
 ### Environment Variables
 
-Create `.env.local` for local development:
+The project includes comprehensive environment variable examples. Copy the example file and customize as needed:
 
 ```bash
-# Add environment variables as needed
+cp .env.example .env.local
 ```
+
+Key variables include:
+
+- **NEXT_PUBLIC_PRODUCTION_DOMAIN**: Production domain for metadata
+- **NODE_ENV**: Environment (development/staging/production)
+- **Analytics IDs**: Google Analytics, GTM, Hotjar (optional)
+- **Future expansion**: Auth, database, CMS, email services
+
+See `.env.example` for complete documentation of all available variables.
 
 ### Customization
 
