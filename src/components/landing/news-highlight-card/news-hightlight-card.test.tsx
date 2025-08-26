@@ -1,19 +1,10 @@
-import { screen, renderWithAct, type Translations } from '@/test/test-utils';
+import { screen, renderWithAct } from '@/test/test-utils';
 import NewsHighlightCard from './news-hightlight-card';
 import '@testing-library/jest-dom';
 
-const customTranslations = {
-  'homepage.newsHighlights.title': 'News Highlights',
-  'homepage.newsHighlights.viewAll': 'View All',
-  'homepage.newsHighlights.placeholder':
-    'Carousel component will be implemented here',
-} satisfies Translations;
-
 describe('NewsHighlightCard', () => {
   it('renders without crashing', async () => {
-    await renderWithAct(<NewsHighlightCard />, {
-      translations: customTranslations,
-    });
+    await renderWithAct(<NewsHighlightCard />);
     const sections = screen.getAllByRole('region');
     const newsSection = sections.find(
       (section) => section.getAttribute('id') === 'news-carousel'
@@ -22,18 +13,14 @@ describe('NewsHighlightCard', () => {
   });
 
   it('displays the news highlights heading', async () => {
-    await renderWithAct(<NewsHighlightCard />, {
-      translations: customTranslations,
-    });
+    await renderWithAct(<NewsHighlightCard />);
     const heading = screen.getByRole('heading', { name: 'News Highlights' });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveTextContent('News Highlights');
   });
 
   it('renders View All links with correct href', async () => {
-    await renderWithAct(<NewsHighlightCard />, {
-      translations: customTranslations,
-    });
+    await renderWithAct(<NewsHighlightCard />);
     const viewAllLinks = screen
       .getAllByTestId('button-component')
       .filter((link) => link.getAttribute('href') === '/news');
@@ -41,24 +28,21 @@ describe('NewsHighlightCard', () => {
   });
 
   it('displays carousel placeholder content', async () => {
-    await renderWithAct(<NewsHighlightCard />, {
-      translations: customTranslations,
-    });
+    await renderWithAct(<NewsHighlightCard />);
     expect(
-      screen.getByText('Carousel component will be implemented here')
+      screen.getByText('News carousel coming soon...')
     ).toBeInTheDocument();
   });
 
-  it('displays loading spinner when isLoading is true', async () => {
-    await renderWithAct(<NewsHighlightCard />, { isLoading: true });
+  it('renders normally without isLoading prop', async () => {
+    await renderWithAct(<NewsHighlightCard />);
     const sections = screen.getAllByRole('region');
     const newsSection = sections.find(
       (section) => section.getAttribute('id') === 'news-carousel'
     );
     expect(newsSection).toBeInTheDocument();
-    expect(screen.getAllByTestId('loading-spinner')).toHaveLength(2); // One for news, one for quote
     expect(
-      screen.queryByRole('heading', { name: 'News Highlights' })
-    ).not.toBeInTheDocument();
+      screen.getByRole('heading', { name: 'News Highlights' })
+    ).toBeInTheDocument();
   });
 });

@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   AnimatePresence,
   motion,
@@ -12,9 +13,6 @@ import {
 import { Menu, X } from 'lucide-react';
 import { themeUtils } from '@/lib/theme';
 import { useTheme } from '@/context/ThemeContext';
-import { useLocale } from '@/context/LocaleContext';
-import { LocaleSwitcher } from '@/components/ui';
-import { LoadingSpinner } from '@/components/common';
 
 interface HeaderProps {
   alwaysGlassy?: boolean;
@@ -32,12 +30,7 @@ const Header: React.FC<HeaderProps> = ({
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const { isDark: contextIsDark } = useTheme();
-  const { t, loadModule, isLoading } = useLocale();
-
-  useEffect(() => {
-    loadModule('navigation').catch(console.warn);
-    loadModule('common').catch(console.warn);
-  }, [loadModule]);
+  const t = useTranslations('header');
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
@@ -73,12 +66,12 @@ const Header: React.FC<HeaderProps> = ({
   });
 
   const menuItems = [
-    { href: '/', label: t('navigation.header.navigation.home') },
-    { href: '/About', label: t('navigation.header.navigation.about') },
-    { href: '/Offerings', label: t('navigation.header.navigation.offerings') },
-    { href: '/Approach', label: t('navigation.header.navigation.approach') },
-    { href: '/Impact', label: t('navigation.header.navigation.impact') },
-    { href: '/News', label: t('navigation.header.navigation.news') },
+    { href: '/', label: t('navigation.home') },
+    { href: '/About', label: t('navigation.about') },
+    { href: '/Offerings', label: t('navigation.offerings') },
+    { href: '/Approach', label: t('navigation.approach') },
+    { href: '/Impact', label: t('navigation.impact') },
+    { href: '/News', label: t('navigation.news') },
   ];
 
   const showGlassy =
@@ -151,7 +144,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className="relative flex items-center justify-between h-13">
             {/* Left: Menu Toggle */}
             <div
-              className="rounded-md p-1 footer-underline transition-all duration-300 ease-in-out flex items-center justify-start cursor-none nav-hover-cursor"
+              className="rounded-md p-1 footer-underline transition-all duration-300 ease-in-out flex items-center justify-start cursor-pointer"
               onClick={() => setMenuOpen((prev: boolean) => !prev)}
               role="button"
               tabIndex={0}
@@ -161,11 +154,7 @@ const Header: React.FC<HeaderProps> = ({
                 }
               }}
               data-testid="menu-toggle"
-              aria-label={
-                menuOpen
-                  ? t('navigation.header.menu.close')
-                  : t('navigation.header.menu.open')
-              }
+              aria-label={menuOpen ? t('menu.close') : t('menu.open')}
             >
               <div className="flex items-center justify-center">
                 <AnimatePresence mode="wait">
@@ -193,13 +182,7 @@ const Header: React.FC<HeaderProps> = ({
                 </AnimatePresence>
               </div>
               <span className="ml-2 tracking-tight hidden md:block leading-none pb-0.5">
-                {isLoading ? (
-                  <LoadingSpinner size="sm" />
-                ) : menuOpen ? (
-                  t('common.actions.close')
-                ) : (
-                  t('common.actions.menu')
-                )}
+                {menuOpen ? t('menu.close') : t('menu.open')}
               </span>
             </div>
 
@@ -265,16 +248,12 @@ const Header: React.FC<HeaderProps> = ({
                         <Link
                           href={item.href}
                           onClick={() => setMenuOpen(false)}
-                          className={`rounded-md p-1 footer-underline transition-all duration-300 ease-in-out flex items-center justify-center cursor-none nav-hover-cursor ${
+                          className={`rounded-md p-1 footer-underline transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
                             isActive ? 'footer-underline-active' : ''
                           }`}
                           data-testid={`nav-link-${item.label.toLowerCase()}`}
                         >
-                          {isLoading ? (
-                            <LoadingSpinner size="sm" />
-                          ) : (
-                            item.label
-                          )}
+                          {item.label}
                         </Link>
                       </motion.div>
                     );
@@ -283,20 +262,15 @@ const Header: React.FC<HeaderProps> = ({
               )}
             </AnimatePresence>
 
-            {/* Right: Locale Switcher and Get Started */}
+            {/* Right: Get Started */}
             <div className="flex items-center gap-4">
               <Link
                 href="/contact"
-                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-none nav-hover-cursor"
+                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
                 data-testid="get-started-link"
               >
-                {isLoading ? (
-                  <LoadingSpinner size="sm" />
-                ) : (
-                  t('navigation.header.actions.getStarted')
-                )}
+                {t('actions.getStarted')}
               </Link>
-              <LocaleSwitcher className="hidden md:block" />
             </div>
           </div>
 
@@ -329,22 +303,18 @@ const Header: React.FC<HeaderProps> = ({
                           <Link
                             href={item.href}
                             onClick={() => setMenuOpen(false)}
-                            className={`text-xl font-medium footer-underline transition-all duration-300 ease-in-out cursor-none nav-hover-cursor ${
+                            className={`text-xl font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer ${
                               isActive ? 'footer-underline-active' : ''
                             }`}
                             data-testid={`mobile-nav-link-${item.label.toLowerCase()}`}
                           >
-                            {isLoading ? (
-                              <LoadingSpinner size="sm" />
-                            ) : (
-                              item.label
-                            )}
+                            {item.label}
                           </Link>
                         </motion.div>
                       );
                     })}
 
-                    {/* Mobile Locale Switcher and Get Started */}
+                    {/* Mobile Get Started */}
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
@@ -355,18 +325,13 @@ const Header: React.FC<HeaderProps> = ({
                       exit={{ opacity: 0, x: -20 }}
                       className="flex flex-col items-center gap-4 pt-4 border-t border-current/20"
                     >
-                      <LocaleSwitcher />
                       <Link
                         href="/contact"
                         onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-none nav-hover-cursor"
+                        className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer"
                         data-testid="mobile-get-started-link"
                       >
-                        {isLoading ? (
-                          <LoadingSpinner size="sm" />
-                        ) : (
-                          t('navigation.header.actions.getStarted')
-                        )}
+                        {t('actions.getStarted')}
                       </Link>
                     </motion.div>
                   </nav>

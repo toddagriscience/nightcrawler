@@ -1,40 +1,25 @@
-import { screen, fireEvent, renderWithAct } from '@/test/test-utils';
-import type { Translations } from '@/test/test-utils';
+import { screen, fireEvent, renderWithNextIntl } from '@/test/test-utils';
 import Header from './header';
 import '@testing-library/jest-dom';
 
-const customTranslations = {
-  'navigation.header.actions.getStarted': 'Get Started',
-  'navigation.header.menu.open': 'Open menu',
-  'navigation.header.menu.close': 'Close menu',
-  'navigation.header.navigation.home': 'Home',
-  'navigation.header.navigation.about': 'About',
-  'navigation.header.navigation.offerings': 'Offerings',
-  'navigation.header.navigation.approach': 'Approach',
-  'navigation.header.navigation.impact': 'Impact',
-  'navigation.header.navigation.news': 'News',
-  'common.actions.close': 'Close',
-  'common.actions.menu': 'Menu',
-} satisfies Translations;
-
 describe('Header', () => {
-  it('renders without crashing', async () => {
-    await renderWithAct(<Header />);
+  it('renders without crashing', () => {
+    renderWithNextIntl(<Header />);
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 
-  it('displays menu toggle button', async () => {
-    await renderWithAct(<Header />);
+  it('displays menu toggle button', () => {
+    renderWithNextIntl(<Header />);
     expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
   });
 
-  it('shows TODD wordmark when not in menu mode', async () => {
-    await renderWithAct(<Header alwaysGlassy />);
+  it('shows TODD wordmark when not in menu mode', () => {
+    renderWithNextIntl(<Header alwaysGlassy />);
     expect(screen.getByTestId('wordmark-link')).toBeInTheDocument();
   });
 
   it('toggles menu when menu button is clicked', async () => {
-    await renderWithAct(<Header />, { translations: customTranslations });
+    renderWithNextIntl(<Header />);
     const menuButton = screen.getByTestId('menu-toggle');
 
     await fireEvent.click(menuButton);
@@ -44,20 +29,20 @@ describe('Header', () => {
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
-  it('applies dark theme classes when isDark prop is true', async () => {
-    await renderWithAct(<Header isDark alwaysGlassy />);
+  it('applies dark theme classes when isDark prop is true', () => {
+    renderWithNextIntl(<Header isDark alwaysGlassy />);
     const headerElement = screen.getByRole('banner');
     expect(headerElement).toHaveAttribute('data-theme', 'dark');
   });
 
-  it('applies light theme classes when isDark prop is false', async () => {
-    await renderWithAct(<Header isDark={false} alwaysGlassy />);
+  it('applies light theme classes when isDark prop is false', () => {
+    renderWithNextIntl(<Header isDark={false} alwaysGlassy />);
     const headerElement = screen.getByRole('banner');
     expect(headerElement).toHaveAttribute('data-theme', 'light');
   });
 
   it('supports keyboard navigation for menu toggle', async () => {
-    await renderWithAct(<Header />);
+    renderWithNextIntl(<Header />);
     const menuButton = screen.getByTestId('menu-toggle');
 
     await fireEvent.keyDown(menuButton, { key: 'Enter' });
@@ -67,16 +52,16 @@ describe('Header', () => {
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
-  it('includes Get Started link', async () => {
-    await renderWithAct(<Header />);
+  it('includes Get Started link', () => {
+    renderWithNextIntl(<Header />);
     const getStartedLink = screen.getByTestId('get-started-link');
     expect(getStartedLink).toBeInTheDocument();
     expect(getStartedLink).toHaveAttribute('href', '/contact');
   });
 
-  it('displays loading spinners when isLoading is true', async () => {
-    await renderWithAct(<Header />, { isLoading: true });
+  it('renders normally without isLoading prop', () => {
+    renderWithNextIntl(<Header />);
     expect(screen.getByRole('banner')).toBeInTheDocument();
-    expect(screen.getAllByTestId('loading-spinner').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
   });
 });

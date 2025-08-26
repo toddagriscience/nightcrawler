@@ -66,3 +66,39 @@ export const WithScrolledView: Story = {
     ),
   ],
 };
+
+// Story that demonstrates how the footer looks in different languages
+// Use the toolbar globe icon to switch between English and Spanish
+export const MultiLanguage: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story shows how the Footer component adapts to different languages. Use the globe icon in the toolbar to switch between English (🇺🇸) and Spanish (🇪🇸). Notice how the section headings, links, and call-to-action text change.',
+      },
+    },
+  },
+  decorators: [
+    (Story) => (
+      <div
+        style={{ background: '#f8f5ee', minHeight: '100vh', padding: '2rem' }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            background: 'rgba(0,0,0,0.1)',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            zIndex: 10,
+          }}
+        >
+          💡 Use the globe (🌍) icon in the toolbar to switch languages
+        </div>
+        <Story />
+      </div>
+    ),
+  ],
+};

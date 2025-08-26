@@ -1,62 +1,78 @@
 import React from 'react';
 import { render, RenderOptions, act, fireEvent } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { env } from '@/lib/env';
 
-// Default translations for common UI elements
-export const defaultTranslations: Record<string, string> = {
-  // Header translations (new modular keys)
-  'navigation.header.actions.getStarted': 'Get Started',
-  'navigation.header.menu.open': 'Open menu',
-  'navigation.header.menu.close': 'Close menu',
-  'navigation.header.navigation.home': 'Home',
-  'navigation.header.navigation.about': 'About',
-  'navigation.header.navigation.offerings': 'Offerings',
-  'navigation.header.navigation.approach': 'Approach',
-  'navigation.header.navigation.impact': 'Impact',
-  'navigation.header.navigation.news': 'News',
-
-  // Homepage translations (new modular keys)
-  'homepage.hero.title': 'Creating the next-generation organic farms',
-  'homepage.quote.text':
-    'At Todd, we combine our deep experiance in sustainable agriculture, managing farms and engaging consumers.',
-  'homepage.quote.button': 'About',
-  'homepage.newsHighlights.title': 'News Highlights',
-  'homepage.newsHighlights.viewAll': 'View All',
-  'homepage.newsHighlights.placeholder':
-    'Carousel component will be implemented here',
-
-  // Common translations
-  'common.actions.close': 'Close',
-  'common.actions.menu': 'Menu',
-  'common.buttons.about': 'About',
-  'common.buttons.viewAll': 'View All',
-
-  // Navigation translations
-  'navigation.footer.copyright':
-    '© {year} Todd Agriscience. All rights reserved.',
-};
+// Import actual messages for testing
+import enMessages from '@/messages/en.json';
+import esMessages from '@/messages/es.json';
 
 export type Translations = Partial<Record<string, string>>;
 
-// Mock LocaleContext with dynamic translations
+// Get actual messages for locale
+const getMessagesForLocale = (locale: string) => {
+  const messageMap: Record<string, typeof enMessages> = {
+    en: enMessages,
+    es: esMessages,
+  };
+  return messageMap[locale] || enMessages;
+};
+
+// Mock LocaleContext with real translations from message files
 const mockLocaleContext = (
-  translations: Translations = {},
+  locale: string = 'en',
+  customTranslations: Translations = {},
   isLoading: boolean = false
 ) => {
-  const mergedTranslations: Record<string, string> = { ...defaultTranslations };
+  const actualMessages = getMessagesForLocale(locale);
 
-  // Only merge defined translations
-  Object.entries(translations).forEach(([key, value]) => {
-    if (value !== undefined) {
-      mergedTranslations[key] = value;
+  // Helper to get nested translation
+  const getNestedValue = (
+    obj: Record<string, unknown>,
+    key: string
+  ): unknown => {
+    return key.split('.').reduce<unknown>((current, segment) => {
+      if (current && typeof current === 'object' && segment in current) {
+        return (current as Record<string, unknown>)[segment];
+      }
+      return undefined;
+    }, obj);
+  };
+
+  // Translation function that uses real message structure
+  const t = (key: string) => {
+    // First check custom overrides
+    if (customTranslations[key]) {
+      return customTranslations[key];
     }
-  });
+
+    // Then check actual messages (handle nested keys like "homepage.welcome")
+    const parts = key.split('.');
+    if (parts.length >= 2) {
+      const namespace = parts[0];
+      const messageKey = parts.slice(1).join('.');
+      const namespaceMessages = (actualMessages as Record<string, unknown>)[
+        namespace
+      ];
+      if (namespaceMessages && typeof namespaceMessages === 'object') {
+        const translation = getNestedValue(
+          namespaceMessages as Record<string, unknown>,
+          messageKey
+        );
+        if (translation && typeof translation === 'string') return translation;
+      }
+    }
+
+    // Fallback to key
+    return key;
+  };
 
   return {
-    locale: 'en',
+    locale,
     setLocale: jest.fn(),
-    messages: mergedTranslations,
-    t: (key: string) => mergedTranslations[key] || key,
+    messages: actualMessages,
+    t,
     isLoading,
     loadModule: jest.fn().mockResolvedValue({}),
     loadModules: jest.fn().mockResolvedValue({}),
@@ -107,31 +123,22 @@ const LocaleContext = React.createContext<
 // Create a mock LocaleProvider that uses our translations
 const MockLocaleProvider: React.FC<{
   children: React.ReactNode;
+  locale?: string;
   translations?: Translations;
   isLoading?: boolean;
-}> = ({ children, translations = {}, isLoading = false }) => {
-  const context = mockLocaleContext(translations, isLoading);
+}> = ({ children, locale = 'en', translations = {}, isLoading = false }) => {
+  const context = mockLocaleContext(locale, translations, isLoading);
   return (
     <LocaleContext.Provider value={context}>{children}</LocaleContext.Provider>
   );
 };
 
-// Mock the useLocale hook
-jest.mock('@/context/LocaleContext', () => ({
-  ...jest.requireActual('@/context/LocaleContext'),
-  useLocale: () => {
-    const context = React.useContext(LocaleContext);
-    if (!context) {
-      throw new Error('useLocale must be used within a LocaleProvider');
-    }
-    return context;
-  },
-}));
-
 interface AllTheProvidersProps {
   children: React.ReactNode;
   translations?: Translations;
   isLoading?: boolean;
+  locale?: string;
+  useNextIntl?: boolean;
 }
 
 /**
@@ -141,10 +148,32 @@ const AllTheProviders = ({
   children,
   translations = {},
   isLoading = false,
+  locale = 'en',
+  useNextIntl = true,
 }: AllTheProvidersProps) => {
+  if (useNextIntl) {
+    // Use next-intl for new components
+    const messageMap: Record<string, typeof enMessages> = {
+      en: enMessages,
+      es: esMessages,
+    };
+    const messages = messageMap[locale] || enMessages;
+
+    return (
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <ThemeProvider>{children}</ThemeProvider>
+      </NextIntlClientProvider>
+    );
+  }
+
+  // Use legacy LocaleContext for old components
   return (
     <ThemeProvider>
-      <MockLocaleProvider translations={translations} isLoading={isLoading}>
+      <MockLocaleProvider
+        locale={locale}
+        translations={translations}
+        isLoading={isLoading}
+      >
         {children}
       </MockLocaleProvider>
     </ThemeProvider>
@@ -159,19 +188,97 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'> & {
     translations?: Translations;
     isLoading?: boolean;
+    locale?: string;
+    useNextIntl?: boolean;
   }
 ) => {
-  const { translations, isLoading, ...renderOptions } = options || {};
+  const { translations, isLoading, locale, useNextIntl, ...renderOptions } =
+    options || {};
   return render(ui, {
     wrapper: (props) => (
       <AllTheProviders
         {...props}
         translations={translations}
         isLoading={isLoading}
+        locale={locale}
+        useNextIntl={useNextIntl}
       />
     ),
     ...renderOptions,
   });
+};
+
+// Helper functions for different testing scenarios
+export const renderWithNextIntl = (
+  ui: React.ReactElement,
+  locale: string = env.defaultLocale,
+  options?: Omit<RenderOptions, 'wrapper'>
+) => customRender(ui, { ...options, locale, useNextIntl: true });
+
+export const renderWithLegacyLocale = (
+  ui: React.ReactElement,
+  locale: string = 'en',
+  translations?: Translations,
+  options?: Omit<RenderOptions, 'wrapper'>
+) => customRender(ui, { ...options, locale, translations, useNextIntl: false });
+
+// Helper to create a test wrapper with language switcher controls
+export const createTestWithLocaleControl = (
+  ui: React.ReactElement,
+  useNextIntl: boolean = true
+) => {
+  const TestWrapperComponent = () => {
+    const [currentLocale, setCurrentLocale] = React.useState('en');
+
+    const supportedLocales = [
+      { code: 'en', name: 'English', flag: '🇺🇸' },
+      { code: 'es', name: 'Español', flag: '🇪🇸' },
+    ];
+
+    return (
+      <div>
+        {/* Language Switcher Control */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 10,
+            right: 10,
+            zIndex: 1000,
+            background: 'white',
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+          }}
+        >
+          <label
+            htmlFor="locale-select"
+            style={{ fontSize: '12px', marginRight: '8px' }}
+          >
+            Language:
+          </label>
+          <select
+            id="locale-select"
+            value={currentLocale}
+            onChange={(e) => setCurrentLocale(e.target.value)}
+            style={{ fontSize: '12px' }}
+          >
+            {supportedLocales.map((locale) => (
+              <option key={locale.code} value={locale.code}>
+                {locale.flag} {locale.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Component with current locale */}
+        <AllTheProviders locale={currentLocale} useNextIntl={useNextIntl}>
+          {ui}
+        </AllTheProviders>
+      </div>
+    );
+  };
+
+  return <TestWrapperComponent />;
 };
 
 /**
@@ -211,3 +318,33 @@ const asyncFireEvent = {
 };
 
 export { asyncFireEvent as fireEvent };
+
+// Example usage:
+/*
+// In a test file:
+import { renderWithNextIntl, createTestWithLocaleControl } from '@/test/test-utils';
+
+// Simple test with specific locale
+test('renders in Spanish', () => {
+  const { getByText } = renderWithNextIntl(<MyComponent />, 'es');
+  expect(getByText('Bienvenido a Todd')).toBeInTheDocument();
+});
+
+// Interactive test with language switcher
+test('can switch languages', () => {
+  const TestComponent = createTestWithLocaleControl(<MyComponent />);
+  const { getByText, getByLabelText } = render(TestComponent);
+  
+  // Should start in English
+  expect(getByText('Welcome to Todd')).toBeInTheDocument();
+  
+  // Switch to Spanish
+  fireEvent.change(getByLabelText('Language:'), { target: { value: 'es' } });
+  expect(getByText('Bienvenido a Todd')).toBeInTheDocument();
+});
+
+// In a Storybook story:
+export const WithLanguageSwitcher = {
+  render: () => createTestWithLocaleControl(<MyComponent />),
+};
+*/

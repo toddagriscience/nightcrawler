@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Read(/C:\\Users\\andyc\\OneDrive\\Documents\\Projects\\website\\app\\messages/**)",
+      "Bash(mkdir:*)",
+      "Bash(npm run test:*)",
+      "WebFetch(domain:next-intl.dev)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

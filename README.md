@@ -52,70 +52,143 @@ npm run dev
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 with App Router & Turbopack
-- **Language**: TypeScript with strict type checking
-- **Styling**: Tailwind CSS v4 with custom brand configuration
-- **Animations**: Framer Motion + Lenis smooth scrolling
-- **Fonts**: Custom fonts (Neue Haas Unica, Utah WGL Condensed)
+#### Core Framework
+
+- **Next.js 15** with App Router & Turbopack
+- **TypeScript** with strict type checking
+- **Tailwind CSS v4** with custom brand configuration
+- **React 19** with modern hooks and patterns
+
+#### Internationalization
+
+- **next-intl v4.3** for multi-language support (en, es)
+- **Smart locale detection** from browser settings and localStorage
+- **Type-safe translations** with parameter interpolation
+- **Middleware-based routing** with domain support
+
+#### Animation & UX
+
+- **Framer Motion v12.23** for component animations
+- **Lenis v1.0** for buttery smooth scrolling
+- **Custom cursor** with hover interactions
+- **Dynamic header** with scroll-based state changes
+- **Advanced theme system** with smooth transitions
+
+#### Fonts & Assets
+
+- **Custom fonts** (Neue Haas Unica, Utah WGL Condensed)
+- **Optimized assets** with next/image and next/font
 
 ### Development Infrastructure
 
-- **Testing**: Jest + React Testing Library, Playwright E2E
-- **Code Quality**: ESLint + Prettier with pre-commit hooks
-- **Documentation**: Storybook 8 with accessibility addon
-- **CI/CD**: GitHub Actions workflow
-- **Git Hooks**: Husky + lint-staged
+#### Testing Stack
+
+- **Unit Testing**: Jest v30 + React Testing Library v16.3
+- **E2E Testing**: Playwright v1.55 with UI mode
+- **Component Testing**: Storybook v9.1 with interaction testing
+- **Coverage**: Jest coverage reports with comprehensive collection
+- **Test Setup**: Custom test utilities with i18n support
+
+#### Code Quality
+
+- **Linting**: ESLint v9 with Next.js and Prettier configs
+- **Formatting**: Prettier v3.6 with automated formatting
+- **Type Checking**: TypeScript v5 with strict mode
+- **Pre-commit**: Husky v9.1 + lint-staged v16.1
+- **CI/CD**: Comprehensive GitHub Actions pipeline
+
+#### Documentation & Development
+
+- **Storybook v9.1**: Component library with accessibility addon
+- **Hot Reload**: Turbopack for faster development
+- **Path Aliases**: `@/` alias for clean imports
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── globals.css        # Global styles & theme
-│   └── layout.tsx         # Root layout with metadata
-├── components/
-│   └── ui/                # Reusable UI components
-│       ├── header/        # Header with scroll animations
-│       ├── footer/        # Footer with links
-│       ├── cursor/        # Custom cursor component
-│       └── index.ts       # Barrel exports
-├── lib/
-│   ├── fonts.ts          # Custom font configuration
+│   ├── [locale]/          # Internationalized pages
+│   ├── globals.css        # Global styles with Lenis setup
+│   ├── layout.tsx         # Root layout with providers
+│   └── page.tsx          # Homepage
+├── components/             # All React components
+│   ├── common/            # Reusable components (Button, etc.)
+│   ├── landing/           # Homepage-specific components
+│   │   ├── hero/          # Hero section with animations
+│   │   ├── news-highlight-card/ # Combined news + quote card
+│   │   ├── quote/         # Quote/About section
+│   │   └── scroll-shrink-wrapper/ # Scroll animation wrapper
+│   └── ui/                # UI components
+│       ├── header/        # Navigation with i18n
+│       ├── footer/        # Footer with locale links
+│       ├── locale-switcher/ # Language selection
+│       └── common/        # Common utilities (Cursor)
+├── context/               # React contexts
+│   └── ThemeContext.tsx   # Theme and dark mode context
+├── hooks/                 # Custom React hooks
+├── i18n/                  # Internationalization config
+│   └── request.ts         # Server-side i18n utilities
+├── lib/                   # Utility functions
+│   ├── env.ts            # Environment configuration
+│   ├── locale-utils.ts   # Locale helper functions
 │   └── metadata.ts       # SEO metadata utilities
-└── svgs/                 # SVG icon components
+├── messages/              # Translation JSON files
+│   ├── en.json           # English translations
+│   └── es.json           # Spanish translations
+└── middleware.ts          # next-intl middleware
 ```
 
 ## 🎨 Features
 
+### Internationalization (i18n)
+
+- **Multi-language Support**: English and Spanish with extensible architecture
+- **Automatic Locale Detection**: Browser language detection with localStorage persistence
+- **SEO Optimization**: Hreflang tags and locale-specific metadata
+- **Type-safe Translations**: Strongly typed translation keys and parameters
+- **Fallback System**: Graceful fallback to default locale for missing translations
+
 ### User Experience
 
-- **Smooth Scrolling**: Lenis-powered buttery smooth scrolling
-- **Header Animations**: Dynamic header with scroll-based state changes
-- **Custom Cursor**: Interactive cursor with hover effects
-- **Responsive Design**: Mobile-first responsive layout
-- **Performance**: Optimized fonts, images, and animations
+- **Smooth Scrolling**: Lenis-powered buttery smooth scrolling experience
+- **Dynamic Animations**: Framer Motion scroll-based animations
+- **Custom Cursor**: Interactive cursor with hover state transitions
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Theme System**: Advanced theme context with smooth transitions
+- **Performance**: Optimized fonts, images, and bundle splitting
 
-### SEO & Analytics
+### SEO & Accessibility
 
 - **Comprehensive SEO**: OpenGraph, Twitter cards, structured data
-- **Meta Tags**: Dynamic page-specific metadata system
-- **Robots.txt**: Custom crawler rules and sitemaps
-- **Favicons**: Complete icon set for all devices
+- **Locale-aware Metadata**: Dynamic meta tags for each language
+- **Accessibility**: WCAG compliant with ARIA labels and semantic HTML
+- **Search Engine Optimization**: Sitemap, robots.txt, and hreflang implementation
 
-### Component System
+### Development Experience
 
-- **Co-located Tests**: Tests alongside components
-- **Storybook Stories**: Interactive component documentation
-- **TypeScript**: Full type safety with custom interfaces
-- **Accessibility**: ARIA labels and semantic HTML
+- **Component Library**: Comprehensive Storybook documentation
+- **Type Safety**: Full TypeScript coverage with strict checking
+- **Testing**: Co-located tests with high coverage requirements
+- **Code Quality**: Automated linting, formatting, and type checking
 
 ## 🧪 Testing Strategy
 
-- **Unit Tests**: Jest + React Testing Library (18 tests passing)
-- **E2E Tests**: Playwright for user journey testing
-- **Component Tests**: Storybook interaction testing
-- **Visual Regression**: Automated visual diff testing
+### Test Coverage
+
+- **Unit Tests**: 9 comprehensive test suites covering components and utilities
+- **Component Tests**: Co-located test files with React Testing Library
+- **E2E Tests**: Playwright for user journey and internationalization testing
+- **Integration Tests**: Middleware and context testing
 - **Accessibility**: Built-in a11y testing in Storybook
+
+### Test Configuration
+
+- **Jest Setup**: Custom configuration with next-intl support
+- **Coverage Reports**: HTML, LCOV, and text formats
+- **Test Utilities**: Custom render functions with providers
+- **Mock Setup**: Comprehensive mocking for external dependencies
+- **CI Integration**: Automated testing in GitHub Actions
 
 ## 🚀 Deployment
 
@@ -146,10 +219,24 @@ Create `.env.local` for local development:
 
 ### Customization
 
-- **Colors**: Edit `src/app/globals.css` for brand colors
-- **Fonts**: Modify `src/lib/fonts.ts` for typography
-- **Metadata**: Update `src/lib/metadata.ts` for SEO
-- **Components**: Extend `src/components/ui/` for new UI elements
+#### Styling & Branding
+
+- **Global Styles**: Edit `src/app/globals.css` for brand colors and theme variables
+- **Component Styles**: Tailwind CSS classes with custom configuration
+- **Typography**: Custom font loading with optimized performance
+
+#### Internationalization
+
+- **Add Languages**: Extend `src/lib/env.ts` and add translation files in `src/messages/`
+- **Translations**: Update JSON files in `src/messages/` for new content
+- **Locale Configuration**: Modify middleware and request configuration
+
+#### Components & Features
+
+- **UI Components**: Extend `src/components/ui/` with new reusable components
+- **Page Components**: Add specific components in `src/components/landing/`
+- **Contexts**: Create new contexts in `src/context/` for global state
+- **Utilities**: Add helper functions in `src/lib/` with proper TypeScript types
 
 ## 📝 Contributing
 

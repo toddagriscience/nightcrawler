@@ -1,25 +1,21 @@
-import { screen, renderWithAct, type Translations } from '@/test/test-utils';
+import { screen, renderWithNextIntl } from '@/test/test-utils';
 import Hero from './hero';
 import '@testing-library/jest-dom';
 
-const customTranslations = {
-  'homepage.hero.title': 'Creating the next-generation organic farms',
-} satisfies Translations;
-
 describe('Hero', () => {
-  it('renders without crashing', async () => {
-    await renderWithAct(<Hero />, { translations: customTranslations });
+  it('renders without crashing', () => {
+    renderWithNextIntl(<Hero />);
     expect(
-      screen.getByText('Creating the next-generation organic farms')
+      screen.getByText('Advancing Agriculture Through Science')
     ).toBeInTheDocument();
   });
 
-  it('displays the hero heading content', async () => {
-    await renderWithAct(<Hero />, { translations: customTranslations });
+  it('displays the hero heading content', () => {
+    renderWithNextIntl(<Hero />);
     const heading = screen.getByRole('heading', { level: 3 });
     expect(heading).toBeInTheDocument();
-    expect(heading).toHaveTextContent(
-      'Creating the next-generation organic farms'
-    );
+    expect(heading).toHaveTextContent('Advancing Agriculture Through Science');
   });
+
+  // TODO: Add Spanish translation tests when Jest/NextIntl integration is improved
 });

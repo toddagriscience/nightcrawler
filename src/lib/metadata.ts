@@ -41,7 +41,6 @@ export const defaultMetadata: Metadata = {
         alt: 'Todd Agriscience',
       },
     ],
-    locale: 'en_US',
     type: 'website',
   },
   twitter: {

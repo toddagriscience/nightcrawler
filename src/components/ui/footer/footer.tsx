@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, LoadingSpinner } from '@/components/common';
-import { useLocale } from '@/context/LocaleContext';
+import { useTranslations } from 'next-intl';
+import { Button } from '@/components/common';
 
 // Footer navigation data structure
 interface FooterLink {
@@ -21,87 +21,72 @@ interface FooterSection {
 }
 
 const Footer = () => {
-  const { t, loadModule, isLoading } = useLocale();
-
-  useEffect(() => {
-    loadModule('navigation').catch(console.warn);
-    loadModule('common').catch(console.warn);
-  }, [loadModule]);
+  const t = useTranslations('footer');
 
   const footerSections: FooterSection[] = [
     {
-      title: t('navigation.footer.sections.todd'),
+      title: t('sections.todd'),
       testId: 'todd-section-heading',
       links: [
-        { href: '/', label: t('navigation.footer.links.home') },
-        { href: '/About', label: t('navigation.footer.links.about') },
-        { href: '/Offerings', label: t('navigation.footer.links.offerings') },
-        { href: '/Approach', label: t('navigation.footer.links.approach') },
-        { href: '/Impact', label: t('navigation.footer.links.impact') },
-        { href: '/News', label: t('navigation.footer.links.news') },
-        { href: '/Careers', label: t('navigation.footer.links.careers') },
+        { href: '/', label: t('links.home') },
+        { href: '/About', label: t('links.about') },
+        { href: '/Offerings', label: t('links.offerings') },
+        { href: '/Approach', label: t('links.approach') },
+        { href: '/Impact', label: t('links.impact') },
+        { href: '/News', label: t('links.news') },
+        { href: '/Careers', label: t('links.careers') },
       ],
     },
     {
-      title: t('navigation.footer.sections.connect'),
+      title: t('sections.connect'),
       testId: 'connect-section-heading',
       links: [
-        { href: '/contact', label: t('navigation.footer.links.contact') },
-        { href: '/Journal', label: t('navigation.footer.links.journal') },
+        { href: '/contact', label: t('links.contact') },
+        { href: '/Journal', label: t('links.journal') },
         {
           href: '/Investor Relations',
-          label: t('navigation.footer.links.investorRelations'),
+          label: t('links.investorRelations'),
         },
-        { href: '/Foundation', label: t('navigation.footer.links.foundation') },
+        { href: '/Foundation', label: t('links.foundation') },
         {
           href: 'https://instagram.com/toddagriscience',
-          label: t('navigation.footer.links.instagram'),
+          label: t('links.instagram'),
           external: true,
           testId: 'social-link-instagram',
         },
         {
           href: 'https://linkedin.com/company/toddagriscience',
-          label: t('navigation.footer.links.linkedin'),
+          label: t('links.linkedin'),
           external: true,
           testId: 'social-link-linkedin',
         },
         {
           href: 'https://x.com/toddagriscience',
-          label: t('navigation.footer.links.x'),
+          label: t('links.x'),
           external: true,
           testId: 'social-link-x',
         },
       ],
     },
     {
-      title: t('navigation.footer.sections.legal'),
+      title: t('sections.legal'),
       testId: 'legal-section-heading',
       links: [
         {
           href: '/accessibility',
-          label: t('navigation.footer.links.accessibility'),
+          label: t('links.accessibility'),
         },
-        { href: '/privacy', label: t('navigation.footer.links.privacy') },
-        { href: '/terms', label: t('navigation.footer.links.terms') },
+        { href: '/privacy', label: t('links.privacy') },
+        { href: '/terms', label: t('links.terms') },
         {
           href: 'https://toddagriscience.safebase.us',
-          label: t('navigation.footer.links.trustCenter'),
+          label: t('links.trustCenter'),
           external: true,
           testId: 'trust-center-link',
         },
       ],
     },
   ];
-
-  if (isLoading) {
-    return (
-      <footer className="bg-[#f8f5ee] text-[#2A2727] py-10 px-4 md:px-6 lg:px-12 xl:px-18">
-        <div className="max-w-screen-2xl mx-auto flex justify-center items-center min-h-[400px]">
-          <LoadingSpinner size="lg" />
-        </div>
-      </footer>
-    );
-  }
 
   return (
     <footer className="bg-[#f8f5ee] text-[#2A2727] py-10 px-4 md:px-6 lg:px-12 xl:px-18">
@@ -114,11 +99,11 @@ const Footer = () => {
               className="font-thin text-4xl md:text-5xl lg:text-6xl mb-6"
               data-testid="lets-talk-heading"
             >
-              {t('navigation.footer.cta.letsTalk')}
+              {t('cta.letsTalk')}
             </h1>
             <Button
               href="/contact"
-              text={t('navigation.footer.cta.getInTouch')}
+              text={t('cta.getInTouch')}
               variant="outline"
               size="lg"
               isDark={false}
@@ -161,7 +146,7 @@ const Footer = () => {
       {/* Copyright section */}
       <div className="max-w-screen-2xl mx-auto border-t border-[#2A2727]/10 pt-6">
         <p className="font-thin text-base md:text-lg text-center lg:text-right">
-          {t('navigation.footer.copyright', { year: new Date().getFullYear() })}
+          {t('copyright', { year: new Date().getFullYear() })}
         </p>
 
         {/* Privacy link with icon */}
@@ -171,10 +156,10 @@ const Footer = () => {
             className="inline-flex items-center gap-2 text-sm text-[#2A2727]/70 footer-underline transition-colors duration-300"
             data-testid="privacy-options-link"
           >
-            {t('navigation.footer.cta.privacyOptions')}
+            {t('cta.privacyOptions')}
             <Image
               src="/privacyoptions.svg"
-              alt={t('common.accessibility.privacy')}
+              alt={t('cta.privacyOptions')}
               width={14}
               height={14}
               className="w-3.5 h-3.5"

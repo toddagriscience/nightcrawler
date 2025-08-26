@@ -6,6 +6,21 @@ import '../src/app/globals.css';
 
 const preview: Preview = {
   decorators: [withStorybookProvider, withCursor, withFonts],
+  globalTypes: {
+    locale: {
+      name: 'Locale',
+      description: 'Internationalization locale',
+      defaultValue: 'en',
+      toolbar: {
+        icon: 'globe',
+        items: [
+          { value: 'en', title: '🇺🇸 English' },
+          { value: 'es', title: '🇪🇸 Español' },
+        ],
+        showName: true,
+      },
+    },
+  },
   parameters: {
     backgrounds: {
       default: 'light',

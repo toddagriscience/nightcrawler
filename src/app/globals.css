@@ -33,18 +33,6 @@ body {
   font-family: var(--font-haas);
 }
 
-/* Remove default cursor pointer from all links */
-a,
-button,
-[role='button'] {
-  cursor: none !important;
-}
-
-/* Remove pointer cursor from all interactive elements */
-* {
-  cursor: none !important;
-}
-
 /* Hide scrollbars globally */
 ::-webkit-scrollbar {
   display: none;
@@ -135,11 +123,6 @@ body {
   background-size: 100% 3px;
   background-repeat: no-repeat;
   background-position: 0 100%;
-}
-
-/* Custom navigation hover cursor */
-.nav-hover-cursor {
-  cursor: none;
 }
 
 /* Smooth theme transitions */

@@ -1,0 +1,94 @@
+{
+  "header": {
+    "navigation": {
+      "home": "Home",
+      "about": "About",
+      "offerings": "Offerings",
+      "approach": "Approach",
+      "impact": "Impact",
+      "news": "News",
+      "services": "Services",
+      "contact": "Contact"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "actions": {
+      "getStarted": "Get Started"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Todd Agriscience. All rights reserved.",
+    "sections": {
+      "todd": "Todd",
+      "connect": "Connect",
+      "legal": "Legal"
+    },
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "offerings": "Offerings",
+      "approach": "Approach",
+      "impact": "Impact",
+      "news": "News",
+      "careers": "Careers",
+      "contact": "Contact",
+      "journal": "Journal",
+      "investorRelations": "Investor Relations",
+      "foundation": "Foundation",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "accessibility": "Accessibility",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "trustCenter": "Trust Center"
+    },
+    "cta": {
+      "letsTalk": "Let's Talk",
+      "getInTouch": "Get in Touch",
+      "privacyOptions": "Privacy Options"
+    }
+  },
+  "homepage": {
+    "welcome": "Welcome to Todd",
+    "hero": {
+      "title": "Leading the future of sustainable agriculture",
+      "subtitle": "Todd is a first-generation generative agriculture firm that partners with high-quality, branded farms to cultivate a sustainable future.",
+      "tagline": "Advancing Agriculture Through Science"
+    }
+  },
+  "common": {
+    "buttons": {
+      "learn_more": "Learn More",
+      "get_started": "Get Started",
+      "contact_us": "Contact Us"
+    },
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": {
+      "message": "The page you are looking for could not be found. Please check the URL and try again.",
+      "homeButton": "Home"
+    }
+  },
+  "about": {
+    "title": "About Todd Agriscience",
+    "description": "We are pioneering the future of sustainable agriculture through innovative farming practices and cutting-edge technology.",
+    "quote": "We believe that sustainable agriculture is the foundation of a healthy planet and thriving communities.",
+    "learnMore": "Learn More"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send Message"
+    }
+  },
+  "metadata": {
+    "title": "Todd Agriscience - Sustainable Agriculture Solutions",
+    "description": "Leading the future of sustainable agriculture with innovative farming practices and technology."
+  }
+}

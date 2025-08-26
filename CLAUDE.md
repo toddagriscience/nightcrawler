@@ -1,8 +1,8 @@
-# ToddAgriScience Website - Claude Context
+# ToddAgriScience Website - Development Context
 
 ## Project Overview
 
-A modern, production-ready Next.js website for Todd Agriscience with comprehensive development infrastructure, smooth user experience, and complete SEO optimization. Successfully migrated from the original website while maintaining exact design fidelity and adding enhanced performance features.
+A modern, production-ready Next.js website for Todd Agriscience with comprehensive development infrastructure, smooth user experience, and complete SEO optimization. This codebase emphasizes maintainability, type safety, and internationalization support.
 
 ## Tech Stack
 
@@ -88,101 +88,116 @@ e2e/                     # End-to-end tests
   decorators/            # Custom Storybook decorators
 ```
 
-### Future Enhancements (Optional)
+### Development Priorities
 
-- [ ] **Analytics setup** - Google Analytics, GTM, Hotjar (IDs available)
-- [ ] **Authentication system** - NextAuth integration (when needed)
-- [ ] **CMS integration** - Prismic or other headless CMS (when needed)
-- [ ] **Additional pages** - Content migration from original site
+When making changes, prioritize:
 
-## Key Pages to Migrate
+1. **Type Safety**: Maintain strict TypeScript throughout
+2. **Internationalization**: Support multi-language architecture
+3. **Testing**: Write tests for functionality and accessibility
+4. **Performance**: Optimize animations and bundle size
+5. **Accessibility**: Ensure WCAG compliance
 
-- Home page
-- About/Who we are
-- What we do
-- News & Events
-- Contact
-- Investors section
-- Governance pages
-- Careers
-- Accessibility
-- Terms & Privacy
+### File Organization & Conventions
 
-### File Organization
+#### Component Structure
 
-- **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) should live alongside their components
-- **Component structure**: Each component should have its own directory with:
-  - `component.tsx` - Main component
-  - `component.test.tsx` - Unit tests
-  - `component.stories.tsx` - Storybook stories
-  - separately:
-    - `index.ts` - located in the parent directory as a Barrel export
-- **Import paths**: Use `@/` alias for src imports (configured in tsconfig and Jest)
+- **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) alongside components
+- **Directory structure**: Each component in its own directory:
+  ```
+  components/ui/
+  ├── header/
+  ├───── header.tsx           # Main component
+  ├───── header.test.tsx      # Unit tests
+  ├───── header.stories.tsx   # Storybook stories
+  └─ index.ts            # Barrel export for all components in the /ui directory
+  ```
+- **Import paths**: Use `@/` alias for all src imports
+- **Naming**: Use kebab-case for directories, PascalCase for components
 
-### Available Scripts
+### Development Workflow
+
+#### Essential Commands
 
 - `npm run dev` - Development server with Turbopack
-- `npm run build` - Production build
-- `npm run test` - Run Jest unit tests
-- `npm run test:watch` - Jest in watch mode
-- `npm run test:coverage` - Jest with coverage report
-- `npm run test:e2e` - Playwright E2E tests
-- `npm run test:e2e:ui` - Playwright with UI mode
-- `npm run lint` - ESLint checking
-- `npm run lint:fix` - ESLint with auto-fix
-- `npm run type-check` - TypeScript validation
-- `npm run format` - Prettier formatting
-- `npm run storybook` - Storybook development server
-- `npm run build-storybook` - Build Storybook static files
+- `npm run ci` - Full validation (type-check → lint → test → build)
+- `npm run validate` - Complete pipeline (format:check → ci)
 
-### CI/CD Pipeline
+#### Testing & Quality
 
-- **Triggers**: Every push to any branch, PRs to dev/main
-- **Workflow**: lint → type-check → unit tests → E2E tests → build
-- **Deployment**:
-  - Feature branches get Vercel preview deployments
-  - `dev` branch deployment for staging
-  - `main` branch deployment for production
-- **Quality gates**: All tests must pass before deployment
+- `npm run test` - Run unit tests
+- `npm run test:e2e` - Run E2E tests
+- `npm run lint:fix` - Auto-fix linting issues
+- `npm run format` - Format code
+- `npm run storybook` - Component documentation
 
-### Pre-commit Hooks
+#### Before Making Changes
 
-- Automatically runs lint and format on staged files
-- Type-checking runs on commit
-- Prevents commits if linting/type errors exist
+1. Run `npm run validate` to ensure clean baseline
+2. Create feature branch from current working branch
+3. Make changes following established patterns
+4. Write/update tests for new functionality
+5. Run `npm run validate` before committing
 
-## Architecture Patterns
+### Code Quality Standards
 
-### Theme Management
+#### Pre-commit Requirements
 
-- **Context-based theme system** with `ThemeContext`
-- **Smooth transitions** with 300ms debounced state changes
-- **Scroll-based dark mode** detection with performance optimization
-- **Centralized theme tokens** in `lib/theme.ts` with TypeScript support
-- **CSS custom properties** generation for runtime theme switching
+- **Automatic formatting**: Prettier runs on staged files
+- **Linting**: ESLint with auto-fix attempts
+- **Type checking**: TypeScript validation before commit
 
-### Component Patterns
+#### Pull Request Requirements
 
-- **Flexible prop/context pattern**: Components accept `isDark` prop OR use theme context
-- **Compound components**: `NewsHighlightCard` contains both news and quote sections
-- **Motion animations**: Framer Motion for smooth color transitions and scroll effects
-- **Barrel exports**: Each component directory has `index.ts` for clean imports
+- All CI checks must pass (lint → type-check → test → build)
+- New components require tests and Storybook stories
+- Changes to i18n require translation updates
+- Performance impact should be minimal
 
-### State Management
+## Key Architecture Patterns
 
-- **Scroll detection**: Optimized with `requestAnimationFrame` throttling
-- **Theme transitions**: Debounced to prevent rapid state changes
-- **Locale management**: Persistent in localStorage with browser fallback
+### When Adding New Components
 
-## Important Notes
+- **Use TypeScript**: Strict typing for all props and state
+- **Theme support**: Integrate with existing ThemeContext when applicable
+- **Internationalization**: Use next-intl for any user-facing text
+- **Testing**: Include unit tests and Storybook stories
+- **Performance**: Consider animation performance and bundle impact
 
-- **Design fidelity**: Keep the same visual design as the original website
-- **Performance first**: Use optimized scroll listeners and smooth transitions
-- **Type safety**: Comprehensive TypeScript throughout with strict checking
-- **Accessibility**: Proper ARIA roles, semantic HTML, and keyboard navigation
-- **Internationalization**: Full i18n support with fallback handling
-- **Testing**: Write tests alongside components (co-located)
-- **Documentation**: Use Storybook for component documentation
-- **Code quality**: All code must pass lint/type checks before commit
-- **Context first**: Ask questions to get full context before making changes
-- **Multiple approaches**: List implementation options from most to least efficient
+### When Modifying Existing Code
+
+- **Preserve patterns**: Follow existing component structure
+- **Maintain tests**: Update tests when changing behavior
+- **Check translations**: Ensure i18n keys still match
+- **Verify accessibility**: Maintain ARIA attributes and semantic HTML
+
+### State Management Approach
+
+- **Context for global state**: Use React Context for theme, locale
+- **Local state for components**: useState/useReducer for component-specific state
+- **Performance optimization**: Use requestAnimationFrame for scroll/animation effects
+
+## Development Guidelines
+
+### Core Principles
+
+- **Type safety first**: Use TypeScript strictly, avoid `any` types
+- **Performance matters**: Optimize animations, images, and bundle size
+- **Accessibility required**: Follow WCAG guidelines, test with screen readers
+- **Internationalization ready**: Support multi-language from the start
+- **Test-driven approach**: Write tests for new functionality
+
+### When Making Changes
+
+- **Understand context**: Review related files before making changes
+- **Follow patterns**: Use existing component and utility patterns
+- **Consider impact**: Think about performance, accessibility, and i18n
+- **Document changes**: Update Storybook stories for UI changes
+- **Validate thoroughly**: Run full validation suite before submitting
+
+### Getting Help
+
+- **Always ask for context**: Always request clarification on requirements and questions
+- **Provide options**: Present multiple implementation approaches
+- **Explain tradeoffs**: Discuss pros/cons of different solutions
+- **Consider maintenance**: Choose solutions that are easy to maintain

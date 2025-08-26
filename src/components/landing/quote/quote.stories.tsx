@@ -51,3 +51,37 @@ export const DarkMode: Story = {
     ),
   ],
 };
+
+// Story that demonstrates how the component looks in different languages
+// Use the toolbar globe icon to switch between English and Spanish
+export const MultiLanguage: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story shows how the Quote component adapts to different languages. Use the globe icon in the toolbar to switch between English (🇺🇸) and Spanish (🇪🇸).',
+      },
+    },
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-[#F8F5EE] min-h-screen p-8">
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            background: 'rgba(0,0,0,0.1)',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            zIndex: 10,
+          }}
+        >
+          💡 Use the globe (🌍) icon in the toolbar to switch languages
+        </div>
+        <Story />
+      </div>
+    ),
+  ],
+};
