@@ -1,0 +1,3 @@
+# Enforce conventional commit format
+# Examples: "feat: add header", "fix: resolve login issue", "docs: update README"
+npx --no -- commitlint --edit $1
