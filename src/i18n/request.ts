@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './config';
 

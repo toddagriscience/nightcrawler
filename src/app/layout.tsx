@@ -1,5 +1,5 @@
-// Root layout - required by Next.js App Router
-// For i18n apps, this should just return children and let [locale]/layout handle HTML structure
+// Copyright Todd LLC, All rights reserved.
+
 export default function RootLayout({
   children,
 }: {

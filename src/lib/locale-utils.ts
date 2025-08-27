@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 import { env } from './env';
 import { routing } from '@/i18n/config';
 import { LOCALE_NAMES, LOCALE_FLAGS, type SupportedLocale } from './locales';

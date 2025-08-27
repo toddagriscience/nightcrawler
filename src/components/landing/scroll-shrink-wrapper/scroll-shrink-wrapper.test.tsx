@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ScrollShrinkWrapper from './scroll-shrink-wrapper';

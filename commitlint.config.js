@@ -1,3 +1,4 @@
+// Copyright Todd LLC, All rights reserved.
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {

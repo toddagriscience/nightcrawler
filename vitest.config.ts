@@ -1,3 +1,4 @@
+// Copyright Todd LLC, All rights reserved.
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 

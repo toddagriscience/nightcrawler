@@ -1,8 +1,10 @@
+//Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Quote } from '../quote';
+import { default as Quote } from '../quote/quote';
 import { Button } from '../../common';
 import { useTheme } from '@/context/ThemeContext';
 

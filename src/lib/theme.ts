@@ -3,6 +3,8 @@
  *
  * Centralized theme configuration with TypeScript support.
  * This serves as the single source of truth for all design tokens.
+ *
+ * @copyright Copyright Todd LLC, All rights reserved.
  */
 
 export const theme = {

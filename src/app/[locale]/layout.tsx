@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';

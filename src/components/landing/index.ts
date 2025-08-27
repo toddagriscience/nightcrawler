@@ -1,4 +1,6 @@
+//Copyright Todd LLC, All rights reserved.
+
 export { default as LandingPage } from './page/landing-page';
-export { Hero } from './hero';
-export { NewsHighlightCard } from './news-highlight-card';
-export { ScrollShrinkWrapper } from './scroll-shrink-wrapper';
+export { default as Hero } from './hero/hero';
+export { default as NewsHighlightCard } from './news-highlight-card/news-highlight-card';
+export { default as ScrollShrinkWrapper } from './scroll-shrink-wrapper/scroll-shrink-wrapper';
