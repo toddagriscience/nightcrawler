@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 // Environment configuration
 export const env = {
   // Environment detection

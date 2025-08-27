@@ -1,3 +1,4 @@
+// Copyright Todd LLC, All rights reserved.
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 

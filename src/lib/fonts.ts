@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 import localFont from 'next/font/local';
 
 // Neue Haas Unica - Main text font

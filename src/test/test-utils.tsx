@@ -1,3 +1,4 @@
+// Copyright Todd LLC, All rights reserved.
 import React from 'react';
 import { render, RenderOptions, act, fireEvent } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';

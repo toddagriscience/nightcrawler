@@ -55,22 +55,11 @@ src/
   components/             # All React components
     common/              # Reusable components (Button, etc.)
     landing/             # Homepage-specific components
-      hero/              # Hero section component
-      news-highlight-card/ # Combined news + quote card
-      quote/             # Quote/About section
-      scroll-shrink-wrapper/ # Scroll animation wrapper
     ui/                  # UI components (Header, Footer, etc.)
-      header/            # Navigation header
-      footer/            # Site footer
-      locale-switcher/   # Language selection component
-      common/            # Common UI utilities (Cursor)
   context/               # React contexts
     ThemeContext.tsx     # Theme and dark mode context
   lib/                   # Utility functions
     i18n/                # Internationalization config
-      config.ts          # Locale configuration
-      messages/          # Translation JSON files
-      request.ts         # Server-side i18n utilities
     theme.ts             # Centralized theme system
   test/                  # Testing utilities
     test-utils.tsx       # React Testing Library setup
@@ -189,6 +178,7 @@ When making changes, prioritize:
 - **Consider impact**: Think about performance, accessibility, and i18n
 - **Document changes**: Update Storybook stories for UI changes
 - **Validate thoroughly**: Run full validation suite before submitting
+- **Properly CopyRight**: Each new file should include "Copyright Todd LLC, All rights reserved" as a comment at the top
 
 ### Getting Help
 

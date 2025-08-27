@@ -1,3 +1,5 @@
+//Copyright Todd LLC, All rights reserved.
+
 import { routing } from '@/i18n/config';
 
 export const SUPPORTED_LOCALES = routing.locales;

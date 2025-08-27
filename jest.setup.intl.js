@@ -1,4 +1,4 @@
-// Mock next-intl for Jest tests
+// Copyright Todd LLC, All rights reserved.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const enMessages = require('./src/messages/en.json');
 
