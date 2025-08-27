@@ -5,10 +5,11 @@ import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { ThemeProvider } from '@/context/ThemeContext';
-import { env, SupportedLocale } from '@/lib/env';
 import { fontVariables } from '@/lib/fonts';
+import { routing } from '@/i18n/config';
+import { env } from '@/lib/env';
 
-import { Header, Footer } from '@/components/ui';
+import { Header, Footer, ScrollToTop, SmoothScroll } from '@/components/ui';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -39,11 +40,10 @@ export async function generateMetadata({
     metadataBase: new URL(env.baseUrl),
     alternates: {
       canonical: `${env.baseUrl}/${locale}`,
-      languages: {
-        en: `${env.baseUrl}/en`,
-        es: `${env.baseUrl}/es`,
-        'x-default': `${env.baseUrl}/en`,
-      },
+      languages: Object.fromEntries([
+        ...routing.locales.map((loc) => [loc, `${env.baseUrl}/${loc}`]),
+        ['x-default', `${env.baseUrl}/${routing.defaultLocale}`],
+      ]),
     },
     openGraph: {
       title: t('title'),
@@ -71,7 +71,7 @@ export const viewport: Viewport = {
 
 // Generate static params for all supported locales
 export async function generateStaticParams() {
-  return env.supportedLocales.map((locale) => ({
+  return routing.locales.map((locale) => ({
     locale,
   }));
 }
@@ -87,11 +87,6 @@ export default async function LocaleLayout({
 }: RootLayoutProps) {
   const { locale } = await params;
 
-  // Check if the locale is supported, if not trigger 404
-  if (!env.supportedLocales.includes(locale as SupportedLocale)) {
-    notFound();
-  }
-
   try {
     const messages = await getMessages({ locale });
 
@@ -102,9 +97,12 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider>
-              <Header />
-              {children}
-              <Footer />
+              <SmoothScroll>
+                <ScrollToTop />
+                <Header />
+                {children}
+                <Footer />
+              </SmoothScroll>
             </ThemeProvider>
           </NextIntlClientProvider>
         </body>

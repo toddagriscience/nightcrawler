@@ -15,7 +15,7 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 
 ### Internationalization
 
-- **Multi-language support** (en, de, es, fr, it, ja, pt)
+- **Multi-language support** (en, es) with architecture ready for expansion
 - **Smart locale detection** from browser settings and localStorage
 - **Type-safe translations** with parameter interpolation
 - **Fallback system** to English for missing translations
@@ -24,7 +24,6 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 
 - **Framer Motion** for component animations and scroll-based effects
 - **Lenis** for buttery smooth scrolling (matching original feel)
-- **Custom cursor** with hover interactions
 - **Dynamic header** with scroll-based state changes
 - **Advanced theme system** with smooth transitions and scroll-based dark mode
 - **Centralized theme context** with debounced state management
@@ -32,7 +31,6 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 ### Development Infrastructure
 
 - **Jest + React Testing Library** (unit testing)
-- **Playwright** (E2E testing)
 - **Storybook 8** with accessibility addon
 - **ESLint + Prettier** with pre-commit hooks (Husky)
 - **GitHub Actions** CI/CD pipeline
@@ -67,7 +65,6 @@ src/
       locale-switcher/   # Language selection component
       common/            # Common UI utilities (Cursor)
   context/               # React contexts
-    LocaleContext.tsx    # Internationalization context
     ThemeContext.tsx     # Theme and dark mode context
   lib/                   # Utility functions
     i18n/                # Internationalization config
@@ -82,7 +79,6 @@ public/                  # Static assets
   publications/          # PDF documents
   images/                # Static images
 scripts/                 # Build and utility scripts
-e2e/                     # End-to-end tests
 .github/workflows/       # CI/CD pipelines
 .storybook/             # Storybook configuration
   decorators/            # Custom Storybook decorators
@@ -126,7 +122,6 @@ When making changes, prioritize:
 #### Testing & Quality
 
 - `npm run test` - Run unit tests
-- `npm run test:e2e` - Run E2E tests
 - `npm run lint:fix` - Auto-fix linting issues
 - `npm run format` - Format code
 - `npm run storybook` - Component documentation

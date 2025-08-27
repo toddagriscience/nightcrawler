@@ -23,7 +23,9 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  transformIgnorePatterns: ['node_modules/(?!(next-intl|use-intl)/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(next-intl|use-intl)/(?!.*\\.cjs$))(?!.*\\.mjs$)',
+  ],
   setupFilesAfterEnv: [
     '<rootDir>/jest.setup.js',
     '<rootDir>/jest.setup.intl.js',

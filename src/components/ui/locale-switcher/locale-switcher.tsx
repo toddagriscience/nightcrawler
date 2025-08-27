@@ -3,11 +3,13 @@
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { SUPPORTED_LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from '@/lib/locales';
 
-const locales = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-] as const;
+const locales = SUPPORTED_LOCALES.map((code) => ({
+  code,
+  name: LOCALE_NAMES[code],
+  flag: LOCALE_FLAGS[code],
+}));
 
 export default function LocaleSwitcher() {
   const locale = useLocale();

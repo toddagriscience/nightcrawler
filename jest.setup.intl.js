@@ -41,6 +41,52 @@ jest.mock('next-intl/server', () => ({
   getRequestConfig: jest.fn((fn) => fn),
 }));
 
+// Mock next-intl/routing
+jest.mock('next-intl/routing', () => ({
+  defineRouting: jest.fn(() => ({
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+    localePrefix: 'always',
+    localeDetection: false,
+  })),
+  createNavigation: jest.fn(() => ({
+    Link: jest.fn(({ children, href, ...props }) => {
+      const React = jest.requireActual('react');
+      return React.createElement('a', { href, ...props }, children);
+    }),
+    redirect: jest.fn(),
+    usePathname: jest.fn(() => '/'),
+    useRouter: jest.fn(() => ({
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      forward: jest.fn(),
+    })),
+  })),
+}));
+
+// Mock our i18n config
+jest.mock('./src/i18n/config', () => ({
+  routing: {
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+    localePrefix: 'always',
+    localeDetection: false,
+  },
+  Link: jest.fn(({ children, href, ...props }) => {
+    const React = jest.requireActual('react');
+    return React.createElement('a', { href, ...props }, children);
+  }),
+  redirect: jest.fn(),
+  usePathname: jest.fn(() => '/'),
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+  })),
+}));
+
 // Mock our environment configuration
 jest.mock('./src/lib/env', () => ({
   env: {

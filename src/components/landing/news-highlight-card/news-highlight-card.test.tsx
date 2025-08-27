@@ -1,5 +1,5 @@
 import { screen, renderWithAct } from '@/test/test-utils';
-import NewsHighlightCard from './news-hightlight-card';
+import NewsHighlightCard from './news-highlight-card';
 import '@testing-library/jest-dom';
 
 describe('NewsHighlightCard', () => {

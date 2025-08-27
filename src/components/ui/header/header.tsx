@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import {
   AnimatePresence,
