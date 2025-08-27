@@ -4,6 +4,16 @@
 import { NextRequest } from 'next/server';
 import middleware from './middleware';
 
+// Mock the routing config
+jest.mock('./i18n/config', () => ({
+  routing: {
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+    localePrefix: 'always',
+    localeDetection: false,
+  },
+}));
+
 // Mock next-intl/middleware
 jest.mock('next-intl/middleware', () => {
   return jest.fn(() => {
@@ -73,9 +83,7 @@ describe('Middleware Config', () => {
     expect(config).toBeDefined();
     expect(config.matcher).toBeDefined();
     expect(Array.isArray(config.matcher)).toBe(true);
-    // Updated matcher pattern excludes API routes, static assets, etc.
-    expect(config.matcher).toContain(
-      '/((?!api|_next/static|_next/image|favicon.ico).*)'
-    );
+    // New matcher pattern for internationalized pathnames
+    expect(config.matcher).toContain('/');
   });
 });

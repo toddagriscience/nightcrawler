@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import NewsHighlightCard from './news-hightlight-card';
+import NewsHighlightCard from './news-highlight-card';
 import {
   storybookControls,
   storybookArgs,
@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <div
         style={{
           backgroundColor: '#F8F5EE',
@@ -50,7 +50,7 @@ export const DarkMode: Story = {
     isDark: true,
   },
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <div>
         <Story />
       </div>

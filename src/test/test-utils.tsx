@@ -2,7 +2,6 @@ import React from 'react';
 import { render, RenderOptions, act, fireEvent } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { env } from '@/lib/env';
 
 // Import actual messages for testing
 import enMessages from '@/messages/en.json';
@@ -211,7 +210,7 @@ const customRender = (
 // Helper functions for different testing scenarios
 export const renderWithNextIntl = (
   ui: React.ReactElement,
-  locale: string = env.defaultLocale,
+  locale: string = 'en',
   options?: Omit<RenderOptions, 'wrapper'>
 ) => customRender(ui, { ...options, locale, useNextIntl: true });
 

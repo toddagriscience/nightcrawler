@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/config';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/common';

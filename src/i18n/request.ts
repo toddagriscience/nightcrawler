@@ -1,18 +1,20 @@
 import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { env, SupportedLocale } from '@/lib/env';
+import { routing } from './config';
 
-export default getRequestConfig(async ({ locale }) => {
-  // Handle cases where locale might be undefined (e.g., metadata generation)
-  const resolvedLocale = locale || 'en';
+export default getRequestConfig(async ({ requestLocale }) => {
+  // This typically corresponds to the `[locale]` segment
+  let locale = await requestLocale;
 
-  // Validate that the incoming locale is one of the supported locales
-  if (!env.supportedLocales.includes(resolvedLocale as SupportedLocale)) {
-    notFound();
+  // Ensure that a valid locale is used
+  if (
+    !locale ||
+    !routing.locales.includes(locale as (typeof routing.locales)[number])
+  ) {
+    locale = routing.defaultLocale;
   }
 
   return {
-    locale: resolvedLocale as string,
-    messages: (await import(`../messages/${resolvedLocale}.json`)).default,
+    locale,
+    messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

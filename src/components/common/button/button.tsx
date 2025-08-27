@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/config';
 import { ArrowRight } from 'lucide-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 

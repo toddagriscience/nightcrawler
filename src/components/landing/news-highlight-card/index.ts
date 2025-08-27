@@ -1,1 +1,1 @@
-export { default as NewsHighlightCard } from './news-hightlight-card';
+export { default as NewsHighlightCard } from './news-highlight-card';

@@ -2,7 +2,7 @@ import React from 'react';
 import { Decorator } from '@storybook/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from '../../src/context/ThemeContext';
-import { env, SupportedLocale } from '../../src/lib/env';
+import { routing } from '../../src/i18n/config';
 
 // Import actual message files
 import enMessages from '../../src/messages/en.json';
@@ -28,11 +28,11 @@ export const withStorybookProvider: Decorator = (Story, context) => {
   const { args, parameters, globals } = context;
   
   // Use global controls for locale, fallback to args, then defaults
-  const locale = globals?.locale ?? args?.locale ?? parameters?.storybook?.locale ?? env.defaultLocale;
+  const locale = globals?.locale ?? args?.locale ?? parameters?.storybook?.locale ?? routing.defaultLocale;
   const isDark = args?.isDark ?? parameters?.storybook?.isDark ?? false;
 
   // Validate locale
-  const validLocale = env.supportedLocales.includes(locale as SupportedLocale) ? locale : env.defaultLocale;
+  const validLocale = routing.locales.includes(locale) ? locale : routing.defaultLocale;
 
   return (
     <NextIntlClientProvider 
