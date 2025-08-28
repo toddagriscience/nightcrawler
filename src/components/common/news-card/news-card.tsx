@@ -51,7 +51,7 @@ const NewsCard = ({
 
   return (
     <div
-      className={`min-w-[90%] md:min-w-[45%] lg:min-w-[50%] max-w-full px-4 py-4 font-light transition-colors duration-300 ${className}`}
+      className={`min-w-[90%] md:min-w-[45%] lg:min-w-[30%] max-w-full px-4 py-4 font-light transition-colors duration-300 ${className}`}
       style={{ color: textColor }}
     >
       <Link href={link}>
