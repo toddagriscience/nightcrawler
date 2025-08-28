@@ -15,6 +15,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
+  //future: move to separate database or separated json files
   return {
     locale,
     messages: (await import(`../messages/${locale}.json`)).default,
