@@ -27,9 +27,9 @@ export default function WhoWeArePage() {
           {/* Mission and Vision Cards Section */}
           <div className="mx-auto pb-4 px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card className="relative p-8 md:p-14 lg:p-36">
-                <CardContent className="p-0">
-                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-20">
+              <Card className="relative p-8 md:p-14 lg:p-36 aspect-square">
+                <CardContent className="p-0 h-full flex flex-col justify-center">
+                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-24">
                     {t('mission.title')}
                   </h2>
                   <p className="text-base xl:text-xl font-light">
@@ -37,9 +37,9 @@ export default function WhoWeArePage() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="relative p-8 md:p-14 lg:p-36">
-                <CardContent className="p-0">
-                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-20">
+              <Card className="relative p-8 md:p-14 lg:p-36 aspect-square">
+                <CardContent className="p-0 h-full flex flex-col justify-center">
+                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-24">
                     {t('vision.title')}
                   </h2>
                   <p className="text-base xl:text-xl font-light">
