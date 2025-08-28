@@ -116,34 +116,72 @@ const Carousel = ({
   };
 
   return (
-    <div className={`relative overflow-hidden ${className}`} ref={emblaRef}>
-      <div className="embla__container flex w-full">{children}</div>
-      <button
-        onClick={scrollPrev}
-        ref={prevBtnRef}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-black/30 hover:bg-black/50 hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
-        aria-label="Previous slide"
-      >
-        <ArrowLeft color="#FDFDFB" />
-      </button>
-      <button
-        onClick={scrollNext}
-        ref={nextBtnRef}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-black/30 hover:bg-black/50 hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
-        aria-label="Next slide"
-      >
-        <ArrowRight color="#FDFDFB" />
-      </button>
+    <div className={`relative ${className}`}>
+      <div className="relative overflow-hidden" ref={emblaRef}>
+        <div className="embla__container flex w-full">{children}</div>
+        <button
+          onClick={scrollPrev}
+          ref={prevBtnRef}
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
+          style={{
+            backgroundColor: isDark
+              ? theme.colors.overlay.dark
+              : theme.colors.overlay.light,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = isDark
+              ? theme.colors.overlay.darkHover
+              : theme.colors.overlay.lightHover;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = isDark
+              ? theme.colors.overlay.dark
+              : theme.colors.overlay.light;
+          }}
+          aria-label="Previous slide"
+        >
+          <ArrowLeft
+            color={
+              isDark ? theme.colors.text.inverse : theme.colors.text.primary
+            }
+          />
+        </button>
+        <button
+          onClick={scrollNext}
+          ref={nextBtnRef}
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
+          style={{
+            backgroundColor: isDark
+              ? theme.colors.overlay.dark
+              : theme.colors.overlay.light,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = isDark
+              ? theme.colors.overlay.darkHover
+              : theme.colors.overlay.lightHover;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = isDark
+              ? theme.colors.overlay.dark
+              : theme.colors.overlay.light;
+          }}
+          aria-label="Next slide"
+        >
+          <ArrowRight
+            color={
+              isDark ? theme.colors.text.inverse : theme.colors.text.primary
+            }
+          />
+        </button>
+      </div>
       {showDots && scrollSnaps.length > 1 && (
-        <div className="flex justify-center space-x-3 mt-8">
+        <div className="flex justify-center space-x-3 mt-8 px-4 pb-2">
           {scrollSnaps.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollTo(index)}
-              className={`relative rounded-full transition-all duration-500 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 hover:cursor-pointer ${
-                index === selectedIndex
-                  ? 'w-8 h-2 scale-110'
-                  : 'w-2 h-2 hover:scale-125'
+              className={`relative rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer ${
+                index === selectedIndex ? 'w-8 h-2' : 'w-2 h-2'
               }`}
               style={{
                 backgroundColor:

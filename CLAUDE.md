@@ -88,10 +88,12 @@ When making changes, prioritize:
 #### Component Structure
 
 - **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) alongside components
-- **Directory structure**: Each component in its own directory:
+- **Directory structure**: Slice architecture each page & related components in its own directory:
   ```
   components/ui/
   ├── header/
+  ├─────types/
+  ├───────header.ts           # Types, hooks, utils used in component
   ├───── header.tsx           # Main component
   ├───── header.test.tsx      # Unit tests
   ├───── header.stories.tsx   # Storybook stories
@@ -170,6 +172,8 @@ When making changes, prioritize:
 - **Accessibility required**: Follow WCAG guidelines, test with screen readers
 - **Internationalization ready**: Support multi-language from the start
 - **Test-driven approach**: Write tests for new functionality
+- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 
 ### When Making Changes
 
@@ -178,7 +182,6 @@ When making changes, prioritize:
 - **Consider impact**: Think about performance, accessibility, and i18n
 - **Document changes**: Update Storybook stories for UI changes
 - **Validate thoroughly**: Run full validation suite before submitting
-- **Properly CopyRight**: Each new file should include "Copyright Todd LLC, All rights reserved" as a comment at the top
 
 ### Getting Help
 
