@@ -67,7 +67,7 @@ const Carousel = ({
 
     // Calculate slides to scroll based on screen size
     if (width < 768) {
-      // Tablet: scroll 1 item at a time
+      // Mobile/Tablet: scroll 1 item at a time
       setSlidesToScroll(1);
     } else {
       // Desktop: scroll 2 items at a time
