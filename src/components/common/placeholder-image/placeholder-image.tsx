@@ -1,18 +1,47 @@
+//Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Image as ImageIcon } from 'lucide-react';
+import PlaceholderImageProps from './types/placeholder-image';
 
-interface PlaceholderImageProps {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-  className?: string;
-  fallbackText?: string;
-  isDark?: boolean;
-}
-
+/**
+ * A robust image component with automatic fallback to a styled placeholder when the image fails to load.
+ *
+ * Features:
+ * - Automatic error handling with graceful fallback
+ * - Dark mode support with theme-appropriate colors
+ * - Accessibility compliance with proper ARIA labels
+ * - Uses Next.js Image component for optimization
+ * - Custom fallback text and styling
+ * - Lucide React icon for visual placeholder
+ * - Maintains specified dimensions even on error
+ * - Automatic retry on successful image load
+ *
+ * @param src - URL or path to the image source
+ * @param alt - Alternative text for accessibility (used in both image and fallback)
+ * @param width - Fixed width of the image in pixels
+ * @param height - Fixed height of the image in pixels
+ * @param className - Additional CSS classes to apply to the image or placeholder
+ * @param fallbackText - Text to display in the placeholder when image fails (default: "Image")
+ * @param isDark - Apply dark theme colors to the placeholder (default: false)
+ * @returns Either a Next.js Image component or a styled placeholder div
+ *
+ * @example
+ * ```tsx
+ * <PlaceholderImage
+ *   src="/images/article.jpg"
+ *   alt="News article illustration"
+ *   width={800}
+ *   height={600}
+ *   className="rounded-lg"
+ *   fallbackText="Article Image"
+ *   isDark={true}
+ * />
+ * ```
+ */
 const PlaceholderImage = ({
   src,
   alt,
@@ -39,22 +68,7 @@ const PlaceholderImage = ({
         aria-label={alt}
       >
         <div className="text-center">
-          <svg
-            className={`mx-auto h-12 w-12 ${
-              isDark ? 'text-gray-400' : 'text-gray-400'
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+          <ImageIcon className="mx-auto h-12 w-12" />
           <p className="mt-2 text-sm">{fallbackText}</p>
         </div>
       </div>

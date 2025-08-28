@@ -1,4 +1,5 @@
 // Copyright Todd LLC, All rights reserved.
+
 import { screen, renderWithAct } from '@/test/test-utils';
 import NewsCard from './news-card';
 import '@testing-library/jest-dom';

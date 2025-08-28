@@ -1,18 +1,42 @@
+//Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useRef, ReactNode, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { theme } from '@/lib/theme';
+import CarouselProps from './types/carousel';
 
-interface CarouselProps {
-  children: ReactNode;
-  isDark?: boolean;
-  loop?: boolean;
-  className?: string;
-  showDots?: boolean;
-}
-
+/**
+ * A responsive carousel component built with Embla Carousel.
+ *
+ * Features:
+ * - Responsive behavior: scrolls 1 item on mobile/tablet, 2 items on desktop
+ * - Optional infinite loop scrolling
+ * - Navigation arrows with hover effects
+ * - Pagination dots with theme integration
+ * - Dark mode support
+ * - Smooth animations and transitions
+ * - Touch/drag support (disabled by default)
+ * - Accessibility features with ARIA labels
+ *
+ * @param children - React elements to be displayed as carousel slides
+ * @param loop - Enable infinite loop scrolling (default: true)
+ * @param className - Additional CSS classes to apply to the carousel container
+ * @param showDots - Display pagination dots below the carousel (default: true)
+ * @param isDark - Apply dark theme styling (default: false)
+ * @returns A fully functional carousel component
+ *
+ * @example
+ * ```tsx
+ * <Carousel isDark={false} showDots={true} loop={true}>
+ *   <div>Slide 1</div>
+ *   <div>Slide 2</div>
+ *   <div>Slide 3</div>
+ * </Carousel>
+ * ```
+ */
 const Carousel = ({
   children,
   loop = true,
@@ -94,7 +118,6 @@ const Carousel = ({
   return (
     <div className={`relative overflow-hidden ${className}`} ref={emblaRef}>
       <div className="embla__container flex w-full">{children}</div>
-
       <button
         onClick={scrollPrev}
         ref={prevBtnRef}
@@ -103,7 +126,6 @@ const Carousel = ({
       >
         <ArrowLeft color="#FDFDFB" />
       </button>
-
       <button
         onClick={scrollNext}
         ref={nextBtnRef}
@@ -112,7 +134,6 @@ const Carousel = ({
       >
         <ArrowRight color="#FDFDFB" />
       </button>
-
       {showDots && scrollSnaps.length > 1 && (
         <div className="flex justify-center space-x-3 mt-8">
           {scrollSnaps.map((_, index) => (
