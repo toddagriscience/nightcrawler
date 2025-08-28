@@ -4,9 +4,10 @@
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { default as Quote } from '../quote/quote';
-import { Button } from '../../common';
+import { Quote } from '../index';
+import { Button, Carousel, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/ThemeContext';
+import newsData from '@/data/featured-news.json';
 
 interface NewsHighlightCardProps {
   carouselRef?: React.RefObject<HTMLDivElement>;
@@ -23,6 +24,8 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
+
+  // TODO: Replace JSON data with database connection for dynamic content management
 
   return (
     <motion.div
@@ -48,9 +51,21 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
           />
         </div>
 
-        {/* Placeholder for carousel - will be implemented later */}
-        <div className="min-h-[200px] flex items-center justify-center text-center mb-8">
-          <p className="text-lg opacity-60">News carousel coming soon...</p>
+        {/* News Carousel */}
+        <div className="mb-8">
+          <Carousel isDark={isDark} showDots={true} loop={true}>
+            {newsData.newsArticles.map((article) => (
+              <NewsCard
+                key={article.id}
+                isDark={isDark}
+                image={article.image}
+                source={article.source}
+                date={article.date}
+                headline={article.headline}
+                link={article.link}
+              />
+            ))}
+          </Carousel>
         </div>
 
         <Button

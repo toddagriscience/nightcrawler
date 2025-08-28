@@ -4,6 +4,29 @@ import { screen, renderWithAct } from '@/test/test-utils';
 import NewsHighlightCard from './news-highlight-card';
 import '@testing-library/jest-dom';
 
+// Mock embla-carousel-react
+jest.mock('embla-carousel-react', () => {
+  const mockEmblaApi = {
+    scrollSnapList: jest.fn(() => [0, 1, 2]),
+    selectedScrollSnap: jest.fn(() => 0),
+    scrollPrev: jest.fn(),
+    scrollNext: jest.fn(),
+    scrollTo: jest.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
+    canScrollPrev: jest.fn(() => true),
+    canScrollNext: jest.fn(() => true),
+  };
+
+  return {
+    __esModule: true,
+    default: jest.fn(() => [
+      jest.fn(), // emblaRef
+      mockEmblaApi, // emblaApi
+    ]),
+  };
+});
+
 describe('NewsHighlightCard', () => {
   it('renders without crashing', async () => {
     await renderWithAct(<NewsHighlightCard />);
@@ -29,11 +52,14 @@ describe('NewsHighlightCard', () => {
     expect(viewAllLinks).toHaveLength(2);
   });
 
-  it('displays carousel placeholder content', async () => {
+  it('displays news articles from JSON data', async () => {
     await renderWithAct(<NewsHighlightCard />);
     expect(
-      screen.getByText('News carousel coming soon...')
+      screen.getByText(
+        'Todd Announces Partnership with Agricultural Innovation Lab'
+      )
     ).toBeInTheDocument();
+    expect(screen.getByText(/Journal.*Apr 15, 2025/)).toBeInTheDocument();
   });
 
   it('renders normally without isLoading prop', async () => {
