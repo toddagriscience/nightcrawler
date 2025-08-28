@@ -3,7 +3,7 @@
 'use client';
 
 import { useQuery, useMutation } from 'convex/react';
-import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { api } from '../../../../convex/_generated/api';
 import Button from '../button/button';
 
