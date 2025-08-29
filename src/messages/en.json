@@ -1,4 +1,18 @@
 {
+  "common": {
+    "buttons": {
+      "learn_more": "Learn More",
+      "get_started": "Get Started",
+      "contact_us": "Contact Us",
+      "view_all": "View All"
+    },
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": {
+      "message": "The page you are looking for could not be found. Please check the URL and try again.",
+      "homeButton": "Home"
+    }
+  },
   "header": {
     "navigation": {
       "home": "Home",
@@ -57,19 +71,9 @@
       "title": "Leading the future of sustainable agriculture",
       "subtitle": "Todd is a first-generation generative agriculture firm that partners with high-quality, branded farms to cultivate a sustainable future.",
       "tagline": "Advancing Agriculture Through Science"
-    }
-  },
-  "common": {
-    "buttons": {
-      "learn_more": "Learn More",
-      "get_started": "Get Started",
-      "contact_us": "Contact Us"
     },
-    "loading": "Loading...",
-    "error": "Something went wrong",
-    "notFound": {
-      "message": "The page you are looking for could not be found. Please check the URL and try again.",
-      "homeButton": "Home"
+    "news": {
+      "news_highlights": "News Highlights"
     }
   },
   "about": {

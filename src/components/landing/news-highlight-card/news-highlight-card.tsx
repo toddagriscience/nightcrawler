@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Quote } from '../index';
 import { Button, Carousel, NewsCard } from '@/components/common';
@@ -22,6 +23,8 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   const internalRef = useRef<HTMLDivElement>(null);
   const carouselRef = externalRef || internalRef;
   const { isDark: contextIsDark } = useTheme();
+  const t = useTranslations('common');
+  const tNews = useTranslations('homepage');
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
@@ -40,11 +43,11 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
       <section id="news-carousel" className="flex flex-col" role="region">
         <div className="flex flex-row justify-between items-start mt-32 font-light mb-8">
           <h1 className="text-3xl lg:text-8xl tracking-tight">
-            News Highlights
+            {tNews('news.news_highlights')}
           </h1>
           <Button
             href="/news"
-            text="View All"
+            text={t('buttons.view_all')}
             variant="outline"
             size="lg"
             isDark={isDark}
@@ -71,7 +74,7 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
 
         <Button
           href="/news"
-          text="View All"
+          text={t('buttons.view_all')}
           variant="outline"
           size="md"
           isDark={isDark}
