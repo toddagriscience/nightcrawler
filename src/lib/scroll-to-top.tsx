@@ -1,8 +1,14 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { usePathname } from '@/i18n/config';
 import { useEffect } from 'react';
 
+/**
+ * Scroll to top component for smooth navigation
+ * @returns {null} - The scroll to top component
+ */
 export function ScrollToTop() {
   const pathname = usePathname();
 

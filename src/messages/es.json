@@ -1,4 +1,18 @@
 {
+  "common": {
+    "buttons": {
+      "learn_more": "Saber Más",
+      "get_started": "Comenzar",
+      "contact_us": "Contáctanos",
+      "view_all": "Ver Todo"
+    },
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "notFound": {
+      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
+      "homeButton": "Inicio"
+    }
+  },
   "header": {
     "navigation": {
       "home": "Inicio",
@@ -57,19 +71,9 @@
       "title": "Liderando el futuro de la agricultura sostenible",
       "subtitle": "Todd es una empresa agrícola generativa de primera generación que se asocia con granjas de alta calidad y marcas reconocidas para cultivar un futuro sostenible.",
       "tagline": "Avanzando la Agricultura a Través de la Ciencia"
-    }
-  },
-  "common": {
-    "buttons": {
-      "learn_more": "Saber Más",
-      "get_started": "Comenzar",
-      "contact_us": "Contáctanos"
     },
-    "loading": "Cargando...",
-    "error": "Algo salió mal",
-    "notFound": {
-      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
-      "homeButton": "Inicio"
+    "news": {
+      "news_highlights": "Noticias Destacadas"
     }
   },
   "about": {

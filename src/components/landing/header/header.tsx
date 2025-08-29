@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { useState } from 'react';
@@ -10,14 +12,17 @@ import {
   useMotionValueEvent,
 } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { themeUtils } from '@/lib/theme';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/theme/ThemeContext';
+import { HeaderProps } from './types/header';
+import { headerTheme } from './theme/header';
 
-interface HeaderProps {
-  alwaysGlassy?: boolean;
-  isDark?: boolean;
-}
-
+/**
+ * Header component
+ * @param {Object} props - The component props
+ * @param {boolean} props.alwaysGlassy - Whether to always show the glassy effect
+ * @param {boolean} props.isDark - Whether to use the dark theme
+ * @returns {JSX.Element} - The header component
+ */
 const Header: React.FC<HeaderProps> = ({
   alwaysGlassy = false,
   isDark: propIsDark,
@@ -35,7 +40,9 @@ const Header: React.FC<HeaderProps> = ({
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
 
   // Get theme values for current mode
-  const headerTheme = themeUtils.getComponentTheme('header', isDark);
+  const currentHeaderTheme = isDark
+    ? headerTheme.header.dark
+    : headerTheme.header.light;
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     if (alwaysGlassy) return;
@@ -81,10 +88,10 @@ const Header: React.FC<HeaderProps> = ({
 
   // Create gradual background color based on scroll progress
   const getGradualBackground = () => {
-    if (alwaysGlassy || menuOpen) return headerTheme.background;
+    if (alwaysGlassy || menuOpen) return currentHeaderTheme.background;
 
     // Extract RGB values from theme background (assumes rgba format)
-    const bgColor = headerTheme.background;
+    const bgColor = currentHeaderTheme.background;
     // For rgba(0,0,0,0.1) format, increase the alpha based on scroll progress
     if (bgColor.includes('rgba')) {
       const match = bgColor.match(
@@ -121,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({
         <motion.div
           className="relative flex flex-col rounded-2xl px-4 overflow-hidden"
           style={{
-            color: headerTheme.text,
+            color: currentHeaderTheme.text,
           }}
           animate={{
             backgroundColor: getGradualBackground(),

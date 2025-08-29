@@ -1,7 +1,8 @@
+// Copyright Todd LLC, All rights reserved.
+
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import NewsCard from './news-card';
-import { theme } from '@/lib/theme';
 
 const meta = {
   title: 'Common/NewsCard',
@@ -51,9 +52,7 @@ export const Default: Story = {
       return (
         <div
           style={{
-            backgroundColor: isDark
-              ? theme.colors.primary
-              : theme.colors.background,
+            backgroundColor: isDark ? '#2A2727' : '#F8F5EE',
             minHeight: '100vh',
             padding: '2rem',
             maxWidth: '600px',
@@ -97,9 +96,7 @@ export const LongHeadline: Story = {
       return (
         <div
           style={{
-            backgroundColor: isDark
-              ? theme.colors.primary
-              : theme.colors.background,
+            backgroundColor: isDark ? '#2A2727' : '#F8F5EE',
             minHeight: '100vh',
             padding: '2rem',
             maxWidth: '600px',

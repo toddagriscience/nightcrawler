@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import Footer from './footer';
 import '@testing-library/jest-dom';

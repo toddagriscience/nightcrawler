@@ -12,6 +12,30 @@
   /* Font variables */
   --font-haas: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* Shadcn/ui CSS variables mapped to Todd Agriscience theme */
+  --background: 43 24% 96%; /* #F8F5EE - Your cream background */
+  --foreground: 0 0% 16%; /* #2A2727 - Your primary text */
+  --card: 43 15% 78%; /* #CCC5B5 - Your light card background */
+  --card-foreground: 0 0% 16%; /* #2A2727 - Your primary text */
+  --popover: 43 24% 96%; /* #F8F5EE - Your cream background */
+  --popover-foreground: 0 0% 16%; /* #2A2727 - Your primary text */
+  --primary: 0 0% 16%; /* #2A2727 - Your primary color */
+  --primary-foreground: 0 0% 99%; /* #FDFDFB - Your secondary/inverse */
+  --secondary: 43 15% 78%; /* #CCC5B5 - Your light card */
+  --secondary-foreground: 0 0% 16%; /* #2A2727 - Your primary text */
+  --muted: 43 15% 78%; /* #CCC5B5 - Your light card */
+  --muted-foreground: 0 0% 33%; /* #555555 - Your secondary text */
+  --accent: 43 15% 78%; /* #CCC5B5 - Your light card */
+  --accent-foreground: 0 0% 16%; /* #2A2727 - Your primary text */
+  --destructive: 0 84% 60%; /* Red for errors */
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 16%; /* #2A2727 - Your border color */
+  --input: 43 15% 78%; /* #CCC5B5 - Your light card */
+  --ring: 0 0% 16%; /* #2A2727 - Focus rings */
+  --radius: 0.5rem;
+
+  transition: all 1.2s ease-in-out;
 }
 
 @theme inline {
@@ -26,6 +50,27 @@
     --background: #f8f5ee;
     --foreground: #333333;
   }
+}
+
+.dark {
+  /* Dark mode Shadcn/ui variables */
+  --background: 0 0% 16%; /* #2A2727 - Your dark background */
+  --foreground: 0 0% 99%; /* #FDFDFB - Your inverse text */
+  --card: 0 0% 16%; /* #2A2727 - Your dark card */
+  --card-foreground: 0 0% 99%; /* #FDFDFB - Your inverse text */
+  --popover: 0 0% 16%; /* #2A2727 - Your dark background */
+  --popover-foreground: 0 0% 99%; /* #FDFDFB - Your inverse text */
+  --primary: 0 0% 99%; /* #FDFDFB - Your inverse/light */
+  --primary-foreground: 0 0% 16%; /* #2A2727 - Your dark */
+  --secondary: 0 0% 16%; /* #2A2727 - Your dark card */
+  --secondary-foreground: 0 0% 99%; /* #FDFDFB - Your inverse text */
+  --muted: 0 0% 16%; /* #2A2727 - Your dark card */
+  --muted-foreground: 0 0% 67%; /* #AAAAAA - Light secondary text */
+  --accent: 0 0% 16%; /* #2A2727 - Your dark card */
+  --accent-foreground: 0 0% 99%; /* #FDFDFB - Your inverse text */
+  --border: 0 0% 99%; /* #FDFDFB - Your dark border */
+  --input: 0 0% 16%; /* #2A2727 - Your dark card */
+  --ring: 0 0% 99%; /* #FDFDFB - Dark focus rings */
 }
 
 body {
@@ -125,11 +170,6 @@ body {
   background-size: 100% 3px;
   background-repeat: no-repeat;
   background-position: 0 100%;
-}
-
-/* Smooth theme transitions */
-:root {
-  transition: all 1.2s ease-in-out;
 }
 
 /* Header theme transitions */

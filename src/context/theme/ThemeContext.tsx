@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
@@ -8,18 +8,15 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  ReactNode,
 } from 'react';
-
-interface ThemeContextType {
-  isDark: boolean;
-  setIsDark: (isDark: boolean) => void;
-  setIsDarkSmooth: (isDark: boolean) => void;
-  toggleDark: () => void;
-}
+import { ThemeContextType, ThemeProviderProps } from './types/ThemeContext';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/**
+ * useTheme hook
+ * @returns {ThemeContextType} - The theme context
+ */
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
@@ -28,10 +25,11 @@ export const useTheme = () => {
   return context;
 };
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
+/**
+ * Theme provider
+ * @param {ThemeProviderProps} props - The component props
+ * @returns {JSX.Element} - The theme provider
+ */
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -58,22 +56,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     [isDark, isTransitioning]
   );
 
-  // Update CSS custom properties when theme changes
+  // Apply dark class to document for CSS variables
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
 
-    // You can also update CSS custom properties here if needed
     if (isDark) {
-      root.style.setProperty('--current-bg', 'var(--header-bg-dark)');
-      root.style.setProperty('--current-text', 'var(--header-text-dark)');
-      root.style.setProperty('--current-border', 'var(--header-border-dark)');
-      root.style.setProperty('--current-hover', 'var(--header-hover-dark)');
+      root.classList.add('dark');
     } else {
-      root.style.setProperty('--current-bg', 'var(--header-bg-light)');
-      root.style.setProperty('--current-text', 'var(--header-text-light)');
-      root.style.setProperty('--current-border', 'var(--header-border-light)');
-      root.style.setProperty('--current-hover', 'var(--header-hover-light)');
+      root.classList.remove('dark');
     }
   }, [isDark]);
 

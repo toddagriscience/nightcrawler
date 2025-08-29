@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import { render, screen, act } from '@testing-library/react';
 import { ThemeProvider, useTheme } from './ThemeContext';
@@ -28,6 +28,10 @@ const ThemeDisplay = () => {
 
 describe('ThemeContext', () => {
   const mockDocumentElement = {
+    classList: {
+      add: jest.fn(),
+      remove: jest.fn(),
+    },
     setAttribute: jest.fn(),
     style: {
       setProperty: jest.fn(),
@@ -48,6 +52,8 @@ describe('ThemeContext', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.useRealTimers();
+    mockDocumentElement.classList.add.mockReset();
+    mockDocumentElement.classList.remove.mockReset();
     mockDocumentElement.setAttribute.mockReset();
     mockDocumentElement.style.setProperty.mockReset();
   });
@@ -62,10 +68,7 @@ describe('ThemeContext', () => {
     });
 
     expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
-    expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith(
-      'data-theme',
-      'light'
-    );
+    expect(mockDocumentElement.classList.remove).toHaveBeenCalledWith('dark');
   });
 
   it('should toggle theme', async () => {
@@ -86,10 +89,7 @@ describe('ThemeContext', () => {
     });
 
     expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
-    expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith(
-      'data-theme',
-      'dark'
-    );
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
   });
 
   it('should handle smooth theme transition', async () => {
@@ -119,10 +119,7 @@ describe('ThemeContext', () => {
 
     // Theme should be dark after transition
     expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
-    expect(mockDocumentElement.setAttribute).toHaveBeenCalledWith(
-      'data-theme',
-      'dark'
-    );
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
   });
 
   it('should prevent multiple smooth transitions at once', async () => {
@@ -151,6 +148,6 @@ describe('ThemeContext', () => {
 
     // Theme should only have changed once
     expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
-    expect(mockDocumentElement.setAttribute).toHaveBeenCalledTimes(2); // Initial + one change
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
   });
 });

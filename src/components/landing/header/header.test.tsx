@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 import { screen, fireEvent, renderWithNextIntl } from '@/test/test-utils';
 import Header from './header';
 import '@testing-library/jest-dom';

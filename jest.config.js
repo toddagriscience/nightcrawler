@@ -1,4 +1,5 @@
 // Copyright Todd LLC, All rights reserved.
+
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({

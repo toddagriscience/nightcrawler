@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import React from 'react';
@@ -5,21 +7,12 @@ import { Link } from '@/i18n/config';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/common';
+import { FooterSection } from './types/footer';
 
-// Footer navigation data structure
-interface FooterLink {
-  href: string;
-  label: string;
-  external?: boolean;
-  testId?: string;
-}
-
-interface FooterSection {
-  title: string;
-  testId: string;
-  links: FooterLink[];
-}
-
+/**
+ * Footer component
+ * @returns {JSX.Element} - The footer component
+ */
 const Footer = () => {
   const t = useTranslations('footer');
 

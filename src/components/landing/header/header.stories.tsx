@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Header from './header';
 import {
@@ -80,15 +82,10 @@ export const DarkTheme: Story = {
         story: 'Dark themed header for use on dark backgrounds.',
       },
     },
-    backgrounds: {
-      default: 'dark',
-    },
   },
-  decorators: [
-    (Story) => (
-      <div style={{ background: '#2A2727', minHeight: '100vh' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: (args) => (
+    <div style={{ minHeight: '100vh' }}>
+      <Header {...args} />
+    </div>
+  ),
 };
