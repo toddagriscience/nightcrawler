@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +13,8 @@ import {
 } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from '@/context/theme/ThemeContext';
-import { HeaderProps, headerTheme } from './types/header';
+import { HeaderProps } from './types/header';
+import { headerTheme } from './theme/header';
 
 /**
  * Header component

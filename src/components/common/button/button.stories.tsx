@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Button from './button';

@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import { routing } from '@/i18n/config';
 

@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { usePathname } from '@/i18n/config';

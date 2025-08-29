@@ -1,11 +1,12 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
 import React from 'react';
 import { Link } from '@/i18n/config';
 import { ArrowRight } from 'lucide-react';
-import { ButtonProps, buttonVariants } from './types/button';
+import { ButtonProps } from './types/button';
+import { buttonVariants } from './themes/button';
 
 /**
  * Basic button component

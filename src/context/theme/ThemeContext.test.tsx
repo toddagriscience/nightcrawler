@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import { render, screen, act } from '@testing-library/react';
 import { ThemeProvider, useTheme } from './ThemeContext';

@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 export { default as LandingPage } from './page/landing-page';
 export { default as Hero } from './hero/hero';

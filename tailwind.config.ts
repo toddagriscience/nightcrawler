@@ -1,4 +1,5 @@
 // Copyright Todd LLC, All rights reserved.
+
 import type { Config } from 'tailwindcss';
 
 const config: Config = {

@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import PlaceholderImage from '../placeholder-image/placeholder-image';
 import { Link } from '@/i18n/config';

@@ -1,11 +1,10 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-// Using CSS variables from globals.css for theming
 import CarouselProps from './types/carousel';
 
 /**
@@ -25,12 +24,11 @@ import CarouselProps from './types/carousel';
  * @param loop - Enable infinite loop scrolling (default: true)
  * @param className - Additional CSS classes to apply to the carousel container
  * @param showDots - Display pagination dots below the carousel (default: true)
- * @param isDark - Apply dark theme styling (default: false)
  * @returns A fully functional carousel component
  *
  * @example
  * ```tsx
- * <Carousel isDark={false} showDots={true} loop={true}>
+ * <Carousel showDots={true} loop={true}>
  *   <div>Slide 1</div>
  *   <div>Slide 2</div>
  *   <div>Slide 3</div>

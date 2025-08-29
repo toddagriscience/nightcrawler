@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Footer from './footer';
 import {

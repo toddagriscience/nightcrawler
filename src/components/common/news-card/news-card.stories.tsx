@@ -1,7 +1,8 @@
+// Copyright Todd LLC, All rights reserved.
+
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import NewsCard from './news-card';
-// Using CSS variables from globals.css for theming
 
 const meta = {
   title: 'Common/NewsCard',
