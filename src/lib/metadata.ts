@@ -2,7 +2,10 @@
 
 import type { Metadata, Viewport } from 'next';
 
-// Site configuration
+/**
+ * Site configuration
+ * @returns {const} - The site configuration
+ */
 const siteConfig = {
   name: 'Todd',
   title: 'Todd',
@@ -17,7 +20,10 @@ const siteConfig = {
   },
 } as const;
 
-// Default metadata for the site
+/**
+ * Default metadata for the site
+ * @returns {Metadata} - The default metadata
+ */
 export const defaultMetadata: Metadata = {
   title: {
     template: `%s | ${siteConfig.name}`,
@@ -70,7 +76,10 @@ export const defaultMetadata: Metadata = {
   },
 };
 
-// Default viewport configuration
+/**
+ * Default viewport configuration
+ * @returns {Viewport} - The default viewport
+ */
 export const defaultViewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -79,7 +88,15 @@ export const defaultViewport: Viewport = {
   themeColor: siteConfig.themeColor,
 };
 
-// Utility function to create page-specific metadata
+/**
+ * Utility function to create page-specific metadata
+ * @param {Object} props - The component props
+ * @param {string} props.title - The title of the page
+ * @param {string} props.description - The description of the page
+ * @param {string} props.path - The path of the page
+ * @param {string} props.ogImage - The og image of the page
+ * @returns {Metadata} - The page metadata
+ */
 export function createMetadata({
   title,
   description,

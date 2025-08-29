@@ -6,14 +6,15 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Quote } from '../index';
 import { Button, Carousel, NewsCard } from '@/components/common';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/theme/ThemeContext';
 import newsData from '@/data/featured-news.json';
+import { NewsHighlightCardProps } from './types/news-highlight-card';
 
-interface NewsHighlightCardProps {
-  carouselRef?: React.RefObject<HTMLDivElement>;
-  isDark?: boolean;
-}
-
+/**
+ * News highlight card component
+ * @param {NewsHighlightCardProps} props - The component props
+ * @returns {JSX.Element} - The news highlight card component
+ */
 const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   carouselRef: externalRef,
   isDark: propIsDark,

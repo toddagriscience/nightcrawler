@@ -2,7 +2,10 @@
 
 import localFont from 'next/font/local';
 
-// Neue Haas Unica - Main text font
+/**
+ * Neue Haas Unica - Main text font
+ * @returns {LocalFont} - The Neue Haas Unica font
+ */
 export const neueHaasUnica = localFont({
   src: [
     {
@@ -22,7 +25,10 @@ export const neueHaasUnica = localFont({
   fallback: ['Arial', 'sans-serif'],
 });
 
-// Utah WGL Condensed - Wordmark font
+/**
+ * Utah WGL Condensed - Wordmark font
+ * @returns {LocalFont} - The Utah WGL Condensed font
+ */
 export const utahWGLCondensed = localFont({
   src: '../../public/fonts/UtahWGLCondensed/UtahWGLCondensedBold.ttf',
   variable: '--font-utah-wgl',
@@ -31,11 +37,17 @@ export const utahWGLCondensed = localFont({
   fallback: ['Arial Black', 'sans-serif'],
 });
 
-// Font class names for easy usage
+/**
+ * Font class names for easy usage
+ * @returns {const} - The font class names
+ */
 export const fontClassNames = {
   neueHaas: neueHaasUnica.className,
   utahWGL: utahWGLCondensed.className,
 } as const;
 
-// CSS variables for use in Tailwind
+/**
+ * CSS variables for use in Tailwind
+ * @returns {string} - The font variables
+ */
 export const fontVariables = `${neueHaasUnica.variable} ${utahWGLCondensed.variable}`;

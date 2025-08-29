@@ -32,31 +32,33 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  decorators: [
-    (Story) => (
-      <div className="bg-[#F8F5EE] min-h-screen p-8">
-        <Story />
-      </div>
-    ),
-  ],
+  args: {
+    isDark: false,
+  },
+  render: (args) => (
+    <div className="p-8">
+      <Quote {...args} />
+    </div>
+  ),
 };
 
 export const DarkMode: Story = {
   args: {
     isDark: true,
   },
-  decorators: [
-    (Story) => (
-      <div className="bg-[#2A2727] text-[#FDFDFB] min-h-screen p-8">
-        <Story />
-      </div>
-    ),
-  ],
+  render: (args) => (
+    <div className="p-8">
+      <Quote {...args} />
+    </div>
+  ),
 };
 
 // Story that demonstrates how the component looks in different languages
 // Use the toolbar globe icon to switch between English and Spanish
 export const MultiLanguage: Story = {
+  args: {
+    isDark: false,
+  },
   parameters: {
     docs: {
       description: {
@@ -65,25 +67,24 @@ export const MultiLanguage: Story = {
       },
     },
   },
-  decorators: [
-    (Story) => (
-      <div className="bg-[#F8F5EE] min-h-screen p-8">
-        <div
-          style={{
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            background: 'rgba(0,0,0,0.1)',
-            padding: '4px 8px',
-            borderRadius: '4px',
-            fontSize: '12px',
-            zIndex: 10,
-          }}
-        >
-          💡 Use the globe (🌍) icon in the toolbar to switch languages
-        </div>
-        <Story />
+  render: (args) => (
+    <div className="p-8">
+      <div
+        style={{
+          position: 'absolute',
+          top: 10,
+          left: 10,
+          background: 'hsl(var(--muted))',
+          color: 'hsl(var(--muted-foreground))',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          fontSize: '12px',
+          zIndex: 10,
+        }}
+      >
+        💡 Use the globe (🌍) icon in the toolbar to switch languages
       </div>
-    ),
-  ],
+      <Quote {...args} />
+    </div>
+  ),
 };

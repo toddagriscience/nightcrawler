@@ -5,7 +5,7 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { theme } from '@/lib/theme';
+// Using CSS variables from globals.css for theming
 import CarouselProps from './types/carousel';
 
 /**
@@ -42,7 +42,6 @@ const Carousel = ({
   loop = true,
   className = '',
   showDots = true,
-  isDark = false,
 }: CarouselProps) => {
   const [slidesToScroll, setSlidesToScroll] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -75,16 +74,21 @@ const Carousel = ({
     }
   }, []);
 
+  const handleResize = useCallback(() => {
+    updateSlidesToScroll();
+  }, [updateSlidesToScroll]);
+
+  const onSelect = useCallback(() => {
+    if (emblaApi) {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    }
+  }, [emblaApi]);
+
   useEffect(() => {
     updateSlidesToScroll();
-
-    const handleResize = () => {
-      updateSlidesToScroll();
-    };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [updateSlidesToScroll]);
+  }, [updateSlidesToScroll, handleResize]);
 
   useEffect(() => {
     if (emblaApi) {
@@ -92,16 +96,12 @@ const Carousel = ({
       setScrollSnaps(emblaApi.scrollSnapList());
       setSelectedIndex(emblaApi.selectedScrollSnap());
 
-      const onSelect = () => {
-        setSelectedIndex(emblaApi.selectedScrollSnap());
-      };
-
       emblaApi.on('select', onSelect);
       return () => {
         emblaApi.off('select', onSelect);
       };
     }
-  }, [emblaApi]);
+  }, [emblaApi, onSelect]);
 
   const scrollPrev = () => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -122,56 +122,18 @@ const Carousel = ({
         <button
           onClick={scrollPrev}
           ref={prevBtnRef}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
-          style={{
-            backgroundColor: isDark
-              ? theme.colors.overlay.dark
-              : theme.colors.overlay.light,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = isDark
-              ? theme.colors.overlay.darkHover
-              : theme.colors.overlay.lightHover;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = isDark
-              ? theme.colors.overlay.dark
-              : theme.colors.overlay.light;
-          }}
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Previous slide"
         >
-          <ArrowLeft
-            color={
-              isDark ? theme.colors.text.inverse : theme.colors.text.primary
-            }
-          />
+          <ArrowLeft className="text-foreground" />
         </button>
         <button
           onClick={scrollNext}
           ref={nextBtnRef}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1"
-          style={{
-            backgroundColor: isDark
-              ? theme.colors.overlay.dark
-              : theme.colors.overlay.light,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = isDark
-              ? theme.colors.overlay.darkHover
-              : theme.colors.overlay.lightHover;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = isDark
-              ? theme.colors.overlay.dark
-              : theme.colors.overlay.light;
-          }}
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Next slide"
         >
-          <ArrowRight
-            color={
-              isDark ? theme.colors.text.inverse : theme.colors.text.primary
-            }
-          />
+          <ArrowRight className="text-foreground" />
         </button>
       </div>
       {showDots && scrollSnaps.length > 1 && (
@@ -181,18 +143,10 @@ const Carousel = ({
               key={index}
               onClick={() => scrollTo(index)}
               className={`relative rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer ${
-                index === selectedIndex ? 'w-8 h-2' : 'w-2 h-2'
+                index === selectedIndex
+                  ? 'w-8 h-2 bg-foreground'
+                  : 'w-2 h-2 bg-foreground/40'
               }`}
-              style={{
-                backgroundColor:
-                  index === selectedIndex
-                    ? isDark
-                      ? theme.colors.text.inverse
-                      : theme.colors.text.primary
-                    : isDark
-                      ? theme.colors.text.inverse + '40'
-                      : theme.colors.text.primary + '40',
-              }}
               aria-label={`Go to slide ${index + 1}`}
               aria-pressed={index === selectedIndex}
             />

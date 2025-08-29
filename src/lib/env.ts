@@ -1,6 +1,9 @@
 //Copyright Todd LLC, All rights reserved.
 
-// Environment configuration
+/**
+ * Environment configuration
+ * @returns {const} - The environment configuration
+ */
 export const env = {
   // Environment detection
   isDevelopment: process.env.NODE_ENV === 'development',

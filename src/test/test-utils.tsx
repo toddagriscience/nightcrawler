@@ -2,12 +2,16 @@
 import React from 'react';
 import { render, RenderOptions, act, fireEvent } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 
 // Import actual messages for testing
 import enMessages from '@/messages/en.json';
 import esMessages from '@/messages/es.json';
 
+/**
+ * Translations type
+ * @returns {Partial<Record<string, string>>} - The translations
+ */
 export type Translations = Partial<Record<string, string>>;
 
 // Get actual messages for locale
@@ -19,7 +23,13 @@ const getMessagesForLocale = (locale: string) => {
   return messageMap[locale] || enMessages;
 };
 
-// Mock LocaleContext with real translations from message files
+/**
+ * Mock LocaleContext with real translations from message files
+ * @param {string} locale - The locale to get the translations for
+ * @param {Translations} customTranslations - The custom translations
+ * @param {boolean} isLoading - Whether the translations are loading
+ * @returns {any} - The mock locale context
+ */
 const mockLocaleContext = (
   locale: string = 'en',
   customTranslations: Translations = {},
@@ -27,7 +37,7 @@ const mockLocaleContext = (
 ) => {
   const actualMessages = getMessagesForLocale(locale);
 
-  // Helper to get nested translation
+  // Helper to get nested translation keys
   const getNestedValue = (
     obj: Record<string, unknown>,
     key: string
@@ -80,7 +90,10 @@ const mockLocaleContext = (
   };
 };
 
-// Mock framer-motion
+/**
+ * Mock framer-motion
+ * @returns {object} - The mocked framer-motion
+ */
 jest.mock('framer-motion', () => {
   const MockMotionComponent = ({
     children,
@@ -104,18 +117,27 @@ jest.mock('framer-motion', () => {
   };
 });
 
-// Mock Next.js router
+/**
+ * Mock Next.js router
+ * @returns {object} - The mocked Next.js router
+ */
 jest.mock('next/navigation', () => ({
   usePathname: jest.fn(() => '/'),
 }));
 
-// Mock createPortal
+/**
+ * Mock createPortal
+ * @returns {object} - The mocked createPortal
+ */
 jest.mock('react-dom', () => ({
   ...jest.requireActual('react-dom'),
   createPortal: (element: React.ReactNode) => element,
 }));
 
-// Create a mock LocaleContext
+/**
+ * Create a mock LocaleContext
+ * @returns {object} - The mocked LocaleContext
+ */
 const LocaleContext = React.createContext<
   ReturnType<typeof mockLocaleContext> | undefined
 >(undefined);
@@ -182,6 +204,9 @@ const AllTheProviders = ({
 
 /**
  * Custom render function that wraps components with all necessary providers
+ * @param {React.ReactElement} ui - The component to render
+ * @param {Omit<RenderOptions, 'wrapper'> & { translations?: Translations; isLoading?: boolean; locale?: string; useNextIntl?: boolean; }} options - The render options
+ * @returns {ReturnType<typeof render>} - The rendered component
  */
 const customRender = (
   ui: React.ReactElement,
@@ -283,6 +308,9 @@ export const createTestWithLocaleControl = (
 
 /**
  * Helper function to wrap async renders in act()
+ * @param {React.ReactElement} ui - The component to render
+ * @param {Omit<RenderOptions, 'wrapper'> & { translations?: Record<string, string>; isLoading?: boolean; }} options - The render options
+ * @returns {ReturnType<typeof customRender>} - The rendered component
  */
 const renderWithAct = async (
   ui: React.ReactElement,

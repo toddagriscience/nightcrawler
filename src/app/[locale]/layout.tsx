@@ -6,12 +6,14 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { fontVariables } from '@/lib/fonts';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 
-import { Header, Footer, ScrollToTop, SmoothScroll } from '@/components/ui';
+import { Header, Footer } from '@/components/landing';
+import { SmoothScroll } from '@/components/common';
+import { ScrollToTop } from '@/lib/scroll-to-top';
 import '../globals.css';
 
 const geistSans = Geist({
