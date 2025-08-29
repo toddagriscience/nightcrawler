@@ -99,7 +99,7 @@ const Carousel = ({
         emblaApi.off('select', onSelect);
       };
     }
-  }, [emblaApi, onSelect]);
+  }, [emblaApi]);
 
   const scrollPrev = () => {
     if (emblaApi) emblaApi.scrollPrev();
