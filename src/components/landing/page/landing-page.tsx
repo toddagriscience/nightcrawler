@@ -33,7 +33,7 @@ export default function LandingPage() {
     const newsCarouselTop = scrollY + newsRect.top;
     const transitionPoint = newsCarouselTop - windowHeight * 0.2;
 
-    // Apply immediate transition for scroll-based switching
+    // Apply transition for scroll-based switching (handled in global.css)
     const shouldBeDark = scrollY > transitionPoint;
     setIsDark(shouldBeDark);
   }, [setIsDark]);
