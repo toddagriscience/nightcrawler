@@ -9,8 +9,8 @@ import { routing } from './i18n/config';
 export default createMiddleware(routing);
 
 /**
- * Configuration for middleware
- * @returns {Matcher} - The configuration for middleware
+ * Configuration object for the middleware.
+ * Contains the `matcher` property to specify which routes the middleware applies to.
  */
 
 export const config = {
