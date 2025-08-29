@@ -2,9 +2,9 @@
 
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
-import { Hero, ScrollShrinkWrapper, NewsHighlightCard } from '../';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { useCallback, useEffect, useRef } from 'react';
+import { Hero, NewsHighlightCard, ScrollShrinkWrapper } from '../';
 
 /**
  * Landing page component
