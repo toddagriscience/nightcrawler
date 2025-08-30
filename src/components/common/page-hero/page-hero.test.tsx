@@ -7,8 +7,18 @@ import '@testing-library/jest-dom';
 describe('PageHero', () => {
   it('renders without crashing', () => {
     renderWithNextIntl(<PageHero title="Test Title" />);
-    const subtitleElement = screen.queryByText(/This is a subtitle/);
     expect(screen.getByText('Test Title')).toBeInTheDocument();
+  });
+
+  it('renders the subtitle when provided', () => {
+    renderWithNextIntl(<PageHero title="Test Title" subtitle="My Subtitle" />);
+    expect(screen.getByText('My Subtitle')).toBeInTheDocument();
+  });
+
+  it('does not render a subtitle when not provided', () => {
+    renderWithNextIntl(<PageHero title="Test Title" />);
+    // Try to find any element with the subtitle text
+    const subtitleElement = screen.queryByText('My Subtitle');
     expect(subtitleElement).not.toBeInTheDocument();
   });
 
