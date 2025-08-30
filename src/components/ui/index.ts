@@ -1,8 +1,9 @@
 export {
   Card,
   CardHeader,
-  CardContent,
+  CardFooter,
   CardTitle,
   CardDescription,
+  CardContent,
 } from './card';
 export { Button } from './button';
