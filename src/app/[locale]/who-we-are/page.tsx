@@ -19,10 +19,7 @@ export default function WhoWeArePage() {
   return (
     <>
       {/* Hero Section */}
-      <PageHero
-        title={t('title')}
-        subtitle={t('subtitle')}
-      />
+      <PageHero title={t('title')} subtitle={t('subtitle')} />
 
       {/* Mission, Vision, and Values Section */}
       <ScrollShrinkWrapper>

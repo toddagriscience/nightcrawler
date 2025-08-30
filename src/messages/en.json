@@ -83,6 +83,8 @@
     "learnMore": "Learn More"
   },
   "whoWeAre": {
+    "title": "Who We Are",
+    "subtitle": "Learn about our mission, vision, and values that drive our work in regenerative agriculture.",
     "mission": {
       "title": "Mission",
       "description": "Our mission is to deliver differentiated results to our clients by leveraging our complementary experience in regenerative agriculture to meet the needs of the modern farmer."

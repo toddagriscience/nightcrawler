@@ -18,7 +18,7 @@ describe('WhoWeArePage', () => {
     expect(screen.getByText('Who We Are')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Todd is a first-generation generative agriculture firm that aims to partner with high-growth, branded, regenerative farms.'
+        'Learn about our mission, vision, and values that drive our work in regenerative agriculture.'
       )
     ).toBeInTheDocument();
   });
