@@ -21,7 +21,7 @@ export default function WhoWeArePage() {
       {/* Hero Section */}
       <PageHero
         title={t('title')}
-        subtitle="Todd is a first-generation generative agriculture firm that aims to partner with high-growth, branded, regenerative farms."
+        subtitle={t('subtitle')}
       />
 
       {/* Mission, Vision, and Values Section */}
