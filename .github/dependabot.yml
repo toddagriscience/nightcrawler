@@ -5,111 +5,111 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/New_York"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/New_York'
     groups:
       nextjs-ecosystem:
         patterns:
-          - "next"
-          - "react*"
-          - "eslint-config-next"
+          - 'next'
+          - 'react*'
+          - 'eslint-config-next'
         update-types:
-          - "major"
-          - "minor"
-          - "patch"
+          - 'major'
+          - 'minor'
+          - 'patch'
       testing-framework:
         patterns:
-          - "@testing-library/*"
-          - "jest*"
-          - "vitest*"
-          - "@vitest/*"
+          - '@testing-library/*'
+          - 'jest*'
+          - 'vitest*'
+          - '@vitest/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       storybook:
         patterns:
-          - "storybook"
-          - "@storybook/*"
-          - "@chromatic-com/storybook"
+          - 'storybook'
+          - '@storybook/*'
+          - '@chromatic-com/storybook'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       typescript:
         patterns:
-          - "typescript"
-          - "@types/*"
+          - 'typescript'
+          - '@types/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       code-quality:
         patterns:
-          - "eslint*"
-          - "prettier"
-          - "@eslint/*"
-          - "lint-staged"
-          - "husky"
+          - 'eslint*'
+          - 'prettier'
+          - '@eslint/*'
+          - 'lint-staged'
+          - 'husky'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       tailwind:
         patterns:
-          - "tailwindcss"
-          - "@tailwindcss/*"
+          - 'tailwindcss'
+          - '@tailwindcss/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       auth:
         patterns:
-          - "@clerk/*"
+          - '@clerk/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       convex:
         patterns:
-          - "convex"
+          - 'convex'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     open-pull-requests-limit: 10
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps-dev"
-      include: "scope"
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "automated"
+      - 'dependencies'
+      - 'automated'
     allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
+      - dependency-type: 'direct'
+      - dependency-type: 'indirect'
     # Ignore specific packages if needed (uncomment and customize as needed)
     # ignore:
     #   - dependency-name: "package-name"
     #     versions: ["1.x", "2.x"]
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "monthly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/New_York"
+      interval: 'monthly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/New_York'
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     open-pull-requests-limit: 10
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: 'ci'
+      include: 'scope'
     labels:
-      - "github-actions"
-      - "dependencies"
-      - "automated"
+      - 'github-actions'
+      - 'dependencies'
+      - 'automated'
