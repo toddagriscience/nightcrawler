@@ -47,15 +47,8 @@ describe('Footer', () => {
   it('includes Get In Touch button', () => {
     renderWithNextIntl(<Footer />);
     const getInTouchButton = screen.getByTestId('button-component');
-    expect(getInTouchButton).toHaveAttribute('href', '/contact');
+    expect(getInTouchButton).toHaveAttribute('href', '/get-started');
     expect(getInTouchButton).toHaveTextContent('Get in Touch');
-  });
-
-  it('includes privacy options link', () => {
-    renderWithNextIntl(<Footer />);
-    const privacyLink = screen.getByTestId('privacy-options-link');
-    expect(privacyLink).toBeInTheDocument();
-    expect(privacyLink).toHaveAttribute('href', '/privacy');
   });
 
   it('has social media links with correct structure', () => {

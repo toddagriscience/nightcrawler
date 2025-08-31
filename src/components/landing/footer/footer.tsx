@@ -4,7 +4,6 @@
 
 import React from 'react';
 import { Link } from '@/i18n/config';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/common';
 import { FooterSection } from './types/footer';
@@ -15,19 +14,19 @@ import { FooterSection } from './types/footer';
  */
 const Footer = () => {
   const t = useTranslations('footer');
+  const tHeader = useTranslations('header');
 
   const footerSections: FooterSection[] = [
     {
       title: t('sections.todd'),
       testId: 'todd-section-heading',
       links: [
-        { href: '/', label: t('links.home') },
-        { href: '/About', label: t('links.about') },
-        { href: '/Offerings', label: t('links.offerings') },
-        { href: '/Approach', label: t('links.approach') },
-        { href: '/Impact', label: t('links.impact') },
-        { href: '/News', label: t('links.news') },
-        { href: '/Careers', label: t('links.careers') },
+        { href: '/', label: tHeader('navigation.home') },
+        { href: '/who-we-are', label: tHeader('navigation.whoWeAre') },
+        { href: '/what-we-do', label: tHeader('navigation.whatWeDo') },
+        { href: '/impact', label: tHeader('navigation.impact') },
+        { href: '/news', label: tHeader('navigation.news') },
+        { href: '/careers', label: t('links.careers') },
       ],
     },
     {
@@ -35,12 +34,12 @@ const Footer = () => {
       testId: 'connect-section-heading',
       links: [
         { href: '/contact', label: t('links.contact') },
-        { href: '/Journal', label: t('links.journal') },
+        { href: '/journal', label: t('links.journal') },
         {
-          href: '/Investor Relations',
+          href: '/investor-relations',
           label: t('links.investorRelations'),
         },
-        { href: '/Foundation', label: t('links.foundation') },
+        { href: '/foundation', label: t('links.foundation') },
         {
           href: 'https://instagram.com/toddagriscience',
           label: t('links.instagram'),
@@ -70,6 +69,7 @@ const Footer = () => {
           label: t('links.accessibility'),
         },
         { href: '/privacy', label: t('links.privacy') },
+        { href: '/privacy-settings', label: t('links.privacySettings') },
         { href: '/terms', label: t('links.terms') },
         {
           href: 'https://toddagriscience.safebase.us',
@@ -95,7 +95,7 @@ const Footer = () => {
               {t('cta.letsTalk')}
             </h1>
             <Button
-              href="/contact"
+              href="/get-started"
               text={t('cta.getInTouch')}
               variant="outline"
               size="lg"
@@ -138,27 +138,9 @@ const Footer = () => {
 
       {/* Copyright section */}
       <div className="max-w-screen-2xl mx-auto border-t border-[#2A2727]/10 pt-6">
-        <p className="font-thin text-base md:text-lg text-center lg:text-right">
+        <p className="font-thin text-base text-center md:text-lg">
           {t('copyright', { year: new Date().getFullYear() })}
         </p>
-
-        {/* Privacy link with icon */}
-        <div className="mt-4 flex justify-center lg:justify-end">
-          <Link
-            href="/privacy"
-            className="inline-flex items-center gap-2 text-sm text-[#2A2727]/70 footer-underline transition-colors duration-300"
-            data-testid="privacy-options-link"
-          >
-            {t('cta.privacyOptions')}
-            <Image
-              src="/privacyoptions.svg"
-              alt={t('cta.privacyOptions')}
-              width={14}
-              height={14}
-              className="w-3.5 h-3.5"
-            />
-          </Link>
-        </div>
       </div>
     </footer>
   );

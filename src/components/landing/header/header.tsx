@@ -73,11 +73,10 @@ const Header: React.FC<HeaderProps> = ({
 
   const menuItems = [
     { href: '/', label: t('navigation.home') },
-    { href: '/About', label: t('navigation.about') },
-    { href: '/Offerings', label: t('navigation.offerings') },
-    { href: '/Approach', label: t('navigation.approach') },
-    { href: '/Impact', label: t('navigation.impact') },
-    { href: '/News', label: t('navigation.news') },
+    { href: '/who-we-are', label: t('navigation.whoWeAre') },
+    { href: '/what-we-do', label: t('navigation.whatWeDo') },
+    { href: '/impact', label: t('navigation.impact') },
+    { href: '/news', label: t('navigation.news') },
   ];
 
   const showGlassy =
@@ -271,11 +270,18 @@ const Header: React.FC<HeaderProps> = ({
             {/* Right: Get Started */}
             <div className="flex items-center gap-4">
               <Link
-                href="/contact"
+                href="/login"
+                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
+                data-testid="login-link"
+              >
+                {t('navigation.logIn')}
+              </Link>
+              <Link
+                href="/get-started"
                 className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
                 data-testid="get-started-link"
               >
-                {t('actions.getStarted')}
+                {t('navigation.getStarted')}
               </Link>
             </div>
           </div>
@@ -332,12 +338,20 @@ const Header: React.FC<HeaderProps> = ({
                       className="flex flex-col items-center gap-4 pt-4 border-t border-current/20"
                     >
                       <Link
-                        href="/contact"
+                        href="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer"
+                        data-testid="mobile-login-link"
+                      >
+                        {t('navigation.logIn')}
+                      </Link>
+                      <Link
+                        href="/get-started"
                         onClick={() => setMenuOpen(false)}
                         className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer"
                         data-testid="mobile-get-started-link"
                       >
-                        {t('actions.getStarted')}
+                        {t('navigation.getStarted')}
                       </Link>
                     </motion.div>
                   </nav>
