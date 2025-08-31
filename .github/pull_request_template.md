@@ -1,49 +1,19 @@
-# Copyright Todd LLC, All rights reserved
+## Checklist
+
+<!-- Thank you for submitting a pull request to our repo. -->
+
+<!-- If this is your first PR in this repo, please run through the checklist
+below to ensure a smooth review and merge process for your PR. -->
+
+- [ ] You've read the [Contributor Guide](https://github.com/dangphung4/Solus/blob/main/CONTRIBUTING.md).
+- [ ] You've included unit or integration tests for your change, where applicable.
+- [ ] You've included inline docs for your change, where applicable.
+- [ ] There's an open issue for the PR that you are making. If you'd like to propose a new feature or change, please open an issue to discuss the change or find an existing issue.
+
+<!-- Once all that is done, you're ready to go. Open the PR with the content below. -->
 
 ## Description
 
-Brief description of what this PR accomplishes.
+{Detail}
 
-## Type of Change
-
-- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
-- [ ] ✨ New feature (non-breaking change that adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🎨 Style/UI changes
-- [ ] ♻️ Code refactoring (no functional changes)
-- [ ] ⚡ Performance improvements
-- [ ] 🧪 Tests only
-- [ ] 🔧 Build/CI changes
-
-## Testing
-
-- [ ] Tests pass locally (`npm run test`)
-- [ ] New tests added for new functionality
-- [ ] Storybook stories updated (if UI changes)
-- [ ] Manual testing completed
-
-## Quality Checklist
-
-- [ ] Code follows project patterns and conventions
-- [ ] TypeScript types are properly defined
-- [ ] ESLint passes (`npm run lint`)
-- [ ] Prettier formatting applied (`npm run format`)
-- [ ] Full validation passes (`npm run validate`)
-
-## Internationalization (if applicable)
-
-- [ ] Translation keys added to `en.json` and `es.json`
-- [ ] Text uses `next-intl` for user-facing content
-- [ ] Locale-specific considerations addressed
-
-## Accessibility (if applicable)
-
-- [ ] ARIA labels and semantic HTML used
-- [ ] Keyboard navigation works properly
-- [ ] Color contrast meets WCAG standards
-- [ ] Screen reader compatibility verified
-
-## Additional Notes
-
-Any additional context, screenshots, or considerations for reviewers.
+Fixes #{issue number}
