@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 /**
  * Props for the NewsCard component
  * @param {string} image - The image of the news card

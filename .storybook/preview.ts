@@ -1,11 +1,10 @@
 import type { Preview } from '@storybook/nextjs-vite';
 import { withFonts } from './decorators/withFonts';
-import { withCursor } from './decorators/withCursor';
 import { withStorybookProvider } from './decorators/withStorybookProvider';
 import '../src/app/globals.css';
 
 const preview: Preview = {
-  decorators: [withStorybookProvider, withCursor, withFonts],
+  decorators: [withStorybookProvider, withFonts],
   globalTypes: {
     locale: {
       name: 'Locale',

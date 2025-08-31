@@ -83,6 +83,12 @@ updates:
     labels:
       - 'dependencies'
       - 'automated'
+    reviewers:
+      - '@toddagriscience/dangphung4'
+      - '@toddagriscience/achen2304'
+    assignees:
+      - '@toddagriscience/dangphung4'
+      - '@toddagriscience/achen2304'
     allow:
       - dependency-type: 'direct'
       - dependency-type: 'indirect'
@@ -113,3 +119,9 @@ updates:
       - 'github-actions'
       - 'dependencies'
       - 'automated'
+    reviewers:
+      - '@toddagriscience/dangphung4'
+      - '@toddagriscience/achen2304'
+    assignees:
+      - '@toddagriscience/dangphung4'
+      - '@toddagriscience/achen2304'

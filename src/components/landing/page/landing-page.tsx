@@ -1,15 +1,19 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
-import { Hero, ScrollShrinkWrapper, NewsHighlightCard } from '../';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/theme/ThemeContext';
+import { useCallback, useEffect, useRef } from 'react';
+import { Hero, NewsHighlightCard, ScrollShrinkWrapper } from '../';
 
-export default function Home() {
+/**
+ * Landing page component
+ * @returns {JSX.Element} - The landing page component
+ */
+export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const newsCarouselRef = useRef<HTMLDivElement>(null);
-  const { setIsDarkSmooth } = useTheme();
+  const { setIsDark } = useTheme();
 
   // Scroll-based theme detection
   const detectTheme = useCallback(() => {
@@ -29,10 +33,10 @@ export default function Home() {
     const newsCarouselTop = scrollY + newsRect.top;
     const transitionPoint = newsCarouselTop - windowHeight * 0.2;
 
-    // Apply slower transition with threshold
+    // Apply transition for scroll-based switching (handled in global.css)
     const shouldBeDark = scrollY > transitionPoint;
-    setIsDarkSmooth(shouldBeDark);
-  }, [setIsDarkSmooth]);
+    setIsDark(shouldBeDark);
+  }, [setIsDark]);
 
   // Set up scroll listener for theme detection
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function Home() {
   }, [detectTheme]);
 
   return (
-    <div className="flex min-h-screen bg-[#F8F5EE] text-[#2A2727] mx-auto flex-col">
+    <>
       <div ref={heroRef}>
         <Hero />
       </div>
@@ -70,6 +74,6 @@ export default function Home() {
           <NewsHighlightCard />
         </ScrollShrinkWrapper>
       </div>
-    </div>
+    </>
   );
 }

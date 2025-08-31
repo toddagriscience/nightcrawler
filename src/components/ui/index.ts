@@ -1,5 +1,9 @@
-export { default as SmoothScroll } from './common/SmoothScroll';
-export { ScrollToTop } from './common/ScrollToTop';
-
-export { Footer } from './footer';
-export { Header } from './header';
+export { Button } from './button';
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './card';
