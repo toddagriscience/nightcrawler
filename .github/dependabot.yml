@@ -1,0 +1,115 @@
+# Copyright Todd LLC, All rights reserved
+
+# Dependabot configuration for automated dependency updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/New_York'
+    groups:
+      nextjs-ecosystem:
+        patterns:
+          - 'next'
+          - 'react*'
+          - 'eslint-config-next'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      testing-framework:
+        patterns:
+          - '@testing-library/*'
+          - 'jest*'
+          - 'vitest*'
+          - '@vitest/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      storybook:
+        patterns:
+          - 'storybook'
+          - '@storybook/*'
+          - '@chromatic-com/storybook'
+        update-types:
+          - 'minor'
+          - 'patch'
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@types/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      code-quality:
+        patterns:
+          - 'eslint*'
+          - 'prettier'
+          - '@eslint/*'
+          - 'lint-staged'
+          - 'husky'
+        update-types:
+          - 'minor'
+          - 'patch'
+      tailwind:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      auth:
+        patterns:
+          - '@clerk/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      convex:
+        patterns:
+          - 'convex'
+        update-types:
+          - 'minor'
+          - 'patch'
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'automated'
+    allow:
+      - dependency-type: 'direct'
+      - dependency-type: 'indirect'
+    # Ignore specific packages if needed (uncomment and customize as needed)
+    # ignore:
+    #   - dependency-name: "package-name"
+    #     versions: ["1.x", "2.x"]
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'America/New_York'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
+    labels:
+      - 'github-actions'
+      - 'dependencies'
+      - 'automated'
