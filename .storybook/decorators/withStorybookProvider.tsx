@@ -1,8 +1,9 @@
 import React from 'react';
 import { Decorator } from '@storybook/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from '../../src/context/ThemeContext';
+import { ThemeProvider } from '../../src/context/theme/ThemeContext';
 import { routing } from '../../src/i18n/config';
+import '../../src/app/globals.css';
 
 // Import actual message files
 import enMessages from '../../src/messages/en.json';
@@ -24,6 +25,41 @@ const getMessages = (locale: string = 'en') => {
   return messages;
 };
 
+// Simple wrapper that only applies the dark class for CSS variables
+const StorybookThemeWrapper: React.FC<{
+  children: React.ReactNode;
+  isDark: boolean;
+  locale: string;
+}> = ({ children, isDark, locale }) => {
+  return (
+    <div 
+      className={isDark ? 'dark' : ''}
+      style={{ 
+        minHeight: '100vh',
+        background: 'hsl(var(--background))',
+        color: 'hsl(var(--foreground))'
+      }}
+    >
+      <div style={{ padding: '1rem' }}>
+        <div style={{ 
+          position: 'fixed', 
+          top: '10px', 
+          right: '10px', 
+          zIndex: 1000,
+          fontSize: '12px',
+          background: 'hsl(var(--muted))',
+          color: 'hsl(var(--muted-foreground))',
+          padding: '4px 8px',
+          borderRadius: '4px'
+        }}>
+          Locale: {locale} | Theme: {isDark ? 'Dark' : 'Light'}
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 export const withStorybookProvider: Decorator = (Story, context) => {
   const { args, parameters, globals } = context;
   
@@ -40,30 +76,9 @@ export const withStorybookProvider: Decorator = (Story, context) => {
       locale={validLocale}
     >
       <ThemeProvider>
-        <div 
-          className={isDark ? 'dark' : ''}
-          style={{ 
-            minHeight: '100vh',
-            background: isDark ? '#2A2727' : '#f8f5ee',
-            color: isDark ? 'white' : 'black'
-          }}
-        >
-          <div style={{ padding: '1rem' }}>
-            <div style={{ 
-              position: 'fixed', 
-              top: '10px', 
-              right: '10px', 
-              zIndex: 1000,
-              fontSize: '12px',
-              background: 'rgba(0,0,0,0.1)',
-              padding: '4px 8px',
-              borderRadius: '4px'
-            }}>
-              Locale: {validLocale}
-            </div>
-            <Story />
-          </div>
-        </div>
+        <StorybookThemeWrapper isDark={isDark} locale={validLocale}>
+          <Story />
+        </StorybookThemeWrapper>
       </ThemeProvider>
     </NextIntlClientProvider>
   );

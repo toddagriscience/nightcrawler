@@ -1,16 +1,18 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '../../common';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/theme/ThemeContext';
+import { QuoteProps } from './types/quote';
 
-interface QuoteProps {
-  isDark?: boolean;
-}
-
+/**
+ * Quote component
+ * @param {QuoteProps} props - The component props
+ * @returns {JSX.Element} - The quote component
+ */
 const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
   const { isDark: contextIsDark } = useTheme();
   const t = useTranslations('about');

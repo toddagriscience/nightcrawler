@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
@@ -6,6 +6,10 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { ArrowDown } from 'lucide-react';
 
+/**
+ * Hero component
+ * @returns {JSX.Element} - The hero component
+ */
 const Hero = () => {
   const t = useTranslations('homepage');
 
@@ -15,7 +19,7 @@ const Hero = () => {
         {t('hero.tagline')}
       </h3>
       <span>
-        <ArrowDown className="text-[#2A2727]" />
+        <ArrowDown className="text-foreground" />
       </span>
     </div>
   );

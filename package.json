@@ -25,6 +25,7 @@
     "validate": "npm run format:check && npm run ci"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@studio-freight/lenis": "^1.0.42",
     "@types/ua-parser-js": "^0.7.39",
     "class-variance-authority": "^0.7.1",
