@@ -61,6 +61,8 @@ export const theme = {
     overlay: {
       light: 'rgba(0, 0, 0, 0.1)',
       dark: 'rgba(255, 255, 255, 0.1)',
+      lightHover: 'rgba(0, 0, 0, 0.2)',
+      darkHover: 'rgba(255, 255, 255, 0.2)',
     },
   },
 
