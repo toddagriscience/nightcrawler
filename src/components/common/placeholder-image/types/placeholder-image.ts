@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 /**
  * Props for the PlaceholderImage component
  * @param {string} src - The source of the placeholder image
