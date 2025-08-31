@@ -97,7 +97,7 @@ export default async function LocaleLayout({
     return (
       <html lang={locale}>
         <body
-          className={`${fontVariables} ${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${fontVariables} ${geistSans.variable} ${geistMono.variable}`}
         >
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider>

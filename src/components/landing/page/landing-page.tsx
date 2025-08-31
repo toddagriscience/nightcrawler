@@ -65,7 +65,7 @@ export default function LandingPage() {
   }, [detectTheme]);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground mx-auto flex-col">
+    <>
       <div ref={heroRef}>
         <Hero />
       </div>
@@ -74,6 +74,6 @@ export default function LandingPage() {
           <NewsHighlightCard />
         </ScrollShrinkWrapper>
       </div>
-    </div>
+    </>
   );
 }
