@@ -2,9 +2,9 @@
 
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
 import { Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 import PlaceholderImageProps from './types/placeholder-image';
 
 /**

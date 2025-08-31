@@ -1,7 +1,7 @@
 // Copyright Todd LLC, All rights reserved.
 
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import React from 'react';
 import NewsCard from './news-card';
 
 const meta = {

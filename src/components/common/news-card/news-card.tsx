@@ -1,7 +1,7 @@
 // Copyright Todd LLC, All rights reserved.
 
-import PlaceholderImage from '../placeholder-image/placeholder-image';
 import { Link } from '@/i18n/config';
+import PlaceholderImage from '../placeholder-image/placeholder-image';
 import NewsCardProps from './types/news-card';
 
 /**

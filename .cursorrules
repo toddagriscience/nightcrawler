@@ -227,6 +227,8 @@ When making changes, prioritize:
 - **Test-driven approach**: Write tests for new functionality
 - **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
+- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 
 ### When Making Changes
 

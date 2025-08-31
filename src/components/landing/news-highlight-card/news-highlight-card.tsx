@@ -2,13 +2,13 @@
 
 'use client';
 
-import React, { useRef } from 'react';
-import { useTranslations } from 'next-intl';
-import { motion } from 'framer-motion';
-import { Quote } from '../index';
 import { Button, Carousel, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
 import newsData from '@/data/featured-news.json';
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import React, { useRef } from 'react';
+import { Quote } from '../index';
 import { NewsHighlightCardProps } from './types/news-highlight-card';
 
 /**
@@ -28,6 +28,8 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
+
+  // TODO: Replace JSON data with database connection for dynamic content management
 
   // TODO: Replace JSON data with database connection for dynamic content management
 

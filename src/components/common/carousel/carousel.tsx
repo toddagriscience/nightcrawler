@@ -2,9 +2,9 @@
 
 'use client';
 
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useRef, useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CarouselProps from './types/carousel';
 
 /**

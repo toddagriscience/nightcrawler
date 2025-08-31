@@ -1,9 +1,8 @@
 // Copyright Todd LLC, All rights reserved.
 
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Carousel from './carousel';
 import NewsCard from '../news-card/news-card';
+import Carousel from './carousel';
 
 const meta = {
   title: 'Common/Carousel',
