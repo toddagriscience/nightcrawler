@@ -1,4 +1,4 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Button from './button';
@@ -101,49 +101,53 @@ export const AllVariants: Story = {
 };
 
 export const DarkModeVariants: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4 bg-[#2A2727] p-6 rounded-lg">
+  args: {
+    ...storybookArgs,
+    isDark: true,
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4 p-6 rounded-lg">
       <Button
         text="Outline Small"
         variant="outline"
         size="sm"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
       <Button
         text="Outline Medium"
         variant="outline"
         size="md"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
       <Button
         text="Outline Large"
         variant="outline"
         size="lg"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
       <Button
         text="Filled Small"
         variant="default"
         size="sm"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
       <Button
         text="Filled Medium"
         variant="default"
         size="md"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
       <Button
         text="Filled Large"
         variant="default"
         size="lg"
         href="#"
-        isDark={true}
+        isDark={args.isDark}
       />
     </div>
   ),
