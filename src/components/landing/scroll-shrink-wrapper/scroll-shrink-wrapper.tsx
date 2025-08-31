@@ -1,10 +1,19 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 'use client';
 
 import React, { useRef } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 
+/**
+ * Scroll shrink wrapper component
+ *
+ * features:
+ * - shrinks the width of the container as the user scrolls
+ *
+ * @param {React.ReactNode} children - The children to be wrapped
+ * @returns {JSX.Element} - The scroll shrink wrapper component
+ */
 const ScrollShrinkWrapper = ({ children }: { children: React.ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({

@@ -1,8 +1,7 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
-import PlaceholderImage from '../placeholder-image/placeholder-image';
-import { themeUtils } from '@/lib/theme';
 import { Link } from '@/i18n/config';
+import PlaceholderImage from '../placeholder-image/placeholder-image';
 import NewsCardProps from './types/news-card';
 
 /**
@@ -47,12 +46,9 @@ const NewsCard = ({
   className = '',
   link = '/news',
 }: NewsCardProps) => {
-  const textColor = themeUtils.getContrastText(isDark);
-
   return (
     <div
-      className={`min-w-[90%] md:min-w-[45%] lg:min-w-[30%] max-w-full px-4 py-4 font-light transition-colors duration-300 ${className}`}
-      style={{ color: textColor }}
+      className={`min-w-[90%] md:min-w-[45%] lg:min-w-[30%] max-w-full px-4 py-4 font-light transition-colors duration-300 text-foreground ${className}`}
     >
       <Link href={link}>
         <div className="rounded-xl overflow-hidden bg-transparent">
