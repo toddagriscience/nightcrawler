@@ -1,0 +1,47 @@
+# Copyright Todd LLC, All rights reserved
+
+# Global ownership - require review from core team
+* @toddagriscience/core-team
+
+# GitHub configuration files
+/.github/ @toddagriscience/devops-team
+
+# CI/CD and deployment
+/.github/workflows/ @toddagriscience/devops-team
+/next.config.ts @toddagriscience/devops-team
+/package.json @toddagriscience/devops-team
+/package-lock.json @toddagriscience/devops-team
+
+# Environment and configuration
+/.env* @toddagriscience/devops-team
+/envexample.md @toddagriscience/devops-team
+
+# Code quality and tooling
+/eslint.config.mjs @toddagriscience/frontend-team
+/prettier.config.* @toddagriscience/frontend-team
+/tailwind.config.ts @toddagriscience/frontend-team
+/tsconfig.json @toddagriscience/frontend-team
+
+# Testing configuration
+/jest.config.js @toddagriscience/frontend-team
+/jest.setup.* @toddagriscience/frontend-team
+/.storybook/ @toddagriscience/frontend-team
+
+# Internationalization
+/src/messages/ @toddagriscience/content-team @toddagriscience/frontend-team
+/src/i18n/ @toddagriscience/frontend-team
+/src/middleware.ts @toddagriscience/frontend-team
+
+# Core application structure
+/src/app/ @toddagriscience/frontend-team
+/src/components/ @toddagriscience/frontend-team
+/src/lib/ @toddagriscience/frontend-team
+
+# Public assets and branding
+/public/ @toddagriscience/design-team @toddagriscience/frontend-team
+/public/fonts/ @toddagriscience/design-team
+
+# Documentation
+/README.md @toddagriscience/core-team
+/CLAUDE.md @toddagriscience/core-team
+/.github/CONTRIBUTING.md @toddagriscience/core-team
