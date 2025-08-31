@@ -1,7 +1,4 @@
 // Copyright Todd LLC, All rights reserved.
-/**
- * @jest-environment node
- */
 
 // Mock next-intl/middleware to return a simple function
 jest.mock('next-intl/middleware', () => {

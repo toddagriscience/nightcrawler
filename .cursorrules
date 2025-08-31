@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A modern, production-ready Next.js website for Todd Agriscience with comprehensive development infrastructure, smooth user experience, and complete SEO optimization. This codebase emphasizes maintainability, type safety, and internationalization support.
+A modern, production-ready Next.js website for Todd Agriscience with comprehensive development infrastructure, smooth user experience, and complete SEO optimization. This codebase emphasizes maintainability, type safety, internationalization support, and component-driven architecture.
 
 ## Tech Stack
 
@@ -13,6 +13,14 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
 
+### UI Component System
+
+- **shadcn/ui** integration with Radix UI primitives
+- **class-variance-authority** for component variants
+- **Lucide React** for consistent iconography
+- **Radix UI Slot** for composition patterns
+- **clsx & tailwind-merge** for conditional styling
+
 ### Internationalization
 
 - **Multi-language support** (en, es) with architecture ready for expansion
@@ -22,17 +30,18 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 
 ### Animation & UX
 
-- **Framer Motion** for component animations and scroll-based effects
-- **Lenis** for buttery smooth scrolling (matching original feel)
+- **Framer Motion v12.23** for component animations and scroll-based effects
+- **Lenis v1.0** for buttery smooth scrolling (matching original feel)
+- **Embla Carousel** for interactive content carousels
 - **Dynamic header** with scroll-based state changes
 - **Advanced theme system** with smooth transitions and scroll-based dark mode
 - **Centralized theme context** with debounced state management
 
 ### Development Infrastructure
 
-- **Jest + React Testing Library** (unit testing)
-- **Storybook 8** with accessibility addon
-- **ESLint + Prettier** with pre-commit hooks (Husky)
+- **Jest v30 + React Testing Library v16.3** (unit testing)
+- **Storybook v9.1** with accessibility addon
+- **ESLint v9 + Prettier v3.6** with pre-commit hooks (Husky v9.1)
 - **GitHub Actions** CI/CD pipeline
 
 ### SEO & Performance
@@ -46,31 +55,62 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 
 ```
 src/
-  app/                    # Pages and API routes only
-    [locale]/            # Internationalized pages (future)
+  app/                    # Next.js App Router
+    [locale]/            # Internationalized pages with layout
+      [...rest]/         # Catch-all route for dynamic pages
     api/                 # API routes
     globals.css          # Global styles with Lenis setup
     layout.tsx           # Root layout with providers
-    not-found.tsx        # Custom 404 page
   components/             # All React components
-    common/              # Reusable components (Button, etc.)
+    common/              # Reusable components
+      button/            # Custom button with variants & types
+      carousel/          # Embla carousel component
+      locale-switcher/   # Language selection component
+      news-card/         # News article card component
+      placeholder-image/ # Image placeholder component
+      smooth-scroll/     # Smooth scroll wrapper
     landing/             # Homepage-specific components
-    ui/                  # UI components (Header, Footer, etc.)
+      footer/            # Landing page footer
+      header/            # Landing page header with navigation
+      hero/              # Hero section component
+      news-highlight-card/ # Combined news + quote card
+      page/              # Landing page layout
+      quote/             # Quote/About section
+      scroll-shrink-wrapper/ # Scroll animation wrapper
+    ui/                  # shadcn/ui components
+      button.tsx         # shadcn/ui button component
   context/               # React contexts
-    ThemeContext.tsx     # Theme and dark mode context
+    theme/               # Theme context with types
+      ThemeContext.tsx   # Theme and dark mode context
+      types/             # Theme-related TypeScript types
+  data/                  # Static data files
+    featured-news.json   # Featured news articles data
+  i18n/                  # Internationalization config
+    config.ts            # i18n configuration
+    request.ts           # Server-side i18n utilities
   lib/                   # Utility functions
-    i18n/                # Internationalization config
-    theme.ts             # Centralized theme system
+    env.ts               # Environment configuration
+    fonts.ts             # Custom font loading
+    locale-utils.ts      # Locale helper functions
+    locales.ts           # Locale definitions
+    metadata.ts          # SEO metadata utilities
+    scroll-to-top.tsx    # Scroll to top component
+    utils.ts             # shadcn/ui utility functions
+  messages/              # Translation JSON files
+    en.json              # English translations
+    es.json              # Spanish translations
   test/                  # Testing utilities
     test-utils.tsx       # React Testing Library setup
+  types/                 # Global TypeScript types
+  middleware.ts          # next-intl middleware
 public/                  # Static assets
   fonts/                 # Custom fonts (Neue Haas, Utah WGL)
   publications/          # PDF documents
-  images/                # Static images
 scripts/                 # Build and utility scripts
 .github/workflows/       # CI/CD pipelines
 .storybook/             # Storybook configuration
   decorators/            # Custom Storybook decorators
+components.json          # shadcn/ui configuration
 ```
 
 ### Development Priorities
@@ -87,20 +127,30 @@ When making changes, prioritize:
 
 #### Component Structure
 
+- **Slice Architecture**: Each page has its own components directory co-located with the page
 - **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) alongside components
-- **Directory structure**: Slice architecture each page & related components in its own directory:
+- **Page-specific structure**: Components are organized per page/feature:
   ```
-  components/ui/
-  ├── header/
-  ├─────types/
-  ├───────header.ts           # Types, hooks, utils used in component
-  ├───── header.tsx           # Main component
-  ├───── header.test.tsx      # Unit tests
-  ├───── header.stories.tsx   # Storybook stories
-  └─ index.ts            # Barrel export for all components in the /ui directory
+  app/
+  ├── [locale]/
+  │   ├── about/
+  │   │   ├── components/       # About page specific components
+  │   │   │   ├── hero/
+  │   │   │   │   ├── types/
+  │   │   │   │   │   └── hero.ts
+  │   │   │   │   ├── hero.tsx
+  │   │   │   │   ├── hero.test.tsx
+  │   │   │   │   └── hero.stories.tsx
+  │   │   │   └── index.ts      # Barrel export for about page components
+  │   │   └── page.tsx          # About page
+  │   └── page.tsx              # Homepage (landing components in src/components/landing/)
   ```
+- **Global components**: Reusable components in `src/components/common/` and `src/components/ui/`
+- **Landing page exception**: Current landing page components remain in `src/components/landing/`
+- **shadcn/ui components**: Direct files in `src/components/ui/` (e.g., `button.tsx`)
 - **Import paths**: Use `@/` alias for all src imports
 - **Naming**: Use kebab-case for directories, PascalCase for components
+- **Component variants**: Use `class-variance-authority` for component styling variants
 
 ### Development Workflow
 
@@ -144,11 +194,14 @@ When making changes, prioritize:
 
 ### When Adding New Components
 
+- **Follow slice architecture**: Page-specific components go in `app/[locale]/page-name/components/`
 - **Use TypeScript**: Strict typing for all props and state
+- **Component variants**: Use `class-variance-authority` for styling variants
 - **Theme support**: Integrate with existing ThemeContext when applicable
 - **Internationalization**: Use next-intl for any user-facing text
 - **Testing**: Include unit tests and Storybook stories
 - **Performance**: Consider animation performance and bundle impact
+- **shadcn/ui integration**: Leverage shadcn/ui components for consistency
 
 ### When Modifying Existing Code
 
@@ -172,6 +225,8 @@ When making changes, prioritize:
 - **Accessibility required**: Follow WCAG guidelines, test with screen readers
 - **Internationalization ready**: Support multi-language from the start
 - **Test-driven approach**: Write tests for new functionality
+- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 - **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 

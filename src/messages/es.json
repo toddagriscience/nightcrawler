@@ -1,14 +1,25 @@
 {
+  "common": {
+    "buttons": {
+      "learn_more": "Saber Más",
+      "view_all": "Ver Todo"
+    },
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "notFound": {
+      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
+      "homeButton": "Inicio"
+    }
+  },
   "header": {
     "navigation": {
       "home": "Inicio",
-      "about": "Acerca de",
-      "offerings": "Ofertas",
-      "approach": "Enfoque",
+      "whoWeAre": "Quiénes Somos",
+      "whatWeDo": "Qué Hacemos",
       "impact": "Impacto",
       "news": "Noticias",
-      "services": "Servicios",
-      "contact": "Contacto"
+      "logIn": "Iniciar Sesión",
+      "getStarted": "Comenzar"
     },
     "menu": {
       "open": "Abrir menú",
@@ -26,12 +37,6 @@
       "legal": "Legal"
     },
     "links": {
-      "home": "Inicio",
-      "about": "Acerca de",
-      "offerings": "Ofertas",
-      "approach": "Enfoque",
-      "impact": "Impacto",
-      "news": "Noticias",
       "careers": "Carreras",
       "contact": "Contacto",
       "journal": "Diario",
@@ -42,13 +47,13 @@
       "x": "X",
       "accessibility": "Accesibilidad",
       "privacy": "Política de Privacidad",
+      "privacySettings": "Configuración de Privacidad",
       "terms": "Términos de Servicio",
       "trustCenter": "Centro de Confianza"
     },
     "cta": {
       "letsTalk": "Hablemos",
-      "getInTouch": "Contáctanos",
-      "privacyOptions": "Opciones de Privacidad"
+      "getInTouch": "Contáctanos"
     }
   },
   "homepage": {
@@ -57,19 +62,9 @@
       "title": "Liderando el futuro de la agricultura sostenible",
       "subtitle": "Todd es una empresa agrícola generativa de primera generación que se asocia con granjas de alta calidad y marcas reconocidas para cultivar un futuro sostenible.",
       "tagline": "Avanzando la Agricultura a Través de la Ciencia"
-    }
-  },
-  "common": {
-    "buttons": {
-      "learn_more": "Saber Más",
-      "get_started": "Comenzar",
-      "contact_us": "Contáctanos"
     },
-    "loading": "Cargando...",
-    "error": "Algo salió mal",
-    "notFound": {
-      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
-      "homeButton": "Inicio"
+    "news": {
+      "news_highlights": "Noticias Destacadas"
     }
   },
   "about": {
@@ -77,6 +72,77 @@
     "description": "Estamos siendo pioneros en el futuro de la agricultura sostenible a través de prácticas agrícolas innovadoras y tecnología de vanguardia.",
     "quote": "Creemos que la agricultura sostenible es la base de un planeta saludable y comunidades prósperas.",
     "learnMore": "Saber Más"
+  },
+  "whoWeAre": {
+    "title": "Quiénes Somos",
+    "subtitle": "Aprende sobre nuestra misión, visión y valores que impulsan nuestro trabajo en agricultura regenerativa.",
+    "mission": {
+      "title": "Misión",
+      "description": "Nuestra misión es entregar resultados diferenciados a nuestros clientes aprovechando nuestra experiencia complementaria en agricultura regenerativa para satisfacer las necesidades del agricultor moderno."
+    },
+    "vision": {
+      "title": "Visión",
+      "description": "Asociar a grandes, crecientes, marcas de agricultura orgánica y biodinámica enfocadas en prácticas de agricultura regenerativa y forjar conexiones emocionales profundas con sus consumidores objetivo."
+    },
+    "values": {
+      "personalValues": {
+        "title": "Valores Personales",
+        "kindnessRespectIntegrity": {
+          "title": "Amabilidad, Respeto e Integridad",
+          "description": "Tratar a otros como queremos ser tratados, interna y externamente."
+        },
+        "humility": {
+          "title": "Humildad",
+          "description": "Escuchar y aprender unos de otros."
+        },
+        "transparency": {
+          "title": "Transparencia",
+          "description": "Comunicarse abiertamente y proporcionar comentarios honestos."
+        },
+        "giveBack": {
+          "title": "Retribuir",
+          "description": "Mejorar las comunidades en las que operamos."
+        }
+      },
+      "professionalValues": {
+        "title": "Valores Profesionales",
+        "drivenByExcellence": {
+          "title": "Impulsados por la Excelencia",
+          "description": "Buscar operar con los más altos estándares y entregar resultados diferenciados."
+        },
+        "clientFocused": {
+          "title": "Enfocados en el Cliente",
+          "description": "Recordar quiénes son nuestros stakeholders más importantes."
+        },
+        "creative": {
+          "title": "Creativos",
+          "description": "Pensar fuera de la caja; esforzarse por no estar limitados por las normas de la industria."
+        },
+        "missionDriven": {
+          "title": "Impulsados por la Misión",
+          "description": "Buscar incorporar perspectivas únicas en nuestros planes de valor y creación."
+        }
+      },
+      "ourCulture": {
+        "title": "Nuestra Cultura",
+        "teamFirst": {
+          "title": "Equipo Primero",
+          "description": "Enfoque colaborativo—juntos podemos ganar."
+        },
+        "inclusivity": {
+          "title": "Inclusividad",
+          "description": "Cada miembro del equipo desempeña un papel importante para llegar a las mejores decisiones."
+        },
+        "diversity": {
+          "title": "Diversidad",
+          "description": "Nuestro equipo valora profundamente el poder de la diversidad."
+        },
+        "talentDevelopment": {
+          "title": "Desarrollo de Talento",
+          "description": "Compromiso duradero para ayudar a los miembros de nuestro equipo a alcanzar su máximo potencial."
+        }
+      }
+    }
   },
   "contact": {
     "title": "Contáctanos",
