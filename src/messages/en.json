@@ -2,8 +2,6 @@
   "common": {
     "buttons": {
       "learn_more": "Learn More",
-      "get_started": "Get Started",
-      "contact_us": "Contact Us",
       "view_all": "View All"
     },
     "loading": "Loading...",
@@ -16,13 +14,12 @@
   "header": {
     "navigation": {
       "home": "Home",
-      "about": "About",
-      "offerings": "Offerings",
-      "approach": "Approach",
-      "impact": "Impact",
+      "whoWeAre": "Who We Are",
+      "whatWeDo": "What We Do",
+      "impact": "Our Impact",
       "news": "News",
-      "services": "Services",
-      "contact": "Contact"
+      "logIn": "Log In",
+      "getStarted": "Get Started"
     },
     "menu": {
       "open": "Open menu",
@@ -40,12 +37,6 @@
       "legal": "Legal"
     },
     "links": {
-      "home": "Home",
-      "about": "About",
-      "offerings": "Offerings",
-      "approach": "Approach",
-      "impact": "Impact",
-      "news": "News",
       "careers": "Careers",
       "contact": "Contact",
       "journal": "Journal",
@@ -56,13 +47,13 @@
       "x": "X",
       "accessibility": "Accessibility",
       "privacy": "Privacy Policy",
+      "privacySettings": "Privacy Settings",
       "terms": "Terms of Service",
       "trustCenter": "Trust Center"
     },
     "cta": {
       "letsTalk": "Let's Talk",
-      "getInTouch": "Get in Touch",
-      "privacyOptions": "Privacy Options"
+      "getInTouch": "Get in Touch"
     }
   },
   "homepage": {

@@ -2,8 +2,6 @@
   "common": {
     "buttons": {
       "learn_more": "Saber Más",
-      "get_started": "Comenzar",
-      "contact_us": "Contáctanos",
       "view_all": "Ver Todo"
     },
     "loading": "Cargando...",
@@ -16,13 +14,12 @@
   "header": {
     "navigation": {
       "home": "Inicio",
-      "about": "Acerca de",
-      "offerings": "Ofertas",
-      "approach": "Enfoque",
+      "whoWeAre": "Quiénes Somos",
+      "whatWeDo": "Qué Hacemos",
       "impact": "Impacto",
       "news": "Noticias",
-      "services": "Servicios",
-      "contact": "Contacto"
+      "logIn": "Iniciar Sesión",
+      "getStarted": "Comenzar"
     },
     "menu": {
       "open": "Abrir menú",
@@ -40,12 +37,6 @@
       "legal": "Legal"
     },
     "links": {
-      "home": "Inicio",
-      "about": "Acerca de",
-      "offerings": "Ofertas",
-      "approach": "Enfoque",
-      "impact": "Impacto",
-      "news": "Noticias",
       "careers": "Carreras",
       "contact": "Contacto",
       "journal": "Diario",
@@ -56,13 +47,13 @@
       "x": "X",
       "accessibility": "Accesibilidad",
       "privacy": "Política de Privacidad",
+      "privacySettings": "Configuración de Privacidad",
       "terms": "Términos de Servicio",
       "trustCenter": "Centro de Confianza"
     },
     "cta": {
       "letsTalk": "Hablemos",
-      "getInTouch": "Contáctanos",
-      "privacyOptions": "Opciones de Privacidad"
+      "getInTouch": "Contáctanos"
     }
   },
   "homepage": {
