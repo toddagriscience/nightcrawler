@@ -281,7 +281,7 @@ const Header: React.FC<HeaderProps> = ({
                 className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
                 data-testid="get-started-link"
               >
-                {t('actions.getStarted')}
+                {t('navigation.getStarted')}
               </Link>
             </div>
           </div>
