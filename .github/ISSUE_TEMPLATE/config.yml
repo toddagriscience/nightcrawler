@@ -1,0 +1,13 @@
+# Copyright Todd LLC, All rights reserved
+
+blank_issues_enabled: false
+contact_links:
+  - name: 📧 General Support
+    url: mailto:support@toddagriscience.com
+    about: For general questions or support requests not related to bugs or features
+  - name: 💬 Discussions
+    url: https://github.com/toddagriscience/website/discussions
+    about: Ask questions, share ideas, or discuss the project with the community
+  - name: 📖 Documentation
+    url: https://github.com/toddagriscience/website/blob/main/README.md
+    about: Check the documentation for setup instructions and project information
