@@ -1,8 +1,13 @@
-//Copyright Todd LLC, All rights reserved.
+// Copyright Todd LLC, All rights reserved.
 
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './config';
 
+/**
+ * Request configuration
+ * @param {RequestLocale} requestLocale - The request locale
+ * @returns {Promise<RequestConfig>} - The request configuration
+ */
 export default getRequestConfig(async ({ requestLocale }) => {
   // This typically corresponds to the `[locale]` segment
   let locale = await requestLocale;

@@ -103,6 +103,14 @@ This will run: format check → type check → lint → unit tests → build
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
 
+#### UI Component System
+
+- **shadcn/ui** integration with Radix UI primitives
+- **class-variance-authority** for component variants
+- **Lucide React** for consistent iconography
+- **Radix UI Slot** for composition patterns
+- **clsx & tailwind-merge** for conditional styling
+
 #### Internationalization
 
 - **next-intl v4.3** for multi-language support (en, es)
@@ -114,7 +122,7 @@ This will run: format check → type check → lint → unit tests → build
 
 - **Framer Motion v12.23** for component animations
 - **Lenis v1.0** for buttery smooth scrolling
-- **Custom cursor** with hover interactions
+- **Embla Carousel** for interactive content carousels
 - **Dynamic header** with scroll-based state changes
 - **Advanced theme system** with smooth transitions
 
@@ -150,36 +158,77 @@ This will run: format check → type check → lint → unit tests → build
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── [locale]/          # Internationalized pages
+├── app/                    # Next.js App Router (slice architecture)
+│   ├── [locale]/          # Internationalized pages with layout
+│   │   ├── [...rest]/     # Catch-all route for dynamic pages
+│   │   ├── page.tsx       # Homepage
+│   │   └── layout.tsx     # Locale-specific layout
 │   ├── globals.css        # Global styles with Lenis setup
-│   ├── layout.tsx         # Root layout with providers
-│   └── page.tsx          # Homepage
-├── components/             # All React components
-│   ├── common/            # Reusable components (Button, etc.)
+│   └── layout.tsx         # Root layout with providers
+├── components/             # React components organized by usage
+│   ├── common/            # Reusable components
+│   │   ├── button/        # Custom button with variants & types
+│   │   ├── carousel/      # Embla carousel component
+│   │   ├── locale-switcher/ # Language selection component
+│   │   ├── news-card/     # News article card component
+│   │   ├── placeholder-image/ # Image placeholder component
+│   │   └── smooth-scroll/ # Smooth scroll wrapper
 │   ├── landing/           # Homepage-specific components
-│   │   ├── hero/          # Hero section with animations
+│   │   ├── footer/        # Landing page footer
+│   │   ├── header/        # Landing page header with navigation
+│   │   ├── hero/          # Hero section component
 │   │   ├── news-highlight-card/ # Combined news + quote card
+│   │   ├── page/          # Landing page layout
 │   │   ├── quote/         # Quote/About section
 │   │   └── scroll-shrink-wrapper/ # Scroll animation wrapper
-│   └── ui/                # UI components
-│       ├── header/        # Navigation with i18n
-│       ├── footer/        # Footer with locale links
-│       ├── locale-switcher/ # Language selection
-│       └── common/        # Common utilities (Cursor)
+│   └── ui/                # shadcn/ui components
+│       └── button.tsx     # shadcn/ui button component
 ├── context/               # React contexts
-│   └── ThemeContext.tsx   # Theme and dark mode context
-├── hooks/                 # Custom React hooks
+│   └── theme/             # Theme context with types
+│       ├── ThemeContext.tsx # Theme and dark mode context
+│       └── types/         # Theme-related TypeScript types
+├── data/                  # Static data files
+│   └── featured-news.json # Featured news articles data
 ├── i18n/                  # Internationalization config
+│   ├── config.ts          # i18n configuration
 │   └── request.ts         # Server-side i18n utilities
 ├── lib/                   # Utility functions
-│   ├── env.ts            # Environment configuration
-│   ├── locale-utils.ts   # Locale helper functions
-│   └── metadata.ts       # SEO metadata utilities
+│   ├── env.ts             # Environment configuration
+│   ├── fonts.ts           # Custom font loading
+│   ├── locale-utils.ts    # Locale helper functions
+│   ├── locales.ts         # Locale definitions
+│   ├── metadata.ts        # SEO metadata utilities
+│   ├── scroll-to-top.tsx  # Scroll to top component
+│   └── utils.ts           # shadcn/ui utility functions
 ├── messages/              # Translation JSON files
-│   ├── en.json           # English translations
-│   └── es.json           # Spanish translations
+│   ├── en.json            # English translations
+│   └── es.json            # Spanish translations
+├── test/                  # Testing utilities
+│   └── test-utils.tsx     # React Testing Library setup
+├── types/                 # Global TypeScript types
 └── middleware.ts          # next-intl middleware
+```
+
+### Slice Architecture
+
+For new pages, components are co-located with the page:
+
+```
+app/
+├── [locale]/
+│   ├── about/
+│   │   ├── components/     # About page specific components
+│   │   │   ├── hero/
+│   │   │   │   ├── types/
+│   │   │   │   │   └── hero.ts
+│   │   │   │   ├── hero.tsx
+│   │   │   │   ├── hero.test.tsx
+│   │   │   │   └── hero.stories.tsx
+│   │   │   └── index.ts    # Barrel export
+│   │   └── page.tsx        # About page
+│   └── contact/
+│       ├── components/     # Contact page specific components
+│       └── page.tsx        # Contact page
 ```
 
 ## 🎨 Features
@@ -196,7 +245,8 @@ src/
 
 - **Smooth Scrolling**: Lenis-powered buttery smooth scrolling experience
 - **Dynamic Animations**: Framer Motion scroll-based animations
-- **Custom Cursor**: Interactive cursor with hover state transitions
+- **Interactive Carousels**: Embla Carousel for content presentation
+- **Component System**: shadcn/ui with Radix UI primitives for consistency
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Theme System**: Advanced theme context with smooth transitions
 - **Performance**: Optimized fonts, images, and bundle splitting
@@ -210,10 +260,13 @@ src/
 
 ### Development Experience
 
-- **Component Library**: Comprehensive Storybook documentation
+- **Component Library**: Comprehensive Storybook documentation with accessibility testing
 - **Type Safety**: Full TypeScript coverage with strict checking
+- **Component Variants**: class-variance-authority for consistent styling patterns
+- **UI System**: shadcn/ui integration for rapid component development
 - **Testing**: Co-located tests with high coverage requirements
 - **Code Quality**: Automated linting, formatting, and type checking
+- **Slice Architecture**: Page-specific component organization for maintainability
 
 ## 🧪 Testing Strategy
 
@@ -284,10 +337,13 @@ See `.env.example` for complete documentation of all available variables.
 
 #### Components & Features
 
-- **UI Components**: Extend `src/components/ui/` with new reusable components
-- **Page Components**: Add specific components in `src/components/landing/`
+- **shadcn/ui Components**: Add new shadcn/ui components in `src/components/ui/`
+- **Global Components**: Add reusable components in `src/components/common/`
+- **Page Components**: Use slice architecture - add components in `app/[locale]/page-name/components/`
+- **Landing Page**: Current landing components remain in `src/components/landing/`
 - **Contexts**: Create new contexts in `src/context/` for global state
 - **Utilities**: Add helper functions in `src/lib/` with proper TypeScript types
+- **Data**: Add static data files in `src/data/` for JSON content
 
 ## 📝 Contributing
 
