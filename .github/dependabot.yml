@@ -19,6 +19,7 @@ updates:
           - "react*"
           - "eslint-config-next"
         update-types:
+          - "major"
           - "minor"
           - "patch"
       testing-framework:
