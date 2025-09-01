@@ -41,7 +41,7 @@ touch src/app/[locale]/your-page/page.tsx
 mkdir src/app/[locale]/your-page/components
 
 # Create page/component types if necessary (slice architecture)
-mkdir src/app/[locale]/your-page/component/component.ts # For components
+touch src/app/[locale]/your-page/components/component.ts # For components
 
 ```
 
