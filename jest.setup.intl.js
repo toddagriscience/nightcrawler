@@ -21,7 +21,7 @@ const loadMessagesSync = (locale) => {
         console.warn(
           `Warning: Could not load message file ${file}/${locale}.json`
         );
-      }```
+      }
     }
   });
 
