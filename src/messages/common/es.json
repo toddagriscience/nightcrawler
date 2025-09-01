@@ -1,0 +1,18 @@
+{
+  "common": {
+    "buttons": {
+      "learn_more": "Saber Más",
+      "view_all": "Ver Todo"
+    },
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "notFound": {
+      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
+      "homeButton": "Inicio"
+    }
+  },
+  "metadata": {
+    "title": "Todd Agriscience - Soluciones de Agricultura Sostenible",
+    "description": "Liderando el futuro de la agricultura sostenible con prácticas agrícolas innovadoras y tecnología."
+  }
+}
