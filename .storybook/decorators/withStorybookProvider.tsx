@@ -1,28 +1,32 @@
-import React from 'react';
 import { Decorator } from '@storybook/react';
 import { NextIntlClientProvider } from 'next-intl';
+import React from 'react';
+import '../../src/app/globals.css';
 import { ThemeProvider } from '../../src/context/theme/ThemeContext';
 import { routing } from '../../src/i18n/config';
-import '../../src/app/globals.css';
+import { messageFiles } from '../../src/i18n/message-files';
 
-// Import actual message files
-import enMessages from '../../src/messages/en.json';
-import esMessages from '../../src/messages/es.json';
+// Load all separated message files synchronously for Storybook - mirrors jest setup
+const loadMessagesSync = (locale: string) => {
+  
+
+  const messages: Record<string, unknown> = {};
+
+  messageFiles.forEach((file) => {
+    try {
+      const fileMessages = require(`../../src/messages/${file}/${locale}.json`);
+      Object.assign(messages, fileMessages);
+    } catch (error) {
+      console.warn(`Warning: Could not load Storybook message file ${file}/${locale}.json`);
+    }
+  });
+
+  return messages;
+};
 
 // Get messages for Storybook
 const getMessages = (locale: string = 'en') => {
-  const messageMap: Record<string, any> = {
-    en: enMessages,
-    es: esMessages,
-  };
-
-  const messages = messageMap[locale];
-  
-  if (!messages) {
-    return enMessages;
-  }
-  
-  return messages;
+  return loadMessagesSync(locale);
 };
 
 // Simple wrapper that only applies the dark class for CSS variables

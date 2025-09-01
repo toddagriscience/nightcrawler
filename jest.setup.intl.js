@@ -1,12 +1,39 @@
 // Copyright Todd LLC, All rights reserved.
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const enMessages = require('./src/messages/en.json');
+import { messageFiles } from './src/i18n/message-files';
+
+// Load all separated message files synchronously for Jest - mirrors request.ts
+const loadMessagesSync = (locale) => {
+  const messages = {};
+
+  messageFiles.forEach((file) => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fileMessages = require(`./src/messages/${file}/${locale}.json`);
+      Object.assign(messages, fileMessages);
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`,
+          error
+        );
+      } else {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`
+        );
+      }
+    }
+  });
+
+  return messages;
+};
+
+const enMessages = loadMessagesSync('en');
 
 jest.mock('next-intl', () => ({
   useTranslations: jest.fn((namespace) => {
     return jest.fn((key) => {
-      // Use actual message structure from en.json
+      // Use actual message structure from loaded messages
       const nestedGet = (obj, path) => {
         return path.split('.').reduce((current, segment) => {
           return current?.[segment];
