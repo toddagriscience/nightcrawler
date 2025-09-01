@@ -33,7 +33,7 @@ const mockLocaleContext = (
   ): unknown => {
     return key.split('.').reduce<unknown>((current, segment) => {
       if (current && typeof current === 'object' && segment in current) {
-        return (current as Record<string, string>)[segment];
+        return (current as Record<string, unknown>)[segment];
       }
       return undefined;
     }, obj);
