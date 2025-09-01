@@ -1,3 +1,5 @@
+# Copyright Todd LLC, All rights reserved
+
 # ⚡ Quick Reference Guide
 
 _Read [CONTRIBUTING.md](../.github/CONTRIBUTING.md) first. This is your quick reminder cheat sheet._
