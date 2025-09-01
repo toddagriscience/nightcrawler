@@ -1,3 +1,3 @@
 # Run CI checks before pushing to prevent broken builds
 echo "🔍 Running pre-push validation..."
-npm run ci
+npm run validate
