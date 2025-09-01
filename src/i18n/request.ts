@@ -21,10 +21,16 @@ export async function loadMessages(
         .default;
       Object.assign(messages, fileMessages);
     } catch (error) {
-      console.warn(
-        `Warning: Could not load message file ${file}/${locale}.json`,
-        error
-      );
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`,
+          error
+        );
+      } else {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`
+        );
+      }
     }
   });
 
