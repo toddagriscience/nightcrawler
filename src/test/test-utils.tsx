@@ -9,7 +9,7 @@ import React from 'react';
  * Translations type
  * @returns {Partial<Record<string, string>>} - The translations
  */
-type Translations = Partial<Record<string, string>>;
+export type Translations = Partial<Record<string, string>>;
 
 /**
  * Mock LocaleContext with real translations from message files
