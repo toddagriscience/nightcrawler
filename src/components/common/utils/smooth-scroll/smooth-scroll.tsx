@@ -4,7 +4,7 @@
 
 import Lenis from '@studio-freight/lenis';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * Global Window interface extension to include Lenis instance
@@ -29,6 +29,7 @@ export default function SmoothScroll({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isLenisReady, setIsLenisReady] = useState(false);
 
   useEffect(() => {
     let lenis: Lenis | null = null;
@@ -45,6 +46,10 @@ export default function SmoothScroll({
           wheelMultiplier: 0.7,
           smoothWheel: true,
         });
+
+        // Store lenis instance globally after successful initialization
+        window.lenis = lenis;
+        setIsLenisReady(true);
       } catch (e) {
         console.error('Lenis Initialization Error', e);
         return;
@@ -77,25 +82,21 @@ export default function SmoothScroll({
     initializeLenis();
     startLenis();
 
-    // Store lenis instance globally for scroll-to-top functionality
-    if (lenis) {
-      window.lenis = lenis;
-    }
-
     return () => {
       destroyLenis();
+      setIsLenisReady(false);
       if (window.lenis) {
         delete window.lenis;
       }
     };
   }, [router]);
 
-  // Handle scroll to top on navigation
+  // Handle scroll to top on navigation - only when Lenis is ready
   useEffect(() => {
-    if (window.lenis) {
+    if (isLenisReady && window.lenis) {
       window.lenis.scrollTo(0, { immediate: true });
     }
-  }, [pathname]);
+  }, [pathname, isLenisReady]);
 
   return <>{children}</>;
 }
