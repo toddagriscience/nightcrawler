@@ -2,16 +2,34 @@
 
 'use client';
 
-import React, { useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
+/**
+ * Global Window interface extension to include Lenis instance
+ * Allows type-safe access to the globally stored Lenis smooth scroll instance
+ */
+declare global {
+  interface Window {
+    /** Optional Lenis smooth scroll instance stored globally for cross-component access */
+    lenis?: Lenis;
+  }
+}
+
+/**
+ * SmoothScroll component that uses Lenis for smooth scrolling
+ * @param {React.ReactNode} children - The content to animate
+ * @returns {JSX.Element} - The animated smooth scroll component
+ */
 export default function SmoothScroll({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [isLenisReady, setIsLenisReady] = useState(false);
 
   useEffect(() => {
     let lenis: Lenis | null = null;
@@ -28,6 +46,10 @@ export default function SmoothScroll({
           wheelMultiplier: 0.7,
           smoothWheel: true,
         });
+
+        // Store lenis instance globally after successful initialization
+        window.lenis = lenis;
+        setIsLenisReady(true);
       } catch (e) {
         console.error('Lenis Initialization Error', e);
         return;
@@ -62,8 +84,19 @@ export default function SmoothScroll({
 
     return () => {
       destroyLenis();
+      setIsLenisReady(false);
+      if (window.lenis) {
+        delete window.lenis;
+      }
     };
   }, [router]);
+
+  // Handle scroll to top on navigation - only when Lenis is ready
+  useEffect(() => {
+    if (isLenisReady && window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    }
+  }, [pathname, isLenisReady]);
 
   return <>{children}</>;
 }
