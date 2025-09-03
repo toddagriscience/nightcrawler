@@ -1,28 +1,15 @@
 // Copyright Todd LLC, All rights reserved.
 
-import React from 'react';
-import { render, RenderOptions, act, fireEvent } from '@testing-library/react';
-import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-
-// Import actual messages for testing
-import enMessages from '@/messages/en.json';
-import esMessages from '@/messages/es.json';
+import { act, fireEvent, render, RenderOptions } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
+import React from 'react';
 
 /**
  * Translations type
  * @returns {Partial<Record<string, string>>} - The translations
  */
 export type Translations = Partial<Record<string, string>>;
-
-// Get actual messages for locale
-const getMessagesForLocale = (locale: string) => {
-  const messageMap: Record<string, typeof enMessages> = {
-    en: enMessages,
-    es: esMessages,
-  };
-  return messageMap[locale] || enMessages;
-};
 
 /**
  * Mock LocaleContext with real translations from message files
@@ -36,7 +23,8 @@ const mockLocaleContext = (
   customTranslations: Translations = {},
   isLoading: boolean = false
 ) => {
-  const actualMessages = getMessagesForLocale(locale);
+  // Use empty messages since Jest setup handles the mocking
+  const actualMessages = {};
 
   // Helper to get nested translation keys
   const getNestedValue = (
@@ -175,15 +163,9 @@ const AllTheProviders = ({
   useNextIntl = true,
 }: AllTheProvidersProps) => {
   if (useNextIntl) {
-    // Use next-intl for new components
-    const messageMap: Record<string, typeof enMessages> = {
-      en: enMessages,
-      es: esMessages,
-    };
-    const messages = messageMap[locale] || enMessages;
-
+    // Use next-intl with Jest mocked messages (no message loading needed)
     return (
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider locale={locale} messages={{}}>
         <ThemeProvider>{children}</ThemeProvider>
       </NextIntlClientProvider>
     );
@@ -329,7 +311,7 @@ const renderWithAct = async (
 
 // Re-export everything
 export * from '@testing-library/react';
-export { customRender as render, renderWithAct, AllTheProviders };
+export { AllTheProviders, customRender as render, renderWithAct };
 
 // Make fireEvent async for consistency
 const asyncFireEvent = {

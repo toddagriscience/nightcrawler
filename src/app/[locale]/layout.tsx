@@ -3,17 +3,16 @@
 import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { notFound } from 'next/navigation';
 
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import { fontVariables } from '@/lib/fonts';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
+import { fontVariables } from '@/lib/fonts';
 
-import { Header, Footer } from '@/components/landing';
-import { SmoothScroll } from '@/components/common';
-import { ScrollToTop } from '@/lib/scroll-to-top';
+import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
+import { Footer, Header } from '@/components/landing';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -101,10 +100,10 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider>
+              <ThemeReset />
               <SmoothScroll>
-                <ScrollToTop />
                 <Header />
-                {children}
+                <FadeIn>{children}</FadeIn>
                 <Footer />
               </SmoothScroll>
             </ThemeProvider>

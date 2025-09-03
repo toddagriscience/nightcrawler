@@ -2,6 +2,41 @@
 
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './config';
+import { messageFiles } from './message-files';
+
+/**
+ * Load and merge all message files for a given locale
+ * @param {string} locale - The locale to load messages for
+ * @returns {Promise<Record<string, unknown>>} - The merged messages
+ */
+export async function loadMessages(
+  locale: string
+): Promise<Record<string, unknown>> {
+  const messages: Record<string, unknown> = {};
+
+  // Load all message files in parallel and merge them
+  const loadPromises = messageFiles.map(async (file) => {
+    try {
+      const fileMessages = (await import(`../messages/${file}/${locale}.json`))
+        .default;
+      Object.assign(messages, fileMessages);
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`,
+          error
+        );
+      } else {
+        console.warn(
+          `Warning: Could not load message file ${file}/${locale}.json`
+        );
+      }
+    }
+  });
+
+  await Promise.all(loadPromises);
+  return messages;
+}
 
 /**
  * Request configuration
@@ -20,9 +55,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
-  //future: move to separate database or separated json files
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    messages: await loadMessages(locale),
   };
 });

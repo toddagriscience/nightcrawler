@@ -1,78 +1,4 @@
 {
-  "common": {
-    "buttons": {
-      "learn_more": "Saber Más",
-      "view_all": "Ver Todo"
-    },
-    "loading": "Cargando...",
-    "error": "Algo salió mal",
-    "notFound": {
-      "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
-      "homeButton": "Inicio"
-    }
-  },
-  "header": {
-    "navigation": {
-      "home": "Inicio",
-      "whoWeAre": "Quiénes Somos",
-      "whatWeDo": "Qué Hacemos",
-      "impact": "Impacto",
-      "news": "Noticias",
-      "logIn": "Iniciar Sesión",
-      "getStarted": "Comenzar"
-    },
-    "menu": {
-      "open": "Abrir menú",
-      "close": "Cerrar menú"
-    },
-    "actions": {
-      "getStarted": "Comenzar"
-    }
-  },
-  "footer": {
-    "copyright": "© {year} Todd Agriscience. Todos los derechos reservados.",
-    "sections": {
-      "todd": "Todd",
-      "connect": "Conectar",
-      "legal": "Legal"
-    },
-    "links": {
-      "careers": "Carreras",
-      "contact": "Contacto",
-      "journal": "Diario",
-      "investorRelations": "Relaciones con Inversores",
-      "foundation": "Fundación",
-      "instagram": "Instagram",
-      "linkedin": "LinkedIn",
-      "x": "X",
-      "accessibility": "Accesibilidad",
-      "privacy": "Política de Privacidad",
-      "privacySettings": "Configuración de Privacidad",
-      "terms": "Términos de Servicio",
-      "trustCenter": "Centro de Confianza"
-    },
-    "cta": {
-      "letsTalk": "Hablemos",
-      "getInTouch": "Contáctanos"
-    }
-  },
-  "homepage": {
-    "welcome": "Bienvenido a Todd",
-    "hero": {
-      "title": "Liderando el futuro de la agricultura sostenible",
-      "subtitle": "Todd es una empresa agrícola generativa de primera generación que se asocia con granjas de alta calidad y marcas reconocidas para cultivar un futuro sostenible.",
-      "tagline": "Avanzando la Agricultura a Través de la Ciencia"
-    },
-    "news": {
-      "news_highlights": "Noticias Destacadas"
-    }
-  },
-  "about": {
-    "title": "Acerca de Todd Agriscience",
-    "description": "Estamos siendo pioneros en el futuro de la agricultura sostenible a través de prácticas agrícolas innovadoras y tecnología de vanguardia.",
-    "quote": "Creemos que la agricultura sostenible es la base de un planeta saludable y comunidades prósperas.",
-    "learnMore": "Saber Más"
-  },
   "whoWeAre": {
     "title": "Quiénes Somos",
     "subtitle": "Aprende sobre nuestra misión, visión y valores que impulsan nuestro trabajo en agricultura regenerativa.",
@@ -143,18 +69,5 @@
         }
       }
     }
-  },
-  "contact": {
-    "title": "Contáctanos",
-    "form": {
-      "name": "Nombre",
-      "email": "Correo Electrónico",
-      "message": "Mensaje",
-      "submit": "Enviar Mensaje"
-    }
-  },
-  "metadata": {
-    "title": "Todd Agriscience - Soluciones de Agricultura Sostenible",
-    "description": "Liderando el futuro de la agricultura sostenible con prácticas agrícolas innovadoras y tecnología."
   }
 }

@@ -1,0 +1,20 @@
+{
+  "header": {
+    "navigation": {
+      "home": "Inicio",
+      "whoWeAre": "Quiénes Somos",
+      "whatWeDo": "Qué Hacemos",
+      "impact": "Impacto",
+      "news": "Noticias",
+      "logIn": "Iniciar Sesión",
+      "getStarted": "Comenzar"
+    },
+    "menu": {
+      "open": "Abrir menú",
+      "close": "Cerrar menú"
+    },
+    "actions": {
+      "getStarted": "Comenzar"
+    }
+  }
+}

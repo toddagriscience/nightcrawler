@@ -17,8 +17,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 1. **Fork and clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/toddagriscience-website.git
-   cd toddagriscience-website
+   git clone https://github.com/toddagriscience/Nightcrawler.git
+   cd Nightcrawler
    ```
 
 2. **Install dependencies**
@@ -52,8 +52,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ### Branch Strategy
 
-- `main` - Production-ready code
-- `dev` - Development branch for integration
+- `main` - Production-ready code and primary development branch
 - `feature/description` - Feature branches
 - `fix/description` - Bug fix branches
 
@@ -62,8 +61,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 1. **Create a feature branch**
 
    ```bash
-   git checkout dev
-   git pull origin dev
+   git checkout main
+   git pull origin main
    git checkout -b feature/your-feature-name
    ```
 
@@ -91,7 +90,7 @@ Thank you for your interest in contributing! This guide will help you get starte
    ```bash
    git push origin feature/your-feature-name
    ```
-   Open a Pull Request against the `dev` branch
+   Open a Pull Request against the `main` branch
 
 ## 🧪 Testing Requirements
 
@@ -155,7 +154,7 @@ components/
 
 ### Adding New Text
 
-1. **Add translation keys** to `src/messages/en.json` and `src/messages/es.json`
+1. **Add translation keys** to appropriate page files in `src/messages/{page}/en.json` and `src/messages/{page}/es.json`
 2. **Use next-intl** for all user-facing text:
 
    ```tsx
