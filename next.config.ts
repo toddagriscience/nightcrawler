@@ -115,7 +115,6 @@ const nextConfig: NextConfig = {
   compress: true,
 
   // Disable X-Powered-By header
-  generateEtags: false,
 };
 
 export default withNextIntl(nextConfig);
