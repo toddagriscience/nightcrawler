@@ -1,6 +1,6 @@
-# Notice: Collection of data on this site through automated means is prohibited 
-# without prior written permission from Todd Agriscience, Inc. and may only be 
-# conducted for the limited purpose contained in: 
+# Notice: Collection of data on this site through automated means is prohibited
+# without prior written permission from Todd Agriscience, Inc. and may only be
+# conducted for the limited purpose contained in:
 # https://toddagriscience.com/automated-data-collection-terms.txt.
 
 # --- Global Directives (for all crawlers) ---
