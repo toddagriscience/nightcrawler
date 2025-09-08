@@ -1,7 +1,7 @@
-# Notice: Collection of data on https://toddagriscience.com through automated means is
-# prohibited unless you have express written permission from Todd Agriscience, Inc.
-# and may only be conducted for the limited purpose contained in said permission.
-# See: http://toddagriscience.com/automated-data-collection-terms.txt
+# Notice: Collection of data on this site through automated means is prohibited
+# without prior written permission from Todd Agriscience, Inc. and may only be
+# conducted for the limited purpose contained in:
+# https://toddagriscience.com/automated-data-collection-terms.txt.
 
 # --- Global Directives (for all crawlers) ---
 User-agent: *
@@ -72,6 +72,9 @@ Disallow: /en-us*data=route*
 
 User-agent: MJ12bot
 Crawl-Delay: 10
+
+User-agent: Twitterbot
+Allow: /media/social-cards/
 
 User-agent: Pinterest
 Crawl-delay: 1
