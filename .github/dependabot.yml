@@ -9,7 +9,6 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
-      date: '1'
       time: '09:00'
       timezone: 'America/New_York'
     groups:
