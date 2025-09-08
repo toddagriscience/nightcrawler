@@ -80,6 +80,4 @@ User-agent: Pinterest
 Crawl-delay: 1
 
 # --- Sitemap Locations ---
-Sitemap: https://toddagriscience.com/sitemap-index.xml
 Sitemap: https://toddagriscience.com/sitemap.xml
-Sitemap: https://toddagriscience.com/sitemap-news.xml
