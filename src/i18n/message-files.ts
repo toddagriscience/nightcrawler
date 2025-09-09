@@ -12,4 +12,5 @@ export const messageFiles = [
   'who-we-are',
   'contact',
   'accessibility',
+  'privacy',
 ];
