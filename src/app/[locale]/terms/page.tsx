@@ -163,19 +163,8 @@ export default function TermsOfUsePage() {
             <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
               {t('miscellaneous.headings')}
             </p>
-            <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
-              {t('miscellaneous.contact')}
-            </p>
           </div>
         </section>
-      </div>
-
-      {/* Footer */}
-      <div className="mt-12 border-t border-gray-300 pt-8 text-center text-sm text-gray-500">
-        <p>
-          For questions about these Terms of Use, please contact:
-          privacy@toddagriscience.com
-        </p>
       </div>
     </div>
   );

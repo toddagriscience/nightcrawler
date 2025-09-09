@@ -84,7 +84,6 @@ export default function PrivacyPage() {
           <div className="space-y-4 text-gray-700">
             <p>{t('miscellaneous.termsReference')}</p>
             <p>{t('miscellaneous.headings')}</p>
-            <p>{t('miscellaneous.contact')}</p>
           </div>
         </section>
 
@@ -231,8 +230,6 @@ export default function PrivacyPage() {
                 ))}
               </div>
             </div>
-
-            <p className="text-gray-700">{t('california.contact')}</p>
           </div>
         </section>
 
@@ -247,7 +244,6 @@ export default function PrivacyPage() {
             <p className="text-gray-700">{t('euUk.intro')}</p>
             <p className="text-gray-700">{t('euUk.definitions')}</p>
             <p className="text-gray-700">{t('euUk.scope')}</p>
-            <p className="text-gray-700">{t('euUk.contact')}</p>
 
             {/* Additional Information */}
             <div>
@@ -282,7 +278,6 @@ export default function PrivacyPage() {
                 {t('euUk.sharing.title')}
               </h3>
               <p className="mb-2 text-gray-700">{t('euUk.sharing.content')}</p>
-              <p className="text-gray-700">{t('euUk.sharing.contact')}</p>
             </div>
 
             {/* Retention and Security */}
@@ -324,7 +319,6 @@ export default function PrivacyPage() {
               <div className="space-y-3 rounded-lg bg-green-50 p-4">
                 <p className="text-gray-700">{t('euUk.rights.list')}</p>
                 <p className="text-gray-700">{t('euUk.rights.verification')}</p>
-                <p className="text-gray-700">{t('euUk.rights.contact')}</p>
               </div>
             </div>
 
@@ -341,14 +335,6 @@ export default function PrivacyPage() {
             </div>
           </div>
         </section>
-      </div>
-
-      {/* Footer */}
-      <div className="mt-12 border-t border-gray-300 pt-8 text-center text-sm text-gray-500">
-        <p>
-          For questions about this Privacy Policy, please contact:
-          contacttodd.us@todd.com
-        </p>
       </div>
     </div>
   );

@@ -34,8 +34,7 @@
     "miscellaneous": {
       "title": "MISCELLANEOUS",
       "termsReference": "The provisions in our Terms of Use are hereby incorporated by reference.",
-      "headings": "Headings and captions throughout this Privacy Policy are for convenience only and should not be considered part of this Privacy Policy. The word including means including without limitation.",
-      "contact": "If you have any questions or concerns about this Privacy Policy or any issues raised in this Privacy Policy or on the Site, please contact contacttodd.us@todd.com."
+      "headings": "Headings and captions throughout this Privacy Policy are for convenience only and should not be considered part of this Privacy Policy. The word including means including without limitation."
     },
     "california": {
       "title": "WEBSITE PRIVACY POLICY SUPPLEMENT FOR CALIFORNIA RESIDENTS",
@@ -166,11 +165,10 @@
         },
         "exercise": {
           "title": "How to Exercise Your Rights",
-          "content": "If you would like to contact us by telephone without incurring telephone charges, please submit your request and telephone number by email to contacttodd.us@todd.com, and we will call you between 9 a.m. and 6 p.m. Pacific Time.",
+          "content": "",
           "verification": "We will contact you to confirm receipt of your request under the CCPA and request any additional information necessary to verify your request. We verify requests by matching information provided in connection with your request to information contained in our records. Depending on the sensitivity of the request and the varying levels of risk in responding to such requests (for example, the risk of responding to fraudulent or malicious requests), we may request further information or your investor portal access credentials, if applicable in order to verify your request. You may designate an authorized agent to make a request under the CCPA on your behalf, provided that you provide a signed agreement verifying such authorized agent's authority to make requests on your behalf, and we may verify such authorized person's identity using the procedures above. If we request you verify your request and we do not receive your response, we will pause processing your request until such verification is received."
         }
-      },
-      "contact": "Please contact us at contacttodd.us@todd.com with any questions about this Privacy Policy supplement."
+      }
     },
     "euUk": {
       "title": "EU-UK PRIVACY NOTICE",
@@ -178,7 +176,6 @@
       "intro": "This EU-UK Privacy Policy (this \"EU-UK Privacy Policy\") supplements (and in the case of conflict, takes precedence over) the general Privacy Policy, if and only to the extent that EU-UK Data Protection Legislation (as defined below) applies to our processing of your personal data in connection with this website. Information required to be disclosed under EU-UK Data Protection Legislation regarding the processing of your personal data that is not set forth in this EU-UK Privacy Policy is otherwise set forth in the general Privacy Policy above. If this EU-UK Privacy Policy applies, you have certain rights with respect to such personal data, as outlined below.",
       "definitions": "For this EU-UK Privacy Policy, \"EU-UK Data Protection Legislation\" means all applicable legislation and regulations relating to the protection of personal data in force from time to time in the European Union (\"EU\"), the European Economic Area (\"EEA\"), the United Kingdom (\"UK\"), or the Cayman Islands, including the EU GDPR and the UK GDPR, and the terms \"data controller,\" \"data processor,\" \"data subject,\" \"personal data\" and \"processing\" in this EU-UK Privacy Policy shall be interpreted in accordance with the applicable EU-UK Data Protection Legislation. For the purposes of applicable EU-UK Data Protection Legislation, Todd and/or one or more of its affiliates will be the controller of any personal data collected by us.",
       "scope": "This EU-UK Privacy Policy does not apply to any processing of personal data by or on behalf of Todd that is covered by a more specific privacy policy (including, without limitation, our employee and contractor privacy policies and our Service and/or Product User Agreement's privacy policies).",
-      "contact": "Please direct any questions arising out of this EU-UK Privacy Policy, please contact contacttodd.us@todd.com.",
       "additionalInfo": {
         "title": "ADDITIONAL INFORMATION REGARDING OUR USE OF YOUR PERSONAL DATA",
         "content": "Our general Privacy Policy sets out the personal data that we collect (as described in the section headed \"THE INFORMATION WE COLLECT AND HOW WE USE IT\"). We do not collect any special categories of personal data about you (this includes details about your race or ethnicity, religious or philosophical beliefs, sex life, sexual orientation, political opinions, trade union membership or information about your health or genetic or biometric data)."
@@ -196,8 +193,7 @@
       },
       "sharing": {
         "title": "SHARING AND TRANSFERS OF PERSONAL DATA",
-        "content": "Our general Privacy Policy sets out details of any personal data transfers (as described in the section headed \"DISCLOSURE AND TRANSFER OF PERSONAL DATA\"). To the extent any personal data is transferred from the EEA or UK to a destination outside the EEA or UK, we will take steps to ensure that your personal data is protected by appropriate organizational and security measures, and that any such transfers are only made in accordance with the EU-UK Data Protection Legislation (which may include implementing the EU standard contractual clauses and/or the UK International Data Transfer Addendum).",
-        "contact": "For further information about the safeguards or details of any relevant non-EEA/UK countries, please contact contacttodd.us@todd.com."
+        "content": "Our general Privacy Policy sets out details of any personal data transfers (as described in the section headed \"DISCLOSURE AND TRANSFER OF PERSONAL DATA\"). To the extent any personal data is transferred from the EEA or UK to a destination outside the EEA or UK, we will take steps to ensure that your personal data is protected by appropriate organizational and security measures, and that any such transfers are only made in accordance with the EU-UK Data Protection Legislation (which may include implementing the EU standard contractual clauses and/or the UK International Data Transfer Addendum)."
       },
       "retention": {
         "title": "RETENTION AND SECURITY OF PERSONAL DATA",
@@ -218,8 +214,7 @@
       "rights": {
         "title": "YOUR RIGHTS UNDER EU-UK DATA PROTECTION LEGISLATION",
         "list": "Subject to applicable EU-UK Data Protection Legislation, you may have the following rights under EU-UK Data Protection Legislation: to obtain information about, or (where applicable) withdraw any consent given in relation to, the processing of your personal data; to access and receive a copy of your personal data; to request rectification of your personal data; to request erasure of your personal data; to exercise your right to data portability; and to exercise your right not to be subject to automated decision-making. Please note that the right to erasure is not absolute, and it may not always be possible to erase personal data on request, including where the personal data must be retained to comply with a legal obligation.",
-        "verification": "We may need to request specific information from you to help us confirm your identity and ensure your right to access your personal data (or to exercise any of your other rights). This is a security measure to ensure that personal data is not disclosed to any person who has no right to receive it. We may also contact you to ask you for further information in relation to your request to speed up our response.",
-        "contact": "You may raise any request relating to the processing of your personal data with Todd by contacting us at contacttodd.us@todd.com."
+        "verification": "We may need to request specific information from you to help us confirm your identity and ensure your right to access your personal data (or to exercise any of your other rights). This is a security measure to ensure that personal data is not disclosed to any person who has no right to receive it. We may also contact you to ask you for further information in relation to your request to speed up our response."
       },
       "complaints": {
         "title": "COMPLAINTS",
