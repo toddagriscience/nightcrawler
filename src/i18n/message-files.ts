@@ -13,4 +13,5 @@ export const messageFiles = [
   'contact',
   'accessibility',
   'privacy',
+  'terms',
 ];
