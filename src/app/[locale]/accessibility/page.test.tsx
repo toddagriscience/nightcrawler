@@ -21,4 +21,10 @@ describe('AccessibilityPage', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('has appropriate maragins', () => {
+    const { container } = renderWithNextIntl(<AccessibilityPage />);
+
+    expect(container.querySelector('.mt-16')).toBeInTheDocument();
+  });
 });
