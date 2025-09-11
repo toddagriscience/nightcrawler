@@ -53,8 +53,8 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
       // Parse the date to get a proper lastModified date
       const articleDate = new Date(newsArticle.date);
       const lastModified = isNaN(articleDate.getTime())
-        ? new Date().toISOString()
-        : articleDate.toISOString();
+        ? new Date()
+        : articleDate;
 
       sitemapEntries.push({
         url,
