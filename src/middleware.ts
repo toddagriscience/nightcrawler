@@ -64,7 +64,7 @@ export default function middleware(request: NextRequest) {
     cookiesToRemove.forEach((cookieName) => {
       if (request.cookies.has(cookieName)) {
         response.cookies.delete(cookieName);
-        logger.warn(`[GPC] Removed non-essential cookie: ${cookieName}`);
+        logger.log(`[GPC] Removed non-essential cookie: ${cookieName}`);
       }
     });
 
