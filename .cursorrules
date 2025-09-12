@@ -93,6 +93,7 @@ src/
     fonts.ts             # Custom font loading
     locale-utils.ts      # Locale helper functions
     locales.ts           # Locale definitions
+    logger.ts            # Environment-aware logging utility
     metadata.ts          # SEO metadata utilities
     scroll-to-top.tsx    # Scroll to top component
     utils.ts             # shadcn/ui utility functions
@@ -183,6 +184,13 @@ When making changes, prioritize:
 - **Linting**: ESLint with auto-fix attempts
 - **Type checking**: TypeScript validation before commit
 
+#### Logging Standards
+
+- **Environment-aware logging**: Use `@/lib/logger` instead of console methods
+- **Production-safe**: Only `logger.warn` and `logger.error` should be used
+- **No console.log**: Avoid console.log entirely - use logger.warn for debug info
+- **Critical errors only**: Use logger.error only for critical issues that need attention
+
 #### Pull Request Requirements
 
 - All CI checks must pass (lint → type-check → test → build)
@@ -237,6 +245,23 @@ When making changes, prioritize:
 - **Consider impact**: Think about performance, accessibility, and i18n
 - **Document changes**: Update Storybook stories for UI changes
 - **Validate thoroughly**: Run full validation suite before submitting
+- **Use proper logging**: Import and use `@/lib/logger` instead of console methods
+
+### Logging Usage Examples
+
+```tsx
+import { logger } from '@/lib/logger';
+
+// For debugging and development info (only shows in dev/local)
+logger.warn('Component state changed:', { newState });
+logger.warn('[GPC] Privacy signal detected');
+
+// For critical errors that need attention (always shows, even in production)
+logger.error('API call failed:', error);
+logger.error('Critical authentication error');
+
+// console.log, console.info, console.debug can still be used for development, though they should be removed before PRs
+```
 
 ### Getting Help
 
