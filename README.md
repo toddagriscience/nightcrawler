@@ -14,8 +14,8 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd toddagriscience
+   git clone https://github.com/toddagriscience/Nightcrawler.git
+   cd Nightcrawler
    ```
 
 2. **Use correct Node.js version** (if using nvm)
