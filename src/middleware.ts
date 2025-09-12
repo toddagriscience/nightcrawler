@@ -1,8 +1,9 @@
 // Copyright Todd LLC, All rights reserved.
 
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './i18n/config';
+import { logger } from '@/lib/logger';
 
 /**
  * Enhanced middleware for internationalization and privacy controls
@@ -17,7 +18,28 @@ export default function middleware(request: NextRequest) {
   const hasGPCEnabled = gpcHeader === '1';
 
   // Run the internationalization middleware first
-  const response = intlMiddleware(request);
+  const intlResponse = intlMiddleware(request);
+
+  // Ensure we have a NextResponse with proper headers and cookies properties
+  const response =
+    intlResponse instanceof NextResponse ? intlResponse : NextResponse.next();
+
+  // Copy headers from intl response if it was a basic Response
+  if (!(intlResponse instanceof NextResponse)) {
+    // Handle case where intl middleware returns a basic Response
+    if (
+      intlResponse &&
+      typeof intlResponse === 'object' &&
+      'headers' in intlResponse
+    ) {
+      const basicResponse = intlResponse as Response;
+      if (basicResponse.headers) {
+        basicResponse.headers.forEach((value, key) => {
+          response.headers.set(key, value);
+        });
+      }
+    }
+  }
 
   // If GPC is enabled, add privacy headers and disable non-essential cookies
   if (hasGPCEnabled) {
@@ -25,7 +47,7 @@ export default function middleware(request: NextRequest) {
     response.headers.set('x-gpc-detected', '1');
     response.headers.set('x-privacy-mode', 'strict');
 
-    // Remove/prevent non-essential cookies (preserve essential ones like locale, theme)
+    // Remove/prevent non-essential cookies
     const cookiesToRemove = [
       'analytics',
       'tracking',
@@ -33,20 +55,31 @@ export default function middleware(request: NextRequest) {
       'advertising',
       'social-media',
       'performance',
+      'experiments',
+      'personalization',
+      'recommendations',
+      'behavioral',
     ];
 
     cookiesToRemove.forEach((cookieName) => {
       if (request.cookies.has(cookieName)) {
         response.cookies.delete(cookieName);
+        logger.log(`[GPC] Removed non-essential cookie: ${cookieName}`);
       }
     });
 
-    // Add additional privacy headers
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    // Log GPC compliance for auditing
+    logger.log(
+      `[GPC] Privacy signal detected from ${request.headers.get('x-forwarded-for') || 'unknown IP'}. Privacy mode: strict`
+    );
+
+    // Add additional privacy headers (Referrer-Policy already set in next.config.ts)
     response.headers.set('X-Privacy-Control', 'gpc-enabled');
+    response.headers.set('X-Data-Processing', 'minimal');
   } else {
     // Standard privacy headers for non-GPC users
     response.headers.set('x-privacy-mode', 'standard');
+    response.headers.set('X-Privacy-Control', 'standard');
   }
 
   return response;
