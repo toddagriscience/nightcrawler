@@ -11,11 +11,15 @@
  * @param {string} link - The link of the news card
  */
 export default interface NewsCardProps {
-  image: string;
-  source: string;
+  title: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+  excerpt: string;
+  source?: string;
   date: string;
-  headline: string;
   isDark?: boolean;
   className?: string;
-  link?: string;
+  slug?: string;
 }
