@@ -36,15 +36,15 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   return (
     <motion.div
       ref={carouselRef}
-      className="w-full rounded-2xl flex flex-col bg-[#CCC5B5] h-fit px-8 lg:px-28"
+      className="flex h-fit w-full flex-col rounded-2xl bg-[#CCC5B5] px-8 lg:px-28"
       animate={{
         backgroundColor: isDark ? '#2A2727' : '#CCC5B5',
         color: isDark ? '#FDFDFB' : '#2A2727',
       }}
     >
       <section id="news-carousel" className="flex flex-col" role="region">
-        <div className="flex flex-row justify-between items-start mt-32 font-light mb-8">
-          <h1 className="text-3xl lg:text-8xl tracking-tight">
+        <div className="mt-32 mb-8 flex flex-row items-start justify-between font-light">
+          <h1 className="text-3xl tracking-tight lg:text-8xl">
             {tNews('news.news_highlights')}
           </h1>
           <Button
@@ -53,7 +53,7 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
             variant="outline"
             size="lg"
             isDark={isDark}
-            className="hidden md:flex self-end"
+            className="hidden self-end md:flex"
           />
         </div>
 
@@ -62,13 +62,14 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
           <Carousel isDark={isDark} showDots={true} loop={true}>
             {newsData.newsArticles.map((article) => (
               <NewsCard
+                title="Featured Article"
                 key={article.id}
                 isDark={isDark}
-                image={article.image}
+                image={{ url: article.image.url, alt: article.image.alt }}
                 source={article.source}
                 date={article.date}
-                headline={article.headline}
-                link={article.link}
+                excerpt={article.headline}
+                slug={article.link}
               />
             ))}
           </Carousel>
@@ -80,7 +81,7 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
           variant="outline"
           size="md"
           isDark={isDark}
-          className="flex md:hidden self-center mt-4 mb-32"
+          className="mt-4 mb-32 flex self-center md:hidden"
         />
       </section>
 

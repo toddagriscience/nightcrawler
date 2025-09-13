@@ -34,31 +34,35 @@ type Story = StoryObj<typeof meta>;
 const sampleNewsCards = (isDark: boolean) => (
   <>
     <NewsCard
-      image="/images/placeholder.jpg"
+      title="Title"
+      image={{ url: '/images/placeholder.jpg', alt: '' }}
       source="Journal"
       date="Apr 15, 2025"
-      headline="Todd Announces Partnership with Agricultural Innovation Lab"
+      excerpt="Todd Announces Partnership with Agricultural Innovation Lab"
       isDark={isDark}
     />
     <NewsCard
-      image="/images/placeholder.jpg"
+      title="Title"
+      image={{ url: '/images/placeholder.jpg', alt: '' }}
       source="PR Newswire"
       date="Mar 30, 2025"
-      headline="Todd Introduces Revolutionary Regenerative Farming Techniques"
+      excerpt="Todd Introduces Revolutionary Regenerative Farming Techniques"
       isDark={isDark}
     />
     <NewsCard
-      image="/images/placeholder.jpg"
+      title="Title"
+      image={{ url: '/images/placeholder.jpg', alt: '' }}
       source="AgTech Weekly"
       date="Feb 12, 2025"
-      headline="Sustainable Agriculture Solutions Show Promising Results"
+      excerpt="Sustainable Agriculture Solutions Show Promising Results"
       isDark={isDark}
     />
     <NewsCard
-      image="/images/placeholder.jpg"
+      title="Title"
+      image={{ url: '/images/placeholder.jpg', alt: '' }}
       source="Farm Journal"
       date="Jan 28, 2025"
-      headline="Next Generation of Farming Technology Unveiled"
+      excerpt="Next Generation of Farming Technology Unveiled"
       isDark={isDark}
     />
   </>

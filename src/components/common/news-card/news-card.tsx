@@ -45,6 +45,7 @@ const NewsCard = ({
   isDark = false,
   className = '',
   slug = '',
+  title,
 }: NewsCardProps) => {
   const link = '/news/' + slug;
 
@@ -64,6 +65,7 @@ const NewsCard = ({
             isDark={isDark}
           />
           <div className="p-4">
+            <h2>{title}</h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
