@@ -1,0 +1,75 @@
+{
+  "news": {
+    "subtitle": "Todd Newsroom",
+    "highlighted": "Highlighted",
+    "latestNews": "Latest News"
+  },
+  "articleExcerpts": {
+    "ambrookPartnership": {
+      "title": "Todd Announces Partnership with Ambrook",
+      "date": "2023-04-15",
+      "excerpt": "Todd has announced a significant investment in a promising tech startup focused on sustainable solutions.",
+      "slug": "article/ambrook-partnership",
+      "source": "Todd",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "Todd investment announcement"
+      }
+    },
+    "regenerativeSeed": {
+      "title": "Todd Announces Worlds First Regenerative Seed Products",
+      "date": "2023-03-22",
+      "excerpt": "Industry leaders from around the world gathered for the annual summit to discuss emerging trends and challenges.",
+      "slug": "industry-leaders-gather-for-annual-summit",
+      "source": "External",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "Industry summit"
+      }
+    },
+    "ftcPartnership": {
+      "title": "Todd Annouces Partership with Farm-to-Consumer",
+      "date": "2023-02-10",
+      "excerpt": "Todd",
+      "slug": "article/ftc-partnership",
+      "source": "Todd",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "SKKY Partners portfolio expansion"
+      }
+    },
+    "farmlinkPartnership": {
+      "title": "Farmlink Project Partnership",
+      "date": "2023-01-05",
+      "excerpt": "A comprehensive analysis of market trends that investors and businesses should watch in 2023.",
+      "slug": "article/farmlink-partnership",
+      "source": "External",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "Market analysis chart"
+      }
+    },
+    "whyRegenerative": {
+      "title": "Why Regenerative Partnership",
+      "date": "2022-12-12",
+      "excerpt": "Placeholder",
+      "slug": "article/why-regenerative-partnership",
+      "source": "External",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "Entrepreneurship workshop"
+      }
+    },
+    "umichPartnership": {
+      "title": "University of Michigan Partnership",
+      "date": "2022-11-18",
+      "excerpt": "Leading economists share their perspectives on the economic outlook for the coming year.",
+      "slug": "article/umich-partnership",
+      "source": "External",
+      "image": {
+        "url": "/placeholder.svg?height=600&width=800",
+        "alt": "Economic forecast"
+      }
+    }
+  }
+}
