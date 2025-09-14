@@ -1,5 +1,5 @@
-import featuredNews from '@/data/featured-news.json';
 import { routing } from '@/i18n/config';
+import news from '@/messages/news/en.json';
 import { env } from '@/lib/env';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
@@ -66,8 +66,8 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
 
   try {
     for (const locale of routing.locales) {
-      for (const newsArticle of featuredNews.newsArticles) {
-        if (!newsArticle.link || !newsArticle.date) {
+      for (const newsArticle of Object.values(news.articleExcerpts)) {
+        if (!newsArticle.slug || !newsArticle.date) {
           console.warn(
             `Skipping news article with missing link or date:`,
             newsArticle
@@ -75,7 +75,7 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
           continue;
         }
 
-        const url = `${baseUrl}/${locale}/${newsArticle.link}`;
+        const url = `${baseUrl}/${locale}/news/articles/${newsArticle.slug}`;
 
         const lastModified = parseArticleDate(newsArticle.date);
 
@@ -85,7 +85,7 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
           changeFrequency: 'weekly',
           priority: 0.7,
           alternates: {
-            languages: getSupportedLanguages(`/${newsArticle.link}`),
+            languages: getSupportedLanguages(`/${newsArticle.slug}`),
           },
         });
       }
