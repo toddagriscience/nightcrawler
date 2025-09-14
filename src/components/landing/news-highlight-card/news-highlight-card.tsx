@@ -4,12 +4,12 @@
 
 import { Button, Carousel, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
-import newsData from '@/data/featured-news.json';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { Quote } from '../index';
 import { NewsHighlightCardProps } from './types/news-highlight-card';
+import { useNews } from '@/lib/utils';
 
 /**
  * News highlight card component
@@ -26,12 +26,10 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   const t = useTranslations('common');
   const tNews = useTranslations('homepage');
 
+  const { allNews } = useNews();
+
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
-
-  // TODO: Replace JSON data with database connection for dynamic content management
-
-  // TODO: Replace JSON data with database connection for dynamic content management
 
   return (
     <motion.div
@@ -57,19 +55,18 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
           />
         </div>
 
-        {/* News Carousel */}
         <div className="mb-8">
           <Carousel isDark={isDark} showDots={true} loop={true}>
-            {newsData.newsArticles.map((article) => (
+            {allNews.map((article) => (
               <NewsCard
-                title="Featured Article"
-                key={article.id}
+                title={article.title}
+                key={article.slug}
                 isDark={isDark}
                 image={{ url: article.image.url, alt: article.image.alt }}
                 source={article.source}
                 date={article.date}
-                excerpt={article.headline}
-                slug={article.link}
+                excerpt={article.excerpt}
+                slug={article.slug}
               />
             ))}
           </Carousel>
@@ -85,7 +82,6 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
         />
       </section>
 
-      {/* Quote/About Section */}
       <Quote isDark={isDark} />
     </motion.div>
   );

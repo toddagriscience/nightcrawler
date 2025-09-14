@@ -55,11 +55,9 @@ describe('NewsHighlightCard', () => {
   it('displays news articles from JSON data', async () => {
     await renderWithAct(<NewsHighlightCard />);
     expect(
-      screen.getByText(
-        'Todd Announces Partnership with Agricultural Innovation Lab'
-      )
+      screen.getByText('Todd Announces Partnership with Ambrook')
     ).toBeInTheDocument();
-    expect(screen.getByText(/Journal.*Apr 15, 2025/)).toBeInTheDocument();
+    expect(screen.getByText(/2023-04-15/)).toBeInTheDocument();
   });
 
   it('renders normally without isLoading prop', async () => {
