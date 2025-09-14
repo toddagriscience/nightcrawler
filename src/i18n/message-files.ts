@@ -10,5 +10,4 @@ export const messageFiles = [
   'footer',
   'homepage',
   'who-we-are',
-  'contact',
 ];
