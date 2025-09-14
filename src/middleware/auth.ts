@@ -1,6 +1,8 @@
 // Copyright Todd LLC, All rights reserved.
 
+import { routing } from '@/i18n/config';
 import { logger } from '@/lib/logger';
+import { Locale } from 'next-intl';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const AUTH_COOKIE_NAME = 'isAuth';
@@ -31,7 +33,7 @@ export function handleAuthRouting(
 
   if (isAuthenticated) {
     // Authenticated users accessing public routes should go to dashboard
-    if (pathname.startsWith('/en') || pathname.startsWith('/es')) {
+    if (routing.locales.includes(pathname.split('/')[1] as Locale)) {
       logger.warn(
         `[Auth] Authenticated user accessing public route: ${pathname}, redirecting to dashboard`
       );
@@ -43,7 +45,9 @@ export function handleAuthRouting(
       logger.warn(
         `[Auth] Unauthenticated user accessing protected route: ${pathname}, redirecting to landing`
       );
-      return NextResponse.redirect(new URL('/en', request.url));
+      return NextResponse.redirect(
+        new URL(`/${routing.defaultLocale}`, request.url)
+      );
     }
   }
 

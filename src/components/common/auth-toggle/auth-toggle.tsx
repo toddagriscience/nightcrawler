@@ -4,9 +4,12 @@
 
 import { useEffect, useState } from 'react';
 
+const COOKIE_MAX_AGE_SECONDS = 31 * 24 * 60 * 60;
+
 /**
  * Dev auth toggle - only shows in development
  * Adds a cookie to the browser to toggle authentication status to test dashboard and proper routing
+ * No tests or storybook for this component as it will be removed later
  * @returns {React.ReactNode} - The auth toggle component
  */
 export function AuthToggle() {
@@ -25,7 +28,7 @@ export function AuthToggle() {
 
   const toggle = () => {
     const newAuth = !isAuth;
-    document.cookie = `isAuth=${newAuth}; path=/; max-age=${31 * 24 * 60 * 60}`;
+    document.cookie = `isAuth=${newAuth}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}`;
     window.location.reload();
   };
 
