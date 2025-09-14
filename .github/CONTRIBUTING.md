@@ -130,6 +130,7 @@ npm run storybook      # Component testing
 - **Props destructuring**: Destructure props in function signature
 - **Default exports**: Use default exports for components
 - **Naming**: PascalCase for components, kebab-case for files
+- **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
 
 ### Styling
 
@@ -149,6 +150,34 @@ components/
 │       ├── header.stories.tsx
 │       └── index.ts
 ```
+
+## 📝 Logging Guidelines
+
+### Using the Logger Utility
+
+Always use the environment-aware to display warnings instead of console logging:
+
+```tsx
+import { logger } from '@/lib/logger';
+
+// Instead of console.log
+logger.warn('Warning message');
+
+// Errors always show (even in production)
+logger.error('Critical error');
+```
+
+### Logging Best Practices
+
+- **Development only**: `logger.warn`, `logger.debug` only show in development/local environments
+- **Always visible**: `logger.error` always shows for critical issues
+- **Structured logging**: Use consistent message formats
+- **No sensitive data**: Never log secrets, keys, or PII
+
+### When to Log
+
+- **Errors**: All error conditions and exceptions
+- **Performance**: Timing information for optimization
 
 ## 🌍 Internationalization (i18n)
 
@@ -281,6 +310,7 @@ components/
 - **Don't hardcode text**: Use i18n for all user-facing text
 - **Don't break accessibility**: Test keyboard navigation
 - **Don't commit without validation**: Always run `npm run validate`
+- **Don't use console methods**: Use `@/lib/logger` for environment-aware logging
 
 ### Performance Considerations
 
