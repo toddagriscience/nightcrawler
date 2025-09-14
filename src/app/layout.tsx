@@ -1,10 +1,9 @@
 // Copyright Todd LLC, All rights reserved.
 import { AuthToggle, ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { AUTH_COOKIE_NAME } from '@/middleware/auth';
 import { cookies } from 'next/headers';
 import './globals.css';
-
-const AUTH_COOKIE_NAME = 'isAuth';
 
 /**
  * Root layout for the app

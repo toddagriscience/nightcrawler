@@ -1,6 +1,6 @@
 // Copyright Todd LLC, All rights reserved.
 
-import { routing, supportedLocales } from '@/i18n/config';
+import { routing, SUPPORTED_LOCALES } from '@/i18n/config';
 import { Locale } from 'next-intl';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
@@ -30,7 +30,7 @@ export function handleI18nMiddleware(
     }
 
     // For paths that already have locale, let them through normally
-    if (supportedLocales.includes(pathname.split('/')[1] as Locale)) {
+    if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
       return NextResponse.next();
     }
 

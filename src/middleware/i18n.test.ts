@@ -59,7 +59,7 @@ jest.mock('@/i18n/config', () => ({
     locales: ['en', 'es'],
     defaultLocale: 'en',
   },
-  supportedLocales: ['en', 'es'],
+  SUPPORTED_LOCALES: ['en', 'es'],
 }));
 
 import { NextRequest, NextResponse } from 'next/server';

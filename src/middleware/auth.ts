@@ -5,6 +5,10 @@ import { logger } from '@/lib/logger';
 import { Locale } from 'next-intl';
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * The name of the authentication cookie
+ * @constant {string} - The name of the authentication cookie
+ */
 export const AUTH_COOKIE_NAME = 'isAuth';
 
 /**
