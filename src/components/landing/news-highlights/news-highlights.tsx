@@ -8,15 +8,15 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { Quote } from '../index';
-import { NewsHighlightCardProps } from './types/news-highlight-card';
+import { NewsHighlightsProps } from './types/news-highlights';
 import { useNews } from '@/lib/utils';
 
 /**
  * News highlight card component
- * @param {NewsHighlightCardProps} props - The component props
+ * @param {NewsHighlightsProps} props - The component props
  * @returns {JSX.Element} - The news highlight card component
  */
-const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
+const NewsHighlights: React.FC<NewsHighlightsProps> = ({
   carouselRef: externalRef,
   isDark: propIsDark,
 }) => {
@@ -26,7 +26,7 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   const t = useTranslations('common');
   const tNews = useTranslations('homepage');
 
-  const { allNews } = useNews();
+  const { featuredNews } = useNews();
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
@@ -57,7 +57,7 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
 
         <div className="mb-8">
           <Carousel isDark={isDark} showDots={true} loop={true}>
-            {allNews.map((article) => (
+            {featuredNews.map((article) => (
               <NewsCard
                 title={article.title}
                 key={article.slug}
@@ -87,4 +87,4 @@ const NewsHighlightCard: React.FC<NewsHighlightCardProps> = ({
   );
 };
 
-export default NewsHighlightCard;
+export default NewsHighlights;
