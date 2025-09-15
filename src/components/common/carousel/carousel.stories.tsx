@@ -40,6 +40,7 @@ const sampleNewsCards = (isDark: boolean) => (
       date="Apr 15, 2025"
       excerpt="Todd Announces Partnership with Agricultural Innovation Lab"
       isDark={isDark}
+      slug="todd-announces-partnership-agricultural-innovation"
     />
     <NewsCard
       title="Title"
@@ -48,6 +49,7 @@ const sampleNewsCards = (isDark: boolean) => (
       date="Mar 30, 2025"
       excerpt="Todd Introduces Revolutionary Regenerative Farming Techniques"
       isDark={isDark}
+      slug="todd-introduces-revolutionary-farming-techniques"
     />
     <NewsCard
       title="Title"
@@ -56,6 +58,7 @@ const sampleNewsCards = (isDark: boolean) => (
       date="Feb 12, 2025"
       excerpt="Sustainable Agriculture Solutions Show Promising Results"
       isDark={isDark}
+      slug="sustainable-agriculture"
     />
     <NewsCard
       title="Title"
@@ -64,6 +67,7 @@ const sampleNewsCards = (isDark: boolean) => (
       date="Jan 28, 2025"
       excerpt="Next Generation of Farming Technology Unveiled"
       isDark={isDark}
+      slug="next-gen-farming-technology"
     />
   </>
 );

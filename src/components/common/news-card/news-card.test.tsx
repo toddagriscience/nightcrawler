@@ -12,6 +12,7 @@ describe('NewsCard', () => {
     date: 'Jan 1, 2025',
     title: 'Test Headline',
     excerpt: 'A tidbit of information',
+    slug: 'test',
   };
 
   it('renders without crashing', async () => {
