@@ -47,7 +47,7 @@ const NewsCard = ({
   slug = '',
   title,
 }: NewsCardProps) => {
-  const link = '/news/' + slug;
+  const link = '/news/articles/' + slug;
 
   return (
     <div
