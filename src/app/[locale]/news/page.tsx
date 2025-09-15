@@ -3,6 +3,7 @@
 'use client';
 
 import { FeaturedNewsCarousel } from '@/components/common/news/featured-news-carousel';
+import { LatestNewsTable } from '@/components/common/news/latest-news-table';
 import { useNews } from '@/lib/utils';
 
 /**
@@ -10,7 +11,7 @@ import { useNews } from '@/lib/utils';
  * @returns {JSX.Element} - The news page
  */
 export default function News() {
-  const { featuredNews } = useNews();
+  const { featuredNews, allNews } = useNews();
 
   return (
     <>
@@ -30,7 +31,7 @@ export default function News() {
             Latest News
           </h3>
 
-          {/* <LatestNewsTable items={allNewsItems} /> */}
+          <LatestNewsTable items={allNews} />
         </div>
       </div>
     </>
