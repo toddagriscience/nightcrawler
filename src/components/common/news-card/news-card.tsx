@@ -51,7 +51,7 @@ const NewsCard = ({
 
   return (
     <div
-      className={`text-foreground h-[90vh] max-w-full min-w-[90%] px-4 py-4 font-light transition-colors duration-300 md:min-w-[45%] lg:min-w-[30%]${className}`}
+      className={`text-foreground h-[90vh] max-w-full min-w-[90%] px-4 py-4 font-light transition-colors duration-300 md:min-w-[45%] lg:min-w-[30%] ${className}`}
     >
       <Link href={link} className="mb-16">
         <div className="rounded-xl bg-transparent">
