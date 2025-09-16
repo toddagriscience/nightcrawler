@@ -1,8 +1,11 @@
+// Copyright Todd LLC, All rights reserved.
+
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsCard } from '@/components/common';
 import { Button } from '@/components/ui';
 import NewsCardProps from '../news-card/types/news-card';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface Props {
   items: NewsCardProps[];
@@ -38,9 +41,9 @@ export function FeaturedNewsCarousel({ items }: Props) {
           <Button
             onClick={handlePrev}
             variant="ghost"
-            className="rounded-full bg-[#727272]/60 text-white shadow-md hover:bg-[#727272]/80"
+            className="rounded-full bg-[#727272]/60 p-3 text-white shadow-md hover:bg-[#727272]/80"
           >
-            ←
+            <ArrowLeft />
           </Button>
         </CarouselButtonWrapper>
         <AnimatePresence mode="wait">
@@ -58,9 +61,9 @@ export function FeaturedNewsCarousel({ items }: Props) {
           <Button
             onClick={handleNext}
             variant="ghost"
-            className="rounded-full bg-[#727272]/60 text-white shadow-md hover:bg-[#727272]/80"
+            className="rounded-full bg-[#727272]/60 p-3 text-white shadow-md hover:bg-[#727272]/80"
           >
-            →
+            <ArrowRight />
           </Button>
         </CarouselButtonWrapper>
       </div>
@@ -70,7 +73,7 @@ export function FeaturedNewsCarousel({ items }: Props) {
 
 function CarouselButtonWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-[18px] flex h-[80vw] max-h-[600px] w-[50px] max-w-[600px] items-center justify-center">
+    <div className="mt-[18px] flex h-[70vw] max-h-[600px] w-[50px] max-w-[600px] items-center justify-center">
       {children}
     </div>
   );

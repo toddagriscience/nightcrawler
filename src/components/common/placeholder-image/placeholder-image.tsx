@@ -60,7 +60,7 @@ const PlaceholderImage = ({
   if (imageError) {
     return (
       <div
-        className={`max-w-[${width}px] max-h-[${height}px] flex h-[80vw] w-[80vw] items-center justify-center px-[18px] ${
+        className={`max-w-[${width}px] max-h-[${height}px] flex h-[70vw] w-[70vw] items-center justify-center px-1 ${
           isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-500'
         } ${className}`}
         role="img"

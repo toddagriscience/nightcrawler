@@ -17,7 +17,7 @@ export default function News() {
     <div className="fadeInAnimation relative z-10 mx-auto mt-24 max-w-[80vw] pt-[calc(var(--headerHeight)+15px)] pb-4 md:pt-[calc(var(--headerHeight)+26px)] xl:overflow-x-visible">
       <h1 className="mx-auto text-center">Todd Newsroom</h1>
 
-      <h2 className="text-slate-secondary text-center text-2xl md:mb-0 md:text-5xl xl:text-7xl">
+      <h2 className="text-slate-secondary pb-4 text-center text-2xl md:mb-0 md:text-5xl xl:text-7xl">
         Highlights
       </h2>
 
