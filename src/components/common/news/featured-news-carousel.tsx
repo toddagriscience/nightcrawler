@@ -26,15 +26,15 @@ export function FeaturedNewsCarousel({ items }: Props) {
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext();
-    }, 5000);
+    }, 6500);
 
     return () => clearInterval(interval);
   }, [handleNext]);
 
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="relative w-full max-w-[640px] scale-95">
-        <div className="absolute top-1/2 left-[-2rem] z-10 -translate-y-1/2">
+      <div className="mx-auto flex h-auto max-w-[640px] flex-row justify-center">
+        <CarouselButtonWrapper>
           <Button
             onClick={handlePrev}
             variant="ghost"
@@ -42,8 +42,7 @@ export function FeaturedNewsCarousel({ items }: Props) {
           >
             ←
           </Button>
-        </div>
-
+        </CarouselButtonWrapper>
         <AnimatePresence mode="wait">
           <motion.div
             key={items[current].excerpt}
@@ -55,8 +54,7 @@ export function FeaturedNewsCarousel({ items }: Props) {
             <NewsCard {...items[current]} />
           </motion.div>
         </AnimatePresence>
-
-        <div className="absolute top-1/2 right-[-2rem] z-10 -translate-y-1/2">
+        <CarouselButtonWrapper>
           <Button
             onClick={handleNext}
             variant="ghost"
@@ -64,8 +62,16 @@ export function FeaturedNewsCarousel({ items }: Props) {
           >
             →
           </Button>
-        </div>
+        </CarouselButtonWrapper>
       </div>
+    </div>
+  );
+}
+
+function CarouselButtonWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-[18px] flex h-[80vw] max-h-[600px] w-[50px] max-w-[600px] items-center justify-center">
+      {children}
     </div>
   );
 }

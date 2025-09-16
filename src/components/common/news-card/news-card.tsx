@@ -51,16 +51,16 @@ const NewsCard = ({
 
   return (
     <div
-      className={`text-foreground max-w-full min-w-[90%] px-4 py-4 font-light transition-colors duration-300 md:min-w-[45%] lg:min-w-[30%] ${className}`}
+      className={`text-foreground h-[90vh] max-w-full min-w-[90%] px-4 py-4 font-light transition-colors duration-300 md:min-w-[45%] lg:min-w-[30%]${className}`}
     >
-      <Link href={link}>
-        <div className="overflow-hidden rounded-xl bg-transparent">
+      <Link href={link} className="mb-16">
+        <div className="rounded-xl bg-transparent">
           <PlaceholderImage
             src={image.url}
             alt={image.alt}
-            width={800}
+            width={600}
             height={600}
-            className="h-auto w-full object-cover"
+            className="h-[80vw] w-[80vw]"
             fallbackText="News Image"
             isDark={isDark}
           />
@@ -69,7 +69,7 @@ const NewsCard = ({
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
-            <h3 className="text-2xl">{excerpt}</h3>
+            <h3 className="text-xl">{excerpt}</h3>
           </div>
         </div>
       </Link>
