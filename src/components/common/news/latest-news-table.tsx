@@ -28,7 +28,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
 
       {items.slice(0, visibleCount).map((item, index) => (
         <div
-          key={item.slug}
+          key={item.link}
           className={clsx(
             'grid grid-cols-3 items-center px-4 py-4 text-sm',
             index !== visibleCount - 1 &&
@@ -42,9 +42,9 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             {item.source}
             <Link
               href={
-                item.slug.startsWith('http')
-                  ? item.slug
-                  : `https://toddagriscience.com/news/${item.slug}`
+                item.link.startsWith('http')
+                  ? item.link
+                  : `https://toddagriscience.com/news/${item.link}`
               }
               target="_blank"
               rel="noopener noreferrer"

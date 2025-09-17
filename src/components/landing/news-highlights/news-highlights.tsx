@@ -60,13 +60,13 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
             {featuredNews.map((article) => (
               <NewsCard
                 title={article.title}
-                key={article.slug}
+                key={article.link}
                 isDark={isDark}
                 image={{ url: article.image.url, alt: article.image.alt }}
                 source={article.source}
                 date={article.date}
                 excerpt={article.excerpt}
-                slug={article.slug}
+                link={article.link}
               />
             ))}
           </Carousel>

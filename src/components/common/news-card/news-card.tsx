@@ -44,11 +44,9 @@ const NewsCard = ({
   excerpt,
   isDark = false,
   className = '',
-  slug = '',
+  link = '',
   title,
 }: NewsCardProps) => {
-  const link = '/news/articles/' + slug;
-
   return (
     <div
       className={`text-foreground h-[90vh] max-w-full min-w-[90%] px-1 py-4 font-light transition-colors duration-300 md:min-w-[45%] lg:min-w-[30%] ${className}`}

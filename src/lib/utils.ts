@@ -34,7 +34,7 @@ export function useNews(): {
       title: t('farmlinkPartnership.title'),
       excerpt: t('farmlinkPartnership.excerpt'),
       date: t('farmlinkPartnership.date'),
-      slug: t('farmlinkPartnership.slug'),
+      link: t('farmlinkPartnership.link'),
       source: t('farmlinkPartnership.source'),
       image: {
         url: t('farmlinkPartnership.image.url'),
@@ -45,7 +45,7 @@ export function useNews(): {
       title: t('ambrookPartnership.title'),
       excerpt: t('ambrookPartnership.excerpt'),
       date: t('ambrookPartnership.date'),
-      slug: t('ambrookPartnership.slug'),
+      link: t('ambrookPartnership.link'),
       source: t('ambrookPartnership.source'),
       image: {
         url: t('ambrookPartnership.image.url'),
@@ -56,7 +56,7 @@ export function useNews(): {
       title: t('regenerativeSeed.title'),
       excerpt: t('regenerativeSeed.excerpt'),
       date: t('regenerativeSeed.date'),
-      slug: t('regenerativeSeed.slug'),
+      link: t('regenerativeSeed.link'),
       source: t('regenerativeSeed.source'),
       image: {
         url: t('regenerativeSeed.image.url'),
@@ -70,7 +70,7 @@ export function useNews(): {
       title: t('whyRegenerative.title'),
       excerpt: t('whyRegenerative.excerpt'),
       date: t('whyRegenerative.date'),
-      slug: t('whyRegenerative.slug'),
+      link: t('whyRegenerative.link'),
       source: t('whyRegenerative.source'),
       image: {
         url: t('whyRegenerative.image.url'),
@@ -81,7 +81,7 @@ export function useNews(): {
       title: t('umichPartnership.title'),
       excerpt: t('umichPartnership.excerpt'),
       date: t('umichPartnership.date'),
-      slug: t('umichPartnership.slug'),
+      link: t('umichPartnership.link'),
       source: t('umichPartnership.source'),
       image: {
         url: t('umichPartnership.image.url'),
@@ -92,7 +92,7 @@ export function useNews(): {
       title: t('ftcPartnership.title'),
       excerpt: t('ftcPartnership.excerpt'),
       date: t('ftcPartnership.date'),
-      slug: t('ftcPartnership.slug'),
+      link: t('ftcPartnership.link'),
       source: t('ftcPartnership.source'),
       image: {
         url: t('ftcPartnership.image.url'),

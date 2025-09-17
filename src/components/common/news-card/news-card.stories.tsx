@@ -21,7 +21,7 @@ const meta = {
         description: 'Image alt for the news card',
       },
     },
-    slug: {
+    link: {
       control: 'text',
       description: 'Slug for article',
     },
@@ -48,7 +48,7 @@ const meta = {
     date: 'Apr 15, 2025',
     excerpt: 'Revolutionary Advances in Sustainable Agriculture Technology',
     isDark: false,
-    slug: 'revolutionary-advances-insustainable-agriculture-tech',
+    link: 'revolutionary-advances-insustainable-agriculture-tech',
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof NewsCard>;

@@ -8,7 +8,7 @@
  * @param {string} date - The date of the news card
  * @param {boolean} [isDark] - Whether the news card is dark
  * @param {string} [className] - The class name of the news card
- * @param {string} slug - The slug of the news article. Examples: /news/articles/{my-awesome-article}
+ * @param {string} link - The external link to the news article
  * @param {Object} image - The object containing the information for the thumbnail
  * @param {string} image.url - The URL for the thumbnail
  * @param {string} image.alt - The alt text for the thumbnail. This may not always be required.
@@ -20,7 +20,7 @@ export default interface NewsCardProps {
   date: string;
   isDark?: boolean;
   className?: string;
-  slug: string;
+  link: string;
   image: {
     url: string;
     alt: string;
