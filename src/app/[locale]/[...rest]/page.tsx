@@ -1,8 +1,11 @@
 // Copyright Todd LLC, All rights reserved.
 
-import { notFound } from 'next/navigation';
+import LocaleNotFound from '../not-found';
 
-// Catch all unmatched routes within locale and trigger 404
+/**
+ * Catch all unmatched routes within locale and render 404
+ * @returns {React.ReactNode} - The 404 page component
+ */
 export default function CatchAllPage() {
-  notFound();
+  return <LocaleNotFound />;
 }

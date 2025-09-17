@@ -1,20 +1,30 @@
 // Copyright Todd LLC, All rights reserved.
 
 import type { Metadata, Viewport } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
+import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { fontVariables } from '@/lib/fonts';
+import { AUTH_COOKIE_NAME } from '@/middleware/auth';
 
-import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
+import {
+  AuthToggle,
+  FadeIn,
+  SmoothScroll,
+  ThemeReset,
+} from '@/components/common';
 import { Footer, Header } from '@/components/landing';
-import '../globals.css';
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 
-// Generate metadata for each locale
+/**
+ * Generate metadata for each locale
+ * @param {Promise<{ locale: string }>} params - The parameters for the function
+ * @returns {Promise<Metadata>} - The metadata for the locale
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -73,11 +83,32 @@ interface RootLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
+/**
+ * Locale layout for the app
+ * @param {React.ReactNode} children - The children of the locale layout
+ * @param {Promise<{ locale: string }>} params - The parameters for the function
+ * @returns {React.ReactNode} - The locale layout
+ */
 export default async function LocaleLayout({
   children,
   params,
 }: RootLayoutProps) {
+  // Check if user is authenticated - if so, skip locale layout
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get(AUTH_COOKIE_NAME);
+  const isAuthenticated = authCookie?.value === 'true';
+
   const { locale } = await params;
+
+  // Validate locale - if invalid, trigger 404 regardless of auth status
+  if (!routing.locales.includes(locale as Locale)) {
+    notFound();
+  }
+
+  if (isAuthenticated) {
+    // Let the root layout handle authenticated users
+    return children;
+  }
 
   try {
     const messages = await getMessages({ locale });
@@ -86,14 +117,15 @@ export default async function LocaleLayout({
       <html lang={locale}>
         <body className={fontVariables}>
           <NextIntlClientProvider messages={messages}>
-            <ThemeProvider>
-              <ThemeReset />
-              <SmoothScroll>
+            <SmoothScroll>
+              <ThemeProvider>
+                <ThemeReset />
+                <AuthToggle />
                 <Header />
                 <FadeIn>{children}</FadeIn>
                 <Footer />
-              </SmoothScroll>
-            </ThemeProvider>
+              </ThemeProvider>
+            </SmoothScroll>
           </NextIntlClientProvider>
         </body>
       </html>
