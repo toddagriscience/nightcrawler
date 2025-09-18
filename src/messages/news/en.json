@@ -12,7 +12,7 @@
       "link": "https://google.com",
       "source": "Todd",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "Todd investment announcement"
       }
     },
@@ -23,7 +23,7 @@
       "link": "https://msnbc.com",
       "source": "External",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "Industry summit"
       }
     },
@@ -34,7 +34,7 @@
       "link": "https://cnn.com",
       "source": "Todd",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "SKKY Partners portfolio expansion"
       }
     },
@@ -45,7 +45,7 @@
       "link": "https://sometestdata.com",
       "source": "External",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "Market analysis chart"
       }
     },
@@ -56,7 +56,7 @@
       "link": "https://runningoutofideas.com",
       "source": "External",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "Entrepreneurship workshop"
       }
     },
@@ -67,7 +67,7 @@
       "link": "https://ireallydkwhattoputhere.com",
       "source": "External",
       "image": {
-        "url": "/placeholder.svg?height=600&width=800",
+        "url": "/placeholder.svg",
         "alt": "Economic forecast"
       }
     }

@@ -76,6 +76,7 @@ const PlaceholderImage = ({
 
   return (
     <Image
+      data-testid="rendered image"
       src={src}
       alt={alt}
       width={width}

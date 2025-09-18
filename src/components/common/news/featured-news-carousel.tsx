@@ -59,6 +59,7 @@ export function FeaturedNewsCarousel({ items }: Props) {
         </AnimatePresence>
         <CarouselButtonWrapper>
           <Button
+            data-testid="right-button"
             onClick={handleNext}
             variant="ghost"
             className="rounded-full bg-[#727272]/60 p-3 text-white shadow-md hover:bg-[#727272]/80"

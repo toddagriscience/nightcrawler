@@ -66,6 +66,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
 
       {!isAllShown && (
         <div
+          role="button"
           onClick={handleLoadMore}
           className="cursor-pointer px-4 py-4 text-left text-sm hover:underline"
         >
