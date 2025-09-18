@@ -5,70 +5,125 @@
     "latestNews": "Latest News"
   },
   "articleExcerpts": {
-    "ambrookPartnership": {
+    "toddAnniversary": {
+      "title": "Todd Anniversary: From Research to Reality",
+      "date": "2025-05-31",
+      "excerpt": "Blank",
+      "link": "https://www.prnewswire.com/news-releases/todd-anniversary-from-research-to-reality-302469963.html",
+      "source": "PR Newswire",
+      "image": {
+        "url": "/placeholder.svg",
+        "alt": "something"
+      }
+    },
+    "celebratingTransformation": {
+      "title": "Celebrating Transformation in Agriculture: Todd's New Offers",
+      "date": "2025-05-31",
+      "excerpt": "Blank",
+      "link": "https://investorshangout.com/celebrating-transformation-in-agriculture-todds-new-offers-295609-/",
+      "source": "Investor Hangout",
+      "image": {
+        "url": "/placeholder.svg",
+        "alt": "something"
+      }
+    },
+    "regenerativeSeedsApril": {
+      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
+      "date": "2025-04-03",
+      "excerpt": "Blank",
+      "link": "https://www.seedtoday.com/article/1089709/todd-introduces-the-worlds-first-regenerative-vegetable-and-flower-seeds",
+      "source": "Seed Today",
+      "image": {
+        "url": "/placeholder.svg",
+        "alt": "something"
+      }
+    },
+    "partnershipAmbrook": {
       "title": "Todd Announces Partnership with Ambrook",
-      "date": "2023-04-15",
-      "excerpt": "Todd has announced a significant investment in a promising tech startup focused on sustainable solutions.",
-      "link": "https://google.com",
-      "source": "Todd",
+      "date": "2025-04-16",
+      "excerpt": "Blank",
+      "link": "/",
+      "source": "",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "Todd investment announcement"
+        "alt": "something"
       }
     },
-    "regenerativeSeed": {
-      "title": "Todd Announces Worlds First Regenerative Seed Products",
-      "date": "2023-03-22",
-      "excerpt": "Industry leaders from around the world gathered for the annual summit to discuss emerging trends and challenges.",
-      "link": "https://msnbc.com",
-      "source": "External",
+    "regenerativeSeedLaunch": {
+      "title": "Todd's Groundbreaking Regenerative Seed Products Launch",
+      "date": "2025-03-31",
+      "excerpt": "Blank",
+      "link": "https://investorshangout.com/todds-groundbreaking-regenerative-seed-products-launch-255229-/",
+      "source": "Investor Hangout",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "Industry summit"
+        "alt": "something"
       }
     },
-    "ftcPartnership": {
-      "title": "Todd Annouces Partership with Farm-to-Consumer",
-      "date": "2023-02-10",
-      "excerpt": "Todd",
-      "link": "https://cnn.com",
-      "source": "Todd",
+    "regenerativeSeedsMarch": {
+      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
+      "date": "2025-03-31",
+      "excerpt": "Blank",
+      "link": "https://www.prnewswire.com/news-releases/todd-introduces-the-worlds-first-regenerative-vegetable-and-flower-seeds-302415741.html",
+      "source": "PR Newswire",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "SKKY Partners portfolio expansion"
+        "alt": "something"
       }
     },
-    "farmlinkPartnership": {
-      "title": "Farmlink Project Partnership",
-      "date": "2023-01-05",
-      "excerpt": "A comprehensive analysis of market trends that investors and businesses should watch in 2023.",
-      "link": "https://sometestdata.com",
-      "source": "External",
+    "pipelineToProspect": {
+      "title": "From Pipeline to Prospect: Inside Todd Recruitment",
+      "date": "2025-03-07",
+      "excerpt": "Blank",
+      "link": "https://medium.com/@toddagriscience/from-pipeline-to-prospect-inside-todd-recruitment-4a6b6c123a75",
+      "source": "Medium",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "Market analysis chart"
+        "alt": "something"
       }
     },
-    "whyRegenerative": {
-      "title": "Why Regenerative Partnership",
-      "date": "2022-12-12",
-      "excerpt": "Placeholder",
-      "link": "https://runningoutofideas.com",
-      "source": "External",
+    "partnershipWhyRegenerative": {
+      "title": "Todd Announces Partnership with Why Regenerative",
+      "date": "2024-11-01",
+      "excerpt": "Blank",
+      "link": "/",
+      "source": "None",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "Entrepreneurship workshop"
+        "alt": "something"
       }
     },
-    "umichPartnership": {
-      "title": "University of Michigan Partnership",
-      "date": "2022-11-18",
-      "excerpt": "Leading economists share their perspectives on the economic outlook for the coming year.",
-      "link": "https://ireallydkwhattoputhere.com",
-      "source": "External",
+    "partnershipFarmlink": {
+      "title": "Todd Announces Partnership with Farmlink Project",
+      "date": "2024-10-29",
+      "excerpt": "Blank",
+      "link": "/farmlink-project",
+      "source": "None",
       "image": {
         "url": "/placeholder.svg",
-        "alt": "Economic forecast"
+        "alt": "something"
+      }
+    },
+    "launchToddAgriscience": {
+      "title": "Vincent Todd Launches Todd Agriscience to Lead Sustainable Farming Innovations",
+      "date": "2024-06-03",
+      "excerpt": "Blank",
+      "link": "https://igrownews.com/vincent-todd-launches-todd-agriscience-to-lead-sustainable-farming-innovations/",
+      "source": "iGrow News",
+      "image": {
+        "url": "/placeholder.svg",
+        "alt": "something"
+      }
+    },
+    "introToddAgriscience": {
+      "title": "Vincent Todd Announces the Introduction of Todd Agriscience",
+      "date": "2024-06-01",
+      "excerpt": "Blank",
+      "link": "https://www.prnewswire.com/news-releases/vincent-todd-announces-the-introduction-of-todd-agriscience-302161119.html",
+      "source": "PR Newswire",
+      "image": {
+        "url": "/placeholder.svg",
+        "alt": "something"
       }
     }
   }

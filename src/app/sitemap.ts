@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 function getStaticSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
-  const staticPages = ['', '/who-we-are'];
+  const staticPages = ['', '/who-we-are', '/news'];
   const excludedPages = ['/login', '/admin', '/api', '/_next', '/cdn-cgi'];
 
   for (const locale of routing.locales) {

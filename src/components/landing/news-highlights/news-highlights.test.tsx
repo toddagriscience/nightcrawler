@@ -55,9 +55,9 @@ describe('NewsHighlights', () => {
   it('displays news articles from JSON data', async () => {
     await renderWithAct(<NewsHighlights />);
     expect(
-      screen.getByText('Todd Announces Partnership with Ambrook')
+      screen.getByText('Todd Anniversary: From Research to Reality')
     ).toBeInTheDocument();
-    expect(screen.getByText(/2023-04-15/)).toBeInTheDocument();
+    expect(screen.getByText(/2025-05-31/)).toBeInTheDocument();
   });
 
   it('renders normally without isLoading prop', async () => {
