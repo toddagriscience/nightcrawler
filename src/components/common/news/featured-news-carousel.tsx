@@ -36,7 +36,7 @@ export function FeaturedNewsCarousel({ items }: Props) {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="mx-auto flex h-auto max-w-[640px] flex-row justify-center">
+      <div className="mx-auto mb-16 flex h-auto max-w-[640px] flex-row justify-center">
         <CarouselButtonWrapper>
           <Button
             onClick={handlePrev}
@@ -48,7 +48,13 @@ export function FeaturedNewsCarousel({ items }: Props) {
         </CarouselButtonWrapper>
         <AnimatePresence mode="wait">
           <motion.div
-            key={items[current].excerpt}
+            // is this scuffed? Perchance.
+            // Perchance.
+            key={
+              items[current].excerpt +
+              items[current].source +
+              items[current].link
+            }
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}

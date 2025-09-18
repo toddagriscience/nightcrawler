@@ -42,8 +42,8 @@
       "title": "Todd Announces Partnership with Ambrook",
       "date": "2025-04-16",
       "excerpt": "Blank",
-      "link": "/",
-      "source": "",
+      "link": "",
+      "source": "none",
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
@@ -86,7 +86,7 @@
       "title": "Todd Announces Partnership with Why Regenerative",
       "date": "2024-11-01",
       "excerpt": "Blank",
-      "link": "/",
+      "link": "",
       "source": "None",
       "image": {
         "url": "/placeholder.svg",
@@ -97,7 +97,7 @@
       "title": "Todd Announces Partnership with Farmlink Project",
       "date": "2024-10-29",
       "excerpt": "Blank",
-      "link": "/farmlink-project",
+      "link": "articles/farmlink-project",
       "source": "None",
       "image": {
         "url": "/placeholder.svg",

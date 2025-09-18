@@ -41,11 +41,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           <div className="flex items-center justify-end gap-1">
             {item.source}
             <Link
-              href={
-                item.link.startsWith('http')
-                  ? item.link
-                  : `https://toddagriscience.com/news/${item.link}`
-              }
+              href={item.link}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open ${item.title} in new tab`}
