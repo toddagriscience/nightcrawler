@@ -57,7 +57,7 @@ describe('NewsHighlights', () => {
     expect(
       screen.getByText('Todd Anniversary: From Research to Reality')
     ).toBeInTheDocument();
-    expect(screen.getByText(/2025-05-31/)).toBeInTheDocument();
+    expect(screen.queryAllByText(/2025-05-31/)).toHaveLength(2);
   });
 
   it('renders normally without isLoading prop', async () => {
