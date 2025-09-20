@@ -5,6 +5,7 @@ import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import NewsCardProps from '../news-card/types/news-card';
+import { useLocale } from 'next-intl';
 
 interface LatestNewsTableProps {
   items: NewsCardProps[];
@@ -17,6 +18,8 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 3); // Show 3 more each time
   };
+
+  const locale = useLocale();
 
   return (
     <div className="rounded-md text-[#555555]">
@@ -51,7 +54,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           </div>
 
           <div className="text-right">
-            {new Date(item.date + 'T00:00:00Z').toLocaleDateString('en-US', {
+            {new Date(item.date + 'T00:00:00').toLocaleDateString(locale, {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
