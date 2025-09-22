@@ -1,7 +1,13 @@
 // Copyright Todd LLC, All rights reserved.
 
-import { defineRouting } from 'next-intl/routing';
 import { createNavigation } from 'next-intl/navigation';
+import { defineRouting } from 'next-intl/routing';
+
+/**
+ * A list of all supported locales
+ * @constant {string[]} - The list of supported locales
+ */
+export const SUPPORTED_LOCALES = ['en', 'es'];
 
 /**
  * Routing configuration
@@ -9,7 +15,7 @@ import { createNavigation } from 'next-intl/navigation';
  */
 export const routing = defineRouting({
   // A list of all locales that are supported
-  locales: ['en', 'es'],
+  locales: SUPPORTED_LOCALES,
 
   // Used when no locale matches
   defaultLocale: 'en',
@@ -19,6 +25,9 @@ export const routing = defineRouting({
 
   // Enable locale detection in production, disable in development for easier testing
   localeDetection: process.env.NODE_ENV === 'production',
+
+  // Don't redirect to 404 for unknown paths - let Next.js handle it
+  alternateLinks: false,
 });
 
 /**
