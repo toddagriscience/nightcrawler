@@ -44,8 +44,20 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
    ```
 
 6. **Open in browser**
+
    ```
    http://localhost:3000
+   ```
+
+7. **Start Storybook**
+
+   ```
+   npm run storybook
+   ```
+
+8. **Open Storybook in browser**
+   ```
+   http://localhost:6006
    ```
 
 ### First-Time Setup Verification
