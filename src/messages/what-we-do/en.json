@@ -4,47 +4,57 @@
     "subtitle": "Transforming agriculture through innovative solutions and sustainable practices",
     "offerings": {
       "title": "Our Offerings",
-      "description": "Todd provides a holistic ecosystem from soil management to produce marketing. All to help farms improve soil health and quickly implement solutions.",
+      "description": "Todd provides a holistic ecosystem from soil management to produce marketing, including a holistic analysis of soil toxicity. All to help farms improve soil health and quickly implement solutions.",
       "services": {
         "soilRemineralization": {
           "title": "Soil Remineralization",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Sprout"
         },
         "seedProducts": {
           "title": "Seed Products",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Leaf"
         },
         "soilConservation": {
           "title": "Soil Conservation",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Mountain"
         },
         "cropProduction": {
           "title": "Crop Production",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "WheatOff"
         },
         "diseaseInsectMitigation": {
           "title": "Disease & Insect Mitigation",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Bug"
         },
         "operationsManagement": {
           "title": "Operations Management",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Settings"
         },
         "nopDemeterIntegrity": {
           "title": "NOP & Demeter Integrity",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "ShieldCheck"
         },
         "produceSafety": {
           "title": "Produce Safety",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Shield"
         },
         "expansionMarketEntry": {
           "title": "Expansion & Market Entry",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "TrendingUp"
         },
         "dtcCSAMarketing": {
           "title": "DTC & CSA Marketing",
-          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+          "description": "",
+          "icon": "Store"
         }
       }
     },
@@ -64,20 +74,35 @@
         ]
       },
       "stories": {
-        "acmeFarms": {
-          "title": "Acme Farms",
-          "description": "Achieved 40% reduction in water usage while maintaining yield levels",
-          "date": "2023"
+        "acmeInc": {
+          "title": "Acme Inc",
+          "description": "",
+          "date": "Jun 2023"
         },
         "brightFuture": {
           "title": "Bright Future",
-          "description": "Improved soil organic matter by 2.5% in just 18 months",
-          "date": "2023"
+          "description": "",
+          "date": "May 2023"
         },
-        "centralValley": {
-          "title": "Central Valley Growers",
-          "description": "Reduced fertilizer costs by 30% through precision agriculture",
-          "date": "2023"
+        "cosmicTechnologies": {
+          "title": "Cosmic Technologies",
+          "description": "",
+          "date": "Apr 2023"
+        },
+        "deltaSystems": {
+          "title": "Delta Systems",
+          "description": "",
+          "date": "Feb 2023"
+        },
+        "echoInnovations": {
+          "title": "Echo Innovations",
+          "description": "",
+          "date": "Nov 2022"
+        },
+        "frontierLabs": {
+          "title": "Frontier Labs",
+          "description": "",
+          "date": "Aug 2022"
         }
       }
     }

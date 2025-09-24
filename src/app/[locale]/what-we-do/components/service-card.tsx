@@ -6,12 +6,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
 const serviceCardVariants = cva(
-  'flex flex-col gap-4 p-6 transition-all duration-300 hover:shadow-lg',
+  'flex flex-col gap-4 p-6 transition-all duration-300 hover:shadow-lg bg-secondary/5',
   {
     variants: {
       variant: {
-        default: 'bg-background',
-        highlight: 'bg-primary/5',
+        default: '',
+        highlight: '',
       },
     },
     defaultVariants: {

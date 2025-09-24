@@ -3,6 +3,18 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import {
+  Bug,
+  Leaf,
+  Mountain,
+  Settings,
+  Shield,
+  ShieldCheck,
+  Sprout,
+  Store,
+  TrendingUp,
+  Wheat,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ImpactCard, ServiceCard } from './components';
 
@@ -48,10 +60,22 @@ export default function WhatWeDoPage() {
 
   const impactStories = [
     {
-      ...t.raw('impact.stories.acmeFarms'),
+      ...t.raw('impact.stories.acmeInc'),
     },
     {
       ...t.raw('impact.stories.brightFuture'),
+    },
+    {
+      ...t.raw('impact.stories.cosmicTechnologies'),
+    },
+    {
+      ...t.raw('impact.stories.deltaSystems'),
+    },
+    {
+      ...t.raw('impact.stories.echoInnovations'),
+    },
+    {
+      ...t.raw('impact.stories.frontierLabs'),
     },
   ];
 
@@ -87,7 +111,7 @@ export default function WhatWeDoPage() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-12">
+      <section className="py-16 px-4 md:px-8 lg:px-12 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-utah-condensed font-bold mb-4">
@@ -102,7 +126,29 @@ export default function WhatWeDoPage() {
             {services.map((service, index) => (
               <ServiceCard
                 key={index}
-                icon={service.icon}
+                icon={
+                  service.icon === 'Sprout' ? (
+                    <Sprout size={24} />
+                  ) : service.icon === 'Leaf' ? (
+                    <Leaf size={24} />
+                  ) : service.icon === 'Mountain' ? (
+                    <Mountain size={24} />
+                  ) : service.icon === 'WheatOff' ? (
+                    <Wheat size={24} />
+                  ) : service.icon === 'Bug' ? (
+                    <Bug size={24} />
+                  ) : service.icon === 'Settings' ? (
+                    <Settings size={24} />
+                  ) : service.icon === 'ShieldCheck' ? (
+                    <ShieldCheck size={24} />
+                  ) : service.icon === 'Shield' ? (
+                    <Shield size={24} />
+                  ) : service.icon === 'TrendingUp' ? (
+                    <TrendingUp size={24} />
+                  ) : service.icon === 'Store' ? (
+                    <Store size={24} />
+                  ) : null
+                }
                 title={service.title}
                 description={service.description}
                 variant={index % 2 === 0 ? 'default' : 'highlight'}
@@ -113,7 +159,7 @@ export default function WhatWeDoPage() {
       </section>
 
       {/* Impact Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-12 bg-secondary/5">
+      <section className="py-16 px-4 md:px-8 lg:px-12 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-utah-condensed font-bold mb-4">
@@ -136,7 +182,7 @@ export default function WhatWeDoPage() {
           </div>
 
           {/* Companies List */}
-          <Card className="p-4 md:p-8 bg-background/80 backdrop-blur">
+          <Card className="p-4 md:p-8 bg-secondary/5">
             <div className="text-center mb-8">
               <h3 className="text-2xl md:text-3xl font-utah-condensed font-bold mb-2">
                 {t('impact.companies.title')}
