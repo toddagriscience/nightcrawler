@@ -120,30 +120,32 @@ const Carousel = ({
         <button
           onClick={scrollPrev}
           ref={prevBtnRef}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+          className="absolute top-1/2 left-0 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Previous slide"
+          data-testid="left-button"
         >
           <ArrowLeft className="text-foreground" />
         </button>
         <button
           onClick={scrollNext}
           ref={nextBtnRef}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full hover:cursor-pointer duration-300 ease-in-out transition-all p-1 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+          className="absolute top-1/2 right-0 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Next slide"
+          data-testid="right-button"
         >
           <ArrowRight className="text-foreground" />
         </button>
       </div>
       {showDots && scrollSnaps.length > 1 && (
-        <div className="flex justify-center space-x-3 mt-8 px-4 pb-2">
+        <div className="mt-8 flex justify-center space-x-3 px-4 pb-2">
           {scrollSnaps.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollTo(index)}
               className={`relative rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer ${
                 index === selectedIndex
-                  ? 'w-8 h-2 bg-foreground'
-                  : 'w-2 h-2 bg-foreground/40'
+                  ? 'bg-foreground h-2 w-8'
+                  : 'bg-foreground/40 h-2 w-2'
               }`}
               aria-label={`Go to slide ${index + 1}`}
               aria-pressed={index === selectedIndex}

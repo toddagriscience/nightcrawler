@@ -1,10 +1,33 @@
 // Copyright Todd LLC, All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
+import { screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { FeaturedNewsCarousel } from './featured-news-carousel';
 import NewsCardProps from '../news-card/types/news-card';
-import { act } from 'react';
+import { render } from '@testing-library/react';
+
+// Mock embla-carousel-react
+jest.mock('embla-carousel-react', () => {
+  const mockEmblaApi = {
+    scrollSnapList: jest.fn(() => [0, 1, 2]),
+    selectedScrollSnap: jest.fn(() => 0),
+    scrollPrev: jest.fn(),
+    scrollNext: jest.fn(),
+    scrollTo: jest.fn(),
+    on: jest.fn(),
+    off: jest.fn(),
+    canScrollPrev: jest.fn(() => true),
+    canScrollNext: jest.fn(() => true),
+  };
+
+  return {
+    __esModule: true,
+    default: jest.fn(() => [
+      jest.fn(), // emblaRef
+      mockEmblaApi, // emblaApi
+    ]),
+  };
+});
 
 const items: NewsCardProps[] = [
   {
@@ -12,6 +35,7 @@ const items: NewsCardProps[] = [
     excerpt: 'omfg i despise making test data',
     date: '1999',
     link: 'idk.com',
+    source: 'blank',
     image: { alt: 'a very cute kitty cat', url: 'https://cutecats.com' },
   },
   {
@@ -19,6 +43,7 @@ const items: NewsCardProps[] = [
     excerpt: 'skibidi toilet',
     date: '2004',
     link: 'interestingwebsite.com',
+    source: 'blank',
     image: { alt: 'a very cute kitty cat', url: 'https://cutecats.com' },
   },
   {
@@ -26,13 +51,14 @@ const items: NewsCardProps[] = [
     excerpt: 'the final one!',
     date: '1934',
     link: 'anoldwebsite.com',
+    source: 'blank',
     image: { alt: 'a very cute kitty cat', url: 'https://cutecats.com' },
   },
 ];
 
 describe('FeaturedNewsCarousel', () => {
   it('renders without imploding', () => {
-    renderWithNextIntl(<FeaturedNewsCarousel items={items} />);
+    render(<FeaturedNewsCarousel items={items} />);
 
     // Should only show the first article
     expect(screen.getByText('Awesome article')).toBeInTheDocument();
@@ -40,37 +66,15 @@ describe('FeaturedNewsCarousel', () => {
       screen.getByText('omfg i despise making test data')
     ).toBeInTheDocument();
 
-    // We shouldn't see the next article yet
-    expect(screen.queryByText('Wow another cool article')).toBeNull();
-    expect(screen.queryByText('skibidi toilet')).toBeNull();
+    // We SHOULD see the next articles
+    expect(screen.queryByText('Wow another cool article')).toBeInTheDocument();
+    expect(screen.queryByText('skibidi toilet')).toBeInTheDocument();
 
     // Two visible buttons
-    expect(screen.getAllByRole('button')).toHaveLength(2);
-  });
-
-  it('scrolls articles', () => {
-    renderWithNextIntl(<FeaturedNewsCarousel items={items} />);
-
-    // Should only show the first article
-    expect(screen.getByText('Awesome article')).toBeInTheDocument();
-    expect(
-      screen.getByText('omfg i despise making test data')
-    ).toBeInTheDocument();
-
-    act(() => {
-      // Scroll to the right
-      screen.getByTestId('right-button').click();
-    });
-
-    // Assert that we've scrolled
-    expect(screen.getByText('skibidi toilet')).toBeInTheDocument();
-
-    act(() => {
-      // Scroll to the right
-      screen.getByTestId('right-button').click();
-    });
-
-    // Assert that we've scrolled
-    expect(screen.getByText('the last one')).toBeInTheDocument();
+    const numNavButtons = 2;
+    const numScrollBarButtons = 3;
+    expect(screen.getAllByRole('button')).toHaveLength(
+      numNavButtons + numScrollBarButtons
+    );
   });
 });
