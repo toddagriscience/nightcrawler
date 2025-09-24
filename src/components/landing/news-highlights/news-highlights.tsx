@@ -60,7 +60,7 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
             {featuredNews.map((article) => (
               <NewsCard
                 title={article.title}
-                key={article.link}
+                key={article.title}
                 isDark={isDark}
                 image={{ url: article.image.url, alt: article.image.alt }}
                 source={article.source}

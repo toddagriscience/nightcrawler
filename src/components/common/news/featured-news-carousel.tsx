@@ -17,7 +17,7 @@ export function FeaturedNewsCarousel({
       {items.map((article) => (
         <NewsCard
           title={article.title}
-          key={article.link}
+          key={article.title}
           isDark={false}
           image={{ url: article.image.url, alt: article.image.alt }}
           source={article.source}

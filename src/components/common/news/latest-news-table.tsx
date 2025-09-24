@@ -31,7 +31,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
 
       {items.slice(0, visibleCount).map((item, index) => (
         <div
-          key={item.link + item.date}
+          key={item.title}
           className={clsx(
             'grid grid-cols-3 items-center px-4 py-4 text-sm',
             index !== visibleCount - 1 &&

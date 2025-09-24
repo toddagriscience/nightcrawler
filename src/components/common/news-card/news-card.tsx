@@ -44,7 +44,7 @@ const NewsCard = ({
   excerpt,
   isDark = false,
   className = '',
-  link = '',
+  link,
   title,
 }: NewsCardProps) => {
   return (
