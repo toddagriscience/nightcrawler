@@ -1,0 +1,85 @@
+{
+  "whatWeDo": {
+    "title": "Lo Que Hacemos",
+    "subtitle": "Transformando la agricultura a través de soluciones innovadoras y prácticas sostenibles",
+    "offerings": {
+      "title": "Nuestros Servicios",
+      "description": "Todd proporciona un ecosistema holístico desde la gestión del suelo hasta la comercialización de productos. Todo para ayudar a las granjas a mejorar la salud del suelo e implementar soluciones rápidamente.",
+      "services": {
+        "soilRemineralization": {
+          "title": "Remineralización del Suelo",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "seedProducts": {
+          "title": "Productos de Semillas",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "soilConservation": {
+          "title": "Conservación del Suelo",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "cropProduction": {
+          "title": "Producción de Cultivos",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "diseaseInsectMitigation": {
+          "title": "Mitigación de Enfermedades e Insectos",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "operationsManagement": {
+          "title": "Gestión de Operaciones",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "nopDemeterIntegrity": {
+          "title": "Integridad NOP y Demeter",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "produceSafety": {
+          "title": "Seguridad de Productos",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "expansionMarketEntry": {
+          "title": "Expansión y Entrada al Mercado",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        },
+        "dtcCSAMarketing": {
+          "title": "Marketing DTC y CSA",
+          "description": "Un análisis holístico de la toxicidad y los desequilibrios del suelo para remineralizar y sanar el suelo y el entorno circundante."
+        }
+      }
+    },
+    "impact": {
+      "title": "Nuestro Impacto",
+      "description": "Todd se asocia con granjas para transformar el suelo y aumentar el valor con nuestro distintivo conjunto de herramientas de gestión agrícola.",
+      "companies": {
+        "title": "Empresas que Hemos Ayudado",
+        "description": "Lista alfabética de empresas con las que nos hemos asociado",
+        "list": [
+          "Acme Farms",
+          "Bright Future",
+          "Cosmic Technologies",
+          "Delta Systems",
+          "Echo Innovations",
+          "Frontier Labs"
+        ]
+      },
+      "stories": {
+        "acmeFarms": {
+          "title": "Acme Farms",
+          "description": "Logró una reducción del 40% en el uso de agua manteniendo los niveles de rendimiento",
+          "date": "2023"
+        },
+        "brightFuture": {
+          "title": "Bright Future",
+          "description": "Mejoró la materia orgánica del suelo en un 2.5% en solo 18 meses",
+          "date": "2023"
+        },
+        "centralValley": {
+          "title": "Central Valley Growers",
+          "description": "Redujo los costos de fertilizantes en un 30% mediante agricultura de precisión",
+          "date": "2023"
+        }
+      }
+    }
+  }
+}

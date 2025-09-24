@@ -1,0 +1,85 @@
+{
+  "whatWeDo": {
+    "title": "What We Do",
+    "subtitle": "Transforming agriculture through innovative solutions and sustainable practices",
+    "offerings": {
+      "title": "Our Offerings",
+      "description": "Todd provides a holistic ecosystem from soil management to produce marketing. All to help farms improve soil health and quickly implement solutions.",
+      "services": {
+        "soilRemineralization": {
+          "title": "Soil Remineralization",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "seedProducts": {
+          "title": "Seed Products",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "soilConservation": {
+          "title": "Soil Conservation",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "cropProduction": {
+          "title": "Crop Production",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "diseaseInsectMitigation": {
+          "title": "Disease & Insect Mitigation",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "operationsManagement": {
+          "title": "Operations Management",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "nopDemeterIntegrity": {
+          "title": "NOP & Demeter Integrity",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "produceSafety": {
+          "title": "Produce Safety",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "expansionMarketEntry": {
+          "title": "Expansion & Market Entry",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        },
+        "dtcCSAMarketing": {
+          "title": "DTC & CSA Marketing",
+          "description": "A holistic analysis of soil toxicity and imbalances to remineralize and heal the soil and surrounding environment."
+        }
+      }
+    },
+    "impact": {
+      "title": "Our Impact",
+      "description": "Todd partners with farms to transform soil and increase value with our distinctive farm management toolkit.",
+      "companies": {
+        "title": "Partners",
+        "description": "Alphabetical list of companies we've partnered with",
+        "list": [
+          "Acme Farms",
+          "Bright Future",
+          "Cosmic Technologies",
+          "Delta Systems",
+          "Echo Innovations",
+          "Frontier Labs"
+        ]
+      },
+      "stories": {
+        "acmeFarms": {
+          "title": "Acme Farms",
+          "description": "Achieved 40% reduction in water usage while maintaining yield levels",
+          "date": "2023"
+        },
+        "brightFuture": {
+          "title": "Bright Future",
+          "description": "Improved soil organic matter by 2.5% in just 18 months",
+          "date": "2023"
+        },
+        "centralValley": {
+          "title": "Central Valley Growers",
+          "description": "Reduced fertilizer costs by 30% through precision agriculture",
+          "date": "2023"
+        }
+      }
+    }
+  }
+}
