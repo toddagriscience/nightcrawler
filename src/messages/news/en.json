@@ -14,7 +14,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "true"
     },
     "celebratingTransformation": {
       "title": "Celebrating Transformation in Agriculture: Todd's New Offers",
@@ -25,7 +26,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "true"
     },
     "regenerativeSeedsApril": {
       "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
@@ -36,7 +38,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "true"
     },
     "partnershipAmbrook": {
       "title": "Todd Announces Partnership with Ambrook",
@@ -47,7 +50,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "regenerativeSeedLaunch": {
       "title": "Todd's Groundbreaking Regenerative Seed Products Launch",
@@ -58,7 +62,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "regenerativeSeedsMarch": {
       "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
@@ -69,7 +74,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "pipelineToProspect": {
       "title": "From Pipeline to Prospect: Inside Todd Recruitment",
@@ -80,7 +86,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "partnershipWhyRegenerative": {
       "title": "Todd Announces Partnership with Why Regenerative",
@@ -91,7 +98,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "partnershipFarmlink": {
       "title": "Todd Announces Partnership with Farmlink Project",
@@ -102,7 +110,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "launchToddAgriscience": {
       "title": "Vincent Todd Launches Todd Agriscience to Lead Sustainable Farming Innovations",
@@ -113,7 +122,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     },
     "introToddAgriscience": {
       "title": "Vincent Todd Announces the Introduction of Todd Agriscience",
@@ -124,7 +134,8 @@
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
-      }
+      },
+      "featured": "false"
     }
   }
 }

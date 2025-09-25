@@ -4,7 +4,7 @@
 
 import { FeaturedNewsCarousel } from '@/components/common/news/featured-news-carousel';
 import { LatestNewsTable } from '@/components/common/news/latest-news-table';
-import { useNews } from '@/lib/utils';
+import { useNews } from '@/lib/hooks/news';
 
 /**
  * Highlighted news & general news
