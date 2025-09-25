@@ -41,17 +41,17 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
         >
           <div>{item.title}</div>
 
-          <div className="flex items-center justify-end gap-1">
-            {item.source}
-            <Link
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${item.title} in new tab`}
-            >
+          <Link
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${item.title} in new tab`}
+          >
+            <div className="flex items-center justify-end gap-1">
+              {item.source}
               <ExternalLink className="h-3.5 w-3.5 transition hover:opacity-70" />
-            </Link>
-          </div>
+            </div>
+          </Link>
 
           <div className="text-right">
             {new Date(item.date + 'T00:00:00').toLocaleDateString(locale, {

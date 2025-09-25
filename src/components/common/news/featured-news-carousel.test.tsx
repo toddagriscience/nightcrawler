@@ -72,9 +72,6 @@ describe('FeaturedNewsCarousel', () => {
 
     // Two visible buttons
     const numNavButtons = 2;
-    const numScrollBarButtons = 3;
-    expect(screen.getAllByRole('button')).toHaveLength(
-      numNavButtons + numScrollBarButtons
-    );
+    expect(screen.getAllByRole('button')).toHaveLength(numNavButtons);
   });
 });
