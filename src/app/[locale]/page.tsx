@@ -2,6 +2,11 @@
 
 import LandingPage from '@/components/landing/page/landing-page';
 
+/**
+ * Home page for the app
+ * @param {Promise<{ locale: string }>} params - The parameters for the function
+ * @returns {React.ReactNode} - The home page component
+ */
 export default async function HomePage(
   {
     // params
@@ -9,15 +14,5 @@ export default async function HomePage(
     params: Promise<{ locale: string }>;
   }
 ) {
-  // const { locale } = await params;
-
-  // TODO: Add authentication check here
-  // const isAuthenticated = await checkAuthentication();
-  // if (isAuthenticated) {
-  //   return <DashboardPage locale={locale} />;
-  // }
-
-  // For now, always render the landing page
-  // The locale will be used later for authentication and dashboard routing
   return <LandingPage />;
 }

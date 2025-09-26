@@ -44,8 +44,20 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
    ```
 
 6. **Open in browser**
+
    ```
    http://localhost:3000
+   ```
+
+7. **Start Storybook**
+
+   ```
+   npm run storybook
+   ```
+
+8. **Open Storybook in browser**
+   ```
+   http://localhost:6006
    ```
 
 ### First-Time Setup Verification
@@ -197,6 +209,7 @@ src/
 │   ├── fonts.ts           # Custom font loading
 │   ├── locale-utils.ts    # Locale helper functions
 │   ├── locales.ts         # Locale definitions
+│   ├── logger.ts          # Conditional logging utility
 │   ├── metadata.ts        # SEO metadata utilities
 │   ├── scroll-to-top.tsx  # Scroll to top component
 │   └── utils.ts           # shadcn/ui utility functions
@@ -267,6 +280,7 @@ app/
 - **Testing**: Co-located tests with high coverage requirements
 - **Code Quality**: Automated linting, formatting, and type checking
 - **Slice Architecture**: Page-specific component organization for maintainability
+- **Production Logging**: Environment-aware logging utility for clean production builds
 
 ## 🧪 Testing Strategy
 
@@ -343,6 +357,7 @@ See `.env.example` for complete documentation of all available variables.
 - **Landing Page**: Current landing components remain in `src/components/landing/`
 - **Contexts**: Create new contexts in `src/context/` for global state
 - **Utilities**: Add helper functions in `src/lib/` with proper TypeScript types
+- **Logging**: Use `@/lib/logger` instead of console methods for environment-aware logging
 - **Data**: Add static data files in `src/data/` for JSON content
 
 ## 📝 Contributing
