@@ -37,65 +37,65 @@
       "headings": "Headings and captions throughout this Privacy Policy are for convenience only and should not be considered part of this Privacy Policy. The word including means including without limitation."
     },
     "japan": {
-      "title": "JAPAN PRIVACY NOTICE",
-      "lastUpdated": "Effective: September 15, 2025",
-      "intro": "Our Company is your personal information and personal number (hereinafter referred to as “personal information, etc.”) As an approach to the policy, we will formulate and publish a personal information protection declaration as follows.",
+      "title": "日本プライバシー通知",
+      "lastUpdated": "発効日：2025年9月15日",
+      "intro": "当社は、お客様の個人情報および個人番号（以下「個人情報等」といいます）を適切に取り扱うため、以下のとおり個人情報保護宣言を策定し、公表 いたします。",
       "compliance": {
-        "title": "COMPLIANCE WITH RELEVANT LAWS AND REGULATIONS",
-        "content": "Related to the protection of personal information, etc., the guidelines of the competent minister, the guidelines of certificated personal information protection organizations, and this personal information protection declaration."
+        "title": "関係法令の遵守",
+        "content": "個人情報等の保護に関しては、主務大臣のガイドライン、認定個人情報保護団体のガイドライン、および本個人情報保護宣言を遵守します。"
       },
-      "businessDetails": "Business details",
-      "relatedBusiness": "Business related to the above",
+      "businessDetails": "事業内容",
+      "relatedBusiness": "上記に関連する業務",
       "purposeOfUse": {
-        "title": "PURPOSE OF USE",
-        "content": "Except when the customer’s consent is obtained and when it is treated as an exception by laws and regulations, etc., we will handle your personal information within the scope necessary to achieve the following business contents and purpose of use. In addition, personal numbers will only be handled within the scope stipulated by laws and regulations.",
-        "subtitle": "Purpose of use",
+        "title": "利用目的",
+        "content": "当社は、お客様の同意を得た場合および法令等により例外として扱われる場合を除き、以下の事業内容および利用目的の達成に必要な範囲内で、お客 様の個人情報を取り扱います。また、個人番号については、法令等に定める範囲内でのみ取り扱います",
+        "subtitle": "利用目的",
         "purposes": [
-          "In order to solicit, sell, and guide services regarding other operations that our company can operate",
-          "To confirm the appropriateness of the provision of products and services in light of the principles of conformity, etc.",
-          "To confirm that the customer is the person or the person’s agent",
-          "Tod report transaction results, deposit balances, etc. to customers",
-          "To do business related to transactions with customers",
-          "To exercise rights and fulfill obligations based on contracts and laws with customers, etc.",
-          "For cancellation of various transactions and post-management after transaction cancellation",
-          "Tod obtain information necessary to respond to inquiries from customers",
-          "For seeing greeting letters, etc. various seminars, receptions, etc.",
-          "To promote our internal business, such management and compliance with laws and regulations",
-          "In addition to the above, in order to carry out transactions with customers appropriately and smoothly",
-          "To respond to requests from foreign regulatory authorities with legitimate authority or to request based on applicable foreign laws and regulations"
+          "当社が営むことができるその他業務に関する勧誘、販売、サービスのご案内のため",
+          "適合性等の原則に照らし、商品・サービスの提供が適切であるかを確認するため",
+          "お客様がご本人または代理人であることを確認するため",
+          "お客様への取引実績、預金残高等の報告のため",
+          "お客様との取引に関する事務処理のため",
+          "お客様との契約、法令等に基づく権利の行使および義務の履行のため",
+          "各種取引の解約および解約後の事後管理のため",
+          "お客様からのお問い合わせに対応するために必要な情報を取得するため",
+          "各種セミナー、レセプション等の案内、案内状の閲覧のため",
+          "法令遵守、管理等の社内業務の推進のため",
+          "上記に加え、お客様との取引を適切かつ円滑に行うため",
+          "正当な権限を有する外国規制当局からの要請、または適用される外国法令に基づく要請に応じるため"
         ]
       },
       "safety": {
-        "title": "SAFETY MANAGEMENT MEASURES",
-        "content": "We strive to make you personal information accurate and up-to-date. In addition, in order to prevent the leakage of customer personal information, etc., we will implement necessary and appropriate safety management measures, and we will carry out appropriate supervision of officers, employees and contractors"
+        "title": "安全管理措置",
+        "content": "当社は、お客様の個人情報を正確かつ最新の状態に保ち、最新の状態に保ちます。また、お客様の個人情報等の漏洩を防止するため、必要かつ適切な 安全管理措置を講じるとともに、役員、従業員及び委託先に対する適切な監督を実施します。"
       },
       "ci": {
-        "title": "CONTINUOUS IMPROVEMENT",
-        "content": "In order to properly handle your personal information, etc., we will review this protection declaration as appropriate and strive for continuous improvement."
+        "title": "継続的な改善",
+        "content": "お客様の個人情報等を適切に取り扱うため、本保護宣言を適宜見直し、継続的な改善に努めます。"
       },
       "requestDisclosure": {
-        "title": "REQUEST PROCEDURES FOR DISCLOSURE, ETC.",
-        "content": "In there is a request from the customer to disclose, correct, suspend use, disclose records provided to their parties, etc. regarding the personal data held by the customer, we will confirm that you are the person and strive to respond appropriately and promptly",
-        "addition": "In addition, if there is a request to disclose whether or not you have a personal number, we will answer whether you have a personal number or not."
+        "title": "開示等の請求手続き",
+        "content": "お客様から、保有する個人データに関する開示、訂正、利用停止、協力会社への提供記録の開示等のご請求があった場合、ご本人であることを確認さ せていただいた上で、適切かつ迅速な対応に努めます。",
+        "addition": "また、個人番号の保有の有無について開示のご請求があった場合、個人番号の保有の有無についてご回答いたします。"
       },
       "informationRequest": {
-        "title": "INFORMATION REQUEST PROCEDURE FROM PROVIDING YOUR PERSONAL DATA TO THIRD PARTIES IN A FOREIGN COUNTRY",
-        "content": "If we provide your personal data to a third party in a foreign country and can identify the third party to be provided afterwards, the customer will take information about the name of the foreign country, the system related to the protection of personal information of the foreign country, and the third party.",
-        "requestInfo": "You can request information from us about measures to protect personal information.",
-        "addition": "In addition, measure that are equivalent to measure that the personal information handling business should take regarding the handling of personal data (hereinafter referred to as “equivalent measure”). If you provide it to a person who has a system that meets the standards as necessary for continuous to take, the customer’s consent is not required, but the customer can request our company to provide information about the information listed below",
+        "title": "外国にある第三者への個人データ提供に関する請求手続き",
+        "content": "当社がお客様の個人データを外国にある第三者に提供する場合、提供先が特定できたときは、お客様は、当該外国の国名、当該外国の個人情報保護に 関する体制、および当該第三者に関する情報を取得します。",
+        "requestInfo": "お客様は、当社に対し、個人情報保護のための措置に関する情報の提供を求めることができます。",
+        "addition": "また、個人情報取扱事業者が個人データの取扱いに関して講じるべき措置（以下「同等の措置」といいます。）に相当する措置を継続的に講じるため に必要な水準を満たす体制を有する者に提供する場合には、お客様の同意は不要ですが、お客様は当社に対し、以下に掲げる情報の提供を求めること ができます。",
         "info": [
-          "Method of system development in the third party in question",
-          "Outline of the corresponding measures implemented by the third party in question",
-          "The method and frequency of our Company’s confirmation of the implementation of the equivalent measures by the third party and the presence or absence of a system that may affect the implementation of the equivalent measures and its contents",
-          "The name of the foreign country",
-          "The presence or absence of the foreign country’s system that may affect the implementation of the corresponding measures by the third party in question and its outline",
-          "Whether or not there are obstacles to the implementation of corresponding measure by the third party and their outline",
-          "Overview of the measures taken by the Company when the obstacles in (6) occur"
+          "当該第三者における体制整備の方法",
+          "当該第三者が実施した対応措置の概要",
+          "当社が当該第三者による同等の措置の実施状況を確認する方法及び頻度、並びに同等の措置の実施に影響を及ぼす可能性のある制度の有無及びそ の内容",
+          "当該外国の国名",
+          "当該第三者による同等の措置の実施に影響を及ぼす可能性のある外国の制度の有無及びその概要",
+          "当該第三者による同等の措置の実施に支障があるか否か及びその概要",
+          "の支障が発生した場合に当社が講じた措置の概要"
         ]
       },
       "questions": {
-        "title": "QUESTIONS, OPINIONS, COMPLAINTS, ETC.",
-        "content": "We will strive to respond promptly and sincerely to questions, opinions, complaints, etc. related to personal information received from customers. If you have any questions, opinions, complaints, etc., please contact us here"
+        "title": "ご質問・ご意見・苦情等について",
+        "content": "当社は、お客様からいただいた個人情報に関するご質問、ご意見、苦情等に対し、迅速かつ誠実に対応するよう努めます。ご質問、ご意見、苦情等が ございましたら、此方 までご連絡ください"
       }
     },
     "california": {

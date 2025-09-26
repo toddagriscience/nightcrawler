@@ -1,6 +1,7 @@
 // Copyright Todd LLC, All rights reserved.
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 /**
  * Privacy page component
@@ -230,6 +231,80 @@ export default function PrivacyPage() {
                 ))}
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Japan section */}
+        <section>
+          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+            {t('japan.title')}
+          </h2>
+          <p className="mb-4 text-sm text-gray-600">{t('japan.lastUpdated')}</p>
+          <div className="space-y-6">
+            <p className="text-gray-700">{t('japan.intro')}</p>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.compliance.title')}
+            </h3>
+            <p className="text-gray-700">{t('japan.compliance.content')}</p>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.purposeOfUse.title')}
+            </h3>
+            <p className="text-gray-700">{t('japan.purposeOfUse.content')}</p>
+            <p className="text-gray-700">{t('japan.businessDetails')}</p>
+            <p className="ml-4 text-gray-700">{t('japan.relatedBusiness')}</p>
+            <p className="text-gray-700">{t('japan.purposeOfUse.subtitle')}</p>
+            <ul className="list-disc space-y-1 pl-6 text-gray-700">
+              {Array.from({ length: 12 }, (_, i) => (
+                <li key={i} className="text-sm">
+                  {t(`japan.purposeOfUse.purposes.${i}`)}
+                </li>
+              ))}
+            </ul>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.safety.title')}
+            </h3>
+            <p className="text-gray-700">{t('japan.safety.content')}</p>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.ci.title')}
+            </h3>
+            <p className="text-gray-700">{t('japan.ci.content')}</p>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.requestDisclosure.title')}
+            </h3>
+            <p className="text-gray-700">
+              {t('japan.requestDisclosure.content')}
+            </p>
+            <p className="text-gray-700">
+              {t('japan.requestDisclosure.addition')}
+            </p>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.informationRequest.title')}
+            </h3>
+            <p className="text-gray-700">
+              {t('japan.informationRequest.content')}
+            </p>
+            <p className="text-gray-700">
+              {t('japan.informationRequest.requestInfo')}
+            </p>
+            <p className="text-gray-700">
+              {t('japan.informationRequest.addition')}
+            </p>
+            <ol className="list-decimal space-y-1 pl-6 text-gray-700">
+              {Array.from({ length: 7 }, (_, i) => (
+                <li key={i} className="text-sm">
+                  {t(`japan.informationRequest.info.${i}`)}
+                </li>
+              ))}
+            </ol>
+            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              {t('japan.questions.title')}
+            </h3>
+            <p className="text-gray-700">
+              {t('japan.questions.content')}
+              <Link href={'/contact'} className="inline-block">
+                : Contact us.
+              </Link>
+            </p>
           </div>
         </section>
 

@@ -21,7 +21,6 @@ export type SupportedLocale = (typeof routing.locales)[number];
 export const LOCALE_NAMES: Record<SupportedLocale, string> = {
   en: 'English',
   es: 'Español',
-  ja: 'Japanese',
 } as const;
 
 /**
@@ -31,5 +30,4 @@ export const LOCALE_NAMES: Record<SupportedLocale, string> = {
 export const LOCALE_FLAGS: Record<SupportedLocale, string> = {
   en: '🇺🇸',
   es: '🇪🇸',
-  ja: '🇯🇵',
 } as const;
