@@ -30,7 +30,7 @@
       "featured": "true"
     },
     "regenerativeSeedsApril": {
-      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
+      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds (April)",
       "date": "2025-04-03",
       "excerpt": "Blank",
       "link": "https://www.seedtoday.com/article/1089709/todd-introduces-the-worlds-first-regenerative-vegetable-and-flower-seeds",
@@ -66,7 +66,7 @@
       "featured": "false"
     },
     "regenerativeSeedsMarch": {
-      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds",
+      "title": "Todd Introduces The World's First Regenerative Vegetable and Flower Seeds (March)",
       "date": "2025-03-31",
       "excerpt": "Blank",
       "link": "https://www.prnewswire.com/news-releases/todd-introduces-the-worlds-first-regenerative-vegetable-and-flower-seeds-302415741.html",
@@ -94,7 +94,7 @@
       "date": "2024-11-01",
       "excerpt": "Blank",
       "link": "",
-      "source": "None",
+      "source": "none",
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"
@@ -106,7 +106,7 @@
       "date": "2024-10-29",
       "excerpt": "Blank",
       "link": "articles/farmlink-project",
-      "source": "None",
+      "source": "none",
       "image": {
         "url": "/placeholder.svg",
         "alt": "something"

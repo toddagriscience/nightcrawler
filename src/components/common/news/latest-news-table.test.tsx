@@ -42,7 +42,7 @@ describe('LatestNewsTable', () => {
     renderWithNextIntl(<LatestNewsTable items={items} />);
 
     expect(screen.getByText('Headline')).toBeInTheDocument();
-    expect(screen.getByText('Source Type')).toBeInTheDocument();
+    expect(screen.getByText('Source')).toBeInTheDocument();
     expect(screen.getByText('January 3, 1999')).toBeInTheDocument();
   });
   it('shows more items on click', () => {

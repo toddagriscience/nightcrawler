@@ -45,7 +45,7 @@ export function useNews(): {
       },
     };
 
-    if (t(`${key}.featured`).toLowerCase() == 'true') {
+    if (t(`${key}.featured`) === 'true') {
       featuredNews.push(article);
     }
 

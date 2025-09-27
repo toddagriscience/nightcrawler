@@ -25,7 +25,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
     <div className="rounded-md text-[#555555]">
       <div className="grid grid-cols-3 border-b border-[#555555] px-4 py-2 text-xs uppercase">
         <span>Headline</span>
-        <span className="text-right">Source Type</span>
+        <span className="text-right">Source</span>
         <span className="text-right">Date</span>
       </div>
 
@@ -47,9 +47,9 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             rel="noopener noreferrer"
             aria-label={`Open ${item.title} in new tab`}
           >
-            <div className="flex items-center justify-end gap-1">
+            <div className="flex items-center justify-end gap-1 hover:underline">
               {item.source}
-              <ExternalLink className="h-3.5 w-3.5 transition hover:opacity-70" />
+              <ExternalLink className="h-3.5 w-3.5 transition" />
             </div>
           </Link>
 
