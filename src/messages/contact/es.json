@@ -1,0 +1,12 @@
+{
+  "ContactPage": {
+    "title": "Contact Us",
+    "description": "Get in touch with Todd Agriscience for inquiries or partnerships.",
+    "nameLabel": "Your Name",
+    "emailLabel": "Your Email",
+    "messageLabel": "Your Message",
+    "submitButton": "Send Message",
+    "submissionSuccess": "Your message has been sent successfully!",
+    "submissionError": "Failed to send your message: {error}"
+  }
+}
