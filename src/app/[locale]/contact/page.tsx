@@ -98,7 +98,9 @@ export default function Contact() {
                   setFormData((prev) => ({ ...prev, fullName: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-foreground/40">*Required</p>
+              <p className="text-sm font-[200] text-foreground/40">
+                * {t('required')}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -118,7 +120,9 @@ export default function Contact() {
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-foreground/40">*Required</p>
+              <p className="text-sm font-[200] text-foreground/40">
+                * {t('required')}
+              </p>
             </div>
 
             <div className="space-y-2 relative">
@@ -126,7 +130,7 @@ export default function Contact() {
                 htmlFor="reason"
                 className="text-xl font-[200] text-foreground/80"
               >
-                Select Reason for Contact
+                {t('reasonLabel')}
               </label>
               <Select
                 required
@@ -142,35 +146,41 @@ export default function Contact() {
                     className="hover:opacity-100 opacity-80 transition"
                     value="general"
                   >
-                    General Inquiry
+                    {t('contactOptions.generalInquiry')}
                   </SelectItem>
+
                   <SelectItem
                     value="support"
                     className="hover:opacity-100 opacity-80 transition"
                   >
-                    Client Support
+                    {t('contactOptions.clientSupport')}
                   </SelectItem>
+
                   <SelectItem
                     value="business"
                     className="hover:opacity-100 opacity-80 transition"
                   >
-                    Employment Inquiry
+                    {t('contactOptions.employmentInquiry')}
                   </SelectItem>
+
                   <SelectItem
                     value="media"
                     className="hover:opacity-100 opacity-80 transition"
                   >
-                    Media
+                    {t('contactOptions.media')}
                   </SelectItem>
+
                   <SelectItem
                     value="other"
                     className="hover:opacity-100 opacity-80 transition"
                   >
-                    Other
+                    {t('contactOptions.other')}
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm font-[200] text-foreground/40">*Required</p>
+              <p className="text-sm font-[200] text-foreground/40">
+                * {t('required')}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -178,7 +188,7 @@ export default function Contact() {
                 htmlFor="message"
                 className="text-xl font-[200] text-foreground/80"
               >
-                Message
+                {t('messageLabel')}
               </label>
               <textarea
                 id="message"
@@ -196,7 +206,7 @@ export default function Contact() {
                 maxLength={MAX_MESSAGE_LENGTH}
               />
               <p className="text-sm font-[200] text-foreground/40">
-                *Required{' '}
+                * {t('required')}
                 <span className="text-foreground/60">
                   ({formData.message.length}/{MAX_MESSAGE_LENGTH} characters)
                 </span>
@@ -208,7 +218,9 @@ export default function Contact() {
               disabled={isSubmitting}
               className="text-xl font-[200] text-foreground/80 hover:text-[#2A2727] transition-colors disabled:opacity-50 flex items-center gap-2 group hover:cursor-pointer"
             >
-              <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
+              <span>
+                {isSubmitting ? t('inProgressSubmit') : t('submitButton')}
+              </span>
               <span className="transition-transform group-hover:translate-x-1">
                 →
               </span>

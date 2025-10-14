@@ -4,9 +4,17 @@
     "description": "Get in touch with Todd Agriscience for inquiries or partnerships.",
     "nameLabel": "Your Name",
     "emailLabel": "Your Email",
+    "reasonLabel": "Your Reason for Contacting Us",
     "messageLabel": "Your Message",
-    "submitButton": "Send Message",
-    "submissionSuccess": "Your message has been sent successfully!",
-    "submissionError": "Failed to send your message: {error}"
+    "submitButton": "Send",
+    "inProgressSubmit": "Sending...",
+    "required": "Required",
+    "contactOptions": {
+      "generalInquiry": "General Inquiry",
+      "clientSupport": "Client Support",
+      "employmentInquiry": "Employment Inquiry",
+      "media": "Media",
+      "other": "Other"
+    }
   }
 }
