@@ -26,60 +26,40 @@ export default function WhatWeDoPage() {
   const t = useTranslations('whatWeDo');
 
   const services = [
-    {
-      ...t.raw('offerings.services.soilRemineralization'),
-    },
-    {
-      ...t.raw('offerings.services.seedProducts'),
-    },
-    {
-      ...t.raw('offerings.services.soilConservation'),
-    },
-    {
-      ...t.raw('offerings.services.cropProduction'),
-    },
-    {
-      ...t.raw('offerings.services.diseaseInsectMitigation'),
-    },
-    {
-      ...t.raw('offerings.services.operationsManagement'),
-    },
-    {
-      ...t.raw('offerings.services.nopDemeterIntegrity'),
-    },
-    {
-      ...t.raw('offerings.services.produceSafety'),
-    },
-    {
-      ...t.raw('offerings.services.expansionMarketEntry'),
-    },
-    {
-      ...t.raw('offerings.services.dtcCSAMarketing'),
-    },
-  ];
+    'soilRemineralization',
+    'seedProducts',
+    'soilConservation',
+    'cropProduction',
+    'diseaseInsectMitigation',
+    'operationsManagement',
+    'nopDemeterIntegrity',
+    'produceSafety',
+    'expansionMarketEntry',
+    'dtcCSAMarketing',
+  ].map((key) => ({
+    key,
+    title: t(`offerings.services.${key}.title`),
+    description: t(`offerings.services.${key}.description`),
+    icon: t(`offerings.services.${key}.icon`),
+  }));
 
   const impactStories = [
-    {
-      ...t.raw('impact.stories.acmeInc'),
-    },
-    {
-      ...t.raw('impact.stories.brightFuture'),
-    },
-    {
-      ...t.raw('impact.stories.cosmicTechnologies'),
-    },
-    {
-      ...t.raw('impact.stories.deltaSystems'),
-    },
-    {
-      ...t.raw('impact.stories.echoInnovations'),
-    },
-    {
-      ...t.raw('impact.stories.frontierLabs'),
-    },
-  ];
+    'acmeInc',
+    'brightFuture',
+    'cosmicTechnologies',
+    'deltaSystems',
+    'echoInnovations',
+    'frontierLabs',
+  ].map((key) => ({
+    key,
+    title: t(`impact.stories.${key}.title`),
+    description: t(`impact.stories.${key}.description`),
+    date: t(`impact.stories.${key}.date`),
+  }));
 
-  const companyList = t.raw('impact.companies.list') as string[];
+  const companyList = ['0', '1', '2', '3', '4', '5'].map((key) => {
+    return t(`impact.companies.list.${key}`);
+  });
 
   return (
     <main className="min-h-screen">

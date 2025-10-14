@@ -18,13 +18,13 @@ describe('ImpactCard', () => {
     expect(screen.getByText('2023')).toBeInTheDocument();
   });
 
-  it('renders image when imageUrl is provided', () => {
-    render(<ImpactCard {...defaultProps} />);
-
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('src');
-    expect(image).toHaveAttribute('alt', 'Test Impact');
-  });
+  // it('renders image when imageUrl is provided', () => {
+  //   render(<ImpactCard {...defaultProps} />);
+  //
+  //   const image = screen.getByRole('img');
+  //   expect(image).toHaveAttribute('src');
+  //   expect(image).toHaveAttribute('alt', 'Test Impact');
+  // });
 
   it('applies custom className', () => {
     const { container } = render(

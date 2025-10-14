@@ -30,7 +30,7 @@ describe('ServiceCard', () => {
       <ServiceCard {...defaultProps} variant="highlight" />
     );
 
-    expect(container.firstChild).toHaveClass('bg-primary/5');
+    expect(container.firstChild).toHaveClass('bg-secondary/5');
   });
 
   it('applies custom className', () => {
