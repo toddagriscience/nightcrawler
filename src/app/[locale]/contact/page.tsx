@@ -1,3 +1,5 @@
+// Copyright Todd LLC, All rights reserved.
+
 'use client';
 
 import { useState } from 'react';
@@ -113,6 +115,7 @@ export default function Contact() {
               <input
                 id="fullName"
                 type="text"
+                data-testid="name-input"
                 required
                 className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
                 value={formData.fullName}
@@ -135,6 +138,7 @@ export default function Contact() {
               <input
                 id="email"
                 type="email"
+                data-testid="email-input"
                 required
                 className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
                 value={formData.email}
@@ -194,6 +198,7 @@ export default function Contact() {
 
                   <SelectItem
                     value="other"
+                    data-testid="other"
                     className="hover:opacity-100 opacity-80 transition"
                   >
                     {t('contactOptions.other')}
@@ -214,6 +219,7 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                data-testid="message-input"
                 required
                 rows={6}
                 className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors resize-none"
