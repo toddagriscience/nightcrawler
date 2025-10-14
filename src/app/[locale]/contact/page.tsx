@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl'; // Add this import
 import { submitToGoogleSheets } from './action';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function Contact() {
   const t = useTranslations('ContactPage'); // Add this hook
@@ -58,12 +65,12 @@ export default function Contact() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#F7F4EC] text-[#2A2727] p-8 md:p-16">
+      <div className="min-h-screen bg-[#F7F4EC] text-foreground p-8 md:p-16 mb-16">
         <div className="max-w-3xl mx-auto pt-8">
-          <h1 className="text-[64px] font-[300] text-[#2A2727]/80 mb-4">
+          <h1 className="text-[64px] font-[300] text-foreground/80 mb-4">
             {t('title')}
           </h1>
-          <p className="text-xl font-[200] mb-16 text-[#2A2727]/60">
+          <p className="text-xl font-[200] mb-16 text-foreground/60">
             {t('description')}
           </p>
 
@@ -77,7 +84,7 @@ export default function Contact() {
             <div className="space-y-2">
               <label
                 htmlFor="fullName"
-                className="text-xl font-[200] text-[#2A2727]/80"
+                className="text-xl font-[200] text-foreground/80"
               >
                 {t('nameLabel')}
               </label>
@@ -85,19 +92,19 @@ export default function Contact() {
                 id="fullName"
                 type="text"
                 required
-                className="w-full bg-transparent border-b border-[#2A2727]/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
+                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
                 value={formData.fullName}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, fullName: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-[#2A2727]/40">*Required</p>
+              <p className="text-sm font-[200] text-foreground/40">*Required</p>
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-xl font-[200] text-[#2A2727]/80"
+                className="text-xl font-[200] text-foreground/80"
               >
                 {t('emailLabel')}
               </label>
@@ -105,48 +112,71 @@ export default function Contact() {
                 id="email"
                 type="email"
                 required
-                className="w-full bg-transparent border-b border-[#2A2727]/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
+                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-[#2A2727]/40">*Required</p>
+              <p className="text-sm font-[200] text-foreground/40">*Required</p>
             </div>
 
             <div className="space-y-2 relative">
               <label
                 htmlFor="reason"
-                className="text-xl font-[200] text-[#2A2727]/80"
+                className="text-xl font-[200] text-foreground/80"
               >
                 Select Reason for Contact
               </label>
-              <select
-                id="reason"
+              <Select
                 required
-                className="w-full bg-transparent border-b border-[#2A2727]/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors appearance-none"
-                value={formData.reason}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, reason: e.target.value }))
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, reason: value }))
                 }
               >
-                <option value="" disabled></option>
-                <option value="general">General Inquiry</option>
-                <option value="support">Client Support</option>
-                <option value="business">Employment Inquiry</option>
-                <option value="media">Media</option>
-                <option value="other">Other</option>
-              </select>
-              <span className="absolute right-2 bottom-3 text-xl text-[#2A2727]/40 pointer-events-none">
-                v
-              </span>
-              <p className="text-sm font-[200] text-[#2A2727]/40">*Required</p>
+                <SelectTrigger className="border-foreground/20 border-b mt-4 pr-0 rounded-none text-xl font-light">
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent className="bg-background border-foreground/20 text-lg">
+                  <SelectItem
+                    className="hover:opacity-100 opacity-80 transition"
+                    value="general"
+                  >
+                    General Inquiry
+                  </SelectItem>
+                  <SelectItem
+                    value="support"
+                    className="hover:opacity-100 opacity-80 transition"
+                  >
+                    Client Support
+                  </SelectItem>
+                  <SelectItem
+                    value="business"
+                    className="hover:opacity-100 opacity-80 transition"
+                  >
+                    Employment Inquiry
+                  </SelectItem>
+                  <SelectItem
+                    value="media"
+                    className="hover:opacity-100 opacity-80 transition"
+                  >
+                    Media
+                  </SelectItem>
+                  <SelectItem
+                    value="other"
+                    className="hover:opacity-100 opacity-80 transition"
+                  >
+                    Other
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm font-[200] text-foreground/40">*Required</p>
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="message"
-                className="text-xl font-[200] text-[#2A2727]/80"
+                className="text-xl font-[200] text-foreground/80"
               >
                 Message
               </label>
@@ -154,7 +184,7 @@ export default function Contact() {
                 id="message"
                 required
                 rows={6}
-                className="w-full bg-transparent border-b border-[#2A2727]/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors resize-none"
+                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors resize-none"
                 value={formData.message}
                 onChange={(e) => {
                   const message = e.target.value;
@@ -165,9 +195,9 @@ export default function Contact() {
                 }}
                 maxLength={MAX_MESSAGE_LENGTH}
               />
-              <p className="text-sm font-[200] text-[#2A2727]/40">
+              <p className="text-sm font-[200] text-foreground/40">
                 *Required{' '}
-                <span className="text-[#2A2727]/60">
+                <span className="text-foreground/60">
                   ({formData.message.length}/{MAX_MESSAGE_LENGTH} characters)
                 </span>
               </p>
@@ -176,7 +206,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="text-xl font-[200] text-[#2A2727]/80 hover:text-[#2A2727] transition-colors disabled:opacity-50 flex items-center gap-2 group hover:cursor-pointer"
+              className="text-xl font-[200] text-foreground/80 hover:text-[#2A2727] transition-colors disabled:opacity-50 flex items-center gap-2 group hover:cursor-pointer"
             >
               <span>{isSubmitting ? 'Submitting...' : 'Submit'}</span>
               <span className="transition-transform group-hover:translate-x-1">
