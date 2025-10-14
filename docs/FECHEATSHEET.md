@@ -28,6 +28,17 @@ git checkout -b feature/your-feature-name
 
 ### 2. Write your code
 
+**For testing the contact form:**
+
+- Create a `.env` file in the root directory
+- Add the following to it:
+
+```
+export GOOGLE_SCRIPT_URL = "form-url.com/my-form-here"
+```
+
+The exact URL can be acquired by setting up a deployment through AppScript on Google Sheets.
+
 **For new pages:**
 
 ```bash
