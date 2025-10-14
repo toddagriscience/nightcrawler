@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl'; // Add this import
 import { submitToGoogleSheets } from './action';
 import {
@@ -11,10 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import Link from 'next/link';
+import { FadeIn } from '@/components/common';
 
 export default function Contact() {
-  const t = useTranslations('ContactPage'); // Add this hook
-  const router = useRouter();
+  const t = useTranslations('contactPage'); // Add this hook
   interface FormData {
     fullName: string;
     email: string;
@@ -32,6 +32,7 @@ export default function Contact() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -52,7 +53,7 @@ export default function Contact() {
         ...formData,
       };
       await submitToGoogleSheets(submissionData);
-      router.push('/thank-you');
+      setIsSuccessfulSubmit(true);
     } catch (error) {
       console.error('Form submission error:', error);
       setError(
@@ -62,6 +63,27 @@ export default function Contact() {
       setIsSubmitting(false);
     }
   };
+
+  if (isSuccessfulSubmit) {
+    return (
+      <FadeIn>
+        <section className="h-screen flex flex-col items-center justify-center px-6 text-center bg-[#F7F4EC] text-[#555555]">
+          <h1 className="text-[70px] md:text-[110px] font-light leading-none mb-6">
+            {t('thankYou.title')}
+          </h1>
+          <p className="text-xl md:text-[24px] font-light leading-relaxed max-w-2xl mb-8">
+            {t('thankYou.content')}
+          </p>
+          <Link
+            href="/impact"
+            className="inline-flex items-center gap-2 px-6 py-3 text-lg border border-[#555555]/20 rounded-full hover:bg-[#555555]/5 transition"
+          >
+            {t('thankYou.impact')} <span>→</span>
+          </Link>
+        </section>
+      </FadeIn>
+    );
+  }
 
   return (
     <>
