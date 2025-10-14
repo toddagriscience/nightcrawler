@@ -38,6 +38,7 @@ describe('Contact page', () => {
     expect(select.nodeValue == 'Other');
   });
   it('sends a message and renders thank you screen', async () => {
+    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
@@ -77,6 +78,7 @@ describe('Contact page', () => {
     );
   });
   it('displays error on failure', async () => {
+    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,
