@@ -5,6 +5,9 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 
 export interface ImpactCardProps {
+  /**
+   * Props for the ImpactCard component: title, description, date, and optional className.
+   */
   title: string;
   description: string;
   date: string;

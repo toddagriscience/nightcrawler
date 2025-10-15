@@ -225,3 +225,39 @@ header {
 .footer-underline-active::after {
   width: 100%;
 }
+
+/* Partners table horizontal scrollbar override */
+.partners-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-gutter: stable both-edges;
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #000 rgba(0, 0, 0, 0.08);
+  -webkit-overflow-scrolling: touch;
+}
+
+.partners-scroll::-webkit-scrollbar {
+  height: 10px;
+  display: block;
+}
+
+.partners-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.partners-scroll::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 9999px;
+}
+
+@media (min-width: 768px) {
+  /* Hide horizontal scrollbar on desktop while allowing content to fit */
+  .partners-scroll {
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .partners-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

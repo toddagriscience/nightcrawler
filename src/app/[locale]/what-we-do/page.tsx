@@ -18,6 +18,70 @@ import {
 import { useTranslations } from 'next-intl';
 import { ImpactCard, ServiceCard } from './components';
 
+// Private helper: map icon name from translations to a Lucide icon element
+function getServiceIcon(iconName: string) {
+  switch (iconName) {
+    case 'Sprout':
+      return <Sprout size={24} />;
+    case 'Leaf':
+      return <Leaf size={24} />;
+    case 'Mountain':
+      return <Mountain size={24} />;
+    case 'WheatOff':
+      return <Wheat size={24} />;
+    case 'Bug':
+      return <Bug size={24} />;
+    case 'Settings':
+      return <Settings size={24} />;
+    case 'ShieldCheck':
+      return <ShieldCheck size={24} />;
+    case 'Shield':
+      return <Shield size={24} />;
+    case 'TrendingUp':
+      return <TrendingUp size={24} />;
+    case 'Store':
+      return <Store size={24} />;
+    default:
+      return null;
+  }
+}
+
+// Private helper: render a single company row
+function renderCompanyRow(company: string, index: number, total: number) {
+  const firstLetter = company.charAt(0);
+  const website = company.toLowerCase().replace(/\s+/g, '') + '.com';
+  const date =
+    ['Apr 2023', 'Feb 2023', 'Nov 2022', 'Aug 2022', 'Jun 2022', 'Mar 2022'][
+      index
+    ] || '';
+  const status = index === total - 1 ? 'Exit' : 'Current';
+
+  return (
+    <tr key={index} className="border-b last:border-b-0">
+      <td className="py-4 font-neue-haas">{firstLetter}</td>
+      <td className="py-4 font-neue-haas">{company}</td>
+      <td className="py-4 font-neue-haas text-primary hover:underline">
+        <a
+          href={`https://${website}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {website}
+        </a>
+      </td>
+      <td className="py-4 font-neue-haas">{date}</td>
+      <td className="py-4 font-neue-haas">
+        <span
+          className={`inline-flex items-center gap-1 ${status === 'Exit' ? 'text-red-500' : 'text-green-500'}`}
+        >
+          <span className="w-2 h-2 rounded-full bg-current" />
+          {status}
+        </span>
+      </td>
+    </tr>
+  );
+}
+
 /**
  * What We Do page component showcasing Todd AgriScience's services and impact
  * @returns {JSX.Element} - The what we do page
@@ -25,7 +89,7 @@ import { ImpactCard, ServiceCard } from './components';
 export default function WhatWeDoPage() {
   const t = useTranslations('whatWeDo');
 
-  const services = [
+  const servicesKeys = [
     'soilRemineralization',
     'seedProducts',
     'soilConservation',
@@ -36,26 +100,38 @@ export default function WhatWeDoPage() {
     'produceSafety',
     'expansionMarketEntry',
     'dtcCSAMarketing',
-  ].map((key) => ({
-    key,
-    title: t(`offerings.services.${key}.title`),
-    description: t(`offerings.services.${key}.description`),
-    icon: t(`offerings.services.${key}.icon`),
-  }));
+  ] as const;
 
-  const impactStories = [
+  type ServiceTranslation = {
+    title: string;
+    description: string;
+    icon: string;
+  };
+
+  const services = servicesKeys.map((key) => {
+    const data = t.raw(`offerings.services.${key}`) as ServiceTranslation;
+    return { key, ...data };
+  });
+
+  const impactStoryKeys = [
     'acmeInc',
     'brightFuture',
     'cosmicTechnologies',
     'deltaSystems',
     'echoInnovations',
     'frontierLabs',
-  ].map((key) => ({
-    key,
-    title: t(`impact.stories.${key}.title`),
-    description: t(`impact.stories.${key}.description`),
-    date: t(`impact.stories.${key}.date`),
-  }));
+  ] as const;
+
+  type ImpactStoryTranslation = {
+    title: string;
+    description: string;
+    date: string;
+  };
+
+  const impactStories = impactStoryKeys.map((key) => {
+    const data = t.raw(`impact.stories.${key}`) as ImpactStoryTranslation;
+    return { key, ...data };
+  });
 
   const companyList = ['0', '1', '2', '3', '4', '5'].map((key) => {
     return t(`impact.companies.list.${key}`);
@@ -72,7 +148,16 @@ export default function WhatWeDoPage() {
           <p className="text-lg md:text-xl text-muted-foreground font-neue-haas max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
-          <div className="mt-12 animate-bounce">
+          <button
+            type="button"
+            aria-label="Scroll to offerings"
+            onClick={() =>
+              document
+                .getElementById('offerings')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+            className="mt-12 animate-bounce mx-auto text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+          >
             <svg
               width="24"
               height="24"
@@ -82,16 +167,18 @@ export default function WhatWeDoPage() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="mx-auto text-muted-foreground"
             >
               <path d="M12 5v14M19 12l-7 7-7-7" />
             </svg>
-          </div>
+          </button>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-12 bg-background">
+      <section
+        id="offerings"
+        className="py-16 px-4 md:px-8 lg:px-12 bg-background"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-utah-condensed font-bold mb-4">
@@ -106,29 +193,7 @@ export default function WhatWeDoPage() {
             {services.map((service, index) => (
               <ServiceCard
                 key={index}
-                icon={
-                  service.icon === 'Sprout' ? (
-                    <Sprout size={24} />
-                  ) : service.icon === 'Leaf' ? (
-                    <Leaf size={24} />
-                  ) : service.icon === 'Mountain' ? (
-                    <Mountain size={24} />
-                  ) : service.icon === 'WheatOff' ? (
-                    <Wheat size={24} />
-                  ) : service.icon === 'Bug' ? (
-                    <Bug size={24} />
-                  ) : service.icon === 'Settings' ? (
-                    <Settings size={24} />
-                  ) : service.icon === 'ShieldCheck' ? (
-                    <ShieldCheck size={24} />
-                  ) : service.icon === 'Shield' ? (
-                    <Shield size={24} />
-                  ) : service.icon === 'TrendingUp' ? (
-                    <TrendingUp size={24} />
-                  ) : service.icon === 'Store' ? (
-                    <Store size={24} />
-                  ) : null
-                }
+                icon={getServiceIcon(service.icon)}
                 title={service.title}
                 description={service.description}
                 variant={index % 2 === 0 ? 'default' : 'highlight'}
@@ -172,8 +237,8 @@ export default function WhatWeDoPage() {
               </p>
             </div>
 
-            <div className="overflow-x-auto -mx-4 md:mx-0">
-              <div className="min-w-[800px] px-4 md:px-0">
+            <div className="partners-scroll md:mx-0">
+              <div className="min-w-[800px] px-4">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
@@ -195,47 +260,9 @@ export default function WhatWeDoPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {companyList.map((company, index) => {
-                      const firstLetter = company.charAt(0);
-                      const website =
-                        company.toLowerCase().replace(/\s+/g, '') + '.com';
-                      const date =
-                        [
-                          'Apr 2023',
-                          'Feb 2023',
-                          'Nov 2022',
-                          'Aug 2022',
-                          'Jun 2022',
-                          'Mar 2022',
-                        ][index] || '';
-                      const status =
-                        index === companyList.length - 1 ? 'Exit' : 'Current';
-
-                      return (
-                        <tr key={index} className="border-b last:border-b-0">
-                          <td className="py-4 font-neue-haas">{firstLetter}</td>
-                          <td className="py-4 font-neue-haas">{company}</td>
-                          <td className="py-4 font-neue-haas text-primary hover:underline">
-                            <a
-                              href={`https://${website}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {website}
-                            </a>
-                          </td>
-                          <td className="py-4 font-neue-haas">{date}</td>
-                          <td className="py-4 font-neue-haas">
-                            <span
-                              className={`inline-flex items-center gap-1 ${status === 'Exit' ? 'text-red-500' : 'text-green-500'}`}
-                            >
-                              <span className="w-2 h-2 rounded-full bg-current" />
-                              {status}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {companyList.map((company, index) =>
+                      renderCompanyRow(company, index, companyList.length)
+                    )}
                   </tbody>
                 </table>
               </div>

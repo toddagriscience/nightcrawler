@@ -20,6 +20,10 @@ const serviceCardVariants = cva(
   }
 );
 
+/**
+ * Props for the ServiceCard component: includes content, optional icon,
+ * variant from cva, and optional className.
+ */
 export interface ServiceCardProps
   extends VariantProps<typeof serviceCardVariants> {
   title: string;
