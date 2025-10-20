@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
  * @returns {JSX.Element} - The ESG page
  */
 export default function ESGPage() {
-  const t = useTranslations('investors.esg');
+  const t = useTranslations('esg');
 
   return (
     <>
