@@ -6,10 +6,6 @@ import { PageHero } from '@/components/common';
 import { ScrollShrinkWrapper } from '@/components/landing';
 import { useTranslations } from 'next-intl';
 
-/**
- * ESG page component
- * @returns {JSX.Element} - The ESG page
- */
 export default function ESGPage() {
   const t = useTranslations('esg');
 
