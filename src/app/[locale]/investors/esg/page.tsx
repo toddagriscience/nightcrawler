@@ -1,5 +1,7 @@
 // Copyright Todd LLC, All rights reserved.
 
+'use client';
+
 import { PageHero } from '@/components/common';
 import { ScrollShrinkWrapper } from '@/components/landing';
 import { useTranslations } from 'next-intl';
