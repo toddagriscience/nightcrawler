@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl'; // Add this import
+import { useTranslations } from 'next-intl';
 import { submitToGoogleSheets } from './action';
 import {
   Select,
@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { FadeIn } from '@/components/common';
 
 export default function Contact() {
-  const t = useTranslations('contactPage'); // Add this hook
+  const t = useTranslations('contactPage');
   interface FormData {
     fullName: string;
     email: string;
@@ -69,16 +69,16 @@ export default function Contact() {
   if (isSuccessfulSubmit) {
     return (
       <FadeIn>
-        <section className="h-screen flex flex-col items-center justify-center px-6 text-center bg-[#F7F4EC] text-[#555555]">
-          <h1 className="text-[70px] md:text-[110px] font-light leading-none mb-6">
+        <section className="flex h-screen flex-col items-center justify-center bg-[#F7F4EC] px-6 text-center text-[#555555]">
+          <h1 className="mb-6 text-[70px] leading-none font-light md:text-[110px]">
             {t('thankYou.title')}
           </h1>
-          <p className="text-xl md:text-[24px] font-light leading-relaxed max-w-2xl mb-8">
+          <p className="mb-8 max-w-2xl text-xl leading-relaxed font-light md:text-[24px]">
             {t('thankYou.content')}
           </p>
           <Link
             href="/impact"
-            className="inline-flex items-center gap-2 px-6 py-3 text-lg border border-[#555555]/20 rounded-full hover:bg-[#555555]/5 transition"
+            className="inline-flex items-center gap-2 rounded-full border border-[#555555]/20 px-6 py-3 text-lg transition hover:bg-[#555555]/5"
           >
             {t('thankYou.impact')} <span>→</span>
           </Link>
@@ -89,26 +89,26 @@ export default function Contact() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#F7F4EC] text-foreground p-8 md:p-16 mb-16">
-        <div className="max-w-3xl mx-auto pt-8">
-          <h1 className="text-[64px] font-[300] text-foreground/80 mb-4">
+      <div className="text-foreground mb-16 min-h-screen bg-[#F7F4EC] p-8 md:p-16">
+        <div className="mx-auto max-w-3xl pt-8">
+          <h1 className="text-foreground/80 mb-4 text-[64px] font-[300]">
             {t('title')}
           </h1>
-          <p className="text-xl font-[200] mb-16 text-foreground/60">
+          <p className="text-foreground/60 mb-16 text-xl font-[200]">
             {t('description')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-16">
             {error && (
-              <div className="p-4 bg-red-50 border border-red-100 rounded-md">
-                <p className="text-red-600 text-sm font-[200]">{error}</p>
+              <div className="rounded-md border border-red-100 bg-red-50 p-4">
+                <p className="text-sm font-[200] text-red-600">{error}</p>
               </div>
             )}
 
             <div className="space-y-2">
               <label
                 htmlFor="fullName"
-                className="text-xl font-[200] text-foreground/80"
+                className="text-foreground/80 text-xl font-[200]"
               >
                 {t('nameLabel')}
               </label>
@@ -117,13 +117,13 @@ export default function Contact() {
                 type="text"
                 data-testid="name-input"
                 required
-                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
+                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
                 value={formData.fullName}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, fullName: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-foreground/40">
+              <p className="text-foreground/40 text-sm font-[200]">
                 * {t('required')}
               </p>
             </div>
@@ -131,7 +131,7 @@ export default function Contact() {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-xl font-[200] text-foreground/80"
+                className="text-foreground/80 text-xl font-[200]"
               >
                 {t('emailLabel')}
               </label>
@@ -140,21 +140,21 @@ export default function Contact() {
                 type="email"
                 data-testid="email-input"
                 required
-                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors"
+                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
               />
-              <p className="text-sm font-[200] text-foreground/40">
+              <p className="text-foreground/40 text-sm font-[200]">
                 * {t('required')}
               </p>
             </div>
 
-            <div className="space-y-2 relative">
+            <div className="relative space-y-2">
               <label
                 htmlFor="reason"
-                className="text-xl font-[200] text-foreground/80"
+                className="text-foreground/80 text-xl font-[200]"
               >
                 {t('reasonLabel')}
               </label>
@@ -164,12 +164,12 @@ export default function Contact() {
                   setFormData((prev) => ({ ...prev, reason: value }))
                 }
               >
-                <SelectTrigger className="border-foreground/20 border-b mt-4 pr-0 rounded-none text-xl font-light">
+                <SelectTrigger className="border-foreground/20 mt-4 rounded-none border-b pr-0 text-xl font-light">
                   <SelectValue placeholder="Select..." />
                 </SelectTrigger>
                 <SelectContent className="bg-background border-foreground/20 text-lg">
                   <SelectItem
-                    className="hover:opacity-100 opacity-80 transition"
+                    className="opacity-80 transition hover:opacity-100"
                     value="general"
                   >
                     {t('contactOptions.generalInquiry')}
@@ -177,21 +177,21 @@ export default function Contact() {
 
                   <SelectItem
                     value="support"
-                    className="hover:opacity-100 opacity-80 transition"
+                    className="opacity-80 transition hover:opacity-100"
                   >
                     {t('contactOptions.clientSupport')}
                   </SelectItem>
 
                   <SelectItem
                     value="business"
-                    className="hover:opacity-100 opacity-80 transition"
+                    className="opacity-80 transition hover:opacity-100"
                   >
                     {t('contactOptions.employmentInquiry')}
                   </SelectItem>
 
                   <SelectItem
                     value="media"
-                    className="hover:opacity-100 opacity-80 transition"
+                    className="opacity-80 transition hover:opacity-100"
                   >
                     {t('contactOptions.media')}
                   </SelectItem>
@@ -199,13 +199,13 @@ export default function Contact() {
                   <SelectItem
                     value="other"
                     data-testid="other"
-                    className="hover:opacity-100 opacity-80 transition"
+                    className="opacity-80 transition hover:opacity-100"
                   >
                     {t('contactOptions.other')}
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm font-[200] text-foreground/40">
+              <p className="text-foreground/40 text-sm font-[200]">
                 * {t('required')}
               </p>
             </div>
@@ -213,7 +213,7 @@ export default function Contact() {
             <div className="space-y-2">
               <label
                 htmlFor="message"
-                className="text-xl font-[200] text-foreground/80"
+                className="text-foreground/80 text-xl font-[200]"
               >
                 {t('messageLabel')}
               </label>
@@ -222,7 +222,7 @@ export default function Contact() {
                 data-testid="message-input"
                 required
                 rows={6}
-                className="w-full bg-transparent border-b border-foreground/20 py-2 text-xl font-[200] focus:outline-none focus:border-[#2A2727]/40 transition-colors resize-none"
+                className="border-foreground/20 w-full resize-none border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
                 value={formData.message}
                 onChange={(e) => {
                   const message = e.target.value;
@@ -233,7 +233,7 @@ export default function Contact() {
                 }}
                 maxLength={MAX_MESSAGE_LENGTH}
               />
-              <p className="text-sm font-[200] text-foreground/40">
+              <p className="text-foreground/40 text-sm font-[200]">
                 * {t('required')}
                 <span className="text-foreground/60">
                   ({formData.message.length}/{MAX_MESSAGE_LENGTH} characters)
@@ -244,7 +244,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="text-xl font-[200] text-foreground/80 hover:text-[#2A2727] transition-colors disabled:opacity-50 flex items-center gap-2 group hover:cursor-pointer"
+              className="text-foreground/80 group flex items-center gap-2 text-xl font-[200] transition-colors hover:cursor-pointer hover:text-[#2A2727] disabled:opacity-50"
             >
               <span>
                 {isSubmitting ? t('inProgressSubmit') : t('submitButton')}
