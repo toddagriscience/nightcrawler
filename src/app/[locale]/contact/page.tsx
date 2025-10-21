@@ -160,7 +160,7 @@ export default function Contact() {
               </label>
               <Select
                 required
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   setFormData((prev) => ({ ...prev, reason: value }))
                 }
               >
