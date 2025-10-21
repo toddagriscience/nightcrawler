@@ -6,6 +6,7 @@
  */
 export const messageFiles = [
   'common',
+  'contact',
   'header',
   'footer',
   'homepage',
