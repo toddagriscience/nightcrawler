@@ -7,23 +7,20 @@ import { env } from '@/lib/env';
 import { createMetadata } from '@/lib/metadata';
 import type { GovernanceTeam } from '@/types/governance';
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { TeamMemberCard } from '../components';
 
 interface GovernancePageProps {
-  params: Promise<{ slug: string[]; locale: string }>;
+  params: { slug: string[]; locale: string };
 }
 
 /**
  * Generate metadata for governance team member pages
  * @param {GovernancePageProps} props - The page props
- * @returns {Promise<Metadata>} - The metadata for the governance page
+ * @returns {Metadata} - The metadata for the governance page
  */
-export async function generateMetadata({
-  params,
-}: GovernancePageProps): Promise<Metadata> {
-  const { slug, locale } = await params;
+export function generateMetadata({ params }: GovernancePageProps): Metadata {
+  const { slug, locale } = params;
   const memberSlug = slug[0];
 
   // Get the team member data
@@ -33,13 +30,12 @@ export async function generateMetadata({
     notFound();
   }
 
-  const t = await getTranslations({
-    locale,
-    namespace: 'governance',
-  });
+  // Use hardcoded title instead of translations to avoid async
+  const governanceTitle =
+    locale === 'es' ? 'Gobierno Corporativo' : 'Governance';
 
   return createMetadata({
-    title: `${teamMember.name} - ${t('title')}`,
+    title: `${teamMember.name} - ${governanceTitle}`,
     description: `${teamMember.title} at Todd Agriscience. ${teamMember.bio[0]}`,
     path: `/${locale}/investors/governance/${memberSlug}`,
     ogImage: `${env.baseUrl}/og-image.jpg`,
@@ -51,8 +47,8 @@ export async function generateMetadata({
  * @param {GovernancePageProps} props - The page props
  * @returns {JSX.Element} - The governance page
  */
-export default async function GovernancePage({ params }: GovernancePageProps) {
-  const { slug } = await params;
+export default function GovernancePage({ params }: GovernancePageProps) {
+  const { slug } = params;
   const memberSlug = slug[0];
 
   // Get the team member data
