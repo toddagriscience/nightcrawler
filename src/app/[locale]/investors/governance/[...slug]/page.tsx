@@ -5,10 +5,10 @@ import { ScrollShrinkWrapper } from '@/components/landing';
 import governanceTeam from '@/data/governance-team.json';
 import { env } from '@/lib/env';
 import { createMetadata } from '@/lib/metadata';
-import type { GovernanceTeam } from '@/types/governance';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { TeamMemberCard } from '../components';
+import type { TeamMember } from '../components/team-member-card/types/team-member-card';
 
 interface GovernancePageProps {
   params: { slug: string[]; locale: string };
@@ -24,7 +24,7 @@ export function generateMetadata({ params }: GovernancePageProps): Metadata {
   const memberSlug = slug[0];
 
   // Get the team member data
-  const teamMember = (governanceTeam as GovernanceTeam)[memberSlug];
+  const teamMember = (governanceTeam as Record<string, TeamMember>)[memberSlug];
 
   if (!teamMember) {
     notFound();
@@ -52,7 +52,7 @@ export default function GovernancePage({ params }: GovernancePageProps) {
   const memberSlug = slug[0];
 
   // Get the team member data
-  const teamMember = (governanceTeam as GovernanceTeam)[memberSlug];
+  const teamMember = (governanceTeam as Record<string, TeamMember>)[memberSlug];
 
   if (!teamMember) {
     notFound();

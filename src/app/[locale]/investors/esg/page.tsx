@@ -20,7 +20,7 @@ export default function ESGPage() {
           <div className="mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-4xl xl:text-6xl font-light mb-8">
-                Environmental, Social & Governance
+                {t('heading')}
               </h2>
               <p className="text-base xl:text-xl font-light text-muted-foreground max-w-3xl mx-auto">
                 {t('description')}
