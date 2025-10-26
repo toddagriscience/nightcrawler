@@ -12,11 +12,10 @@ const siteConfig = {
   description:
     'Todd Agriscience is a first-generation generative agriculture firm.',
   url: 'https://www.toddagriscience.com',
-  ogImage: 'https://www.toddagriscience.com/media/social-cards/og-image.png',
-  twitterImage:
-    'https://www.toddagriscience.com/media/social-cards/twitter-card-image.png',
-  linkedinImage:
-    'https://www.toddagriscience.com/media/social-cards/linkedin-card-image.png',
+  ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
+  // Using same image for Twitter, LinkedIn, and other social platforms
+  twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
+  linkedinImage: 'https://www.toddagriscience.com/opengraph-image.png',
   themeColor: '#F8F5EE',
   social: {
     twitter: '@toddagriscience',
@@ -34,28 +33,12 @@ export const defaultMetadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  // Next.js automatically detects icons in /app directory
+  // Files detected: favicon.ico, icon.png, apple-touch-icon.png, opengraph-image.png
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
-      { url: '/icons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    shortcut: '/icons/favicon-16x16.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
     apple: '/apple-touch-icon.png',
-    other: [
-      {
-        rel: 'icon',
-        url: '/icons/android-chrome-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        rel: 'icon',
-        url: '/icons/android-chrome-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
-      },
-    ],
   },
   openGraph: {
     title: siteConfig.title,
