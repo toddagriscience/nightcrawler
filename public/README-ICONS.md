@@ -69,6 +69,7 @@ Next.js 15's automatic detection system simplifies icon management. Instead of m
 
 - `/icons/favicon-16x16.png`
 - `/icons/favicon-32x32.png`
+
 - `/icons/android-chrome-192x192.png`
 - `/icons/android-chrome-512x512.png`
 
@@ -107,4 +108,5 @@ public/
 1. Run `npm run generate-icons` to create proper icons from your actual logo
 2. Generate proper `favicon.ico` using an online tool
 3. Test PWA installation on mobile and desktop
+
 4. Verify icons appear correctly in all contexts
