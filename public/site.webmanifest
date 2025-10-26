@@ -14,7 +14,13 @@
   "icons": [
     {
       "src": "/icon.png",
-      "sizes": "180x180",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
@@ -28,7 +34,7 @@
       "src": "/opengraph-image.png",
       "sizes": "1200x630",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [

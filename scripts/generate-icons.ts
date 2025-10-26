@@ -10,8 +10,8 @@
  * Example: npm run generate-icons path/to/source-logo.png
  *
  * Generated files in /app:
- * - favicon.ico (multi-size ICO)
- * - icon.png (default icon, 180x180)
+ * - favicon.ico (multi-size ICO - created manually via online tool)
+ * - icon.png (PWA main icon, 512x512 for install prompts)
  * - apple-touch-icon.png (Apple touch icon, 180x180)
  * - opengraph-image.png (Open Graph & Twitter card image, 1200x630)
  *
@@ -37,9 +37,9 @@ const APP_DIR = path.join(process.cwd(), 'src', 'app');
 const ICON_SPECS: IconSpec[] = [
   {
     filename: 'icon.png',
-    width: 180,
-    height: 180,
-    description: 'Default Next.js icon (180x180)',
+    width: 512,
+    height: 512,
+    description: 'PWA main icon (512x512 for install prompts)',
     format: 'png',
   },
   {
