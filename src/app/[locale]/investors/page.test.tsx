@@ -4,33 +4,12 @@ import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import InvestorsPage from './page';
 
-// Mock framer-motion to fix ScrollShrinkWrapper issues
-jest.mock('framer-motion', () => {
-  const mockMotionValue = {
-    get: jest.fn(() => 0),
-    set: jest.fn(),
-    onChange: jest.fn(),
-    clearListeners: jest.fn(),
-  };
-
-  return {
-    ...jest.requireActual('framer-motion'),
-    useScroll: jest.fn(() => ({ scrollYProgress: mockMotionValue })),
-    useTransform: jest.fn(() => mockMotionValue),
-    useMotionValueEvent: jest.fn(),
-    motion: {
-      div: ({ children, ...props }: React.HTMLProps<HTMLDivElement>) => (
-        <div {...props}>{children}</div>
-      ),
-      button: ({
-        children,
-        ...props
-      }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-        children?: React.ReactNode;
-      }) => <button {...props}>{children}</button>,
-    },
-  };
-});
+// Mock ScrollShrinkWrapper to avoid framer-motion issues
+jest.mock('@/components/landing', () => ({
+  ScrollShrinkWrapper: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="scroll-shrink-wrapper">{children}</div>
+  ),
+}));
 
 describe('InvestorsPage', () => {
   it('renders the page with correct content', () => {
@@ -58,9 +37,13 @@ describe('InvestorsPage', () => {
   });
 
   it('renders with correct structure', () => {
-    const { container } = renderWithNextIntl(<InvestorsPage />);
+    renderWithNextIntl(<InvestorsPage />);
 
-    // Check for main content structure
+    // Check for the mocked ScrollShrinkWrapper
+    expect(screen.getByTestId('scroll-shrink-wrapper')).toBeInTheDocument();
+
+    // Check for main content structure within the component
+    const { container } = renderWithNextIntl(<InvestorsPage />);
     expect(container.querySelector('.bg-secondary')).toBeInTheDocument();
     expect(container.querySelector('.rounded-2xl')).toBeInTheDocument();
     expect(container.querySelector('.text-center')).toBeInTheDocument();
