@@ -4,6 +4,34 @@ import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import InvestorsPage from './page';
 
+// Mock framer-motion to fix ScrollShrinkWrapper issues
+jest.mock('framer-motion', () => {
+  const mockMotionValue = {
+    get: jest.fn(() => 0),
+    set: jest.fn(),
+    onChange: jest.fn(),
+    clearListeners: jest.fn(),
+  };
+
+  return {
+    ...jest.requireActual('framer-motion'),
+    useScroll: jest.fn(() => ({ scrollYProgress: mockMotionValue })),
+    useTransform: jest.fn(() => mockMotionValue),
+    useMotionValueEvent: jest.fn(),
+    motion: {
+      div: ({ children, ...props }: React.HTMLProps<HTMLDivElement>) => (
+        <div {...props}>{children}</div>
+      ),
+      button: ({
+        children,
+        ...props
+      }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+        children?: React.ReactNode;
+      }) => <button {...props}>{children}</button>,
+    },
+  };
+});
+
 describe('InvestorsPage', () => {
   it('renders the page with correct content', () => {
     renderWithNextIntl(<InvestorsPage />);
