@@ -6,6 +6,10 @@ import { PageHero } from '@/components/common';
 import { ScrollShrinkWrapper } from '@/components/landing';
 import { useTranslations } from 'next-intl';
 
+/**
+ * ESGPage component renders the Environmental, Social, and Governance (ESG) information page.
+ * @returns {JSX.Element} The rendered ESG page content.
+ */
 export default function ESGPage() {
   const t = useTranslations('esg');
 
