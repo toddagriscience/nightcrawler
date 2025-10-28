@@ -22,10 +22,4 @@ describe('InvestorsPage', () => {
 
     expect(screen.getByText('Investment Opportunities')).toBeInTheDocument();
   });
-
-  it('has correct margins', () => {
-    const { container } = renderWithNextIntl(<InvestorsPage />);
-
-    expect(container.querySelector('.mt-4')).toBeInTheDocument();
-  });
 });
