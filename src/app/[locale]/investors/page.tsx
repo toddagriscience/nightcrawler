@@ -15,10 +15,8 @@ export default function InvestorsPage() {
 
   return (
     <>
-      {/* Hero Section */}
       <PageHero title={t('title')} subtitle={t('subtitle')} />
 
-      {/* Content Section */}
       <ScrollShrinkWrapper>
         <div className="w-full rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
           <div className="mx-auto px-4 sm:px-6 lg:px-8">

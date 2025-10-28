@@ -11,16 +11,18 @@ import { TeamMemberCard } from '../components';
 import type { TeamMember } from '../components/team-member-card/types/team-member-card';
 
 interface GovernancePageProps {
-  params: { slug: string[]; locale: string };
+  params: Promise<{ slug: string[]; locale: string }>;
 }
 
 /**
  * Generate metadata for governance team member pages
  * @param {GovernancePageProps} props - The page props
- * @returns {Metadata} - The metadata for the governance page
+ * @returns {Promise<Metadata>} - The metadata for the governance page
  */
-export function generateMetadata({ params }: GovernancePageProps): Metadata {
-  const { slug, locale } = params;
+export async function generateMetadata({
+  params,
+}: GovernancePageProps): Promise<Metadata> {
+  const { slug, locale } = await params;
   const memberSlug = slug[0];
 
   // Get the team member data
@@ -47,8 +49,8 @@ export function generateMetadata({ params }: GovernancePageProps): Metadata {
  * @param {GovernancePageProps} props - The page props
  * @returns {JSX.Element} - The governance page
  */
-export default function GovernancePage({ params }: GovernancePageProps) {
-  const { slug } = params;
+export default async function GovernancePage({ params }: GovernancePageProps) {
+  const { slug } = await params;
   const memberSlug = slug[0];
 
   // Get the team member data
