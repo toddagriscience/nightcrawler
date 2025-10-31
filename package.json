@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack && npm run build-api-routes",
-    "build-api-routes": "node --env-file=.env.local -r ts-node/register ./src/lib/build-api-routes.mts",
+    "build-api-routes": "node --env-file=.env.local -r ts-node/register ./src/scripts/build-api-routes.mts",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
