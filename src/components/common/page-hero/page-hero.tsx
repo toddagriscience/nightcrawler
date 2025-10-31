@@ -24,6 +24,7 @@ const PageHero = ({
 }: PageHeroProps) => {
   return (
     <div
+      data-testid="page-hero"
       className={cn(
         'justify-end mx-auto flex flex-col h-[85vh] sm:h-[90vh] lg:h-[97vh] pb-16 sm:pb-24 lg:pb-32 max-w-7xl px-4 sm:px-6 lg:px-8',
         className

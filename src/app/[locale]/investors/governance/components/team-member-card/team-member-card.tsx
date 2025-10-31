@@ -11,7 +11,10 @@ import { TeamMemberCardProps } from './types/team-member-card';
  */
 const TeamMemberCard = ({ teamMember }: TeamMemberCardProps) => {
   return (
-    <div className="flex justify-end items-start w-full">
+    <div
+      data-testid="team-member-card"
+      className="flex justify-end items-start w-full"
+    >
       <div className="w-full md:w-1/2">
         <hr className="border-t border-gray-300 my-6 pb-6" />
 
