@@ -32,10 +32,9 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
 
 4. **Setup environment variables**
 
-   ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
-   ```
+Copy any wanted environment variables from `envexample.md`. Copy:
+
+- `BACKEND_HOST`: If you need to refresh API routes or utilize the backend at all.
 
 5. **Start development server**
 

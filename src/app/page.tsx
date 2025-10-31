@@ -8,15 +8,15 @@
  */
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto max-w-4xl">
           <header className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-foreground mb-2 text-3xl font-bold">
               Dashboard
             </h1>
           </header>
-          <div className="text-sm text-muted-foreground">Coming soon...</div>
+          <div className="text-muted-foreground text-sm">Coming soon...</div>
         </div>
       </div>
     </div>
