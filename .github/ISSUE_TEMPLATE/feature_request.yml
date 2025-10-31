@@ -10,3 +10,7 @@ body:
     attributes:
       value: |
         Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
+  - type: textarea
+    attributes:
+      value: |
+        Add any external media here
