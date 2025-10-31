@@ -15,7 +15,7 @@ if (process.env.BACKEND_HOST == undefined) {
       return res.json();
     })
     .then((json) => {
-      fs.writeFileSync('src/apiRoutes.json', JSON.stringify(json, null, 2));
+      fs.writeFileSync('src/apiRoutes.json', JSON.stringify(json));
     })
     .catch((err) => {
       console.log('Error saving file: ' + err);
