@@ -35,7 +35,7 @@ describe('GovernancePage Components', () => {
 
     expect(screen.getByTestId('team-member-card')).toBeInTheDocument();
     expect(screen.getByText(/Vincent Todd/)).toBeInTheDocument();
-    expect(screen.getByText(/Chairman & CEO/)).toBeInTheDocument();
+    expect(screen.getByText(/Chairman and CEO/)).toBeInTheDocument();
   });
 
   it('renders TeamMemberCard with Vincent Todd bio paragraphs using regex', () => {
