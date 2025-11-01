@@ -54,7 +54,7 @@
     "@storybook/addon-vitest": "^9.1.10",
     "@storybook/nextjs-vite": "^9.1.10",
     "@tailwindcss/postcss": "^4",
-    "@testing-library/jest-dom": "^6.9.0",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
