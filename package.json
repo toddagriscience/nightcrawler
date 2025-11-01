@@ -52,7 +52,7 @@
     "@storybook/addon-links": "^9.1.10",
     "@storybook/addon-onboarding": "^9.1.10",
     "@storybook/addon-vitest": "^9.1.10",
-    "@storybook/nextjs-vite": "^9.1.10",
+    "@storybook/nextjs-vite": "^10.0.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
