@@ -31,7 +31,7 @@ jobs:
         run: npm run build-storybook
 
       - name: Upload Next.js build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: nextjs-build
@@ -41,7 +41,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Storybook build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: storybook-build
