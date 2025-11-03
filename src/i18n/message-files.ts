@@ -6,10 +6,16 @@
  */
 export const messageFiles = [
   'common',
+  'contact',
   'header',
   'footer',
   'homepage',
   'who-we-are',
   'investors',
   'governance',
+  'news',
+  'contact',
+  'accessibility',
+  'privacy',
+  'terms',
 ];
