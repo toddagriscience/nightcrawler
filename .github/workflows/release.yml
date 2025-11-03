@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0 # Required for changelog generation
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           commitMode: true
           ignorePreReleases: true
