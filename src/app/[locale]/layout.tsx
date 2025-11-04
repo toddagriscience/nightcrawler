@@ -60,6 +60,19 @@ export async function generateMetadata({
       title: t('title'),
       description: t('description'),
     },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        noimageindex: false,
+        'max-video-preview': -1,
+        'max-snippet': -1,
+      },
+    },
+    manifest: '/manifest.json',
   };
 }
 
