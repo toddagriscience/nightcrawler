@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build --turbopack && npm run build-api-routes",
+    "build-api-routes": "node --env-file=.env.local ./src/scripts/build-api-routes.mjs && prettier --write ./src/apiRoutes.json",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
