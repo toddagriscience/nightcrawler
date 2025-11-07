@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   applyPrivacyControls,
   ensureNextResponse,
-  getAuthStatus,
   handleAuthRouting,
   handleI18nMiddleware,
   hasGPCEnabled,
@@ -21,7 +20,8 @@ export default function middleware(request: NextRequest) {
   const gpcEnabled = hasGPCEnabled(request);
 
   // Get authentication status from cookie
-  const isAuthenticated = getAuthStatus(request);
+  // TODO: Implement me
+  const isAuthenticated = false;
 
   // Handle authentication-based routing
   const authRedirect = handleAuthRouting(request, isAuthenticated);

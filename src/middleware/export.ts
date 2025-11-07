@@ -1,6 +1,6 @@
 // Copyright Todd LLC, All rights reserved.
 
-export { AUTH_COOKIE_NAME, getAuthStatus, handleAuthRouting } from './auth';
+export { handleAuthRouting } from './auth';
 export {
   ensureNextResponse,
   handleI18nMiddleware,

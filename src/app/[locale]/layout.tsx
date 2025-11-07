@@ -9,7 +9,6 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { fontVariables } from '@/lib/fonts';
-import { AUTH_COOKIE_NAME } from '@/middleware/auth';
 
 import {
   AuthToggle,
@@ -94,9 +93,8 @@ export default async function LocaleLayout({
   params,
 }: RootLayoutProps) {
   // Check if user is authenticated - if so, skip locale layout
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get(AUTH_COOKIE_NAME);
-  const isAuthenticated = authCookie?.value === 'true';
+  // TODO: Implement me
+  const isAuthenticated = false;
 
   const { locale } = await params;
 
