@@ -233,9 +233,9 @@ When making changes, prioritize:
 - **Accessibility required**: Follow WCAG guidelines, test with screen readers
 - **Internationalization ready**: Support multi-language from the start
 - **Test-driven approach**: Write tests for new functionality
-- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
-- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 
 ### When Making Changes

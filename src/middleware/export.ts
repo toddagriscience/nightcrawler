@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 export { AUTH_COOKIE_NAME, getAuthStatus, handleAuthRouting } from './auth';
 export {

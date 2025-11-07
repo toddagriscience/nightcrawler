@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { type VariantProps } from 'class-variance-authority';
 import { buttonVariants } from '../themes/button';
