@@ -19,9 +19,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
-      - name: Install Bun
-        run: npm install -g bun
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
 
       - name: Install dependencies
         run: bun ci
@@ -30,10 +32,10 @@ jobs:
         run: touch .env.local
 
       - name: Build application
-        run: bun build
+        run: bun run build
 
       - name: Build Storybook
-        run: bun build-storybook
+        run: bun run build-storybook
 
       - name: Upload Next.js build artifacts
         uses: actions/upload-artifact@v5
