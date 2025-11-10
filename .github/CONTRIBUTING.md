@@ -103,9 +103,9 @@ Thank you for your interest in contributing! This guide will help you get starte
 ### Running Tests
 
 ```bash
-bun test           # Unit tests
-bun test:watch     # Watch mode
-bun test:coverage  # Coverage report
+bun run test           # Unit tests
+bun run test:watch     # Watch mode
+bun run test:coverage  # Coverage report
 bun storybook      # Component testing
 ```
 
@@ -324,10 +324,10 @@ logger.error('Critical error');
 ### PR Checklist
 
 - [ ] Branch is up-to-date with target branch
-- [ ] All tests pass (`bun test`)
+- [ ] All tests pass (`bun run test`)
 - [ ] Linting passes (`bun lint`)
 - [ ] Type checking passes (`bun type-check`)
-- [ ] Build succeeds (`bun build`)
+- [ ] Build succeeds (`bun run build`)
 - [ ] Storybook stories updated (if UI changes)
 - [ ] i18n translations added (if new text)
 - [ ] Accessibility tested (if UI changes)

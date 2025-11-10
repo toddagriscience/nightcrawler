@@ -163,7 +163,7 @@ When making changes, prioritize:
 
 #### Testing & Quality
 
-- `bun test` - Run unit tests
+- `bun run test` - Run unit tests
 - `bun lint:fix` - Auto-fix linting issues
 - `bun format` - Format code
 - `bun storybook` - Component documentation
