@@ -20,18 +20,20 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+      - name: Install Bun
+        run: npm install -g bun
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Create blank .env.local file
         run: touch .env.local
 
       - name: Build application
-        run: npm run build
+        run: bun build
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: bun build-storybook
 
       - name: Upload Next.js build artifacts
         uses: actions/upload-artifact@v5

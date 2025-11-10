@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack && npm run build-api-routes",
+    "build": "next build --turbopack && bun build-api-routes",
     "build-api-routes": "node --env-file=.env.local ./src/scripts/build-api-routes.mjs && prettier --write ./src/apiRoutes.json",
     "start": "next start",
     "lint": "eslint .",
@@ -22,8 +22,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepare": "husky",
-    "ci": "npm run type-check && npm run lint && npm run test && npm run build",
-    "validate": "npm run format:check && npm run ci"
+    "ci": "bun type-check && bun lint && bun run test && bun run build",
+    "validate": "bun format:check && bun ci"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
