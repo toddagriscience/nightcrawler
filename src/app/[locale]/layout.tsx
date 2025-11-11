@@ -3,7 +3,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { routing } from '@/i18n/config';
@@ -18,6 +17,7 @@ import {
 } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { checkAuthenticated } from '@/lib/auth';
 
 /**
  * Generate metadata for each locale
@@ -84,6 +84,7 @@ interface RootLayoutProps {
 
 /**
  * Locale layout for the app
+ *
  * @param {React.ReactNode} children - The children of the locale layout
  * @param {Promise<{ locale: string }>} params - The parameters for the function
  * @returns {React.ReactNode} - The locale layout
@@ -92,20 +93,11 @@ export default async function LocaleLayout({
   children,
   params,
 }: RootLayoutProps) {
-  // Check if user is authenticated - if so, skip locale layout
-  // TODO: Implement me
-  const isAuthenticated = false;
-
   const { locale } = await params;
 
   // Validate locale - if invalid, trigger 404 regardless of auth status
   if (!routing.locales.includes(locale as Locale)) {
     notFound();
-  }
-
-  if (isAuthenticated) {
-    // Let the root layout handle authenticated users
-    return children;
   }
 
   try {

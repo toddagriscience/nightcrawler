@@ -2,6 +2,7 @@
 import { AuthToggle, ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';
+import { checkAuthenticated } from '@/lib/auth';
 
 /**
  * Root layout for the app
@@ -13,8 +14,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // TODO: Make me a function
-  const isAuthenticated = false;
+  const isAuthenticated = await checkAuthenticated();
 
   // If authenticated, render html/body tags for dashboard
   if (isAuthenticated) {

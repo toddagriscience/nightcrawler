@@ -5,7 +5,7 @@
  */
 
 // Import setup first
-import './middleware.setup';
+import { handleAuthRouting } from '@/middleware/auth';
 
 // Mock logger
 jest.mock('@/lib/logger', () => ({
@@ -47,71 +47,66 @@ jest.mock('next/server', () => {
 });
 
 import { NextRequest, NextResponse } from 'next/server';
-import { handleAuthRouting } from './auth';
 
-// TODO: Implement me
 describe('Auth Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('is a tmp test', () => {});
+  describe('handleAuthRouting', () => {
+    it('should redirect authenticated users from locale routes to dashboard', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/en/about' },
+        url: 'https://example.com/en/about',
+      } as NextRequest;
+
+      const result = handleAuthRouting(mockRequest, true);
+
+      expect(result).toBeInstanceOf(NextResponse);
+      // Note: In a real test, you'd check the redirect URL
+    });
+
+    it('should not redirect authenticated users from non-locale routes (let them through)', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/invalid-route' },
+        url: 'https://example.com/invalid-route',
+      } as NextRequest;
+
+      const result = handleAuthRouting(mockRequest, true);
+
+      expect(result).toBeNull();
+    });
+
+    it('should redirect unauthenticated users from root to /en', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/' },
+        url: 'https://example.com/',
+      } as NextRequest;
+
+      const result = handleAuthRouting(mockRequest, false);
+
+      expect(result).toBeInstanceOf(NextResponse);
+    });
+
+    it('should not redirect unauthenticated users from non-root routes (let i18n handle)', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/invalid-route' },
+        url: 'https://example.com/invalid-route',
+      } as NextRequest;
+
+      const result = handleAuthRouting(mockRequest, false);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null for valid routes that do not need redirection', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/' },
+        url: 'https://example.com/',
+      } as NextRequest;
+
+      const result = handleAuthRouting(mockRequest, true);
+      expect(result).toBeNull();
+    });
+  });
 });
-//
-// describe('handleAuthRouting', () => {
-//   it('should redirect authenticated users from locale routes to dashboard', () => {
-//     const mockRequest = {
-//       nextUrl: { pathname: '/en/about' },
-//       url: 'https://example.com/en/about',
-//     } as NextRequest;
-//
-//     const result = handleAuthRouting(mockRequest, true);
-//
-//     expect(result).toBeInstanceOf(NextResponse);
-//     // Note: In a real test, you'd check the redirect URL
-//   });
-//
-//   it('should not redirect authenticated users from non-locale routes (let them through)', () => {
-//     const mockRequest = {
-//       nextUrl: { pathname: '/invalid-route' },
-//       url: 'https://example.com/invalid-route',
-//     } as NextRequest;
-//
-//     const result = handleAuthRouting(mockRequest, true);
-//
-//     expect(result).toBeNull();
-//   });
-//
-//   it('should redirect unauthenticated users from root to /en', () => {
-//     const mockRequest = {
-//       nextUrl: { pathname: '/' },
-//       url: 'https://example.com/',
-//     } as NextRequest;
-//
-//     const result = handleAuthRouting(mockRequest, false);
-//
-//     expect(result).toBeInstanceOf(NextResponse);
-//   });
-//
-//   it('should not redirect unauthenticated users from non-root routes (let i18n handle)', () => {
-//     const mockRequest = {
-//       nextUrl: { pathname: '/invalid-route' },
-//       url: 'https://example.com/invalid-route',
-//     } as NextRequest;
-//
-//     const result = handleAuthRouting(mockRequest, false);
-//
-//     expect(result).toBeNull();
-//   });
-//
-//   it('should return null for valid routes that do not need redirection', () => {
-//     const mockRequest = {
-//       nextUrl: { pathname: '/' },
-//       url: 'https://example.com/',
-//     } as NextRequest;
-//
-//     const result = handleAuthRouting(mockRequest, true);
-//     expect(result).toBeNull();
-//   });
-// });
-// });

@@ -12,7 +12,7 @@ import logger from './logger';
  * @param password The password of the user
  * @returns {object} - The object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
  * */
-export default async function login(
+export async function login(
   email: string,
   password: string
 ): Promise<object | null> {
@@ -32,4 +32,16 @@ export default async function login(
   } finally {
     return null;
   }
+}
+
+/**
+ * Returns whether a user is verified or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ *
+ * @returns {boolean} - True if the user is authenticated. */
+export async function checkAuthenticated(): Promise<boolean> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return !(user == null);
 }
