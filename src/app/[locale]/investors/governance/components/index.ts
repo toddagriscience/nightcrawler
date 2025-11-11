@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 export { default as TeamMemberCard } from './team-member-card/team-member-card';
 export type {
