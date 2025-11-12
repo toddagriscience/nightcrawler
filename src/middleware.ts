@@ -4,11 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   applyPrivacyControls,
   ensureNextResponse,
-  getAuthStatus,
   handleAuthRouting,
   handleI18nMiddleware,
   hasGPCEnabled,
 } from './middleware/export';
+import { checkAuthenticated } from './lib/auth';
 
 /**
  * Middleware for internationalization, authentication, and privacy controls
@@ -20,8 +20,10 @@ export default function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
-  // Get authentication status from cookie
-  const isAuthenticated = getAuthStatus(request);
+  let isAuthenticated = false;
+  checkAuthenticated().then((res) => {
+    isAuthenticated = res;
+  });
 
   // Handle authentication-based routing
   const authRedirect = handleAuthRouting(request, isAuthenticated);
