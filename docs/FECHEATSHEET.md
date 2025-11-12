@@ -8,11 +8,11 @@ _Read [CONTRIBUTING.md](../.github/CONTRIBUTING.md) first. This is your quick re
 
 ```bash
 # Setup (first time)
-npm install && npm run validate
+bun install && bun validate
 
 # Daily workflow
-npm run dev                    # Start development
-npm run validate              # Before committing
+bun dev                    # Start development
+bun validate              # Before committing
 ```
 
 ## Starting New Feature
@@ -152,13 +152,13 @@ git push origin feature/your-feature-name
 - **JS/TS files**: `eslint --fix` + `prettier --write`
 - **Other files**: `prettier --write`
 
-**Pre-push** (when you push): Husky runs full `npm run validate`:
+**Pre-push** (when you push): Husky runs full `bun validate`:
 
-1. **Format check** (`npm run format:check`) - Prettier validation
-2. **Type check** (`npm run type-check`) - TypeScript validation
-3. **Lint** (`npm run lint`) - ESLint rules enforcement
-4. **Test** (`npm run test`) - Unit tests execution
-5. **Build** (`npm run build`) - Production build verification
+1. **Format check** (`bun format:check`) - Prettier validation
+2. **Type check** (`bun type-check`) - TypeScript validation
+3. **Lint** (`bun lint`) - ESLint rules enforcement
+4. **Test** (`bun run test`) - Unit tests execution
+5. **Build** (`bun run build`) - Production build verification
 
 **If any pre-push step fails, your push is blocked.** Use the quick fixes below to resolve issues. If they don't work, check the terminal to see what issues exist and fix them manually
 
@@ -166,21 +166,21 @@ git push origin feature/your-feature-name
 
 ```bash
 # Format issues
-npm run format
+bun format
 
 # Lint issues
-npm run lint:fix
+bun lint:fix
 
 # Type errors
-npm run type-check
+bun type-check
 
 # Build issues
-rm -rf .next && npm run build
+rm -rf .next && bun build
 ```
 
 ## 🔍 When Things Break
 
-1. Check if `main` branch works: `git checkout main && npm run validate`
+1. Check if `main` branch works: `git checkout main && bun validate`
 2. Rebase your branch: `git rebase main`
-3. Clear cache: `rm -rf .next node_modules && npm install`
+3. Clear cache: `rm -rf .next node_modules && bun install`
 4. Still broken? Check recent commits or ask for help

@@ -1,2 +1,2 @@
-npm run format
-npx lint-staged
+bun run format
+bun lint-staged

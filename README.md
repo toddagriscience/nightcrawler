@@ -7,7 +7,7 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
 ### Prerequisites
 
 - **Node.js**: 18.0.0 or higher
-- **npm**: 8.0.0 or higher
+- **Bun**: Latest stable version
 
 ### Setup
 
@@ -27,7 +27,7 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
 3. **Install dependencies**
 
    ```bash
-   npm install
+   bun install
    ```
 
 4. **Setup environment variables**
@@ -39,7 +39,7 @@ Copy any wanted environment variables from `envexample.md`. Copy:
 5. **Start development server**
 
    ```bash
-   npm run dev
+   bun dev
    ```
 
 6. **Open in browser**
@@ -51,7 +51,7 @@ Copy any wanted environment variables from `envexample.md`. Copy:
 7. **Start Storybook**
 
    ```
-   npm run storybook
+   bun storybook
    ```
 
 8. **Open Storybook in browser**
@@ -64,7 +64,7 @@ Copy any wanted environment variables from `envexample.md`. Copy:
 Run the full validation pipeline to ensure everything works:
 
 ```bash
-npm run validate
+bun validate
 ```
 
 This will run: format check → type check → lint → unit tests → build
@@ -73,35 +73,35 @@ This will run: format check → type check → lint → unit tests → build
 
 ### Core Commands
 
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build for production
-- `npm run start` - Start production server
+- `bun dev` - Start development server with Turbopack
+- `bun run build` - Build for production
+- `bun start` - Start production server
 
 ### Quality Assurance
 
-- `npm run ci` - **Complete validation**: type-check → lint → unit tests → build
-- `npm run validate` - **Full pipeline**: format:check → ci
-- `npm run type-check` - TypeScript type checking
-- `npm run lint` - ESLint code quality check
-- `npm run lint:fix` - Auto-fix ESLint issues
+- `bun ci` - **Complete validation**: type-check → lint → unit tests → build
+- `bun validate` - **Full pipeline**: format:check → ci
+- `bun type-check` - TypeScript type checking
+- `bun lint` - ESLint code quality check
+- `bun lint:fix` - Auto-fix ESLint issues
 
 ### Testing
 
-- `npm test` - Run Jest unit tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Generate test coverage report
-- `npm run test:e2e` - Run Playwright E2E tests
-- `npm run test:e2e:ui` - Run E2E tests with UI
+- `bun run test` - Run Jest unit tests
+- `bun run test:watch` - Run tests in watch mode
+- `bun run test:coverage` - Generate test coverage report
+- `bun run test:e2e` - Run Playwright E2E tests
+- `bun run test:e2e:ui` - Run E2E tests with UI
 
 ### Code Formatting
 
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
+- `bun format` - Format code with Prettier
+- `bun format:check` - Check code formatting
 
 ### Component Development
 
-- `npm run storybook` - Start Storybook component explorer
-- `npm run build-storybook` - Build Storybook for production
+- `bun storybook` - Start Storybook component explorer
+- `bun build-storybook` - Build Storybook for production
 
 ## 🏗️ Architecture
 
@@ -309,10 +309,10 @@ The site is optimized for deployment on Vercel with:
 
 ```bash
 # Production build
-npm run build
+bun run build
 
 # Validate before deployment
-npm run validate
+bun validate
 ```
 
 ## 🔧 Configuration
@@ -363,7 +363,7 @@ See `.env.example` for complete documentation of all available variables.
 
 1. Create a feature branch
 2. Make your changes
-3. Run `npm run validate` to ensure quality
+3. Run `bun validate` to ensure quality
 4. Submit a pull request
 
 ## 📄 License

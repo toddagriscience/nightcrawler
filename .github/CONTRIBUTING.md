@@ -9,7 +9,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 ### Prerequisites
 
 - **Node.js**: 18.0.0 or higher
-- **npm**: 8.0.0 or higher
+- **Bun**: Latest stable version
 - **Git**: Latest stable version
 
 ### First-Time Setup
@@ -24,7 +24,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 2. **Install dependencies**
 
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Create environment file**
@@ -37,14 +37,14 @@ Thank you for your interest in contributing! This guide will help you get starte
 4. **Verify setup**
 
    ```bash
-   npm run validate
+   bun validate
    ```
 
    This runs: format check → type check → lint → tests → build
 
 5. **Start development**
    ```bash
-   npm run dev
+   bun dev
    ```
    Open [http://localhost:3000](http://localhost:3000)
 
@@ -74,7 +74,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 3. **Validate your changes**
 
    ```bash
-   npm run validate
+   bun validate
    ```
 
 4. **Commit your changes**
@@ -103,10 +103,10 @@ Thank you for your interest in contributing! This guide will help you get starte
 ### Running Tests
 
 ```bash
-npm run test           # Unit tests
-npm run test:watch     # Watch mode
-npm run test:coverage  # Coverage report
-npm run storybook      # Component testing
+bun run test           # Unit tests
+bun run test:watch     # Watch mode
+bun run test:coverage  # Coverage report
+bun storybook      # Component testing
 ```
 
 ### Test Patterns
@@ -281,11 +281,11 @@ logger.error('Critical error');
 
 ### Essential Commands
 
-- `npm run dev` - Development server with Turbopack
-- `npm run validate` - Complete validation pipeline
-- `npm run lint:fix` - Auto-fix linting issues
-- `npm run format` - Format code with Prettier
-- `npm run storybook` - Component explorer
+- `bun dev` - Development server with Turbopack
+- `bun validate` - Complete validation pipeline
+- `bun lint:fix` - Auto-fix linting issues
+- `bun format` - Format code with Prettier
+- `bun storybook` - Component explorer
 
 ### IDE Setup
 
@@ -309,7 +309,7 @@ logger.error('Critical error');
 - **Don't ignore linting**: Fix ESLint warnings
 - **Don't hardcode text**: Use i18n for all user-facing text
 - **Don't break accessibility**: Test keyboard navigation
-- **Don't commit without validation**: Always run `npm run validate`
+- **Don't commit without validation**: Always run `bun validate`
 - **Don't use console methods**: Use `@/lib/logger` for environment-aware logging
 
 ### Performance Considerations
@@ -324,10 +324,10 @@ logger.error('Critical error');
 ### PR Checklist
 
 - [ ] Branch is up-to-date with target branch
-- [ ] All tests pass (`npm run test`)
-- [ ] Linting passes (`npm run lint`)
-- [ ] Type checking passes (`npm run type-check`)
-- [ ] Build succeeds (`npm run build`)
+- [ ] All tests pass (`bun run test`)
+- [ ] Linting passes (`bun lint`)
+- [ ] Type checking passes (`bun type-check`)
+- [ ] Build succeeds (`bun run build`)
 - [ ] Storybook stories updated (if UI changes)
 - [ ] i18n translations added (if new text)
 - [ ] Accessibility tested (if UI changes)
@@ -346,7 +346,7 @@ Use the provided template and include:
 ### Resources
 
 - **Documentation**: Check the [README](../README.md)
-- **Storybook**: Component documentation at `npm run storybook`
+- **Storybook**: Component documentation at `bun storybook`
 - **Issues**: Search existing issues before creating new ones
 - **Discussions**: Use GitHub Discussions for questions
 
