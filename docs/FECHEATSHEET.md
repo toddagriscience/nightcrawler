@@ -73,7 +73,7 @@ echo "export { default as YourComponent } from './your-component/your-component'
 **Component template:**
 
 ```tsx
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { useTranslations } from 'next-intl';
 import { yourprop } from ./types/yourprop
