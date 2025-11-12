@@ -12,8 +12,10 @@ const siteConfig = {
   description:
     'Todd Agriscience is a first-generation generative agriculture firm.',
   url: 'https://www.toddagriscience.com',
-  ogImage: 'https://www.toddagriscience.com/og-image.jpg',
-  twitterImage: 'https://www.toddagriscience.com/twitter-card-image.jpg',
+  ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
+  // Using same image for Twitter, LinkedIn, and other social platforms
+  twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
+  linkedinImage: 'https://www.toddagriscience.com/opengraph-image.png',
   themeColor: '#F8F5EE',
   social: {
     twitter: '@toddagriscience',
@@ -31,9 +33,11 @@ export const defaultMetadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  // Next.js automatically detects icons in /app directory
+  // Files detected: favicon.ico, icon.png, apple-touch-icon.png, opengraph-image.png
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
@@ -74,6 +78,7 @@ export const defaultMetadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
+  manifest: '/site.webmanifest',
 };
 
 /**
