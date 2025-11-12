@@ -1,9 +1,9 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 'use client';
 
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export default function LocaleNotFound() {
   const t = useTranslations('common');

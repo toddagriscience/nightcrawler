@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import storybook from 'eslint-plugin-storybook';
 

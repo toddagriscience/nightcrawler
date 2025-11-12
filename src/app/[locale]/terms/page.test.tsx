@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 //
 // The tests here contain a *lot* of text. Sorry :(
 

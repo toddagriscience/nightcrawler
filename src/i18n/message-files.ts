@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 /**
  * A list of all message files
@@ -11,6 +11,8 @@ export const messageFiles = [
   'footer',
   'homepage',
   'who-we-are',
+  'investors',
+  'governance',
   'news',
   'contact',
   'accessibility',

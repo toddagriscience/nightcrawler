@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import LandingPage from '@/components/landing/page/landing-page';
 
@@ -7,12 +7,8 @@ import LandingPage from '@/components/landing/page/landing-page';
  * @param {Promise<{ locale: string }>} params - The parameters for the function
  * @returns {React.ReactNode} - The home page component
  */
-export default async function HomePage(
-  {
-    // params
-  }: {
-    params: Promise<{ locale: string }>;
-  }
-) {
+export default async function HomePage({}: {
+  params: Promise<{ locale: string }>;
+}) {
   return <LandingPage />;
 }

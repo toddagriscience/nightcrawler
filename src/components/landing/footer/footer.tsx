@@ -1,11 +1,10 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 'use client';
 
-import React from 'react';
+import { Button } from '@/components/common';
 import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/common';
 import { FooterSection } from './types/footer';
 
 /**
@@ -36,7 +35,7 @@ const Footer = () => {
         { href: '/contact', label: t('links.contact') },
         { href: '/journal', label: t('links.journal') },
         {
-          href: '/investor-relations',
+          href: '/investors',
           label: t('links.investorRelations'),
         },
         { href: '/foundation', label: t('links.foundation') },

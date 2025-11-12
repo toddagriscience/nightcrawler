@@ -1,4 +1,7 @@
 ```env
+# Environment Variables Example
+# Copy this file to .env.local for local development
+
 # Internationalization and Domain Configuration
 # Copy this file to .env.local and fill in your values
 
@@ -17,9 +20,8 @@
 # Other environment variables
 # NODE_ENV=development
 
-
-# Environment Variables Example
-# Copy this file to .env.local for local development
+# The URL/IP for the backend
+# BACKEND_HOST="http://localhost:8080"
 
 # ====================
 # NEXT.JS CONFIGURATION
