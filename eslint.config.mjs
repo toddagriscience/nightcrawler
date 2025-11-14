@@ -1,9 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+import { FlatCompat } from '@eslint/eslintrc';
 import licenseHeader from 'eslint-plugin-license-header';
 import storybook from 'eslint-plugin-storybook';
-
-import { FlatCompat } from '@eslint/eslintrc';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -14,15 +13,13 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-// Some plugins export as `default`, some as the module itself.
-// Normalize so we always pass the plugin object to ESLint.
-const licenseHeaderPlugin =
-  licenseHeader && licenseHeader.default
-    ? licenseHeader.default
-    : licenseHeader;
+// Normalize plugin exports
+const licenseHeaderPlugin = licenseHeader?.default ?? licenseHeader;
 
-const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+export default [
+  // -----------------------------------------------------
+  // 1) GLOBAL IGNORES (must be first)
+  // -----------------------------------------------------
   {
     ignores: [
       'node_modules/**',
@@ -37,19 +34,27 @@ const eslintConfig = [
       'vitest.config.ts',
       'vitest.shims.d.ts',
     ],
+  },
 
-    // <-- plugins must be an object in flat config
+  // -----------------------------------------------------
+  // 2) Next.js + TS + Prettier configs (flat form)
+  // -----------------------------------------------------
+  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+
+  // -----------------------------------------------------
+  // 3) Your custom rules
+  // -----------------------------------------------------
+  {
     plugins: {
       'license-header': licenseHeaderPlugin,
     },
-
     rules: {
       'license-header/header': [2, './.license-header.txt'],
     },
   },
 
-  // Storybook flat recommended config
+  // -----------------------------------------------------
+  // 4) Storybook’s flat recommended config
+  // -----------------------------------------------------
   ...storybook.configs['flat/recommended'],
 ];
-
-export default eslintConfig;
