@@ -1,6 +1,8 @@
+// Copyright Todd Agriscience, Inc. All rights reserved.
+
 import { routing } from '@/i18n/config';
-import news from '@/messages/news/en.json';
 import { env } from '@/lib/env';
+import news from '@/messages/news/en.json';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 

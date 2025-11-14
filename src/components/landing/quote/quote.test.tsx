@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import Quote from './quote';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import Quote from './quote';
 
 describe('Quote', () => {
   it('renders without crashing', () => {

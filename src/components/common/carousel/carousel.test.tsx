@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithAct } from '@/test/test-utils';
-import Carousel from './carousel';
+import { renderWithAct, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import Carousel from './carousel';
 
 // Mock embla-carousel-react
 jest.mock('embla-carousel-react', () => {

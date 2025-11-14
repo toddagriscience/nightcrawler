@@ -1,10 +1,10 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import { LatestNewsTable } from './latest-news-table';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import NewsCardProps from '../news-card/types/news-card';
 import { act } from 'react';
+import NewsCardProps from '../news-card/types/news-card';
+import { LatestNewsTable } from './latest-news-table';
 
 const items: NewsCardProps[] = [
   {

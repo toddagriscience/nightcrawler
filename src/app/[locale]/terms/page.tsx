@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
  * Terms component
  * @returns {JSX.Element} - The terms page
  */
-import React from 'react';
 
 export default function TermsOfUsePage() {
   const t = useTranslations('terms');

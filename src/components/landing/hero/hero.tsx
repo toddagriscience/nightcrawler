@@ -2,9 +2,8 @@
 
 'use client';
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
 import { ArrowDown } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 /**
  * Hero component

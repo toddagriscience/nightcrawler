@@ -4,8 +4,8 @@
  * @jest-environment jsdom
  */
 
-import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import LocaleLayout from './layout';
 
 // Mock dependencies

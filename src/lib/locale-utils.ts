@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { env } from './env';
 import { routing } from '@/i18n/config';
-import { LOCALE_NAMES, LOCALE_FLAGS, type SupportedLocale } from './locales';
+import { env } from './env';
+import { LOCALE_FLAGS, LOCALE_NAMES, type SupportedLocale } from './locales';
 
 /**
  * Get the display name for a locale

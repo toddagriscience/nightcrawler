@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithAct } from '@/test/test-utils';
-import NewsCard from './news-card';
+import { renderWithAct, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import NewsCard from './news-card';
 import NewsCardProps from './types/news-card';
 
 describe('NewsCard', () => {

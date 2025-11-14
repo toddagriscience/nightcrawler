@@ -2,8 +2,8 @@
 
 'use client';
 
+import { motion, useScroll, useTransform } from 'framer-motion';
 import React, { useRef } from 'react';
-import { useScroll, useTransform, motion } from 'framer-motion';
 
 /**
  * Scroll shrink wrapper component

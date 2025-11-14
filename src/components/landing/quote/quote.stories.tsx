@@ -1,12 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Quote from './quote';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import Quote from './quote';
 
 const meta = {
   title: 'Landing/Quote',

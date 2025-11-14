@@ -2,10 +2,10 @@
 
 'use client';
 
+import { LOCALE_FLAGS, LOCALE_NAMES, SUPPORTED_LOCALES } from '@/lib/locales';
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { SUPPORTED_LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from '@/lib/locales';
 
 const locales = SUPPORTED_LOCALES.map((code) => ({
   code,

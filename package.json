@@ -24,7 +24,8 @@
     "prepare": "husky",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "ci": "npm run type-check && npm run lint && npm run test && npm run build",
-    "validate": "npm run format:check && npm run ci"
+    "validate": "npm run format:check && npm run ci",
+    "check-license": "eslint . --rule 'license-header/header: [error, { 'template': '/*\\n * Copyright (c) Todd Agriscience, Inc. All rights reserved.\\n */' }]'"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
@@ -70,6 +71,7 @@
     "eslint": "^9",
     "eslint-config-next": "^15.5.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-license-header": "^0.8.0",
     "eslint-plugin-storybook": "^10.0.2",
     "husky": "^9.1.7",
     "jest": "^30.2.0",

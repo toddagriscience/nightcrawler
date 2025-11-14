@@ -2,9 +2,8 @@
 
 'use client';
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui';
+import { useTranslations } from 'next-intl';
 
 /**
  * Values card component that displays the company values as a single card

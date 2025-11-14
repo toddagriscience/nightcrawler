@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, fireEvent, renderWithNextIntl } from '@/test/test-utils';
-import Header from './header';
+import { fireEvent, renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import Header from './header';
 
 describe('Header', () => {
   it('renders without crashing', () => {

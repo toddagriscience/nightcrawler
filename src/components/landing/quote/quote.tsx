@@ -2,10 +2,10 @@
 
 'use client';
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
-import { Button } from '../../common';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { useTranslations } from 'next-intl';
+import React from 'react';
+import { Button } from '../../common';
 import { QuoteProps } from './types/quote';
 
 /**

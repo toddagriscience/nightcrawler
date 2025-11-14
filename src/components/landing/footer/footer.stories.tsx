@@ -1,11 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Footer from './footer';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import Footer from './footer';
 
 const meta: Meta<typeof Footer> = {
   title: 'UI/Footer',

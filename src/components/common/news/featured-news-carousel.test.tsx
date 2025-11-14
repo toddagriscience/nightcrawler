@@ -2,9 +2,9 @@
 
 import { screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { FeaturedNewsCarousel } from './featured-news-carousel';
-import NewsCardProps from '../news-card/types/news-card';
 import { render } from '@testing-library/react';
+import NewsCardProps from '../news-card/types/news-card';
+import { FeaturedNewsCarousel } from './featured-news-carousel';
 
 // Mock embla-carousel-react
 jest.mock('embla-carousel-react', () => {

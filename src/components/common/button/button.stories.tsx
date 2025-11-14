@@ -1,11 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Button from './button';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import Button from './button';
 
 const meta = {
   title: 'Common/Button',

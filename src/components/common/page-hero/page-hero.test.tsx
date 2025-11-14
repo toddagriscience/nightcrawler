@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import PageHero from './page-hero';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import PageHero from './page-hero';
 
 describe('PageHero', () => {
   it('renders without crashing', () => {

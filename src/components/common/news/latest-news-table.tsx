@@ -1,11 +1,13 @@
+// Copyright Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
-import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
-import Link from 'next/link';
 import clsx from 'clsx';
-import NewsCardProps from '../news-card/types/news-card';
+import { ExternalLink } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import Link from 'next/link';
+import { useState } from 'react';
+import NewsCardProps from '../news-card/types/news-card';
 
 interface LatestNewsTableProps {
   items: NewsCardProps[];

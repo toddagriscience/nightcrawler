@@ -2,9 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { submitToGoogleSheets } from './action';
+import { FadeIn } from '@/components/common';
 import {
   Select,
   SelectContent,
@@ -12,8 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { FadeIn } from '@/components/common';
+import { useState } from 'react';
+import { submitToGoogleSheets } from './action';
 
 export default function Contact() {
   const t = useTranslations('contactPage');

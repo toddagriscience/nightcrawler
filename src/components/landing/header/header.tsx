@@ -2,19 +2,19 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useTheme } from '@/context/theme/ThemeContext';
 import { Link, usePathname } from '@/i18n/config';
-import { useTranslations } from 'next-intl';
 import {
   AnimatePresence,
   motion,
-  useScroll,
   useMotionValueEvent,
+  useScroll,
 } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { useTheme } from '@/context/theme/ThemeContext';
-import { HeaderProps } from './types/header';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { headerTheme } from './theme/header';
+import { HeaderProps } from './types/header';
 
 /**
  * Header component

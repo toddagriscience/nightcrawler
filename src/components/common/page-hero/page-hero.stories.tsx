@@ -1,11 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import PageHero from './page-hero';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import PageHero from './page-hero';
 
 const meta = {
   title: 'Common/PageHero',

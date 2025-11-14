@@ -1,8 +1,8 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import WhoWeArePage from './page';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import WhoWeArePage from './page';
 
 // Mock the ScrollShrinkWrapper component
 jest.mock('@/components/landing', () => ({

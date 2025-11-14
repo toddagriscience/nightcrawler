@@ -2,9 +2,8 @@
 
 'use client';
 
-import React from 'react';
-import { ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ArrowDown } from 'lucide-react';
 import { PageHeroProps } from './types/page-hero';
 
 /**

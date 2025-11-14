@@ -2,11 +2,11 @@
 
 'use client';
 
-import React from 'react';
 import { Link } from '@/i18n/config';
 import { ArrowRight } from 'lucide-react';
-import { ButtonProps } from './types/button';
+import React from 'react';
 import { buttonVariants } from './themes/button';
+import { ButtonProps } from './types/button';
 
 /**
  * Basic button component

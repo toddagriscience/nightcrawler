@@ -4,12 +4,12 @@
 
 import { Button, Carousel, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { useNews } from '@/lib/hooks/news';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { Quote } from '../index';
 import { NewsHighlightsProps } from './types/news-highlights';
-import { useNews } from '@/lib/hooks/news';
 
 /**
  * News highlight card component

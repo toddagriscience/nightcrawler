@@ -1,11 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Hero from './hero';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import Hero from './hero';
 
 const meta = {
   title: 'Landing/Hero',

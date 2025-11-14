@@ -1,14 +1,14 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import {
-  screen,
-  renderWithNextIntl,
   fireEvent,
+  renderWithNextIntl,
+  screen,
   waitFor,
 } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import Contact from './page';
 import { act } from 'react';
+import Contact from './page';
 
 describe('Contact page', () => {
   it('renders correctly', () => {

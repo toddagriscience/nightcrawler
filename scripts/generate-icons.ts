@@ -1,25 +1,4 @@
-/**
- * Icon Generation Script for Next.js App Router
- *
- * Copyright Todd LLC, All rights reserved.
- *
- * This script generates PWA icons from a source image for Next.js 15 App Router.
- * Next.js automatically detects these files in the /app directory.
- *
- * Usage: npm run generate-icons <source-image-path>
- * Example: npm run generate-icons path/to/source-logo.png
- *
- * Generated files in /app:
- * - favicon.ico (multi-size ICO - created manually via online tool)
- * - icon.png (PWA main icon, 512x512 for install prompts)
- * - apple-touch-icon.png (Apple touch icon, 180x180)
- * - opengraph-image.png (Open Graph & Twitter card image, 1200x630)
- *
- * Requirements:
- * - Source image must be at least 512x512px for best results
- * - Source image should be square (1:1 aspect ratio)
- * - Source image format: PNG, JPG, or SVG
- */
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import * as fs from 'fs';
 import * as path from 'path';

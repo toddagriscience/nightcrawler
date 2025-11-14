@@ -1,11 +1,11 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Header from './header';
 import {
-  storybookControls,
   storybookArgs,
+  storybookControls,
 } from '../../../../.storybook/utils/storybookControls';
+import Header from './header';
 
 const meta: Meta<typeof Header> = {
   title: 'UI/Header',
