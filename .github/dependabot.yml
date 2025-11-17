@@ -35,6 +35,7 @@ updates:
           - 'storybook'
           - '@storybook/*'
           - '@chromatic-com/storybook'
+          - 'eslint-plugin-storybook'
         update-types:
           - 'minor'
           - 'patch'
@@ -59,18 +60,13 @@ updates:
         patterns:
           - 'tailwindcss'
           - '@tailwindcss/*'
+          - 'tailwind-merge'
         update-types:
           - 'minor'
           - 'patch'
       auth:
         patterns:
-          - '@clerk/*'
-        update-types:
-          - 'minor'
-          - 'patch'
-      convex:
-        patterns:
-          - 'convex'
+          - '@supabase/supabase-js*'
         update-types:
           - 'minor'
           - 'patch'
@@ -91,6 +87,7 @@ updates:
     allow:
       - dependency-type: 'direct'
       - dependency-type: 'indirect'
+
     # Ignore specific packages if needed (uncomment and customize as needed)
     # ignore:
     #   - dependency-name: "package-name"
