@@ -22,8 +22,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepare": "husky",
-    "ci": "bun type-check && bun lint && bun run test && bun run build",
-    "validate": "bun format:check && bun ci"
+    "ci": "bun run type-check && bun run lint && bun run test && bun run build",
+    "validate": "bun run format:check && bun run ci",
+    "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
@@ -75,9 +76,11 @@
     "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
+    "sharp": "^0.34.4",
     "storybook": "^10.0.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.4",
+    "tsx": "^4.20.6",
     "typescript": "^5",
     "vitest": "^4.0.6"
   },
