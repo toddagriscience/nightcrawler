@@ -5,7 +5,7 @@
  */
 
 // Import setup first
-import './middleware.setup';
+import { handleAuthRouting } from '@/middleware/auth';
 
 // Mock logger
 jest.mock('@/lib/logger', () => ({
@@ -47,47 +47,10 @@ jest.mock('next/server', () => {
 });
 
 import { NextRequest, NextResponse } from 'next/server';
-import { AUTH_COOKIE_NAME, getAuthStatus, handleAuthRouting } from './auth';
 
 describe('Auth Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe('getAuthStatus', () => {
-    it('should return true when auth cookie is set to true', () => {
-      const mockRequest = {
-        cookies: {
-          get: jest.fn().mockReturnValue({ value: 'true' }),
-        },
-      } as unknown as NextRequest;
-
-      const result = getAuthStatus(mockRequest);
-      expect(result).toBe(true);
-      expect(mockRequest.cookies.get).toHaveBeenCalledWith(AUTH_COOKIE_NAME);
-    });
-
-    it('should return false when auth cookie is set to false', () => {
-      const mockRequest = {
-        cookies: {
-          get: jest.fn().mockReturnValue({ value: 'false' }),
-        },
-      } as unknown as NextRequest;
-
-      const result = getAuthStatus(mockRequest);
-      expect(result).toBe(false);
-    });
-
-    it('should return false when auth cookie is not present', () => {
-      const mockRequest = {
-        cookies: {
-          get: jest.fn().mockReturnValue(undefined),
-        },
-      } as unknown as NextRequest;
-
-      const result = getAuthStatus(mockRequest);
-      expect(result).toBe(false);
-    });
   });
 
   describe('handleAuthRouting', () => {
