@@ -16,14 +16,11 @@ import { checkAuthenticated } from './lib/auth';
  * @param {NextRequest} request - The request object
  * @returns {NextResponse} - The response object
  */
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
-  let isAuthenticated = false;
-  checkAuthenticated().then((res) => {
-    isAuthenticated = res;
-  });
+  const isAuthenticated = await checkAuthenticated();
 
   // Handle authentication-based routing
   const authRedirect = handleAuthRouting(request, isAuthenticated);
