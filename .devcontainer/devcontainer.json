@@ -7,6 +7,7 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/bun:1": {},
     "ghcr.io/devcontainers/features/node:1": {
       "nodeGypDependencies": true,
       "version": "20"
@@ -24,7 +25,8 @@
         "ms-playwright.playwright",
         "storybook.storybook-vscode",
         "formulahendry.auto-rename-tag",
-        "christian-kohler.path-intellisense"
+        "christian-kohler.path-intellisense",
+        "oven.bun-vscode"
       ],
       "settings": {
         "editor.formatOnSave": true,
@@ -58,7 +60,7 @@
     }
   },
 
-  "postCreateCommand": "npm install && npm run validate",
+  "postCreateCommand": "bun install && bun validate",
 
   "remoteUser": "node",
 

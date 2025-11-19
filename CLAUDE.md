@@ -157,24 +157,24 @@ When making changes, prioritize:
 
 #### Essential Commands
 
-- `npm run dev` - Development server with Turbopack
-- `npm run ci` - Full validation (type-check → lint → test → build)
-- `npm run validate` - Complete pipeline (format:check → ci)
+- `bun dev` - Development server with Turbopack
+- `bun ci` - Full validation (type-check → lint → test → build)
+- `bun validate` - Complete pipeline (format:check → ci)
 
 #### Testing & Quality
 
-- `npm run test` - Run unit tests
-- `npm run lint:fix` - Auto-fix linting issues
-- `npm run format` - Format code
-- `npm run storybook` - Component documentation
+- `bun run test` - Run unit tests
+- `bun lint:fix` - Auto-fix linting issues
+- `bun format` - Format code
+- `bun storybook` - Component documentation
 
 #### Before Making Changes
 
-1. Run `npm run validate` to ensure clean baseline
+1. Run `bun validate` to ensure clean baseline
 2. Create feature branch from current working branch
 3. Make changes following established patterns
 4. Write/update tests for new functionality
-5. Run `npm run validate` before committing
+5. Run `bun validate` before committing
 
 ### Code Quality Standards
 
@@ -233,9 +233,9 @@ When making changes, prioritize:
 - **Accessibility required**: Follow WCAG guidelines, test with screen readers
 - **Internationalization ready**: Support multi-language from the start
 - **Test-driven approach**: Write tests for new functionality
-- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
-- **Properly CopyRight**: All new files should include "Copyright Todd LLC, All rights reserved" as a comment at the top
+- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 
 ### When Making Changes

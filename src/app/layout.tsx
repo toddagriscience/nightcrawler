@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 import { AuthToggle, ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';

@@ -1,6 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
-
-'use client';
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
@@ -8,6 +6,11 @@ import { PageHero } from '@/components/common';
 import { Card, CardContent } from '@/components/ui';
 import { ScrollShrinkWrapper } from '@/components/landing';
 import ValuesCard from './components/values-card';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Who We Are | Todd',
+};
 
 /**
  * Who We Are page component

@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
@@ -59,6 +59,19 @@ export async function generateMetadata({
       title: t('title'),
       description: t('description'),
     },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        noimageindex: false,
+        'max-video-preview': -1,
+        'max-snippet': -1,
+      },
+    },
+    manifest: '/manifest.json',
   };
 }
 

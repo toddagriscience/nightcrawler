@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved.
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { routing } from '@/i18n/config';
 import { logger } from '@/lib/logger';
