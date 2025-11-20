@@ -74,12 +74,10 @@ User-agent: MJ12bot
 Crawl-Delay: 10
 
 User-agent: Twitterbot
-Allow: /media/social-cards/
+Allow: /opengraph-image.png
 
 User-agent: Pinterest
 Crawl-delay: 1
 
 # --- Sitemap Locations ---
-Sitemap: https://toddagriscience.com/sitemap-index.xml
 Sitemap: https://toddagriscience.com/sitemap.xml
-Sitemap: https://toddagriscience.com/sitemap-news.xml
