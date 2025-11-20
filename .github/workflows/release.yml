@@ -25,19 +25,23 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Run quality checks
-        run: npm run ci
+        run: bun run ci
 
       - name: Build application
-        run: npm run build
+        run: bun run build
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: bun run build-storybook
 
       - name: Generate Changelog
         id: changelog

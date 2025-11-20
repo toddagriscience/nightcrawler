@@ -4,11 +4,14 @@
   "private": true,
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "bun": ">=1.0.0"
+  },
+  "overrides": {
+    "glob": "^11.1.0"
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack && npm run build-api-routes",
+    "build": "next build --turbopack && bun build-api-routes",
     "build-api-routes": "node --env-file=.env.local ./src/scripts/build-api-routes.mjs && prettier --write ./src/apiRoutes.json",
     "start": "next start",
     "lint": "eslint .",
@@ -22,9 +25,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepare": "husky",
-    "generate-icons": "tsx scripts/generate-icons.ts",
-    "ci": "npm run type-check && npm run lint && npm run test && npm run build",
-    "validate": "npm run format:check && npm run ci"
+    "ci": "bun run type-check && bun run lint && bun run test && bun run build",
+    "validate": "bun run format:check && bun run ci",
+    "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
@@ -36,6 +39,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
+    "glob": "11.1.0",
     "lucide-react": "^0.544.0",
     "next": "^16.0.1",
     "next-intl": "^4.4.0",
