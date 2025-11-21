@@ -32,6 +32,9 @@ const customJestConfig = {
     '<rootDir>/jest.setup.js',
     '<rootDir>/jest.setup.intl.js',
   ],
+  coveragePathIgnorePatterns: [
+    'node_modules/(?!(next-intl|use-intl)/(?!.*\\.cjs$))(?!.*\\.mjs$)',
+  ],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

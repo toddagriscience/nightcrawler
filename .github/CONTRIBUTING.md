@@ -96,6 +96,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ### Test Coverage
 
+For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
+
 - **Unit tests**: Required for all new components and utilities
 - **Storybook stories**: Required for all UI components
 - **Integration tests**: Required for complex features
