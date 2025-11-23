@@ -1,7 +1,7 @@
 /**
  * Icon Generation Script for Next.js App Router
  *
- * Copyright Todd LLC, All rights reserved.
+ * Copyright Todd Agriscience, Inc. All rights reserved.
  *
  * This script generates PWA icons from a source image for Next.js 15 App Router.
  * Next.js automatically detects these files in the /app directory.
