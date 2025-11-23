@@ -1,5 +1,5 @@
 ```sh
-# Copyright Todd LLC, All rights reserved.
+# Copyright Todd Agriscience, Inc. All rights reserved.
 # Environment Variables Example
 # Copy this file to .env.local for local development
 
