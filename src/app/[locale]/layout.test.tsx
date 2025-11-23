@@ -154,24 +154,4 @@ describe('LocaleLayout', () => {
       expect(notFound).not.toHaveBeenCalled();
     });
   });
-
-  describe('Authentication Logic', () => {
-    it('should return children for authenticated users (skipping locale layout)', async () => {
-      // Mock authenticated user
-      mockCookies.get.mockReturnValue({ value: 'true' });
-
-      // Valid locale
-      const params = Promise.resolve({ locale: 'en' });
-      const testChildren = <div data-testid="test-children">Test</div>;
-
-      const result = await LocaleLayout({
-        children: testChildren,
-        params,
-      });
-
-      // Should return children directly for authenticated users
-      expect(result).toBe(testChildren);
-      expect(notFound).not.toHaveBeenCalled();
-    });
-  });
 });

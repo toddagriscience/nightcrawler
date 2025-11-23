@@ -6,25 +6,9 @@ import { Locale } from 'next-intl';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * The name of the authentication cookie
- * @constant {string} - The name of the authentication cookie
- */
-export const AUTH_COOKIE_NAME = 'isAuth';
-
-/**
- * Get authentication status from request cookies
- * @param {NextRequest} request - The request object
- * @returns {boolean} - The authentication status
- */
-export function getAuthStatus(request: NextRequest): boolean {
-  const authCookie = request.cookies.get(AUTH_COOKIE_NAME);
-  return authCookie?.value === 'true';
-}
-
-/**
  * Handle authentication-based routing
  * simple handler to redirect to the correct route based on the authentication status
- * will need to be updated later once backend is implemented
+ *
  * @param {NextRequest} request - The request object
  * @param {boolean} isAuthenticated - The authentication status
  * @returns {NextResponse | null} - The response object
