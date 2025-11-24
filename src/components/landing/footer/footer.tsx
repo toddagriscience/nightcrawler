@@ -23,7 +23,6 @@ const Footer = () => {
         { href: '/', label: tHeader('navigation.home') },
         { href: '/who-we-are', label: tHeader('navigation.whoWeAre') },
         { href: '/what-we-do', label: tHeader('navigation.whatWeDo') },
-        { href: '/impact', label: tHeader('navigation.impact') },
         { href: '/news', label: tHeader('navigation.news') },
         { href: '/careers', label: t('links.careers') },
       ],
@@ -33,12 +32,6 @@ const Footer = () => {
       testId: 'connect-section-heading',
       links: [
         { href: '/contact', label: t('links.contact') },
-        { href: '/journal', label: t('links.journal') },
-        {
-          href: '/investors',
-          label: t('links.investorRelations'),
-        },
-        { href: '/foundation', label: t('links.foundation') },
         {
           href: 'https://instagram.com/toddagriscience',
           label: t('links.instagram'),
@@ -70,12 +63,6 @@ const Footer = () => {
         { href: '/privacy', label: t('links.privacy') },
         { href: '/privacy-settings', label: t('links.privacySettings') },
         { href: '/terms', label: t('links.terms') },
-        {
-          href: 'https://toddagriscience.safebase.us',
-          label: t('links.trustCenter'),
-          external: true,
-          testId: 'trust-center-link',
-        },
       ],
     },
   ];
