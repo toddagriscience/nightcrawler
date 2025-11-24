@@ -3,6 +3,7 @@ import { AuthToggle, ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';
 import { checkAuthenticated } from '@/lib/auth';
+import { PostHogProvider } from './providers';
 
 /**
  * Root layout for the app
@@ -21,11 +22,13 @@ export default async function RootLayout({
     return (
       <html lang="en">
         <body>
-          <ThemeProvider>
-            <ThemeReset />
-            {children}
-            <AuthToggle />
-          </ThemeProvider>
+          <PostHogProvider>
+            <ThemeProvider>
+              <ThemeReset />
+              {children}
+              <AuthToggle />
+            </ThemeProvider>
+          </PostHogProvider>
         </body>
       </html>
     );

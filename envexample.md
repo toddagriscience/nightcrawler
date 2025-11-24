@@ -27,4 +27,8 @@ DEBUG=true
 
 # Disable telemetry (Next.js)
 NEXT_TELEMETRY_DISABLED=1
+
+# Posthog Analytics, both of these keys are appropriate to be public
+NEXT_PUBLIC_POSTHOG_KEY=phc_dNQKsvNxp8t3XYid8xYidmEhzZxBXMqIAwJe0v0VSY8
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```

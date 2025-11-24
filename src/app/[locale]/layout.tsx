@@ -18,6 +18,7 @@ import {
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { checkAuthenticated } from '@/lib/auth';
+import { PostHogProvider } from '../providers';
 
 /**
  * Generate metadata for each locale
@@ -125,7 +126,9 @@ export default async function LocaleLayout({
                 <ThemeReset />
                 <AuthToggle />
                 <Header />
-                <FadeIn>{children}</FadeIn>
+                <FadeIn>
+                  <PostHogProvider>{children}</PostHogProvider>
+                </FadeIn>
                 <Footer />
               </ThemeProvider>
             </SmoothScroll>
