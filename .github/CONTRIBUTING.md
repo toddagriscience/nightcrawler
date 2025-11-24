@@ -1,6 +1,6 @@
-# Copyright Todd LLC, All rights reserved
+# Copyright Todd Agriscience, Inc. All rights reserved.
 
-Important: Every single file must have "Copyright Todd LLC, All rights reserved." at the top of the file. This may be commented in whatever manner you prefer, but it must be present.
+Important: Every single file must have " Copyright Todd Agriscience, Inc. All rights reserved." at the top of the file. This may be commented in whatever manner you prefer, but it must be present.
 
 ## 🚀 Quick Start for New Contributors
 
