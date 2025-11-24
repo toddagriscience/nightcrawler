@@ -61,7 +61,6 @@ const Footer = () => {
           label: t('links.accessibility'),
         },
         { href: '/privacy', label: t('links.privacy') },
-        { href: '/privacy-settings', label: t('links.privacySettings') },
         { href: '/terms', label: t('links.terms') },
       ],
     },
