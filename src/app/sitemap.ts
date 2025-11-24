@@ -1,6 +1,7 @@
 import { routing } from '@/i18n/config';
 import news from '@/messages/news/en.json';
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logger';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
@@ -26,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  * Includes internationalization support and proper SEO priorities
  * @returns {MetadataRoute.Sitemap} Sitemap entries for static pages
  */
-function getStaticSitemap(): MetadataRoute.Sitemap {
+export function getStaticSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   const staticPages = [
@@ -74,14 +75,14 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
  * Includes error handling and validation for malformed data
  * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
  */
-function getNewsSitemap(): MetadataRoute.Sitemap {
+export function getNewsSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   try {
     for (const locale of routing.locales) {
       for (const newsArticle of Object.values(news.articleExcerpts)) {
         if (!newsArticle.link || !newsArticle.date) {
-          console.warn(
+          logger.warn(
             `Skipping news article with missing link or date:`,
             newsArticle
           );
@@ -104,7 +105,7 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
       }
     }
   } catch (error) {
-    console.error('Error generating news sitemap:', error);
+    logger.error('Error generating news sitemap:', error);
   }
 
   return sitemapEntries;
@@ -116,7 +117,7 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
  * @param {string} dateString - The date string to parse
  * @returns {string} ISO date string or current date as fallback
  */
-function parseArticleDate(dateString: string): string {
+export function parseArticleDate(dateString: string): string {
   try {
     // Try parsing the date string directly first
     let articleDate = new Date(dateString);
@@ -152,7 +153,7 @@ function parseArticleDate(dateString: string): string {
       ? new Date().toISOString()
       : articleDate.toISOString();
   } catch (error) {
-    console.warn(`Failed to parse date "${dateString}":`, error);
+    logger.warn(`Failed to parse date "${dateString}":`, error);
     return new Date().toISOString();
   }
 }
@@ -163,7 +164,7 @@ function parseArticleDate(dateString: string): string {
  * @param {string} page - The page path (with or without leading slash)
  * @returns {Languages<string>} Object mapping locales to URLs
  */
-function getSupportedLanguages(page: string): Languages<string> {
+export function getSupportedLanguages(page: string): Languages<string> {
   const languages: { [key: string]: string } = {};
   routing.locales.forEach((loc) => {
     // Ensure proper path separator - page might already start with '/' or be empty
