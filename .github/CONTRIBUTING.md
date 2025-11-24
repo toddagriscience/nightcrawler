@@ -85,8 +85,8 @@ Test _everything_, and follow general best practices. Ex. if a bug is fixed, add
 
 Testing related commands:
 
-- `npm run test`
-- `npm run test:coverage`
+- `bun run test`
+- `bun run test:coverage`
 
 However, husky/workflows will handle the majority of code validation/testing for you.
 
@@ -98,10 +98,10 @@ However, husky/workflows will handle the majority of code validation/testing for
 
 Formatting/style related commands:
 
-- `npm run lint:fix`
-- `npm run format`
-- `npm run format:check`
-- `npm run lint`
+- `bun run lint:fix`
+- `bun run format`
+- `bun run format:check`
+- `bun run lint`
 
 #### Commenting
 
