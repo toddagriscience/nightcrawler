@@ -83,7 +83,8 @@
     "tailwindcss": "^4",
     "ts-jest": "^29.4.4",
     "tsx": "^4.20.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
