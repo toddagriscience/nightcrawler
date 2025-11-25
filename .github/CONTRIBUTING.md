@@ -96,16 +96,11 @@ However, husky/workflows will handle the majority of code validation/testing for
 - JSDoc _everything_ -- even with TypeScript. There should be no confusion in variable purpose or meaning
 - Format all code with `prettier`. Additionally ensure that your formatter is using the configuration found in `.prettierrc`
 
-Formatting/style related commands:
+For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
 
-- `bun run lint:fix`
-- `bun run format`
-- `bun run format:check`
-- `bun run lint`
-
-#### Commenting
-
-Comment all code that could cause confusion, or provide an expanded commented version. However, JSDoc should handle the majority of scenarios where extensive commenting is needed.
+- **Unit tests**: Required for all new components and utilities
+- **Storybook stories**: Required for all UI components
+- **Integration tests**: Required for complex features
 
 ### Running Tests
 
