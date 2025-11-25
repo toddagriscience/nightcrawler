@@ -1,13 +1,13 @@
 /**
  * Icon Generation Script for Next.js App Router
  *
- * Copyright Todd LLC, All rights reserved.
+ * Copyright Todd Agriscience, Inc. All rights reserved.
  *
  * This script generates PWA icons from a source image for Next.js 15 App Router.
  * Next.js automatically detects these files in the /app directory.
  *
- * Usage: npm run generate-icons <source-image-path>
- * Example: npm run generate-icons path/to/source-logo.png
+ * Usage: bun run generate-icons <source-image-path>
+ * Example: bun run generate-icons path/to/source-logo.png
  *
  * Generated files in /app:
  * - favicon.ico (multi-size ICO - created manually via online tool)
@@ -107,7 +107,7 @@ async function generateIcons(sourceImagePath: string) {
     } catch (err) {
       error('Sharp library not found.');
       log('\nPlease install sharp to use this script:');
-      log('  npm install --save-dev sharp');
+      log('  bun install --save-dev sharp');
       log(
         '\nAlternative: Use an online tool at https://realfavicongenerator.net/'
       );
@@ -220,8 +220,8 @@ const args = process.argv.slice(2);
 
 if (args.length === 0) {
   error('No source image provided');
-  log('\nUsage: npm run generate-icons <source-image-path>');
-  log('Example: npm run generate-icons path/to/logo.png');
+  log('\nUsage: bun run generate-icons <source-image-path>');
+  log('Example: bun run generate-icons path/to/logo.png');
   log('\nThis will generate all necessary icon files in src/app/');
   process.exit(1);
 }

@@ -1,9 +1,9 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 import { AuthToggle, ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import { AUTH_COOKIE_NAME } from '@/middleware/auth';
-import { cookies } from 'next/headers';
 import './globals.css';
+import { checkAuthenticated } from '@/lib/auth';
+import { PostHogProvider } from './providers';
 
 /**
  * Root layout for the app
@@ -15,20 +15,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get(AUTH_COOKIE_NAME);
-  const isAuthenticated = authCookie?.value === 'true';
+  const isAuthenticated = await checkAuthenticated();
 
   // If authenticated, render html/body tags for dashboard
   if (isAuthenticated) {
     return (
       <html lang="en">
         <body>
-          <ThemeProvider>
-            <ThemeReset />
-            {children}
-            <AuthToggle />
-          </ThemeProvider>
+          <PostHogProvider>
+            <ThemeProvider>
+              <ThemeReset />
+              {children}
+              <AuthToggle />
+            </ThemeProvider>
+          </PostHogProvider>
         </body>
       </html>
     );

@@ -1,8 +1,6 @@
-# Copyright Todd LLC, All rights reserved
+# Copyright Todd Agriscience, Inc. All rights reserved.
 
-# Contributing to Todd Agriscience Website
-
-Thank you for your interest in contributing! This guide will help you get started with the development workflow and project standards.
+Important: Every single file must have " Copyright Todd Agriscience, Inc. All rights reserved." at the top of the file. This may be commented in whatever manner you prefer, but it must be present.
 
 ## 🚀 Quick Start for New Contributors
 
@@ -50,51 +48,53 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ## 📋 Development Workflow
 
-### Branch Strategy
+1. Open an issue/discussion with _complete_ context. No "add api route for getting customers" issues. Your issue should ideally completely describe your solution/suggestion/idea.
+2. Create a branch, following conventional commits as specified [below](##standardsgeneral-information)
+3. Draft a PR. A draft PR should be made when your first commit is made, even if you're nowhere near close to merging.
+4. Request review and convert draft PR into a PR.
+5. Merge to main!
 
-- `main` - Production-ready code and primary development branch
-- `feature/description` - Feature branches
-- `fix/description` - Bug fix branches
+A few notes:
 
-### Making Changes
+- We generally avoid directly interacting with others' PRs. If you see an issue, leave a comment/review
+- Smaller/more focused PRs are generally preferred -- we'd rather see 5 small PRs than 1 ginormous one
+- When drafting/creating a PR, consider:
+  - Have I updated documentation accordingly?
+  - Are tests passing?
+  - Is my code readable and could I or someone else build off of my code 1+ years from now?
 
-1. **Create a feature branch**
+## Standards/General information
 
-   ```bash
-   git checkout main
-   git pull origin main
-   git checkout -b feature/your-feature-name
-   ```
+`psylocke` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
 
-2. **Make your changes**
-   - Follow existing code patterns
-   - Write tests for new functionality
-   - Update Storybook stories for UI changes
+When creating a branch... follow conventional commits in the following format (all lowercase): `commit-type/branch-summary` Ex:
 
-3. **Validate your changes**
+Bad:
+`Feature/add-new-page`
+`carousel-logic`
+`feat/add-the-page-for-privacy-and-other-pages-related-to-privacy`
 
-   ```bash
-   bun validate
-   ```
+Good:
+`feat/add-new-page`
+`refactor/carousel-logic`
+`feat/add-privacy-pages`
 
-4. **Commit your changes**
+### Testing
 
-   ```bash
-   git add .
-   git commit -m "feat: add new feature description"
-   ```
+Test _everything_, and follow general best practices. Ex. if a bug is fixed, add a test for that bug.
 
-   Follow [Conventional Commits](https://conventionalcommits.org/) format
+Testing related commands:
 
-5. **Push and create PR**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-   Open a Pull Request against the `main` branch
+- `bun run test`
+- `bun run test:coverage`
 
-## 🧪 Testing Requirements
+However, husky/workflows will handle the majority of code validation/testing for you.
 
-### Test Coverage
+### Formatting/Styling
+
+- Follow AirBNB's JavaScript style [guide](https://github.com/airbnb/javascript) for all JavaScript/TypeScript
+- JSDoc _everything_ -- even with TypeScript. There should be no confusion in variable purpose or meaning
+- Format all code with `prettier`. Additionally ensure that your formatter is using the configuration found in `.prettierrc`
 
 For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
 
@@ -181,9 +181,9 @@ logger.error('Critical error');
 - **Errors**: All error conditions and exceptions
 - **Performance**: Timing information for optimization
 
-## 🌍 Internationalization (i18n)
+### Internationalization (i18n)
 
-### Adding New Text
+#### Adding New Text
 
 1. **Add translation keys** to appropriate page files in `src/messages/{page}/en.json` and `src/messages/{page}/es.json`
 2. **Use next-intl** for all user-facing text:
@@ -195,15 +195,15 @@ logger.error('Critical error');
    return <h1>{t('title')}</h1>;
    ```
 
-### Translation Guidelines
+#### Translation Guidelines
 
 - **Descriptive keys**: Use clear, hierarchical keys
 - **Parameters**: Support dynamic content with parameters
 - **Fallbacks**: Always provide English fallback
 
-## ♿ Accessibility Requirements
+### Accessibility Requirements
 
-### Standards
+#### Standards
 
 - **WCAG 2.1 AA compliance**
 - **Semantic HTML**: Use appropriate HTML elements
@@ -211,7 +211,7 @@ logger.error('Critical error');
 - **Keyboard navigation**: Ensure all interactions work with keyboard
 - **Screen reader testing**: Test with screen readers
 
-### Testing
+#### Testing
 
 - Storybook includes a11y addon for automated testing
 - Manual testing with keyboard navigation
@@ -289,14 +289,6 @@ logger.error('Critical error');
 - `bun format` - Format code with Prettier
 - `bun storybook` - Component explorer
 
-### IDE Setup
-
-- **VS Code recommended** with extensions:
-  - ESLint
-  - Prettier
-  - TypeScript
-  - Tailwind CSS IntelliSense
-
 ### Git Hooks
 
 - **Pre-commit**: Automatic formatting and linting
@@ -333,6 +325,7 @@ logger.error('Critical error');
 - [ ] Storybook stories updated (if UI changes)
 - [ ] i18n translations added (if new text)
 - [ ] Accessibility tested (if UI changes)
+- [ ] All static pages are listed in `app/sitemap.ts` (if new static page was added)
 
 ### PR Description
 
@@ -343,21 +336,12 @@ Use the provided template and include:
 - Testing notes
 - Breaking changes (if any)
 
-## 🆘 Getting Help
-
-### Resources
-
-- **Documentation**: Check the [README](../README.md)
-- **Storybook**: Component documentation at `bun storybook`
-- **Issues**: Search existing issues before creating new ones
-- **Discussions**: Use GitHub Discussions for questions
-
-### Contact
-
-- **General questions**: Open a GitHub Discussion
-- **Bug reports**: Use the bug report template
-- **Feature requests**: Use the feature request template
-
 ## 📄 License
 
 This project is private and proprietary to Todd Agriscience, Inc. All rights reserved.
+
+## Code of Conduct
+
+If in doubt, follow the [Arch Linux Code of Conduct](https://terms.archlinux.org/docs/code-of-conduct/).
+
+TLDR; be kind.

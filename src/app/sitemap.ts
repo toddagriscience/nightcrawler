@@ -29,7 +29,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
 function getStaticSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
-  const staticPages = ['', '/who-we-are', '/news'];
+  const staticPages = [
+    '/',
+    '/who-we-are',
+    '/news',
+    '/terms',
+    '/privacy',
+    '/contact',
+    '/accessibility',
+    '/investors',
+    '/investors/esg',
+    '/investors/governance/vincent-todd',
+    '/investors/governance/lawrence-wilson',
+    '/investors/governance/brandy-beem',
+  ];
   const excludedPages = ['/login', '/admin', '/api', '/_next', '/cdn-cgi'];
 
   for (const locale of routing.locales) {
