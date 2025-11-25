@@ -1,112 +1,81 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+import { handleAuthRouting } from '@/middleware/auth';
+import { NextRequest, NextResponse } from 'next/server';
+
 /**
  * @jest-environment node
  */
 
-// Import setup first
-import { handleAuthRouting } from '@/middleware/auth';
+describe('handleAuthRouting', () => {
+  it('should allow authenticated users on a protected un-internationalized route', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/dashboard' },
+      url: 'https://example.com/dashboard',
+    } as NextRequest;
 
-// Mock logger
-jest.mock('@/lib/logger', () => ({
-  logger: {
-    warn: jest.fn(),
-  },
-}));
+    const result = handleAuthRouting(mockRequest, true);
 
-// Mock next/server with proper NextResponse class
-jest.mock('next/server', () => {
-  class MockNextResponse {
-    private headerStore: { [key: string]: string } = {};
-
-    headers = {
-      set: jest.fn((key: string, value: string) => {
-        this.headerStore[key] = value;
-      }),
-      get: jest.fn((key: string) => {
-        return this.headerStore[key] || null;
-      }),
-    };
-    cookies = {
-      delete: jest.fn(),
-    };
-
-    static next() {
-      return new MockNextResponse();
-    }
-
-    static redirect() {
-      return new MockNextResponse();
-    }
-  }
-
-  return {
-    NextRequest: jest.fn(),
-    NextResponse: MockNextResponse,
-  };
-});
-
-import { NextRequest, NextResponse } from 'next/server';
-
-describe('Auth Middleware', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+    expect(result).toBeInstanceOf(NextResponse);
   });
 
-  describe('handleAuthRouting', () => {
-    it('should redirect authenticated users from locale routes to dashboard', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/en/about' },
-        url: 'https://example.com/en/about',
-      } as NextRequest;
+  it('should redirect authenticated users from protected internationalized route to non-internationalized version', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/en/dashboard' },
+      url: 'https://example.com/en/dashboard',
+    } as NextRequest;
 
-      const result = handleAuthRouting(mockRequest, true);
+    const result = handleAuthRouting(mockRequest, true);
 
-      expect(result).toBeInstanceOf(NextResponse);
-      // Note: In a real test, you'd check the redirect URL
-    });
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe(
+      'https://example.com/dashboard'
+    );
+  });
 
-    it('should not redirect authenticated users from non-locale routes (let them through)', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/invalid-route' },
-        url: 'https://example.com/invalid-route',
-      } as NextRequest;
+  it('should allow authenticated users on an unprotected route', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/about' },
+      url: 'https://example.com/about',
+    } as NextRequest;
 
-      const result = handleAuthRouting(mockRequest, true);
+    const result = handleAuthRouting(mockRequest, true);
 
-      expect(result).toBeNull();
-    });
+    expect(result).toBeNull();
+  });
 
-    it('should redirect unauthenticated users from root to /en', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/' },
-        url: 'https://example.com/',
-      } as NextRequest;
+  it('should redirect unauthenticated users from a protected un-internationalized route to /login', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/dashboard' },
+      url: 'https://example.com/dashboard',
+    } as NextRequest;
 
-      const result = handleAuthRouting(mockRequest, false);
+    const result = handleAuthRouting(mockRequest, false);
 
-      expect(result).toBeInstanceOf(NextResponse);
-    });
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe('https://example.com/login');
+  });
 
-    it('should not redirect unauthenticated users from non-root routes (let i18n handle)', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/invalid-route' },
-        url: 'https://example.com/invalid-route',
-      } as NextRequest;
+  it('should redirect unauthenticated users from a protected internationalized route to /login', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/en/dashboard' },
+      url: 'https://example.com/en/dashboard',
+    } as NextRequest;
 
-      const result = handleAuthRouting(mockRequest, false);
+    const result = handleAuthRouting(mockRequest, false);
 
-      expect(result).toBeNull();
-    });
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe('https://example.com/login');
+  });
 
-    it('should return null for valid routes that do not need redirection', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/' },
-        url: 'https://example.com/',
-      } as NextRequest;
+  it('should allow unauthenticated users on an unprotected route', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/about' },
+      url: 'https://example.com/about',
+    } as NextRequest;
 
-      const result = handleAuthRouting(mockRequest, true);
-      expect(result).toBeNull();
-    });
+    const result = handleAuthRouting(mockRequest, false);
+
+    expect(result).toBeNull();
   });
 });
