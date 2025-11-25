@@ -45,7 +45,7 @@ For **Progressive Web App** installation prompts, you need:
 Use the included script to generate icons from your logo:
 
 ```bash
-npm run generate-icons <path-to-source-logo.png>
+bun run generate-icons <path-to-source-logo.png>
 ```
 
 **Requirements for source image:**
@@ -105,7 +105,7 @@ public/
 
 ## Next Steps
 
-1. Run `npm run generate-icons` to create proper icons from your actual logo
+1. Run `bun run generate-icons` to create proper icons from your actual logo
 2. Generate proper `favicon.ico` using an online tool
 3. Test PWA installation on mobile and desktop
 
