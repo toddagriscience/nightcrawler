@@ -33,6 +33,20 @@ describe('handleAuthRouting', () => {
     );
   });
 
+  it('should redirect authenticated users from protected internationalized route with extra content behind it to non-internationalized version', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/en/dashboard/somewhere/extra' },
+      url: 'https://example.com/en/dashboard',
+    } as NextRequest;
+
+    const result = handleAuthRouting(mockRequest, true);
+
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe(
+      'https://example.com/dashboard/somewhere/extra'
+    );
+  });
+
   it('should allow authenticated users on an unprotected route', () => {
     const mockRequest = {
       nextUrl: { pathname: '/about' },
@@ -59,6 +73,18 @@ describe('handleAuthRouting', () => {
   it('should redirect unauthenticated users from a protected internationalized route to /login', () => {
     const mockRequest = {
       nextUrl: { pathname: '/en/dashboard' },
+      url: 'https://example.com/en/dashboard',
+    } as NextRequest;
+
+    const result = handleAuthRouting(mockRequest, false);
+
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe('https://example.com/login');
+  });
+
+  it('should redirect unauthenticated users from a protected internationalized route with extra content in the URL to /login', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/en/dashboard/somewhere/extra' },
       url: 'https://example.com/en/dashboard',
     } as NextRequest;
 
