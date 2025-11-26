@@ -52,4 +52,16 @@ describe('handleAuthRouting', () => {
 
     expect(result).toBeNull();
   });
+
+  it('should not redirect unauthenticated users navigating to an unprotected base route', () => {
+    const mockRequest = {
+      nextUrl: { pathname: '/login' },
+      url: 'https://example.com/login',
+    } as NextRequest;
+
+    const result = handleAuthRouting(mockRequest, false);
+
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.headers.get('location')).toBe('https://example.com/login');
+  });
 });

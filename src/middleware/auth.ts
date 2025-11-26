@@ -1,11 +1,12 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { routing } from '@/i18n/config';
-import { Locale } from 'next-intl';
 import { NextRequest, NextResponse } from 'next/server';
 
 /** Any protected URLs */
 const protectedUrls = ['/'];
+
+/** URLs without internationalization that aren't protected */
+const unprotectedBaseUrls = ['/login'];
 
 /**
  * Handle authentication-based routing. If the user is:
@@ -16,7 +17,7 @@ const protectedUrls = ['/'];
  *
  * Note that the "dashboard" is located at '/' and is consequently uninternationalized. The marketing site is the only piece of the site that is internationalized.
  *
- * Routes with no internationalization, ex. `/somewhere`, are treated as protected routes, and in the given example, will redirect to `/en` + `/somewhere` for unauthenticated users. HOWEVER, this is handled by other pieces of middleware.
+ * Routes with no internationalization, ex. `/somewhere`, are treated as protected routes, and in the given example, will redirect to `/en` + `/somewhere` for unauthenticated users. HOWEVER, this is handled by other pieces of middleware. There are exceptions to this though, as seen in `unprotectedBaseUrls`.
  *
  * @param {NextRequest} request - The request object
  * @param {boolean} isAuthenticated - The authentication status
@@ -34,6 +35,8 @@ export function handleAuthRouting(
     }
 
     return NextResponse.redirect(new URL('/en', request.url));
+  } else if (isBaseRoute(pathname)) {
+    return NextResponse.next();
   } else {
     if (isAuthenticated) {
       return NextResponse.redirect(new URL('/', request.url));
@@ -56,6 +59,15 @@ function isRouteProtected(pathname: string) {
       if (pathname.length > 1 && url === '/') {
         return false;
       }
+      return pathname.startsWith(url);
+    })
+    .some((val) => val);
+}
+
+/** Helper function that checks if a given route is a base route (see unprotectedBaseUrls) */
+function isBaseRoute(pathname: string) {
+  return unprotectedBaseUrls
+    .map((url) => {
       return pathname.startsWith(url);
     })
     .some((val) => val);
