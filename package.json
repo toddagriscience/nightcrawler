@@ -30,7 +30,9 @@
     "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.3",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/supabase-js": "^2.85.0",
