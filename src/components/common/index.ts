@@ -1,6 +1,5 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-export { AuthToggle } from './auth-toggle/auth-toggle';
 export { default as Button } from './button/button';
 export { default as Carousel } from './carousel/carousel';
 export { default as LocaleSwitcher } from './locale-switcher/locale-switcher';

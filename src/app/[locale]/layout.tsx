@@ -9,15 +9,9 @@ import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { fontVariables } from '@/lib/fonts';
 
-import {
-  AuthToggle,
-  FadeIn,
-  SmoothScroll,
-  ThemeReset,
-} from '@/components/common';
+import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import { checkAuthenticated } from '@/lib/auth';
 import { PostHogProvider } from '../providers';
 
 /**
@@ -124,7 +118,6 @@ export default async function LocaleLayout({
             <SmoothScroll>
               <ThemeProvider>
                 <ThemeReset />
-                <AuthToggle />
                 <Header />
                 <FadeIn>
                   <PostHogProvider>{children}</PostHogProvider>
