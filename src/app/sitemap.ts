@@ -102,7 +102,16 @@ export function getNewsSitemap(): MetadataRoute.Sitemap {
           continue;
         }
 
-        const url = `${baseUrl}/${locale}/news/articles/${newsArticle.link}`;
+        // Normalize internal article links so sitemap URLs are:
+        // toddagriscience.com/{locale}/news/{example-article-title}
+        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
+        const normalizedSlug = newsArticle.link
+          // Remove any leading slash
+          .replace(/^\//, '')
+          // Strip optional "articles/" prefix for backwards compatibility
+          .replace(/^articles\//, '');
+
+        const url = `${baseUrl}/${locale}/news/${normalizedSlug}`;
 
         const lastModified = parseArticleDate(newsArticle.date);
 
@@ -112,7 +121,8 @@ export function getNewsSitemap(): MetadataRoute.Sitemap {
           changeFrequency: 'weekly',
           priority: 0.7,
           alternates: {
-            languages: getSupportedLanguages(`/${newsArticle.link}`),
+            // Ensure alternates match the normalized news URL shape
+            languages: getSupportedLanguages(`/news/${normalizedSlug}`),
           },
         });
       }
