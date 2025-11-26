@@ -65,7 +65,6 @@ describe('Footer', () => {
     });
   });
 
-
   it('renders normally without isLoading prop', () => {
     renderWithNextIntl(<Footer />);
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
