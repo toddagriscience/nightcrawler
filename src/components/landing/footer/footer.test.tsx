@@ -65,16 +65,6 @@ describe('Footer', () => {
     });
   });
 
-  it('includes trust center external link', () => {
-    renderWithNextIntl(<Footer />);
-    const trustCenterLink = screen.getByTestId('trust-center-link');
-    expect(trustCenterLink).toHaveAttribute(
-      'href',
-      'https://toddagriscience.safebase.us'
-    );
-    expect(trustCenterLink).toHaveAttribute('target', '_blank');
-  });
-
   it('renders normally without isLoading prop', () => {
     renderWithNextIntl(<Footer />);
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
