@@ -82,17 +82,6 @@ describe('I18n Middleware', () => {
       expect(result).toBeInstanceOf(NextResponse);
     });
 
-    it('should return a response for unauthenticated root route', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/' },
-      } as NextRequest;
-
-      const result = handleI18nMiddleware(mockRequest, false);
-
-      expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(NextResponse);
-    });
-
     it('should return NextResponse.next() for authenticated users', () => {
       const mockRequest = {
         nextUrl: { pathname: '/en' },
@@ -117,17 +106,6 @@ describe('I18n Middleware', () => {
       const result = handleI18nMiddleware(mockRequest, false);
 
       expect(NextResponse.redirect).toHaveBeenCalled();
-      expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(NextResponse);
-    });
-
-    it('should return valid response for root route when unauthenticated', () => {
-      const mockRequest = {
-        nextUrl: { pathname: '/' },
-      } as NextRequest;
-
-      const result = handleI18nMiddleware(mockRequest, false);
-
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
     });

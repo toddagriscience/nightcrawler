@@ -1,6 +1,7 @@
 import { routing } from '@/i18n/config';
 import news from '@/messages/news/en.json';
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logger';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
@@ -81,14 +82,36 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
     for (const locale of routing.locales) {
       for (const newsArticle of Object.values(news.articleExcerpts)) {
         if (!newsArticle.link || !newsArticle.date) {
-          console.warn(
+          logger.warn(
             `Skipping news article with missing link or date:`,
             newsArticle
           );
           continue;
         }
 
-        const url = `${baseUrl}/${locale}/news/articles/${newsArticle.link}`;
+        // Skip external media links so the sitemap only includes on-site content
+        if (
+          typeof newsArticle.link === 'string' &&
+          (newsArticle.link.startsWith('http://') ||
+            newsArticle.link.startsWith('https://'))
+        ) {
+          logger.warn(
+            'Skipping external news article link from sitemap:',
+            newsArticle.link
+          );
+          continue;
+        }
+
+        // Normalize internal article links so sitemap URLs are:
+        // toddagriscience.com/{locale}/news/{example-article-title}
+        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
+        const normalizedSlug = newsArticle.link
+          // Remove any leading slash
+          .replace(/^\//, '')
+          // Strip optional "articles/" prefix for backwards compatibility
+          .replace(/^articles\//, '');
+
+        const url = `${baseUrl}/${locale}/news/${normalizedSlug}`;
 
         const lastModified = parseArticleDate(newsArticle.date);
 
@@ -98,13 +121,14 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
           changeFrequency: 'weekly',
           priority: 0.7,
           alternates: {
-            languages: getSupportedLanguages(`/${newsArticle.link}`),
+            // Ensure alternates match the normalized news URL shape
+            languages: getSupportedLanguages(`/news/${normalizedSlug}`),
           },
         });
       }
     }
   } catch (error) {
-    console.error('Error generating news sitemap:', error);
+    logger.error('Error generating news sitemap:', error);
   }
 
   return sitemapEntries;
@@ -152,7 +176,7 @@ function parseArticleDate(dateString: string): string {
       ? new Date().toISOString()
       : articleDate.toISOString();
   } catch (error) {
-    console.warn(`Failed to parse date "${dateString}":`, error);
+    logger.warn(`Failed to parse date "${dateString}":`, error);
     return new Date().toISOString();
   }
 }
