@@ -75,7 +75,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
  * Includes error handling and validation for malformed data
  * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
  */
-export function getNewsSitemap(): MetadataRoute.Sitemap {
+function getNewsSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   try {
