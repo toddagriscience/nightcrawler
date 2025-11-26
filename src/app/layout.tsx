@@ -1,5 +1,5 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
-import { AuthToggle, ThemeReset } from '@/components/common';
+import { ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';
 import { checkAuthenticated } from '@/lib/auth';
@@ -26,7 +26,6 @@ export default async function RootLayout({
             <ThemeProvider>
               <ThemeReset />
               {children}
-              <AuthToggle />
             </ThemeProvider>
           </PostHogProvider>
         </body>
