@@ -89,6 +89,19 @@ export function getNewsSitemap(): MetadataRoute.Sitemap {
           continue;
         }
 
+        // Skip external media links so the sitemap only includes on-site content
+        if (
+          typeof newsArticle.link === 'string' &&
+          (newsArticle.link.startsWith('http://') ||
+            newsArticle.link.startsWith('https://'))
+        ) {
+          logger.warn(
+            'Skipping external news article link from sitemap:',
+            newsArticle.link
+          );
+          continue;
+        }
+
         const url = `${baseUrl}/${locale}/news/articles/${newsArticle.link}`;
 
         const lastModified = parseArticleDate(newsArticle.date);
