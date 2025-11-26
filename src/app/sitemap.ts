@@ -140,7 +140,7 @@ export function getNewsSitemap(): MetadataRoute.Sitemap {
  * @param {string} dateString - The date string to parse
  * @returns {string} ISO date string or current date as fallback
  */
-export function parseArticleDate(dateString: string): string {
+function parseArticleDate(dateString: string): string {
   try {
     // Try parsing the date string directly first
     let articleDate = new Date(dateString);
@@ -187,7 +187,7 @@ export function parseArticleDate(dateString: string): string {
  * @param {string} page - The page path (with or without leading slash)
  * @returns {Languages<string>} Object mapping locales to URLs
  */
-export function getSupportedLanguages(page: string): Languages<string> {
+function getSupportedLanguages(page: string): Languages<string> {
   const languages: { [key: string]: string } = {};
   routing.locales.forEach((loc) => {
     // Ensure proper path separator - page might already start with '/' or be empty
