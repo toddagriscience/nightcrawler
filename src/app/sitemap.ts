@@ -27,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  * Includes internationalization support and proper SEO priorities
  * @returns {MetadataRoute.Sitemap} Sitemap entries for static pages
  */
-export function getStaticSitemap(): MetadataRoute.Sitemap {
+function getStaticSitemap(): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   const staticPages = [
