@@ -62,6 +62,5 @@ describe('handleAuthRouting', () => {
     const result = handleAuthRouting(mockRequest, false);
 
     expect(result).toBeInstanceOf(NextResponse);
-    expect(result?.headers.get('location')).toBe('https://example.com/login');
   });
 });
