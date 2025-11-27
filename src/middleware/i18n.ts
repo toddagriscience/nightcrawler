@@ -5,6 +5,8 @@ import { Locale } from 'next-intl';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
+const unIntlRoutes = ['/', '/login'];
+
 /**
  * Next-intl middleware instance
  * @returns {createMiddleware} - The next-intl middleware instance
@@ -17,31 +19,34 @@ export const intlMiddleware = createMiddleware(routing);
  * @param {boolean} isAuthenticated - The authentication status
  * @returns {NextResponse} - The response object
  */
-export function handleI18nMiddleware(
-  request: NextRequest,
-  isAuthenticated: boolean
-): NextResponse {
+export function handleI18nMiddleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
-  if (!isAuthenticated) {
-    // For root path, use intl middleware (it will redirect / to /en)
-    if (pathname === '/') {
-      return intlMiddleware(request);
-    }
+  // If route is uninternationalized, don't touch it
+  if (
+    unIntlRoutes
+      .map((url) => {
+        if (pathname.length > 1 && url === '/') {
+          return false;
+        }
 
-    // For paths that already have locale, let them through normally
-    if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
-      return NextResponse.next();
-    }
-
-    // For paths without locale (like /who-we-are, /no-page-here),
-    // manually redirect to /en/{path} to preserve the exact path
-    const url = request.nextUrl.clone();
-    url.pathname = `/en${pathname}`;
-    return NextResponse.redirect(url);
+        return pathname.startsWith(url);
+      })
+      .some((val) => val)
+  ) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // For paths that already have locale, let them through normally
+  if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
+    return NextResponse.next();
+  }
+
+  // For paths without locale (like /who-we-are, /no-page-here),
+  // manually redirect to /en/{path} to preserve the exact path
+  const url = request.nextUrl.clone();
+  url.pathname = `/en${pathname}`;
+  return NextResponse.redirect(url);
 }
 
 /**

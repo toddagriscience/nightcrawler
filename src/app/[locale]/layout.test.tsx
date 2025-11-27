@@ -56,10 +56,6 @@ jest.mock('@/context/theme/ThemeContext', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-jest.mock('@/middleware/auth', () => ({
-  AUTH_COOKIE_NAME: 'isAuth',
-}));
-
 describe('LocaleLayout', () => {
   const mockCookies = {
     get: jest.fn(),

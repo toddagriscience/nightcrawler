@@ -76,7 +76,7 @@ describe('I18n Middleware', () => {
         nextUrl: { pathname: '/en' },
       } as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, false);
+      const result = handleI18nMiddleware(mockRequest);
 
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
@@ -87,13 +87,13 @@ describe('I18n Middleware', () => {
         nextUrl: { pathname: '/en' },
       } as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, true);
+      const result = handleI18nMiddleware(mockRequest);
 
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
     });
 
-    it('should redirect non-locale routes to /en/{path} when unauthenticated', () => {
+    it('should redirect non-locale routes to /en/{path}', () => {
       const mockRequest = {
         nextUrl: {
           pathname: '/who-we-are',
@@ -103,7 +103,7 @@ describe('I18n Middleware', () => {
         },
       } as unknown as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, false);
+      const result = handleI18nMiddleware(mockRequest);
 
       expect(NextResponse.redirect).toHaveBeenCalled();
       expect(result).toBeDefined();
@@ -115,7 +115,19 @@ describe('I18n Middleware', () => {
         nextUrl: { pathname: '/en/about' },
       } as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, false);
+      const result = handleI18nMiddleware(mockRequest);
+
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(result).toBeDefined();
+      expect(result).toBeInstanceOf(NextResponse);
+    });
+
+    it('should return next() for uninternationalized routes', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/login' },
+      } as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest);
 
       expect(NextResponse.next).toHaveBeenCalled();
       expect(result).toBeDefined();

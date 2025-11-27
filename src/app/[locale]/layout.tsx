@@ -112,22 +112,18 @@ export default async function LocaleLayout({
     const messages = await getMessages({ locale });
 
     return (
-      <html lang={locale}>
-        <body className={fontVariables}>
-          <NextIntlClientProvider messages={messages}>
-            <SmoothScroll>
-              <ThemeProvider>
-                <ThemeReset />
-                <Header />
-                <FadeIn>
-                  <PostHogProvider>{children}</PostHogProvider>
-                </FadeIn>
-                <Footer />
-              </ThemeProvider>
-            </SmoothScroll>
-          </NextIntlClientProvider>
-        </body>
-      </html>
+      <NextIntlClientProvider messages={messages}>
+        <SmoothScroll>
+          <ThemeProvider>
+            <ThemeReset />
+            <Header />
+            <FadeIn>
+              <PostHogProvider>{children}</PostHogProvider>
+            </FadeIn>
+            <Footer />
+          </ThemeProvider>
+        </SmoothScroll>
+      </NextIntlClientProvider>
     );
   } catch (error) {
     console.error('❌ [layout.tsx] Error in LocaleLayout:', error);

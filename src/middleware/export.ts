@@ -1,6 +1,5 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-export { handleAuthRouting } from './auth';
 export {
   ensureNextResponse,
   handleI18nMiddleware,
