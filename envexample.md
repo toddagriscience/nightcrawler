@@ -19,8 +19,8 @@ NODE_ENV=development
 BACKEND_HOST="http://localhost:8080"
 
 # Both of these keys are real and appropriate to be public.
-SUPABASE_PROJECT_ID="pexzjinboynpudrgsbve"
-SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleHpqaW5ib3lucHVkcmdzYnZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjkzODksImV4cCI6MjA3Nzg0NTM4OX0.n-ikH7U_r8zOFd3LnM62GIefOyngrSRWLlHqjgL7YeM"
+NEXT_PUBLIC_SUPABASE_PROJECT_ID="pexzjinboynpudrgsbve"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleHpqaW5ib3lucHVkcmdzYnZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjkzODksImV4cCI6MjA3Nzg0NTM4OX0.n-ikH7U_r8zOFd3LnM62GIefOyngrSRWLlHqjgL7YeM"
 
 # Enable debug logging
 DEBUG=true

@@ -2,6 +2,7 @@
 
 import { supabase } from '@/supabaseClient';
 import logger from './logger';
+import LoginResponse from './types/auth';
 
 /** Any and all authentication helpers should be placed in this file. */
 
@@ -15,7 +16,7 @@ import logger from './logger';
 export async function login(
   email: string,
   password: string
-): Promise<object | null> {
+): Promise<LoginResponse | null> {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -26,7 +27,7 @@ export async function login(
         `Something went wrong when authenticating the user: ${error}`
       );
     }
-    return data;
+    return { data, error };
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
   }

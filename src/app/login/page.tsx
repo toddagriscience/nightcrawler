@@ -13,6 +13,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 export default function Login() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   function handleFormChange(e: ChangeEvent<HTMLInputElement>) {
@@ -26,15 +27,27 @@ export default function Login() {
     const response = await login(email, password);
 
     if (response !== null) {
-      router.push('/');
-      return;
+      const { error } = response;
+
+      if (error !== null) {
+        setLoginErrorMessage(error.message);
+      } else {
+        setLoginErrorMessage('');
+        router.push('/');
+        return;
+      }
     }
   }
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
       <div className="w-[90vw] max-w-[inherit]">
-        <h1 className="mb-8 text-center text-3xl">LOGIN</h1>
+        <h1 className="mb-6 text-center text-3xl">LOGIN</h1>
+        {loginErrorMessage && (
+          <p className="text-center mb-3 text-sm text-red-500">
+            {loginErrorMessage}
+          </p>
+        )}
         <form onSubmit={(e) => handleSubmit(e)}>
           <FieldSet className="mb-8">
             <FieldGroup>
@@ -54,7 +67,7 @@ export default function Login() {
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder="Password"
                   className="focus:ring-0!"
                   name="password"
                   onChange={(e) => handleFormChange(e)}
