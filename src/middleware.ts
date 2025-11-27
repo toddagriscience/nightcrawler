@@ -9,7 +9,7 @@ import {
 } from './middleware/export';
 
 /**
- * Middleware for internationalization, authentication, and privacy controls
+ * Middleware for internationalization and privacy controls
  * Handles Global Privacy Control (GPC) signals and privacy preferences
  * @param {NextRequest} request - The request object
  * @returns {NextResponse} - The response object
@@ -18,7 +18,7 @@ export default async function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
-  // Run the internationalization middleware for unauthenticated users only
+  // Run the internationalization middleware for ALL users, both authenticated and unauthenticated
   const intlResponse = handleI18nMiddleware(request);
 
   // Ensure we have a NextResponse with proper headers and cookies properties
