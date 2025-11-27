@@ -75,7 +75,6 @@ const Header: React.FC<HeaderProps> = ({
     { href: '/', label: t('navigation.home') },
     { href: '/who-we-are', label: t('navigation.whoWeAre') },
     { href: '/what-we-do', label: t('navigation.whatWeDo') },
-    { href: '/impact', label: t('navigation.impact') },
     { href: '/news', label: t('navigation.news') },
   ];
 
@@ -267,21 +266,14 @@ const Header: React.FC<HeaderProps> = ({
               )}
             </AnimatePresence>
 
-            {/* Right: Get Started */}
+            {/* Right: Login */}
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
-                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
+                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center flex cursor-pointer"
                 data-testid="login-link"
               >
                 {t('navigation.logIn')}
-              </Link>
-              <Link
-                href="/get-started"
-                className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center hidden md:flex cursor-pointer"
-                data-testid="get-started-link"
-              >
-                {t('navigation.getStarted')}
               </Link>
             </div>
           </div>
@@ -325,35 +317,6 @@ const Header: React.FC<HeaderProps> = ({
                         </motion.div>
                       );
                     })}
-
-                    {/* Mobile Get Started */}
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                        transition: { delay: menuItems.length * 0.1 },
-                      }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="flex flex-col items-center gap-4 pt-4 border-t border-current/20"
-                    >
-                      <Link
-                        href="/login"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer"
-                        data-testid="mobile-login-link"
-                      >
-                        {t('navigation.logIn')}
-                      </Link>
-                      <Link
-                        href="/get-started"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium footer-underline transition-all duration-300 ease-in-out cursor-pointer"
-                        data-testid="mobile-get-started-link"
-                      >
-                        {t('navigation.getStarted')}
-                      </Link>
-                    </motion.div>
                   </nav>
                 </div>
               </motion.div>

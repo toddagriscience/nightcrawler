@@ -54,18 +54,13 @@ describe('Header', () => {
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
   });
 
-  it('includes Get Started and Login links', () => {
+  it('includes Login link', () => {
     renderWithNextIntl(<Header />);
 
     // Check login link
     const loginLink = screen.getByTestId('login-link');
     expect(loginLink).toBeInTheDocument();
     expect(loginLink).toHaveAttribute('href', '/login');
-
-    // Check get-started link
-    const getStartedLink = screen.getByTestId('get-started-link');
-    expect(getStartedLink).toBeInTheDocument();
-    expect(getStartedLink).toHaveAttribute('href', '/get-started');
   });
 
   it('renders normally without isLoading prop', () => {
