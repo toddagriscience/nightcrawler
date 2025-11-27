@@ -1,6 +1,4 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
-'use client';
-
 import { ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';

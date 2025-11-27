@@ -5,6 +5,10 @@ import { Locale } from 'next-intl';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * @constant {Array.<string>}
+ *
+ * A collection of routes that are not to be handled with intl middleware. */
 const unIntlRoutes = ['/', '/login'];
 
 /**

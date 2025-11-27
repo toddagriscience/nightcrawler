@@ -1,9 +1,9 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import Protected from './protected';
-import { redirect, usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 // Mock external dependencies
 jest.mock('@/lib/auth', () => ({

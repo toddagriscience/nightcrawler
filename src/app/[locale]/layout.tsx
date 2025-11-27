@@ -7,7 +7,6 @@ import { notFound } from 'next/navigation';
 
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
-import { fontVariables } from '@/lib/fonts';
 
 import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
