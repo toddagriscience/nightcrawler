@@ -2,6 +2,20 @@
 
 import { supabase } from '@/supabaseClient';
 import logger from './logger';
+import LoginResponse from './types/auth';
+
+/** Auth, assuming credentials are correct, is handled in the following manner:
+ *
+ * 1. User sends a request to Supabase
+ * 2. Supabase returns authentication credentials
+ * 3. User attempts to access a protected page
+ * 4. Authentication credentials are validated optimistically, and the base UI loads. Note that no data is loaded yet.
+ * 5. Request with authentication credentials is sent to backend for secure validation, data is returned.
+ *
+ * Note that the authentication process required to load a page and the authentication process required to fetch data are two completely different processes.
+ *
+ * The following resource from NextJS may be useful in understanding how we handle authentication: https://nextjs.org/docs/app/guides/authentication#authorization
+ * */
 
 /** Any and all authentication helpers should be placed in this file. */
 
@@ -15,7 +29,7 @@ import logger from './logger';
 export async function login(
   email: string,
   password: string
-): Promise<object | null> {
+): Promise<LoginResponse | null> {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -26,12 +40,11 @@ export async function login(
         `Something went wrong when authenticating the user: ${error}`
       );
     }
-    return data;
+    return { data, error };
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
-  } finally {
-    return null;
   }
+  return null;
 }
 
 /**
