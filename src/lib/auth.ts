@@ -29,9 +29,8 @@ export async function login(
     return data;
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
-  } finally {
-    return null;
   }
+  return null;
 }
 
 /**
