@@ -1,15 +1,15 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
 import { PageHero } from '@/components/common';
-import { Card, CardContent } from '@/components/ui';
 import { ScrollShrinkWrapper } from '@/components/landing';
-import ValuesCard from './components/values-card';
+import { Card, CardContent } from '@/components/ui';
 import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
+import ValuesCard from './components/values-card';
 
 export const metadata: Metadata = {
-  title: 'Who We Are | Todd',
+  title: 'Todd United States',
+  description: 'We research, explore, innovate and think deeply',
 };
 
 /**

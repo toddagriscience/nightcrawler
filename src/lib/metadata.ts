@@ -7,10 +7,10 @@ import type { Metadata, Viewport } from 'next';
  * @returns {const} - The site configuration
  */
 const siteConfig = {
-  name: 'Todd',
-  title: 'Todd',
+  name: 'Todd United States',
+  title: 'Todd United States',
   description:
-    'Todd Agriscience is a first-generation generative agriculture firm.',
+    'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
   url: 'https://www.toddagriscience.com',
   ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
   // Using same image for Twitter, LinkedIn, and other social platforms

@@ -34,7 +34,9 @@ export async function generateMetadata({
 
   // Use hardcoded title instead of translations to avoid async
   const governanceTitle =
-    locale === 'es' ? 'Gobierno Corporativo' : 'Governance';
+    locale === 'es'
+      ? 'Gobierno Corporativo | Todd Investors'
+      : 'Governance | Todd Investors';
 
   return createMetadata({
     title: `${teamMember.name} - ${governanceTitle}`,

@@ -1,6 +1,16 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import LandingPage from '@/components/landing/page/landing-page';
+import type { Metadata } from 'next';
+
+/**
+ * Metadata for the localized home page
+ */
+export const metadata: Metadata = {
+  title: 'Todd | Global Leader in Sustainable Agriculture',
+  description:
+    'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers',
+};
 
 /**
  * Home page for the app
