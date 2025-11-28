@@ -17,7 +17,6 @@ import {
 } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import { checkAuthenticated } from '@/lib/auth';
 import { PostHogProvider } from '../providers';
 
 /**
@@ -56,7 +55,7 @@ export async function generateMetadata({
       type: 'website',
     },
     twitter: {
-      card: 'summary_large_image',
+      card: 'summary',
       title: t('title'),
       description: t('description'),
     },

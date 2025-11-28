@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   title: 'Todd | Global Leader in Sustainable Agriculture',
   description:
     'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers',
+  openGraph: {
+    title: 'Todd | Global Leader in Sustainable Agriculture',
+    description:
+      'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Todd | Global Leader in Sustainable Agriculture',
+    description:
+      'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers',
+  },
 };
 
 /**

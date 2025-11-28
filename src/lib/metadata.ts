@@ -56,7 +56,7 @@ export const defaultMetadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     site: siteConfig.social.twitter,
     creator: siteConfig.social.twitter,
     title: siteConfig.title,
