@@ -48,6 +48,7 @@
         "@types/react-dom": "^19",
         "@vitest/browser": "^4.0.6",
         "@vitest/coverage-v8": "^4.0.6",
+        "commitlint": "20.1.0",
         "eslint": "^9",
         "eslint-config-next": "^15.5.4",
         "eslint-config-prettier": "^10.1.8",
@@ -935,6 +936,8 @@
     "colorette": ["colorette@2.0.20", "", {}, "sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w=="],
 
     "commander": ["commander@14.0.2", "", {}, "sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ=="],
+
+    "commitlint": ["commitlint@20.1.0", "", { "dependencies": { "@commitlint/cli": "^20.1.0", "@commitlint/types": "^20.0.0" }, "bin": { "commitlint": "cli.js" } }, "sha512-3W3CTUpZl6R98UquFiZA/C9yGdzGJU2rmVIXlx6tvKNX8hzLuiPsoZINFfzKnfCnaSP07Xys5aXP+FE7vXZmEg=="],
 
     "compare-func": ["compare-func@2.0.0", "", { "dependencies": { "array-ify": "^1.0.0", "dot-prop": "^5.1.0" } }, "sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA=="],
 

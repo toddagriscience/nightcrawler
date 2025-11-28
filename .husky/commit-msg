@@ -1,5 +1,3 @@
 # Enforce conventional commit format
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-bunx commitlint --edit "$1"
+# Examples: "feat: add header", "fix: resolve login issue", "docs: update README"
+npx --no -- commitlint --edit $1
