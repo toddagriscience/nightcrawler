@@ -6,14 +6,9 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * @constant {Array.<string>}
- *
- * A collection of routes that are not to be handled with intl middleware. */
-const unIntlRoutes = ['/', '/login'];
-
-/**
  * Next-intl middleware instance
  * @returns {createMiddleware} - The next-intl middleware instance
+ * @param {boolean} isAuthenticated - The authentication status
  */
 export const intlMiddleware = createMiddleware(routing);
 
@@ -22,34 +17,31 @@ export const intlMiddleware = createMiddleware(routing);
  * @param {NextRequest} request - The request object
  * @returns {NextResponse} - The response object
  */
-export function handleI18nMiddleware(request: NextRequest): NextResponse {
+export function handleI18nMiddleware(
+  request: NextRequest,
+  isAuthenticated: boolean
+): NextResponse {
   const { pathname } = request.nextUrl;
 
-  // If route is uninternationalized, don't touch it
-  if (
-    unIntlRoutes
-      .map((url) => {
-        if (pathname.length > 1 && url === '/') {
-          return false;
-        }
+  if (!isAuthenticated) {
+    // For root path, use intl middleware (it will redirect / to /en)
+    if (pathname === '/') {
+      return intlMiddleware(request);
+    }
 
-        return pathname.startsWith(url);
-      })
-      .some((val) => val)
-  ) {
-    return NextResponse.next();
+    // For paths that already have locale, let them through normally
+    if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
+      return NextResponse.next();
+    }
+
+    // For paths without locale (like /who-we-are, /no-page-here),
+    // manually redirect to /en/{path} to preserve the exact path
+    const url = request.nextUrl.clone();
+    url.pathname = `/en${pathname}`;
+    return NextResponse.redirect(url);
   }
 
-  // For paths that already have locale, let them through normally
-  if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
-    return NextResponse.next();
-  }
-
-  // For paths without locale (like /who-we-are, /no-page-here),
-  // manually redirect to /en/{path} to preserve the exact path
-  const url = request.nextUrl.clone();
-  url.pathname = `/en${pathname}`;
-  return NextResponse.redirect(url);
+  return NextResponse.next();
 }
 
 /**

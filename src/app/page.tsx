@@ -1,7 +1,5 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import Protected from '@/components/auth/protected';
-
 /**
  * Dashboard page - served at "/" route for authenticated users
  * This page is protected by middleware and only accessible to authenticated users
@@ -10,19 +8,17 @@ import Protected from '@/components/auth/protected';
  */
 export default function DashboardPage() {
   return (
-    <Protected>
-      <div className="bg-background min-h-screen">
-        <div className="container mx-auto px-4 py-8">
-          <div className="mx-auto max-w-4xl">
-            <header className="mb-8">
-              <h1 className="text-foreground mb-2 text-3xl font-bold">
-                Dashboard
-              </h1>
-            </header>
-            <div className="text-muted-foreground text-sm">Coming soon...</div>
-          </div>
+    <div className="bg-background min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mx-auto max-w-4xl">
+          <header className="mb-8">
+            <h1 className="text-foreground mb-2 text-3xl font-bold">
+              Dashboard
+            </h1>
+          </header>
+          <div className="text-muted-foreground text-sm">Coming soon...</div>
         </div>
       </div>
-    </Protected>
+    </div>
   );
 }
