@@ -269,7 +269,7 @@ const Header: React.FC<HeaderProps> = ({
             {/* Right: Login */}
             <div className="flex items-center gap-4">
               <Link
-                href="/login"
+                href="./login"
                 className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center flex cursor-pointer"
                 data-testid="login-link"
               >
