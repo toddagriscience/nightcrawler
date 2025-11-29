@@ -2,8 +2,8 @@
 
 import logger from './logger';
 import LoginResponse from './types/auth';
-import { createClient as createServerClient } from './supabase/server';
 import { createClient as createBrowserClient } from './supabase/client';
+import { AuthError } from '@supabase/supabase-js';
 
 /** Auth, assuming credentials are correct, is handled in the following manner:
  *
@@ -30,7 +30,7 @@ import { createClient as createBrowserClient } from './supabase/client';
 export async function login(
   email: string,
   password: string
-): Promise<LoginResponse | null> {
+): Promise<LoginResponse> {
   try {
     const { data, error } = await createBrowserClient().auth.signInWithPassword(
       {
@@ -47,7 +47,10 @@ export async function login(
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
   }
-  return null;
+  return {
+    data: {},
+    error: new AuthError('Something went wrong. Please contact support.'),
+  };
 }
 
 /**
