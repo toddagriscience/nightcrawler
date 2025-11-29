@@ -1,8 +1,9 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { supabase } from '@/supabaseClient';
 import logger from './logger';
 import LoginResponse from './types/auth';
+import { createClient as createServerClient } from './supabase/server';
+import { createClient as createBrowserClient } from './supabase/client';
 
 /** Auth, assuming credentials are correct, is handled in the following manner:
  *
@@ -31,10 +32,12 @@ export async function login(
   password: string
 ): Promise<LoginResponse | null> {
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data, error } = await createBrowserClient().auth.signInWithPassword(
+      {
+        email,
+        password,
+      }
+    );
     if (error) {
       logger.warn(
         `Something went wrong when authenticating the user: ${error}`
@@ -48,13 +51,13 @@ export async function login(
 }
 
 /**
- * Returns whether a user is verified or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ * ONLY USE ON CLIENT SIDE! Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
- * @returns {boolean} - True if the user is authenticated. */
+ * @returns {Promise<boolean>} - True if the user is authenticated. */
 export async function checkAuthenticated(): Promise<boolean> {
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await createBrowserClient().auth.getUser();
 
   return !(user == null);
 }
