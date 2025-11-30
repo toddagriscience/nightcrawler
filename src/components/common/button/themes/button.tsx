@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import { cva } from 'class-variance-authority';
 

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import { routing, SUPPORTED_LOCALES } from '@/i18n/config';
 import { Locale } from 'next-intl';

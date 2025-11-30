@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 /**
  * Jest setup for middleware tests

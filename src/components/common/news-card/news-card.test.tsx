@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithAct } from '@/test/test-utils';
 import NewsCard from './news-card';

@@ -1,7 +1,10 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
+
+import { FlatCompat } from '@eslint/eslintrc';
+import licenseHeader from 'eslint-plugin-license-header';
+import storybook from 'eslint-plugin-storybook';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,8 +13,10 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+// Normalize plugin exports
+const licenseHeaderPlugin = licenseHeader?.default ?? licenseHeader;
+
+export default [
   {
     ignores: [
       'node_modules/**',
@@ -23,9 +28,21 @@ const eslintConfig = [
       'storybook-static/**',
       'jest.config.js',
       'playwright.config.ts',
-      '**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)', // Ignore all story files
+      'vitest.config.ts',
+      'vitest.shims.d.ts',
     ],
   },
-];
 
-export default eslintConfig;
+  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+
+  {
+    plugins: {
+      'license-header': licenseHeaderPlugin,
+    },
+    rules: {
+      'license-header/header': [2, './license-header.txt'],
+    },
+  },
+
+  ...storybook.configs['flat/recommended'],
+];

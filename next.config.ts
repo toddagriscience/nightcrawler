@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
