@@ -41,7 +41,6 @@ jest.mock('@/lib/fonts', () => ({
 
 // Mock all the components
 jest.mock('@/components/common', () => ({
-  AuthToggle: () => null,
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
   SmoothScroll: ({ children }: { children: React.ReactNode }) => children,
   ThemeReset: () => null,

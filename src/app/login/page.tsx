@@ -68,15 +68,18 @@ export default function Login() {
                       className="focus:ring-0!"
                       placeholder="Email Address"
                       id="email"
+                      data-testid="email"
                       name="email"
                       type="email"
                       onChange={(e) => handleFormChange(e)}
+                      required
                     />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Input
                       id="password"
+                      data-testid="password"
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Password"
                       className="focus:ring-0!"
