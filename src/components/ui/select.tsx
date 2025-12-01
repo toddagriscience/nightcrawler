@@ -1,3 +1,5 @@
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
 import * as React from 'react';

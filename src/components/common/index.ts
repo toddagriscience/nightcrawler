@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 export { AuthToggle } from './auth-toggle/auth-toggle';
 export { default as Button } from './button/button';

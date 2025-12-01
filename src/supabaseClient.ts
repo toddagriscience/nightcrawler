@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
+
 import { createClient } from '@supabase/supabase-js';
 
 const projectId = process.env.SUPABASE_PROJECT_ID || 'NO_PROJECT_ID';

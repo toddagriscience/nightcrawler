@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import { Link } from '@/i18n/config';
 import PlaceholderImage from '../placeholder-image/placeholder-image';

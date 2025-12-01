@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright (c) Todd Agriscience, Inc. All rights reserved.
 
 import { handleAuthRouting } from '@/middleware/auth';
 import { NextRequest, NextResponse } from 'next/server';
