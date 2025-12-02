@@ -34,8 +34,7 @@ export async function login(
   if (!validated.success) {
     return {
       data: {},
-      // Stupid typescript stuff
-      error: z.treeifyError(validated.error) as unknown as ZodError,
+      error: z.treeifyError(validated.error),
     };
   }
 

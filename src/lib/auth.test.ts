@@ -59,7 +59,9 @@ describe('login', () => {
     const result = await login('x', 'y');
 
     expect(result.error).toBeInstanceOf(AuthError);
-    expect(result.error!.message).toContain('Something went wrong');
+    expect((result.error! as AuthError).message).toContain(
+      'Something went wrong'
+    );
   });
 });
 

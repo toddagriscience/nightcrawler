@@ -2,7 +2,7 @@
 import { AuthError } from '@supabase/supabase-js';
 
 export type ZodError = {
-  errors: string;
+  errors: string[];
   properties?: Record<string, { errors: string[] }>;
 };
 
