@@ -1,21 +1,17 @@
+// Copyright Todd Agriscience, Inc. All rights reserved.
 'use server';
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { z } from 'zod';
 import logger from '../logger';
 import LoginResponse from '../types/auth';
+import { loginSchema } from '../zod-schemas/auth';
+import { z } from 'zod';
 
-const loginSchema = z.object({
-  email: z.email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
+/** This file is STRICTLY for SERVER SIDE authentication. Server-side authentication should be generally preferred over client-side authentication. You can read more about this in `./src/lib/auth.ts` */
 
 /**
- * Logs a user in using Supabase on the server, and handles errors accordingly.
- *
- * DISCLAMER: THIS IS A SERVER ACTION.
- * PLEASE READ THE SERVER ACTION DOCUMENTATION BEFORE CALLING THIS IN RANDOM PLACES.
+ * ONLY USE ON SERVER SIDE! Logs a user in using Supabase on the server, and handles errors accordingly.
  *
  * @param formData The form data containing the email and password
  * @returns {object} - The object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously

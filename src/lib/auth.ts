@@ -5,9 +5,13 @@ import LoginResponse from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 
-/** Auth, assuming credentials are correct, is handled in the following manner:
+/** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
- * 1. User sends a request to Supabase
+ * With that:
+ *
+ * Client side auth + request to API, assuming credentials are correct, is handled in the following manner:
+ *
+ * 1. User attempts to
  * 2. Supabase returns authentication credentials
  * 3. User attempts to access a protected page
  * 4. Authentication credentials are validated optimistically, and the base UI loads. Note that no data is loaded yet.
@@ -16,12 +20,11 @@ import { AuthError } from '@supabase/supabase-js';
  * Note that the authentication process required to load a page and the authentication process required to fetch data are two completely different processes.
  *
  * The following resource from NextJS may be useful in understanding how we handle authentication: https://nextjs.org/docs/app/guides/authentication#authorization
- * */
-
-/** Any and all authentication helpers should be placed in this file. */
+ *
+ */
 
 /**
- * Logs a user in using Supabase, and handles errors accordingly.
+ * ONLY USE ON CLIENT SIDE! Logs a user in using Supabase, and handles errors accordingly.
  *
  * @param email The email of the user
  * @param password The password of the user
@@ -66,7 +69,7 @@ export async function checkAuthenticated(): Promise<boolean> {
 }
 
 /**
- * Standardizes all the different error types produced by the login action into a list
+ * Standardizes all the different error types produced by the login action into a list. Contrary to the majority of other functions in this file, this function can be used in any location in the codebase. It's just a helper function for formatting.
  *
  * @param state The current form action state
  * @returns A list of all the errors

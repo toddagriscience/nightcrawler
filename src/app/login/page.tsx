@@ -1,3 +1,4 @@
+// Copyright Todd Agriscience, Inc. All rights reserved.
 'use client';
 
 import { FadeIn } from '@/components/common';

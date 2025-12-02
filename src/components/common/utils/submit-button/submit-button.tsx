@@ -1,3 +1,4 @@
+// Copyright Todd Agriscience, Inc. All rights reserved.
 import { Button } from '@/components/ui';
 import { Spinner } from '@/components/ui/spinner';
 import { useFormStatus } from 'react-dom';
