@@ -64,3 +64,17 @@ export async function checkAuthenticated(): Promise<boolean> {
 
   return !(user == null);
 }
+
+/**
+ * Standardizes all the different error types produced by the login action into a list
+ *
+ * @param state The current form action state
+ * @returns A list of all the errors
+ */
+export function loginErrors(state: LoginResponse | null): string[] {
+  if (!state?.error) return [];
+  if (typeof state.error === 'string') return [state.error];
+  if (state.error instanceof Error) return [state.error.message];
+  if ('errors' in state.error) return state.error.errors;
+  return [];
+}

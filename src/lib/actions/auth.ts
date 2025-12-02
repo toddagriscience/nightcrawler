@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 import logger from '../logger';
-import LoginResponse, { ZodError } from '../types/auth';
+import LoginResponse from '../types/auth';
 
 const loginSchema = z.object({
   email: z.email('Invalid email address'),
@@ -32,6 +32,7 @@ export async function login(
   const validated = loginSchema.safeParse(rawData);
 
   if (!validated.success) {
+    logger.info('Login credentials were not valid');
     return {
       data: {},
       error: z.treeifyError(validated.error),
@@ -40,7 +41,7 @@ export async function login(
 
   const client = await createClient();
   try {
-    const { data: _data, error } = await client.auth.signInWithPassword({
+    const { error } = await client.auth.signInWithPassword({
       email: validated.data.email,
       password: validated.data.password,
     });
@@ -49,13 +50,17 @@ export async function login(
       logger.warn(
         `Something went wrong when authenticating the user: ${error}`
       );
+      return {
+        data: {},
+        error: error instanceof Error ? error.message : 'An error occured',
+      };
     }
-    // return { data, error };
-    redirect('/');
   } catch (error) {
+    logger.info(`An error occured when authenticating the user: ${error}`);
     return {
       data: {},
       error: error instanceof Error ? error.message : 'An error occurred',
     };
   }
+  redirect('/');
 }

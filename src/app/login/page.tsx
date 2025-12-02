@@ -1,45 +1,20 @@
 'use client';
 
 import { FadeIn } from '@/components/common';
-import { Button } from '@/components/ui';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
 import { login } from '@/lib/actions/auth';
-import LoginResponse from '@/lib/types/auth';
+import { loginErrors } from '@/lib/auth';
 import Link from 'next/link';
 import { useActionState, useState } from 'react';
-import { useFormStatus } from 'react-dom';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
-      type="submit"
-      disabled={pending}
-    >
-      {pending ? <Spinner className="mx-auto w-5 h-5" /> : 'LOGIN'}
-    </Button>
-  );
-}
 
 /**
- * Standardizes all the different error types produced by the login action into a list
+ * Login page. See `.src/lib/auth.ts` for more information regarding authentication and authorization.
  *
- * @param state The current form action state
- * @returns A list of all the errors
- */
-function loginErrors(state: LoginResponse | null): string[] {
-  if (!state?.error) return [];
-  if (typeof state.error === 'string') return [state.error];
-  if (state.error instanceof Error) return [state.error.message];
-  if ('errors' in state.error) return state.error.errors;
-  return [];
-}
-
+ * @returns {JSX.Element} - The login page
+ * */
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, loginAction] = useActionState(login, null);
@@ -98,7 +73,7 @@ export default function Login() {
                     </FieldLabel>
                   </div>
                   <Link
-                    href={'/todo'}
+                    href={'/forgot-password'}
                     className="basis-[min-content] text-sm text-nowrap underline"
                   >
                     Forgot Password
@@ -106,7 +81,7 @@ export default function Login() {
                 </Field>
               </FieldGroup>
             </FieldSet>
-            <SubmitButton />
+            <SubmitButton buttonText="LOGIN" />
           </form>
         </FadeIn>
       </div>
