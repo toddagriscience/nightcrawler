@@ -8,13 +8,13 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * Next-intl middleware instance
  * @returns {createMiddleware} - The next-intl middleware instance
+ * @param {boolean} isAuthenticated - The authentication status
  */
 export const intlMiddleware = createMiddleware(routing);
 
 /**
  * Handle internationalization middleware for public routes
  * @param {NextRequest} request - The request object
- * @param {boolean} isAuthenticated - The authentication status
  * @returns {NextResponse} - The response object
  */
 export function handleI18nMiddleware(

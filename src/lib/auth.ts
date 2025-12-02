@@ -1,12 +1,30 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { supabase } from '@/supabaseClient';
 import logger from './logger';
+import LoginResponse from './types/auth';
+import { createClient as createBrowserClient } from './supabase/client';
+import { AuthError } from '@supabase/supabase-js';
 
-/** Any and all authentication helpers should be placed in this file. */
+/** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
+ *
+ * With that:
+ *
+ * Client side auth + request to API, assuming credentials are correct, is handled in the following manner:
+ *
+ * 1. User attempts to
+ * 2. Supabase returns authentication credentials
+ * 3. User attempts to access a protected page
+ * 4. Authentication credentials are validated optimistically, and the base UI loads. Note that no data is loaded yet.
+ * 5. Request with authentication credentials is sent to backend for secure validation, data is returned.
+ *
+ * Note that the authentication process required to load a page and the authentication process required to fetch data are two completely different processes.
+ *
+ * The following resource from NextJS may be useful in understanding how we handle authentication: https://nextjs.org/docs/app/guides/authentication#authorization
+ *
+ */
 
 /**
- * Logs a user in using Supabase, and handles errors accordingly.
+ * ONLY USE ON CLIENT SIDE! Logs a user in using Supabase, and handles errors accordingly.
  *
  * @param email The email of the user
  * @param password The password of the user
@@ -15,33 +33,51 @@ import logger from './logger';
 export async function login(
   email: string,
   password: string
-): Promise<object | null> {
+): Promise<LoginResponse> {
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data, error } = await createBrowserClient().auth.signInWithPassword(
+      {
+        email,
+        password,
+      }
+    );
     if (error) {
       logger.warn(
         `Something went wrong when authenticating the user: ${error}`
       );
     }
-    return data;
+    return { data, error };
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
-  } finally {
-    return null;
   }
+  return {
+    data: {},
+    error: new AuthError('Something went wrong. Please contact support.'),
+  };
 }
 
 /**
- * Returns whether a user is verified or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ * ONLY USE ON CLIENT SIDE! Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
- * @returns {boolean} - True if the user is authenticated. */
+ * @returns {Promise<boolean>} - True if the user is authenticated. */
 export async function checkAuthenticated(): Promise<boolean> {
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await createBrowserClient().auth.getUser();
 
   return !(user == null);
+}
+
+/**
+ * Standardizes all the different error types produced by the login action into a list. Contrary to the majority of other functions in this file, this function can be used in any location in the codebase. It's just a helper function for formatting.
+ *
+ * @param state The current form action state
+ * @returns A list of all the errors
+ */
+export function loginErrors(state: LoginResponse | null): string[] {
+  if (!state?.error) return [];
+  if (typeof state.error === 'string') return [state.error];
+  if (state.error instanceof Error) return [state.error.message];
+  if ('errors' in state.error) return state.error.errors;
+  return [];
 }

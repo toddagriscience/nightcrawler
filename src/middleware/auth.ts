@@ -1,8 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { routing } from '@/i18n/config';
-import { Locale } from 'next-intl';
 import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
 /** Any protected URLs */
 const protectedUrls = ['/'];
@@ -19,28 +18,79 @@ const protectedUrls = ['/'];
  * Routes with no internationalization, ex. `/somewhere`, are treated as protected routes, and in the given example, will redirect to `/en` + `/somewhere` for unauthenticated users. HOWEVER, this is handled by other pieces of middleware.
  *
  * @param {NextRequest} request - The request object
- * @param {boolean} isAuthenticated - The authentication status
  * @returns {NextResponse | null} - The response object
  */
-export function handleAuthRouting(
-  request: NextRequest,
-  isAuthenticated: boolean
-): NextResponse | null {
+export async function handleAuthRouting(
+  request: NextRequest
+): Promise<NextResponse | null> {
   const { pathname } = request.nextUrl;
+
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
+
+  const supabase = createServerClient(
+    `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID!}.supabase.co`,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value }) =>
+            supabaseResponse.cookies.set(name, value)
+          );
+        },
+      },
+    }
+  );
+
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+
+  // IMPORTANT: Don't remove getClaims()
+  const { data } = await supabase.auth.getClaims();
+
+  const isAuthenticated = data?.claims;
 
   if (isRouteProtected(pathname)) {
     if (isAuthenticated) {
-      return NextResponse.next();
+      return supabaseResponse;
     }
 
     return NextResponse.redirect(new URL('/en', request.url));
   } else {
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/', request.url));
+      const response = NextResponse.redirect(new URL('/', request.url));
+      supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
+        response.cookies.set(name, value, options);
+      });
+      return response;
     }
   }
 
-  return null;
+  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
+
+  return supabaseResponse;
 }
 
 /**

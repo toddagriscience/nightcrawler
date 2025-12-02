@@ -1,55 +1,93 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import { handleAuthRouting } from '@/middleware/auth';
-import { NextRequest, NextResponse } from 'next/server';
-
 /**
  * @jest-environment node
  */
 
+import { handleAuthRouting } from '@/middleware/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
+
+jest.mock('@supabase/ssr', () => ({
+  createServerClient: jest.fn(),
+}));
+
+function mockSupabase({ authenticated }: { authenticated: boolean }) {
+  return {
+    auth: {
+      getClaims: jest.fn().mockResolvedValue({
+        data: authenticated ? { claims: { sub: '123' } } : { claims: null },
+      }),
+    },
+  };
+}
+
+// Utility: Create a mock request with cookies support
+function makeMockRequest(url: string): NextRequest {
+  const req = {
+    nextUrl: { pathname: new URL(url).pathname },
+    url,
+    cookies: {
+      getAll: () => [],
+      set: jest.fn(),
+    },
+  } as unknown as NextRequest;
+
+  return req;
+}
+
 describe('handleAuthRouting', () => {
-  it('should allow authenticated users on a protected route', () => {
-    const mockRequest = {
-      nextUrl: { pathname: '/' },
-      url: 'https://example.com/',
-    } as NextRequest;
-
-    const result = handleAuthRouting(mockRequest, true);
-
-    expect(result).toBeInstanceOf(NextResponse);
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should not allow authenticated users on an internationalized route', () => {
-    const mockRequest = {
-      nextUrl: { pathname: '/en/about' },
-      url: 'https://example.com/en/about',
-    } as NextRequest;
+  it('allows authenticated users on a protected route', async () => {
+    const mockRequest = makeMockRequest('https://example.com/');
 
-    const result = handleAuthRouting(mockRequest, true);
+    (createServerClient as jest.Mock).mockReturnValue(
+      mockSupabase({ authenticated: true })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
+
+    expect(result).toBeInstanceOf(NextResponse);
+    expect(result?.status).toBe(200);
+  });
+
+  it('redirects authenticated users off an internationalized route to "/"', async () => {
+    const mockRequest = makeMockRequest('https://example.com/en/about');
+
+    (createServerClient as jest.Mock).mockReturnValue(
+      mockSupabase({ authenticated: true })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
 
     expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
-  it('should redirect unauthenticated users from a protected route to /en', () => {
-    const mockRequest = {
-      nextUrl: { pathname: '/' },
-      url: 'https://example.com/',
-    } as NextRequest;
+  it('redirects unauthenticated users from a protected route to "/en"', async () => {
+    const mockRequest = makeMockRequest('https://example.com/');
 
-    const result = handleAuthRouting(mockRequest, false);
+    (createServerClient as jest.Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
 
     expect(result).toBeInstanceOf(NextResponse);
     expect(result?.headers.get('location')).toBe('https://example.com/en');
   });
 
-  it('should not redirect unauthenticated users navigating to a non-protected route', () => {
-    const mockRequest = {
-      nextUrl: { pathname: '/en/who-we-are' },
-      url: 'https://example.com/en/who-we-are',
-    } as NextRequest;
+  it('allows unauthenticated users on a non-protected marketing route', async () => {
+    const mockRequest = makeMockRequest('https://example.com/en/who-we-are');
 
-    const result = handleAuthRouting(mockRequest, false);
+    (createServerClient as jest.Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
 
-    expect(result).toBeNull();
+    const result = await handleAuthRouting(mockRequest);
+
+    expect(result).toBeInstanceOf(NextResponse);
   });
 });

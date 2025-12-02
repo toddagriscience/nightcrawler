@@ -7,17 +7,10 @@ import { notFound } from 'next/navigation';
 
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
-import { fontVariables } from '@/lib/fonts';
 
-import {
-  AuthToggle,
-  FadeIn,
-  SmoothScroll,
-  ThemeReset,
-} from '@/components/common';
+import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import { checkAuthenticated } from '@/lib/auth';
 import { PostHogProvider } from '../providers';
 
 /**
@@ -118,23 +111,18 @@ export default async function LocaleLayout({
     const messages = await getMessages({ locale });
 
     return (
-      <html lang={locale}>
-        <body className={fontVariables}>
-          <NextIntlClientProvider messages={messages}>
-            <SmoothScroll>
-              <ThemeProvider>
-                <ThemeReset />
-                <AuthToggle />
-                <Header />
-                <FadeIn>
-                  <PostHogProvider>{children}</PostHogProvider>
-                </FadeIn>
-                <Footer />
-              </ThemeProvider>
-            </SmoothScroll>
-          </NextIntlClientProvider>
-        </body>
-      </html>
+      <NextIntlClientProvider messages={messages}>
+        <SmoothScroll>
+          <ThemeProvider>
+            <ThemeReset />
+            <Header />
+            <FadeIn>
+              <PostHogProvider>{children}</PostHogProvider>
+            </FadeIn>
+            <Footer />
+          </ThemeProvider>
+        </SmoothScroll>
+      </NextIntlClientProvider>
     );
   } catch (error) {
     console.error('❌ [layout.tsx] Error in LocaleLayout:', error);
