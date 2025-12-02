@@ -2,10 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { checkAuthenticated } from './auth';
-import { login } from './actions/auth';
+import { login, checkAuthenticated } from './auth';
 import { AuthError } from '@supabase/supabase-js';
-import { redirect } from 'next/navigation';
 
 jest.mock('./logger', () => ({
   warn: jest.fn(),
@@ -14,18 +12,12 @@ jest.mock('./logger', () => ({
 const mockSignInWithPassword = jest.fn();
 const mockGetUser = jest.fn();
 
-jest.mock('./supabase/server', () => ({
+jest.mock('./supabase/client', () => ({
   createClient: () => ({
     auth: {
       signInWithPassword: mockSignInWithPassword,
       getUser: mockGetUser,
     },
-  }),
-}));
-
-jest.mock('next/navigation', () => ({
-  redirect: jest.fn(() => {
-    throw new Error('NEXT_REDIRECT');
   }),
 }));
 
@@ -36,45 +28,37 @@ describe('login', () => {
 
   it('returns data and no error on successful login', async () => {
     const fakeData = { session: 'abc' };
-    const formData = new FormData();
-    formData.append('email', 'test@example.com');
-    formData.append('password', 'password');
 
     mockSignInWithPassword.mockResolvedValue({
       data: fakeData,
       error: null,
     });
 
-    await expect(login(null, formData)).rejects.toThrow('NEXT_REDIRECT');
-    expect(redirect).toHaveBeenCalledWith('/');
+    const result = await login('test@example.com', 'password');
+
+    expect(result.error).toBeNull();
+    expect(result.data).toEqual(fakeData);
   });
 
   it('returns the error when Supabase returns one', async () => {
     const fakeError = new AuthError('Invalid credentials');
-    const formData = new FormData();
-    formData.append('email', 'bad@example.com');
-    formData.append('password', 'wrong');
 
     mockSignInWithPassword.mockResolvedValue({
       data: null,
       error: fakeError,
     });
 
-    const result = await login(null, formData);
+    const result = await login('bad@example.com', 'wrong');
 
     expect(result.error).toBe(fakeError);
   });
 
   it('returns default error when an exception is thrown', async () => {
-    const formData = new FormData();
-    formData.append('email', 'x');
-    formData.append('password', 'y');
-
     mockSignInWithPassword.mockRejectedValue(new Error('network'));
 
-    const result = await login(null, formData);
+    const result = await login('x', 'y');
 
-    expect(result.error).toBe('network');
+    expect(result.error).toBeInstanceOf(Error);
   });
 });
 

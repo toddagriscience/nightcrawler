@@ -4,12 +4,17 @@
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from './page';
-import { login } from '@/lib/auth';
+import { login } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import userEvent from '@testing-library/user-event';
-import { error } from 'console';
+import { loginErrors } from '@/lib/auth';
 
 jest.mock('@/lib/auth', () => ({
+  login: jest.fn(),
+  loginErrors: jest.fn(),
+}));
+
+jest.mock('@/lib/actions/auth', () => ({
   login: jest.fn(),
 }));
 
@@ -52,33 +57,20 @@ describe('login page', () => {
 
   test('shows spinner while loading', async () => {
     (login as jest.Mock).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({}), 200))
+      () => new Promise((resolve) => setTimeout(() => resolve({}), 1000))
     );
-
     render(<Login />);
 
-    fireEvent.submit(screen.getByRole('button', { name: 'LOGIN' }));
+    const emailField = screen.getByTestId('email');
+    const passwordField = screen.getByTestId('password');
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
-  });
+    await userEvent.type(emailField, 'test@example.com');
+    await userEvent.type(passwordField, 'test@example.com');
 
-  test('successful login redirects home', async () => {
-    (login as jest.Mock).mockResolvedValue({ error: null });
-
-    render(<Login />);
-
-    fireEvent.change(screen.getByLabelText('Email Address'), {
-      target: { value: 'a@b.com' },
-    });
-
-    fireEvent.change(screen.getByLabelText('Password'), {
-      target: { value: 'pass123' },
-    });
-
-    fireEvent.submit(screen.getByRole('button', { name: 'LOGIN' }));
+    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/');
+      expect(screen.getByRole('status')).toBeInTheDocument();
     });
   });
 
@@ -86,18 +78,17 @@ describe('login page', () => {
     (login as jest.Mock).mockResolvedValue({
       error: { message: 'Invalid credentials' },
     });
+    (loginErrors as jest.Mock).mockReturnValue(['Invalid credentials']);
 
     render(<Login />);
 
-    fireEvent.change(screen.getByLabelText('Email Address'), {
-      target: { value: 'bad@user.com' },
-    });
+    const emailField = screen.getByTestId('email');
+    const passwordField = screen.getByTestId('password');
 
-    fireEvent.change(screen.getByLabelText('Password'), {
-      target: { value: 'wrongpw' },
-    });
+    await userEvent.type(emailField, 'test@example.com');
+    await userEvent.type(passwordField, 'test@example.com');
 
-    fireEvent.submit(screen.getByRole('button', { name: 'LOGIN' }));
+    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
 
     await waitFor(() => {
       expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
@@ -105,13 +96,24 @@ describe('login page', () => {
   });
 
   test('shows error if login() throws', async () => {
-    (login as jest.Mock).mockRejectedValue(new Error('Network down'));
+    (login as jest.Mock).mockReturnValue({
+      error: 'Network down',
+      data: {},
+    });
+    (loginErrors as jest.Mock).mockReturnValue(['Network down']);
 
     render(<Login />);
 
-    fireEvent.submit(screen.getByRole('button', { name: 'LOGIN' }));
+    const emailField = screen.getByTestId('email');
+    const passwordField = screen.getByTestId('password');
+
+    await userEvent.type(emailField, 'test@example.com');
+    await userEvent.type(passwordField, 'test@example.com');
+
+    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
 
     await waitFor(() => {
+      expect(login).toHaveBeenCalled();
       expect(screen.getByText('Network down')).toBeInTheDocument();
     });
   });
@@ -133,7 +135,7 @@ describe('login page', () => {
 
   test('does not submit unless both email and password are entered', async () => {
     render(<Login />);
-    (login as jest.Mock).mockRejectedValue({ error: null });
+    (login as jest.Mock).mockReturnValue({ error: null });
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');

@@ -25,7 +25,7 @@ export default function Login() {
       <div className="w-[90vw] max-w-[inherit]">
         <FadeIn>
           <h1 className="mb-6 text-center text-3xl">LOGIN</h1>
-          {errors.length > 0 && (
+          {errors && errors.length > 0 && (
             <div className="mb-3">
               {errors.map((error, index) => (
                 <p key={index} className="text-center text-sm text-red-500">
