@@ -1,7 +1,6 @@
 # Notice: Collection of data on this site through automated means is prohibited
 # without prior written permission from Todd Agriscience, Inc. and may only be
-# conducted for the limited purpose contained in:
-# https://toddagriscience.com/automated-data-collection-terms.txt.
+# conducted for limited purposes.
 
 # --- Global Directives (for all crawlers) ---
 User-agent: *
@@ -17,67 +16,97 @@ Disallow: /*/*?*ls%3d*%3fls%3d*
 Disallow: /apple-app-site-association
 Disallow: /en-us*data=route*
 
-User-agent: Google-extended
-Crawl-delay: 1
-Allow: /*?llm=true
+User-agent: AhrefsBot
+Crawl-delay: 10
 Disallow: /admin/
-Disallow: /cdn-cgi/
-Disallow: /login/
 Disallow: /api/
+Disallow: /apple-app-site-association
+Disallow: /cdn-cgi/
+Disallow: /en-us*data=route*
+Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+
+User-agent: AhrefsSiteAudit
+Crawl-delay: 10
+Disallow: /admin/
+Disallow: /api/
 Disallow: /apple-app-site-association
+Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /login/
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+
+User-agent: AliyunSpider
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: ByteSpider
+Disallow: /
 
 User-agent: ChatGPT-user
 Crawl-delay: 1
 Allow: /*?llm=true
 Disallow: /admin/
-Disallow: /cdn-cgi/
-Disallow: /login/
 Disallow: /api/
+Disallow: /apple-app-site-association
+Disallow: /cdn-cgi/
+Disallow: /en-us*data=route*
+Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
-Disallow: /apple-app-site-association
-Disallow: /en-us*data=route*
 
-User-agent: Nutch
+User-agent: CCBot
 Disallow: /
 
-User-agent: AhrefsBot
-Crawl-delay: 10
+User-agent: Google-extended
+Crawl-delay: 1
+Allow: /*?llm=true
 Disallow: /admin/
-Disallow: /cdn-cgi/
-Disallow: /login/
 Disallow: /api/
+Disallow: /apple-app-site-association
+Disallow: /cdn-cgi/
+Disallow: /en-us*data=route*
+Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
-Disallow: /apple-app-site-association
-Disallow: /en-us*data=route*
 
-User-agent: AhrefsSiteAudit
-Crawl-delay: 10
-Disallow: /admin/
-Disallow: /cdn-cgi/
-Disallow: /login/
-Disallow: /api/
-Disallow: /*/*?*ls=*&ls=*
-Disallow: /*/*?*ls%3D*%3Fls%3D*
-Disallow: /*/*?*ls%3d*%3fls%3d*
-Disallow: /apple-app-site-association
-Disallow: /en-us*data=route*
+User-agent: Huawei
+Disallow: /
+
+User-agent: HuaweiSymantecSpider
+Disallow: /
 
 User-agent: MJ12bot
 Crawl-Delay: 10
 
+User-agent: Nutch
+Disallow: /
+
+User-agent: Pinterestbot
+Crawl-delay: 1
+
+User-agent: Sogou spider
+Disallow: /
+
 User-agent: Twitterbot
 Allow: /opengraph-image.png
 
-User-agent: Pinterest
-Crawl-delay: 1
+User-agent: YisouSpider
+Disallow: /
+
+User-agent: YodaoBot
+Disallow: /
+
+User-agent: 360Spider
+Disallow: /
 
 # --- Sitemap Locations ---
 Sitemap: https://toddagriscience.com/sitemap.xml
