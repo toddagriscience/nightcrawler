@@ -5,4 +5,6 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export { loginSchema };
+const emailSchema = z.email('Invalid email address');
+
+export { loginSchema, emailSchema };
