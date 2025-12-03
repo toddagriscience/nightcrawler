@@ -1,5 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+import LogoutButton from '@/components/common/utils/logout-button/logout-button';
+
 /**
  * Dashboard page - served at "/" route for authenticated users
  * This page is protected by middleware and only accessible to authenticated users
@@ -17,6 +19,7 @@ export default function DashboardPage() {
             </h1>
           </header>
           <div className="text-muted-foreground text-sm">Coming soon...</div>
+          <LogoutButton />
         </div>
       </div>
     </div>
