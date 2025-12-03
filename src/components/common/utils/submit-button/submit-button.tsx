@@ -16,7 +16,7 @@ export default function SubmitButton({
 }: {
   buttonText: string;
   className?: string;
-  onClickFunction?: (...args: unknown[]) => unknown;
+  onClickFunction?(...args: unknown[]): unknown;
 }) {
   const { pending } = useFormStatus();
 

@@ -69,6 +69,11 @@ export async function logout(): Promise<LogoutResponse> {
 
       if (error) {
         logger.warn(`Something went wrong when logging out the user: ${error}`);
+        return {
+          error: new AuthError(
+            `Something went wrong when logging out the user: ${error}`
+          ),
+        };
       }
     }
   } catch (error) {
