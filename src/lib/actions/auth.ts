@@ -4,7 +4,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import logger from '../logger';
-import LoginResponse from '../types/auth';
+import { LoginResponse } from '../types/auth';
 import { loginSchema } from '../zod-schemas/auth';
 import { z } from 'zod';
 
