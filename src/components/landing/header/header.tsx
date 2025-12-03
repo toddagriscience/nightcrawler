@@ -15,6 +15,7 @@ import { Menu, X } from 'lucide-react';
 import { useTheme } from '@/context/theme/ThemeContext';
 import { HeaderProps } from './types/header';
 import { headerTheme } from './theme/header';
+import NextLink from 'next/link';
 
 /**
  * Header component
@@ -268,13 +269,14 @@ const Header: React.FC<HeaderProps> = ({
 
             {/* Right: Login */}
             <div className="flex items-center gap-4">
-              <Link
-                href="./login"
+              <NextLink
+                locale={undefined}
+                href="/login"
                 className="tracking-tight rounded-md p-1 footer-underline transition-all duration-300 ease-in-out items-center flex cursor-pointer"
                 data-testid="login-link"
               >
                 {t('navigation.logIn')}
-              </Link>
+              </NextLink>
             </div>
           </div>
 
