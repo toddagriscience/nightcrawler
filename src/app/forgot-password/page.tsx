@@ -21,49 +21,65 @@ export default function ForgotPassword() {
   const errors = state ? loginErrors(state) : null;
 
   return (
-    <div>
-      <FadeIn>
-        {errors === null && (
-          <form action={resetPasswordAction}>
-            <FieldSet>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="email">Email Address</FieldLabel>
-                  <Input
-                    className="focus:ring-0!"
-                    placeholder="Email Address"
-                    id="email"
-                    data-testid="email"
-                    name="email"
-                    type="email"
-                    required
-                  />
-                </Field>
-                <SubmitButton
-                  buttonText="Reset Password"
-                  onClickFunction={() => {}}
-                />
-              </FieldGroup>
-            </FieldSet>
-          </form>
-        )}
-
-        {Array.isArray(errors) && errors.length === 0 && (
-          <p className="text-center text-sm text-green-600 mt-3">
-            Thank you — please check your email for a password reset link.
-          </p>
-        )}
-
-        {Array.isArray(errors) && errors.length > 0 && (
-          <div className="mb-3">
-            {errors.map((error, index) => (
-              <p key={index} className="text-center text-sm text-red-500">
-                {error}
+    <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
+      <div className="w-[90vw] max-w-[inherit]">
+        <FadeIn>
+          {Array.isArray(errors) && errors.length === 0 && (
+            <>
+              <h1 className="mb-6 text-center text-3xl">RESET PASSWORD</h1>
+              <p className="text-center mb-6">
+                We&apos;ve sent an email with the information needed to reset
+                your password.
               </p>
-            ))}
-          </div>
-        )}
-      </FadeIn>
+              <p>
+                If you haven&apos;t received the email in a few minutes, check
+                your junk mail and ensure you entered the correct email.
+              </p>
+            </>
+          )}
+
+          {(!errors || errors.length > 0) && (
+            <>
+              <h1 className="mb-6 text-center text-3xl">RESET PASSWORD</h1>
+              <p className="text-center mb-6">
+                Please provide your account email to receive a password reset
+                link.
+              </p>
+              {errors && errors.length > 0 && (
+                <div className="mb-3">
+                  {errors.map((error, index) => (
+                    <p key={index} className="text-center text-sm text-red-500">
+                      {error}
+                    </p>
+                  ))}
+                </div>
+              )}
+              <form action={resetPasswordAction}>
+                <FieldSet>
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                      <Input
+                        className="focus:ring-0!"
+                        placeholder="Email Address"
+                        id="email"
+                        data-testid="email"
+                        name="email"
+                        type="email"
+                        required
+                      />
+                    </Field>
+                    <SubmitButton
+                      buttonText="SUBMIT"
+                      onClickFunction={() => {}}
+                    />
+                  </FieldGroup>
+                </FieldSet>
+              </form>
+            </>
+          )}
+        </FadeIn>
+      </div>
     </div>
   );
 }
