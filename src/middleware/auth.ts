@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
 /** Any protected URLs */
-const protectedUrls = ['/', '/accounts/reset-password'];
+const protectedUrls = ['/', '/account/reset-password'];
 
 /**
  * Handle authentication-based routing. If the user is:
