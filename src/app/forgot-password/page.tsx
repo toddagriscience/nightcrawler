@@ -29,11 +29,9 @@ export default function ForgotPassword() {
               <h1 className="mb-6 text-center text-3xl">RESET PASSWORD</h1>
               <p className="text-center mb-6">
                 We&apos;ve sent an email with the information needed to reset
-                your password.
-              </p>
-              <p>
-                If you haven&apos;t received the email in a few minutes, check
-                your junk mail and ensure you entered the correct email.
+                your password. If you haven&apos;t received the email in a few
+                minutes, check your junk mail and ensure you entered the correct
+                email.
               </p>
             </>
           )}

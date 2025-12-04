@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  redirectTo.pathname = '/auth/auth-code-error';
+  redirectTo.pathname = '/auth/error/auth-code';
   return NextResponse.redirect(redirectTo);
 }
