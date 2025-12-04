@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
 /** Any protected URLs */
-const protectedUrls = ['/'];
+const protectedUrls = ['/', '/accounts/reset-password'];
 
 /**
  * Handle authentication-based routing. If the user is:
@@ -14,8 +14,6 @@ const protectedUrls = ['/'];
  * - Unauthenticated and navigating to a non-protected route (marketing site route): Allow them through
  *
  * Note that the "dashboard" is located at '/' and is consequently uninternationalized. The marketing site is the only piece of the site that is internationalized.
- *
- * Routes with no internationalization, ex. `/somewhere`, are treated as protected routes, and in the given example, will redirect to `/en` + `/somewhere` for unauthenticated users. HOWEVER, this is handled by other pieces of middleware.
  *
  * @param {NextRequest} request - The request object
  * @returns {NextResponse | null} - The response object

@@ -1,22 +1,20 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
 import { FadeIn } from '@/components/common';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { sendResetPasswordEmail } from '@/lib/actions/auth';
+import { updateUser } from '@/lib/actions/auth';
 import { loginErrors } from '@/lib/auth';
 import { useActionState } from 'react';
 
-/** The forgot password page. Sends an email via Supabase that links to `/accounts/reset-password` after verifying with an OTP code (again, all handled by Supabase).
+/** Reset password page, protected by middleware.
  *
- * @returns {JSX.Element} - The ForgotPassword page*/
-export default function ForgotPassword() {
-  const [state, resetPasswordAction] = useActionState(
-    sendResetPasswordEmail,
-    null
-  );
+ * @returns {JSX.Element} - The password reset page*/
+export default function ResetPassword() {
+  const [state, resetPasswordAction] = useActionState(updateUser, null);
 
   const errors = state ? loginErrors(state) : null;
 
@@ -28,29 +26,40 @@ export default function ForgotPassword() {
             <FieldSet>
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                  <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
                   <Input
                     className="focus:ring-0!"
-                    placeholder="Email Address"
-                    id="email"
-                    data-testid="email"
-                    name="email"
-                    type="email"
+                    placeholder="New Password"
+                    id="newPassword"
+                    data-testid="new-password"
+                    name="newPassword"
+                    type="password"
                     required
                   />
                 </Field>
-                <SubmitButton
-                  buttonText="Reset Password"
-                  onClickFunction={() => {}}
-                />
+                <Field>
+                  <FieldLabel htmlFor="confirmNewPassword">
+                    Old Password
+                  </FieldLabel>
+                  <Input
+                    className="focus:ring-0!"
+                    placeholder="Confirm New Password"
+                    id="confirmNewPassword"
+                    data-testid="confirm-new-password"
+                    name="confirmNewPassword"
+                    type="password"
+                    required
+                  />
+                </Field>
               </FieldGroup>
             </FieldSet>
+            <SubmitButton buttonText="Update Password" />
           </form>
         )}
 
         {Array.isArray(errors) && errors.length === 0 && (
           <p className="text-center text-sm text-green-600 mt-3">
-            Thank you — please check your email for a password reset link.
+            Password updated succesfully!
           </p>
         )}
 

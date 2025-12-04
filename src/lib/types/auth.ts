@@ -22,3 +22,19 @@ export interface LoginResponse {
 export interface LogoutResponse {
   error: AuthError | null;
 }
+
+/** Response from the `resetPassword()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
+ *
+ * @property {AuthError | ZodError | string | null} error - Could be a generic error type from `@supabase/supabase-js` that extends `Error`, A `ZodError` from an invalid auth request, a String error from everything going totally wrong, or null if no errors happened.
+ * */
+export interface SendResetPasswordEmailResponse {
+  error: AuthError | ZodError | string | null;
+}
+
+/** Response from the `SendResetPasswordEmail()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
+ *
+ * @property {AuthError | ZodError | string | null} error - Could be a generic error type from `@supabase/supabase-js` that extends `Error`, A `ZodError` from an invalid auth request, a String error from everything going totally wrong, or null if no errors happened.
+ * */
+export interface UpdateUserResponse {
+  error: AuthError | ZodError | string | null;
+}
