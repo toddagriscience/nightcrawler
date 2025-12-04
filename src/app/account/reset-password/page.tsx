@@ -3,76 +3,139 @@
 'use client';
 
 import { FadeIn } from '@/components/common';
+import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
 import { loginErrors } from '@/lib/auth';
-import { useActionState } from 'react';
+import { redirect } from 'next/navigation';
+import { useActionState, useState } from 'react';
 
 /** Reset password page, protected by middleware.
  *
  * @returns {JSX.Element} - The password reset page*/
 export default function ResetPassword() {
   const [state, resetPasswordAction] = useActionState(updateUser, null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  // These two states only exists for the sake of UX (see PasswordChecklist). It should not be utilized in form validation.
+  const [password, setPassword] = useState('');
+  const [confirmationPassword, setConfirmationPassword] = useState('');
 
   const errors = state ? loginErrors(state) : null;
 
   return (
-    <div>
-      <FadeIn>
-        {errors === null && (
-          <form action={resetPasswordAction}>
-            <FieldSet>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
-                  <Input
-                    className="focus:ring-0!"
-                    placeholder="New Password"
-                    id="newPassword"
-                    data-testid="new-password"
-                    name="newPassword"
-                    type="password"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="confirmNewPassword">
-                    Old Password
-                  </FieldLabel>
-                  <Input
-                    className="focus:ring-0!"
-                    placeholder="Confirm New Password"
-                    id="confirmNewPassword"
-                    data-testid="confirm-new-password"
-                    name="confirmNewPassword"
-                    type="password"
-                    required
-                  />
-                </Field>
-              </FieldGroup>
-            </FieldSet>
-            <SubmitButton buttonText="Update Password" />
-          </form>
-        )}
-
-        {Array.isArray(errors) && errors.length === 0 && (
-          <p className="text-center text-sm text-green-600 mt-3">
-            Password updated succesfully!
-          </p>
-        )}
-
-        {Array.isArray(errors) && errors.length > 0 && (
-          <div className="mb-3">
-            {errors.map((error, index) => (
-              <p key={index} className="text-center text-sm text-red-500">
-                {error}
+    <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
+      <div className="w-[90vw] max-w-[inherit]">
+        <FadeIn>
+          {Array.isArray(errors) && errors.length === 0 && (
+            <>
+              <h1 className="mb-6 text-center text-3xl">
+                PASSWORD RESET SUCCESFULL
+              </h1>
+              <p className="text-center mb-6">
+                Your password has been updated successfully.
               </p>
-            ))}
-          </div>
-        )}
-      </FadeIn>
+              <SubmitButton
+                buttonText="DASHBOARD"
+                onClickFunction={() => redirect('/')}
+              ></SubmitButton>
+            </>
+          )}
+
+          {(!errors || errors.length > 0) && (
+            <>
+              <h1 className="mb-6 text-center text-3xl">RESET PASSWORD</h1>
+
+              {errors && errors.length > 0 && (
+                <div className="mb-3">
+                  {errors.map((error, index) => (
+                    <p key={index} className="text-center text-sm text-red-500">
+                      {error}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              <form action={resetPasswordAction}>
+                <FieldSet className="mb-8">
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor="newPassword">
+                        New Password
+                      </FieldLabel>
+                      <Input
+                        className="focus:ring-0!"
+                        placeholder="New Password"
+                        id="newPassword"
+                        data-testid="new-password"
+                        name="newPassword"
+                        type={showPassword ? 'text' : 'password'}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                    </Field>
+
+                    <Field>
+                      <FieldLabel htmlFor="confirmNewPassword">
+                        Confirm New Password
+                      </FieldLabel>
+                      <Input
+                        className="focus:ring-0!"
+                        placeholder="Confirm New Password"
+                        id="confirmNewPassword"
+                        data-testid="confirm-new-password"
+                        name="confirmNewPassword"
+                        type={showPassword ? 'text' : 'password'}
+                        onChange={(e) =>
+                          setConfirmationPassword(e.target.value)
+                        }
+                        required
+                      />
+                    </Field>
+
+                    <PasswordChecklist
+                      password={password}
+                      confirmationPassword={confirmationPassword}
+                      setIsPasswordValid={setIsPasswordValid}
+                    />
+
+                    <Field className="flex flex-row items-center justify-between">
+                      <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
+                        <Checkbox
+                          id="show-password"
+                          className="max-h-4 max-w-4 focus:ring-0!"
+                          onCheckedChange={() => setShowPassword(!showPassword)}
+                        />
+                        <FieldLabel htmlFor="show-password">
+                          Show Password
+                        </FieldLabel>
+                      </div>
+                    </Field>
+                  </FieldGroup>
+                </FieldSet>
+
+                <SubmitButton
+                  buttonText={isPasswordValid ? 'SAVE' : 'INVALID PASSWORD'}
+                  className={
+                    'mb-4 ' +
+                    (!isPasswordValid &&
+                      'bg-transparent text-black/80 border-black border-1 border-solid')
+                  }
+                />
+
+                <SubmitButton
+                  buttonText="CANCEL"
+                  onClickFunction={() => redirect('/')}
+                />
+              </form>
+            </>
+          )}
+        </FadeIn>
+      </div>
     </div>
   );
 }

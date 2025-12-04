@@ -38,3 +38,21 @@ export interface SendResetPasswordEmailResponse {
 export interface UpdateUserResponse {
   error: AuthError | ZodError | string | null;
 }
+
+/** Password requirements for `/account/reset-password`. Supabase will also enforce everything except `isConfirmationSame` in case validation somehow fails.
+ *
+ * This is not handled by Zod for the sake of UX -- we want the user to be able to see exactly what they're missing, and Zod doesn't allow us to easily do that.
+ *
+ * @property {boolean} has8Characters - Is this password at least 8 characters?
+ * @property {boolean} hasUpperCase - Does this password have at least 1 uppercase character?
+ * @property {boolean} hasSpecialCharacter - Does this password have at least 1 special character?
+ * @property {boolean} hasNumber - Does this password have at least 1 number?
+ * @property {boolean} isConfirmationSame - Is the confirmation password the same as the new password?
+ * */
+export interface PasswordRequirements {
+  has8Characters: boolean;
+  hasUpperCase: boolean;
+  hasSpecialCharacter: boolean;
+  hasNumber: boolean;
+  isConfirmationSame: boolean;
+}
