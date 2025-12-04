@@ -13,10 +13,12 @@ export default function SubmitButton({
   buttonText,
   className = '',
   onClickFunction = () => {},
+  disabled = undefined,
 }: {
   buttonText: string;
   className?: string;
   onClickFunction?(...args: unknown[]): unknown;
+  disabled?: boolean;
 }) {
   const { pending } = useFormStatus();
 
@@ -27,7 +29,7 @@ export default function SubmitButton({
         className
       }
       type="submit"
-      disabled={pending}
+      disabled={disabled || pending}
       onClick={onClickFunction}
     >
       {pending ? <Spinner className="mx-auto w-5 h-5" /> : buttonText}

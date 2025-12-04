@@ -5,12 +5,13 @@
 import { FadeIn } from '@/components/common';
 import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { Button } from '@/components/ui';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
 import { loginErrors } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useActionState, useState } from 'react';
 
 /** Reset password page, protected by middleware.
@@ -20,6 +21,7 @@ export default function ResetPassword() {
   const [state, resetPasswordAction] = useActionState(updateUser, null);
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const router = useRouter();
 
   // These two states only exists for the sake of UX (see PasswordChecklist). It should not be utilized in form validation.
   const [password, setPassword] = useState('');
@@ -120,17 +122,21 @@ export default function ResetPassword() {
 
                 <SubmitButton
                   buttonText={isPasswordValid ? 'SAVE' : 'INVALID PASSWORD'}
+                  disabled={!isPasswordValid}
                   className={
                     'mb-4 ' +
                     (!isPasswordValid &&
-                      'bg-transparent text-black/80 border-black border-1 border-solid')
+                      'bg-transparent text-black/80 border-black border-1 border-solid hover:bg-black/10')
                   }
                 />
 
-                <SubmitButton
-                  buttonText="CANCEL"
-                  onClickFunction={() => redirect('/')}
-                />
+                <Button
+                  onClick={() => router.push('/')}
+                  className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                  type="button"
+                >
+                  CANCEL
+                </Button>
               </form>
             </>
           )}
