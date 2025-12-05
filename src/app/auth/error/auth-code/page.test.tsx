@@ -17,6 +17,6 @@ describe('AuthCodeError', () => {
   test('should render the HOME button', () => {
     render(<AuthCodeError />);
 
-    expect(screen.getByRole('button', { name: /HOME/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /RETRY/i })).toBeInTheDocument();
   });
 });
