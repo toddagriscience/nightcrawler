@@ -16,8 +16,8 @@ export default function AuthCodeError() {
           There was an error with your authentication code.
         </p>
         <SubmitButton
-          buttonText="HOME"
-          onClickFunction={() => redirect('/en')}
+          buttonText="RETRY"
+          onClickFunction={() => redirect('/forgot-password')}
         />
       </div>
     </div>
