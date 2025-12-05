@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Logic in this function is primarily from https://supabase.com/docs/guides/auth/passwords?queryGroups=flow&flow=pkce&queryGroups=framework&framework=nextjs#resetting-a-password
+ *
+ * Because the logic in this function is a near-exact copy of the logic from Supabase, it will not be tested.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

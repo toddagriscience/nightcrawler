@@ -27,4 +27,16 @@ describe('submit button', () => {
       expect(testFn).toHaveBeenCalled();
     });
   });
+  it('disables when disabled', () => {
+    const testFn = jest.fn();
+    render(
+      <SubmitButton
+        buttonText="TEST"
+        onClickFunction={testFn}
+        disabled={true}
+      />
+    );
+
+    expect(screen.getByText('TEST')).toBeDisabled();
+  });
 });

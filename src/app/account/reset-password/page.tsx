@@ -11,7 +11,7 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
 import { loginErrors } from '@/lib/auth';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useActionState, useState } from 'react';
 
 /** Reset password page, protected by middleware.
@@ -43,7 +43,7 @@ export default function ResetPassword() {
               </p>
               <SubmitButton
                 buttonText="DASHBOARD"
-                onClickFunction={() => redirect('/')}
+                onClickFunction={() => router.push('/')}
               ></SubmitButton>
             </>
           )}
@@ -108,6 +108,7 @@ export default function ResetPassword() {
                     <Field className="flex flex-row items-center justify-between">
                       <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
                         <Checkbox
+                          data-testid="show-password-checkbox"
                           id="show-password"
                           className="max-h-4 max-w-4 focus:ring-0!"
                           onCheckedChange={() => setShowPassword(!showPassword)}
