@@ -1,7 +1,12 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import logger from './logger';
-import { LoginResponse, LogoutResponse } from './types/auth';
+import {
+  LoginResponse,
+  LogoutResponse,
+  SendResetPasswordEmailResponse,
+  UpdateUserResponse,
+} from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
@@ -106,7 +111,13 @@ export async function checkAuthenticated(): Promise<boolean> {
  * @param state The current form action state
  * @returns A list of all the errors
  */
-export function loginErrors(state: LoginResponse | null): string[] {
+export function loginErrors(
+  state:
+    | LoginResponse
+    | null
+    | SendResetPasswordEmailResponse
+    | UpdateUserResponse
+): string[] {
   if (!state?.error) return [];
   if (typeof state.error === 'string') return [state.error];
   if (state.error instanceof Error) return [state.error.message];
