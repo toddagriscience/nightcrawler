@@ -108,13 +108,23 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/:path*', // Use a custom path like /ingest or /ph
+        destination: `${process.env.NEXT_PUBLIC_POSTHOG_HOST}/:path*`,
+      },
+    ];
+  },
+
+  // This can be important if PostHog's API endpoints use trailing slashes.
+  skipTrailingSlashRedirect: true,
+
   // Disable powered-by header to reduce information disclosure
   poweredByHeader: false,
 
   // Enable compression for better performance
   compress: true,
-
-  // Disable X-Powered-By header
 };
 
 export default withNextIntl(nextConfig);
