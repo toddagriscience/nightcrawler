@@ -113,14 +113,9 @@ export default async function LocaleLayout({
     return (
       <NextIntlClientProvider messages={messages}>
         <SmoothScroll>
-          <ThemeProvider>
-            <ThemeReset />
-            <Header />
-            <FadeIn>
-              <PostHogProvider>{children}</PostHogProvider>
-            </FadeIn>
-            <Footer />
-          </ThemeProvider>
+          <Header />
+          <FadeIn>{children}</FadeIn>
+          <Footer />
         </SmoothScroll>
       </NextIntlClientProvider>
     );
