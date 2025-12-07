@@ -122,6 +122,7 @@ const Header: React.FC<HeaderProps> = ({
     <header
       className="fixed top-0 z-40 w-full"
       data-theme={isDark ? 'dark' : 'light'}
+      role="banner"
     >
       <div className="max-w-[107rem] mx-auto mt-3 px-4 sm:px-6 lg:px-8">
         <motion.div
