@@ -1,6 +1,14 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+import type { Metadata } from 'next';
 import LogoutButton from '@/components/common/utils/logout-button/logout-button';
+
+/**
+ * Dashboard homepage metadata - uses specific title without template
+ */
+export const metadata: Metadata = {
+  title: 'Home | Todd',
+};
 
 /**
  * Dashboard page - served at "/" route for authenticated users

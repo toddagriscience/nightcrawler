@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Accessibility | Todd',
+  title: 'Accessibility',
 };
 
 /**

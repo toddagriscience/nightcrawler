@@ -33,8 +33,8 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: t('title'),
-      template: `%s | ${t('title')}`,
+      default: 'Todd United States',
+      template: '%s | Todd United States',
     },
     description: t('description'),
     metadataBase: new URL(env.baseUrl),

@@ -9,7 +9,7 @@ import ValuesCard from './components/values-card';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Who We Are | Todd',
+  title: 'Who We Are',
 };
 
 /**
