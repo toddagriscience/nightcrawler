@@ -1,39 +1,47 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export default function applyNonce(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const isDev = process.env.NODE_ENV === 'development';
 
-  const cspHeader = [
-    "default-src 'self'", // Only allow resources from same origin
-    `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https://*.posthog.com https://challenges.cloudflare.com`,
-    `style-src 'self' 'nonce-${nonce}' https://*.posthog.com`, // Allow inline styles for CSS-in-JS
-    "img-src 'self' blob: data: https://*.posthog.com", // Allow images from self, blob URLs, and data URLs
-    "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
-    "connect-src 'self' https://*.posthog.com https://*.supabase.co", // Allow PostHog analytics in cookieless mode
-    "media-src 'self' https://*.posthog.com", // Restrict media sources
-    "object-src 'none'", // Block object/embed/applet
-    "base-uri 'self'", // Restrict base tag URLs
-    "form-action 'self'", // Restrict form submissions
-    "frame-ancestors 'none'", // Prevent embedding in frames
-    'frame-src https://challenges.cloudflare.com',
-    'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
-  ].join('; ');
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'nonce-${nonce}' ${isDev ? "'unsafe-eval'" : ''} 'strict-dynamic' https://*.posthog.com https://challenges.cloudflare.com;
+    style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`} https://*.posthog.com;
+    img-src 'self' blob: data: https://*.posthog.com;
+    font-src 'self' https://*.posthog.com;
+    media-src 'self' https://*.posthog.com;
+    connect-src 'self' https://*.posthog.com https://*.supabase.co;
+    object-src 'none';
+    frame-src https://challenges.cloudflare.com;
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+  `;
 
   // Replace newline characters and spaces
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  const newRequestHeaders = new Headers(request.headers);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
 
-  // Set the nonce and CSP on the *REQUEST* headers
-  newRequestHeaders.set('x-nonce', nonce);
-  newRequestHeaders.set(
+  requestHeaders.set(
     'Content-Security-Policy',
     contentSecurityPolicyHeaderValue
   );
 
-  return new NextRequest(request, {
-    headers: newRequestHeaders,
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
   });
+  response.headers.set(
+    'Content-Security-Policy',
+    contentSecurityPolicyHeaderValue
+  );
+
+  return response;
 }

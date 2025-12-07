@@ -4,6 +4,7 @@ import { routing, SUPPORTED_LOCALES } from '@/i18n/config';
 import { Locale } from 'next-intl';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import applyNonce from './nonce';
 
 /**
  * Next-intl middleware instance
@@ -23,6 +24,8 @@ export function handleI18nMiddleware(
 ): NextResponse {
   const { pathname } = request.nextUrl;
 
+  const defaultResponse = applyNonce(request);
+
   if (!isAuthenticated) {
     // For root path, use intl middleware (it will redirect / to /en)
     if (pathname === '/') {
@@ -31,7 +34,7 @@ export function handleI18nMiddleware(
 
     // For paths that already have locale, let them through normally
     if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
-      return NextResponse.next();
+      return defaultResponse;
     }
 
     // For paths without locale (like /who-we-are, /no-page-here),
@@ -41,7 +44,7 @@ export function handleI18nMiddleware(
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return defaultResponse;
 }
 
 /**

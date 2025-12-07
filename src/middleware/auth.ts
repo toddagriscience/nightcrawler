@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import applyNonce from './nonce';
 
 /** Any protected URLs */
 const protectedUrls = ['/', '/account/reset-password'];
@@ -23,9 +24,7 @@ export async function handleAuthRouting(
 ): Promise<NextResponse | null> {
   const { pathname } = request.nextUrl;
 
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  let supabaseResponse = applyNonce(request);
 
   const supabase = createServerClient(
     `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID!}.supabase.co`,

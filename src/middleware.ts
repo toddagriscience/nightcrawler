@@ -8,7 +8,6 @@ import {
   hasGPCEnabled,
 } from './middleware/export';
 import { handleAuthRouting } from './middleware/auth';
-import applyNonce from './middleware/nonce';
 
 /**
  * Middleware for internationalization, authorization, and privacy controls
@@ -20,22 +19,20 @@ export default async function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
-  const nonceApplied = applyNonce(request);
-
   // Handle authentication-based routing
-  const authRedirect = await handleAuthRouting(nonceApplied);
+  const authRedirect = await handleAuthRouting(request);
   if (authRedirect) {
     return authRedirect;
   }
 
   // Run the internationalization middleware for unauthenticated users only
-  const intlResponse = handleI18nMiddleware(nonceApplied, false);
+  const intlResponse = handleI18nMiddleware(request, false);
 
   // Ensure we have a NextResponse with proper headers and cookies properties
   const response = ensureNextResponse(intlResponse);
 
   // Apply privacy controls based on GPC status
-  return applyPrivacyControls(nonceApplied, response, gpcEnabled);
+  return applyPrivacyControls(request, response, gpcEnabled);
 }
 
 export const config = {
@@ -50,6 +47,12 @@ export const config = {
      * - images (static images)
      * - Any file with extension (like .jpg, .png, .js, .css, etc.)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\..*).*)',
+    {
+      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
   ],
 };
