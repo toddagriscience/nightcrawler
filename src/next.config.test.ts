@@ -72,7 +72,6 @@ describe('Next.js Security Headers Configuration', () => {
 
     const policy = permissionsHeader!.value;
     expect(policy).toContain('camera=()'); // Disable camera
-    expect(policy).toContain('geolocation=()'); // Disable geolocation
     expect(policy).toContain('microphone=()'); // Disable microphone
     expect(policy).toContain('interest-cohort=()'); // Disable FLoC
     expect(policy).toContain('browsing-topics=()'); // Disable Topics API

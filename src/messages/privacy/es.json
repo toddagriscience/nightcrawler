@@ -137,7 +137,7 @@
         "geolocation": {
           "title": "Geolocation data",
           "description": "Physical location or movements.",
-          "collected": "NO"
+          "collected": "YES"
         },
         "sensoryData": {
           "title": "Sensory data",

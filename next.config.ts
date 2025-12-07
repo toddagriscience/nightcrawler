@@ -112,7 +112,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/ingest/:path*', // Use a custom path like /ingest or /ph
-        destination: `${process.env.NEXT_PUBLIC_POSTHOG_HOST}/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'}/:path*`,
       },
     ];
   },
