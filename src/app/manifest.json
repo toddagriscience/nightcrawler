@@ -1,7 +1,7 @@
 {
-  "name": "Todd Agriscience - Sustainable Agriculture Solutions",
-  "short_name": "Todd Agriscience",
-  "description": "Leading the future of sustainable agriculture with innovative farming practices and technology.",
+  "name": "Todd | Global Leader in Sustainable Agriculture",
+  "short_name": "Todd",
+  "description": "Todd combines deep experience in regenerative agriculture, farm management and engaging consumers",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F8F5EE",
@@ -48,9 +48,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Who We Are",
-      "short_name": "About",
-      "description": "Learn about our mission, vision, and values",
+      "name": "Who We Are | Todd United States",
+      "short_name": "Who We Are",
+      "description": "We research, explore and innovate deeply",
       "url": "/who-we-are",
       "icons": [
         {
