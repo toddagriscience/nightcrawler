@@ -32,4 +32,7 @@ NEXT_TELEMETRY_DISABLED=1
 # Posthog Analytics, both of these keys are appropriate to be public
 NEXT_PUBLIC_POSTHOG_KEY=phc_dNQKsvNxp8t3XYid8xYidmEhzZxBXMqIAwJe0v0VSY8
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+
+# Cloudflare, real key, appropriate to be public
+NEXT_PUBLIC_CLOUDFLARE_SITEKEY="0x4AAAAAACEYfDvRCc8Fkc6C"
 ```

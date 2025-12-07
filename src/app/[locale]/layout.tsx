@@ -12,6 +12,11 @@ import { FadeIn, SmoothScroll, ThemeReset } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { PostHogProvider } from '../providers';
+import { Turnstile } from '@marsidev/react-turnstile';
+
+/** Cloudflare sitekey. This will likely never be changed and is completely appropriate to be public. The default key, if NEXT_PUBLIC_CLOUDFLARE_SITEKEY cannot be found, is invisible and always passes. */
+const cloudflareSitekey =
+  process.env.NEXT_PUBLIC_CLOUDFLARE_SITEKEY ?? '1x00000000000000000000BB';
 
 /**
  * Generate metadata for each locale
@@ -111,18 +116,20 @@ export default async function LocaleLayout({
     const messages = await getMessages({ locale });
 
     return (
-      <NextIntlClientProvider messages={messages}>
-        <SmoothScroll>
-          <ThemeProvider>
-            <ThemeReset />
-            <Header />
-            <FadeIn>
-              <PostHogProvider>{children}</PostHogProvider>
-            </FadeIn>
-            <Footer />
-          </ThemeProvider>
-        </SmoothScroll>
-      </NextIntlClientProvider>
+      <Turnstile siteKey={cloudflareSitekey}>
+        <NextIntlClientProvider messages={messages}>
+          <SmoothScroll>
+            <ThemeProvider>
+              <ThemeReset />
+              <Header />
+              <FadeIn>
+                <PostHogProvider>{children}</PostHogProvider>
+              </FadeIn>
+              <Footer />
+            </ThemeProvider>
+          </SmoothScroll>
+        </NextIntlClientProvider>
+      </Turnstile>
     );
   } catch (error) {
     console.error('❌ [layout.tsx] Error in LocaleLayout:', error);

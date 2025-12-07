@@ -6,6 +6,7 @@
 
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { Turnstile } from '@marsidev/react-turnstile';
 import LocaleLayout from './layout';
 
 // Mock dependencies
@@ -53,6 +54,10 @@ jest.mock('@/components/landing', () => ({
 
 jest.mock('@/context/theme/ThemeContext', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+jest.mock('@marsidev/react-turnstile', () => ({
+  Turnstile: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 describe('LocaleLayout', () => {
