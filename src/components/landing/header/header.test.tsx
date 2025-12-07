@@ -60,7 +60,7 @@ describe('Header', () => {
     // Check login link
     const loginLink = screen.getByTestId('login-link');
     expect(loginLink).toBeInTheDocument();
-    expect(loginLink).toHaveAttribute('href', './login');
+    expect(loginLink).toHaveAttribute('href', '/login');
   });
 
   it('renders normally without isLoading prop', () => {

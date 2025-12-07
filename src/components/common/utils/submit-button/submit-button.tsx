@@ -1,4 +1,5 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
+'use client';
 import { Button } from '@/components/ui';
 import { Spinner } from '@/components/ui/spinner';
 import { useFormStatus } from 'react-dom';
@@ -11,9 +12,13 @@ import { useFormStatus } from 'react-dom';
 export default function SubmitButton({
   buttonText,
   className = '',
+  onClickFunction = () => {},
+  disabled = undefined,
 }: {
   buttonText: string;
   className?: string;
+  onClickFunction?(...args: unknown[]): unknown;
+  disabled?: boolean;
 }) {
   const { pending } = useFormStatus();
 
@@ -24,7 +29,8 @@ export default function SubmitButton({
         className
       }
       type="submit"
-      disabled={pending}
+      disabled={disabled || pending}
+      onClick={onClickFunction}
     >
       {pending ? <Spinner className="mx-auto w-5 h-5" /> : buttonText}
     </Button>

@@ -1,9 +1,15 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import logger from './logger';
-import LoginResponse from './types/auth';
+import {
+  LoginResponse,
+  LogoutResponse,
+  SendResetPasswordEmailResponse,
+  UpdateUserResponse,
+} from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
+import { redirect } from 'next/navigation';
 
 /** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -20,7 +26,6 @@ import { AuthError } from '@supabase/supabase-js';
  * Note that the authentication process required to load a page and the authentication process required to fetch data are two completely different processes.
  *
  * The following resource from NextJS may be useful in understanding how we handle authentication: https://nextjs.org/docs/app/guides/authentication#authorization
- *
  */
 
 /**
@@ -28,7 +33,7 @@ import { AuthError } from '@supabase/supabase-js';
  *
  * @param email The email of the user
  * @param password The password of the user
- * @returns {object} - The object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
+ * @returns {Promise<LoginResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
  * */
 export async function login(
   email: string,
@@ -56,6 +61,38 @@ export async function login(
   };
 }
 
+/** ONLY USE ON CLIENT SIDE! Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
+ *
+ * @returns {Promise<LogoutResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
+export async function logout(): Promise<LogoutResponse> {
+  try {
+    const client = createBrowserClient();
+    const isAuthenticated = await checkAuthenticated();
+
+    if (isAuthenticated) {
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        logger.warn(`Something went wrong when logging out the user: ${error}`);
+        return {
+          error: new AuthError(
+            `Something went wrong when logging out the user: ${error}`
+          ),
+        };
+      }
+    }
+  } catch (error) {
+    logger.warn(`Something went wrong when logging out the user: ${error}`);
+    return {
+      error: new AuthError(
+        `Something went wrong when logging out the user: ${error}`
+      ),
+    };
+  }
+
+  redirect('/');
+}
+
 /**
  * ONLY USE ON CLIENT SIDE! Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
@@ -74,7 +111,13 @@ export async function checkAuthenticated(): Promise<boolean> {
  * @param state The current form action state
  * @returns A list of all the errors
  */
-export function loginErrors(state: LoginResponse | null): string[] {
+export function loginErrors(
+  state:
+    | LoginResponse
+    | null
+    | SendResetPasswordEmailResponse
+    | UpdateUserResponse
+): string[] {
   if (!state?.error) return [];
   if (typeof state.error === 'string') return [state.error];
   if (state.error instanceof Error) return [state.error.message];
