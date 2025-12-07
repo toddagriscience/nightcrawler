@@ -50,9 +50,9 @@ const securityHeaders = [
   {
     key: 'Permissions-Policy',
     value: [
+      'geolocation=*', // Enable geolocation for all origins
       'accelerometer=()', // Disable accelerometer access
       'camera=()', // Disable camera access
-      'geolocation=()', // Disable geolocation
       'gyroscope=()', // Disable gyroscope
       'magnetometer=()', // Disable magnetometer
       'microphone=()', // Disable microphone
