@@ -1,9 +1,20 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
+import type { Metadata } from 'next';
 import { ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';
 import { PostHogProvider } from './providers';
 import { fontVariables } from '@/lib/fonts';
+
+/**
+ * Root layout metadata for pages outside [locale] directory
+ */
+export const metadata: Metadata = {
+  title: {
+    default: 'Todd United States',
+    template: '%s | Todd United States',
+  },
+};
 
 /**
  * Root layout for the app

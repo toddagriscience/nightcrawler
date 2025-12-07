@@ -3,7 +3,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms | Todd',
+  title: 'Terms',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

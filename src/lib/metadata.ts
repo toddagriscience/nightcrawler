@@ -13,7 +13,6 @@ const siteConfig = {
     'Todd Agriscience is a first-generation generative agriculture firm.',
   url: 'https://www.toddagriscience.com',
   ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
-  // Using same image for Twitter, LinkedIn, and other social platforms
   twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
   linkedinImage: 'https://www.toddagriscience.com/opengraph-image.png',
   themeColor: '#F8F5EE',
@@ -94,6 +93,18 @@ export const defaultViewport: Viewport = {
 };
 
 /**
+ * Get the title suffix based on the path
+ * @param {string} path - The path of the page
+ * @returns {string} - The title suffix
+ */
+function getTitleSuffix(path: string): string {
+  if (path.includes('/investors')) {
+    return 'Todd Investors';
+  }
+  return 'Todd United States';
+}
+
+/**
  * Utility function to create page-specific metadata
  * @param {Object} props - The component props
  * @param {string} props.title - The title of the page
@@ -114,6 +125,8 @@ export function createMetadata({
   ogImage?: string;
 }): Metadata {
   const pageUrl = `${siteConfig.url}${path}`;
+  const titleSuffix = getTitleSuffix(path);
+  const fullTitle = title ? `${title} | ${titleSuffix}` : titleSuffix;
 
   return {
     title,
@@ -123,7 +136,7 @@ export function createMetadata({
     },
     openGraph: {
       ...defaultMetadata.openGraph,
-      title: title || siteConfig.title,
+      title: fullTitle,
       description: description || siteConfig.description,
       url: pageUrl,
       images: ogImage
@@ -139,7 +152,7 @@ export function createMetadata({
     },
     twitter: {
       ...defaultMetadata.twitter,
-      title: title || siteConfig.title,
+      title: fullTitle,
       description: description || siteConfig.description,
       images: ogImage ? [ogImage] : defaultMetadata.twitter?.images,
     },

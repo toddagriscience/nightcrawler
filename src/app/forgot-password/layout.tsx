@@ -3,7 +3,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Forgot Password | Todd United States',
+  title: 'Forgot Password',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
