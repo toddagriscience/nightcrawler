@@ -77,7 +77,7 @@ const securityHeaders = [
       "base-uri 'self'", // Restrict base tag URLs
       "form-action 'self'", // Restrict form submissions
       "frame-ancestors 'none'", // Prevent embedding in frames
-      "frame-src 'none' https://challenges.cloudflare.com",
+      'frame-src https://challenges.cloudflare.com',
       'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
     ].join('; '),
   },

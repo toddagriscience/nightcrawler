@@ -77,8 +77,8 @@ export async function generateMetadata({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   themeColor: '#F8F5EE',
 };
 
@@ -119,14 +119,9 @@ export default async function LocaleLayout({
       <Turnstile siteKey={cloudflareSitekey}>
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll>
-            <ThemeProvider>
-              <ThemeReset />
-              <Header />
-              <FadeIn>
-                <PostHogProvider>{children}</PostHogProvider>
-              </FadeIn>
-              <Footer />
-            </ThemeProvider>
+            <Header />
+            <FadeIn>{children}</FadeIn>
+            <Footer />
           </SmoothScroll>
         </NextIntlClientProvider>
       </Turnstile>
