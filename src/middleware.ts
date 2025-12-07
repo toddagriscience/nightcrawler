@@ -8,6 +8,7 @@ import {
   hasGPCEnabled,
 } from './middleware/export';
 import { handleAuthRouting } from './middleware/auth';
+import applyNonce from './middleware/nonce';
 
 /**
  * Middleware for internationalization, authorization, and privacy controls
@@ -19,20 +20,22 @@ export default async function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
+  const nonceApplied = applyNonce(request);
+
   // Handle authentication-based routing
-  const authRedirect = await handleAuthRouting(request);
+  const authRedirect = await handleAuthRouting(nonceApplied);
   if (authRedirect) {
     return authRedirect;
   }
 
   // Run the internationalization middleware for unauthenticated users only
-  const intlResponse = handleI18nMiddleware(request, false);
+  const intlResponse = handleI18nMiddleware(nonceApplied, false);
 
   // Ensure we have a NextResponse with proper headers and cookies properties
   const response = ensureNextResponse(intlResponse);
 
   // Apply privacy controls based on GPC status
-  return applyPrivacyControls(request, response, gpcEnabled);
+  return applyPrivacyControls(nonceApplied, response, gpcEnabled);
 }
 
 export const config = {
