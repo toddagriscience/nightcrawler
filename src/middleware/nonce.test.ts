@@ -23,7 +23,6 @@ describe('applyNonce Middleware', () => {
     const result = applyNonce(makeMockRequest('https://google.com'));
 
     const newHeaders = result.headers;
-    console.log(newHeaders);
     expect(newHeaders).toBeInstanceOf(Headers);
     expect(newHeaders.get('x-middleware-request-x-nonce')).toHaveLength(48);
   });
