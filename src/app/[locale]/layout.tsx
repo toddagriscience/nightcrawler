@@ -31,6 +31,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
+  const ogLocale = locale === 'en' ? 'en_US' : 'es_US';
+
   return {
     title: {
       default: 'Todd United States',
@@ -40,23 +42,35 @@ export async function generateMetadata({
     metadataBase: new URL(env.baseUrl),
     alternates: {
       canonical: `${env.baseUrl}/${locale}`,
-      languages: Object.fromEntries([
-        ...routing.locales.map((loc) => [loc, `${env.baseUrl}/${loc}`]),
-        ['x-default', `${env.baseUrl}/${routing.defaultLocale}`],
-      ]),
+      languages: {
+        'en-US': 'https://toddagriscience.com/us/en/',
+        'es-US': 'https://toddagriscience.com/us/es/',
+        'x-default': 'https://toddagriscience.com/us/en/',
+      },
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
-      siteName: 'Todd Agriscience',
-      locale: locale,
+      siteName: 'Todd',
+      locale: ogLocale,
       type: 'website',
+      images: [
+        {
+          url: 'https://www.toddagriscience.com/opengraph-image.png',
+          width: 1300,
+          height: 740,
+          type: 'image/png',
+          alt: 'Todd Agriscience',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
+      site: '@ToddAgriscience',
       title: t('title'),
       description: t('description'),
+      images: ['https://www.toddagriscience.com/opengraph-image.png'],
     },
     robots: {
       index: true,
