@@ -1,7 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-import type { Metadata } from 'next';
 import LandingPage from '@/components/landing/page/landing-page';
+import type { Metadata } from 'next';
 
 /**
  * Homepage metadata - uses specific title without template
