@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
     url: 'https://toddagriscience.com/en/',
     siteName: 'Todd',
-    locale: 'en_US',
+    locale: 'en',
     type: 'website',
     images: [
       {

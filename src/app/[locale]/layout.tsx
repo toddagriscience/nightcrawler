@@ -31,7 +31,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
-  const ogLocale = locale === 'en' ? 'en_US' : 'es_US';
+  // OpenGraph locale - using language only (en/es)
+  // Location support (e.g., en_US, es_US) can be added here if needed:
+  // const ogLocale = locale === 'en' ? 'en_US' : 'es_US';
+  const ogLocale = locale;
 
   return {
     title: {
@@ -42,14 +45,14 @@ export async function generateMetadata({
     metadataBase: new URL(env.baseUrl),
     alternates: {
       canonical: `${env.baseUrl}/${locale}`,
-      languages: {
-        'en-US': 'https://toddagriscience.com/us/en/',
-        'es-US': 'https://toddagriscience.com/us/es/',
-        'x-default': 'https://toddagriscience.com/us/en/',
-      },
+      languages: Object.fromEntries([
+        ...routing.locales.map((loc) => [loc, `${env.baseUrl}/${loc}`]),
+        ['x-default', `${env.baseUrl}/${routing.defaultLocale}`],
+      ]),
     },
     openGraph: {
-      title: t('title'),
+      // Titles are English-only per requirements
+      title: 'Todd Agriscience - Sustainable Agriculture Solutions',
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
       siteName: 'Todd',
@@ -68,7 +71,8 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       site: '@ToddAgriscience',
-      title: t('title'),
+      // Titles are English-only per requirements
+      title: 'Todd Agriscience - Sustainable Agriculture Solutions',
       description: t('description'),
       images: ['https://www.toddagriscience.com/opengraph-image.png'],
     },
