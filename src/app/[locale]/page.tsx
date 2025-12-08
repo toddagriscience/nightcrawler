@@ -4,7 +4,7 @@ import LandingPage from '@/components/landing/page/landing-page';
 import type { Metadata } from 'next';
 
 /**
- * Homepage metadata - uses specific title without template
+ * Homepage metadata
  */
 export const metadata: Metadata = {
   title: {
@@ -43,11 +43,6 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * Home page for the app
- * @param {Promise<{ locale: string }>} params - The parameters for the function
- * @returns {React.ReactNode} - The home page component
- */
 export default async function HomePage({}: {
   params: Promise<{ locale: string }>;
 }) {
