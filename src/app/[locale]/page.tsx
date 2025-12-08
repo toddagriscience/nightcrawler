@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
   alternates: {
-    canonical: 'https://toddagriscience.com/us/en/',
+    canonical: 'https://toddagriscience.com/en/',
   },
   openGraph: {
     title: 'Todd | Global Leader in Sustainable Agriculture',
