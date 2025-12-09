@@ -24,11 +24,23 @@ git pull origin main
 
 **Create branch:**
 
-Name your branch with what kind of task it is; a chore, feat (feature), etc.
+Name your branch following conventional formats like below (all lowercase):
 
 ```
 git checkout -b <chore/branch-name>
 ```
+
+Examples:
+
+Bad:
+`Feature/add-new-page`
+`carousel-logic`
+`feat/add-the-page-for-privacy-and-other-pages-related-to-privacy`
+
+Good:
+`feat/add-new-page`
+`refactor/carousel-logic`
+`feat/add-privacy-pages`
 
 **Edit your files:** Make sure to save your changes or you'll get a clean working tree error.
 
@@ -36,12 +48,6 @@ git checkout -b <chore/branch-name>
 
 ```
 git rm filename.ext
-```
-
-**Check what has changed:**
-
-```
-git status
 ```
 
 **Stage your changes:**
@@ -86,7 +92,6 @@ git branch -D <branch name>
 
 - Make sure to open an issue in Github. The issue should describe your solution, suggestion or idea clearly and concisely. Smaller, singlar issues are perferred over jumbo manifests.
 - When addressing the issue, please consider: "is my code and issue understanable if I disappeared tommorow?"
-- When you make a branch, follow conventional formats.
 - Draft a PR and connect it to your issue. You don't need it finished to create a PR.
 - Request a review once your finished.
 - If it's your PR, you get the honor of merging.
@@ -166,18 +171,6 @@ rm -rf .next && bun build
 
 `psylocke` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
 
-When creating a branch... follow conventional commits in the following format (all lowercase): `commit-type/branch-summary` Ex:
-
-Bad:
-`Feature/add-new-page`
-`carousel-logic`
-`feat/add-the-page-for-privacy-and-other-pages-related-to-privacy`
-
-Good:
-`feat/add-new-page`
-`refactor/carousel-logic`
-`feat/add-privacy-pages`
-
 ### Testing
 
 Test _everything_, and follow general best practices. Ex. if a bug is fixed, add a test for that bug.
@@ -241,72 +234,6 @@ bun storybook      # Component testing
 - **Strict mode enabled**: No `any` types
 - **Props interfaces**: Define all component props
 - **Type exports**: Export types for reusable interfaces
-
-### Pages
-
-```bash
-# Create page directory
-mkdir src/app/[locale]/your-page
-
-# Create page
-touch src/app/[locale]/your-page/page.tsx
-
-# Create page-specific components (slice architecture)
-mkdir src/app/[locale]/your-page/components
-
-# Create page/component types if necessary (slice architecture)
-touch src/app/[locale]/your-page/components/component.ts # For components
-
-```
-
-### Components
-
-- **Functional components**: Use React hooks
-- **Props destructuring**: Destructure props in function signature
-- **Default exports**: Use default exports for components
-- **Naming**: PascalCase for components, kebab-case for files
-- **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
-
-**For shared components:**
-
-```bash
-# Create in common directory
-mkdir src/components/common/your-component
-touch src/components/common/your-component/your-component.tsx
-touch src/components/common/your-component/your-component.test.tsx
-touch src/components/common/your-component/your-component.stories.tsx
-
-# Add to common index (for shared components)
-# Add export to src/components/common/index.ts:
-echo "export { default as YourComponent } from './your-component/your-component';" >> src/components/common/index.ts
-```
-
-**Component template:**
-
-```tsx
-// Copyright Todd Agriscience, Inc. All rights reserved.
-
-import { useTranslations } from 'next-intl';
-import { yourprop } from ./types/yourprop
-
-/**
- * Your component description
- * @param {Props} props - Component props
- * @returns {JSX.Element} - The component
- */
-export default function YourComponent({ title, variant = 'primary' }: Props) {
-  const t = useTranslations('YourNamespace');
-
-  return (
-    <div
-      className={`your-classes ${variant === 'primary' ? 'primary-styles' : 'secondary-styles'}`}
-    >
-      <h1>{t('title')}</h1>
-      <p>{title}</p>
-    </div>
-  );
-}
-```
 
 ### Styling
 
@@ -391,67 +318,106 @@ logger.error('Critical error');
 - Manual testing with keyboard navigation
 - Color contrast validation
 
-## 📦 Component Development
+## Page Development
+
+```bash
+# Create page directory
+mkdir src/app/[locale]/your-page
+
+# Create page
+touch src/app/[locale]/your-page/page.tsx
+
+# Create page-specific components (slice architecture)
+mkdir src/app/[locale]/your-page/components
+
+# Create page/component types if necessary (slice architecture)
+touch src/app/[locale]/your-page/components/component.ts # For components
+
+```
+
+## Component Development
 
 ### Creating New Components
 
-1. **Create component directory**
+- **Functional components**: Use React hooks
+- **Props destructuring**: Destructure props in function signature
+- **Default exports**: Use default exports for components
+- **Naming**: PascalCase for components, kebab-case for files
+- **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
 
-   ```bash
-   mkdir src/components/ui/my-component
-   ```
+### For shared components:
 
-2. **Component structure**
+```bash
+# Create in common directory
+mkdir src/components/common/your-component
+touch src/components/common/your-component/your-component.tsx
+touch src/components/common/your-component/your-component.test.tsx
+touch src/components/common/your-component/your-component.stories.tsx
 
-   ```tsx
-   // my-component.tsx
-   import { type ComponentProps } from 'react';
+# Add to common index (for shared components)
+# Add export to src/components/common/index.ts:
+echo "export { default as YourComponent } from './your-component/your-component';" >> src/components/common/index.ts
+```
 
-   interface MyComponentProps {
-     title: string;
-     variant?: 'primary' | 'secondary';
-   }
+### Component structure
 
-   export default function MyComponent({
-     title,
-     variant = 'primary',
-   }: MyComponentProps) {
-     return <div className="...">{title}</div>;
-   }
-   ```
+```tsx
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
-3. **Add tests**
+import { useTranslations } from 'next-intl';
+import { yourprop } from ./types/yourprop
 
-   ```tsx
-   // my-component.test.tsx
-   import { render, screen } from '@/test/test-utils';
-   import MyComponent from './my-component';
+/**
+ * Your component description
+ * @param {Props} props - Component props
+ * @returns {JSX.Element} - The component
+ */
+export default function YourComponent({ title, variant = 'primary' }: Props) {
+ const t = useTranslations('YourNamespace');
 
-   describe('MyComponent', () => {
-     it('renders title correctly', () => {
-       render(<MyComponent title="Test" />);
-       expect(screen.getByText('Test')).toBeInTheDocument();
-     });
-   });
-   ```
+  return (
+    <div
+       className={`your-classes ${variant === 'primary' ? 'primary-styles' : 'secondary-styles'}`}
+   >
+     <h1>{t('title')}</h1>
+      <p>{title}</p>
+   </div>
+ );
+ }
+```
 
-4. **Add Storybook story**
+### Add tests
 
-   ```tsx
-   // my-component.stories.tsx
-   import type { Meta, StoryObj } from '@storybook/react';
-   import MyComponent from './my-component';
+```tsx
+// my-component.test.tsx
+import { render, screen } from '@/test/test-utils';
+import MyComponent from './my-component';
 
-   const meta: Meta<typeof MyComponent> = {
-     title: 'UI/MyComponent',
-     component: MyComponent,
-   };
+describe('MyComponent', () => {
+  it('renders title correctly', () => {
+    render(<MyComponent title="Test" />);
+    expect(screen.getByText('Test')).toBeInTheDocument();
+  });
+});
+```
 
-   export default meta;
-   export const Default: StoryObj<typeof MyComponent> = {
-     args: { title: 'Example' },
-   };
-   ```
+### Add Storybook story
+
+```tsx
+// my-component.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import MyComponent from './my-component';
+
+const meta: Meta<typeof MyComponent> = {
+  title: 'UI/MyComponent',
+  component: MyComponent,
+};
+
+export default meta;
+export const Default: StoryObj<typeof MyComponent> = {
+  args: { title: 'Example' },
+};
+```
 
 ## 🔧 Development Tools
 
