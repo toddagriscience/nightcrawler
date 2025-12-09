@@ -10,7 +10,6 @@ import { env } from '@/lib/env';
 
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
-import { Turnstile } from '@marsidev/react-turnstile';
 
 /**
  * Generate metadata for each locale
