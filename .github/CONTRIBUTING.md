@@ -56,6 +56,12 @@ git add .
 bun validate
 ```
 
+**Had a formating issue?**
+
+```
+bun run format
+```
+
 **Make your commit (adding a return will make a paragraph section):**
 
 ```
