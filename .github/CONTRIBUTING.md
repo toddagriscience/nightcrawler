@@ -1,8 +1,118 @@
-# Copyright Todd Agriscience, Inc. All rights reserved.
+# Contributing
 
-Important: Every single file must have " Copyright Todd Agriscience, Inc. All rights reserved." at the top of the file. This may be commented in whatever manner you prefer, but it must be present.
+This is the general contributing guide for the marketing site and platform. Please request permission before editing this document.
 
-## 🚀 Quick Start for New Contributors
+## Contents
+
+1. **adding this might help once its done**
+
+## Basic Workflow
+
+**Check status:**
+
+```
+git status
+```
+
+**Make sure you're in the right branch and update main branch with any new code:**
+
+```
+git checkout main
+git fetch origin
+git pull origin main
+```
+
+**Create branch:**
+
+Name your branch with what kind of task it is; a chore, feat (feature), etc.
+
+```
+git checkout -b <chore/branch-name>
+```
+
+**Edit your files:** Make sure to save your changes or you'll get a clean working tree error.
+
+**Need to delete a file?**
+
+```
+git rm filename.ext
+```
+
+**Check what has changed:**
+
+```
+git status
+```
+
+**Stage your changes:**
+
+```
+git add .
+```
+
+**Check your code:**
+
+```
+bun validate
+```
+
+**Make your commit (adding a return will make a paragraph section):**
+
+```
+git commit -m "chore: update forgot password page title
+
+Updated the metadata title from 'Reset Password' to 'Forgot Password' for consistency."
+```
+
+**Push your branch/commits to Github:**
+
+```
+git push origin chore/your-feature-name
+```
+
+**Once your branch has been merged, delete it locally:**
+
+```
+git branch -D <branch name>
+```
+
+### Notes:
+
+- Make sure to open an issue in Github. The issue should describe your solution, suggestion or idea clearly and concisely. Smaller, singlar issues are perferred over jumbo manifests.
+- When addressing the issue, please consider: "is my code and issue understanable if I disappeared tommorow?"
+- When you make a branch, follow conventional formats.
+- Draft a PR and connect it to your issue. You don't need it finished to create a PR.
+- Request a review once your finished.
+- If it's your PR, you get the honor of merging.
+- Don't contribute to someone else's PR unless they've requested your help.
+
+## When Things Break
+
+### Quick Fixes:
+
+```bash
+# Format issues
+bun format
+
+# Lint issues
+bun lint:fix
+
+# Type errors
+bun type-check
+
+# Build issues
+rm -rf .next && bun build
+```
+
+### When those don't work, try the 3 C's:
+
+1. Check if `main` branch works: `git checkout main && bun validate`
+2. Clear cache: `rm -rf .next node_modules && bun install`
+3. Cry (it might help?)
+
+### Still broken? It might be past a simple fix: ask for help 🙏.
+
+## First-Time Setup
 
 ### Prerequisites
 
@@ -10,7 +120,7 @@ Important: Every single file must have " Copyright Todd Agriscience, Inc. All ri
 - **Bun**: Latest stable version
 - **Git**: Latest stable version
 
-### First-Time Setup
+### Getting Started
 
 1. **Fork and clone the repository**
 
@@ -46,23 +156,6 @@ Important: Every single file must have " Copyright Todd Agriscience, Inc. All ri
    ```
    Open [http://localhost:3000](http://localhost:3000)
 
-## 📋 Development Workflow
-
-1. Open an issue/discussion with _complete_ context. No "add api route for getting customers" issues. Your issue should ideally completely describe your solution/suggestion/idea.
-2. Create a branch, following conventional commits as specified [below](##standardsgeneral-information)
-3. Draft a PR. A draft PR should be made when your first commit is made, even if you're nowhere near close to merging.
-4. Request review and convert draft PR into a PR.
-5. Merge to main!
-
-A few notes:
-
-- We generally avoid directly interacting with others' PRs. If you see an issue, leave a comment/review
-- Smaller/more focused PRs are generally preferred -- we'd rather see 5 small PRs than 1 ginormous one
-- When drafting/creating a PR, consider:
-  - Have I updated documentation accordingly?
-  - Are tests passing?
-  - Is my code readable and could I or someone else build off of my code 1+ years from now?
-
 ## Standards/General information
 
 `psylocke` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
@@ -89,6 +182,23 @@ Testing related commands:
 - `bun run test:coverage`
 
 However, husky/workflows will handle the majority of code validation/testing for you.
+
+### Git Hooks Validation
+
+**Pre-commit** (when you commit): Husky runs `lint-staged` on staged files only:
+
+- **JS/TS files**: `eslint --fix` + `prettier --write`
+- **Other files**: `prettier --write`
+
+**Pre-push** (when you push): Husky runs full `bun validate`:
+
+1. **Format check** (`bun format:check`) - Prettier validation
+2. **Type check** (`bun type-check`) - TypeScript validation
+3. **Lint** (`bun lint`) - ESLint rules enforcement
+4. **Test** (`bun run test`) - Unit tests execution
+5. **Build** (`bun run build`) - Production build verification
+
+**If any pre-push step fails, your push is blocked.** Use the quick fixes below to resolve issues. If they don't work, check the terminal to see what issues exist and fix them manually
 
 ### Formatting/Styling
 
@@ -126,6 +236,23 @@ bun storybook      # Component testing
 - **Props interfaces**: Define all component props
 - **Type exports**: Export types for reusable interfaces
 
+### Pages
+
+```bash
+# Create page directory
+mkdir src/app/[locale]/your-page
+
+# Create page
+touch src/app/[locale]/your-page/page.tsx
+
+# Create page-specific components (slice architecture)
+mkdir src/app/[locale]/your-page/components
+
+# Create page/component types if necessary (slice architecture)
+touch src/app/[locale]/your-page/components/component.ts # For components
+
+```
+
 ### Components
 
 - **Functional components**: Use React hooks
@@ -133,6 +260,47 @@ bun storybook      # Component testing
 - **Default exports**: Use default exports for components
 - **Naming**: PascalCase for components, kebab-case for files
 - **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
+
+**For shared components:**
+
+```bash
+# Create in common directory
+mkdir src/components/common/your-component
+touch src/components/common/your-component/your-component.tsx
+touch src/components/common/your-component/your-component.test.tsx
+touch src/components/common/your-component/your-component.stories.tsx
+
+# Add to common index (for shared components)
+# Add export to src/components/common/index.ts:
+echo "export { default as YourComponent } from './your-component/your-component';" >> src/components/common/index.ts
+```
+
+**Component template:**
+
+```tsx
+// Copyright Todd Agriscience, Inc. All rights reserved.
+
+import { useTranslations } from 'next-intl';
+import { yourprop } from ./types/yourprop
+
+/**
+ * Your component description
+ * @param {Props} props - Component props
+ * @returns {JSX.Element} - The component
+ */
+export default function YourComponent({ title, variant = 'primary' }: Props) {
+  const t = useTranslations('YourNamespace');
+
+  return (
+    <div
+      className={`your-classes ${variant === 'primary' ? 'primary-styles' : 'secondary-styles'}`}
+    >
+      <h1>{t('title')}</h1>
+      <p>{title}</p>
+    </div>
+  );
+}
+```
 
 ### Styling
 
