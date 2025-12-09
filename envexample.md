@@ -35,4 +35,8 @@ NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 
 # Cloudflare, real key, appropriate to be public
 NEXT_PUBLIC_CLOUDFLARE_SITEKEY="0x4AAAAAACEYfDvRCc8Fkc6C"
+
+# Sanity, real key, appropriate to be public
+NEXT_PUBLIC_SANITY_PROJECT_ID="3x7sixjh"
+NEXT_PUBLIC_SANITY_DATASET="production"
 ```
