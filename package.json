@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack && bun build-api-routes",
+    "build": "bun build-api-routes && next build",
     "build-api-routes": "node ./src/scripts/create-env-local.mjs && node --env-file=.env.local ./src/scripts/build-api-routes.mjs && prettier --write ./src/apiRoutes.json",
     "start": "next start",
     "lint": "eslint .",

@@ -24,6 +24,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
+  // Location support (e.g., en_US, es_US) can be added here:
+  // const ogLocale = locale === 'en' ? 'en_US' : 'es_US';
+  const ogLocale = locale;
+
   return {
     title: {
       default: 'Todd United States',
@@ -39,17 +43,28 @@ export async function generateMetadata({
       ]),
     },
     openGraph: {
-      title: t('title'),
+      title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
-      siteName: 'Todd Agriscience',
-      locale: locale,
+      siteName: 'Todd',
+      locale: ogLocale,
       type: 'website',
+      images: [
+        {
+          url: 'https://www.toddagriscience.com/opengraph-image.png',
+          width: 1300,
+          height: 740,
+          type: 'image/png',
+          alt: 'Todd Agriscience',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: t('title'),
+      site: '@ToddAgriscience',
+      title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
+      images: ['https://www.toddagriscience.com/opengraph-image.png'],
     },
     robots: {
       index: true,
