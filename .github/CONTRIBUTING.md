@@ -8,13 +8,13 @@ This is the general contributing guide for the marketing site and platform. Plea
 
 ## Basic Workflow
 
-**Check status:**
+Check status:
 
 ```
 git status
 ```
 
-**Make sure you're in the right branch and update main branch with any new code:**
+Make sure you're in the right branch and update main branch with any new code:
 
 ```
 git checkout main
@@ -22,70 +22,71 @@ git fetch origin
 git pull origin main
 ```
 
-**Create branch:**
+Create branch:
 
-Name your branch following conventional formats like below (all lowercase):
+(Name your branch using [conventional commits](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3) in the following format:
+`conventional-commit-type/short-description`) (all lowercase)
 
 ```
-git checkout -b <chore/branch-name>
+git checkout -b chore/branch-name
 ```
 
-Examples:
+Edit your files:
 
-Bad:
-`Feature/add-new-page`
-`carousel-logic`
-`feat/add-the-page-for-privacy-and-other-pages-related-to-privacy`
+(Make sure to save your changes or you'll get a clean working tree error)
 
-Good:
-`feat/add-new-page`
-`refactor/carousel-logic`
-`feat/add-privacy-pages`
-
-**Edit your files:** Make sure to save your changes or you'll get a clean working tree error.
-
-**Need to delete a file?**
+Need to delete a file?
 
 ```
 git rm filename.ext
 ```
 
-**Stage your changes:**
-
-```
-git add .
-```
-
-**Check your code:**
+Check your code:
 
 ```
 bun validate
 ```
 
-**Had a formating issue?**
+Had a formating issue? (hint: theres a plugin to do this automatically)
 
 ```
-bun run format
+bun format
 ```
 
-**Make your commit (adding a return will make a paragraph section):**
+Had a linkting issue?
 
 ```
-git commit -m "chore: update forgot password page title
-
-Updated the metadata title from 'Reset Password' to 'Forgot Password' for consistency."
+bun lint:fix
 ```
 
-**Push your branch/commits to Github:**
+Had a type issue?
+
+```
+bun type-check
+```
+
+Stage your changes:
+
+```
+git add .
+```
+
+Make your commit:
+
+```
+git commit -m "feat: my commit message" -m "more information in a long paragraph format"
+```
+
+Push your branch/commits to Github:
 
 ```
 git push origin chore/your-feature-name
 ```
 
-**Once your branch has been merged, delete it locally:**
+Once your branch has been merged, delete it locally:
 
 ```
-git branch -D <branch name>
+git branch -D chore/branch-name
 ```
 
 ### Notes:
@@ -99,29 +100,31 @@ git branch -D <branch name>
 
 ## When Things Break
 
-### Quick Fixes:
+### The 4 C's:
 
-```bash
-# Format issues
-bun format
-
-# Lint issues
-bun lint:fix
-
-# Type errors
-bun type-check
-
-# Build issues
-rm -rf .next && bun build
-```
-
-### When those don't work, try the 3 C's:
-
-1. Check if `main` branch works: `git checkout main && bun validate`
-2. Clear cache: `rm -rf .next node_modules && bun install`
-3. Cry (it might help?)
+1. Confirm you followed the above steps exactly.
+2. Check if `main` branch works: `git checkout main && bun validate` (then remember to swap back)
+3. Clear cache in the root directory: `rm -rf .next node_modules && bun install`
+4. Cry (it might help?)
 
 ### Still broken? It might be past a simple fix: ask for help 🙏.
+
+## 📋 Development Workflow
+
+1. Open an issue/discussion with _complete_ context. No "add api route for getting customers" issues. Your issue should ideally completely describe your solution/suggestion/idea.
+2. Create a branch, following conventional commits as specified [below](##standardsgeneral-information)
+3. Draft a PR. A draft PR should be made when your first commit is made, even if you're nowhere near close to merging.
+4. Request review and convert draft PR into a PR.
+5. Merge to main!
+
+A few notes:
+
+- We generally avoid directly interacting with others' PRs. If you see an issue, leave a comment/review
+- Smaller/more focused PRs are generally preferred -- we'd rather see 5 small PRs than 1 ginormous one
+- When drafting/creating a PR, consider:
+  - Have I updated documentation accordingly?
+  - Are tests passing?
+  - Is my code readable and could I or someone else build off of my code 1+ years from now?
 
 ## First-Time Setup
 
@@ -169,7 +172,7 @@ rm -rf .next && bun build
 
 ## Standards/General information
 
-`psylocke` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
+`nightcrawler` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
 
 ### Testing
 
@@ -227,7 +230,7 @@ bun storybook      # Component testing
 - Mock external dependencies
 - Test accessibility with built-in a11y tools
 
-## 🎨 Code Standards
+## Code Standards
 
 ### TypeScript
 
@@ -318,32 +321,7 @@ logger.error('Critical error');
 - Manual testing with keyboard navigation
 - Color contrast validation
 
-## Page Development
-
-```bash
-# Create page directory
-mkdir src/app/[locale]/your-page
-
-# Create page
-touch src/app/[locale]/your-page/page.tsx
-
-# Create page-specific components (slice architecture)
-mkdir src/app/[locale]/your-page/components
-
-# Create page/component types if necessary (slice architecture)
-touch src/app/[locale]/your-page/components/component.ts # For components
-
-```
-
 ## Component Development
-
-### Creating New Components
-
-- **Functional components**: Use React hooks
-- **Props destructuring**: Destructure props in function signature
-- **Default exports**: Use default exports for components
-- **Naming**: PascalCase for components, kebab-case for files
-- **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
 
 ### For shared components:
 
@@ -373,7 +351,7 @@ import { yourprop } from ./types/yourprop
  * @returns {JSX.Element} - The component
  */
 export default function YourComponent({ title, variant = 'primary' }: Props) {
- const t = useTranslations('YourNamespace');
+ const t = useTranslations('YourRegion');
 
   return (
     <div
