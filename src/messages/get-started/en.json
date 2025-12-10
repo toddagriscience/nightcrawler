@@ -1,0 +1,29 @@
+{
+  "getStarted": {
+    "title": "Get Started",
+    "subtitle": "Ready to partner with Todd Agriscience? Let's discuss how we can help transform your agricultural operations.",
+    "description": "Whether you're interested in regenerative agriculture practices, farm management solutions, or consumer engagement strategies, we're here to help. Fill out the form below and our team will get in touch with you shortly.",
+    "form": {
+      "nameLabel": "Your Name",
+      "emailLabel": "Your Email",
+      "companyLabel": "Company Name",
+      "interestLabel": "What are you interested in?",
+      "messageLabel": "Tell us more about your needs",
+      "submitButton": "Submit Inquiry",
+      "inProgressSubmit": "Submitting...",
+      "required": "Required"
+    },
+    "interestOptions": {
+      "regenerativeAgriculture": "Regenerative Agriculture",
+      "farmManagement": "Farm Management",
+      "consumerEngagement": "Consumer Engagement",
+      "partnership": "Partnership Opportunities",
+      "other": "Other"
+    },
+    "thankYou": {
+      "title": "Thank You",
+      "content": "We've received your inquiry. Our team will review your submission and reach out to you within 1-2 business days.",
+      "homeLink": "Return Home"
+    }
+  }
+}
