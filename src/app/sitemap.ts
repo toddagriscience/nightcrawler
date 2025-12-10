@@ -1,5 +1,4 @@
 import { routing } from '@/i18n/config';
-import news from '@/messages/news/en.json';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import type { MetadataRoute } from 'next';
@@ -18,9 +17,9 @@ export const revalidate = 86400;
  * @returns {MetadataRoute.Sitemap} Complete sitemap entries with hreflang alternates
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap()
-    .concat(getNewsSitemap())
-    .concat(await getSanityNewsSitemap());
+  const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap().concat(
+    await getSanityNewsSitemap()
+  );
 
   return sitemapEntries;
 }
@@ -73,71 +72,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   return sitemapEntries;
 }
 
-/**
- * Generates sitemap entries for news articles from featured-news.json
- * Includes error handling and validation for malformed data
- * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
- */
-function getNewsSitemap(): MetadataRoute.Sitemap {
-  const sitemapEntries: MetadataRoute.Sitemap = [];
-
-  try {
-    for (const locale of routing.locales) {
-      for (const newsArticle of Object.values(news.articleExcerpts)) {
-        if (!newsArticle.link || !newsArticle.date) {
-          logger.warn(
-            `Skipping news article with missing link or date:`,
-            newsArticle
-          );
-          continue;
-        }
-
-        // Skip external media links so the sitemap only includes on-site content
-        if (
-          typeof newsArticle.link === 'string' &&
-          (newsArticle.link.startsWith('http://') ||
-            newsArticle.link.startsWith('https://'))
-        ) {
-          logger.warn(
-            'Skipping external news article link from sitemap:',
-            newsArticle.link
-          );
-          continue;
-        }
-
-        // Normalize internal article links so sitemap URLs are:
-        // toddagriscience.com/{locale}/news/{example-article-title}
-        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
-        const normalizedSlug = newsArticle.link
-          // Remove any leading slash
-          .replace(/^\//, '')
-          // Strip optional "articles/" prefix for backwards compatibility
-          .replace(/^articles\//, '');
-
-        const url = `${baseUrl}/${locale}/news/${normalizedSlug}`;
-
-        const lastModified = parseArticleDate(newsArticle.date);
-
-        sitemapEntries.push({
-          url,
-          lastModified,
-          changeFrequency: 'weekly',
-          priority: 0.7,
-          alternates: {
-            // Ensure alternates match the normalized news URL shape
-            languages: getSupportedLanguages(`/news/${normalizedSlug}`),
-          },
-        });
-      }
-    }
-  } catch (error) {
-    logger.error('Error generating news sitemap:', error);
-  }
-
-  return sitemapEntries;
-}
-
-/** Generates sitemap entries based off of all of the documents from Sanity. Note the potentially scuffed type assertion:
+/** Generates sitemap entries based off of all of the documents from Sanity. Ignores articles with offsite URLs. Note the potentially scuffed type assertion:
  *
  * ```ts
  * const newsArticles = (await sanityQuery(
@@ -158,6 +93,9 @@ async function getSanityNewsSitemap(): Promise<MetadataRoute.Sitemap> {
 
     for (const locale of routing.locales) {
       for (const newsArticle of newsArticles) {
+        if (newsArticle.offSiteUrl && newsArticle.offSiteUrl.length > 0) {
+          continue;
+        }
         const slug = newsArticle.slug.current;
         const lastModified = newsArticle._updatedAt;
 

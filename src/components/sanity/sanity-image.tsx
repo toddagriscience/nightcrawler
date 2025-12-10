@@ -1,12 +1,7 @@
-import {
-  createImageUrlBuilder,
-  type SanityImageSource,
-} from '@sanity/image-url';
-import { client } from '@/lib/sanity/client';
+import { type SanityImageSource } from '@sanity/image-url';
 import Image from 'next/image';
 import { PortableTextComponentProps } from 'next-sanity';
-
-const { projectId = 'NO_PROJECT_ID', dataset = 'NO_DATASET' } = client.config();
+import { urlFor } from '@/lib/sanity/utils';
 
 /** A helper function for an image loaded with Sanity
  *
@@ -26,12 +21,4 @@ export default function SanityImage({
       loading="eager"
     />
   );
-}
-
-/** Helper function to build image URLS. See: https://www.sanity.io/plugins/sanity-image-url-builder
- *
- * @param {SanityImageSource} source - The image information
- * @returns {ImageUrlBuilder} - A Sanity thing for constructing the URL of an image.*/
-function urlFor(source: SanityImageSource) {
-  return createImageUrlBuilder({ projectId, dataset }).image(source);
 }

@@ -1,7 +1,9 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { Carousel, NewsCard } from '@/components/common';
-import NewsCardProps from '../news-card/types/news-card';
+import { urlFor } from '@/lib/sanity/utils';
+import { SanityDocument } from 'next-sanity';
+import ArticlePlaceholder from '@/../public/article-placeholder.webp';
 
 /*
  * A carousel for featured news.
@@ -10,7 +12,7 @@ import NewsCardProps from '../news-card/types/news-card';
 export function FeaturedNewsCarousel({
   items = [],
 }: {
-  items: NewsCardProps[];
+  items: SanityDocument[];
 }) {
   return (
     <Carousel isDark={true} showDots={true}>
@@ -19,11 +21,22 @@ export function FeaturedNewsCarousel({
           title={article.title}
           key={article.title}
           isDark={false}
-          image={{ url: article.image.url, alt: article.image.alt }}
+          image={
+            article.thumbnail
+              ? {
+                  url: urlFor(article.thumbnail)?.url(),
+                  alt: article.thumbnail.alt,
+                }
+              : { url: ArticlePlaceholder.src, alt: '' }
+          }
           source={article.source}
           date={article.date}
-          excerpt={article.excerpt}
-          link={article.link}
+          excerpt={article.summary}
+          link={
+            article.offSiteUrl && article.offSiteUrl.length > 0
+              ? article.offSiteUrl
+              : window.location.href + '/' + article.slug.current
+          }
         />
       ))}
     </Carousel>

@@ -9,7 +9,8 @@ import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { Quote } from '../index';
 import { NewsHighlightsProps } from './types/news-highlights';
-import { useNews } from '@/lib/hooks/news';
+import sanityQuery from '@/lib/sanity/query';
+import { SanityDocument } from 'next-sanity';
 
 /**
  * News highlight card component
@@ -26,7 +27,8 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
   const t = useTranslations('common');
   const tNews = useTranslations('homepage');
 
-  const { featuredNews } = useNews();
+  const allNews = sanityQuery('news') as unknown as Array<SanityDocument>;
+  const featuredNews = allNews.filter((article) => article.isFeatured);
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;

@@ -15,7 +15,7 @@ export default async function sanityQuery(
   documentType: string,
   params: { slug?: string } = {},
   options?: FilteredResponseQueryOptions,
-  index: number = 0
+  index?: number
 ) {
   const postQuery = `*[_type == "${documentType}"${params.slug ? ' && slug.current == $slug' : ''}]${index !== undefined ? `[${index}]` : ''}`;
 

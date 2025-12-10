@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import NewsCardProps from '../news-card/types/news-card';
 import { useLocale } from 'next-intl';
+import { SanityDocument } from 'next-sanity';
 
 interface LatestNewsTableProps {
-  items: NewsCardProps[];
+  items: SanityDocument[];
 }
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
@@ -42,7 +42,11 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           <div>{item.title}</div>
 
           <Link
-            href={item.link}
+            href={
+              item.offSiteUrl
+                ? item.offSiteUrl
+                : window.location.href + '/' + item.slug.current
+            }
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Open ${item.title} in new tab`}
@@ -54,7 +58,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           </Link>
 
           <div className="text-right">
-            {new Date(item.date + 'T00:00:00').toLocaleDateString(locale, {
+            {new Date(item.date).toLocaleDateString(locale, {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
