@@ -9,7 +9,11 @@ import {
   SendResetPasswordEmailResponse,
   UpdateUserResponse,
 } from '../types/auth';
-import { emailSchema, loginSchema } from '../zod-schemas/auth';
+import {
+  emailSchema,
+  loginSchema,
+  updatePasswordSchema,
+} from '../zod-schemas/auth';
 import { z } from 'zod';
 
 /** This file is STRICTLY for SERVER SIDE authentication. Server-side authentication should be generally preferred over client-side authentication. You can read more about this in `./src/lib/auth.ts` */
@@ -118,19 +122,21 @@ export async function updateUser(
   _: unknown,
   formData: FormData
 ): Promise<UpdateUserResponse> {
-  // No need to check if the new password is strong enough. Supabase will handle this for us.
-  const newPassword = formData.get('newPassword');
-  const confirmNewPassword = formData.get('confirmNewPassword');
+  const rawData = {
+    newPassword: formData.get('newPassword'),
+    confirmNewPassword: formData.get('confirmNewPassword'),
+  };
 
-  if (
-    !newPassword ||
-    !confirmNewPassword ||
-    confirmNewPassword !== newPassword
-  ) {
-    return { error: "Passwords don't match" };
+  // Validate password strength and matching
+  const validated = updatePasswordSchema.safeParse(rawData);
+
+  if (!validated.success) {
+    const errorMessage = z.treeifyError(validated.error);
+    logger.warn('Password update validation failed:', errorMessage);
+    return { error: errorMessage };
   }
 
-  const toUpdate = { password: newPassword.toString() };
+  const toUpdate = { password: validated.data.newPassword };
   const client = await createClient();
 
   try {
