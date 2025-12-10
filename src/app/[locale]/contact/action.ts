@@ -22,8 +22,13 @@ export async function submitToGoogleSheets(formData: unknown): Promise<{
   const validated = contactFormSchema.safeParse(formData);
 
   if (!validated.success) {
-    const errorMessage = z.treeifyError(validated.error);
-    logger.warn('Contact form validation failed:', errorMessage);
+    // Extract first error message for user-friendly feedback
+    const firstError = validated.error.errors[0];
+    const errorMessage = firstError?.message || 'Invalid form data';
+    
+    // Log detailed error for debugging (only visible in dev/logs)
+    logger.warn('Contact form validation failed:', z.treeifyError(validated.error));
+    
     return {
       success: false,
       error: errorMessage,

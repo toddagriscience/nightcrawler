@@ -6,6 +6,11 @@ import { z } from 'zod';
 export const MIN_PASSWORD_LENGTH = 8;
 
 /**
+ * Maximum password length to prevent DoS attacks
+ */
+export const MAX_PASSWORD_LENGTH = 128;
+
+/**
  * Password validation regex requiring:
  * - At least one uppercase letter
  * - At least one lowercase letter
@@ -30,6 +35,7 @@ const emailSchema = z.email('Invalid email address');
 const passwordSchema = z
   .string()
   .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`)
+  .max(MAX_PASSWORD_LENGTH, `Password must not exceed ${MAX_PASSWORD_LENGTH} characters`)
   .refine(
     (password) => PASSWORD_REGEX.test(password),
     'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)'
