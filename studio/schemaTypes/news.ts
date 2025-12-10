@@ -57,6 +57,11 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: 'summary',
+      title: 'Summary',
+      type: 'string',
+    }),
   ],
   preview: {
     select: {

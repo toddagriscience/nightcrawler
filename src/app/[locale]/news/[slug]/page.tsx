@@ -16,9 +16,6 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
   },
 };
 
-/** Options for `@lib/sanity/client`'s fetch function. */
-const options = { next: { revalidate: 30 } };
-
 /**
  * A news article page, rendered with Sanity CMS.
  *
@@ -29,7 +26,12 @@ export default async function NewsPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const article = await sanityQuery('news', await params, options, 0);
+  const article = await sanityQuery(
+    'news',
+    await params,
+    { next: { revalidate: 60 * 60 } },
+    0
+  );
 
   return (
     <main className="mt-16 mb-16 container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4">

@@ -8,5 +8,5 @@ export const client = createClient({
     process.env.NEXT_PUBLIC_SANITY_DATASET ||
     'Missing env variable: NEXT_PUBLIC_SANITY_DATASET',
   apiVersion: '2024-01-01',
-  useCdn: false,
+  useCdn: true,
 });
