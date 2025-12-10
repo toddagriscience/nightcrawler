@@ -67,7 +67,7 @@ export async function handleAuthRouting(
     return NextResponse.redirect(new URL('/en', request.url));
   } else {
     if (isAuthenticated) {
-      const response = NextResponse.redirect(new URL('/', request.url));
+      const response = NextResponse.next();
       supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
         response.cookies.set(name, value, options);
       });
