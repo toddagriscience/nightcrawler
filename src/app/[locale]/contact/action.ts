@@ -2,26 +2,49 @@
 
 'use server';
 
-interface FormData {
-  fullName: string;
-  email: string;
-  reason: string;
-  message: string;
-}
+import {
+  contactFormSchema,
+  type ContactFormData,
+} from '@/lib/zod-schemas/contact';
+import logger from '@/lib/logger';
+import { z } from 'zod';
 
-export async function submitToGoogleSheets(formData: FormData) {
-  const MAX_MESSAGE_LENGTH = 1500;
+/**
+ * Submit contact form data to Google Sheets
+ * @param {unknown} formData - Raw form data to be validated
+ * @returns {Promise<{ success: boolean; error?: string }>} - Result of submission
+ */
+export async function submitToGoogleSheets(formData: unknown): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  // Validate input data with Zod schema
+  const validated = contactFormSchema.safeParse(formData);
 
-  if (formData.message.length > MAX_MESSAGE_LENGTH) {
-    throw new Error(
-      `Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters.`
-    );
+  if (!validated.success) {
+    // Extract first error message for user-friendly feedback
+    const firstError = validated.error.errors[0];
+    const errorMessage = firstError?.message || 'Invalid form data';
+    
+    // Log detailed error for debugging (only visible in dev/logs)
+    logger.warn('Contact form validation failed:', z.treeifyError(validated.error));
+    
+    return {
+      success: false,
+      error: errorMessage,
+    };
   }
+
+  const validatedData: ContactFormData = validated.data;
 
   const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
 
   if (!GOOGLE_SCRIPT_URL) {
-    throw new Error('Server configuration error: Missing GOOGLE_SCRIPT_URL');
+    logger.error('Server configuration error: Missing GOOGLE_SCRIPT_URL');
+    return {
+      success: false,
+      error: 'Server configuration error. Please try again later.',
+    };
   }
 
   try {
@@ -33,7 +56,7 @@ export async function submitToGoogleSheets(formData: FormData) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
@@ -48,9 +71,11 @@ export async function submitToGoogleSheets(formData: FormData) {
 
     return { success: true };
   } catch (error) {
-    console.error('Submission error:', error);
-    throw new Error(
-      error instanceof Error ? error.message : 'An unknown error occurred'
-    );
+    logger.error('Contact form submission error:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'An unknown error occurred',
+    };
   }
 }
