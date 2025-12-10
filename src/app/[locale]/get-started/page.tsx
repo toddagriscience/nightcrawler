@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { submitGetStartedForm } from './action';
 import { PageHero } from '@/components/common';
 import {
   Select,
@@ -58,9 +59,10 @@ export default function GetStartedPage() {
     setError(null);
 
     try {
-      // TODO: Implement actual form submission
-      // For now, simulate a successful submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const submissionData = {
+        ...formData,
+      };
+      await submitGetStartedForm(submissionData);
       setIsSuccessfulSubmit(true);
     } catch (error) {
       console.error('Form submission error:', error);
