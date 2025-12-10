@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
+import logger from '@/lib/logger';
 
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
@@ -133,8 +134,8 @@ export default async function LocaleLayout({
       </NextIntlClientProvider>
     );
   } catch (error) {
-    console.error('❌ [layout.tsx] Error in LocaleLayout:', error);
-    console.error('❌ [layout.tsx] Error details:', {
+    logger.error('❌ [layout.tsx] Error in LocaleLayout:', error);
+    logger.error('❌ [layout.tsx] Error details:', {
       name: (error as Error).name,
       message: (error as Error).message,
       stack: (error as Error).stack,
