@@ -2,6 +2,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { SUPPORTED_LOCALES } from '@/lib/locales';
+import { Locale } from 'next-intl';
+import { isRouteInternationalized } from '@/lib/routing';
 
 /** Any protected URLs */
 const protectedUrls = ['/', '/account/reset-password'];
@@ -67,6 +70,13 @@ export async function handleAuthRouting(
     return NextResponse.redirect(new URL('/en', request.url));
   } else {
     if (isAuthenticated) {
+      if (isRouteInternationalized(pathname)) {
+        const response = NextResponse.redirect(new URL('/', request.url));
+        supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
+          response.cookies.set(name, value, options);
+        });
+        return response;
+      }
       const response = NextResponse.next();
       supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
         response.cookies.set(name, value, options);

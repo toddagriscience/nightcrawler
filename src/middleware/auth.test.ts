@@ -64,7 +64,7 @@ describe('handleAuthRouting', () => {
     const result = await handleAuthRouting(mockRequest);
 
     // Yes, this is correct
-    expect(result?.url).toBe('');
+    expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
   it('redirects unauthenticated users from a protected route to "/en"', async () => {
