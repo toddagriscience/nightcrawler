@@ -1,0 +1,37 @@
+{
+  "careers": {
+    "title": "Careers",
+    "subtitle": "Join Our Team",
+    "description": "At Todd Agriscience, we're committed to advancing agricultural science and creating sustainable solutions for the future. We're always looking for talented individuals who share our passion for innovation and excellence.",
+    "whyJoinUs": {
+      "title": "Why Join Us",
+      "innovation": {
+        "title": "Innovation",
+        "content": "Work on cutting-edge agricultural technologies that make a real difference in the world."
+      },
+      "growth": {
+        "title": "Professional Growth",
+        "content": "We invest in our employees' development through training, mentorship, and career advancement opportunities."
+      },
+      "culture": {
+        "title": "Collaborative Culture",
+        "content": "Join a team of passionate professionals who work together to solve complex challenges."
+      },
+      "impact": {
+        "title": "Global Impact",
+        "content": "Contribute to sustainable agriculture and food security on a global scale."
+      }
+    },
+    "openPositions": {
+      "title": "Open Positions",
+      "noPositions": "We don't have any open positions at this time, but we're always interested in hearing from talented individuals. Please check back soon or reach out to us directly.",
+      "checkBack": "Check back regularly for new opportunities or contact us to express your interest in future openings."
+    },
+    "howToApply": {
+      "title": "How to Apply",
+      "content": "Interested in joining our team? We'd love to hear from you. Please send your resume and cover letter to our HR department.",
+      "contact": "For career inquiries, please contact us through our contact page or email us directly.",
+      "contactLink": "Contact Us"
+    }
+  }
+}
