@@ -13,7 +13,7 @@ export const MIN_PASSWORD_LENGTH = 8;
  * - At least one special character
  */
 const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
 /** Schema for log in validation */
 const loginSchema = z.object({

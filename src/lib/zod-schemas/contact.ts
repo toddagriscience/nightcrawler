@@ -29,13 +29,9 @@ export const CONTACT_REASONS = [
 export const contactFormSchema = z.object({
   fullName: z
     .string()
-    .min(1, 'Full name is required')
-    .max(MAX_NAME_LENGTH, `Name must not exceed ${MAX_NAME_LENGTH} characters`)
     .trim()
-    .refine(
-      (name) => name.length > 0,
-      'Full name cannot be only whitespace'
-    ),
+    .min(1, 'Full name is required')
+    .max(MAX_NAME_LENGTH, `Name must not exceed ${MAX_NAME_LENGTH} characters`),
   email: z
     .string()
     .min(1, 'Email is required')
@@ -47,15 +43,11 @@ export const contactFormSchema = z.object({
   }),
   message: z
     .string()
+    .trim()
     .min(1, 'Message is required')
     .max(
       MAX_MESSAGE_LENGTH,
       `Message must not exceed ${MAX_MESSAGE_LENGTH} characters`
-    )
-    .trim()
-    .refine(
-      (message) => message.length > 0,
-      'Message cannot be only whitespace'
     ),
 });
 
