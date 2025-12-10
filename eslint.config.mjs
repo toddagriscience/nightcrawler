@@ -24,6 +24,7 @@ const eslintConfig = [
       'jest.config.js',
       'playwright.config.ts',
       '**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)', // Ignore all story files
+      'studio/**',
     ],
   },
 ];

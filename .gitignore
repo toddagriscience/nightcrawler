@@ -46,6 +46,3 @@ storybook-static
 *.claude
 .claude/
 .swc/
-
-# sanity
-sanity/node_modules
