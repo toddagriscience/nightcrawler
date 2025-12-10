@@ -1,0 +1,44 @@
+{
+  "whatWeDo": {
+    "title": "What We Do",
+    "subtitle": "We partner with high-growth, market-leading farms to advance regenerative agriculture and create lasting value for stakeholders and the environment.",
+    "approach": {
+      "title": "Our Approach",
+      "description": "Todd Agriscience is a first-generation regenerative agriculture firm focused on partnering with branded organic and biodynamic farms. We leverage our complementary expertise to meet the evolving needs of modern agriculture while prioritizing environmental sustainability and stakeholder value creation."
+    },
+    "services": {
+      "title": "What We Offer",
+      "strategicPartnerships": {
+        "title": "Strategic Partnerships",
+        "description": "We form deep partnerships with high-growth, market-leading farms that share our commitment to regenerative agriculture practices and sustainable food systems."
+      },
+      "operationalExpertise": {
+        "title": "Operational Expertise",
+        "description": "Our team brings complementary experience in agriculture operations, helping farms optimize their practices while maintaining regenerative principles."
+      },
+      "marketLeadership": {
+        "title": "Market Leadership",
+        "description": "We work with branded farms that forge deep emotional connections with their target consumers, positioning them as leaders in the organic and biodynamic marketplace."
+      },
+      "sustainableGrowth": {
+        "title": "Sustainable Growth",
+        "description": "We focus on creating long-term value through sustainable practices that benefit the environment, communities, and all stakeholders involved."
+      }
+    },
+    "focus": {
+      "title": "Our Focus Areas",
+      "regenerativeAgriculture": {
+        "title": "Regenerative Agriculture",
+        "description": "Supporting farms that prioritize soil health, biodiversity, and ecosystem restoration through regenerative farming practices."
+      },
+      "organicBiodynamic": {
+        "title": "Organic & Biodynamic Farming",
+        "description": "Partnering with certified organic and biodynamic operations that demonstrate the highest standards of sustainable agriculture."
+      },
+      "brandedFarms": {
+        "title": "Branded Market Leaders",
+        "description": "Working with farms that have established strong brand identities and meaningful connections with conscious consumers."
+      }
+    }
+  }
+}

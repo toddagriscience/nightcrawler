@@ -1,0 +1,44 @@
+{
+  "whatWeDo": {
+    "title": "Qué Hacemos",
+    "subtitle": "Nos asociamos con granjas de alto crecimiento y líderes del mercado para avanzar la agricultura regenerativa y crear valor duradero para las partes interesadas y el medio ambiente.",
+    "approach": {
+      "title": "Nuestro Enfoque",
+      "description": "Todd Agriscience es una firma de primera generación enfocada en agricultura regenerativa, asociándose con granjas orgánicas y biodinámicas de marca. Aprovechamos nuestra experiencia complementaria para satisfacer las necesidades evolutivas de la agricultura moderna, priorizando la sostenibilidad ambiental y la creación de valor para las partes interesadas."
+    },
+    "services": {
+      "title": "Lo Que Ofrecemos",
+      "strategicPartnerships": {
+        "title": "Asociaciones Estratégicas",
+        "description": "Formamos asociaciones profundas con granjas de alto crecimiento y líderes del mercado que comparten nuestro compromiso con prácticas de agricultura regenerativa y sistemas alimentarios sostenibles."
+      },
+      "operationalExpertise": {
+        "title": "Experiencia Operacional",
+        "description": "Nuestro equipo aporta experiencia complementaria en operaciones agrícolas, ayudando a las granjas a optimizar sus prácticas mientras mantienen principios regenerativos."
+      },
+      "marketLeadership": {
+        "title": "Liderazgo de Mercado",
+        "description": "Trabajamos con granjas de marca que forjan conexiones emocionales profundas con sus consumidores objetivo, posicionándolas como líderes en el mercado orgánico y biodinámico."
+      },
+      "sustainableGrowth": {
+        "title": "Crecimiento Sostenible",
+        "description": "Nos enfocamos en crear valor a largo plazo a través de prácticas sostenibles que benefician al medio ambiente, las comunidades y todas las partes interesadas involucradas."
+      }
+    },
+    "focus": {
+      "title": "Nuestras Áreas de Enfoque",
+      "regenerativeAgriculture": {
+        "title": "Agricultura Regenerativa",
+        "description": "Apoyando granjas que priorizan la salud del suelo, la biodiversidad y la restauración del ecosistema a través de prácticas agrícolas regenerativas."
+      },
+      "organicBiodynamic": {
+        "title": "Agricultura Orgánica y Biodinámica",
+        "description": "Asociándonos con operaciones orgánicas y biodinámicas certificadas que demuestran los más altos estándares de agricultura sostenible."
+      },
+      "brandedFarms": {
+        "title": "Líderes de Marca del Mercado",
+        "description": "Trabajando con granjas que han establecido identidades de marca sólidas y conexiones significativas con consumidores conscientes."
+      }
+    }
+  }
+}
