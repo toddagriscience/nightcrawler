@@ -17,7 +17,15 @@ export default function SanityImage({
 }: {
   value: PortableTextComponentProps<SanityImageSource>;
 }) {
-  return <Image width={1000} height={1000} src={urlFor(value)?.url()} alt="" />;
+  return (
+    <Image
+      width={1000}
+      height={1000}
+      src={urlFor(value)?.url()}
+      alt=""
+      loading="eager"
+    />
+  );
 }
 
 /** Helper function to build image URLS. See: https://www.sanity.io/plugins/sanity-image-url-builder
