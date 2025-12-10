@@ -4,6 +4,7 @@ import SanityImage from '@/components/sanity/sanity-image';
 import SanityNormal from '@/components/sanity/sanity-normal';
 import { Link } from '@/i18n/config';
 import sanityQuery from '@/lib/sanity/query';
+import ShareArticleButtons from '@/components/common/share-article/share-article';
 
 /** Sanity helpers. See: https://github.com/portabletext/react-portabletext#customizing-components */
 const portableTextComponents: Partial<PortableTextReactComponents> = {
@@ -35,11 +36,15 @@ export default async function NewsPage({
       <Link href="/news" className="hover:underline">
         ← Back to articles
       </Link>
-      <div className="flex flex-col md:flex-row justify-between items-baseline">
+      <div className="flex flex-col md:flex-row justify-between items-start mb-4">
         <h1 className="text-4xl font-bold mb-8">{article.title}</h1>
-        <div className="flex flex-col justify-end">
-          <p>Published: {new Date(article.date).toLocaleDateString()}</p>
-          <div className="flex flex-row"></div>
+        <div className="flex md:flex-col flex-row items-center md:justify-end justify-between md:w-min w-full">
+          <p className="md:mb-4 md:ml-auto pr-2">
+            {new Date(article.date).toLocaleDateString()}
+          </p>
+          <div className="ml-auto flex flex-row">
+            <ShareArticleButtons title={article.title} />
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-10">
