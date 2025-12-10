@@ -4,6 +4,8 @@ import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
+import sanityQuery from '@/lib/sanity/query';
+import { SanityDocument } from 'next-sanity';
 
 const baseUrl = env.baseUrl;
 
@@ -15,9 +17,10 @@ export const revalidate = 86400;
  * Combines static pages and dynamic news articles with proper internationalization
  * @returns {MetadataRoute.Sitemap} Complete sitemap entries with hreflang alternates
  */
-export default function sitemap(): MetadataRoute.Sitemap {
-  const sitemapEntries: MetadataRoute.Sitemap =
-    getStaticSitemap().concat(getNewsSitemap());
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap()
+    .concat(getNewsSitemap())
+    .concat(await getSanityNewsSitemap());
 
   return sitemapEntries;
 }
@@ -129,6 +132,54 @@ function getNewsSitemap(): MetadataRoute.Sitemap {
     }
   } catch (error) {
     logger.error('Error generating news sitemap:', error);
+  }
+
+  return sitemapEntries;
+}
+
+/** Generates sitemap entries based off of all of the documents from Sanity. Note the potentially scuffed type assertion:
+ *
+ * ```ts
+ * const newsArticles = (await sanityQuery(
+ *   'news'
+ * )) as unknown as Array<SanityDocument>;
+ * ```
+ *
+ * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
+ */
+async function getSanityNewsSitemap(): Promise<MetadataRoute.Sitemap> {
+  const sitemapEntries: MetadataRoute.Sitemap = [];
+
+  try {
+    // Valid
+    const newsArticles = (await sanityQuery(
+      'news'
+    )) as unknown as Array<SanityDocument>;
+
+    for (const locale of routing.locales) {
+      for (const newsArticle of newsArticles) {
+        const slug = newsArticle.slug.current;
+        const lastModified = newsArticle._updatedAt;
+
+        // Normalize internal article links so sitemap URLs are:
+        // toddagriscience.com/{locale}/news/{example-article-title}
+        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
+        const url = `${baseUrl}/${locale}/news/${slug}`;
+
+        sitemapEntries.push({
+          url,
+          lastModified,
+          changeFrequency: 'weekly',
+          priority: 0.7,
+          alternates: {
+            // Ensure alternates match the normalized news URL shape
+            languages: getSupportedLanguages(`/news/${slug}`),
+          },
+        });
+      }
+    }
+  } catch (error) {
+    logger.error('Error generating Sanity news sitemap: ', error);
   }
 
   return sitemapEntries;
