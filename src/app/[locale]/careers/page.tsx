@@ -1,7 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/config';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
