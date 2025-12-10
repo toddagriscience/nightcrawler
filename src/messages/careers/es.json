@@ -1,0 +1,37 @@
+{
+  "careers": {
+    "title": "Carreras",
+    "subtitle": "Únete a Nuestro Equipo",
+    "description": "En Todd Agriscience, estamos comprometidos con el avance de la ciencia agrícola y la creación de soluciones sostenibles para el futuro. Siempre estamos buscando personas talentosas que compartan nuestra pasión por la innovación y la excelencia.",
+    "whyJoinUs": {
+      "title": "Por Qué Unirte a Nosotros",
+      "innovation": {
+        "title": "Innovación",
+        "content": "Trabaja en tecnologías agrícolas de vanguardia que marcan una diferencia real en el mundo."
+      },
+      "growth": {
+        "title": "Crecimiento Profesional",
+        "content": "Invertimos en el desarrollo de nuestros empleados a través de capacitación, mentoría y oportunidades de avance profesional."
+      },
+      "culture": {
+        "title": "Cultura Colaborativa",
+        "content": "Únete a un equipo de profesionales apasionados que trabajan juntos para resolver desafíos complejos."
+      },
+      "impact": {
+        "title": "Impacto Global",
+        "content": "Contribuye a la agricultura sostenible y la seguridad alimentaria a escala global."
+      }
+    },
+    "openPositions": {
+      "title": "Posiciones Abiertas",
+      "noPositions": "No tenemos posiciones abiertas en este momento, pero siempre estamos interesados en escuchar de personas talentosas. Por favor, vuelve pronto o contáctanos directamente.",
+      "checkBack": "Revisa regularmente para nuevas oportunidades o contáctanos para expresar tu interés en futuras aperturas."
+    },
+    "howToApply": {
+      "title": "Cómo Aplicar",
+      "content": "¿Interesado en unirte a nuestro equipo? Nos encantaría saber de ti. Por favor, envía tu currículum y carta de presentación a nuestro departamento de recursos humanos.",
+      "contact": "Para consultas sobre carreras, por favor contáctanos a través de nuestra página de contacto o envíanos un correo electrónico directamente.",
+      "contactLink": "Contáctanos"
+    }
+  }
+}
