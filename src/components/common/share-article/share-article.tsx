@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useState } from 'react';
+import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 
 /** Primarily used for `/en/news/[slug]`. Provides a few buttons that automatically share articles to social platforms. Facebook is the one exception: due to needing to make an account, among other things, with Facebook's developer platform, clicking on the Facebook icon only copies the link of the article to your clipboard and displays a small "Copied!" dialog.
  *
@@ -23,7 +24,7 @@ export default function ShareArticleButtons({ title }: { title: string }) {
   const [isFbCopied, setIsFbCopied] = useState(false);
   const [isFbTooltipOpen, setIsFbTooltipOpen] = useState(false);
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareUrl = useCurrentUrl();
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
@@ -37,34 +38,19 @@ export default function ShareArticleButtons({ title }: { title: string }) {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() =>
-          window.open(
-            `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-            '_blank'
-          )
-        }
-        aria-label="Share on X"
+      <IconWrapper
+        link={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
       >
         <FaXTwitter />
-      </Button>
+      </IconWrapper>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() =>
-          window.open(
-            `https://www.linkedin.com/feed?shareActive&mini=true&text=${encodedUrl}`,
-            '_blank'
-          )
-        }
-        aria-label="Share on LinkedIn"
+      <IconWrapper
+        link={`https://www.linkedin.com/feed?shareActive&mini=true&text=${encodedUrl}`}
       >
         <RiLinkedinLine />
-      </Button>
+      </IconWrapper>
 
+      {/** Same idea as other uses of IconWrapper, just requires a tooltip. See docs for this component. */}
       <div onMouseLeave={() => setIsFbTooltipOpen(false)}>
         <Tooltip
           onOpenChange={() => setIsFbTooltipOpen(true)}
@@ -74,12 +60,14 @@ export default function ShareArticleButtons({ title }: { title: string }) {
             <Button
               onMouseOut={() => setIsFbCopied(false)}
               onClick={() => copyToClipboard()}
-              variant={'ghost'}
+              variant="ghost"
+              size="icon"
               aria-label="Share on Facebook"
             >
               <FaFacebook />
             </Button>
           </TooltipTrigger>
+
           <TooltipContent
             side="bottom"
             className="px-2 py-0.5 text-sm m-0 relative bottom-2"
@@ -90,19 +78,28 @@ export default function ShareArticleButtons({ title }: { title: string }) {
         </Tooltip>
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() =>
-          window.open(
-            `mailto:?subject=${encodedTitle}&body=${encodedUrl}`,
-            '_blank'
-          )
-        }
-        aria-label="Share via Email"
-      >
+      <IconWrapper link={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}>
         <HiOutlineMail />
-      </Button>
+      </IconWrapper>
     </>
+  );
+}
+
+function IconWrapper({
+  children,
+  link,
+}: {
+  children: React.ReactNode;
+  link: string;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => window.open(link, '_blank')}
+      aria-label="Share via Email"
+    >
+      {children}
+    </Button>
   );
 }

@@ -1,31 +1,17 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import { FeaturedNewsCarousel } from '@/components/common/news/featured-news-carousel';
 import { LatestNewsTable } from '@/components/common/news/latest-news-table';
 import sanityQuery from '@/lib/sanity/query';
 import { SanityDocument } from 'next-sanity';
-import { useEffect, useState } from 'react';
+import { use } from 'react';
 
 /**
  * Highlighted news & general news
  * @returns {JSX.Element} - The news page
  */
 export default function News() {
-  const [allNews, setAllNews] = useState<Array<SanityDocument>>([]);
-
-  useEffect(() => {
-    async function loadNews() {
-      // This is potentially inefficient. Benchmark me.
-      const allNews = (await sanityQuery(
-        'news'
-      )) as unknown as Array<SanityDocument>;
-      setAllNews(allNews);
-    }
-
-    loadNews();
-  }, []);
+  const allNews = use(sanityQuery('news')) as unknown as Array<SanityDocument>;
 
   const featuredNews = allNews
     ? allNews.filter((article) => article.isFeatured)
