@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';

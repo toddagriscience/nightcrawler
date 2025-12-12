@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 export { default as Button } from './button/button';
 export { default as Carousel } from './carousel/carousel';

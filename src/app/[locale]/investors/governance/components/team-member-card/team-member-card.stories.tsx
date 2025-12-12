@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import TeamMemberCard from './team-member-card';

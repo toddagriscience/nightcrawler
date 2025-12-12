@@ -1,7 +1,7 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 /**
  * Icon Generation Script for Next.js App Router
- *
- * Copyright Todd Agriscience, Inc. All rights reserved.
  *
  * This script generates PWA icons from a source image for Next.js 15 App Router.
  * Next.js automatically detects these files in the /app directory.
@@ -20,7 +20,6 @@
  * - Source image should be square (1:1 aspect ratio)
  * - Source image format: PNG, JPG, or SVG
  */
-
 import * as fs from 'fs';
 import * as path from 'path';
 

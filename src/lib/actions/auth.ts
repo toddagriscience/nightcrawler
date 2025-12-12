@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 'use server';
 
 import { redirect } from 'next/navigation';

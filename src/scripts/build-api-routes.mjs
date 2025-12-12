@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 /** A short script for fetching API routes from the backend. These API routes are accessible via importing src/apiRoutes.json. If you're strictly a frontend developer, you can largely disregard this script. */
 import fs from 'fs';

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithAct } from '@/test/test-utils';
 import NewsHighlights from './news-highlights';

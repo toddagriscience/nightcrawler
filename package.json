@@ -15,7 +15,8 @@
     "build-api-routes": "node ./src/scripts/create-env-local.mjs && node --env-file=.env.local ./src/scripts/build-api-routes.mjs && prettier --write ./src/apiRoutes.json",
     "start": "next start",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "prelint:fix": "tsx ./scripts/prep-for-license.ts",
+    "lint:fix": "bun run prelint:fix && eslint . --fix",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -27,7 +28,8 @@
     "prepare": "husky",
     "ci": "bun run type-check && bun run lint && bun run test && bun run build",
     "validate": "bun run format:check && bun run ci",
-    "generate-icons": "tsx scripts/generate-icons.ts"
+    "generate-icons": "tsx scripts/generate-icons.ts",
+    "check-license": "eslint . --rule 'license-header/header: [error, { 'template': '/*\\n * Copyright © Todd Agriscience, Inc. All rights reserved.\\n */' }]'"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",
@@ -78,6 +80,7 @@
     "eslint": "^9",
     "eslint-config-next": "^15.5.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-license-header": "^0.8.0",
     "eslint-plugin-storybook": "^10.0.2",
     "husky": "^9.1.7",
     "jest": "^30.2.0",

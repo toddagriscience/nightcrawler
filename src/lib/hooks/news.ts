@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import NewsCardProps from '@/components/common/news-card/types/news-card';
 import { useTranslations } from 'next-intl';

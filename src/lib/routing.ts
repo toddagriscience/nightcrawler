@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { SUPPORTED_LOCALES } from './locales';
 import { Locale } from 'next-intl';
 
