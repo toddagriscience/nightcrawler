@@ -4,23 +4,31 @@ import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { login, checkAuthenticated, logout } from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
-vitest.mock('./logger', () => ({
-  warn: vitest.fn(),
-}));
+vitest.mock(import('./logger'), async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    warn: vitest.fn(),
+  };
+});
 
 const mockSignInWithPassword = vitest.fn();
 const mockGetUser = vitest.fn();
 const mockSignOut = vitest.fn();
 
-vitest.mock('./supabase/client', () => ({
-  createClient: () => ({
-    auth: {
-      signInWithPassword: mockSignInWithPassword,
-      getUser: mockGetUser,
-      signOut: mockSignOut,
-    },
-  }),
-}));
+vitest.mock('./supabase/client', async (importActual) => {
+  const actual = await importActual<typeof import('./supabase/client')>();
+  return {
+    ...actual,
+    createClient: vitest.fn(() => ({
+      auth: {
+        signInWithPassword: mockSignInWithPassword,
+        getUser: mockGetUser,
+        signOut: mockSignOut,
+      },
+    })),
+  };
+});
 
 const mockRedirect = vitest.fn();
 vitest.mock('next/navigation', () => ({

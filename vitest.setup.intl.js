@@ -5,6 +5,8 @@
 import { messageFiles } from './src/i18n/message-files';
 import { vitest } from 'vitest';
 
+const React = await vitest.importActual('react');
+
 // Load all separated message files synchronously for Vitest - mirrors request.ts
 const loadMessagesSync = (locale) => {
   const messages = {};
@@ -81,10 +83,9 @@ vitest.mock('next-intl/routing', () => ({
     localeDetection: false,
   })),
   createNavigation: vitest.fn(() => ({
-    Link: vitest.fn(async ({ children, href, ...props }) => {
-      const React = await vitest.importActual('react');
+    Link: ({ children, href, ...props }) => {
       return React.createElement('a', { href, ...props }, children);
-    }),
+    },
     redirect: vitest.fn(),
     usePathname: vitest.fn(() => '/'),
     useRouter: vitest.fn(() => ({
@@ -104,10 +105,9 @@ vitest.mock('./src/i18n/config', () => ({
     localePrefix: 'always',
     localeDetection: false,
   },
-  Link: vitest.fn(async ({ children, href, ...props }) => {
-    const React = await vitest.importActual('react');
+  Link: ({ children, href, ...props }) => {
     return React.createElement('a', { href, ...props }, children);
-  }),
+  },
   redirect: vitest.fn(),
   usePathname: vitest.fn(() => '/'),
   useRouter: vitest.fn(() => ({

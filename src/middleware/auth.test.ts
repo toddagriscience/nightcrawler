@@ -6,9 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import type { Mock } from 'vitest';
 
-vitest.mock('@supabase/ssr', () => ({
-  createServerClient: vitest.fn(),
-}));
+vitest.mock('@supabase/ssr', { spy: true });
 
 function mockSupabase({ authenticated }: { authenticated: boolean }) {
   return {

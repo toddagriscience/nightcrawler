@@ -5,8 +5,12 @@ import { NextConfig } from 'next';
 import nextConfig from '../next.config';
 
 // Mock next-intl/plugin to avoid Next.js initialization errors in tests
-vitest.mock('next-intl/plugin', () => {
-  return vitest.fn(() => (config: NextConfig) => config);
+vitest.mock(import('next-intl/plugin'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    createNextIntlPlugin: vitest.fn(() => (config: NextConfig) => config),
+  };
 });
 
 type SecurityHeader = {

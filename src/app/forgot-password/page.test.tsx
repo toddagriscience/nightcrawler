@@ -6,14 +6,17 @@ import { useActionState } from 'react';
 import { AuthError } from '@supabase/supabase-js';
 import { describe, test, expect, vi, Mock } from 'vitest';
 
-vi.mock('react', () => ({
-  ...vi.importActual('react'),
-  useActionState: vi.fn(),
-}));
+vi.mock('react', { spy: true });
 
 describe('ForgotPassword', () => {
   test('should render the form and initial prompt without errors', () => {
-    (useActionState as Mock).mockReturnValue([null, vi.fn()]);
+    vi.mocked(useActionState).mockImplementation(() => [
+      null,
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
 
     render(<ForgotPassword />);
 
@@ -41,7 +44,13 @@ describe('ForgotPassword', () => {
     ).toBeInTheDocument();
 
     // Rerender the component with the successful state returned by the mock
-    (useActionState as Mock).mockReturnValue([[], null]);
+    vi.mocked(useActionState).mockImplementation(() => [
+      [[]],
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     rerender(<ForgotPassword />);
 
     expect(
@@ -59,9 +68,12 @@ describe('ForgotPassword', () => {
 
   test('should display error message after failed submission', async () => {
     const errorMessage = 'Invalid email or server error.';
-    (useActionState as Mock).mockReturnValue([
-      { error: new AuthError(errorMessage) },
-      null,
+    vi.mocked(useActionState).mockImplementation(() => [
+      { error: errorMessage },
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
     ]);
 
     render(<ForgotPassword />);

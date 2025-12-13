@@ -1,7 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
 import { screen } from '@/test/test-utils';
-import '@testing-library/vi-dom';
+import '@testing-library/jest-dom';
 import { FeaturedNewsCarousel } from './featured-news-carousel';
 import NewsCardProps from '../news-card/types/news-card';
 import { render } from '@testing-library/react';

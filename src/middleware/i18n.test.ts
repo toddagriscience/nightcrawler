@@ -1,5 +1,7 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+import { NextRequest, NextResponse } from 'next/server';
+import { ensureNextResponse, handleI18nMiddleware } from './i18n';
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 
 // Import setup first
@@ -40,15 +42,15 @@ vi.mock('next/server', () => {
 });
 
 // Mock next-intl/middleware
-vi.mock('next-intl/middleware', () => {
+vi.mock(import('next-intl/middleware'), async (importActual) => {
+  const actual = await importActual();
   const mockIntlMiddleware = vi.fn(() => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { NextResponse } = require('next/server');
     const response = NextResponse.next();
     response.headers.set('x-intl-processed', '1');
     return response;
   });
-  return vi.fn(() => mockIntlMiddleware);
+
+  return { ...actual, mockIntlMiddleware: vi.fn(() => mockIntlMiddleware) };
 });
 
 // Mock i18n config
@@ -59,9 +61,6 @@ vi.mock('@/i18n/config', () => ({
   },
   SUPPORTED_LOCALES: ['en', 'es'],
 }));
-
-import { NextRequest, NextResponse } from 'next/server';
-import { ensureNextResponse, handleI18nMiddleware } from './i18n';
 
 describe('I18n Middleware', () => {
   beforeEach(() => {

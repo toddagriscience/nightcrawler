@@ -2,7 +2,7 @@
 
 import { screen, renderWithAct } from '@/test/test-utils';
 import NewsHighlights from './news-highlights';
-import '@testing-library/vi-dom';
+import '@testing-library/jest-dom';
 import { vi, describe, it, expect } from 'vitest';
 
 // Mock embla-carousel-react

@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { loginErrors } from '@/lib/auth';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { Mock } from 'vitest';
+import ResizeObserver from 'resize-observer-polyfill';
 
 vitest.mock('@/lib/auth', () => ({
   login: vitest.fn(),
@@ -33,11 +34,7 @@ vitest.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-global.ResizeObserver = vitest.fn(() => ({
-  observe: vitest.fn(),
-  unobserve: vitest.fn(),
-  disconnect: vitest.fn(),
-}));
+global.ResizeObserver = ResizeObserver;
 
 describe('login page', () => {
   const mockPush = vitest.fn();
