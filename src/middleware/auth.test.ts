@@ -1,21 +1,19 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-/**
- * @jest-environment node
- */
-
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { handleAuthRouting } from '@/middleware/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import type { Mock } from 'vitest';
 
-jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(),
+vitest.mock('@supabase/ssr', () => ({
+  createServerClient: vitest.fn(),
 }));
 
 function mockSupabase({ authenticated }: { authenticated: boolean }) {
   return {
     auth: {
-      getClaims: jest.fn().mockResolvedValue({
+      getClaims: vitest.fn().mockResolvedValue({
         data: authenticated ? { claims: { sub: '123' } } : { claims: null },
       }),
     },
@@ -29,7 +27,7 @@ function makeMockRequest(url: string): NextRequest {
     url,
     cookies: {
       getAll: () => [],
-      set: jest.fn(),
+      set: vitest.fn(),
     },
   } as unknown as NextRequest;
 
@@ -38,13 +36,13 @@ function makeMockRequest(url: string): NextRequest {
 
 describe('handleAuthRouting', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   it('allows authenticated users on a protected route', async () => {
     const mockRequest = makeMockRequest('https://example.com/');
 
-    (createServerClient as jest.Mock).mockReturnValue(
+    (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: true })
     );
 
@@ -57,20 +55,19 @@ describe('handleAuthRouting', () => {
   it('redirects authenticated users off an internationalized route to "/"', async () => {
     const mockRequest = makeMockRequest('https://example.com/en/about');
 
-    (createServerClient as jest.Mock).mockReturnValue(
+    (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: true })
     );
 
     const result = await handleAuthRouting(mockRequest);
 
-    // Yes, this is correct
     expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
   it('redirects unauthenticated users from a protected route to "/en"', async () => {
     const mockRequest = makeMockRequest('https://example.com/');
 
-    (createServerClient as jest.Mock).mockReturnValue(
+    (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: false })
     );
 
@@ -83,7 +80,7 @@ describe('handleAuthRouting', () => {
   it('allows unauthenticated users on a non-protected marketing route', async () => {
     const mockRequest = makeMockRequest('https://example.com/en/who-we-are');
 
-    (createServerClient as jest.Mock).mockReturnValue(
+    (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: false })
     );
 

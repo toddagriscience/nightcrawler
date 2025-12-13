@@ -1,6 +1,9 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
+// This file is JS instead of TS because the types were being a pain.
+
 import { messageFiles } from './src/i18n/message-files';
+import { vitest } from 'vitest';
 
 // Load all separated message files synchronously for Jest - mirrors request.ts
 const loadMessagesSync = (locale) => {
@@ -30,9 +33,9 @@ const loadMessagesSync = (locale) => {
 
 const enMessages = loadMessagesSync('en');
 
-jest.mock('next-intl', () => ({
-  useTranslations: jest.fn((namespace) => {
-    return jest.fn((key) => {
+vitest.mock('next-intl', () => ({
+  useTranslations: vitest.fn((namespace) => {
+    return vitest.fn((key) => {
       // Use actual message structure from loaded messages
       const nestedGet = (obj, path) => {
         return path.split('.').reduce((current, segment) => {
@@ -48,14 +51,14 @@ jest.mock('next-intl', () => ({
       return `[${namespace}.${key}]`;
     });
   }),
-  useLocale: jest.fn(() => 'en'),
+  useLocale: vitest.fn(() => 'en'),
   NextIntlClientProvider: ({ children }) => children,
 }));
 
-jest.mock('next-intl/server', () => ({
-  getMessages: jest.fn().mockResolvedValue(enMessages),
-  getTranslations: jest.fn().mockImplementation(({ namespace } = {}) => {
-    return jest.fn((key) => {
+vitest.mock('next-intl/server', () => ({
+  getMessages: vitest.fn().mockResolvedValue(enMessages),
+  getTranslations: vitest.fn().mockImplementation(({ namespace } = {}) => {
+    return vitest.fn((key) => {
       const nestedGet = (obj, path) => {
         return path.split('.').reduce((current, segment) => {
           return current?.[segment];
@@ -66,57 +69,57 @@ jest.mock('next-intl/server', () => ({
       return translation || `[${namespace}.${key}]`;
     });
   }),
-  getRequestConfig: jest.fn((fn) => fn),
+  getRequestConfig: vitest.fn((fn) => fn),
 }));
 
 // Mock next-intl/routing
-jest.mock('next-intl/routing', () => ({
-  defineRouting: jest.fn(() => ({
+vitest.mock('next-intl/routing', () => ({
+  defineRouting: vitest.fn(() => ({
     locales: ['en', 'es'],
     defaultLocale: 'en',
     localePrefix: 'always',
     localeDetection: false,
   })),
-  createNavigation: jest.fn(() => ({
-    Link: jest.fn(({ children, href, ...props }) => {
-      const React = jest.requireActual('react');
+  createNavigation: vitest.fn(() => ({
+    Link: vitest.fn(async ({ children, href, ...props }) => {
+      const React = await vitest.importActual('react');
       return React.createElement('a', { href, ...props }, children);
     }),
-    redirect: jest.fn(),
-    usePathname: jest.fn(() => '/'),
-    useRouter: jest.fn(() => ({
-      push: jest.fn(),
-      replace: jest.fn(),
-      back: jest.fn(),
-      forward: jest.fn(),
+    redirect: vitest.fn(),
+    usePathname: vitest.fn(() => '/'),
+    useRouter: vitest.fn(() => ({
+      push: vitest.fn(),
+      replace: vitest.fn(),
+      back: vitest.fn(),
+      forward: vitest.fn(),
     })),
   })),
 }));
 
 // Mock our i18n config
-jest.mock('./src/i18n/config', () => ({
+vitest.mock('./src/i18n/config', () => ({
   routing: {
     locales: ['en', 'es'],
     defaultLocale: 'en',
     localePrefix: 'always',
     localeDetection: false,
   },
-  Link: jest.fn(({ children, href, ...props }) => {
-    const React = jest.requireActual('react');
+  Link: vitest.fn(async ({ children, href, ...props }) => {
+    const React = await vitest.importActual('react');
     return React.createElement('a', { href, ...props }, children);
   }),
-  redirect: jest.fn(),
-  usePathname: jest.fn(() => '/'),
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
+  redirect: vitest.fn(),
+  usePathname: vitest.fn(() => '/'),
+  useRouter: vitest.fn(() => ({
+    push: vitest.fn(),
+    replace: vitest.fn(),
+    back: vitest.fn(),
+    forward: vitest.fn(),
   })),
 }));
 
 // Mock our environment configuration
-jest.mock('./src/lib/env', () => ({
+vitest.mock('./src/lib/env', () => ({
   env: {
     productionDomain: 'toddagriscience.com',
     developmentDomain: 'localhost',

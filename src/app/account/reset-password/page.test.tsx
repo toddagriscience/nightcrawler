@@ -1,41 +1,51 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ResetPassword from './page';
-import { useActionState } from 'react';
+import React from 'react';
 import { AuthError } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import { beforeEach, describe, expect, vitest, test, vi } from 'vitest';
+import ResizeObserver from 'resize-observer-polyfill';
+import { UpdateUserResponse } from '@/lib/types/auth';
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: '/login',
-}));
+global.ResizeObserver = ResizeObserver;
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useActionState: jest.fn(),
-}));
+const { mockUseRouter } = vi.hoisted(() => {
+  return { mockUseRouter: vi.fn() };
+});
+
+vi.mock('next/navigation', async () => {
+  const actual = await vi.importActual('next/navigation');
+  return {
+    ...actual,
+    usePathname: '/login',
+    useRouter: mockUseRouter,
+  };
+});
+
+vi.mock('react', { spy: true });
 
 // i have no clue why we have to do this. usePathname is mocked right above this??? i hate tests so much
-jest.mock('@/components/common', () => ({
+vitest.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
-}));
-global.ResizeObserver = jest.fn(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
 }));
 
 describe('ResetPassword', () => {
-  const mockPush = jest.fn();
+  const mockPush = vitest.fn();
   const user = userEvent.setup();
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-    jest.clearAllMocks();
+    mockUseRouter.mockReturnValue({ push: mockPush });
+    vitest.clearAllMocks();
   });
 
   test('should render the password reset form initially', () => {
-    (useActionState as jest.Mock).mockReturnValue([null, null]);
+    vi.mocked(React.useActionState).mockImplementation(() => [
+      null,
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     render(<ResetPassword />);
 
     expect(
@@ -56,6 +66,13 @@ describe('ResetPassword', () => {
   });
 
   test('should toggle password visibility when "Show Password" checkbox is clicked', async () => {
+    vi.mocked(React.useActionState).mockImplementation(() => [
+      null,
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     render(<ResetPassword />);
 
     const newPasswordInput = screen.getByTestId(
@@ -85,6 +102,15 @@ describe('ResetPassword', () => {
   });
 
   test('should enable/disable submit button based on PasswordChecklist callback', async () => {
+    const ERROR_MESSAGE = 'The session token has expired.';
+    const ERROR_STATE = { error: new AuthError(ERROR_MESSAGE) };
+    vi.mocked(React.useActionState).mockImplementation(() => [
+      ERROR_STATE,
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     render(<ResetPassword />);
     const submitButton = screen.getByText('INVALID PASSWORD');
 
@@ -115,11 +141,13 @@ describe('ResetPassword', () => {
 
   // Test 4: Successful Submission (Redirect to Dashboard)
   test('should show success screen and redirect to dashboard on successful action', async () => {
-    const SUCCESS_STATE = { success: true };
-    const ACTION_FN = jest.fn(() => SUCCESS_STATE);
-
-    // Set the state to success by mocking useActionState to return the success state
-    (useActionState as jest.Mock).mockReturnValue([[], ACTION_FN]);
+    vi.mocked(React.useActionState).mockImplementation(() => [
+      [[]],
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     render(<ResetPassword />);
 
     // Check for success message content
@@ -138,20 +166,25 @@ describe('ResetPassword', () => {
     await user.click(dashboardButton);
 
     // Check if redirect was called
-    expect(useRouter().push as jest.Mock).toHaveBeenCalledWith('/');
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
   // Test 5: Failed Submission (Error Screen)
-  test('should show error message when action state contains an error', () => {
+  test('should show error message when action state contains an error', async () => {
     const ERROR_MESSAGE = 'The session token has expired.';
     const ERROR_STATE = { error: new AuthError(ERROR_MESSAGE) };
 
-    // Set the state to error by mocking useActionState to return the error state
-    (useActionState as jest.Mock).mockReturnValue([ERROR_STATE, null]);
+    vi.mocked(React.useActionState).mockImplementation(() => [
+      ERROR_STATE,
+      vi.fn(() => {
+        success: true;
+      }),
+      false,
+    ]);
     render(<ResetPassword />);
 
     // Check for the error message
-    const errorElement = screen.getByText(ERROR_MESSAGE);
+    const errorElement = await screen.findByText(ERROR_MESSAGE);
     expect(errorElement).toBeInTheDocument();
     expect(errorElement).toHaveClass('text-red-500');
 
@@ -168,7 +201,7 @@ describe('ResetPassword', () => {
     await user.click(cancelButton);
 
     // Check that router.push was called with the correct path
-    expect(useRouter().push as jest.Mock).toHaveBeenCalledTimes(1);
-    expect(useRouter().push as jest.Mock).toHaveBeenCalledWith('/');
+    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 });

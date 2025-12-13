@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { act, fireEvent, render, RenderOptions } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
+import { vi, vitest } from 'vitest';
 
 /**
  * Translations type
@@ -69,13 +70,13 @@ const mockLocaleContext = (
 
   return {
     locale,
-    setLocale: jest.fn(),
+    setLocale: vitest.fn(),
     messages: actualMessages,
     t,
     isLoading,
-    loadModule: jest.fn().mockResolvedValue({}),
-    loadModules: jest.fn().mockResolvedValue({}),
-    preloadCritical: jest.fn().mockResolvedValue(undefined),
+    loadModule: vitest.fn().mockResolvedValue({}),
+    loadModules: vitest.fn().mockResolvedValue({}),
+    preloadCritical: vitest.fn().mockResolvedValue(undefined),
   };
 };
 
@@ -83,7 +84,7 @@ const mockLocaleContext = (
  * Mock framer-motion
  * @returns {object} - The mocked framer-motion
  */
-jest.mock('framer-motion', () => {
+vitest.mock('framer-motion', () => {
   const MockMotionComponent = ({
     children,
     ...props
@@ -93,9 +94,9 @@ jest.mock('framer-motion', () => {
   };
 
   return {
-    ...jest.requireActual('framer-motion'),
-    useScroll: jest.fn(() => ({ scrollYProgress: 0 })),
-    useMotionValueEvent: jest.fn(),
+    ...vitest.importActual('framer-motion'),
+    useScroll: vitest.fn(() => ({ scrollYProgress: 0 })),
+    useMotionValueEvent: vitest.fn(),
     motion: {
       div: MockMotionComponent,
       button: MockMotionComponent,
@@ -110,17 +111,8 @@ jest.mock('framer-motion', () => {
  * Mock Next.js router
  * @returns {object} - The mocked Next.js router
  */
-jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(() => '/'),
-}));
-
-/**
- * Mock createPortal
- * @returns {object} - The mocked createPortal
- */
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
-  createPortal: (element: React.ReactNode) => element,
+vitest.mock('next/navigation', () => ({
+  usePathname: vitest.fn(() => '/'),
 }));
 
 /**

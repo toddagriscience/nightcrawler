@@ -1,21 +1,18 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
-/**
- * @jest-environment jsdom
- */
 
-import { waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { login, checkAuthenticated, logout } from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
-jest.mock('./logger', () => ({
-  warn: jest.fn(),
+vitest.mock('./logger', () => ({
+  warn: vitest.fn(),
 }));
 
-const mockSignInWithPassword = jest.fn();
-const mockGetUser = jest.fn();
-const mockSignOut = jest.fn();
+const mockSignInWithPassword = vitest.fn();
+const mockGetUser = vitest.fn();
+const mockSignOut = vitest.fn();
 
-jest.mock('./supabase/client', () => ({
+vitest.mock('./supabase/client', () => ({
   createClient: () => ({
     auth: {
       signInWithPassword: mockSignInWithPassword,
@@ -25,14 +22,14 @@ jest.mock('./supabase/client', () => ({
   }),
 }));
 
-const mockRedirect = jest.fn();
-jest.mock('next/navigation', () => ({
+const mockRedirect = vitest.fn();
+vitest.mock('next/navigation', () => ({
   redirect: (path: string) => mockRedirect(path),
 }));
 
 describe('login', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   it('returns data and no error on successful login', async () => {
@@ -73,7 +70,7 @@ describe('login', () => {
 
 describe('logout', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
     mockGetUser.mockResolvedValue({
       data: { user: { id: '123' } },
     });
@@ -118,7 +115,7 @@ describe('logout', () => {
 
 describe('checkAuthenticated', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   it('returns true when a user exists', async () => {

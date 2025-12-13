@@ -1,21 +1,28 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-/**
- * Tests for conditional logging utility
- */
-
+import { afterAll, beforeEach, describe, expect, it, vitest } from 'vitest';
 import { logger } from './logger';
 
 // Mock console methods
-const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
-const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation();
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
-const mockConsoleInfo = jest.spyOn(console, 'info').mockImplementation();
-const mockConsoleDebug = jest.spyOn(console, 'debug').mockImplementation();
+const mockConsoleLog = vitest
+  .spyOn(console, 'log')
+  .mockImplementation(() => {});
+const mockConsoleWarn = vitest
+  .spyOn(console, 'warn')
+  .mockImplementation(() => {});
+const mockConsoleError = vitest
+  .spyOn(console, 'error')
+  .mockImplementation(() => {});
+const mockConsoleInfo = vitest
+  .spyOn(console, 'info')
+  .mockImplementation(() => {});
+const mockConsoleDebug = vitest
+  .spyOn(console, 'debug')
+  .mockImplementation(() => {});
 
 describe('Logger Utility', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   afterAll(() => {
