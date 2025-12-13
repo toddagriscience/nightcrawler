@@ -1,17 +1,21 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import { FeaturedNewsCarousel } from '@/components/common/news/featured-news-carousel';
 import { LatestNewsTable } from '@/components/common/news/latest-news-table';
-import { useNews } from '@/lib/hooks/news';
+import sanityQuery from '@/lib/sanity/query';
+import { SanityDocument } from 'next-sanity';
+import { use } from 'react';
 
 /**
  * Highlighted news & general news
  * @returns {JSX.Element} - The news page
  */
 export default function News() {
-  const { featuredNews, allNews } = useNews();
+  const allNews = use(sanityQuery('news')) as unknown as Array<SanityDocument>;
+
+  const featuredNews = allNews
+    ? allNews.filter((article) => article.isFeatured)
+    : [];
 
   return (
     <div className="fadeInAnimation relative z-10 mx-auto mt-24 max-w-[80vw] md:max-w-[95vw] pt-[calc(var(--headerHeight)+15px)] pb-4 md:pt-[calc(var(--headerHeight)+26px)] xl:overflow-x-visible">

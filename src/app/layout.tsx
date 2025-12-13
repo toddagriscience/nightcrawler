@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/context/theme/ThemeContext';
 import './globals.css';
 import { PostHogProvider } from './providers';
 import { fontVariables } from '@/lib/fonts';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 /**
  * Root layout metadata for pages outside [locale] directory
@@ -31,8 +32,10 @@ export default function RootLayout({
       <body className={fontVariables}>
         <PostHogProvider>
           <ThemeProvider>
-            <ThemeReset />
-            {children}
+            <TooltipProvider delayDuration={0} skipDelayDuration={0}>
+              <ThemeReset />
+              {children}
+            </TooltipProvider>
           </ThemeProvider>
         </PostHogProvider>
       </body>
