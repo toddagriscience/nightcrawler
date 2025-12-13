@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import AuthCodeError from './page';
+import { describe, test, expect } from 'vitest';
 
 describe('AuthCodeError', () => {
   test('should render the correct title and message', () => {

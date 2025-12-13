@@ -5,7 +5,6 @@ import React from 'react';
 import { AuthError } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, vitest, test, vi } from 'vitest';
 import ResizeObserver from 'resize-observer-polyfill';
-import { UpdateUserResponse } from '@/lib/types/auth';
 
 global.ResizeObserver = ResizeObserver;
 
@@ -41,9 +40,7 @@ describe('ResetPassword', () => {
   test('should render the password reset form initially', () => {
     vi.mocked(React.useActionState).mockImplementation(() => [
       null,
-      vi.fn(() => {
-        success: true;
-      }),
+      vi.fn(() => {}),
       false,
     ]);
     render(<ResetPassword />);
@@ -68,9 +65,7 @@ describe('ResetPassword', () => {
   test('should toggle password visibility when "Show Password" checkbox is clicked', async () => {
     vi.mocked(React.useActionState).mockImplementation(() => [
       null,
-      vi.fn(() => {
-        success: true;
-      }),
+      vi.fn(() => {}),
       false,
     ]);
     render(<ResetPassword />);
@@ -106,9 +101,7 @@ describe('ResetPassword', () => {
     const ERROR_STATE = { error: new AuthError(ERROR_MESSAGE) };
     vi.mocked(React.useActionState).mockImplementation(() => [
       ERROR_STATE,
-      vi.fn(() => {
-        success: true;
-      }),
+      vi.fn(() => {}),
       false,
     ]);
     render(<ResetPassword />);
@@ -143,9 +136,7 @@ describe('ResetPassword', () => {
   test('should show success screen and redirect to dashboard on successful action', async () => {
     vi.mocked(React.useActionState).mockImplementation(() => [
       [[]],
-      vi.fn(() => {
-        success: true;
-      }),
+      vi.fn(() => {}),
       false,
     ]);
     render(<ResetPassword />);
@@ -176,9 +167,7 @@ describe('ResetPassword', () => {
 
     vi.mocked(React.useActionState).mockImplementation(() => [
       ERROR_STATE,
-      vi.fn(() => {
-        success: true;
-      }),
+      vi.fn(() => {}),
       false,
     ]);
     render(<ResetPassword />);

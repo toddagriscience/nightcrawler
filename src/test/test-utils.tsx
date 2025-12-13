@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { act, fireEvent, render, RenderOptions } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
-import { vi, vitest } from 'vitest';
+import { vitest } from 'vitest';
 
 /**
  * Translations type
