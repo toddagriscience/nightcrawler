@@ -1,0 +1,29 @@
+{
+  "getStarted": {
+    "title": "Comenzar",
+    "subtitle": "¿Listo para asociarse con Todd Agriscience? Hablemos sobre cómo podemos ayudar a transformar sus operaciones agrícolas.",
+    "description": "Ya sea que esté interesado en prácticas de agricultura regenerativa, soluciones de gestión agrícola o estrategias de participación del consumidor, estamos aquí para ayudar. Complete el formulario a continuación y nuestro equipo se pondrá en contacto con usted en breve.",
+    "form": {
+      "nameLabel": "Su Nombre",
+      "emailLabel": "Su Correo Electrónico",
+      "companyLabel": "Nombre de la Empresa",
+      "interestLabel": "¿En qué está interesado?",
+      "messageLabel": "Cuéntenos más sobre sus necesidades",
+      "submitButton": "Enviar Consulta",
+      "inProgressSubmit": "Enviando...",
+      "required": "Requerido"
+    },
+    "interestOptions": {
+      "regenerativeAgriculture": "Agricultura Regenerativa",
+      "farmManagement": "Gestión Agrícola",
+      "consumerEngagement": "Compromiso del Consumidor",
+      "partnership": "Oportunidades de Asociación",
+      "other": "Otro"
+    },
+    "thankYou": {
+      "title": "Gracias",
+      "content": "Hemos recibido su consulta. Nuestro equipo revisará su envío y se comunicará con usted dentro de 1-2 días hábiles.",
+      "homeLink": "Volver al Inicio"
+    }
+  }
+}
