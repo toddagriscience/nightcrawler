@@ -207,6 +207,9 @@ However, husky/workflows will handle the majority of code validation/testing for
 - Follow AirBNB's JavaScript style [guide](https://github.com/airbnb/javascript) for all JavaScript/TypeScript
 - JSDoc _everything_ -- even with TypeScript. There should be no confusion in variable purpose or meaning
 - Format all code with `prettier`. Additionally ensure that your formatter is using the configuration found in `.prettierrc`
+- Each file should have a license header (copyright) defined in license-header.txt. Upon running `bun run lint:fix`, the following steps will run:
+  1.  A custom script: cleans up documents that contain a starting file comment, preparing them so they are not overriden by the plugin
+  2.  Run `eslint-plugin-license-header`: adds a copyright statement to the beginning of each file written by a Todd organization member
 
 For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
 

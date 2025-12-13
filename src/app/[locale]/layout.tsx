@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { PageHero } from '@/components/common';
 import { ScrollShrinkWrapper } from '@/components/landing';

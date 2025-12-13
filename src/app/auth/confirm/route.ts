@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createClient } from '@/lib/supabase/server';
 import { type EmailOtpType } from '@supabase/supabase-js';

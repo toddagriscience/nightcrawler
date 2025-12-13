@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 import { Button } from '@/components/ui';
 import { Spinner } from '@/components/ui/spinner';

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen } from '@/test/test-utils';
 import { render, waitFor } from '@testing-library/react';

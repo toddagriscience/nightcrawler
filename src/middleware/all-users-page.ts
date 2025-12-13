@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { isRouteInternationalized } from '@/lib/routing';
 import { NextRequest } from 'next/server';

@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { z } from 'zod';
 
 /** Schema for log in validation */
