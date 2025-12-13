@@ -1,5 +1,30 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+/**
+ * @fileoverview
+ * Normalizes source-file license headers across a codebase.
+ *
+ * This script scans JavaScript and TypeScript source files and ensures that
+ * a standardized license header is present at the top of each file.
+ *
+ * Behavior:
+ * 1. If a file has no leading comment, the license header is prepended.
+ * The license text is loaded from a shared license file and applied
+ * consistently to all matched source files.
+ *
+ * Files processed:
+ * - JavaScript and TypeScript files (`.js`, `.jsx`, `.ts`, `.tsx`)
+ *
+ * Files ignored:
+ * - `node_modules/**`
+ * - TypeScript declaration files (`*.d.ts`)
+ *
+ * Notes:
+ * - The script operates in-place and overwrites files on disk.
+ * - Errors during processing will terminate execution with a non-zero exit code.
+ *
+ */
+
 import { promises as fs } from 'fs';
 import { stat } from 'fs/promises';
 import { glob } from 'glob';

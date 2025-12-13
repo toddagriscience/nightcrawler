@@ -28,8 +28,7 @@
     "prepare": "husky",
     "ci": "bun run type-check && bun run lint && bun run test && bun run build",
     "validate": "bun run format:check && bun run ci",
-    "generate-icons": "tsx scripts/generate-icons.ts",
-    "check-license": "eslint . --rule 'license-header/header: [error, { 'template': '/*\\n * Copyright © Todd Agriscience, Inc. All rights reserved.\\n */' }]'"
+    "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",
