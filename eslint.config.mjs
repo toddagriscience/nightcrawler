@@ -21,7 +21,7 @@ const eslintConfig = [
       'next-env.d.ts',
       '.storybook/**',
       'storybook-static/**',
-      'jest.config.js',
+      'vitest.config.js',
       'playwright.config.ts',
       '**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)', // Ignore all story files
     ],

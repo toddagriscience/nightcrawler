@@ -24,7 +24,7 @@ const mockLocaleContext = (
   customTranslations: Translations = {},
   isLoading: boolean = false
 ) => {
-  // Use empty messages since Jest setup handles the mocking
+  // Use empty messages since Vitest setup handles the mocking
   const actualMessages = {};
 
   // Helper to get nested translation keys
@@ -155,7 +155,7 @@ const AllTheProviders = ({
   useNextIntl = true,
 }: AllTheProvidersProps) => {
   if (useNextIntl) {
-    // Use next-intl with Jest mocked messages (no message loading needed)
+    // Use next-intl with Vitest mocked messages (no message loading needed)
     return (
       <NextIntlClientProvider locale={locale} messages={{}}>
         <ThemeProvider>{children}</ThemeProvider>

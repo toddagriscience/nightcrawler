@@ -87,7 +87,7 @@ This will run: format check → type check → lint → unit tests → build
 
 ### Testing
 
-- `bun run test` - Run Jest unit tests
+- `bun run test` - Run Vitest unit tests
 - `bun run test:watch` - Run tests in watch mode
 - `bun run test:coverage` - Generate test coverage report
 - `bun run test:e2e` - Run Playwright E2E tests
@@ -146,9 +146,9 @@ This will run: format check → type check → lint → unit tests → build
 
 #### Testing Stack
 
-- **Unit Testing**: Jest v30 + React Testing Library v16.3
+- **Unit Testing**: Vitest v4 + React Testing Library v16.3
 - **Component Testing**: Storybook v9.1 with interaction testing
-- **Coverage**: Jest coverage reports with comprehensive collection
+- **Coverage**: Vitest coverage reports with comprehensive collection
 - **Test Setup**: Custom test utilities with i18n support
 
 #### Code Quality
@@ -292,7 +292,7 @@ app/
 
 ### Test Configuration
 
-- **Jest Setup**: Custom configuration with next-intl support
+- **Vitest Setup**: Custom configuration with next-intl support
 - **Coverage Reports**: HTML, LCOV, and text formats
 - **Test Utilities**: Custom render functions with providers
 - **Mock Setup**: Comprehensive mocking for external dependencies

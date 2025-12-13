@@ -3,6 +3,7 @@
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import PageHero from './page-hero';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('PageHero', () => {
   it('renders without crashing', () => {

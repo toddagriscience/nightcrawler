@@ -4,6 +4,7 @@ import { screen, renderWithAct } from '@/test/test-utils';
 import NewsCard from './news-card';
 import '@testing-library/jest-dom';
 import NewsCardProps from './types/news-card';
+import { describe, it, expect } from 'vitest';
 
 describe('NewsCard', () => {
   const mockProps: NewsCardProps = {

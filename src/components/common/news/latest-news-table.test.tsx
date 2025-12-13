@@ -5,6 +5,7 @@ import { LatestNewsTable } from './latest-news-table';
 import '@testing-library/jest-dom';
 import NewsCardProps from '../news-card/types/news-card';
 import { act } from 'react';
+import { describe, it, expect } from 'vitest';
 
 const items: NewsCardProps[] = [
   {

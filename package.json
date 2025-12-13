@@ -19,7 +19,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest --passWithNoTests",
+    "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "storybook": "storybook dev -p 6006",
@@ -44,6 +44,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
     "glob": "11.1.0",
+    "jsdom": "^27.3.0",
     "lucide-react": "^0.544.0",
     "next": "^16.0.10",
     "next-intl": "^4.4.0",
@@ -86,6 +87,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5",
+    "vitest": "^4.0.15",
     "whatwg-fetch": "^3.6.20"
   },
   "lint-staged": {

@@ -1,34 +1,32 @@
 // Copyright Todd Agriscience, Inc. All rights reserved.
 
-/**
- * @jest-environment node
- */
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 
 // Import setup first
 import './middleware.setup';
 
 // Mock next/server with proper NextResponse class
-jest.mock('next/server', () => {
+vi.mock('next/server', () => {
   class MockNextResponse {
     private headerStore: { [key: string]: string } = {};
 
     headers = {
-      set: jest.fn((key: string, value: string) => {
+      set: vi.fn((key: string, value: string) => {
         this.headerStore[key] = value;
       }),
-      get: jest.fn((key: string) => {
+      get: vi.fn((key: string) => {
         return this.headerStore[key] || null;
       }),
     };
     cookies = {
-      delete: jest.fn(),
+      delete: vi.fn(),
     };
 
-    static next = jest.fn(() => {
+    static next = vi.fn(() => {
       return new MockNextResponse();
     });
 
-    static redirect = jest.fn((url: string) => {
+    static redirect = vi.fn((url: string) => {
       const response = new MockNextResponse();
       response.headers.set('location', url);
       return response;
@@ -36,25 +34,25 @@ jest.mock('next/server', () => {
   }
 
   return {
-    NextRequest: jest.fn(),
+    NextRequest: vi.fn(),
     NextResponse: MockNextResponse,
   };
 });
 
 // Mock next-intl/middleware
-jest.mock('next-intl/middleware', () => {
-  const mockIntlMiddleware = jest.fn(() => {
+vi.mock('next-intl/middleware', () => {
+  const mockIntlMiddleware = vi.fn(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { NextResponse } = require('next/server');
     const response = NextResponse.next();
     response.headers.set('x-intl-processed', '1');
     return response;
   });
-  return jest.fn(() => mockIntlMiddleware);
+  return vi.fn(() => mockIntlMiddleware);
 });
 
 // Mock i18n config
-jest.mock('@/i18n/config', () => ({
+vi.mock('@/i18n/config', () => ({
   routing: {
     locales: ['en', 'es'],
     defaultLocale: 'en',
@@ -67,7 +65,7 @@ import { ensureNextResponse, handleI18nMiddleware } from './i18n';
 
 describe('I18n Middleware', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('handleI18nMiddleware', () => {
@@ -97,7 +95,7 @@ describe('I18n Middleware', () => {
       const mockRequest = {
         nextUrl: {
           pathname: '/who-we-are',
-          clone: jest.fn().mockReturnValue({
+          clone: vi.fn().mockReturnValue({
             pathname: '/who-we-are',
           }),
         },
@@ -140,7 +138,7 @@ describe('I18n Middleware', () => {
       } as unknown as Response;
 
       // Mock the headers.forEach method
-      mockBasicResponse.headers.forEach = jest.fn((callback) => {
+      mockBasicResponse.headers.forEach = vi.fn((callback) => {
         callback('test-value', 'x-test-header', mockBasicResponse.headers);
         callback(
           'another-value',
@@ -151,11 +149,11 @@ describe('I18n Middleware', () => {
 
       const mockNewResponse = {
         headers: {
-          set: jest.fn(),
+          set: vi.fn(),
         },
       } as unknown as NextResponse;
 
-      (NextResponse.next as jest.Mock).mockReturnValue(mockNewResponse);
+      (NextResponse.next as Mock).mockReturnValue(mockNewResponse);
 
       const result = ensureNextResponse(mockBasicResponse);
 
@@ -174,11 +172,11 @@ describe('I18n Middleware', () => {
       const mockBasicResponse = {} as Response;
       const mockNewResponse = {
         headers: {
-          set: jest.fn(),
+          set: vi.fn(),
         },
       } as unknown as NextResponse;
 
-      (NextResponse.next as jest.Mock).mockReturnValue(mockNewResponse);
+      (NextResponse.next as Mock).mockReturnValue(mockNewResponse);
 
       const result = ensureNextResponse(mockBasicResponse);
 

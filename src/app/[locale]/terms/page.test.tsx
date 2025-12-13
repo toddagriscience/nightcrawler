@@ -5,6 +5,7 @@
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import TermsOfUsePage from './page';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('TermsOfUsePage', () => {
   it('renders terms and conditions', () => {

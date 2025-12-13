@@ -5,7 +5,7 @@
 import { messageFiles } from './src/i18n/message-files';
 import { vitest } from 'vitest';
 
-// Load all separated message files synchronously for Jest - mirrors request.ts
+// Load all separated message files synchronously for Vitest - mirrors request.ts
 const loadMessagesSync = (locale) => {
   const messages = {};
 

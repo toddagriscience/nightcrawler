@@ -3,7 +3,7 @@
 import { defineConfig } from 'vitest/config';
 import path from 'path';
 
-// Add any custom config to be passed to Jest
+// Add any custom config to be passed to Vitest
 export default defineConfig({
   test: {
     setupFiles: [

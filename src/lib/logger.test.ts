@@ -101,7 +101,7 @@ describe('Logger Utility', () => {
   });
 
   it('should detect development environment correctly', () => {
-    // Since we can't easily mock process.env in Jest reliably,
+    // Since we can't easily mock process.env in Vitest reliably,
     // we'll test the manual enable/disable functionality instead
     const originalEnabled = logger.isEnabled();
 
