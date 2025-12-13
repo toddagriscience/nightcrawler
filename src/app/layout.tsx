@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import type { Metadata } from 'next';
 import { ThemeReset } from '@/components/common';
 import { ThemeProvider } from '@/context/theme/ThemeContext';

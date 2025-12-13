@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NextURL } from 'next/dist/server/web/next-url';
 import isAllUserRoute from './all-users-page';

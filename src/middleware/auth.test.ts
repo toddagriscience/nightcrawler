@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { handleAuthRouting } from '@/middleware/auth';

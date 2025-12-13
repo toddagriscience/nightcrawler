@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import './middleware.setup';
 import { describe, it, expect, beforeEach, vi } from 'vitest';

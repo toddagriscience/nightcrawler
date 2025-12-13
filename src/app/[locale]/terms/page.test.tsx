@@ -1,11 +1,11 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 //
 // The tests here contain a *lot* of text. Sorry :(
-
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import TermsOfUsePage from './page';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
+import TermsOfUsePage from './page';
 
 describe('TermsOfUsePage', () => {
   it('renders terms and conditions', () => {

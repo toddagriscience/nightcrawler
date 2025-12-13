@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata } from 'next';
 import LogoutButton from '@/components/common/utils/logout-button/logout-button';

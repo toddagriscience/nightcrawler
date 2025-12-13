@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from './page';

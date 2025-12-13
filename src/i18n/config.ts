@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createNavigation } from 'next-intl/navigation';
 import { defineRouting } from 'next-intl/routing';

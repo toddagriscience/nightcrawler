@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { AuthError } from '@supabase/supabase-js';
 
 /** An error type, specifically used in the `login()` funtion from `@/lib/action/auth`. */

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { ensureNextResponse, handleI18nMiddleware } from './i18n';

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { PasswordRequirements } from '@/lib/types/auth';
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';

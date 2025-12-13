@@ -1,4 +1,4 @@
-// Copyright Todd LLC, All rights reserved
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import AccessibilityPage from './page';

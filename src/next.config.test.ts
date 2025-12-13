@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeAll, describe, expect, it, vitest } from 'vitest';
 import { NextConfig } from 'next';
