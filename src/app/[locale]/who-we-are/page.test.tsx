@@ -3,9 +3,10 @@
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import WhoWeArePage from './page';
 import '@testing-library/jest-dom';
+import { describe, it, expect, vi } from 'vitest';
 
 // Mock the ScrollShrinkWrapper component
-jest.mock('@/components/landing', () => ({
+vi.mock('@/components/landing', () => ({
   ScrollShrinkWrapper: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="scroll-shrink-wrapper">{children}</div>
   ),

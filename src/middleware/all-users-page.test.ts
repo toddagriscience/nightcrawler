@@ -3,6 +3,7 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 import isAllUserRoute from './all-users-page';
 import { NextRequest } from 'next/server';
+import { describe, it, expect } from 'vitest';
 
 // Helper to mock NextRequest
 function mockNextRequest(pathname: string): Partial<NextRequest> {

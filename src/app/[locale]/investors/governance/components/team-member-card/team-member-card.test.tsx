@@ -3,6 +3,7 @@
 import { render, screen } from '@testing-library/react';
 import TeamMemberCard from './team-member-card';
 import { TeamMember } from './types/team-member-card';
+import { describe, it, expect } from 'vitest';
 
 const mockTeamMember: TeamMember = {
   name: 'John Doe',

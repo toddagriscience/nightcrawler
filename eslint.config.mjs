@@ -26,7 +26,7 @@ export default [
       'next-env.d.ts',
       '.storybook/**',
       'storybook-static/**',
-      'jest.config.js',
+      'vitest.config.js',
       'playwright.config.ts',
       'vitest.config.ts',
       'vitest.shims.d.ts',

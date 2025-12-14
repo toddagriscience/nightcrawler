@@ -3,16 +3,17 @@
 import { render, screen } from '@testing-library/react';
 import ForgotPassword from './page';
 import { useActionState } from 'react';
-import { AuthError } from '@supabase/supabase-js';
+import { describe, test, expect, vi } from 'vitest';
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useActionState: jest.fn(),
-}));
+vi.mock('react', { spy: true });
 
 describe('ForgotPassword', () => {
   test('should render the form and initial prompt without errors', () => {
-    (useActionState as jest.Mock).mockReturnValue([null, jest.fn()]);
+    vi.mocked(useActionState).mockImplementation(() => [
+      null,
+      vi.fn(() => {}),
+      false,
+    ]);
 
     render(<ForgotPassword />);
 
@@ -40,7 +41,11 @@ describe('ForgotPassword', () => {
     ).toBeInTheDocument();
 
     // Rerender the component with the successful state returned by the mock
-    (useActionState as jest.Mock).mockReturnValue([[], null]);
+    vi.mocked(useActionState).mockImplementation(() => [
+      [[]],
+      vi.fn(() => {}),
+      false,
+    ]);
     rerender(<ForgotPassword />);
 
     expect(
@@ -58,9 +63,10 @@ describe('ForgotPassword', () => {
 
   test('should display error message after failed submission', async () => {
     const errorMessage = 'Invalid email or server error.';
-    (useActionState as jest.Mock).mockReturnValue([
-      { error: new AuthError(errorMessage) },
-      null,
+    vi.mocked(useActionState).mockImplementation(() => [
+      { error: errorMessage },
+      vi.fn(() => {}),
+      false,
     ]);
 
     render(<ForgotPassword />);

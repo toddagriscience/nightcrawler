@@ -3,25 +3,26 @@
 import { screen, renderWithAct } from '@/test/test-utils';
 import Carousel from './carousel';
 import '@testing-library/jest-dom';
+import { describe, it, expect, vi } from 'vitest';
 
 // Mock embla-carousel-react
-jest.mock('embla-carousel-react', () => {
+vi.mock('embla-carousel-react', () => {
   const mockEmblaApi = {
-    scrollSnapList: jest.fn(() => [0, 1, 2]),
-    selectedScrollSnap: jest.fn(() => 0),
-    scrollPrev: jest.fn(),
-    scrollNext: jest.fn(),
-    scrollTo: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    canScrollPrev: jest.fn(() => true),
-    canScrollNext: jest.fn(() => true),
+    scrollSnapList: vi.fn(() => [0, 1, 2]),
+    selectedScrollSnap: vi.fn(() => 0),
+    scrollPrev: vi.fn(),
+    scrollNext: vi.fn(),
+    scrollTo: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    canScrollPrev: vi.fn(() => true),
+    canScrollNext: vi.fn(() => true),
   };
 
   return {
     __esModule: true,
-    default: jest.fn(() => [
-      jest.fn(), // emblaRef
+    default: vi.fn(() => [
+      vi.fn(), // emblaRef
       mockEmblaApi, // emblaApi
     ]),
   };

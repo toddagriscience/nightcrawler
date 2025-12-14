@@ -3,6 +3,7 @@
 import { screen, fireEvent, renderWithNextIntl } from '@/test/test-utils';
 import Header from './header';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('Header', () => {
   it('renders without crashing', () => {

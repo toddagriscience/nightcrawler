@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 /**
- * Jest setup for middleware tests
+ * Vitest setup for middleware tests
  * Provides required Web API globals for Next.js middleware testing
  */
 
