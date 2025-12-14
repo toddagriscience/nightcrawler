@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
   screen,
@@ -6,9 +6,9 @@ import {
   fireEvent,
   waitFor,
 } from '@/test/test-utils';
-import '@testing-library/jest-dom';
 import Contact from './page';
-import { act } from 'react';
+import { it, describe, expect, vitest } from 'vitest';
+import { act } from '@/test/test-utils';
 
 describe('Contact page', () => {
   it('renders correctly', () => {
@@ -39,7 +39,7 @@ describe('Contact page', () => {
   });
   it('sends a message and renders thank you screen', async () => {
     process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
-    window.fetch = jest.fn().mockImplementation(() =>
+    window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
         json: () =>
@@ -62,24 +62,27 @@ describe('Contact page', () => {
       fireEvent.change(emailInput, { target: { value: 'wsup@gmail.com' } });
       fireEvent.change(message, { target: { value: 'cba' } });
       select.click();
+    });
 
+    waitFor(() => {
       const other = screen.getByTestId('other');
-      other.click();
+      act(() => {
+        other.click();
+      });
     });
 
-    const submit = screen.getByRole('button');
-
-    act(() => {
-      submit.click();
+    waitFor(() => {
+      const submit = screen.getByRole('button');
+      act(() => {
+        submit.click();
+      });
     });
 
-    await waitFor(() =>
-      expect(screen.getByText('Thank You')).toBeInTheDocument()
-    );
+    expect(await screen.findByText('Thank You')).toBeInTheDocument();
   });
   it('displays error on failure', async () => {
     process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
-    window.fetch = jest.fn().mockImplementation(() =>
+    window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,
         json: () =>
@@ -91,7 +94,7 @@ describe('Contact page', () => {
     );
 
     let numConsoleErrors = 0;
-    window.console.error = jest.fn().mockImplementation(() => {
+    window.console.error = vitest.fn().mockImplementation(() => {
       numConsoleErrors++;
     });
 
@@ -108,14 +111,17 @@ describe('Contact page', () => {
       fireEvent.change(message, { target: { value: 'cba' } });
       select.click();
 
-      const other = screen.getByTestId('other');
-      other.click();
+      waitFor(() => {
+        const other = screen.getByTestId('other');
+        other.click();
+      });
     });
 
-    const submit = screen.getByRole('button');
-
-    act(() => {
-      submit.click();
+    waitFor(() => {
+      const submit = screen.getByRole('button');
+      act(() => {
+        submit.click();
+      });
     });
 
     await waitFor(() =>

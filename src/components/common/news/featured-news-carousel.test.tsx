@@ -1,70 +1,62 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { FeaturedNewsCarousel } from './featured-news-carousel';
-import {
-  createImageUrlBuilder,
-  type SanityImageSource,
-} from '@sanity/image-url';
-import { client } from '@/lib/sanity/client';
 import { render } from '@testing-library/react';
+import { vi, beforeEach, describe, it, expect } from 'vitest';
 import { SanityDocument } from 'next-sanity';
 
 // Mock embla-carousel-react
-jest.mock('embla-carousel-react', () => {
+vi.mock('embla-carousel-react', () => {
   const mockEmblaApi = {
-    scrollSnapList: jest.fn(() => [0, 1, 2]),
-    selectedScrollSnap: jest.fn(() => 0),
-    scrollPrev: jest.fn(),
-    scrollNext: jest.fn(),
-    scrollTo: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    canScrollPrev: jest.fn(() => true),
-    canScrollNext: jest.fn(() => true),
+    scrollSnapList: vi.fn(() => [0, 1, 2]),
+    selectedScrollSnap: vi.fn(() => 0),
+    scrollPrev: vi.fn(),
+    scrollNext: vi.fn(),
+    scrollTo: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    canScrollPrev: vi.fn(() => true),
+    canScrollNext: vi.fn(() => true),
   };
 
   return {
     __esModule: true,
-    default: jest.fn(() => [
-      jest.fn(), // emblaRef
+    default: vi.fn(() => [
+      vi.fn(), // emblaRef
       mockEmblaApi, // emblaApi
     ]),
   };
 });
 
-// const { projectId = 'NO_PROJECT_ID', dataset = 'NO_DATASET' } = client.config();
-// jest.mock('@/lib/sanity/utils', () => {
-//   return {
-//     urlFor: () =>
-//       createImageUrlBuilder({ projectId, dataset }).image(
-//         '/image/src/' as SanityImageSource
-//       ),
-//   };
-// });
-
 const items = [
   {
     title: 'New AI Model Sets Performance Record',
     isDark: false,
-    thumbnail: {
-      url: 'https://example.com/ai-model.jpg',
-      alt: 'AI model visualization',
-    },
     source: 'TechCrunch',
     date: 'November 20, 2024',
     summary:
       'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
     link: 'https://example.com/news/new-ai-model-sets-record',
+    slug: { current: 'new-ai' },
+    thumbnail: {
+      url: 'https://example.com/markets.jpg',
+      alt: 'Stock market graph',
+    },
   },
   {
+    thumbnail: {
+      url: 'https://example.com/markets.jpg',
+      alt: 'Stock market graph',
+    },
     title: 'Local Startup Raises $12M in Funding',
     source: 'Bloomberg',
     date: 'November 18, 2024',
     summary:
       'A fast-growing local startup secured new funding to expand its platform and hire additional engineers.',
     link: 'https://bloomberg.com/startup-raises-12m',
+    slug: { current: 'breakthrough' },
   },
   {
     title: 'Breakthrough in Renewable Energy Tech',
@@ -78,6 +70,11 @@ const items = [
     summary:
       'Researchers unveiled a new renewable energy system that drastically improves efficiency and reduces waste.',
     link: 'https://example.com/news/renewable-energy-breakthrough',
+    slug: { current: 'local-startup' },
+    thumbnail: {
+      url: 'https://example.com/markets.jpg',
+      alt: 'Stock market graph',
+    },
   },
   {
     title: 'New Security Protocol Announced',
@@ -90,7 +87,11 @@ const items = [
     date: 'September 15, 2024',
     summary:
       'A new security protocol aims to make online communication significantly safer for consumers and businesses.',
-    link: 'https://theverge.com/new-security-protocol',
+    slug: { current: 'new-security' },
+    thumbnail: {
+      url: 'https://example.com/markets.jpg',
+      alt: 'Stock market graph',
+    },
   },
   {
     title: 'Global Markets Show Strong Growth',
@@ -104,30 +105,53 @@ const items = [
     summary:
       'Despite ongoing global challenges, markets have shown resilience with steady upward growth.',
     link: 'https://example.com/news/global-markets-growth',
+    slug: { current: 'global-markets' },
   },
 ];
 
+const builder = {
+  width: vi.fn().mockReturnThis(),
+  height: vi.fn().mockReturnThis(),
+  src: vi.fn().mockReturnValue('mocked-url'),
+  url: vi.fn().mockReturnValue('https://google.com/test.png'),
+};
+
+vi.mock('@/lib/sanity/utils', () => {
+  return {
+    urlFor: vi.fn(() => builder),
+  };
+});
+
+//
+// const imageMock = vi.fn((source: SanityImageSource) => builder);
+// imageMock.mockReturnValue(builder);
+//
+// vi.mock('@sanity/image-url', () => ({
+//   createImageUrlBuilder: vi.fn(() => ({
+//     image: imageMock,
+//   })),
+// }));
+
 describe('FeaturedNewsCarousel', () => {
-  // it('renders without imploding', () => {
-  //   render(
-  //     <FeaturedNewsCarousel items={items as unknown as SanityDocument[]} />
-  //   );
-  //
-  //   // Should only show the first article
-  //   expect(screen.getByText('Awesome article')).toBeInTheDocument();
-  //   expect(
-  //     screen.getByText('omfg i despise making test data')
-  //   ).toBeInTheDocument();
-  //
-  //   // We SHOULD see the next articles
-  //   expect(screen.queryByText('Wow another cool article')).toBeInTheDocument();
-  //   expect(screen.queryByText('skibidi toilet')).toBeInTheDocument();
-  //
-  //   // Two visible buttons
-  //   const numNavButtons = 2;
-  //   expect(screen.getAllByRole('button')).toHaveLength(numNavButtons);
-  // });
-  it('is temporary', () => {
-    expect(true);
+  beforeEach(() => {
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = '3x7sixjh';
+    process.env.NEXT_PUBLIC_SANITY_DATASET = 'production';
+  });
+  it('renders without imploding', () => {
+    render(
+      <FeaturedNewsCarousel items={items as unknown as SanityDocument[]} />
+    );
+
+    // Should only show the first three articles (assuming we're rendering this on a reasonably sized 16:9 screen)
+    expect(
+      screen.getByText('New AI Model Sets Performance Record')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('Local Startup Raises $12M in Funding')
+    ).toBeInTheDocument();
+
+    // Two visible buttons
+    const numNavButtons = 2;
+    expect(screen.getAllByRole('button')).toHaveLength(numNavButtons);
   });
 });

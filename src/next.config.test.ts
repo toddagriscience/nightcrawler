@@ -1,15 +1,16 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
-/**
- * Tests for Next.js configuration security headers
- * Validates that all required security headers are properly configured
- */
+import { beforeAll, describe, expect, it, vitest } from 'vitest';
 import { NextConfig } from 'next';
 import nextConfig from '../next.config';
 
 // Mock next-intl/plugin to avoid Next.js initialization errors in tests
-jest.mock('next-intl/plugin', () => {
-  return jest.fn(() => (config: NextConfig) => config);
+vitest.mock(import('next-intl/plugin'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    createNextIntlPlugin: vitest.fn(() => (config: NextConfig) => config),
+  };
 });
 
 type SecurityHeader = {

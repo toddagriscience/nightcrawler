@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { type SanityImageSource } from '@sanity/image-url';
 import Image from 'next/image';
 import { PortableTextComponentProps } from 'next-sanity';

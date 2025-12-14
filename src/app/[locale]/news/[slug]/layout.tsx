@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import sanityQuery from '@/lib/sanity/query';
 import { Metadata } from 'next';
 

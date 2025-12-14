@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';

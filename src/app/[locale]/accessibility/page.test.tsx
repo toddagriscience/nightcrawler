@@ -1,8 +1,9 @@
-// Copyright Todd LLC, All rights reserved
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import AccessibilityPage from './page';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('AccessibilityPage', () => {
   it('renders the page', () => {

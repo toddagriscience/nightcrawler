@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { createBrowserClient } from '@supabase/ssr';
 
 export function createClient() {

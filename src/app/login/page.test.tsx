@@ -1,8 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
-
-/**
- * @jest-environment jsdom
- */
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from './page';
@@ -10,43 +6,42 @@ import { login } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import userEvent from '@testing-library/user-event';
 import { loginErrors } from '@/lib/auth';
+import { beforeEach, describe, expect, test, vitest } from 'vitest';
+import type { Mock } from 'vitest';
+import ResizeObserver from 'resize-observer-polyfill';
 
-jest.mock('@/lib/auth', () => ({
-  login: jest.fn(),
-  loginErrors: jest.fn(),
+vitest.mock('@/lib/auth', () => ({
+  login: vitest.fn(),
+  loginErrors: vitest.fn(),
 }));
 
-jest.mock('@/lib/actions/auth', () => ({
-  login: jest.fn(),
+vitest.mock('@/lib/actions/auth', () => ({
+  login: vitest.fn(),
 }));
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
+vitest.mock('next/navigation', () => ({
+  useRouter: vitest.fn(),
   usePathname: '/login',
 }));
 
-jest.mock('@/lib/env', () => ({
+vitest.mock('@/lib/env', () => ({
   env: {
     baseUrl: 'https://example.com',
   },
 }));
 
-jest.mock('@/components/common', () => ({
+vitest.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-global.ResizeObserver = jest.fn(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
-}));
+global.ResizeObserver = ResizeObserver;
 
 describe('login page', () => {
-  const mockPush = jest.fn();
+  const mockPush = vitest.fn();
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-    jest.clearAllMocks();
+    (useRouter as Mock).mockReturnValue({ push: mockPush });
+    vitest.clearAllMocks();
   });
 
   test('renders login form', () => {
@@ -58,7 +53,7 @@ describe('login page', () => {
   });
 
   test('shows spinner while loading', async () => {
-    (login as jest.Mock).mockImplementation(
+    (login as Mock).mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve({}), 1000))
     );
     render(<Login />);
@@ -77,10 +72,10 @@ describe('login page', () => {
   });
 
   test('failed login shows error message', async () => {
-    (login as jest.Mock).mockResolvedValue({
+    (login as Mock).mockResolvedValue({
       error: { message: 'Invalid credentials' },
     });
-    (loginErrors as jest.Mock).mockReturnValue(['Invalid credentials']);
+    (loginErrors as Mock).mockReturnValue(['Invalid credentials']);
 
     render(<Login />);
 
@@ -98,11 +93,11 @@ describe('login page', () => {
   });
 
   test('shows error if login() throws', async () => {
-    (login as jest.Mock).mockReturnValue({
+    (login as Mock).mockReturnValue({
       error: 'Network down',
       data: {},
     });
-    (loginErrors as jest.Mock).mockReturnValue(['Network down']);
+    (loginErrors as Mock).mockReturnValue(['Network down']);
 
     render(<Login />);
 
@@ -137,7 +132,7 @@ describe('login page', () => {
 
   test('does not submit unless both email and password are entered', async () => {
     render(<Login />);
-    (login as jest.Mock).mockReturnValue({ error: null });
+    (login as Mock).mockReturnValue({ error: null });
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');

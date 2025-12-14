@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +8,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { useLocale } from 'next-intl';
 import { SanityDocument } from 'next-sanity';
+import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 
 interface LatestNewsTableProps {
   items: SanityDocument[];
@@ -20,6 +23,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   };
 
   const locale = useLocale();
+  const windowHref = useCurrentUrl();
 
   return (
     <div className="rounded-md text-[#555555]">
@@ -45,7 +49,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             href={
               item.offSiteUrl
                 ? item.offSiteUrl
-                : window.location.href + '/' + item.slug.current
+                : windowHref + '/' + item.slug.current
             }
             target="_blank"
             rel="noopener noreferrer"

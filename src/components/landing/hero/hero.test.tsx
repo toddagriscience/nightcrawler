@@ -1,8 +1,9 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import Hero from './hero';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('Hero', () => {
   it('renders without crashing', () => {
@@ -19,5 +20,5 @@ describe('Hero', () => {
     expect(heading).toHaveTextContent('Advancing Agriculture Through Science');
   });
 
-  // TODO: Add Spanish translation tests when Jest/NextIntl integration is improved
+  // TODO: Add Spanish translation tests when Vitest/NextIntl integration is improved
 });

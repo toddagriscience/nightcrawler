@@ -1,4 +1,5 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';

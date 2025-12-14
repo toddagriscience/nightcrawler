@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { PageHero } from '@/components/common';
 import governanceTeam from '@/data/governance-team.json';
@@ -6,6 +6,7 @@ import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { TeamMemberCard } from '../components';
 import type { TeamMember } from '../components/team-member-card/types/team-member-card';
+import { describe, it, expect } from 'vitest';
 
 describe('GovernancePage Components', () => {
   it('renders PageHero with Vincent Todd information', () => {

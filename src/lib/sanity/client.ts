@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { createClient } from 'next-sanity';
 
 export const client = createClient({

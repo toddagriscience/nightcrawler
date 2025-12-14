@@ -1,14 +1,15 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ScrollShrinkWrapper from './scroll-shrink-wrapper';
+import { describe, it, expect, vi } from 'vitest';
 
 // Mock framer-motion
-jest.mock('framer-motion', () => ({
-  ...jest.requireActual('framer-motion'),
-  useScroll: jest.fn(() => ({ scrollYProgress: 0 })),
-  useTransform: jest.fn(() => '100vw'),
+vi.mock('framer-motion', () => ({
+  ...vi.importActual('framer-motion'),
+  useScroll: vi.fn(() => ({ scrollYProgress: 0 })),
+  useTransform: vi.fn(() => '100vw'),
   motion: {
     div: React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
       function MockMotionDiv({ children, ...props }, ref) {

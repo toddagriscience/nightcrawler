@@ -1,10 +1,11 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen } from '@/test/test-utils';
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SubmitButton from './submit-button';
 import userEvent from '@testing-library/user-event';
+import { it, describe, expect, vitest } from 'vitest';
 
 describe('submit button', () => {
   it('renders without exploding and taking the whole world with it', () => {
@@ -18,7 +19,7 @@ describe('submit button', () => {
     expect(screen.getByText('TEST')).toHaveClass('bg-amber-50');
   });
   it('calls given function correctly', async () => {
-    const testFn = jest.fn();
+    const testFn = vitest.fn();
     render(<SubmitButton buttonText="TEST" onClickFunction={testFn} />);
 
     userEvent.click(screen.getByText('TEST'));
@@ -28,7 +29,7 @@ describe('submit button', () => {
     });
   });
   it('disables when disabled', () => {
-    const testFn = jest.fn();
+    const testFn = vitest.fn();
     render(
       <SubmitButton
         buttonText="TEST"

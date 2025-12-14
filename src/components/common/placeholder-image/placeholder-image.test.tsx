@@ -1,9 +1,10 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl, waitFor } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import PlaceholderImage from './placeholder-image';
 import { fireEvent } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 
 describe('PlaceholderImage', () => {
   it('renders an image without destabilizing the quantum field', async () => {

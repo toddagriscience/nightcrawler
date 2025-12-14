@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { client } from '@/lib/sanity/client';
 import { FilteredResponseQueryOptions, SanityDocument } from 'next-sanity';

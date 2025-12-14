@@ -1,38 +1,43 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
-/**
- * @jest-environment jsdom
- */
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { login, checkAuthenticated, logout } from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
-jest.mock('./logger', () => ({
-  warn: jest.fn(),
-}));
+vitest.mock(import('./logger'), async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    warn: vitest.fn(),
+  };
+});
 
-const mockSignInWithPassword = jest.fn();
-const mockGetUser = jest.fn();
-const mockSignOut = jest.fn();
+const mockSignInWithPassword = vitest.fn();
+const mockGetUser = vitest.fn();
+const mockSignOut = vitest.fn();
 
-jest.mock('./supabase/client', () => ({
-  createClient: () => ({
-    auth: {
-      signInWithPassword: mockSignInWithPassword,
-      getUser: mockGetUser,
-      signOut: mockSignOut,
-    },
-  }),
-}));
+vitest.mock('./supabase/client', async (importActual) => {
+  const actual = await importActual<typeof import('./supabase/client')>();
+  return {
+    ...actual,
+    createClient: vitest.fn(() => ({
+      auth: {
+        signInWithPassword: mockSignInWithPassword,
+        getUser: mockGetUser,
+        signOut: mockSignOut,
+      },
+    })),
+  };
+});
 
-const mockRedirect = jest.fn();
-jest.mock('next/navigation', () => ({
+const mockRedirect = vitest.fn();
+vitest.mock('next/navigation', () => ({
   redirect: (path: string) => mockRedirect(path),
 }));
 
 describe('login', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   it('returns data and no error on successful login', async () => {
@@ -73,7 +78,7 @@ describe('login', () => {
 
 describe('logout', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
     mockGetUser.mockResolvedValue({
       data: { user: { id: '123' } },
     });
@@ -118,7 +123,7 @@ describe('logout', () => {
 
 describe('checkAuthenticated', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vitest.clearAllMocks();
   });
 
   it('returns true when a user exists', async () => {

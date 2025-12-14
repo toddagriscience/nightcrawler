@@ -1,10 +1,13 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+'use client';
 
 import { Carousel, NewsCard } from '@/components/common';
 import { urlFor } from '@/lib/sanity/utils';
 import { SanityDocument } from 'next-sanity';
 import ArticlePlaceholder from '@/../public/article-placeholder.webp';
 import { useLocale } from 'next-intl';
+import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 
 /*
  * A carousel for featured news.
@@ -16,6 +19,7 @@ export function FeaturedNewsCarousel({
   items: SanityDocument[];
 }) {
   const locale = useLocale();
+  const windowHref = useCurrentUrl();
 
   return (
     <Carousel isDark={true} showDots={true}>
@@ -42,7 +46,7 @@ export function FeaturedNewsCarousel({
           link={
             article.offSiteUrl && article.offSiteUrl.length > 0
               ? article.offSiteUrl
-              : window.location.href + '/' + article.slug.current
+              : windowHref + '/' + article.slug.current
           }
         />
       ))}

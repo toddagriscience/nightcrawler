@@ -1,8 +1,132 @@
-# Copyright Todd Agriscience, Inc. All rights reserved.
+# Contributing
 
-Important: Every single file must have " Copyright Todd Agriscience, Inc. All rights reserved." at the top of the file. This may be commented in whatever manner you prefer, but it must be present.
+This is the general contributing guide for the marketing site and platform. Please request permission before editing this document.
 
-## 🚀 Quick Start for New Contributors
+## Contents
+
+1. **adding this might help once its done**
+
+## Basic Workflow
+
+Check status:
+
+```
+git status
+```
+
+Make sure you're in the right branch and update main branch with any new code:
+
+```
+git checkout main
+git fetch origin
+git pull origin main
+```
+
+Create branch:
+
+(Name your branch using [conventional commits](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3) in the following format:
+`conventional-commit-type/short-description`) (all lowercase)
+
+```
+git checkout -b chore/branch-name
+```
+
+Edit your files:
+
+(Make sure to save your changes or you'll get a clean working tree error)
+
+Need to delete a file?
+
+```
+git rm filename.ext
+```
+
+Check your code:
+
+```
+bun validate
+```
+
+Had a formating issue? (hint: theres a plugin to do this automatically)
+
+```
+bun format
+```
+
+Had a linkting issue?
+
+```
+bun lint:fix
+```
+
+Had a type issue?
+
+```
+bun type-check
+```
+
+Stage your changes:
+
+```
+git add .
+```
+
+Make your commit:
+
+```
+git commit -m "feat: my commit message" -m "more information in a long paragraph format"
+```
+
+Push your branch/commits to Github:
+
+```
+git push origin chore/your-feature-name
+```
+
+Once your branch has been merged, delete it locally:
+
+```
+git branch -D chore/branch-name
+```
+
+### Notes:
+
+- Make sure to open an issue in Github. The issue should describe your solution, suggestion or idea clearly and concisely. Smaller, singlar issues are perferred over jumbo manifests.
+- When addressing the issue, please consider: "is my code and issue understanable if I disappeared tommorow?"
+- Draft a PR and connect it to your issue. You don't need it finished to create a PR.
+- Request a review once your finished.
+- If it's your PR, you get the honor of merging.
+- Don't contribute to someone else's PR unless they've requested your help.
+
+## When Things Break
+
+### The 4 C's:
+
+1. Confirm you followed the above steps exactly.
+2. Check if `main` branch works: `git checkout main && bun validate` (then remember to swap back)
+3. Clear cache in the root directory: `rm -rf .next node_modules && bun install`
+4. Cry (it might help?)
+
+### Still broken? It might be past a simple fix: ask for help 🙏.
+
+## 📋 Development Workflow
+
+1. Open an issue/discussion with _complete_ context. No "add api route for getting customers" issues. Your issue should ideally completely describe your solution/suggestion/idea.
+2. Create a branch, following conventional commits as specified [below](##standardsgeneral-information)
+3. Draft a PR. A draft PR should be made when your first commit is made, even if you're nowhere near close to merging.
+4. Request review and convert draft PR into a PR.
+5. Merge to main!
+
+A few notes:
+
+- We generally avoid directly interacting with others' PRs. If you see an issue, leave a comment/review
+- Smaller/more focused PRs are generally preferred -- we'd rather see 5 small PRs than 1 ginormous one
+- When drafting/creating a PR, consider:
+  - Have I updated documentation accordingly?
+  - Are tests passing?
+  - Is my code readable and could I or someone else build off of my code 1+ years from now?
+
+## First-Time Setup
 
 ### Prerequisites
 
@@ -10,7 +134,7 @@ Important: Every single file must have " Copyright Todd Agriscience, Inc. All ri
 - **Bun**: Latest stable version
 - **Git**: Latest stable version
 
-### First-Time Setup
+### Getting Started
 
 1. **Fork and clone the repository**
 
@@ -46,38 +170,9 @@ Important: Every single file must have " Copyright Todd Agriscience, Inc. All ri
    ```
    Open [http://localhost:3000](http://localhost:3000)
 
-## 📋 Development Workflow
-
-1. Open an issue/discussion with _complete_ context. No "add api route for getting customers" issues. Your issue should ideally completely describe your solution/suggestion/idea.
-2. Create a branch, following conventional commits as specified [below](##standardsgeneral-information)
-3. Draft a PR. A draft PR should be made when your first commit is made, even if you're nowhere near close to merging.
-4. Request review and convert draft PR into a PR.
-5. Merge to main!
-
-A few notes:
-
-- We generally avoid directly interacting with others' PRs. If you see an issue, leave a comment/review
-- Smaller/more focused PRs are generally preferred -- we'd rather see 5 small PRs than 1 ginormous one
-- When drafting/creating a PR, consider:
-  - Have I updated documentation accordingly?
-  - Are tests passing?
-  - Is my code readable and could I or someone else build off of my code 1+ years from now?
-
 ## Standards/General information
 
-`psylocke` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
-
-When creating a branch... follow conventional commits in the following format (all lowercase): `commit-type/branch-summary` Ex:
-
-Bad:
-`Feature/add-new-page`
-`carousel-logic`
-`feat/add-the-page-for-privacy-and-other-pages-related-to-privacy`
-
-Good:
-`feat/add-new-page`
-`refactor/carousel-logic`
-`feat/add-privacy-pages`
+`nightcrawler` follows and uses conventional commits (here's a [cheatsheet](https://gist.github.com/Zekfad/f51cb06ac76e2457f11c80ed705c95a3)). If this is completely new to you, read [this article](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/) as an introduction.
 
 ### Testing
 
@@ -90,11 +185,31 @@ Testing related commands:
 
 However, husky/workflows will handle the majority of code validation/testing for you.
 
+### Git Hooks Validation
+
+**Pre-commit** (when you commit): Husky runs `lint-staged` on staged files only:
+
+- **JS/TS files**: `eslint --fix` + `prettier --write`
+- **Other files**: `prettier --write`
+
+**Pre-push** (when you push): Husky runs full `bun validate`:
+
+1. **Format check** (`bun format:check`) - Prettier validation
+2. **Type check** (`bun type-check`) - TypeScript validation
+3. **Lint** (`bun lint`) - ESLint rules enforcement
+4. **Test** (`bun run test`) - Unit tests execution
+5. **Build** (`bun run build`) - Production build verification
+
+**If any pre-push step fails, your push is blocked.** Use the quick fixes below to resolve issues. If they don't work, check the terminal to see what issues exist and fix them manually
+
 ### Formatting/Styling
 
 - Follow AirBNB's JavaScript style [guide](https://github.com/airbnb/javascript) for all JavaScript/TypeScript
 - JSDoc _everything_ -- even with TypeScript. There should be no confusion in variable purpose or meaning
 - Format all code with `prettier`. Additionally ensure that your formatter is using the configuration found in `.prettierrc`
+- Each file should have a license header (copyright) defined in license-header.txt. Upon running `bun run lint:fix`, the following steps will run:
+  1.  A custom script: cleans up documents that contain a starting file comment, preparing them so they are not overriden by the plugin
+  2.  Run `eslint-plugin-license-header`: adds a copyright statement to the beginning of each file written by a Todd organization member
 
 For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
 
@@ -118,21 +233,13 @@ bun storybook      # Component testing
 - Mock external dependencies
 - Test accessibility with built-in a11y tools
 
-## 🎨 Code Standards
+## Code Standards
 
 ### TypeScript
 
 - **Strict mode enabled**: No `any` types
 - **Props interfaces**: Define all component props
 - **Type exports**: Export types for reusable interfaces
-
-### Components
-
-- **Functional components**: Use React hooks
-- **Props destructuring**: Destructure props in function signature
-- **Default exports**: Use default exports for components
-- **Naming**: PascalCase for components, kebab-case for files
-- **Logging**: Use `@/lib/logger` instead of `console.log/warn/error`
 
 ### Styling
 
@@ -217,67 +324,81 @@ logger.error('Critical error');
 - Manual testing with keyboard navigation
 - Color contrast validation
 
-## 📦 Component Development
+## Component Development
 
-### Creating New Components
+### For shared components:
 
-1. **Create component directory**
+```bash
+# Create in common directory
+mkdir src/components/common/your-component
+touch src/components/common/your-component/your-component.tsx
+touch src/components/common/your-component/your-component.test.tsx
+touch src/components/common/your-component/your-component.stories.tsx
 
-   ```bash
-   mkdir src/components/ui/my-component
-   ```
+# Add to common index (for shared components)
+# Add export to src/components/common/index.ts:
+echo "export { default as YourComponent } from './your-component/your-component';" >> src/components/common/index.ts
+```
 
-2. **Component structure**
+### Component structure
 
-   ```tsx
-   // my-component.tsx
-   import { type ComponentProps } from 'react';
+```tsx
+// Copyright Todd Agriscience, Inc. All rights reserved.
 
-   interface MyComponentProps {
-     title: string;
-     variant?: 'primary' | 'secondary';
-   }
+import { useTranslations } from 'next-intl';
+import { yourprop } from ./types/yourprop
 
-   export default function MyComponent({
-     title,
-     variant = 'primary',
-   }: MyComponentProps) {
-     return <div className="...">{title}</div>;
-   }
-   ```
+/**
+ * Your component description
+ * @param {Props} props - Component props
+ * @returns {JSX.Element} - The component
+ */
+export default function YourComponent({ title, variant = 'primary' }: Props) {
+ const t = useTranslations('YourRegion');
 
-3. **Add tests**
+  return (
+    <div
+       className={`your-classes ${variant === 'primary' ? 'primary-styles' : 'secondary-styles'}`}
+   >
+     <h1>{t('title')}</h1>
+      <p>{title}</p>
+   </div>
+ );
+ }
+```
 
-   ```tsx
-   // my-component.test.tsx
-   import { render, screen } from '@/test/test-utils';
-   import MyComponent from './my-component';
+### Add tests
 
-   describe('MyComponent', () => {
-     it('renders title correctly', () => {
-       render(<MyComponent title="Test" />);
-       expect(screen.getByText('Test')).toBeInTheDocument();
-     });
-   });
-   ```
+```tsx
+// my-component.test.tsx
+import { render, screen } from '@/test/test-utils';
+import MyComponent from './my-component';
 
-4. **Add Storybook story**
+describe('MyComponent', () => {
+  it('renders title correctly', () => {
+    render(<MyComponent title="Test" />);
+    expect(screen.getByText('Test')).toBeInTheDocument();
+  });
+});
+```
 
-   ```tsx
-   // my-component.stories.tsx
-   import type { Meta, StoryObj } from '@storybook/react';
-   import MyComponent from './my-component';
+### Add Storybook story
 
-   const meta: Meta<typeof MyComponent> = {
-     title: 'UI/MyComponent',
-     component: MyComponent,
-   };
+```tsx
+// my-component.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import MyComponent from './my-component';
 
-   export default meta;
-   export const Default: StoryObj<typeof MyComponent> = {
-     args: { title: 'Example' },
-   };
-   ```
+const meta: Meta<typeof MyComponent> = {
+  title: 'UI/MyComponent',
+  component: MyComponent,
+};
+
+export default meta;
+export const Default: StoryObj<typeof MyComponent> = {
+  args: { title: 'Example' },
+};
+```
 
 ## 🔧 Development Tools
 

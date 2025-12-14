@@ -1,8 +1,9 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
 import ValuesCard from './values-card';
 import '@testing-library/jest-dom';
+import { describe, it, expect } from 'vitest';
 
 describe('ValuesCard', () => {
   it('renders the Values title', () => {

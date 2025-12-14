@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { Loader2Icon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';

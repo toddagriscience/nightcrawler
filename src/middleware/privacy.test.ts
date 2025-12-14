@@ -1,33 +1,28 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
-/**
- * @jest-environment node
- */
-
-// Import setup first
 import './middleware.setup';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
 import { applyPrivacyControls, hasGPCEnabled } from './privacy';
 
 // Mock logger
 import { logger } from '@/lib/logger';
 
-jest.mock('@/lib/logger', () => ({
+vi.mock('@/lib/logger', () => ({
   logger: {
-    log: jest.fn(),
+    log: vi.fn(),
   },
 }));
 
 // Mock NextResponse
-jest.mock('next/server', () => ({
+vi.mock('next/server', () => ({
   NextResponse: {
-    next: jest.fn(() => ({
+    next: vi.fn(() => ({
       headers: {
-        set: jest.fn(),
+        set: vi.fn(),
       },
       cookies: {
-        delete: jest.fn(),
+        delete: vi.fn(),
       },
     })),
   },
@@ -35,14 +30,14 @@ jest.mock('next/server', () => ({
 
 describe('Privacy Middleware', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('hasGPCEnabled', () => {
     it('should return true when Sec-GPC header is "1"', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn().mockReturnValue('1'),
+          get: vi.fn().mockReturnValue('1'),
         },
       } as unknown as NextRequest;
 
@@ -54,7 +49,7 @@ describe('Privacy Middleware', () => {
     it('should return false when Sec-GPC header is not "1"', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn().mockReturnValue('0'),
+          get: vi.fn().mockReturnValue('0'),
         },
       } as unknown as NextRequest;
 
@@ -65,7 +60,7 @@ describe('Privacy Middleware', () => {
     it('should return false when Sec-GPC header is not present', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn().mockReturnValue(null),
+          get: vi.fn().mockReturnValue(null),
         },
       } as unknown as NextRequest;
 
@@ -78,22 +73,22 @@ describe('Privacy Middleware', () => {
     it('should apply GPC headers when GPC is enabled', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn((header) => {
+          get: vi.fn((header) => {
             if (header === 'x-forwarded-for') return '192.168.1.1';
             return null;
           }),
         },
         cookies: {
-          has: jest.fn().mockReturnValue(false),
+          has: vi.fn().mockReturnValue(false),
         },
       } as unknown as NextRequest;
 
       const mockResponse = {
         headers: {
-          set: jest.fn(),
+          set: vi.fn(),
         },
         cookies: {
-          delete: jest.fn(),
+          delete: vi.fn(),
         },
       } as unknown as NextResponse;
 
@@ -126,19 +121,19 @@ describe('Privacy Middleware', () => {
     it('should apply standard headers when GPC is disabled', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn().mockReturnValue(null),
+          get: vi.fn().mockReturnValue(null),
         },
         cookies: {
-          has: jest.fn().mockReturnValue(false),
+          has: vi.fn().mockReturnValue(false),
         },
       } as unknown as NextRequest;
 
       const mockResponse = {
         headers: {
-          set: jest.fn(),
+          set: vi.fn(),
         },
         cookies: {
-          delete: jest.fn(),
+          delete: vi.fn(),
         },
       } as unknown as NextResponse;
 
@@ -162,10 +157,10 @@ describe('Privacy Middleware', () => {
     it('should remove non-essential cookies when GPC is enabled', () => {
       const mockRequest = {
         headers: {
-          get: jest.fn().mockReturnValue(null),
+          get: vi.fn().mockReturnValue(null),
         },
         cookies: {
-          has: jest.fn((cookieName) => {
+          has: vi.fn((cookieName) => {
             return ['analytics', 'tracking', 'marketing'].includes(cookieName);
           }),
         },
@@ -173,10 +168,10 @@ describe('Privacy Middleware', () => {
 
       const mockResponse = {
         headers: {
-          set: jest.fn(),
+          set: vi.fn(),
         },
         cookies: {
-          delete: jest.fn(),
+          delete: vi.fn(),
         },
       } as unknown as NextResponse;
 

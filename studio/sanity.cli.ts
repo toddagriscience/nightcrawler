@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import {defineCliConfig} from 'sanity/cli'
 
 export default defineCliConfig({

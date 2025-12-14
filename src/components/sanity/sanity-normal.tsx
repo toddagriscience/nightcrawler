@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { PortableTextBlock, PortableTextComponentProps } from 'next-sanity';
 
 /**

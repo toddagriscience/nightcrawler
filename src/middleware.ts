@@ -1,4 +1,4 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NextRequest } from 'next/server';
 import {
@@ -8,6 +8,7 @@ import {
   hasGPCEnabled,
 } from './middleware/export';
 import { handleAuthRouting } from './middleware/auth';
+import isAllUserRoute from './middleware/all-users-page';
 
 /**
  * Middleware for internationalization, authorization, and privacy controls
@@ -20,9 +21,11 @@ export default async function middleware(request: NextRequest) {
   const gpcEnabled = hasGPCEnabled(request);
 
   // Handle authentication-based routing
-  const authRedirect = await handleAuthRouting(request);
-  if (authRedirect) {
-    return authRedirect;
+  if (!(await isAllUserRoute(request))) {
+    const authRedirect = await handleAuthRouting(request);
+    if (authRedirect) {
+      return authRedirect;
+    }
   }
 
   // Run the internationalization middleware for unauthenticated users only

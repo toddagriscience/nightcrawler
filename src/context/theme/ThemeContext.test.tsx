@@ -1,8 +1,9 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen, act } from '@testing-library/react';
 import { ThemeProvider, useTheme } from './ThemeContext';
 import '@testing-library/jest-dom';
+import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 
 // Mock component to access theme context values
 const ThemeDisplay = () => {
@@ -29,12 +30,12 @@ const ThemeDisplay = () => {
 describe('ThemeContext', () => {
   const mockDocumentElement = {
     classList: {
-      add: jest.fn(),
-      remove: jest.fn(),
+      add: vi.fn(),
+      remove: vi.fn(),
     },
-    setAttribute: jest.fn(),
+    setAttribute: vi.fn(),
     style: {
-      setProperty: jest.fn(),
+      setProperty: vi.fn(),
     },
   };
 
@@ -46,12 +47,12 @@ describe('ThemeContext', () => {
     });
 
     // Reset timers
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.useRealTimers();
+    vi.clearAllMocks();
+    vi.useRealTimers();
     mockDocumentElement.classList.add.mockReset();
     mockDocumentElement.classList.remove.mockReset();
     mockDocumentElement.setAttribute.mockReset();
@@ -114,7 +115,7 @@ describe('ThemeContext', () => {
 
     // Fast-forward timer
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     // Theme should be dark after transition
@@ -143,7 +144,7 @@ describe('ThemeContext', () => {
 
     // Fast-forward timer
     await act(async () => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     // Theme should only have changed once

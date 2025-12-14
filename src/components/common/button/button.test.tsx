@@ -1,8 +1,9 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Button from './button';
+import { describe, it, expect } from 'vitest';
 
 describe('Button', () => {
   it('renders with required props', () => {

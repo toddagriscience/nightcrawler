@@ -1,68 +1,65 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
-
-/**
- * @jest-environment jsdom
- */
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import LocaleLayout from './layout';
+import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 
 // Mock dependencies
-jest.mock('next/navigation', () => ({
-  notFound: jest.fn(),
+vi.mock('next/navigation', () => ({
+  notFound: vi.fn(),
 }));
 
-jest.mock('next/headers', () => ({
-  cookies: jest.fn(),
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(),
 }));
 
-jest.mock('next-intl/server', () => ({
-  getTranslations: jest.fn(),
-  getMessages: jest.fn(),
+vi.mock('next-intl/server', () => ({
+  getTranslations: vi.fn(),
+  getMessages: vi.fn(),
 }));
 
-jest.mock('@/i18n/config', () => ({
+vi.mock('@/i18n/config', () => ({
   routing: {
     locales: ['en', 'es'],
     defaultLocale: 'en',
   },
 }));
 
-jest.mock('@/lib/env', () => ({
+vi.mock('@/lib/env', () => ({
   env: {
     baseUrl: 'https://example.com',
   },
 }));
 
-jest.mock('@/lib/fonts', () => ({
+vi.mock('@/lib/fonts', () => ({
   fontVariables: 'font-class',
 }));
 
 // Mock all the components
-jest.mock('@/components/common', () => ({
+vi.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
   SmoothScroll: ({ children }: { children: React.ReactNode }) => children,
   ThemeReset: () => null,
 }));
 
-jest.mock('@/components/landing', () => ({
+vi.mock('@/components/landing', () => ({
   Footer: () => null,
   Header: () => null,
 }));
 
-jest.mock('@/context/theme/ThemeContext', () => ({
+vi.mock('@/context/theme/ThemeContext', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 describe('LocaleLayout', () => {
   const mockCookies = {
-    get: jest.fn(),
+    get: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (cookies as jest.Mock).mockResolvedValue(mockCookies);
+    vi.clearAllMocks();
+    (cookies as Mock).mockResolvedValue(mockCookies);
   });
 
   /**

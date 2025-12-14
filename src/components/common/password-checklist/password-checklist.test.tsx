@@ -1,11 +1,12 @@
-// Copyright Todd Agriscience, Inc. All rights reserved.
+// Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
 import PasswordChecklist from './password-checklist';
+import { describe, expect, vitest, test } from 'vitest';
 
 describe('PasswordChecklist', () => {
   test('should render with all checks failing when password is empty', () => {
-    const setIsPasswordValid = jest.fn();
+    const setIsPasswordValid = vitest.fn();
     render(
       <PasswordChecklist
         password=""
@@ -35,7 +36,7 @@ describe('PasswordChecklist', () => {
 
   test('should pass all checks and call setIsPasswordValid(true) for a valid password', () => {
     const validPassword = 'P@ssword1';
-    const setIsPasswordValid = jest.fn();
+    const setIsPasswordValid = vitest.fn();
 
     render(
       <PasswordChecklist
@@ -57,7 +58,7 @@ describe('PasswordChecklist', () => {
 
   test('should fail the 8 characters check when password is too short', () => {
     const shortPassword = 'A1@b';
-    const setIsPasswordValid = jest.fn();
+    const setIsPasswordValid = vitest.fn();
 
     render(
       <PasswordChecklist
@@ -83,7 +84,7 @@ describe('PasswordChecklist', () => {
   test('should fail the confirmation check when passwords do not match', () => {
     const password = 'ValidP@ss1';
     const confirmation = 'ValidP@ss2';
-    const setIsPasswordValid = jest.fn();
+    const setIsPasswordValid = vitest.fn();
 
     render(
       <PasswordChecklist
@@ -111,7 +112,7 @@ describe('PasswordChecklist', () => {
 
   test('should fail specific checks when number and uppercase letter are missing', () => {
     const weakPassword = 'password!'; // only special char and >= 8
-    const setIsPasswordValid = jest.fn();
+    const setIsPasswordValid = vitest.fn();
 
     render(
       <PasswordChecklist
