@@ -1,57 +1,80 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NextRequest, NextResponse } from 'next/server';
-import { ensureNextResponse, handleI18nMiddleware } from './i18n';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-
 // Import setup first
 import './middleware.setup';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { NextResponse, NextRequest } from 'next/server.js';
 
-// Mock next/server with proper NextResponse class
-vi.mock('next/server', () => {
-  class MockNextResponse {
-    private headerStore: { [key: string]: string } = {};
-
-    headers = {
-      set: vi.fn((key: string, value: string) => {
-        this.headerStore[key] = value;
-      }),
-      get: vi.fn((key: string) => {
-        return this.headerStore[key] || null;
-      }),
-    };
-    cookies = {
-      delete: vi.fn(),
-    };
-
-    static next = vi.fn(() => {
-      return new MockNextResponse();
-    });
-
-    static redirect = vi.fn((url: string) => {
-      const response = new MockNextResponse();
-      response.headers.set('location', url);
-      return response;
-    });
-  }
-
-  return {
-    NextRequest: vi.fn(),
-    NextResponse: MockNextResponse,
-  };
-});
-
+// Dear reader: to be frank with you, I have no idea why or how this file works. Best of luck.
 // Mock next-intl/middleware
-vi.mock(import('next-intl/middleware'), async (importActual) => {
-  const actual = await importActual();
+vi.mock('next-intl/middleware', () => {
   const mockIntlMiddleware = vi.fn(() => {
     const response = NextResponse.next();
     response.headers.set('x-intl-processed', '1');
     return response;
   });
-
-  return { ...actual, mockIntlMiddleware: vi.fn(() => mockIntlMiddleware) };
+  return { default: mockIntlMiddleware };
 });
+
+const { MockNextResponse } = vi.hoisted(() => {
+  class MockNextResponse {
+    private headers = new Headers();
+    private cookies: string[] = [];
+    status?: number;
+
+    constructor(body?: object, init?: ResponseInit) {
+      this.status = init?.status;
+
+      if (init?.headers) {
+        Object.entries(init.headers).forEach(([k, v]) => {
+          this.headers.set(k, String(v));
+        });
+      }
+    }
+
+    static json(body: object, init?: ResponseInit) {
+      return new MockNextResponse(body, init);
+    }
+
+    headersGet(name: string) {
+      return this.headers.get(name);
+    }
+
+    headersSet(name: string, value: string) {
+      this.headers.set(name, value);
+    }
+
+    /** required by Next middleware */
+    getSetCookie(): string[] {
+      return this.cookies;
+    }
+
+    /** test helper */
+    _pushSetCookie(value: string) {
+      this.cookies.push(value);
+    }
+  }
+
+  const redirect = vi.fn((url: string, status = 307) => {
+    const res = new MockNextResponse({}, { status });
+    res.headersSet('location', url);
+    return res;
+  });
+
+  const next = vi.fn(() => new MockNextResponse());
+
+  Object.assign(MockNextResponse, {
+    redirect,
+    next,
+  });
+
+  return { MockNextResponse };
+});
+
+vi.mock('next/server', { spy: true });
+vi.mock('next/server', () => ({
+  NextResponse: MockNextResponse,
+}));
 
 // Mock i18n config
 vi.mock('@/i18n/config', () => ({
@@ -61,6 +84,8 @@ vi.mock('@/i18n/config', () => ({
   },
   SUPPORTED_LOCALES: ['en', 'es'],
 }));
+
+import { ensureNextResponse, handleI18nMiddleware } from './i18n';
 
 describe('I18n Middleware', () => {
   beforeEach(() => {
@@ -102,7 +127,8 @@ describe('I18n Middleware', () => {
 
       const result = handleI18nMiddleware(mockRequest, false);
 
-      expect(NextResponse.redirect).toHaveBeenCalled();
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      expect(vi.mocked(MockNextResponse.redirect)).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
     });
@@ -114,7 +140,8 @@ describe('I18n Middleware', () => {
 
       const result = handleI18nMiddleware(mockRequest, false);
 
-      expect(NextResponse.next).toHaveBeenCalled();
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      expect(MockNextResponse.next).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
     });
@@ -152,7 +179,8 @@ describe('I18n Middleware', () => {
         },
       } as unknown as NextResponse;
 
-      (NextResponse.next as Mock).mockReturnValue(mockNewResponse);
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      MockNextResponse.next.mockReturnValue(mockNewResponse);
 
       const result = ensureNextResponse(mockBasicResponse);
 
@@ -175,7 +203,8 @@ describe('I18n Middleware', () => {
         },
       } as unknown as NextResponse;
 
-      (NextResponse.next as Mock).mockReturnValue(mockNewResponse);
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      MockNextResponse.next.mockReturnValue(mockNewResponse);
 
       const result = ensureNextResponse(mockBasicResponse);
 
