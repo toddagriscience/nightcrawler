@@ -13,9 +13,6 @@ jobs:
     defaults:
         run:
             working-directory: ./frontend
-    env:
-        NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-        NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
 
     steps:
       - name: Checkout code
