@@ -5,9 +5,10 @@
 import { Carousel, NewsCard } from '@/components/common';
 import { urlFor } from '@/lib/sanity/utils';
 import { SanityDocument } from 'next-sanity';
-import ArticlePlaceholder from '../../../../public/article-placeholder.webp';
 import { useLocale } from 'next-intl';
 import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+
+const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /*
  * A carousel for featured news.
@@ -29,12 +30,12 @@ export function FeaturedNewsCarousel({
           key={article.title}
           isDark={false}
           image={
-            article.thumbnail
+            article.thumbnail && article.thumbnail.url
               ? {
                   url: urlFor(article.thumbnail)?.url(),
                   alt: article.thumbnail.alt,
                 }
-              : { url: ArticlePlaceholder.src, alt: '' }
+              : { url: articlePlaceholderRoute, alt: '' }
           }
           source={article.source}
           date={new Date(article.date).toLocaleDateString(locale, {
