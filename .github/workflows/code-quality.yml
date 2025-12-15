@@ -28,9 +28,6 @@ jobs:
         with:
           bun-version: 'latest'
 
-      - name: CD into frontend
-        run: cd ./frontend
-
       - name: Install dependencies
         run: bun ci
 
