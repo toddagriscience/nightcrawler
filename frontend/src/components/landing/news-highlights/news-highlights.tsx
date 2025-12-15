@@ -5,12 +5,16 @@
 import { Button, Carousel, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import React, { useRef } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import React, { useEffect, useRef, useState } from 'react';
 import { Quote } from '../index';
 import { NewsHighlightsProps } from './types/news-highlights';
 import sanityQuery from '@/lib/sanity/query';
 import { SanityDocument } from 'next-sanity';
+import { urlFor } from '@/lib/sanity/utils';
+import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+
+const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
  * News highlight card component
@@ -26,12 +30,27 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
   const { isDark: contextIsDark } = useTheme();
   const t = useTranslations('common');
   const tNews = useTranslations('homepage');
+  const [allNews, setAllNews] = useState<SanityDocument[]>();
 
-  const allNews = sanityQuery('news') as unknown as Array<SanityDocument>;
-  const featuredNews = allNews.filter((article) => article.isFeatured);
+  const featuredNews = allNews
+    ? allNews.filter((article) => article.isFeatured)
+    : [];
+
+  const locale = useLocale();
+  const windowHref = useCurrentUrl();
 
   // Use prop isDark if provided, otherwise use context
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
+
+  useEffect(() => {
+    async function getNews() {
+      const news = (await sanityQuery(
+        'news'
+      )) as unknown as Array<SanityDocument>;
+      setAllNews(news);
+    }
+    getNews();
+  }, [setAllNews]);
 
   return (
     <motion.div
@@ -63,12 +82,27 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
               <NewsCard
                 title={article.title}
                 key={article.title}
-                isDark={isDark}
-                image={{ url: article.image.url, alt: article.image.alt }}
+                isDark={false}
+                image={
+                  article.thumbnail && article.thumbnail.url
+                    ? {
+                        url: urlFor(article.thumbnail)?.url(),
+                        alt: article.thumbnail.alt,
+                      }
+                    : { url: articlePlaceholderRoute, alt: '' }
+                }
                 source={article.source}
-                date={article.date}
-                excerpt={article.excerpt}
-                link={article.link}
+                date={new Date(article.date).toLocaleDateString(locale, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+                excerpt={article.summary}
+                link={
+                  article.offSiteUrl && article.offSiteUrl.length > 0
+                    ? article.offSiteUrl
+                    : `${locale}/news/${article.slug.current}`
+                }
               />
             ))}
           </Carousel>

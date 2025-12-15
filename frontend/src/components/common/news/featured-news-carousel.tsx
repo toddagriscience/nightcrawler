@@ -20,7 +20,6 @@ export function FeaturedNewsCarousel({
   items: SanityDocument[];
 }) {
   const locale = useLocale();
-  const windowHref = useCurrentUrl();
 
   return (
     <Carousel isDark={true} showDots={true}>
@@ -47,7 +46,7 @@ export function FeaturedNewsCarousel({
           link={
             article.offSiteUrl && article.offSiteUrl.length > 0
               ? article.offSiteUrl
-              : windowHref + '/' + article.slug.current
+              : `${locale}/news/${article.slug.current}`
           }
         />
       ))}

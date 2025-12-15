@@ -6,7 +6,7 @@ import SanityNormal from '@/components/sanity/sanity-normal';
 import { Link } from '@/i18n/config';
 import sanityQuery from '@/lib/sanity/query';
 import ShareArticleButtons from '@/components/common/share-article/share-article';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 /** Sanity helpers. See: https://github.com/portabletext/react-portabletext#customizing-components */
 const portableTextComponents: Partial<PortableTextReactComponents> = {
@@ -34,6 +34,10 @@ export default async function NewsPage({
     { next: { revalidate: 60 * 60 } },
     0
   );
+
+  if (!article) {
+    notFound();
+  }
 
   if (article.offSiteUrl && article.offSiteUrl.length > 0) {
     redirect(article.offSiteUrl);

@@ -9,9 +9,14 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   // This should be cached from `page.tsx` (metadata is rendered after RSC)
-  const article = await sanityQuery('news', await params, {
-    next: { revalidate: 60 * 60 },
-  });
+  const article = await sanityQuery(
+    'news',
+    await params,
+    {
+      next: { revalidate: 60 * 60 },
+    },
+    0
+  );
 
   return {
     title: { default: article.title, template: '%s | Todd United States' },
