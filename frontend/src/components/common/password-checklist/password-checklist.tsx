@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { PasswordRequirements } from '@/lib/types/auth';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 /** A password checklist that updates based off of what password the user has entered.
  *
@@ -19,26 +19,22 @@ export default function PasswordChecklist({
   className?: string;
   setIsPasswordValid?: (arg0: boolean) => unknown;
 }) {
-  const [passwordRequirements, setPasswordRequirements] =
-    useState<PasswordRequirements>({
-      has8Characters: false,
-      hasSpecialCharacter: false,
-      hasNumber: false,
-      hasUpperCase: false,
-      isConfirmationSame: false,
-    });
-
-  useEffect(() => {
-    const innerPasswordRequirements = {
+  const innerPasswordRequirements = useMemo(
+    () => ({
       has8Characters: password.length >= 8,
       hasSpecialCharacter: /[^A-Za-z0-9]/.test(password),
       hasNumber: /\d/.test(password),
       hasUpperCase: /[A-Z]/.test(password),
       isConfirmationSame: password === confirmationPassword,
-    };
+    }),
+    [password, confirmationPassword]
+  );
 
-    setPasswordRequirements(innerPasswordRequirements);
+  const [passwordRequirements] = useState<PasswordRequirements>(
+    () => innerPasswordRequirements
+  );
 
+  useEffect(() => {
     if (setIsPasswordValid) {
       if (
         innerPasswordRequirements.has8Characters &&
@@ -52,7 +48,12 @@ export default function PasswordChecklist({
         setIsPasswordValid(false);
       }
     }
-  }, [password, confirmationPassword, setIsPasswordValid]);
+  }, [
+    password,
+    confirmationPassword,
+    setIsPasswordValid,
+    innerPasswordRequirements,
+  ]);
 
   return (
     <div className={`${className}`}>

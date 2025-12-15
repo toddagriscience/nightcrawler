@@ -8,7 +8,6 @@
 // Mock Web API globals that are required by Next.js server components
 Object.defineProperty(global, 'Request', {
   value: class MockRequest {
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(_input: unknown, _init?: unknown) {
       // Basic mock implementation
     }
@@ -18,7 +17,6 @@ Object.defineProperty(global, 'Request', {
 
 Object.defineProperty(global, 'Response', {
   value: class MockResponse {
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(_body?: unknown, _init?: unknown) {
       // Basic mock implementation
     }

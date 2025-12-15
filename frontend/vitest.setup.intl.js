@@ -13,7 +13,6 @@ const loadMessagesSync = (locale) => {
 
   messageFiles.forEach((file) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const fileMessages = require(`./src/messages/${file}/${locale}.json`);
       Object.assign(messages, fileMessages);
     } catch (error) {

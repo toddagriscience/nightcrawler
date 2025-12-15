@@ -1,3 +1,4 @@
 # Run CI checks before pushing to prevent broken builds
+cd ./frontend
 echo "🔍 Running pre-push validation..."
 bun validate

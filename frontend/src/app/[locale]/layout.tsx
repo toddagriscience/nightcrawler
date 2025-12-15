@@ -120,26 +120,15 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  try {
-    const messages = await getMessages({ locale });
+  const messages = await getMessages({ locale });
 
-    return (
-      <NextIntlClientProvider messages={messages}>
-        <SmoothScroll>
-          <Header />
-          <FadeIn>{children}</FadeIn>
-          <Footer />
-        </SmoothScroll>
-      </NextIntlClientProvider>
-    );
-  } catch (error) {
-    console.error('❌ [layout.tsx] Error in LocaleLayout:', error);
-    console.error('❌ [layout.tsx] Error details:', {
-      name: (error as Error).name,
-      message: (error as Error).message,
-      stack: (error as Error).stack,
-    });
-    // If there's an error loading messages, also trigger 404
-    notFound();
-  }
+  return (
+    <NextIntlClientProvider messages={messages}>
+      <SmoothScroll>
+        <Header />
+        <FadeIn>{children}</FadeIn>
+        <Footer />
+      </SmoothScroll>
+    </NextIntlClientProvider>
+  );
 }

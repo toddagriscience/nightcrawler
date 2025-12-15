@@ -122,16 +122,6 @@ vi.mock('@/lib/sanity/utils', () => {
   };
 });
 
-//
-// const imageMock = vi.fn((source: SanityImageSource) => builder);
-// imageMock.mockReturnValue(builder);
-//
-// vi.mock('@sanity/image-url', () => ({
-//   createImageUrlBuilder: vi.fn(() => ({
-//     image: imageMock,
-//   })),
-// }));
-
 describe('FeaturedNewsCarousel', () => {
   beforeEach(() => {
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = '3x7sixjh';

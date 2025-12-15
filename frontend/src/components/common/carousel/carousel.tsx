@@ -78,8 +78,13 @@ const Carousel = ({ children, loop = true, className = '' }: CarouselProps) => {
   }, [updateAlignment]);
 
   useEffect(() => {
-    updateAlignment();
-    window.addEventListener('resize', handleResize);
+    const resizeHelper = async () => {
+      updateAlignment();
+      window.addEventListener('resize', handleResize);
+    };
+
+    resizeHelper();
+
     return () => window.removeEventListener('resize', handleResize);
   }, [updateAlignment, handleResize]);
 

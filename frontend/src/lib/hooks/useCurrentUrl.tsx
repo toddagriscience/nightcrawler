@@ -3,12 +3,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import logger from '../logger';
 
 export default function useCurrentUrl() {
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    setUrl(window.location.href);
+    const windowHelper = async () => {
+      setUrl(window.location.href);
+    };
+    windowHelper().catch((e) => {
+      logger.log(e);
+    });
   }, []);
 
   return url;
