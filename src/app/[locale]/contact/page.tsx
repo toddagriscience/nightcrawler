@@ -54,10 +54,14 @@ export default function Contact() {
       const submissionData = {
         ...formData,
       };
-      await submitToGoogleSheets(submissionData);
-      setIsSuccessfulSubmit(true);
+      const result = await submitToGoogleSheets(submissionData);
+      
+      if (result.success) {
+        setIsSuccessfulSubmit(true);
+      } else {
+        setError(result.error || 'An unknown error occurred');
+      }
     } catch (error) {
-      console.error('Form submission error:', error);
       setError(
         error instanceof Error ? error.message : 'An unknown error occurred'
       );

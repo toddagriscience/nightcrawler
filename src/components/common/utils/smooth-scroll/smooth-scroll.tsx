@@ -5,6 +5,7 @@
 import Lenis from '@studio-freight/lenis';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import logger from '@/lib/logger';
 
 /**
  * Global Window interface extension to include Lenis instance
@@ -51,7 +52,7 @@ export default function SmoothScroll({
         window.lenis = lenis;
         setIsLenisReady(true);
       } catch (e) {
-        console.error('Lenis Initialization Error', e);
+        logger.error('Lenis Initialization Error', e);
         return;
       }
 
