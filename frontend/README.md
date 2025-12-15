@@ -2,6 +2,8 @@
 
 A modern, scalable Next.js website for Todd Agriscience with comprehensive development infrastructure and smooth user experience.
 
+The majority of this document will assume that you're operating in the `/frontend` folder. See `CONTRIBUTING.md` for more information.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -30,31 +32,35 @@ A modern, scalable Next.js website for Todd Agriscience with comprehensive devel
    bun install
    ```
 
-4. **Setup environment variables**
+4. **Navigate into correct folder**
+
+Unless you're directly working on the CMS (located in `/sanity-studio`), the majority of your work will take place in the `/frontend` folder.
+
+5. **Setup environment variables**
 
 Copy any wanted environment variables from `envexample.md`. Copy:
 
 - `BACKEND_HOST`: If you need to refresh API routes or utilize the backend at all.
 
-5. **Start development server**
+6. **Start development server**
 
    ```bash
    bun dev
    ```
 
-6. **Open in browser**
+7. **Open in browser**
 
    ```
    http://localhost:3000
    ```
 
-7. **Start Storybook**
+8. **Start Storybook**
 
    ```
    bun storybook
    ```
 
-8. **Open Storybook in browser**
+9. **Open Storybook in browser**
    ```
    http://localhost:6006
    ```

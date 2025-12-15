@@ -4,7 +4,50 @@ This is the general contributing guide for the marketing site and platform. Plea
 
 ## Contents
 
-1. **adding this might help once its done**
+- [Basic Workflow](#basic-workflow)
+  - [Notes](#notes)
+- [When Things Break](#when-things-break)
+  - [The 4 C's](#the-4-cs)
+- [Development Workflow](#development-workflow)
+- [First-Time Setup](#first-time-setup)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+- [Standards / General Information](#standardsgeneral-information)
+  - [Testing](#testing)
+  - [Git Hooks Validation](#git-hooks-validation)
+  - [Formatting / Styling](#formattingstyling)
+  - [Running Tests](#running-tests)
+  - [Test Patterns](#test-patterns)
+- [Code Standards](#code-standards)
+  - [TypeScript](#typescript)
+  - [Styling](#styling)
+  - [File Organization](#file-organization)
+- [Logging Guidelines](#logging-guidelines)
+  - [Using the Logger Utility](#using-the-logger-utility)
+  - [Logging Best Practices](#logging-best-practices)
+  - [When to Log](#when-to-log)
+- [Internationalization (i18n)](#internationalization-i18n)
+  - [Adding New Text](#adding-new-text)
+  - [Translation Guidelines](#translation-guidelines)
+- [Accessibility Requirements](#accessibility-requirements)
+  - [Standards](#standards)
+  - [Testing](#testing-1)
+- [Component Development](#component-development)
+  - [For Shared Components](#for-shared-components)
+  - [Component Structure](#component-structure)
+  - [Add Tests](#add-tests)
+  - [Add Storybook Story](#add-storybook-story)
+- [Development Tools](#development-tools)
+  - [Essential Commands](#essential-commands)
+  - [Git Hooks](#git-hooks)
+- [Common Pitfalls](#common-pitfalls)
+  - [Avoid These Mistakes](#avoid-these-mistakes)
+  - [Performance Considerations](#performance-considerations)
+- [Pull Request Guidelines](#pull-request-guidelines)
+  - [PR Checklist](#pr-checklist)
+  - [PR Description](#pr-description)
+- [License](#license)
+- [Code of Conduct](#code-of-conduct)
 
 ## Basic Workflow
 
@@ -127,6 +170,8 @@ A few notes:
   - Is my code readable and could I or someone else build off of my code 1+ years from now?
 
 ## First-Time Setup
+
+`nightcrawler` is a monorepo. The majority of your work will likely take place in the `/frontend` folder. `/sanity-studio` is the folder for anything regarding Sanity's CMS management.
 
 ### Prerequisites
 
@@ -267,13 +312,13 @@ components/
 Always use the environment-aware to display warnings instead of console logging:
 
 ```tsx
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 // Instead of console.log
-logger.warn('Warning message');
+logger.warn("Warning message");
 
 // Errors always show (even in production)
-logger.error('Critical error');
+logger.error("Critical error");
 ```
 
 ### Logging Best Practices
@@ -296,10 +341,10 @@ logger.error('Critical error');
 2. **Use next-intl** for all user-facing text:
 
    ```tsx
-   import { useTranslations } from 'next-intl';
+   import { useTranslations } from "next-intl";
 
-   const t = useTranslations('ComponentName');
-   return <h1>{t('title')}</h1>;
+   const t = useTranslations("ComponentName");
+   return <h1>{t("title")}</h1>;
    ```
 
 #### Translation Guidelines
@@ -371,13 +416,13 @@ export default function YourComponent({ title, variant = 'primary' }: Props) {
 
 ```tsx
 // my-component.test.tsx
-import { render, screen } from '@/test/test-utils';
-import MyComponent from './my-component';
+import { render, screen } from "@/test/test-utils";
+import MyComponent from "./my-component";
 
-describe('MyComponent', () => {
-  it('renders title correctly', () => {
+describe("MyComponent", () => {
+  it("renders title correctly", () => {
     render(<MyComponent title="Test" />);
-    expect(screen.getByText('Test')).toBeInTheDocument();
+    expect(screen.getByText("Test")).toBeInTheDocument();
   });
 });
 ```
@@ -386,17 +431,17 @@ describe('MyComponent', () => {
 
 ```tsx
 // my-component.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import MyComponent from './my-component';
+import type { Meta, StoryObj } from "@storybook/react";
+import MyComponent from "./my-component";
 
 const meta: Meta<typeof MyComponent> = {
-  title: 'UI/MyComponent',
+  title: "UI/MyComponent",
   component: MyComponent,
 };
 
 export default meta;
 export const Default: StoryObj<typeof MyComponent> = {
-  args: { title: 'Example' },
+  args: { title: "Example" },
 };
 ```
 
