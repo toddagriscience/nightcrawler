@@ -5,7 +5,7 @@
 import { Carousel, NewsCard } from '@/components/common';
 import { urlFor } from '@/lib/sanity/utils';
 import { SanityDocument } from 'next-sanity';
-import ArticlePlaceholder from '@/../public/article-placeholder.webp';
+import ArticlePlaceholder from '../../../../public/article-placeholder.webp';
 import { useLocale } from 'next-intl';
 import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 
