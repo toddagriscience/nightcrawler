@@ -39,7 +39,7 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 
 ### Development Infrastructure
 
-- **Jest v30 + React Testing Library v16.3** (unit testing)
+- **Vitest + React Testing Library v16.3** (unit testing)
 - **Storybook v9.1** with accessibility addon
 - **ESLint v9 + Prettier v3.6** with pre-commit hooks (Husky v9.1)
 - **GitHub Actions** CI/CD pipeline

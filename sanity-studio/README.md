@@ -1,5 +1,9 @@
 # Sanity Studio
 
+Good news for you -- you probably don't need to touch this workspace. This is purely for handling and managing Sanity CMS.
+
+## Working with Sanity
+
 Sanity requires itself to be placed in its own folder (or technically speaking, "package"). This means that Sanity comes with its own set of commands & own development server. Sanity's documentation isn't the best, so a few relevant commands are documented here:
 
 - `bun run dev` - Runs Sanity's development server
