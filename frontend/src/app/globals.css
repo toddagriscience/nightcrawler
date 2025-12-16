@@ -200,28 +200,28 @@ header {
 }
 
 /* Footer underline animation - expands from center */
-.footer-underline {
+.text-underline {
   position: relative;
   text-decoration: none;
 }
 
-.footer-underline::after {
+.text-underline::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
   width: 0;
-  height: 3px;
+  height: 2px;
   background-color: currentColor;
   transition: all 0.3s ease-in-out;
   transform: translateX(-50%);
 }
 
-.footer-underline:hover::after {
+.text-underline:hover::after {
   width: 100%;
 }
 
 /* Active state for navigation items */
-.footer-underline-active::after {
+.text-underline-active::after {
   width: 100%;
 }
