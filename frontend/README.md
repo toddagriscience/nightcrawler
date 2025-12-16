@@ -1,6 +1,6 @@
 # Todd Agriscience
 
-A Next.js site for the Todd Agriscience's marketing site and customer platform. Please follow the base `README.md` in the root directory for general information.
+A Next.js site for the Todd Agriscience's marketing site and customer platform. Please follow the base [README.md](/README.md) in the root directory for general information.
 
 ## Notes
 
