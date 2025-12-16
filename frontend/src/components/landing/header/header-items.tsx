@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import { Link } from '@/i18n/config';
 import { MenuItem } from '@/lib/types/components';
 import { AnimatePresence, motion } from 'framer-motion';

@@ -3,7 +3,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import { MenuIcon } from 'lucide-react';
 import { useTheme } from '@/context/theme/ThemeContext';
@@ -18,6 +17,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 
 /**
  * Header component
@@ -100,21 +100,6 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
     </header>
   );
 };
-
-/** Small helper for the TODD logo.
- *
- * @returns {JSX.Element} - The logo, with a link to the homepage*/
-function ToddHeader() {
-  return (
-    <Link
-      href="/"
-      className="wordmark uppercase text-4xl leading-none"
-      data-testid="wordmark-link"
-    >
-      TODD
-    </Link>
-  );
-}
 
 /** Small helper for the login link.
  *
