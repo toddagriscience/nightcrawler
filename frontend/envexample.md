@@ -35,4 +35,7 @@ NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 
 # Cloudflare, real key, appropriate to be public
 NEXT_PUBLIC_CLOUDFLARE_SITEKEY="0x4AAAAAACEYfDvRCc8Fkc6C"
+
+# Database URL, private
+DATABASE_URL=""
 ```
