@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { date, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { managementZone } from './managementZones.js';
+import { managementZone } from './managementZone';
 
 /** A singular analysis for a singular management zone. There isn't much data in this table, the majority of it is stored in child tables. */
 export const analysis = pgTable('analysis', {

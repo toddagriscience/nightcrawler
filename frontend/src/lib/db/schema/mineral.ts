@@ -8,7 +8,7 @@ import {
   serial,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { analysis } from './analysis.js';
+import { analysis } from './analysis';
 
 /** A "brief" overview of the level of a given mineral. See the mineral table for more context. */
 export const mineralLevel = pgEnum('mineral_level', ['Low', 'Med', 'High']);

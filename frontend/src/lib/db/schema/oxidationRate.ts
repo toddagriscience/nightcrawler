@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { numeric, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { analysis } from './analysis.js';
+import { analysis } from './analysis';
 
 /** A general tag for the oxidation rate of a given analysis. */
 export const oxidationRateTag = pgEnum('oxidation_rate_tag', [

@@ -10,7 +10,7 @@ import {
   boolean,
   text,
 } from 'drizzle-orm/pg-core';
-import { client } from './client.js';
+import { client } from './client';
 
 /** The current risk of contamination for a given management zone, calculated from other metrics. */
 export const contaminationRisk = pgEnum('contamination_risk', [
