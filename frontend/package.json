@@ -16,7 +16,7 @@
     "start": "next start",
     "lint": "eslint .",
     "prelint:fix": "tsx ./scripts/prep-for-license.ts",
-    "lint:fix": "bun run prelint:fix && eslint . --fix",
+    "lint:fix": "bun run prelint:fix && eslint . --fix && bun run format",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
