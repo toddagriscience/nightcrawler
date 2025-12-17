@@ -4,7 +4,6 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { submitToGoogleSheets } from './action';
 import {
   Select,
   SelectContent,
