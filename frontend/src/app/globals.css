@@ -60,7 +60,7 @@
   /* Dark mode Shadcn/ui variables */
   --background: #f8f5ee; /* Keep cream background even in dark mode */
   --background-secondary: #ccc5b5; /* Keep light card background even in dark mode */
-  --foreground: #fdfdfb; /* Your inverse text */
+  --foreground: #2a2727; /* Your inverse text */
   --card: #2a2727; /* Your dark card */
   --card-foreground: #fdfdfb; /* Your inverse text */
   --popover: #2a2727; /* Your dark background */
@@ -199,7 +199,7 @@ header {
   background-color: var(--header-hover-dark);
 }
 
-/* Footer underline animation - expands from center */
+/* Underline animation - expands from center */
 .text-underline {
   position: relative;
   text-decoration: none;
@@ -224,4 +224,25 @@ header {
 /* Active state for navigation items */
 .text-underline-active::after {
   width: 100%;
+}
+
+/* Underline animation expanding from the left */
+.text-underline-left {
+  border-bottom-width: 0;
+  background-image:
+    linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+  background-size: 0 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.5s ease-in-out;
+}
+
+.text-underline-left-black {
+  background-image:
+    linear-gradient(transparent, transparent), linear-gradient(#111, #111);
+}
+
+.text-underline-left:hover {
+  background-size: 100% 3px;
+  background-position: 0 100%;
 }

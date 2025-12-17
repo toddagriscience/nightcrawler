@@ -19,7 +19,9 @@
       "privacy": "Política de Privacidad",
       "privacySettings": "Configuración de Privacidad",
       "terms": "Términos de Servicio",
-      "trustCenter": "Centro de Confianza"
+      "trustCenter": "Centro de Confianza",
+      "vulnReporting": "Informes de vulnerabilidad",
+      "disclosures": "Divulgaciones"
     },
     "cta": {
       "letsTalk": "Hablemos",
