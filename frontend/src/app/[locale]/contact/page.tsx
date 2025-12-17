@@ -13,19 +13,13 @@ import {
 } from '@/components/ui/select';
 import Link from 'next/link';
 import { FadeIn } from '@/components/common';
+import { submitToGoogleSheetsHelper } from './action';
 
 export default function Contact() {
   const t = useTranslations('contactPage');
-  interface FormData {
-    fullName: string;
-    email: string;
-    reason: string;
-    message: string;
-  }
-
   const MAX_MESSAGE_LENGTH = 1500;
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     reason: '',
@@ -50,10 +44,21 @@ export default function Contact() {
     setError(null);
 
     try {
-      const submissionData = {
+      const submissionData: Record<string, string> = {
         ...formData,
       };
-      await submitToGoogleSheets(submissionData);
+
+      const submitFormData = new FormData();
+
+      for (const key in submissionData) {
+        const value = submissionData[key];
+
+        if (value !== undefined && value !== null) {
+          submitFormData.append(key, String(value));
+        }
+      }
+
+      await submitToGoogleSheetsHelper(submitFormData);
       setIsSuccessfulSubmit(true);
     } catch (error) {
       console.error('Form submission error:', error);

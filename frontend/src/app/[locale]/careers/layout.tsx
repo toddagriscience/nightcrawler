@@ -1,0 +1,48 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import { Metadata } from 'next';
+import { env } from '@/lib/env';
+import { getTranslations } from 'next-intl/server';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  // /{locale}/careers
+  const locale = (await params).locale;
+  const t = await getTranslations({ locale, namespace: 'careers.metadata' });
+
+  return {
+    title: t('shortTitle'),
+    description: t('description'),
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: `${env.baseUrl}/${locale}/careers`,
+      siteName: 'Todd',
+      locale: locale,
+      type: 'website',
+      images: [
+        {
+          url: 'https://www.toddagriscience.com/career-opengraph-image.png',
+          width: 2796,
+          height: 1460,
+          type: 'image/png',
+          alt: 'Todd - Join Todd.',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@ToddAgriscience',
+      title: t('title'),
+      description: t('description'),
+      images: ['https://www.toddagriscience.com/career-opengraph-image.png'],
+    },
+  };
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return children;
+}
