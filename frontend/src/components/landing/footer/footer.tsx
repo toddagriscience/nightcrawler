@@ -65,14 +65,14 @@ const Footer = () => {
     <footer className="mt-8 bg-background text-foreground py-10 px-4 md:px-6 lg:px-12 xl:px-18 mb-8 sm:mb-0">
       <div className="flex flex-col md:flex-row">
         <div className="flex flex-col md:flex-row w-full justify-between md:mb-16">
-          <ToddHeader />
+          <ToddHeader className="md:text-5xl lg:text-6xl" />
           <div className="flex flex-row md:ml-auto gap-32 max-md:mt-8">
             <div className="flex flex-col gap-4">
               {siteLinks.slice(0, 4).map((val, index) => (
                 <Link
                   key={index}
                   href={val.href}
-                  className="md:text-xl text-lg"
+                  className="md:text-lg text-md"
                 >
                   <span className="link text-underline-left text-underline-left-black text-black">
                     {val.label}
@@ -85,7 +85,7 @@ const Footer = () => {
                 <Link
                   key={index}
                   href={val.href}
-                  className="md:text-xl text-lg"
+                  className="md:text-lg text-md"
                 >
                   <span className="link text-underline-left text-underline-left-black text-black">
                     {val.label}
@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-6 mt-8">
+      <div className="flex flex-col gap-10 mt-8">
         <div className="flex flex-row gap-4">
           <Image
             role="img"
@@ -109,7 +109,7 @@ const Footer = () => {
           <span>{t('location')}</span>
         </div>
         <p>© Todd Agriscience 2025</p>
-        <div className="flex flex-row gap-6 flex-wrap">
+        <div className="flex md:flex-row flex-col gap-6 flex-wrap">
           {legalLinks.map((val, index) => (
             <Link key={index} href={val.href}>
               {val.label}

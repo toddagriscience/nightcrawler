@@ -59,7 +59,9 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
       <div className="sm:hidden pl-5 pt-3">
         <ToddHeader />
       </div>
-      <div className="sm:hidden fixed bottom-0 w-screen py-2 px-6 z-20 bg-background rounded-t-md border-x-black/20 border-solid border">
+      <div
+        className={`sm:hidden fixed bottom-0 w-screen py-2 px-6 z-20 bg-background rounded-t-md`}
+      >
         <Drawer
           open={menuOpen}
           onOpenChange={(isOpen) => {

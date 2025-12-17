@@ -25,7 +25,7 @@
   --primary-foreground: #fdfdfb; /* Your secondary/inverse */
   --secondary: #ccc5b5; /* Your light card */
   --secondary-foreground: #2a2727; /* Your primary text */
-  --muted: #ccc5b5; /* Your light card */
+  --muted: #2a2727;
   --muted-foreground: #555555; /* Your secondary text */
   --accent: #ccc5b5; /* Your light card */
   --accent-foreground: #2a2727; /* Your primary text */
