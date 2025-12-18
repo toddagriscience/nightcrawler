@@ -69,7 +69,7 @@ export default function LandingPage() {
   return (
     <div className="mb-32">
       <ScrollShrinkWrapper>
-        <div ref={heroRef}>
+        <div ref={heroRef} className="h-[40vh]">
           <Hero />
         </div>
         <motion.div

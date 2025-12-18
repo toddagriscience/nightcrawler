@@ -26,11 +26,11 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
       className="flex flex-col justify-center items-center text-center h-screen px-0 lg:px-0"
       role="region"
     >
-      <h1 className="text-2xl lg:text-6xl tracking-tight font-thin text-center max-w-4xl mx-auto">
+      <h1 className="text-2xl lg:text-6xl tracking-tight font-thin text-center max-w-4xl w-[80%] mx-auto">
         {t('quote')}
       </h1>
       <Button
-        href="/about"
+        href="/who-we-are"
         text={t('learnMore')}
         variant="outline"
         size="lg"

@@ -22,8 +22,8 @@ const ScrollShrinkWrapper = ({ children }: { children: React.ReactNode }) => {
   });
   const width = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.7, 1],
-    ['85vw', '100vw', '100vw', '85vw']
+    [0, 0.15, 1],
+    ['76vw', '100vw', '100vw']
   );
 
   return (
