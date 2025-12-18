@@ -7,7 +7,7 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { sendResetPasswordEmail } from '@/lib/actions/auth';
-import { loginErrors } from '@/lib/auth';
+import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
 import { useActionState } from 'react';
 
 /** The forgot password page. Sends an email via Supabase that links to `/accounts/reset-password` after verifying with an OTP code (again, all handled by Supabase).
@@ -19,7 +19,7 @@ export default function ForgotPassword() {
     null
   );
 
-  const errors = state ? loginErrors(state) : null;
+  const errors = state ? formatActionResponseErrors(state) : null;
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">

@@ -5,14 +5,17 @@ import Login from './page';
 import { login } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import userEvent from '@testing-library/user-event';
-import { loginErrors } from '@/lib/auth';
+import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { Mock } from 'vitest';
 import ResizeObserver from 'resize-observer-polyfill';
 
 vitest.mock('@/lib/auth', () => ({
   login: vitest.fn(),
-  loginErrors: vitest.fn(),
+}));
+
+vitest.mock('@/lib/utils/format-action-response-errors', () => ({
+  formatActionResponseErrors: vitest.fn(),
 }));
 
 vitest.mock('@/lib/actions/auth', () => ({
@@ -75,7 +78,9 @@ describe('login page', () => {
     (login as Mock).mockResolvedValue({
       error: { message: 'Invalid credentials' },
     });
-    (loginErrors as Mock).mockReturnValue(['Invalid credentials']);
+    (formatActionResponseErrors as Mock).mockReturnValue([
+      'Invalid credentials',
+    ]);
 
     render(<Login />);
 
@@ -97,7 +102,7 @@ describe('login page', () => {
       error: 'Network down',
       data: {},
     });
-    (loginErrors as Mock).mockReturnValue(['Network down']);
+    (formatActionResponseErrors as Mock).mockReturnValue(['Network down']);
 
     render(<Login />);
 

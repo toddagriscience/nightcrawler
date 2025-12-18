@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
-import { loginErrors } from '@/lib/auth';
+import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
 import { useRouter } from 'next/navigation';
 import { useActionState, useState } from 'react';
 
@@ -27,7 +27,7 @@ export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
 
-  const errors = state ? loginErrors(state) : null;
+  const errors = state ? formatActionResponseErrors(state) : null;
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
