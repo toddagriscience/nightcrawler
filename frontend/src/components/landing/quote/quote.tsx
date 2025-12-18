@@ -22,7 +22,7 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
 
   return (
     <section
-      id="about-us"
+      id="who-we-are"
       className="flex flex-col justify-center items-center text-center h-screen px-0 lg:px-0"
       role="region"
     >
