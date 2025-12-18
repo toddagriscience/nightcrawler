@@ -13,7 +13,7 @@ const protectedUrls = ['/', '/account/reset-password'];
  * Handle authentication-based routing. If the user is:
  * - Authenticated and navigating to a protected route: Allow them through
  * - Authenticated and navigating to a non-protected route (marketing site route): Redirect to protected route '/'
- * - Unauthenticated and navigating to a protected route: Redirect to `/en` (marketing site landing page)
+ * - Unauthenticated and navigating to a protected route: Redirect to `/en` (marketing site landing page) + the rest of the URL. Ex. /who-we-are -> /en/who-we-are
  * - Unauthenticated and navigating to a non-protected route (marketing site route): Allow them through
  *
  * Note that the "dashboard" is located at '/' and is consequently uninternationalized. The marketing site is the only piece of the site that is internationalized.
@@ -98,7 +98,7 @@ export async function handleAuthRouting(
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
-  return supabaseResponse;
+  return null;
 }
 
 /**

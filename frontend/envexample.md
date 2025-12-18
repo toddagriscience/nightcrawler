@@ -39,4 +39,7 @@ NEXT_PUBLIC_CLOUDFLARE_SITEKEY="0x4AAAAAACEYfDvRCc8Fkc6C"
 # Google Script URLs for submitting form data, private
 CONTACT_GOOGLE_SCRIPT_URL="https://google.com"
 EXTERNSHIP_GOOGLE_SCRIPT_URL="https://google.com"
+
+# Database URL, private
+DATABASE_URL=""
 ```
