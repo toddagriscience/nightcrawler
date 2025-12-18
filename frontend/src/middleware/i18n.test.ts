@@ -131,6 +131,49 @@ describe('I18n Middleware', () => {
       expect(vi.mocked(MockNextResponse.redirect)).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
+      expect(result.headers.get('location')).toStrictEqual({
+        pathname: '/en/who-we-are',
+      });
+    });
+
+    it('should not redirect unauth uninternationalized routes', async () => {
+      const mockRequest = {
+        nextUrl: {
+          pathname: '/login',
+          clone: vi.fn().mockReturnValue({
+            pathname: '/login',
+          }),
+        },
+      } as unknown as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      expect(vi.mocked(MockNextResponse.next)).toHaveBeenCalled();
+      expect(result).toBeDefined();
+      expect(result).toBeInstanceOf(NextResponse);
+      expect(result.headers.get('testing-location')).toBe('/login');
+    });
+
+    it('should redirect unauth internationalized routes', async () => {
+      const mockRequest = {
+        url: 'http://localhost:3000/es/login',
+        nextUrl: {
+          pathname: '/es/login',
+          clone: vi.fn().mockReturnValue({
+            pathname: '/es/login',
+          }),
+        },
+      } as unknown as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
+      expect(vi.mocked(MockNextResponse.redirect)).toHaveBeenCalled();
+      expect(result).toBeDefined();
+      expect(result).toBeInstanceOf(NextResponse);
+      // @ts-expect-error Caused for some reason, probably due to the mock
+      expect(result.headers.get('location').pathname).toBe('/login');
     });
 
     it('should return next() for locale routes when unauthenticated', () => {
