@@ -5,6 +5,9 @@ import { Locale } from 'next-intl';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
+/** Routes that are uninternationalized and only accessible to the public */
+const unauthUnintlRoutes = ['login', 'forgot-password'];
+
 /**
  * Next-intl middleware instance
  * @returns {createMiddleware} - The next-intl middleware instance
@@ -29,9 +32,28 @@ export function handleI18nMiddleware(
       return intlMiddleware(request);
     }
 
+    const splitPathnames = pathname.split('/');
+
+    // Check for internationalized unauth only routes, such as `/en/login`
+    if (
+      splitPathnames.length > 2 &&
+      unauthUnintlRoutes.includes(splitPathnames[2])
+    ) {
+      return NextResponse.redirect(
+        new URL(`/${splitPathnames[2]}`, request.url)
+      );
+    }
+
     // For paths that already have locale, let them through normally
-    if (SUPPORTED_LOCALES.includes(pathname.split('/')[1] as Locale)) {
+    if (SUPPORTED_LOCALES.includes(splitPathnames[1] as Locale)) {
       return NextResponse.next();
+    }
+
+    // Unauth routes, such as `/login`
+    if (unauthUnintlRoutes.includes(splitPathnames[1])) {
+      const response = NextResponse.next();
+      response.headers.set('testing-location', pathname);
+      return response;
     }
 
     // For paths without locale (like /who-we-are, /no-page-here),
