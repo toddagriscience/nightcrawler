@@ -5,7 +5,7 @@ import Login from './page';
 import { login } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import userEvent from '@testing-library/user-event';
-import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import type { Mock } from 'vitest';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -14,7 +14,7 @@ vitest.mock('@/lib/auth', () => ({
   login: vitest.fn(),
 }));
 
-vitest.mock('@/lib/utils/format-action-response-errors', () => ({
+vitest.mock('@/lib/utils/actions', () => ({
   formatActionResponseErrors: vitest.fn(),
 }));
 

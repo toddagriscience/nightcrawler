@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useActionState } from 'react';
 import { submitEmail } from './action';
 import { FadeIn } from '@/components/common';
-import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 
 /** The careers page. Currently only provides information on the externship and allows applicants to submit their email..
  *

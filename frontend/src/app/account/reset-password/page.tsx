@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
-import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useActionState, useState } from 'react';
 

@@ -9,7 +9,7 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/actions/auth';
 import Link from 'next/link';
-import { formatActionResponseErrors } from '@/lib/utils/format-action-response-errors';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useActionState, useState } from 'react';
 
 /**
