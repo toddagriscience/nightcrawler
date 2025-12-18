@@ -1,15 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import logger from './logger';
-import {
-  LoginResponse,
-  LogoutResponse,
-  SendResetPasswordEmailResponse,
-  UpdateUserResponse,
-} from './types/auth';
+import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
+import { ActionResponse } from './types/action-response';
 
 /** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -33,12 +29,12 @@ import { redirect } from 'next/navigation';
  *
  * @param email The email of the user
  * @param password The password of the user
- * @returns {Promise<LoginResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
+ * @returns {Promise<AuthResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
  * */
 export async function login(
   email: string,
   password: string
-): Promise<LoginResponse> {
+): Promise<AuthResponse> {
   try {
     const { data, error } = await createBrowserClient().auth.signInWithPassword(
       {
@@ -51,20 +47,21 @@ export async function login(
         `Something went wrong when authenticating the user: ${error}`
       );
     }
-    return { data, error };
+    return { data, error, responseType: AuthResponseTypes.Login };
   } catch (error) {
     logger.warn(`Something went wrong when authenticating the user: ${error}`);
   }
   return {
     data: {},
     error: new AuthError('Something went wrong. Please contact support.'),
+    responseType: AuthResponseTypes.Login,
   };
 }
 
 /** ONLY USE ON CLIENT SIDE! Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
  *
- * @returns {Promise<LogoutResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
-export async function logout(): Promise<LogoutResponse> {
+ * @returns {Promise<AuthResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
+export async function logout(): Promise<AuthResponse> {
   try {
     const client = createBrowserClient();
     const isAuthenticated = await checkAuthenticated();
@@ -78,6 +75,7 @@ export async function logout(): Promise<LogoutResponse> {
           error: new AuthError(
             `Something went wrong when logging out the user: ${error}`
           ),
+          responseType: AuthResponseTypes.Logout,
         };
       }
     }
@@ -87,6 +85,7 @@ export async function logout(): Promise<LogoutResponse> {
       error: new AuthError(
         `Something went wrong when logging out the user: ${error}`
       ),
+      responseType: AuthResponseTypes.Logout,
     };
   }
 
@@ -103,24 +102,4 @@ export async function checkAuthenticated(): Promise<boolean> {
   } = await createBrowserClient().auth.getUser();
 
   return !(user == null);
-}
-
-/**
- * Standardizes all the different error types produced by the login action into a list. Contrary to the majority of other functions in this file, this function can be used in any location in the codebase. It's just a helper function for formatting.
- *
- * @param state The current form action state
- * @returns A list of all the errors
- */
-export function loginErrors(
-  state:
-    | LoginResponse
-    | null
-    | SendResetPasswordEmailResponse
-    | UpdateUserResponse
-): string[] {
-  if (!state?.error) return [];
-  if (typeof state.error === 'string') return [state.error];
-  if (state.error instanceof Error) return [state.error.message];
-  if ('errors' in state.error) return state.error.errors;
-  return [];
 }

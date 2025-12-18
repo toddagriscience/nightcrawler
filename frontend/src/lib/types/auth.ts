@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { AuthError } from '@supabase/supabase-js';
+import { ActionResponse } from './action-response';
 
 /** An error type, specifically used in the `login()` funtion from `@/lib/action/auth`. */
 export type ZodError = {
@@ -8,36 +8,26 @@ export type ZodError = {
   properties?: Record<string, { errors: string[] }>;
 };
 
-/** Response from the `login()` function from `@/lib/auth`, `@/lib/actions/auth`, and any other auth related functions. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signinwithpassword
- *
- * @property {object} data - The user data with three fields: `session`, `user`, and optionally `weakPassword`. `session` and `user` can be null, but the field itself will be present.
- * @property {AuthError | ZodError | string | null} error - Could be a generic error type from `@supabase/supabase-js` that extends `Error`, A `ZodError` from an invalid auth request, a String error from everything going totally wrong, or null if no errors happened. */
-export interface LoginResponse {
-  data: object;
-  error: AuthError | ZodError | string | null;
+/*
+ * @typedef AuthResponseTypes
+ * @property Login - Response from the `login()` function from `@/lib/auth`, `@/lib/actions/auth`, and any other auth related functions. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signinwithpassword
+ * @property Logout - Response from the logout() function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signout
+ * @property SendResetPasswordEmail - Response from the `resetPassword()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
+ * @property UpdateUser - Response from the `SendResetPasswordEmail()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
+ */
+export enum AuthResponseTypes {
+  Login,
+  Logout,
+  SendResetPasswordEmail,
+  UpdateUser,
 }
 
-/** Response from the logout() function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signout
+/** Generic interface for a response from a server action/API route involving authentication.
  *
- * @property {AuthError | null} - An AuthError (Supabase error) or nothing at all. */
-export interface LogoutResponse {
-  error: AuthError | null;
-}
-
-/** Response from the `resetPassword()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
- *
- * @property {AuthError | ZodError | string | null} error - Could be a generic error type from `@supabase/supabase-js` that extends `Error`, A `ZodError` from an invalid auth request, a String error from everything going totally wrong, or null if no errors happened.
+ * @property {AuthResponseTypes} responseType - The type of the response
  * */
-export interface SendResetPasswordEmailResponse {
-  error: AuthError | ZodError | string | null;
-}
-
-/** Response from the `SendResetPasswordEmail()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
- *
- * @property {AuthError | ZodError | string | null} error - Could be a generic error type from `@supabase/supabase-js` that extends `Error`, A `ZodError` from an invalid auth request, a String error from everything going totally wrong, or null if no errors happened.
- * */
-export interface UpdateUserResponse {
-  error: AuthError | ZodError | string | null;
+export interface AuthResponse extends ActionResponse {
+  responseType: AuthResponseTypes;
 }
 
 /** Password requirements for `/account/reset-password`. Supabase will also enforce everything except `isConfirmationSame` in case validation somehow fails.

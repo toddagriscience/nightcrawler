@@ -7,8 +7,8 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useActionState } from 'react';
 import { submitEmail } from './action';
-import { loginErrors } from '@/lib/auth';
 import { FadeIn } from '@/components/common';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 
 /** The careers page. Currently only provides information on the externship and allows applicants to submit their email..
  *
@@ -16,7 +16,7 @@ import { FadeIn } from '@/components/common';
 export default function Careers() {
   const [state, submitEmailAction] = useActionState(submitEmail, null);
 
-  const errors = state ? loginErrors(state) : null;
+  const errors = state ? formatActionResponseErrors(state) : null;
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">

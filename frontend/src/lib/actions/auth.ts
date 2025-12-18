@@ -5,11 +5,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import logger from '../logger';
-import {
-  LoginResponse,
-  SendResetPasswordEmailResponse,
-  UpdateUserResponse,
-} from '../types/auth';
+import { AuthResponse, AuthResponseTypes } from '../types/auth';
 import { emailSchema, loginSchema } from '../zod-schemas/auth';
 import { z } from 'zod';
 
@@ -20,12 +16,12 @@ import { z } from 'zod';
  *
  * @param {unknown} _ - The initial state (unneeded in this function)
  * @param formData - The form data containing the email and password
- * @returns {LoginResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
+ * @returns {AuthResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-signinanonymously
  */
 export async function login(
   _: unknown,
   formData: FormData
-): Promise<LoginResponse> {
+): Promise<AuthResponse> {
   const rawData = {
     email: formData.get('email'),
     password: formData.get('password'),
@@ -38,6 +34,7 @@ export async function login(
     return {
       data: {},
       error: z.treeifyError(validated.error),
+      responseType: AuthResponseTypes.Login,
     };
   }
 
@@ -55,6 +52,7 @@ export async function login(
       return {
         data: {},
         error: error instanceof Error ? error.message : 'An error occured',
+        responseType: AuthResponseTypes.Login,
       };
     }
   } catch (error) {
@@ -62,6 +60,7 @@ export async function login(
     return {
       data: {},
       error: error instanceof Error ? error.message : 'An error occurred',
+      responseType: AuthResponseTypes.Login,
     };
   }
   redirect('/');
@@ -71,19 +70,22 @@ export async function login(
  *
  * @param {unknown} _ - The initial state (unneeded in this function)
  * @param formData - The form data containing the email and password
- * @returns {SendResetPasswordEmailResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
+ * @returns {AuthResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
  * */
 export async function sendResetPasswordEmail(
   _: unknown,
   formData: FormData
-): Promise<SendResetPasswordEmailResponse> {
+): Promise<AuthResponse> {
   const email = formData.get('email');
 
   const validated = emailSchema.safeParse(email);
 
   if (!validated.success) {
     logger.warn('Email was not valid');
-    return { error: z.treeifyError(validated.error) };
+    return {
+      error: z.treeifyError(validated.error),
+      responseType: AuthResponseTypes.SendResetPasswordEmail,
+    };
   }
 
   const client = await createClient();
@@ -95,16 +97,23 @@ export async function sendResetPasswordEmail(
       logger.warn(
         `Something went wrong when resetting the user's password: ${error}`
       );
-      return { error: error };
+      return {
+        error: error,
+        responseType: AuthResponseTypes.SendResetPasswordEmail,
+      };
     }
 
-    return { error: null };
+    return {
+      error: null,
+      responseType: AuthResponseTypes.SendResetPasswordEmail,
+    };
   } catch (error) {
     logger.warn(
       `Something went wrong when resetting the user's password: ${error}`
     );
     return {
       error: error instanceof Error ? error.message : 'An error occurred',
+      responseType: AuthResponseTypes.SendResetPasswordEmail,
     };
   }
 }
@@ -113,12 +122,12 @@ export async function sendResetPasswordEmail(
  *
  * @param {unknown} _ - The initial state (unneeded in this function)
  * @param formData - The form data containing the email and password
- * @returns {UpdateUserResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-updateuser
+ * @returns {AuthResponse} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-updateuser
  * */
 export async function updateUser(
   _: unknown,
   formData: FormData
-): Promise<UpdateUserResponse> {
+): Promise<AuthResponse> {
   // No need to check if the new password is strong enough. Supabase will handle this for us.
   const newPassword = formData.get('newPassword');
   const confirmNewPassword = formData.get('confirmNewPassword');
@@ -128,7 +137,10 @@ export async function updateUser(
     !confirmNewPassword ||
     confirmNewPassword !== newPassword
   ) {
-    return { error: "Passwords don't match" };
+    return {
+      error: "Passwords don't match",
+      responseType: AuthResponseTypes.UpdateUser,
+    };
   }
 
   const toUpdate = { password: newPassword.toString() };
@@ -141,16 +153,17 @@ export async function updateUser(
       logger.warn(
         `Something went wrong when resetting the user's password: ${error}`
       );
-      return { error: error };
+      return { error: error, responseType: AuthResponseTypes.UpdateUser };
     }
 
-    return { error: null };
+    return { error: null, responseType: AuthResponseTypes.UpdateUser };
   } catch (error) {
     logger.warn(
       `Something went wrong when resetting the user's password: ${error}`
     );
     return {
       error: error instanceof Error ? error.message : 'An error occurred',
+      responseType: AuthResponseTypes.UpdateUser,
     };
   }
 }
