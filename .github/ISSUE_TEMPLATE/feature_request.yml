@@ -5,10 +5,7 @@ description: Suggest a new feature or enhancement
 labels: ['enhancement', 'triage']
 
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
   - type: textarea
     attributes:
-      label: Add any external media here
+      placeholder: |
+        Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
