@@ -67,25 +67,23 @@ export default function LandingPage() {
   }, [detectTheme]);
 
   return (
-    <>
-      <div ref={heroRef}>
-        <Hero />
-      </div>
-      <div>
-        <ScrollShrinkWrapper>
-          <motion.div
-            className="flex h-fit max-w-375 w-[95%] mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
-            animate={{
-              backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
-              color: contextIsDark ? '#FDFDFB' : '#2A2727',
-            }}
-            ref={newsCarouselRef}
-          >
-            <NewsHighlights />
-            <Quote isDark={contextIsDark} />
-          </motion.div>
-        </ScrollShrinkWrapper>
-      </div>
-    </>
+    <div className="mb-32">
+      <ScrollShrinkWrapper>
+        <div ref={heroRef}>
+          <Hero />
+        </div>
+        <motion.div
+          className="flex h-fit  mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
+          animate={{
+            backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
+            color: contextIsDark ? '#FDFDFB' : '#2A2727',
+          }}
+          ref={newsCarouselRef}
+        >
+          <NewsHighlights />
+          <Quote isDark={contextIsDark} />
+        </motion.div>
+      </ScrollShrinkWrapper>
+    </div>
   );
 }
