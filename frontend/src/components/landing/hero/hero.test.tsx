@@ -9,7 +9,7 @@ describe('Hero', () => {
   it('renders without crashing', () => {
     renderWithNextIntl(<Hero />);
     expect(
-      screen.getByText('Advancing Agriculture Through Science')
+      screen.getByText('We help regenerate sustainable farms.')
     ).toBeInTheDocument();
   });
 
@@ -17,8 +17,6 @@ describe('Hero', () => {
     renderWithNextIntl(<Hero />);
     const heading = screen.getByRole('heading', { level: 3 });
     expect(heading).toBeInTheDocument();
-    expect(heading).toHaveTextContent('Advancing Agriculture Through Science');
+    expect(heading).toHaveTextContent('We help regenerate sustainable farms.');
   });
-
-  // TODO: Add Spanish translation tests when Vitest/NextIntl integration is improved
 });
