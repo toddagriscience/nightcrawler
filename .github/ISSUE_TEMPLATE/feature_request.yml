@@ -7,5 +7,6 @@ labels: ['enhancement', 'triage']
 body:
   - type: textarea
     attributes:
+      label: Open a feature request issue
       placeholder: |
         Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
