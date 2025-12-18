@@ -2,10 +2,16 @@
 
 'use client';
 
-import { Button } from '@/components/common';
 import { Link } from '@/i18n/config';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { FooterSection } from './types/footer';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaXTwitter,
+  FaYoutube,
+} from 'react-icons/fa6';
 
 /**
  * Footer component
@@ -13,119 +19,110 @@ import { FooterSection } from './types/footer';
  */
 const Footer = () => {
   const t = useTranslations('footer');
-  const tHeader = useTranslations('header');
 
-  const footerSections: FooterSection[] = [
+  const siteLinks = [
+    { href: '/who-we-are', label: t('links.whoWeAre') },
+    { href: '/what-we-do', label: t('links.whatWeDo') },
+    { href: '/news', label: t('links.news') },
+    { href: '/careers', label: t('links.careers') },
+    { href: '/contact', label: t('links.contact') },
+    { href: '/investors', label: t('links.investors') },
+    { href: '/sponsorships', label: t('links.sponsorships') },
+    { href: '/foundation', label: t('links.foundation') },
+  ];
+
+  const legalLinks = [
+    { href: '/terms', label: t('links.terms') },
+    { href: '/privacy', label: t('links.privacy') },
     {
-      title: t('sections.todd'),
-      testId: 'todd-section-heading',
-      links: [
-        { href: '/', label: tHeader('navigation.home') },
-        { href: '/who-we-are', label: tHeader('navigation.whoWeAre') },
-        { href: '/what-we-do', label: tHeader('navigation.whatWeDo') },
-        { href: '/news', label: tHeader('navigation.news') },
-        { href: '/careers', label: t('links.careers') },
-      ],
+      href: '/accessibility',
+      label: t('links.accessibility'),
+    },
+    { href: '/disclosures', label: t('links.disclosures') },
+    {
+      href: 'https://toddagriscience.safebase.us/',
+      label: t('links.vulnReporting'),
+    },
+  ];
+
+  const socialMediaIcons = [
+    {
+      icon: <FaInstagram role="img" />,
+      href: 'https://www.instagram.com/toddagriscience/',
     },
     {
-      title: t('sections.connect'),
-      testId: 'connect-section-heading',
-      links: [
-        { href: '/contact', label: t('links.contact') },
-        {
-          href: 'https://instagram.com/toddagriscience',
-          label: t('links.instagram'),
-          external: true,
-          testId: 'social-link-instagram',
-        },
-        {
-          href: 'https://linkedin.com/company/toddagriscience',
-          label: t('links.linkedin'),
-          external: true,
-          testId: 'social-link-linkedin',
-        },
-        {
-          href: 'https://x.com/toddagriscience',
-          label: t('links.x'),
-          external: true,
-          testId: 'social-link-x',
-        },
-      ],
+      icon: <FaLinkedinIn role="img" />,
+      href: 'https://www.linkedin.com/company/toddagriscience/',
     },
+    { icon: <FaXTwitter role="img" />, href: 'https://x.com/toddagriscience' },
     {
-      title: t('sections.legal'),
-      testId: 'legal-section-heading',
-      links: [
-        {
-          href: '/accessibility',
-          label: t('links.accessibility'),
-        },
-        { href: '/privacy', label: t('links.privacy') },
-        { href: '/terms', label: t('links.terms') },
-      ],
+      icon: <FaYoutube role="img" />,
+      href: 'http://www.youtube.com/@toddagriscience',
     },
   ];
 
   return (
-    <footer className="bg-[#f8f5ee] text-[#2A2727] py-10 px-4 md:px-6 lg:px-12 xl:px-18">
-      {/* Top section with Let's Talk and links */}
-      <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
-        {/* Let's Talk section */}
-        <div className="lg:col-span-3 flex flex-col justify-between">
-          <div>
-            <h1
-              className="font-thin text-4xl md:text-5xl lg:text-6xl mb-6"
-              data-testid="lets-talk-heading"
-            >
-              {t('cta.letsTalk')}
-            </h1>
-            <Button
-              href="/get-started"
-              text={t('cta.getInTouch')}
-              variant="outline"
-              size="lg"
-              isDark={false}
-              data-testid="get-in-touch-button"
-            />
+    <footer className="mt-8 bg-background text-foreground py-10 px-4 md:px-6 lg:px-12 xl:px-18 mb-8 sm:mb-0">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col md:flex-row w-full justify-between md:mb-16">
+          <ToddHeader className="md:text-5xl lg:text-6xl" />
+          <div className="flex flex-row md:ml-auto gap-32 max-md:mt-8">
+            <div className="flex flex-col gap-4">
+              {siteLinks.slice(0, 4).map((val, index) => (
+                <Link
+                  key={index}
+                  href={val.href}
+                  className="md:text-lg text-md"
+                >
+                  <span className="link text-underline-left text-underline-left-black text-black">
+                    {val.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <div className="flex flex-col gap-4">
+              {siteLinks.slice(4, 8).map((val, index) => (
+                <Link
+                  key={index}
+                  href={val.href}
+                  className="md:text-lg text-md"
+                >
+                  <span className="link text-underline-left text-underline-left-black text-black">
+                    {val.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Navigation links section */}
-        <div className="lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-4 lg:gap-8">
-          {footerSections.map((section) => (
-            <div key={section.title} className="flex flex-col">
-              <p
-                className="font-semibold md:font-thin text-lg md:text-xl mb-4 md:mb-6 lg:mb-8"
-                data-testid={section.testId}
-              >
-                {section.title}
-              </p>
-              <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-thin flex flex-col gap-2 md:gap-3">
-                {section.links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="footer-underline duration-300 ease-in-out transition-all"
-                    {...(link.external && {
-                      target: '_blank',
-                      rel: 'noopener noreferrer',
-                    })}
-                    {...(link.testId && { 'data-testid': link.testId })}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+      </div>
+      <div className="flex flex-col gap-10 mt-8">
+        <div className="flex flex-row gap-4">
+          <Image
+            role="img"
+            src={'/united_states_flag.png'}
+            alt=""
+            width={50}
+            height={50}
+            className="rounded-[50%] w-6 h-6"
+          />
+          <span>{t('location')}</span>
+        </div>
+        <p>© Todd Agriscience 2025</p>
+        <div className="flex md:flex-row flex-col gap-6 flex-wrap">
+          {legalLinks.map((val, index) => (
+            <Link key={index} href={val.href}>
+              {val.label}
+            </Link>
           ))}
         </div>
-      </div>
-
-      {/* Copyright section */}
-      <div className="max-w-screen-2xl mx-auto border-t border-[#2A2727]/10 pt-6">
-        <p className="font-thin text-base text-center md:text-lg">
-          {t('copyright', { year: new Date().getFullYear() })}
-        </p>
+        <div className="flex flex-row gap-6 flex-wrap">
+          {socialMediaIcons.map((val, index) => (
+            <Link key={index} href={val.href}>
+              {val.icon}
+            </Link>
+          ))}
+        </div>
       </div>
     </footer>
   );

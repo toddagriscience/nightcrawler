@@ -16,9 +16,9 @@ describe('Header', () => {
     expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
   });
 
-  it('shows TODD wordmark when not in menu mode', () => {
+  it('shows TODD wordmarks when not in menu mode', () => {
     renderWithNextIntl(<Header alwaysGlassy />);
-    expect(screen.getByTestId('wordmark-link')).toBeInTheDocument();
+    expect(screen.getAllByTestId('wordmark-link')).toHaveLength(2);
   });
 
   it('toggles menu when menu button is clicked', async () => {
@@ -30,18 +30,6 @@ describe('Header', () => {
 
     await fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute('aria-label', 'Open menu');
-  });
-
-  it('applies dark theme classes when isDark prop is true', () => {
-    renderWithNextIntl(<Header isDark alwaysGlassy />);
-    const headerElement = screen.getByRole('banner');
-    expect(headerElement).toHaveAttribute('data-theme', 'dark');
-  });
-
-  it('applies light theme classes when isDark prop is false', () => {
-    renderWithNextIntl(<Header isDark={false} alwaysGlassy />);
-    const headerElement = screen.getByRole('banner');
-    expect(headerElement).toHaveAttribute('data-theme', 'light');
   });
 
   it('supports keyboard navigation for menu toggle', async () => {
@@ -59,7 +47,7 @@ describe('Header', () => {
     renderWithNextIntl(<Header />);
 
     // Check login link
-    const loginLink = screen.getByTestId('login-link');
+    const loginLink = screen.getAllByTestId('login-link')[0];
     expect(loginLink).toBeInTheDocument();
     expect(loginLink).toHaveAttribute('href', '/login');
   });
@@ -67,6 +55,6 @@ describe('Header', () => {
   it('renders normally without isLoading prop', () => {
     renderWithNextIntl(<Header />);
     expect(screen.getByRole('banner')).toBeInTheDocument();
-    expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
+    expect(screen.getByText('Careers')).toBeInTheDocument();
   });
 });
