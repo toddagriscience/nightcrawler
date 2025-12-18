@@ -20,8 +20,10 @@ export default async function middleware(request: NextRequest) {
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
+  const canAllAccess = await isAllUserRoute(request);
+
   // Handle authentication-based routing
-  if (!(await isAllUserRoute(request))) {
+  if (!canAllAccess) {
     const authRedirect = await handleAuthRouting(request);
     if (authRedirect) {
       return authRedirect;
