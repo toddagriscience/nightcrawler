@@ -1,14 +1,12 @@
 # Copyright Todd LLC, All rights reserved
 
 name: ✨ Feature Request
-description: Suggest a new feature or enhancement
-labels: ['enhancement', 'triage']
+description: Open a feature request issue
+labels: ['feat']
 
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
   - type: textarea
     attributes:
-      label: Add any external media here
+      label: Open a feature request issue
+      placeholder: |
+        Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
