@@ -1,7 +1,7 @@
 # Copyright Todd LLC, All rights reserved
 
 name: ✨ Feature Request
-description: Suggest a new feature or enhancement
+description: Open a feature request issue
 labels: ['feat']
 
 body:
