@@ -36,6 +36,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
 
   const staticPages = [
     '/',
+    '/careers',
     '/who-we-are',
     '/news',
     '/terms',
