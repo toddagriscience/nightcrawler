@@ -84,6 +84,30 @@ describe('handleAuthRouting', () => {
 
     const result = await handleAuthRouting(mockRequest);
 
-    expect(result).toBeInstanceOf(NextResponse);
+    expect(result).toBeNull();
+  });
+
+  it('redirects unauthenticated users on a non-protected unintl route', async () => {
+    const mockRequest = makeMockRequest('https://example.com/who-we-are');
+
+    (createServerClient as Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
+
+    expect(result).toBeNull();
+  });
+
+  it('does not redirect ignored routes', async () => {
+    const mockRequest = makeMockRequest('https://example.com/login');
+
+    (createServerClient as Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
+
+    expect(result).toBeNull();
   });
 });

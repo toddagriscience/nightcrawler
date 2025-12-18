@@ -38,7 +38,7 @@ describe('Contact page', () => {
     expect(select.nodeValue == 'Other');
   });
   it('sends a message and renders thank you screen', async () => {
-    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
+    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
@@ -81,7 +81,7 @@ describe('Contact page', () => {
     expect(await screen.findByText('Thank You')).toBeInTheDocument();
   });
   it('displays error on failure', async () => {
-    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
+    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,
