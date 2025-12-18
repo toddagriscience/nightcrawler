@@ -6,18 +6,18 @@ import z from 'zod';
 import logger from '@/lib/logger';
 import { emailSchema } from '@/lib/zod-schemas/auth';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
-import { LoginResponse } from '@/lib/types/auth';
+import { ActionResponse } from '@/lib/types/action-response';
 
 /** USE ONLY ON THE SERVER SIDE!!! Submits an email to the Google Sheet for keeping track of externship emails.
  *
  * @param {unknown} _ - The initial state (unneeded in this function)
  * @param {FormData} formData - The form data containing the email and password
- * @returns {LoginResponse} - The response. The return type will be refactored into a generic in the future.
+ * @returns {AuthResponse} - The response. The return type will be refactored into a generic in the future.
  * */
 export async function submitEmail(
   _: unknown,
   formData: FormData
-): Promise<LoginResponse> {
+): Promise<ActionResponse> {
   const email = formData.get('email');
 
   // We are not collecting names. If a name was entered, it was likely entered by a robot. Just act like the request succeeded if this form was filled out.
@@ -56,9 +56,4 @@ export async function submitEmail(
       error: 'Error saving email',
     };
   }
-
-  return {
-    data: {},
-    error: 'Error saving email',
-  };
 }
