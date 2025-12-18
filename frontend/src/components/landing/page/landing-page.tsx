@@ -2,9 +2,10 @@
 
 'use client';
 
+import { motion } from 'framer-motion';
 import { useTheme } from '@/context/theme/ThemeContext';
 import { useCallback, useEffect, useRef } from 'react';
-import { Hero, ScrollShrinkWrapper } from '../';
+import { Hero, Quote, ScrollShrinkWrapper } from '../';
 import NewsHighlights from '../news-highlights/news-highlights';
 
 /**
@@ -14,7 +15,7 @@ import NewsHighlights from '../news-highlights/news-highlights';
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const newsCarouselRef = useRef<HTMLDivElement>(null);
-  const { setIsDark } = useTheme();
+  const { setIsDark, isDark: contextIsDark } = useTheme();
 
   // Scroll-based theme detection
   const detectTheme = useCallback(() => {
@@ -70,9 +71,19 @@ export default function LandingPage() {
       <div ref={heroRef}>
         <Hero />
       </div>
-      <div ref={newsCarouselRef}>
+      <div>
         <ScrollShrinkWrapper>
-          <NewsHighlights />
+          <motion.div
+            className="flex h-fit max-w-375 w-[95%] mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
+            animate={{
+              backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
+              color: contextIsDark ? '#FDFDFB' : '#2A2727',
+            }}
+            ref={newsCarouselRef}
+          >
+            <NewsHighlights />
+            <Quote isDark={contextIsDark} />
+          </motion.div>
         </ScrollShrinkWrapper>
       </div>
     </>

@@ -20,7 +20,7 @@ const ScrollShrinkWrapper = ({ children }: { children: React.ReactNode }) => {
     target: containerRef,
     offset: ['start start', 'end start'],
   });
-  const width = useTransform(scrollYProgress, [0, 1], ['100vw', '98vw']);
+  const width = useTransform(scrollYProgress, [0, 1], ['100vw', '95vw']);
 
   return (
     <div ref={containerRef} className="w-full">

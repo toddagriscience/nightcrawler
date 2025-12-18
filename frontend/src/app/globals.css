@@ -109,6 +109,10 @@ body {
   }
 }
 
+html {
+  position: relative;
+}
+
 html,
 body {
   font-family: var(--font-haas);
