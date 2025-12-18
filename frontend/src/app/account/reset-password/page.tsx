@@ -36,7 +36,7 @@ export default function ResetPassword() {
           {Array.isArray(errors) && errors.length === 0 && (
             <>
               <h1 className="mb-6 text-center text-3xl">
-                PASSWORD RESET SUCCESFULL
+                PASSWORD RESET SUCCESSFUL
               </h1>
               <p className="text-center mb-6">
                 Your password has been updated successfully.

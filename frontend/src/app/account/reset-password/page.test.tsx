@@ -145,7 +145,7 @@ describe('ResetPassword', () => {
 
     // Check for success message content
     expect(
-      screen.getByRole('heading', { name: /PASSWORD RESET SUCCESFULL/i })
+      screen.getByRole('heading', { name: /PASSWORD RESET SUCCESSFUL/i })
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Your password has been updated successfully./i)
