@@ -1,12 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { Metadata } from 'next';
 import { ThemeReset } from '@/components/common';
-import { ThemeProvider } from '@/context/theme/ThemeContext';
-import './globals.css';
-import { PostHogProvider } from './providers';
-import { fontVariables } from '@/lib/fonts';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { fontVariables } from '@/lib/fonts';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import './globals.css';
+import PageLoading from './loading';
+import { PostHogProvider } from './providers';
 
 /**
  * Root layout metadata for pages outside [locale] directory
@@ -35,7 +37,7 @@ export default function RootLayout({
           <ThemeProvider>
             <TooltipProvider delayDuration={0} skipDelayDuration={0}>
               <ThemeReset />
-              {children}
+              <Suspense fallback={<PageLoading />}>{children}</Suspense>
             </TooltipProvider>
           </ThemeProvider>
         </PostHogProvider>

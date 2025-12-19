@@ -225,3 +225,24 @@ header {
 .footer-underline-active::after {
   width: 100%;
 }
+
+/* Style for loading pages */
+.ellipsis::after {
+  content: '';
+  animation: ellipsis 1.5s infinite steps(4, end);
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '. .';
+  }
+  75% {
+    content: '. . .';
+  }
+}

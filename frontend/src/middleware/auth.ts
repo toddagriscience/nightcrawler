@@ -1,10 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { SUPPORTED_LOCALES } from '@/lib/locales';
-import { Locale } from 'next-intl';
 import { isRouteInternationalized } from '@/lib/routing';
+import { createServerClient } from '@supabase/ssr';
+import { NextRequest, NextResponse } from 'next/server';
 
 /** Any protected URLs */
 const protectedUrls = ['/', '/account/reset-password'];
@@ -63,7 +61,10 @@ export async function handleAuthRouting(
   const isAuthenticated = data?.claims;
 
   if (isRouteProtected(pathname)) {
-    if (isAuthenticated) {
+    // delete
+    const test = false;
+    if (isAuthenticated || test) {
+      console.log('Authenticated access to protected route');
       return supabaseResponse;
     }
 
