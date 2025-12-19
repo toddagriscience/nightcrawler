@@ -132,11 +132,10 @@ vi.mock('@/lib/sanity/utils', () => {
 
 describe('News Page', () => {
   it('renders without exploding', async () => {
-    // ??? tbh idk why this works exactly
     renderWithNextIntl(await News());
 
-    expect(screen.getByText('Todd Newsroom'));
+    expect(screen.getByText('Todd Newsroom')).toBeInTheDocument();
 
-    expect(screen.getByText('Latest News'));
+    expect(screen.getByText('Latest News')).toBeInTheDocument();
   });
 });

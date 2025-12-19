@@ -26,6 +26,14 @@ A few important things to mention:
 - `bun lint:fix` - Auto-fix ESLint issues
 - `bun prelint:fix` - Adds the appropriate license header to all files
 
+#### A note on linting
+
+We use a plugin that helps catch/find strings that might be secrets or credentials in plaintext, called [`eslint-plugin-no-secrets`](https://github.com/nickdeis/eslint-plugin-no-secrets). This normally works without any trouble, but it'll occasionally go off incorrectly. If this happens, paste the following comment above the chunk of code that's giving you an ESLint error:
+
+```ts
+// eslint-disable-next-line no-secrets/no-secrets
+```
+
 ### Testing
 
 - `bun run test` - Run Vitest unit tests

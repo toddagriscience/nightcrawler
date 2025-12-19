@@ -54,9 +54,10 @@ describe('PlaceholderImage', () => {
     fireEvent.error(image);
 
     await waitFor(() => {
-      const img = expect(screen.getByRole('img'));
-      img.toHaveClass('bg-gray-700');
-      img.toHaveClass('text-gray-300');
+      const img = screen.getByRole('img');
+      expect(img).toBeInTheDocument();
+      expect(img).toHaveClass('bg-gray-700');
+      expect(img).toHaveClass('text-gray-300');
     });
   });
 });
