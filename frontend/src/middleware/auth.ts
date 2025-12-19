@@ -61,10 +61,7 @@ export async function handleAuthRouting(
   const isAuthenticated = data?.claims;
 
   if (isRouteProtected(pathname)) {
-    // delete
-    const test = false;
-    if (isAuthenticated || test) {
-      console.log('Authenticated access to protected route');
+    if (isAuthenticated) {
       return supabaseResponse;
     }
 
