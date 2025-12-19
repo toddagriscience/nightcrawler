@@ -86,29 +86,41 @@ Folders, what they do, and why they exist.
   - `/scripts` - Arbitrary scripts. Will likely be merged with `./scripts` (scripts folder in root directory)
   - `/test` - Extra utility for testing
 
-### Slice Architecture (Where do I put components?)
+### Architecture (Or where do I put components?)
 
-For new pages, components are co-located with the page:
+This ASCII chart should give you a brief overview of the architecture of nightcrawler. If possible, prefer making logic as generic as possible and placing that logic in `./src/lib`, `.src/components`, or a similar folder. Co-located components, such as `login-modal.tsx` in the diagram below, should be reserved for components that are not generic enough to be used site-wide.
+
+Logic that isn't generic enough to be placed in one of the "generic" folders (`./src/lib`) tends to be very common -- don't panic if you feel like you're not abstracting enough.
 
 ```
-app/
-├── [locale]/
-│   ├── about/
-│   │   ├── components/     # About page specific components
-│   │   │   ├── hero/
-│   │   │   │   ├── types/
-│   │   │   │   │   └── hero.ts
-│   │   │   │   ├── hero.tsx
-│   │   │   │   ├── hero.test.tsx
-│   │   │   │   └── hero.stories.tsx
-│   │   │   └── index.ts    # Barrel export
-│   │   └── page.tsx        # About page
-│   └── contact/
-│       ├── components/     # Contact page specific components
-│       └── page.tsx        # Contact page
+.
+└── src/
+    ├── app/
+    │   └── login/
+    │       ├── page.test..tsx
+    │       ├── page.tsx
+    │       └── components/
+    │           ├── login-modal.test.tsx
+    │           └── login-modal.tsx
+    ├── components/
+    │   ├── ui/
+    │   │   └── ...
+    │   └── common/
+    │       ├── button.test.tsx
+    │       └── button.tsx
+    ├── lib/
+    │   ├── db/
+    │   │   └── schema/
+    │   │       ├── model.ts
+    │   │       └── index.ts
+    │   ├── types/
+    │   │   └── auth.ts
+    │   └── actions/
+    │       └── auth.ts
+    └── ...
 ```
 
-If possible, prefer making components generic and placing them inside `./src/components`. Co-located components should be reserved for components that are not generic enough to be used site-wide.
+Note that there are some older pieces of logic (namely the components for the landing page) that do not abide by this. We ask you to politely ignore this for now -- it'll be refactored in the future at some point.
 
 ## Testing Strategy
 
