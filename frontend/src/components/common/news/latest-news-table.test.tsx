@@ -46,32 +46,7 @@ const items = [
 ];
 
 describe('LatestNewsTable', () => {
-  // it('renders without literally exploding', () => {
-  //   renderWithNextIntl(
-  //     <LatestNewsTable items={items as unknown as SanityDocument[]} />
-  //   );
-  //
-  //   expect(screen.getByText('Headline')).toBeInTheDocument();
-  //   expect(screen.getByText('Source')).toBeInTheDocument();
-  //   expect(screen.getByText('The Verge')).toBeInTheDocument();
-  //   expect(
-  //     screen.getByText('Global Markets Show Strong Growth')
-  //   ).toBeInTheDocument();
-  //   expect(screen.getByText('September 1, 2024')).toBeInTheDocument();
-  // });
-  // it('shows more items on click', () => {
-  //   renderWithNextIntl(
-  //     <LatestNewsTable items={items as unknown as SanityDocument[]} />
-  //   );
-  //
-  //   // Click dropdown button
-  //   act(() => {
-  //     screen.getByRole('button').click();
-  //   });
-  //
-  //   expect(screen.getByText('the last one')).toBeInTheDocument();
-  // });
   it('is temporary', () => {
-    expect(true);
+    expect(true).toBeTruthy();
   });
 });

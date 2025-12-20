@@ -328,13 +328,13 @@ export { asyncFireEvent as fireEvent };
 import { renderWithNextIntl, createTestWithLocaleControl } from '@/test/test-utils';
 
 // Simple test with specific locale
-test('renders in Spanish', () => {
+skip('renders in Spanish', () => {
   const { getByText } = renderWithNextIntl(<MyComponent />, 'es');
   expect(getByText('Bienvenido a Todd')).toBeInTheDocument();
 });
 
 // Interactive test with language switcher
-test('can switch languages', () => {
+skip('can switch languages', () => {
   const TestComponent = createTestWithLocaleControl(<MyComponent />);
   const { getByText, getByLabelText } = render(TestComponent);
   

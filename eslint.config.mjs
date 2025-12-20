@@ -3,6 +3,8 @@
 import licenseHeader from "eslint-plugin-license-header";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
+import noSecrets from "eslint-plugin-no-secrets";
+import vitest from "@vitest/eslint-plugin";
 
 // Normalize plugin exports
 const licenseHeaderPlugin = licenseHeader?.default ?? licenseHeader;
@@ -27,9 +29,13 @@ const eslintConfig = defineConfig([
   {
     plugins: {
       "license-header": licenseHeaderPlugin,
+      "no-secrets": noSecrets,
+      vitest,
     },
     rules: {
+      ...vitest.configs.recommended.rules,
       "license-header/header": [2, "./license-header.txt"],
+      "no-secrets/no-secrets": "error",
     },
   },
 ]);

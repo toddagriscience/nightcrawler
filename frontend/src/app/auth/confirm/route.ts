@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
+// eslint-disable-next-line no-secrets/no-secrets
 /**
  * Logic in this function is primarily from https://supabase.com/docs/guides/auth/passwords?queryGroups=flow&flow=pkce&queryGroups=framework&framework=nextjs#resetting-a-password
  *
