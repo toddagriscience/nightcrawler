@@ -7,8 +7,8 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "notFound": {
-      "message": "The page you are looking for could not be found. Please check the URL and try again.",
-      "homeButton": "Home"
+      "title": "Page not available",
+      "message": "We're sorry, but the page you have requested is not yet available. Check out our <home>homepage</home> or <news>news</news> for more information."
     }
   },
   "metadata": {
