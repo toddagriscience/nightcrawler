@@ -29,12 +29,15 @@ export function FeaturedNewsCarousel({
           key={article.slug.current}
           isDark={false}
           image={
-            article.thumbnail && article.thumbnail.url
+            article.thumbnail && article.thumbnail.asset
               ? {
                   url: urlFor(article.thumbnail)?.url(),
                   alt: article.thumbnail.alt,
                 }
-              : { url: articlePlaceholderRoute, alt: '' }
+              : {
+                  url: articlePlaceholderRoute,
+                  alt: '',
+                }
           }
           source={article.source}
           date={new Date(article.date).toLocaleDateString(locale, {
