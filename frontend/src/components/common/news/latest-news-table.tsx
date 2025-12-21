@@ -27,17 +27,17 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
 
   return (
     <div className="rounded-md text-[#555555]">
-      <div className="grid grid-cols-3 border-b border-[#555555] px-4 py-2 text-xs uppercase">
+      <div className="grid sm:grid-cols-3 grid-cols-4 border-b border-[#555555] px-4 py-2 text-xs uppercase">
         <span>Headline</span>
         <span className="text-right">Source</span>
-        <span className="text-right">Date</span>
+        <span className="text-right max-sm:col-span-2">Date</span>
       </div>
 
       {items.slice(0, visibleCount).map((item, index) => (
         <div
-          key={item.title}
+          key={item.slug.current}
           className={clsx(
-            'grid grid-cols-3 items-center px-4 py-4 text-sm',
+            'grid sm:grid-cols-3 grid-cols-4 items-center px-4 py-4 text-sm',
             index !== visibleCount - 1 &&
               index !== items.length - 1 &&
               'border-b border-[#555555]'
@@ -51,9 +51,8 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
                 ? item.offSiteUrl
                 : windowHref + '/' + item.slug.current
             }
-            target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${item.title} in new tab`}
+            aria-label={`Open ${item.title} in this tab`}
           >
             <div className="flex items-center justify-end gap-1 hover:underline">
               {item.source}
@@ -61,7 +60,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             </div>
           </Link>
 
-          <div className="text-right">
+          <div className="text-right max-sm:col-span-2">
             {new Date(item.date).toLocaleDateString(locale, {
               year: 'numeric',
               month: 'long',

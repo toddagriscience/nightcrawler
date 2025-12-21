@@ -19,7 +19,7 @@ export default function Careers() {
   const errors = state ? formatActionResponseErrors(state) : null;
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
+    <div className="min-h-[90vh] flex flex-col justify-center items-center">
       <FadeIn className="max-w-[550px] w-[90%] gap-4 flex flex-col mx-auto">
         {Array.isArray(errors) && errors.length === 0 && (
           <>

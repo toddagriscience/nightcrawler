@@ -15,7 +15,7 @@ const siteConfig = {
   ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
   twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
   linkedinImage: 'https://www.toddagriscience.com/opengraph-image.png',
-  themeColor: '#F8F5EE',
+  themeColor: '#FDFDFB',
   social: {
     twitter: '@toddagriscience',
   },

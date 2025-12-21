@@ -26,15 +26,18 @@ export function FeaturedNewsCarousel({
       {items.map((article) => (
         <NewsCard
           title={article.title}
-          key={article.title}
+          key={article.slug.current}
           isDark={false}
           image={
-            article.thumbnail && article.thumbnail.url
+            article.thumbnail && article.thumbnail.asset
               ? {
                   url: urlFor(article.thumbnail)?.url(),
                   alt: article.thumbnail.alt,
                 }
-              : { url: articlePlaceholderRoute, alt: '' }
+              : {
+                  url: articlePlaceholderRoute,
+                  alt: '',
+                }
           }
           source={article.source}
           date={new Date(article.date).toLocaleDateString(locale, {
@@ -46,7 +49,7 @@ export function FeaturedNewsCarousel({
           link={
             article.offSiteUrl && article.offSiteUrl.length > 0
               ? article.offSiteUrl
-              : `${locale}/news/${article.slug.current}`
+              : `/news/${article.slug.current}`
           }
         />
       ))}

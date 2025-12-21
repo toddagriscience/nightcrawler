@@ -87,7 +87,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#F8F5EE',
+  themeColor: '#FDFDFB',
 };
 
 // Generate static params for all supported locales

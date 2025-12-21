@@ -40,7 +40,7 @@ Unless you're directly working on the CMS (located in `/sanity-studio`), the maj
 
 5. **Setup environment variables**
 
-Copy any and all environment variables from `envexample.md`. Copy:
+Copy any and all environment variables from `env.example` to `.env.local` and update any empty variables as necessary.
 
 6. **Start development server**
 
