@@ -26,7 +26,7 @@ export function FeaturedNewsCarousel({
       {items.map((article) => (
         <NewsCard
           title={article.title}
-          key={article.title}
+          key={article.slug.current}
           isDark={false}
           image={
             article.thumbnail && article.thumbnail.url
@@ -46,7 +46,7 @@ export function FeaturedNewsCarousel({
           link={
             article.offSiteUrl && article.offSiteUrl.length > 0
               ? article.offSiteUrl
-              : `${locale}/news/${article.slug.current}`
+              : `/news/${article.slug.current}`
           }
         />
       ))}

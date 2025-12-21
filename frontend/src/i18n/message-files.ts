@@ -13,9 +13,9 @@ export const messageFiles = [
   'who-we-are',
   'investors',
   'governance',
-  'news',
   'contact',
   'accessibility',
   'privacy',
   'terms',
+  'careers',
 ];

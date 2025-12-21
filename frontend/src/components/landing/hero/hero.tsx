@@ -14,13 +14,10 @@ const Hero = () => {
   const t = useTranslations('homepage');
 
   return (
-    <div className="text-center justify-end mx-auto flex flex-col items-center h-[97vh] pb-32">
-      <h3 className="text-2xl lg:text-4xl font-light max-w-lg my-5 select-none pointer-events-none">
+    <div className="absolute z-20 left-0 right-0 text-center justify-center mx-4 flex flex-col items-center h-[40vh]">
+      <h3 className="text-3xl lg:text-4xl font-light my-5 select-none pointer-events-none">
         {t('hero.tagline')}
       </h3>
-      <span>
-        <ArrowDown className="text-foreground" />
-      </span>
     </div>
   );
 };

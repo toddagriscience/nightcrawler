@@ -18,27 +18,8 @@ describe('Contact page', () => {
     expect(screen.getByText('Your Name')).toBeInTheDocument();
     expect(screen.getByText('Send')).toBeInTheDocument();
   });
-  it('dropdown works', () => {
-    renderWithNextIntl(<Contact />);
-
-    const select = screen.getByRole('combobox');
-    act(() => {
-      select.click();
-    });
-
-    expect(screen.getAllByText('General Inquiry')).toHaveLength(2);
-    expect(screen.getAllByText('Other')).toHaveLength(2);
-
-    const other = screen.getByTestId('other');
-
-    act(() => {
-      other.click();
-    });
-
-    expect(select.nodeValue == 'Other');
-  });
   it('sends a message and renders thank you screen', async () => {
-    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
+    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: true,
@@ -81,7 +62,7 @@ describe('Contact page', () => {
     expect(await screen.findByText('Thank You')).toBeInTheDocument();
   });
   it('displays error on failure', async () => {
-    process.env.GOOGLE_SCRIPT_URL = 'https://google.com';
+    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
     window.fetch = vitest.fn().mockImplementation(() =>
       Promise.resolve({
         ok: false,

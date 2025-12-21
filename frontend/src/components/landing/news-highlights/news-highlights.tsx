@@ -2,45 +2,30 @@
 
 'use client';
 
-import { Button, Carousel, NewsCard } from '@/components/common';
+import { FadeIn, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
-import { motion } from 'framer-motion';
-import { useLocale, useTranslations } from 'next-intl';
-import React, { useEffect, useRef, useState } from 'react';
-import { Quote } from '../index';
-import { NewsHighlightsProps } from './types/news-highlights';
+import { useLocale } from 'next-intl';
+import { useEffect, useState } from 'react';
 import sanityQuery from '@/lib/sanity/query';
 import { SanityDocument } from 'next-sanity';
 import { urlFor } from '@/lib/sanity/utils';
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
-
+import { Spinner } from '@/components/ui/spinner';
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
  * News highlight card component
- * @param {NewsHighlightsProps} props - The component props
  * @returns {JSX.Element} - The news highlight card component
  */
-const NewsHighlights: React.FC<NewsHighlightsProps> = ({
-  carouselRef: externalRef,
-  isDark: propIsDark,
-}) => {
-  const internalRef = useRef<HTMLDivElement>(null);
-  const carouselRef = externalRef || internalRef;
+export default function NewsHighlights() {
   const { isDark: contextIsDark } = useTheme();
-  const t = useTranslations('common');
-  const tNews = useTranslations('homepage');
   const [allNews, setAllNews] = useState<SanityDocument[]>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const featuredNews = allNews
     ? allNews.filter((article) => article.isFeatured)
     : [];
 
   const locale = useLocale();
-  const windowHref = useCurrentUrl();
-
-  // Use prop isDark if provided, otherwise use context
-  const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
 
   useEffect(() => {
     async function getNews() {
@@ -48,48 +33,39 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
         'news'
       )) as unknown as Array<SanityDocument>;
       setAllNews(news);
+      setIsLoading(false);
     }
     getNews();
   }, [setAllNews]);
 
   return (
-    <motion.div
-      ref={carouselRef}
-      className="flex h-fit w-full flex-col rounded-2xl bg-[#CCC5B5] px-8 lg:px-28"
-      animate={{
-        backgroundColor: isDark ? '#2A2727' : '#CCC5B5',
-        color: isDark ? '#FDFDFB' : '#2A2727',
-      }}
-    >
-      <section id="news-carousel" className="flex flex-col" role="region">
-        <div className="mt-32 mb-8 flex flex-row items-start justify-between font-light">
-          <h1 className="text-3xl tracking-tight lg:text-8xl">
-            {tNews('news.news_highlights')}
-          </h1>
-          <Button
-            href="/news"
-            text={t('buttons.view_all')}
-            variant="outline"
-            size="lg"
-            isDark={isDark}
-            className="hidden self-end md:flex"
-          />
-        </div>
-
-        <div className="mb-8">
-          <Carousel isDark={isDark} showDots={true} loop={true}>
+    <>
+      {isLoading ? (
+        <FadeIn className="min-h-[50vh] flex flex-col justify-center items-center">
+          <Spinner className="size-8" />
+        </FadeIn>
+      ) : (
+        <FadeIn>
+          <div className="mb-8 gap-8 mx-auto flex flex-row max-w-[95%] flex-wrap justify-center">
             {featuredNews.map((article) => (
               <NewsCard
+                key={article.slug.current}
                 title={article.title}
-                key={article.title}
-                isDark={false}
+                isDark={contextIsDark}
                 image={
-                  article.thumbnail && article.thumbnail.url
+                  article.thumbnail && article.thumbnail.asset
                     ? {
                         url: urlFor(article.thumbnail)?.url(),
                         alt: article.thumbnail.alt,
+                        height: 400,
+                        width: 400,
                       }
-                    : { url: articlePlaceholderRoute, alt: '' }
+                    : {
+                        url: articlePlaceholderRoute,
+                        alt: '',
+                        height: 400,
+                        width: 400,
+                      }
                 }
                 source={article.source}
                 date={new Date(article.date).toLocaleDateString(locale, {
@@ -105,22 +81,9 @@ const NewsHighlights: React.FC<NewsHighlightsProps> = ({
                 }
               />
             ))}
-          </Carousel>
-        </div>
-
-        <Button
-          href="/news"
-          text={t('buttons.view_all')}
-          variant="outline"
-          size="md"
-          isDark={isDark}
-          className="mt-4 mb-32 flex self-center md:hidden"
-        />
-      </section>
-
-      <Quote isDark={isDark} />
-    </motion.div>
+          </div>
+        </FadeIn>
+      )}
+    </>
   );
-};
-
-export default NewsHighlights;
+}

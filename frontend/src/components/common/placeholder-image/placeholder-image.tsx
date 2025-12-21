@@ -50,6 +50,7 @@ const PlaceholderImage = ({
   className = '',
   fallbackText = 'Image',
   isDark = false,
+  loading = 'eager',
 }: PlaceholderImageProps) => {
   const [imageError, setImageError] = useState(false);
 
@@ -84,6 +85,7 @@ const PlaceholderImage = ({
       className={className + ` max-w-[${width}px] max-h-[${height}px]`}
       onError={handleError}
       onLoad={() => setImageError(false)}
+      loading={loading}
     />
   );
 };

@@ -10,13 +10,13 @@ import type FadeInProps from './types/fade-in';
 /**
  * FadeIn component that fades the entire page content on navigation
  * @param {React.ReactNode} children - The content to animate
- * @param {number} duration - Animation duration in seconds (default: 1.3)
+ * @param {number} duration - Animation duration in seconds (default: 1.0)
  * @param {string} className - Additional CSS classes
  * @returns {JSX.Element} - The animated fade-in component
  */
 const FadeIn: React.FC<FadeInProps> = ({
   children,
-  duration = 1.3,
+  duration = 1.0,
   className = '',
 }) => {
   const pathname = usePathname();

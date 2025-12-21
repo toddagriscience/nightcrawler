@@ -7,22 +7,7 @@ import NewsCardProps from './types/news-card';
 /**
  * A news article card component that displays article information with image, source, date, and headline.
  *
- * Features:
- * - Responsive design with flexible width based on screen size
- * - Integrated image with fallback placeholder support
- * - Dark mode support with automatic contrast text color
- * - Internationalized Link component for locale-aware navigation
- * - Smooth color transitions
- * - Rounded corners and clean typography
- * - Hover effects and accessibility features
- *
- * @param image - URL of the news article image
- * @param source - Name of the news source (e.g., "CNN", "BBC")
- * @param date - Publication date in readable format (e.g., "Apr 15, 2025")
- * @param headline - Main headline text of the news article
- * @param isDark - Apply dark theme styling with contrast text (default: false)
- * @param className - Additional CSS classes to apply to the card container
- * @param link - URL path for the article link (default: "/news")
+ * @param {NewsCardProps} props - News Card Info
  * @returns A clickable news card component
  *
  * @example
@@ -49,20 +34,20 @@ const NewsCard = ({
 }: NewsCardProps) => {
   return (
     <div
-      className={`text-foreground md:mr-4 max-w-[600px] px-1 py-4 font-light transition-colors duration-300  ${className}`}
+      className={`text-foreground md:mr-4 max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
     >
       <Link href={link} className="mb-16">
         <div className="rounded-xl bg-transparent">
           <PlaceholderImage
             src={image.url}
             alt={image.alt}
-            width={600}
-            height={600}
-            className="h-[70vw] w-[70vw]"
+            width={image.width || 600}
+            height={image.height || 600}
+            className={`mx-auto`}
             fallbackText="News Image"
             isDark={isDark}
           />
-          <div className="p-4">
+          <div className={`p-4 ${isDark ? 'text-white' : ''}`}>
             <h2>{title}</h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}

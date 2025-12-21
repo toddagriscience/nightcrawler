@@ -2,53 +2,41 @@
 
 'use server';
 
-interface FormData {
-  fullName: string;
-  email: string;
-  reason: string;
-  message: string;
-}
+import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
+import logger from '@/lib/logger';
+import z from 'zod';
 
-export async function submitToGoogleSheets(formData: FormData) {
-  const MAX_MESSAGE_LENGTH = 1500;
+/** USE ONLY ON THE SERVER SIDE!!! Submits contact information to the Google Sheet for keeping track of potential leads.
+ *
+ * @param {unknown} _ - The initial state (unneeded in this function)
+ * @param {FormData} formData - The form data containing the contact information
+ * @returns {void} - Returns nothing at the moment. This will likely be changed in the future for sake of error handling. */
+export async function submitToGoogleSheetsHelper(formData: FormData) {
+  const messageSchema = z
+    .string()
+    .max(1500, 'Message is too long.')
+    .min(1, 'Message is too short');
+  const message = formData.get('message');
 
-  if (formData.message.length > MAX_MESSAGE_LENGTH) {
+  const validated = messageSchema.safeParse(message);
+
+  if (!validated.success) {
+    // Hacky, but it works for now
+    throw new Error(z.treeifyError(validated.error).errors[0]);
+  }
+
+  const contactGoogleScriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
+
+  if (!contactGoogleScriptUrl) {
     throw new Error(
-      `Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters.`
+      'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
     );
   }
 
-  const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
-
-  if (!GOOGLE_SCRIPT_URL) {
-    throw new Error('Server configuration error: Missing GOOGLE_SCRIPT_URL');
-  }
-
   try {
-    const url = new URL(GOOGLE_SCRIPT_URL);
-    url.searchParams.append('timestamp', Date.now().toString());
-
-    const response = await fetch(url.toString(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status !== 'success') {
-      throw new Error(result.message || 'Submission failed');
-    }
-
-    return { success: true };
+    await submitToGoogleSheets(formData, contactGoogleScriptUrl);
   } catch (error) {
-    console.error('Submission error:', error);
+    logger.error('Submission error:', error);
     throw new Error(
       error instanceof Error ? error.message : 'An unknown error occurred'
     );

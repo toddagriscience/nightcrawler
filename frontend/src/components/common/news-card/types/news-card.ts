@@ -24,5 +24,7 @@ export default interface NewsCardProps {
   image: {
     url: string;
     alt: string;
+    width?: number;
+    height?: number;
   };
 }

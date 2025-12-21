@@ -76,8 +76,10 @@ describe('News Page', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByText('New AI Model Sets Performance Record'));
+    expect(
+      screen.getByText('New AI Model Sets Performance Record')
+    ).toBeInTheDocument();
 
-    expect(screen.getByText('11/20/2024'));
+    expect(screen.getByText('11/20/2024')).toBeInTheDocument();
   });
 });
