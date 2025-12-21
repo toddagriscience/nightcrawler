@@ -23,7 +23,7 @@ export default function HeaderItems({
 }) {
   const pathname = usePathname();
   return (
-    <div className={`flex gap-5 md:gap-8 ${className}`}>
+    <div className={`flex gap-0.5 md:gap-8 ${className}`}>
       {menuItems.map((item, index) => {
         const isActive = pathname === item.href;
         return (
@@ -36,17 +36,17 @@ export default function HeaderItems({
                 transition: { delay: index * 0.15 },
               }}
               exit={{ opacity: 0, x: -5 }}
-              className="flex items-center justify-center gap-1 h-full"
+              className="flex items-center justify-center gap-1 h-full "
             >
               <Link
                 href={item.href}
                 onClick={() => onClickCallback(false)}
-                className={`rounded-md p-1 text-underline decoration-[0.5px] transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
+                className={`rounded-md p-1 md:text-underline decoration-[0.5px] transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
                   isActive ? 'text-underline-active' : ''
                 }`}
                 data-testid={`nav-link-${item.label.toLowerCase()}`}
               >
-                <span className="">{item.label}</span>
+                <span className="max-md:py-2">{item.label}</span>
               </Link>
             </motion.div>
           </AnimatePresence>

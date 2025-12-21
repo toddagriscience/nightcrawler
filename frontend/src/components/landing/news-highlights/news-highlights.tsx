@@ -2,13 +2,14 @@
 
 'use client';
 
-import { NewsCard } from '@/components/common';
+import { FadeIn, NewsCard } from '@/components/common';
 import { useTheme } from '@/context/theme/ThemeContext';
 import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
 import sanityQuery from '@/lib/sanity/query';
 import { SanityDocument } from 'next-sanity';
 import { urlFor } from '@/lib/sanity/utils';
+import { Spinner } from '@/components/ui/spinner';
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
@@ -18,6 +19,7 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
 export default function NewsHighlights() {
   const { isDark: contextIsDark } = useTheme();
   const [allNews, setAllNews] = useState<SanityDocument[]>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const featuredNews = allNews
     ? allNews.filter((article) => article.isFeatured)
@@ -31,46 +33,57 @@ export default function NewsHighlights() {
         'news'
       )) as unknown as Array<SanityDocument>;
       setAllNews(news);
+      setIsLoading(false);
     }
     getNews();
   }, [setAllNews]);
 
   return (
-    <div className="mb-8 gap-8 mx-auto flex flex-row max-w-[95%] flex-wrap justify-center">
-      {featuredNews.map((article) => (
-        <NewsCard
-          key={article.slug.current}
-          title={article.title}
-          isDark={contextIsDark}
-          image={
-            article.thumbnail && article.thumbnail.url
-              ? {
-                  url: urlFor(article.thumbnail)?.url(),
-                  alt: article.thumbnail.alt,
-                  height: 400,
-                  width: 400,
+    <>
+      {isLoading ? (
+        <FadeIn className="min-h-[50vh] flex flex-col justify-center items-center">
+          <Spinner className="size-8" />
+        </FadeIn>
+      ) : (
+        <FadeIn>
+          <div className="mb-8 gap-8 mx-auto flex flex-row max-w-[95%] flex-wrap justify-center">
+            {featuredNews.map((article) => (
+              <NewsCard
+                key={article.slug.current}
+                title={article.title}
+                isDark={contextIsDark}
+                image={
+                  article.thumbnail && article.thumbnail.asset
+                    ? {
+                        url: urlFor(article.thumbnail)?.url(),
+                        alt: article.thumbnail.alt,
+                        height: 400,
+                        width: 400,
+                      }
+                    : {
+                        url: articlePlaceholderRoute,
+                        alt: '',
+                        height: 400,
+                        width: 400,
+                      }
                 }
-              : {
-                  url: articlePlaceholderRoute,
-                  alt: '',
-                  height: 400,
-                  width: 400,
+                source={article.source}
+                date={new Date(article.date).toLocaleDateString(locale, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+                excerpt={article.summary}
+                link={
+                  article.offSiteUrl && article.offSiteUrl.length > 0
+                    ? article.offSiteUrl
+                    : `${locale}/news/${article.slug.current}`
                 }
-          }
-          source={article.source}
-          date={new Date(article.date).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          excerpt={article.summary}
-          link={
-            article.offSiteUrl && article.offSiteUrl.length > 0
-              ? article.offSiteUrl
-              : `${locale}/news/${article.slug.current}`
-          }
-        />
-      ))}
-    </div>
+              />
+            ))}
+          </div>
+        </FadeIn>
+      )}
+    </>
   );
 }

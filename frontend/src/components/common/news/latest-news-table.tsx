@@ -35,7 +35,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
 
       {items.slice(0, visibleCount).map((item, index) => (
         <div
-          key={item.title}
+          key={item.slug.current}
           className={clsx(
             'grid grid-cols-3 items-center px-4 py-4 text-sm',
             index !== visibleCount - 1 &&
@@ -51,9 +51,8 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
                 ? item.offSiteUrl
                 : windowHref + '/' + item.slug.current
             }
-            target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${item.title} in new tab`}
+            aria-label={`Open ${item.title} in this tab`}
           >
             <div className="flex items-center justify-end gap-1 hover:underline">
               {item.source}
