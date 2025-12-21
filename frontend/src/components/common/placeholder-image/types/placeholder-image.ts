@@ -18,4 +18,5 @@ export default interface PlaceholderImageProps {
   className?: string;
   fallbackText?: string;
   isDark?: boolean;
+  loading?: 'eager' | 'lazy' | undefined;
 }

@@ -14,7 +14,7 @@
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 
   /* Shadcn/ui CSS variables mapped to Todd Agriscience theme */
-  --background: #f8f5ee; /* Your cream background */
+  --background: #fdfdfb; /* Your cream background */
   --background-secondary: #ccc5b5; /* Your light card background */
   --foreground: #2a2727; /* Your primary text */
   --card: #ccc5b5; /* Your light card background */
@@ -51,14 +51,14 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #f8f5ee;
+    --background: #fdfdfb;
     --foreground: #333333;
   }
 }
 
 .dark {
   /* Dark mode Shadcn/ui variables */
-  --background: #f8f5ee; /* Keep cream background even in dark mode */
+  --background: #fdfdfb; /* Keep cream background even in dark mode */
   --background-secondary: #ccc5b5; /* Keep light card background even in dark mode */
   --foreground: #2a2727; /* Your inverse text */
   --card: #2a2727; /* Your dark card */
@@ -80,7 +80,7 @@
 
 body {
   color: var(--foreground);
-  background: #f8f5ee;
+  background: #fdfdfb;
   overflow-x: hidden;
   font-family: var(--font-haas);
 }

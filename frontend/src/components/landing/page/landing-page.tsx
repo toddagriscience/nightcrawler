@@ -80,7 +80,9 @@ export default function LandingPage() {
           }}
           ref={newsCarouselRef}
         >
-          <NewsHighlights />
+          <div className="xl:max-w-400 max-w-200 mx-auto">
+            <NewsHighlights />
+          </div>
           <Quote isDark={contextIsDark} />
         </motion.div>
       </ScrollShrinkWrapper>
