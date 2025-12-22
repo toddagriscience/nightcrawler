@@ -249,6 +249,7 @@ header {
   75% {
     content: '. . .';
   }
+}
 
 /* Underline animation expanding from the left */
 .text-underline-left {
