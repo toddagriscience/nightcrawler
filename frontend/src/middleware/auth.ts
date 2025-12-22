@@ -1,10 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { SUPPORTED_LOCALES } from '@/lib/locales';
-import { Locale } from 'next-intl';
 import { isRouteInternationalized } from '@/lib/routing';
+import { createServerClient } from '@supabase/ssr';
+import { NextRequest, NextResponse } from 'next/server';
 
 /** Any protected URLs */
 const protectedUrls = ['/', '/account/reset-password'];
