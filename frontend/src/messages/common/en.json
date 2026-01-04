@@ -9,6 +9,15 @@
     "notFound": {
       "title": "Page not available",
       "message": "We're sorry, but the page you have requested is not yet available. Check out our <home>homepage</home> or <news>news</news> for more information."
+    },
+    "disclaimers": {
+      "0": "Todd’s advisory and management services should not be considered an assurance that losses will not be incurred. There are risks that are not monitored or controlled by Todd and risks that may be greater than forecasted by Todd, especially in unusual environmental conditions.",
+      "1": "Significant or complete losses may result from these risks or other reasons despite Todd’s management protocols or any information provided herein.",
+      "2": "Todd may request testing for toxic agents in areas determined to have an elevated contamination risk. Environmental factors which can endanger the marketability of produce irrespective of its organic status is not included. Maximum toxic agent tolerance levels are determined by Todd at the time of Account Application. If contamination persists beyond a recognized period, Todd may pause or terminate future access to services and seed products.",
+      "3": "Contamination must be continuously monitored and documentation maintained verifying compliance.",
+      "4": "Application of synthetic fertilizers and chemicals is prohibited without written approval.",
+      "5": "Split operations and parallel production is not permitted.",
+      "6": "Services and products are subject to eligibility and are not guaranteed. Todd may restrict the use of products in areas with known production of genetically engineered crops."
     }
   },
   "metadata": {

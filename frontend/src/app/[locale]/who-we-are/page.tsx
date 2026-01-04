@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui';
 import { ScrollShrinkWrapper } from '@/components/landing';
 import ValuesCard from './components/values-card';
 import { Metadata } from 'next';
+import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -26,7 +27,7 @@ export default function WhoWeArePage() {
 
       {/* Mission, Vision, and Values Section */}
       <ScrollShrinkWrapper>
-        <div className="w-full rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
+        <div className="w-full mb-32 rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
           {/* Mission and Vision Cards Section */}
           <div className="mx-auto pb-4 px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -55,6 +56,7 @@ export default function WhoWeArePage() {
           <ValuesCard />
         </div>
       </ScrollShrinkWrapper>
+      <Disclaimer />
     </>
   );
 }
