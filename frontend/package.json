@@ -41,7 +41,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sanity/image-url": "^2.0.2",
-    "@sanity/vision": "^4.21.1",
+    "@sanity/vision": "^5.1.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.85.0",
