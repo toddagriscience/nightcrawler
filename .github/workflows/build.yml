@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -29,7 +29,7 @@ jobs:
           bun-version: 'latest'
 
       - name: Install dependencies
-        run: bun ci
+        run: bun i
 
       - name: Create blank .env.local file
         run: touch .env.local
@@ -41,7 +41,7 @@ jobs:
         run: bun run build-storybook
 
       - name: Upload Next.js build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: nextjs-build
@@ -51,7 +51,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Storybook build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: storybook-build
