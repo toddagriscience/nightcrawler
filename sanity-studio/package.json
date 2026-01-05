@@ -16,15 +16,15 @@
   ],
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/vision": "^4.21.0",
+    "@sanity/vision": "^5.1.0",
     "date-fns": "^4.1.0",
     "react": "^19.1",
     "react-dom": "^19.1",
-    "sanity": "^4.21.0",
+    "sanity": "^5.1.0",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^5.0.2",
+    "@sanity/eslint-config-studio": "^6.0.0",
     "@types/react": "^19.1",
     "eslint": "^9.28",
     "prettier": "^3.5",
