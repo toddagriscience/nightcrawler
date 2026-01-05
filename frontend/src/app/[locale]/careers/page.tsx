@@ -92,7 +92,7 @@ export default function Careers() {
           )}
         </FadeIn>
       </div>
-      <Disclaimer />
+      <Disclaimer translationLoc="careers.disclaimers" disclaimerCount={5} />
     </>
   );
 }

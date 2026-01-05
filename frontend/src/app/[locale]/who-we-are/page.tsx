@@ -56,7 +56,7 @@ export default function WhoWeArePage() {
           <ValuesCard />
         </div>
       </ScrollShrinkWrapper>
-      <Disclaimer />
+      <Disclaimer translationLoc="whoWeAre.disclaimers" disclaimerCount={7} />
     </>
   );
 }
