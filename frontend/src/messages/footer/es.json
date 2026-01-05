@@ -1,31 +1,30 @@
 {
   "footer": {
     "copyright": "© {year} Todd Agriscience. Todos los derechos reservados.",
+    "location": "Estados Unidos",
     "sections": {
       "todd": "Todd",
-      "connect": "Conectar",
+      "connect": "Conéctate",
       "legal": "Legal"
     },
     "links": {
+      "whoWeAre": "Quiénes Somos",
+      "whatWeDo": "Qué Hacemos",
+      "news": "Noticias",
       "careers": "Carreras",
       "contact": "Contacto",
-      "journal": "Diario",
-      "investorRelations": "Relaciones con Inversores",
+      "investors": "Inversionistas",
+      "sponsorships": "Patrocinios",
       "foundation": "Fundación",
-      "instagram": "Instagram",
-      "linkedin": "LinkedIn",
-      "x": "X",
       "accessibility": "Accesibilidad",
       "privacy": "Política de Privacidad",
-      "privacySettings": "Configuración de Privacidad",
       "terms": "Términos de Servicio",
-      "trustCenter": "Centro de Confianza",
-      "vulnReporting": "Informes de vulnerabilidad",
+      "vulnReporting": "Reporte de Vulnerabilidades",
       "disclosures": "Divulgaciones"
     },
     "cta": {
       "letsTalk": "Hablemos",
-      "getInTouch": "Contáctanos"
+      "getInTouch": "Ponte en contacto"
     }
   }
 }
