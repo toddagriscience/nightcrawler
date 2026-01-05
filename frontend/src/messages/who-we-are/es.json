@@ -68,6 +68,15 @@
           "description": "Compromiso duradero para ayudar a los miembros de nuestro equipo a alcanzar su máximo potencial."
         }
       }
+    },
+    "disclaimers": {
+      "0": "Los servicios de asesoría y gestión de Todd no deben considerarse una garantía de que no se producirán pérdidas. Existen riesgos que no son monitoreados ni controlados por Todd y riesgos que pueden ser mayores a los previstos por Todd, especialmente en condiciones ambientales inusuales.",
+      "1": "Pueden producirse pérdidas significativas o totales como resultado de estos riesgos u otras razones, a pesar de los protocolos de gestión de Todd o de cualquier información proporcionada en el presente documento.",
+      "2": "Todd podrá solicitar pruebas de agentes tóxicos en áreas que se determine presentan un riesgo elevado de contaminación. No se incluyen los factores ambientales que puedan poner en peligro la comercialización de los productos, independientemente de su condición orgánica. Los niveles máximos de tolerancia a agentes tóxicos son determinados por Todd en el momento de la Solicitud de Cuenta. Si la contaminación persiste más allá de un período reconocido, Todd podrá pausar o terminar el acceso futuro a los servicios y productos de semillas.",
+      "3": "La contaminación debe ser monitoreada de forma continua y debe mantenerse documentación que verifique el cumplimiento.",
+      "4": "La aplicación de fertilizantes y productos químicos sintéticos está prohibida sin autorización por escrito.",
+      "5": "No se permiten operaciones divididas ni producción paralela.",
+      "6": "Los servicios y productos están sujetos a elegibilidad y no están garantizados. Todd puede restringir el uso de productos en áreas con producción conocida de cultivos genéticamente modificados."
     }
   }
 }
