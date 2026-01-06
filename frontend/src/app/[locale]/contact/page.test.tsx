@@ -7,110 +7,123 @@ import {
   waitFor,
 } from '@/test/test-utils';
 import Contact from './page';
-import { it, describe, expect, vitest } from 'vitest';
+import { it, describe, expect, vitest, vi } from 'vitest';
 import { act } from '@/test/test-utils';
+import ResizeObserver from 'resize-observer-polyfill';
+
+// @ts-ignore type error due to lack of types from this polyfill
+import IntersectionObserver from 'intersection-observer-polyfill';
+import userEvent from '@testing-library/user-event';
+
+global.ResizeObserver = ResizeObserver;
+global.IntersectionObserver = IntersectionObserver;
+
+// Mocks for Embla Carousel, taken from https://github.com/davidjerleke/embla-carousel/blob/master/packages/embla-carousel/src/__tests__/mocks/index.ts
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // Deprecated
+    removeListener: vi.fn(), // Deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
 describe('Contact page', () => {
   it('renders correctly', () => {
     renderWithNextIntl(<Contact />);
 
-    expect(screen.getByText('Contact Us')).toBeInTheDocument();
-    expect(screen.getByText('Your Name')).toBeInTheDocument();
-    expect(screen.getByText('Send')).toBeInTheDocument();
+    expect(screen.getByText('First Name')).toBeInTheDocument();
+    expect(screen.getByText('Farm Name')).toBeInTheDocument();
   });
-  it('sends a message and renders thank you screen', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
-    window.fetch = vitest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            status: 'success',
-            success: true,
-          }),
-      })
-    );
+  it('shows a success screen when entering a business email but not a website', async () => {
+    const user = userEvent.setup();
 
     renderWithNextIntl(<Contact />);
 
-    const nameInput = screen.getByTestId('name-input');
-    const emailInput = screen.getByTestId('email-input');
-    const message = screen.getByTestId('message-input');
-    const select = screen.getByRole('combobox');
+    // First name
+    const firstName = screen.getByPlaceholderText(/first name/i);
+    await user.type(firstName, 'Jane');
+
+    // Last name
+    const lastName = screen.getByPlaceholderText(/last name/i);
+    await user.type(lastName, 'Doe');
+
+    // Farm name
+    const farmName = screen.getByPlaceholderText(/farm name/i);
+    await user.type(farmName, 'Green Valley Farms');
+
+    // Email
+    const email = screen.getByPlaceholderText(/email/i);
+    await user.type(email, 'jane@greenvalley.com');
+
+    // Phone
+    const phone = screen.getByPlaceholderText(/phone/i);
+    await user.type(phone, '555-123-4567');
+
+    const nextButton = screen.getByTestId('button-next');
 
     act(() => {
-      fireEvent.change(nameInput, { target: { value: 'bobby' } });
-      fireEvent.change(emailInput, { target: { value: 'wsup@gmail.com' } });
-      fireEvent.change(message, { target: { value: 'cba' } });
-      select.click();
+      nextButton.click();
     });
 
-    waitFor(() => {
-      const other = screen.getByTestId('other');
-      act(() => {
-        other.click();
-      });
+    act(() => {
+      nextButton.click();
     });
 
-    waitFor(() => {
-      const submit = screen.getByRole('button');
-      act(() => {
-        submit.click();
-      });
+    const yesButton = screen.getByText('Yes');
+
+    act(() => {
+      yesButton.click();
     });
 
-    expect(await screen.findByText('Thank You')).toBeInTheDocument();
+    expect(screen.getByText("It's a match!")).toBeInTheDocument();
   });
-  it('displays error on failure', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://google.com';
-    window.fetch = vitest.fn().mockImplementation(() =>
-      Promise.resolve({
-        ok: false,
-        json: () =>
-          Promise.resolve({
-            status: 'success',
-            success: false,
-          }),
-      })
-    );
-
-    let numConsoleErrors = 0;
-    window.console.error = vitest.fn().mockImplementation(() => {
-      numConsoleErrors++;
-    });
+  it('shows a failure screen when not entering either a business email or website', async () => {
+    const user = userEvent.setup();
 
     renderWithNextIntl(<Contact />);
 
-    const nameInput = screen.getByTestId('name-input');
-    const emailInput = screen.getByTestId('email-input');
-    const message = screen.getByTestId('message-input');
-    const select = screen.getByRole('combobox');
+    // First name
+    const firstName = screen.getByPlaceholderText(/first name/i);
+    await user.type(firstName, 'Jane');
+
+    // Last name
+    const lastName = screen.getByPlaceholderText(/last name/i);
+    await user.type(lastName, 'Doe');
+
+    // Farm name
+    const farmName = screen.getByPlaceholderText(/farm name/i);
+    await user.type(farmName, 'Green Valley Farms');
+
+    // Email
+    const email = screen.getByPlaceholderText(/email/i);
+    await user.type(email, 'jane@gmail.com');
+
+    // Phone
+    const phone = screen.getByPlaceholderText(/phone/i);
+    await user.type(phone, '555-123-4567');
+
+    const nextButton = screen.getByTestId('button-next');
 
     act(() => {
-      fireEvent.change(nameInput, { target: { value: 'bobby' } });
-      fireEvent.change(emailInput, { target: { value: 'wsup@gmail.com' } });
-      fireEvent.change(message, { target: { value: 'cba' } });
-      select.click();
-
-      waitFor(() => {
-        const other = screen.getByTestId('other');
-        other.click();
-      });
+      nextButton.click();
     });
 
-    waitFor(() => {
-      const submit = screen.getByRole('button');
-      act(() => {
-        submit.click();
-      });
+    act(() => {
+      nextButton.click();
     });
 
-    await waitFor(() =>
-      expect(
-        screen.getByText('HTTP error! status: undefined')
-      ).toBeInTheDocument()
-    );
+    const yesButton = screen.getByText('Yes');
 
-    expect(numConsoleErrors).toBeGreaterThanOrEqual(2);
+    act(() => {
+      yesButton.click();
+    });
+
+    expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
   });
 });

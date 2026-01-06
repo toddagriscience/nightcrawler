@@ -236,6 +236,7 @@ export default function Contact() {
                 className="text-xl hover:cursor-pointer"
                 type="button"
                 onClick={handleBack}
+                data-testid="button-back"
               >
                 {t('buttons.back')}
               </Button>
@@ -250,6 +251,7 @@ export default function Contact() {
                 className="text-xl hover:cursor-pointer"
                 type="button"
                 onClick={handleNext}
+                data-testid="button-next"
               >
                 {t('buttons.next')}
               </Button>
