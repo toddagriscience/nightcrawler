@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
 
   return (
     <header
-      className="top-0 z-40 w-full"
+      className="z-40 w-full md:mt-4"
       data-theme={isDark ? 'dark' : 'light'}
       role="banner"
     >
