@@ -70,13 +70,11 @@ export default async function GovernancePage({ params }: GovernancePageProps) {
       />
 
       {/* Content Section */}
-      <ScrollShrinkWrapper>
-        <div className="w-full rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
-          <div className="mx-auto px-4 sm:px-6 lg:px-8">
-            <TeamMemberCard teamMember={teamMember} />
-          </div>
+      <div className="w-full max-w-6xl mx-auto lg:rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+          <TeamMemberCard teamMember={teamMember} />
         </div>
-      </ScrollShrinkWrapper>
+      </div>
     </>
   );
 }
