@@ -2,24 +2,41 @@
   "contactPage": {
     "title": "Contact Us",
     "description": "Get in touch with Todd Agriscience for inquiries or partnerships.",
-    "nameLabel": "Your Name",
-    "emailLabel": "Your Email",
-    "reasonLabel": "Your Reason for Contacting Us",
-    "messageLabel": "Your Message",
-    "submitButton": "Send",
-    "inProgressSubmit": "Sending...",
-    "required": "Required",
-    "contactOptions": {
-      "generalInquiry": "General Inquiry",
-      "clientSupport": "Client Support",
-      "employmentInquiry": "Employment Inquiry",
-      "media": "Media",
-      "other": "Other"
+    "fields": {
+      "name": "Name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "farmName": "Farm Name",
+      "email": "Work Email",
+      "phone": "Phone Number"
     },
-    "thankYou": {
-      "title": "Thank You",
-      "content": "Your inquiry has been submitted. We will review your submission and get back to you soon.",
-      "impact": "Impact"
+    "placeholders": {
+      "name": "Name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "farmName": "Farm Name",
+      "email": "Work Email",
+      "phone": "Phone Number",
+      "website": "Website"
+    },
+    "buttons": {
+      "yes": "Yes",
+      "no": "No",
+      "back": "Back",
+      "next": "Next →"
+    },
+    "errors": {
+      "requiredFields": "Please ensure all fields are filled out."
+    },
+    "questions": {
+      "website": "What is {farm}'s website?",
+      "organic": "Is {farm} certified organic or biodynamic?"
+    },
+    "results": {
+      "matchTitle": "It's a match!",
+      "matchBody": "Let’s get your account set up.",
+      "noMatchTitle": "Based on your information, Todd might not be the right fit.",
+      "noMatchBody": "We’re always working on services to serve growing farms of all kinds—and we’ll reach out as soon as we have something that better fits yours."
     }
   }
 }
