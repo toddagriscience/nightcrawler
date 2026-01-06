@@ -53,7 +53,7 @@ const ValuesCard = () => {
     <div>
       <h2 className="text-4xl xl:text-6xl mb-0 xl:mb-36 font-light">Values</h2>
 
-      <div className="hidden xl:grid grid-cols-1 xl:grid-cols-3 gap-[180px]">
+      <div className="hidden xl:grid grid-cols-1 xl:grid-cols-3 gap-8">
         {valuesSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className="flex flex-col">
             <div className="h-full flex flex-col gap-16 md:gap-20">
@@ -79,10 +79,8 @@ const ValuesCard = () => {
             <div key={sectionIndex} className="space-y-8">
               {section.items.map((item, itemIndex) => (
                 <div key={itemIndex}>
-                  <h4 className="text-lg md:text-xl font-light mb-3">
-                    {item.title}
-                  </h4>
-                  <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
+                  <h4 className="text-lg md:text-xl mb-3">{item.title}</h4>
+                  <p className="font-light leading-relaxed text-base md:text-base">
                     {item.description}
                   </p>
                 </div>
@@ -95,8 +93,8 @@ const ValuesCard = () => {
   );
 
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:px-8">
-      <Card className="relative p-8 md:p-14 lg:p-36">
+    <div className="">
+      <Card className="p-8 md:p-14 lg:p-36">
         <CardContent className="p-0">{valuesContent}</CardContent>
       </Card>
     </div>
