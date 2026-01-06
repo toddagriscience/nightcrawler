@@ -4,5 +4,6 @@
     "deploymentEnabled": {
       "main": false
     }
-  }
+  },
+  "bunVersion": "1.x"
 }
