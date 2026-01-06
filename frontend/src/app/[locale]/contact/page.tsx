@@ -2,264 +2,263 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import Link from 'next/link';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { FadeIn } from '@/components/common';
-import { submitToGoogleSheetsHelper } from './action';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+} from '@/components/ui/carousel';
+import ContactFormItem from './components/contact-form-item';
+import { Input } from '@/components/ui/input';
+import { submitEmail } from '../careers/action';
+import isWorkEmail from '@/lib/utils/is-work-email';
+import { Button } from '@/components/ui';
+import { ContactFormData } from './types';
+import Fade from 'embla-carousel-fade';
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 
 export default function Contact() {
   const t = useTranslations('contactPage');
-  const MAX_MESSAGE_LENGTH = 1500;
-
-  const [formData, setFormData] = useState({
-    fullName: '',
+  const [state, submitEmailAction] = useActionState(submitEmail, null);
+  const [slide, setSlide] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(-1);
+  const [formData, setFormData] = useState<ContactFormData>({
+    firstName: '',
+    lastName: '',
+    farmName: '',
     email: '',
-    reason: '',
-    message: '',
+    phone: '',
+    isOrganic: false,
   });
+  const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
+  const [api, setApi] = useState<CarouselApi>();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!api) return;
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    setTotalSlides(api.slideNodes().length);
+    setSlide(api.selectedScrollSnap());
 
-    if (formData.message.length > MAX_MESSAGE_LENGTH) {
-      setError(
-        `Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters.`
-      );
-      return;
-    }
+    api.on('select', () => setSlide(api.selectedScrollSnap()));
+    api.on('slidesChanged', () => setTotalSlides(api.slideNodes().length));
+  }, [api]);
 
-    setIsSubmitting(true);
-    setError(null);
+  function handleFormChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = e.target;
 
-    try {
-      const submissionData: Record<string, string> = {
-        ...formData,
-      };
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
 
-      const submitFormData = new FormData();
+  function handleBack() {
+    api?.scrollPrev();
+  }
 
-      for (const key in submissionData) {
-        const value = submissionData[key];
+  function handleNext() {
+    if (!api) return;
 
-        if (value !== undefined && value !== null) {
-          submitFormData.append(key, String(value));
-        }
+    if (slide === 0) {
+      const isValid =
+        formData.firstName &&
+        formData.lastName &&
+        formData.farmName &&
+        formData.email &&
+        formData.phone;
+
+      if (isValid) {
+        api.scrollNext();
+        setFormErrorMessage(null);
+      } else {
+        setFormErrorMessage(t('errors.requiredFields'));
       }
-
-      await submitToGoogleSheetsHelper(submitFormData);
-      setIsSuccessfulSubmit(true);
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setError(
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      );
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      api.scrollNext();
     }
-  };
-
-  if (isSuccessfulSubmit) {
-    return (
-      <FadeIn>
-        <section className="flex h-screen flex-col items-center justify-center bg-[#F7F4EC] px-6 text-center text-[#555555]">
-          <h1 className="mb-6 text-[70px] leading-none font-light md:text-[110px]">
-            {t('thankYou.title')}
-          </h1>
-          <p className="mb-8 max-w-2xl text-xl leading-relaxed font-light md:text-[24px]">
-            {t('thankYou.content')}
-          </p>
-          <Link
-            href="/impact"
-            className="inline-flex items-center gap-2 rounded-full border border-[#555555]/20 px-6 py-3 text-lg transition hover:bg-[#555555]/5"
-          >
-            {t('thankYou.impact')} <span>→</span>
-          </Link>
-        </section>
-      </FadeIn>
-    );
   }
 
   return (
-    <>
-      <div className="text-foreground mb-16 min-h-screen bg-[#F7F4EC] p-8 md:p-16">
-        <div className="mx-auto max-w-3xl pt-8">
-          <h1 className="text-foreground/80 mb-4 text-[64px] font-[300]">
-            {t('title')}
-          </h1>
-          <p className="text-foreground/60 mb-16 text-xl font-[200]">
-            {t('description')}
-          </p>
+    <form action={submitEmailAction}>
+      <Carousel
+        setApi={setApi}
+        className="max-w-[800px] w-[80vw] mx-auto h-[90vh] flex flex-col justify-center"
+        plugins={[Fade()]}
+        opts={{ duration: 30 }}
+      >
+        <CarouselContent>
+          <ContactFormItem>
+            <FormErrorMessage errorMessage={formErrorMessage} />
 
-          <form onSubmit={handleSubmit} className="space-y-16">
-            {error && (
-              <div className="rounded-md border border-red-100 bg-red-50 p-4">
-                <p className="text-sm font-[200] text-red-600">{error}</p>
+            <FieldSet className="gap-4 flex flex-col">
+              {/** Honeypot */}
+              <Field className="hidden">
+                <FieldLabel>{t('fields.name')}</FieldLabel>
+                <Input
+                  placeholder={t('placeholders.name')}
+                  name="name"
+                  type="text"
+                  onChange={handleFormChange}
+                />
+              </Field>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field>
+                  <FieldLabel>{t('fields.firstName')}</FieldLabel>
+                  <Input
+                    placeholder={t('placeholders.firstName')}
+                    name="firstName"
+                    required
+                    onChange={handleFormChange}
+                  />
+                </Field>
+
+                <Field>
+                  <FieldLabel>{t('fields.lastName')}</FieldLabel>
+                  <Input
+                    placeholder={t('placeholders.lastName')}
+                    name="lastName"
+                    required
+                    onChange={handleFormChange}
+                  />
+                </Field>
+              </div>
+
+              <Field>
+                <FieldLabel>{t('fields.farmName')}</FieldLabel>
+                <Input
+                  placeholder={t('placeholders.farmName')}
+                  name="farmName"
+                  required
+                  onChange={handleFormChange}
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel>{t('fields.email')}</FieldLabel>
+                <Input
+                  placeholder={t('placeholders.email')}
+                  name="email"
+                  type="email"
+                  required
+                  onChange={handleFormChange}
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel>{t('fields.phone')}</FieldLabel>
+                <Input
+                  placeholder={t('placeholders.phone')}
+                  name="phone"
+                  type="tel"
+                  required
+                  onChange={handleFormChange}
+                />
+              </Field>
+            </FieldSet>
+          </ContactFormItem>
+
+          {!isWorkEmail(formData.email) && (
+            <ContactFormItem>
+              <FieldSet>
+                <Field>
+                  <FieldLabel>
+                    {t('questions.website', { farm: formData.farmName })}
+                  </FieldLabel>
+                  <Input
+                    placeholder={t('placeholders.website')}
+                    name="website"
+                    onChange={handleFormChange}
+                  />
+                </Field>
+              </FieldSet>
+            </ContactFormItem>
+          )}
+
+          <ContactFormItem>
+            <FieldSet>
+              <h2>{t('questions.organic', { farm: formData.farmName })}</h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-lg hover:cursor-pointer text-underline"
+                  onClick={() => {
+                    setFormData({ ...formData, isOrganic: true });
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-lg hover:cursor-pointer text-underline"
+                  onClick={() => {
+                    setFormData({ ...formData, isOrganic: false });
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </ContactFormItem>
+
+          <ContactFormItem>
+            {isWorkEmail(formData.email) || formData.website ? (
+              <div className="flex flex-col text-center justify-center h-full gap-8">
+                <h1 className="text-xl md:text-5xl">
+                  {t('results.matchTitle')}
+                </h1>
+                <p>{t('results.matchBody')}</p>
+              </div>
+            ) : (
+              <div className="flex flex-col text-center justify-center h-full gap-8">
+                <h1 className="text-xl md:text-5xl">
+                  {t('results.noMatchTitle')}
+                </h1>
+                <p>{t('results.noMatchBody')}</p>
               </div>
             )}
+          </ContactFormItem>
+        </CarouselContent>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="fullName"
-                className="text-foreground/80 text-xl font-[200]"
+        <div className="flex justify-between mt-4 min-h-10">
+          {slide !== 0 && slide !== totalSlides - 1 ? (
+            <FadeIn>
+              <Button
+                className="text-xl hover:cursor-pointer"
+                type="button"
+                onClick={handleBack}
               >
-                {t('nameLabel')}
-              </label>
-              <input
-                id="fullName"
-                type="text"
-                data-testid="name-input"
-                required
-                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.fullName}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, fullName: e.target.value }))
-                }
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
+                {t('buttons.back')}
+              </Button>
+            </FadeIn>
+          ) : (
+            <div />
+          )}
 
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="text-foreground/80 text-xl font-[200]"
+          {slide < totalSlides - 2 ? (
+            <FadeIn>
+              <Button
+                className="text-xl hover:cursor-pointer"
+                type="button"
+                onClick={handleNext}
               >
-                {t('emailLabel')}
-              </label>
-              <input
-                id="email"
-                type="email"
-                data-testid="email-input"
-                required
-                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
-                }
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
-
-            <div className="relative space-y-2">
-              <label
-                htmlFor="reason"
-                className="text-foreground/80 text-xl font-[200]"
-              >
-                {t('reasonLabel')}
-              </label>
-              <Select
-                required
-                onValueChange={(value: string) =>
-                  setFormData((prev) => ({ ...prev, reason: value }))
-                }
-              >
-                <SelectTrigger className="border-foreground/20 mt-4 rounded-none border-b pr-0 text-xl font-light">
-                  <SelectValue placeholder="Select..." />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-foreground/20 text-lg">
-                  <SelectItem
-                    className="opacity-80 transition hover:opacity-100"
-                    value="general"
-                  >
-                    {t('contactOptions.generalInquiry')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="support"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.clientSupport')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="business"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.employmentInquiry')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="media"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.media')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="other"
-                    data-testid="other"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.other')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="message"
-                className="text-foreground/80 text-xl font-[200]"
-              >
-                {t('messageLabel')}
-              </label>
-              <textarea
-                id="message"
-                data-testid="message-input"
-                required
-                rows={6}
-                className="border-foreground/20 w-full resize-none border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.message}
-                onChange={(e) => {
-                  const message = e.target.value;
-                  if (message.length <= MAX_MESSAGE_LENGTH) {
-                    // Prevent state update if over limit
-                    setFormData((prev) => ({ ...prev, message: message }));
-                  }
-                }}
-                maxLength={MAX_MESSAGE_LENGTH}
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-                <span className="text-foreground/60">
-                  ({formData.message.length}/{MAX_MESSAGE_LENGTH} characters)
-                </span>
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="text-foreground/80 group flex items-center gap-2 text-xl font-[200] transition-colors hover:cursor-pointer hover:text-[#2A2727] disabled:opacity-50"
-            >
-              <span>
-                {isSubmitting ? t('inProgressSubmit') : t('submitButton')}
-              </span>
-              <span className="transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </button>
-          </form>
+                {t('buttons.next')}
+              </Button>
+            </FadeIn>
+          ) : (
+            <div />
+          )}
         </div>
-      </div>
-    </>
+      </Carousel>
+    </form>
   );
 }
