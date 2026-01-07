@@ -5,7 +5,7 @@
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { submitEmail } from './action';
 import { FadeIn } from '@/components/common';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
@@ -17,7 +17,16 @@ import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 export default function Careers() {
   const [state, submitEmailAction] = useActionState(submitEmail, null);
 
-  const errors = state ? formatActionResponseErrors(state) : null;
+  const defaultCooldownTime = 10;
+  const [cooldownError, setCooldownError] = useState('');
+  const [cooldownTime, setCooldownTime] = useState<Date>();
+
+  const errors =
+    cooldownError != ''
+      ? [cooldownError]
+      : state
+        ? formatActionResponseErrors(state)
+        : null;
 
   return (
     <>
@@ -86,7 +95,20 @@ export default function Careers() {
                     />
                   </Field>
                 </FieldSet>
-                <SubmitButton buttonText="SUBMIT" />
+                <SubmitButton
+                  buttonText="LOGIN"
+                  cooldownTime={defaultCooldownTime}
+                  sendCooldownTime={(date) => setCooldownTime(date)}
+                  cooldownClickHandler={() => {
+                    setCooldownError('Please wait between submissions');
+                    setTimeout(
+                      () => setCooldownError(''),
+                      (cooldownTime
+                        ? (new Date().getTime() - cooldownTime.getTime()) / 1000
+                        : defaultCooldownTime) * 1000
+                    );
+                  }}
+                />
               </form>
             </>
           )}

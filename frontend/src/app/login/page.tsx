@@ -20,7 +20,17 @@ import { useActionState, useState } from 'react';
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, loginAction] = useActionState(login, null);
-  const errors = formatActionResponseErrors(state);
+
+  const defaultCooldownTime = 3;
+  const [cooldownError, setCooldownError] = useState('');
+  const [cooldownTime, setCooldownTime] = useState<Date>();
+
+  const errors =
+    cooldownError != ''
+      ? [cooldownError]
+      : state
+        ? formatActionResponseErrors(state)
+        : null;
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
@@ -83,7 +93,20 @@ export default function Login() {
                 </Field>
               </FieldGroup>
             </FieldSet>
-            <SubmitButton buttonText="LOGIN" />
+            <SubmitButton
+              buttonText="LOGIN"
+              cooldownTime={defaultCooldownTime}
+              sendCooldownTime={(date) => setCooldownTime(date)}
+              cooldownClickHandler={() => {
+                setCooldownError('Please wait between submissions');
+                setTimeout(
+                  () => setCooldownError(''),
+                  (cooldownTime
+                    ? (new Date().getTime() - cooldownTime.getTime()) / 1000
+                    : defaultCooldownTime) * 1000
+                );
+              }}
+            />
           </form>
         </FadeIn>
       </div>

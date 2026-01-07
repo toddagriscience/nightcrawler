@@ -14,6 +14,7 @@ import { useFormStatus } from 'react-dom';
  * @param {boolean} disabled - Externally change if the button is disabled. The exact logic that is used is `disabled || pending`. Pending is acquired from `useFormStatus()`. Optional.
  * @param {number} cooldownTime - The amount of time, in seconds, that the user has to wait before submitting again. Defaults to 10 seconds. This parameter being provided does not "activate" the cooldown functionality. See the `cooldownClickHandler` parameter for that.
  * @param {function} cooldownClickHandler - If provided, forces the button to have a cooldown (default 10 seconds, see `cooldownTime`). This function is called if the button is clicked during the cooldown period.
+ * @param {function} sendCooldownTime - Sends the exact time that the cooldown started. Helps with calculating amount of time to display an error message.
  *
  * @returns {JSX.Element} - The submit button component. */
 export default function SubmitButton({
@@ -23,6 +24,7 @@ export default function SubmitButton({
   disabled = undefined,
   cooldownTime = 10,
   cooldownClickHandler = undefined,
+  sendCooldownTime = undefined,
 }: {
   buttonText: string;
   className?: string;
@@ -30,6 +32,7 @@ export default function SubmitButton({
   disabled?: boolean;
   cooldownTime?: number;
   cooldownClickHandler?: () => void;
+  sendCooldownTime?: (arg0: Date) => void;
 }) {
   const { pending } = useFormStatus();
   const [cooldown, setCooldown] = useState(false);
@@ -42,6 +45,9 @@ export default function SubmitButton({
         cooldownClickHandler();
       } else {
         setCooldown(true);
+        if (sendCooldownTime) {
+          sendCooldownTime(new Date());
+        }
         setTimeout(() => setCooldown(false), cooldownTime * 1000);
       }
     }
