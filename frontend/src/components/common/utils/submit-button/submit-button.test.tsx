@@ -40,4 +40,29 @@ describe('submit button', () => {
 
     expect(screen.getByText('TEST')).toBeDisabled();
   });
+  it('handles cooldown appropriately', async () => {
+    const onClickFunction = vitest.fn();
+    const cooldownClickHandler = vitest.fn();
+    render(
+      <SubmitButton
+        buttonText="TEST"
+        onClickFunction={onClickFunction}
+        cooldownClickHandler={cooldownClickHandler}
+      />
+    );
+
+    const button = screen.getByRole('button');
+    userEvent.click(button);
+
+    await waitFor(() => {
+      expect(onClickFunction).toHaveBeenCalledOnce();
+    });
+
+    userEvent.click(button);
+
+    await waitFor(() => {
+      expect(onClickFunction).toHaveBeenCalledTimes(2);
+      expect(cooldownClickHandler).toHaveBeenCalledOnce();
+    });
+  });
 });
