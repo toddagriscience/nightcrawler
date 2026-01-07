@@ -46,7 +46,7 @@ export default function NewsHighlights() {
         </FadeIn>
       ) : (
         <FadeIn>
-          <div className="mb-8 gap-8 mx-auto flex flex-row max-w-[95%] flex-wrap justify-center">
+          <div className="mb-8 gap-8 mx-auto items-center flex flex-row max-w-[95%] flex-wrap justify-center">
             {featuredNews.map((article) => (
               <NewsCard
                 key={article.slug.current}

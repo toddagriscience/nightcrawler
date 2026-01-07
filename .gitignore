@@ -46,3 +46,5 @@ storybook-static
 *.claude
 .claude/
 .swc/
+.vercel
+.env*.local

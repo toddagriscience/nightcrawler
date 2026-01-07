@@ -35,7 +35,7 @@ describe('ScrollShrinkWrapper', () => {
 
   it('renders children within the wrapper', () => {
     render(
-      <ScrollShrinkWrapper>
+      <ScrollShrinkWrapper stopWidth={400}>
         <div data-testid="test-child">Test content</div>
         <span data-testid="another-child">Another element</span>
       </ScrollShrinkWrapper>

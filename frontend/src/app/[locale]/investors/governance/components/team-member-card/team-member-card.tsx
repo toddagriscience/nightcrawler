@@ -16,7 +16,7 @@ const TeamMemberCard = ({ teamMember }: TeamMemberCardProps) => {
       className="flex justify-end items-start w-full"
     >
       <div className="w-full md:w-1/2">
-        <hr className="border-t border-gray-300 my-6 pb-6" />
+        <hr className="border-t border-gray-100 my-6 pb-6" />
 
         <div className="space-y-6 text-lg leading-relaxed text-foreground">
           {teamMember.bio.map((paragraph, index) => (

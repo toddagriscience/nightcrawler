@@ -1,12 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import React from 'react';
 import { useTranslations } from 'next-intl';
 import { PageHero } from '@/components/common';
 import { Card, CardContent } from '@/components/ui';
-import { ScrollShrinkWrapper } from '@/components/landing';
 import ValuesCard from './components/values-card';
 import { Metadata } from 'next';
+import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -21,40 +20,35 @@ export default function WhoWeArePage() {
 
   return (
     <>
-      {/* Hero Section */}
       <PageHero title={t('title')} subtitle={t('subtitle')} />
-
-      {/* Mission, Vision, and Values Section */}
-      <ScrollShrinkWrapper>
-        <div className="w-full rounded-2xl flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
-          {/* Mission and Vision Cards Section */}
-          <div className="mx-auto pb-4 px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card className="relative p-8 md:p-14 lg:p-36 aspect-square">
-                <CardContent className="p-0 h-full flex flex-col justify-center">
-                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-24">
-                    {t('mission.title')}
-                  </h2>
-                  <p className="text-base xl:text-xl font-light">
-                    {t('mission.description')}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="relative p-8 md:p-14 lg:p-36 aspect-square">
-                <CardContent className="p-0 h-full flex flex-col justify-center">
-                  <h2 className="text-4xl xl:text-6xl font-light mb-12 lg:mb-24">
-                    {t('vision.title')}
-                  </h2>
-                  <p className="text-base xl:text-xl font-light">
-                    {t('vision.description')}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+      <div className="w-full mb-32 flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
+        <div className="flex flex-col gap-4 max-w-[900px] mx-auto">
+          <div className="flex lg:flex-row flex-col flex-wrap gap-4">
+            <Card className="lg:max-w-110">
+              <CardContent className="p-4 h-full flex flex-col justify-center">
+                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
+                  {t('mission.title')}
+                </h2>
+                <p className="md:text-lg text-base font-light">
+                  {t('mission.description')}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="lg:max-w-110">
+              <CardContent className="p-4 h-full flex flex-col justify-center">
+                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
+                  {t('vision.title')}
+                </h2>
+                <p className="md:text-lg text-base font-light">
+                  {t('vision.description')}
+                </p>
+              </CardContent>
+            </Card>
           </div>
           <ValuesCard />
         </div>
-      </ScrollShrinkWrapper>
+      </div>
+      <Disclaimer translationLoc="whoWeAre.disclaimers" disclaimerCount={7} />
     </>
   );
 }

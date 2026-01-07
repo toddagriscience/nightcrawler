@@ -34,7 +34,7 @@ const NewsCard = ({
 }: NewsCardProps) => {
   return (
     <div
-      className={`text-foreground md:mr-4 max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
+      className={`text-foreground max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
     >
       <Link href={link} className="mb-16">
         <div className="rounded-xl bg-transparent">

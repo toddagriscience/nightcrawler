@@ -41,7 +41,7 @@ export default function HeaderItems({
               <Link
                 href={item.href}
                 onClick={() => onClickCallback(false)}
-                className={`rounded-md p-1 md:text-underline decoration-[0.5px] transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
+                className={`rounded-md p-1 text-underline decoration-[0.5px] transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
                   isActive ? 'text-underline-active' : ''
                 }`}
                 data-testid={`nav-link-${item.label.toLowerCase()}`}
