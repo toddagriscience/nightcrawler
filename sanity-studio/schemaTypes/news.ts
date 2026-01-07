@@ -46,7 +46,7 @@ export default defineType({
 
           // If this is an off-site/external article, allow empty content.
           // Otherwise, require content.
-          const isExternal = Boolean(doc?.offSiteUrl)
+          const isExternal = doc?.offSiteUrl !== undefined
 
           if (isExternal) return true
 
