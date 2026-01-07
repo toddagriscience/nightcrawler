@@ -7,7 +7,6 @@ import { fontVariables } from '@/lib/fonts';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
-import PageLoading from './loading';
 import { PostHogProvider } from './providers';
 
 /**
@@ -37,7 +36,7 @@ export default function RootLayout({
           <ThemeProvider>
             <TooltipProvider delayDuration={0} skipDelayDuration={0}>
               <ThemeReset />
-              <Suspense fallback={<PageLoading />}>{children}</Suspense>
+              {children}
             </TooltipProvider>
           </ThemeProvider>
         </PostHogProvider>
