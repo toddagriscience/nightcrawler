@@ -40,7 +40,20 @@ export default defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const doc = context.document as {offSiteUrl?: string} | undefined
+
+          // If this is an off-site/external article, allow empty content.
+          // Otherwise, require content.
+          const isExternal = doc?.offSiteUrl !== undefined
+
+          if (isExternal) return true
+
+          return Array.isArray(value) && value.length > 0
+            ? true
+            : 'Content is required unless this is an off-site article.'
+        }),
       of: [
         {
           type: 'block',
