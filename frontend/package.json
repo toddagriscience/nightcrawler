@@ -61,6 +61,7 @@
     "next-sanity": "^12.0.7",
     "pg": "^8.16.3",
     "posthog-js": "^1.298.1",
+    "preact": "10.28.2",
     "react": "^19.2.1",
     "react-docgen": "^8.0.2",
     "react-dom": "^19.2.1",
