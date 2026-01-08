@@ -3,10 +3,10 @@
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
-import type { MetadataRoute } from 'next';
-import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 import sanityQuery from '@/lib/sanity/query';
+import type { MetadataRoute } from 'next';
 import { SanityDocument } from 'next-sanity';
+import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 const baseUrl = env.baseUrl;
 
@@ -48,6 +48,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
     '/investors/governance/vincent-todd',
     '/investors/governance/lawrence-wilson',
     '/investors/governance/brandy-beem',
+    '/testing',
   ];
   const excludedPages = ['/login', '/admin', '/api', '/_next', '/cdn-cgi'];
 
