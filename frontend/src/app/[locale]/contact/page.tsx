@@ -10,14 +10,17 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
+  CarouselItem,
 } from '@/components/ui/carousel';
-import ContactFormItem from './components/contact-form-item';
 import { Input } from '@/components/ui/input';
 import { submitEmail } from '../careers/action';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { Button } from '@/components/ui';
-import { ContactFormData } from './types';
+import { ContactFormData, contactFormSchema } from './types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Fade from 'embla-carousel-fade';
+import { ErrorMessage } from '@hookform/error-message';
+import { useForm } from 'react-hook-form';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 
 export default function Contact() {
@@ -25,16 +28,26 @@ export default function Contact() {
   const [state, submitEmailAction] = useActionState(submitEmail, null);
   const [slide, setSlide] = useState(0);
   const [totalSlides, setTotalSlides] = useState(-1);
-  const [formData, setFormData] = useState<ContactFormData>({
-    firstName: '',
-    lastName: '',
-    farmName: '',
-    email: '',
-    phone: '',
-    isOrganic: false,
-  });
-  const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
   const [api, setApi] = useState<CarouselApi>();
+  const {
+    register,
+    trigger,
+    getValues,
+    clearErrors,
+    setValue,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    defaultValues: {
+      name: undefined,
+      firstName: '',
+      lastName: '',
+      farmName: '',
+      email: '',
+      phone: '',
+      isOrganic: false,
+    },
+    resolver: zodResolver(contactFormSchema),
+  });
 
   useEffect(() => {
     if (!api) return;
@@ -46,17 +59,6 @@ export default function Contact() {
     api.on('slidesChanged', () => setTotalSlides(api.slideNodes().length));
   }, [api]);
 
-  function handleFormChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
-
   function handleBack() {
     api?.scrollPrev();
   }
@@ -66,18 +68,19 @@ export default function Contact() {
 
     if (slide === 0) {
       const isValid =
-        formData.firstName &&
-        formData.lastName &&
-        formData.farmName &&
-        formData.email &&
-        formData.phone;
+        getValues().firstName &&
+        getValues().lastName &&
+        getValues().farmName &&
+        getValues().email &&
+        getValues().phone;
 
       if (isValid) {
         api.scrollNext();
-        setFormErrorMessage(null);
+        clearErrors();
       } else {
-        setFormErrorMessage(t('errors.requiredFields'));
+        trigger();
       }
+      // Unfilled fields are automatically handled by useFormState
     } else {
       api.scrollNext();
     }
@@ -89,107 +92,155 @@ export default function Contact() {
         setApi={setApi}
         className="max-w-[800px] w-[80vw] mx-auto h-[90vh] flex flex-col justify-center"
         plugins={[Fade()]}
-        opts={{ duration: 30 }}
+        opts={{ duration: 30, watchDrag: false }}
       >
         <CarouselContent>
-          <ContactFormItem>
-            <FormErrorMessage errorMessage={formErrorMessage} />
-
+          <CarouselItem>
             <FieldSet className="gap-4 flex flex-col">
               {/** Honeypot */}
               <Field className="hidden">
                 <FieldLabel>{t('fields.name')}</FieldLabel>
                 <Input
                   placeholder={t('placeholders.name')}
-                  name="name"
                   type="text"
-                  onChange={handleFormChange}
+                  {...register('name')}
                 />
               </Field>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field>
-                  <FieldLabel>{t('fields.firstName')}</FieldLabel>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>{t('fields.firstName')}</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="firstName"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
                   <Input
                     placeholder={t('placeholders.firstName')}
-                    name="firstName"
                     required
-                    onChange={handleFormChange}
+                    {...register('firstName', {
+                      required: 'This field is required.',
+                    })}
                   />
                 </Field>
 
                 <Field>
-                  <FieldLabel>{t('fields.lastName')}</FieldLabel>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>{t('fields.lastName')}</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="lastName"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
                   <Input
                     placeholder={t('placeholders.lastName')}
-                    name="lastName"
                     required
-                    onChange={handleFormChange}
+                    {...register('lastName', {
+                      required: 'This field is required.',
+                    })}
                   />
                 </Field>
               </div>
 
               <Field>
-                <FieldLabel>{t('fields.farmName')}</FieldLabel>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.farmName')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="farmName"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
                 <Input
                   placeholder={t('placeholders.farmName')}
-                  name="farmName"
                   required
-                  onChange={handleFormChange}
+                  {...register('farmName', {
+                    required: 'This field is required.',
+                  })}
                 />
               </Field>
 
               <Field>
-                <FieldLabel>{t('fields.email')}</FieldLabel>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.email')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
                 <Input
                   placeholder={t('placeholders.email')}
-                  name="email"
                   type="email"
                   required
-                  onChange={handleFormChange}
+                  {...register('email', {
+                    required: 'This field is required.',
+                  })}
                 />
               </Field>
 
               <Field>
-                <FieldLabel>{t('fields.phone')}</FieldLabel>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.phone')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="phone"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
                 <Input
                   placeholder={t('placeholders.phone')}
-                  name="phone"
                   type="tel"
                   required
-                  onChange={handleFormChange}
+                  {...register('phone', {
+                    required: 'This field is required.',
+                  })}
                 />
               </Field>
             </FieldSet>
-          </ContactFormItem>
+          </CarouselItem>
 
-          {!isWorkEmail(formData.email) && (
-            <ContactFormItem>
+          {!isWorkEmail(getValues().email) && (
+            <CarouselItem>
               <FieldSet>
                 <Field>
-                  <FieldLabel>
-                    {t('questions.website', { farm: formData.farmName })}
-                  </FieldLabel>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>
+                      {t('questions.website', { farm: getValues().farmName })}
+                    </FieldLabel>
+                  </div>
                   <Input
                     placeholder={t('placeholders.website')}
-                    name="website"
-                    onChange={handleFormChange}
+                    {...register('website')}
                   />
                 </Field>
               </FieldSet>
-            </ContactFormItem>
+            </CarouselItem>
           )}
 
-          <ContactFormItem>
+          <CarouselItem>
             <FieldSet>
-              <h2>{t('questions.organic', { farm: formData.farmName })}</h2>
+              <h2>{t('questions.organic', { farm: getValues().farmName })}</h2>
 
               <div className="flex gap-8">
                 <Button
                   type="button"
                   className="text-lg hover:cursor-pointer text-underline"
                   onClick={() => {
-                    setFormData({ ...formData, isOrganic: true });
+                    setValue('isOrganic', true);
                     api?.scrollNext();
                   }}
                 >
@@ -200,7 +251,7 @@ export default function Contact() {
                   type="button"
                   className="text-lg hover:cursor-pointer text-underline"
                   onClick={() => {
-                    setFormData({ ...formData, isOrganic: false });
+                    setValue('isOrganic', false);
                     api?.scrollNext();
                   }}
                 >
@@ -208,10 +259,10 @@ export default function Contact() {
                 </Button>
               </div>
             </FieldSet>
-          </ContactFormItem>
+          </CarouselItem>
 
-          <ContactFormItem>
-            {isWorkEmail(formData.email) || formData.website ? (
+          <CarouselItem>
+            {isWorkEmail(getValues().email) || getValues().website ? (
               <div className="flex flex-col text-center justify-center h-full gap-8">
                 <h1 className="text-xl md:text-5xl">
                   {t('results.matchTitle')}
@@ -226,7 +277,7 @@ export default function Contact() {
                 <p>{t('results.noMatchBody')}</p>
               </div>
             )}
-          </ContactFormItem>
+          </CarouselItem>
         </CarouselContent>
 
         <div className="flex justify-between mt-4 min-h-10">
