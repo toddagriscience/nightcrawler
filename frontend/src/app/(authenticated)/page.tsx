@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { Metadata } from 'next';
 import LogoutButton from '@/components/common/utils/logout-button/logout-button';
+import type { Metadata } from 'next';
 
 /**
  * Dashboard homepage metadata - uses specific title without template

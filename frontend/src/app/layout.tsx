@@ -1,12 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { Metadata } from 'next';
 import { ThemeReset } from '@/components/common';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { fontVariables } from '@/lib/fonts';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import './globals.css';
 import { PostHogProvider } from './providers';
-import { fontVariables } from '@/lib/fonts';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 /**
  * Root layout metadata for pages outside [locale] directory
