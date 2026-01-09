@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { pgEnum } from 'drizzle-orm/pg-core';
 import { farm } from './farm';
+import citext from '../types/citext';
 
 /** An admin can view, edit, modify, etc. anything about the farm. A viewer can only view data on the platform. */
 export const userRoleEnum = pgEnum('user_role', ['Admin', 'Viewer']);
@@ -21,7 +22,7 @@ export const user = pgTable('user', {
   farmId: integer().references(() => farm.id),
   firstName: varchar({ length: 200 }).notNull(),
   lastName: varchar({ length: 200 }).notNull(),
-  email: varchar({ length: 200 }).notNull(),
+  email: citext().notNull(),
   /** Phone number in E164 format */
   phone: varchar({ length: 15 }),
   /** Is this user approved? If they are, assume that the user is currently being billed. This is handled manually at the moment. */
