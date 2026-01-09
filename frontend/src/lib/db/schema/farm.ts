@@ -10,30 +10,24 @@ import {
 } from 'drizzle-orm/pg-core';
 
 /** The "top" table. A given client's core information. "Client" may refer to the owner of a given business involved with Todd Agriscience or a representative. */
-export const client = pgTable('client', {
+export const farm = pgTable('farm', {
   /** Auto increment id */
   id: serial().primaryKey().notNull(),
   /** Name of the business */
   businessName: varchar({ length: 200 }).notNull(),
-  /** Client's first name */
-  firstName: varchar({ length: 200 }).notNull(),
-  /** Client's last name */
-  lastName: varchar({ length: 200 }).notNull(),
-  /** Client's email/business' main email */
-  email: varchar({ length: 200 }).notNull(),
-  /** Phone number in E164 format */
-  phone: varchar({ length: 15 }).notNull(),
+  /** The date the farm was founded. Collected during Internal Onboarding */
+  founded: date('founded'),
 });
 
 /** Client location data. This table *should* be internationally compatible, and all fields that aren't documented should be completely self explanatory. */
-export const clientLocation = pgTable('client_location', {
+export const farmLocation = pgTable('farmLocation', {
   /** Foreign key relationship back to the client */
-  clientId: varchar({ length: 13 })
-    .references(() => client.id)
+  farmId: varchar({ length: 13 })
+    .references(() => farm.id)
     .notNull()
     .primaryKey(),
   /** The literal longitude/latitude position of the client. The exact location from where these coordinates were taken *does not matter.* */
-  farmLocation: point({ mode: 'tuple' }),
+  location: point({ mode: 'tuple' }),
   address1: varchar({ length: 200 }).notNull(),
   address2: varchar({ length: 200 }),
   address3: varchar({ length: 200 }),
@@ -51,14 +45,13 @@ export const certificateType = pgEnum('certificate_type', [
 ]);
 
 /** Any certificates that the client's business/farm has. See the certificateType enum for more info. */
-export const clientCertificate = pgTable('client_certificate', {
+export const farmCertificate = pgTable('farm_certificate', {
   /** Auto increment id -- no specific format for IDs for client certificates */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
-  clientId: varchar({ length: 13 })
-    .references(() => client.id)
-    .notNull()
-    .primaryKey(),
+  farmId: varchar({ length: 13 })
+    .references(() => farm.id)
+    .notNull(),
   /** The kind of certificate. See the certificateType enum for more info. */
   kind: certificateType().notNull(),
   /** The date this certificate was granted/initialized */

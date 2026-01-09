@@ -10,7 +10,7 @@ import {
   boolean,
   text,
 } from 'drizzle-orm/pg-core';
-import { client } from './client';
+import { farm } from './farm';
 
 /** The current risk of contamination for a given management zone, calculated from other metrics. */
 export const contaminationRisk = pgEnum('contamination_risk', [
@@ -25,7 +25,7 @@ export const managementZone = pgTable('management_zone', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
   clientId: varchar({ length: 13 })
-    .references(() => client.id)
+    .references(() => farm.id)
     .notNull(),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
   location: point({ mode: 'tuple' }),
