@@ -7,10 +7,10 @@ import {
   pgTable,
   point,
   serial,
-  text,
-  varchar,
+  varchar
 } from 'drizzle-orm/pg-core';
 import { client } from './client';
+import { notes } from './notes';
 
 /** The current risk of contamination for a given management zone, calculated from other metrics. */
 import { contaminationRisk } from './enum';
@@ -58,7 +58,9 @@ export const crop = pgTable('crop', {
   /** Is this crop a covercrop? (A covercrop is a crop that is planted not with the intent of being harvested, but with the intent of helping the soil) */
   isCovercrop: boolean(),
   /** Generic notes for each crop (a given client might want to list their reasoning behind using this crop, etc.) */
-  notes: text(),
+  notes: varchar({ length: 13 })
+    .references(() => notes.id)
+    .notNull(),
 });
 
 /** Represents a fertilizer that was used on a field */
@@ -76,7 +78,9 @@ export const fertilizer = pgTable('fertilizer', {
   /** The date that the fertilizer was last used */
   last_used: date({ mode: 'date' }).notNull(),
   /** Generic notes for each livestock */
-  notes: text(),
+  notes: varchar({ length: 13 })
+    .references(() => notes.id)
+    .notNull(),
 });
 
 /** Describes some animal/group of animals living on or spending the majority of their time on a given management zone. Also details when this animal/group of animals is "deployed" (when they're in the management zone). */
@@ -96,7 +100,9 @@ export const livestock = pgTable('livestock', {
   /** Is this animal currently deployed? */
   currentlyDeployed: boolean().notNull(),
   /** Generic notes for each livestock */
-  notes: text(),
+  notes: varchar({ length: 13 })
+    .references(() => notes.id)
+    .notNull(),
 });
 
 /** The type of pest, either an insect or a disease. */
@@ -119,5 +125,7 @@ export const pest = pgTable('pest', {
   /** The type of pest. See the pestType enum for more information. */
   type: pestType().notNull(),
   /** Generic notes for each pest */
-  notes: text(),
+  notes: varchar({ length: 13 })
+    .references(() => notes.id)
+    .notNull(),
 });

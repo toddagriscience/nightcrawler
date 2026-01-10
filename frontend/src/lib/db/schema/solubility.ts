@@ -4,6 +4,7 @@ import { numeric, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 
 /** A general tag for solubility. See the mineral table for more context. */
+import { solubilityLevel } from './enum';
 
 /** The solubility metric for an analysis. */
 export const solubility = pgTable('solubility', {
