@@ -1,23 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
+  boolean,
   date,
   pgEnum,
   pgTable,
   point,
   serial,
-  varchar,
-  boolean,
   text,
+  varchar,
 } from 'drizzle-orm/pg-core';
 import { client } from './client';
 
 /** The current risk of contamination for a given management zone, calculated from other metrics. */
-export const contaminationRisk = pgEnum('contamination_risk', [
-  'low',
-  'med',
-  'high',
-]);
+import { contaminationRisk } from './enum';
 
 /** A management zone. For the majority of the time, you may think of this as a field. */
 export const managementZone = pgTable('management_zone', {

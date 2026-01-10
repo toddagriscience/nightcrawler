@@ -3,15 +3,14 @@
 import {
   boolean,
   numeric,
-  pgEnum,
   pgTable,
   serial,
-  varchar,
+  varchar
 } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 
 /** A "brief" overview of the level of a given mineral. See the mineral table for more context. */
-export const mineralLevel = pgEnum('mineral_level', ['Low', 'Med', 'High']);
+import { mineralLevel } from './enum';
 
 /** A table that describes a single mineral and its values for a given analysis. */
 export const mineral = pgTable('mineral', {
