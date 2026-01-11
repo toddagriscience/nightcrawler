@@ -73,7 +73,7 @@ export default function Contact() {
   if (isSuccessfulSubmit) {
     return (
       <FadeIn>
-        <section className="flex h-screen flex-col items-center justify-center bg-[#F7F4EC] px-6 text-center text-[#555555]">
+        <section className="flex h-screen flex-col items-center justify-center px-6 text-center text-muted-foreground">
           <h1 className="mb-6 text-[70px] leading-none font-light md:text-[110px]">
             {t('thankYou.title')}
           </h1>
@@ -82,7 +82,7 @@ export default function Contact() {
           </p>
           <Link
             href="/impact"
-            className="inline-flex items-center gap-2 rounded-full border border-[#555555]/20 px-6 py-3 text-lg transition hover:bg-[#555555]/5"
+            className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-6 py-3 text-lg transition hover:bg-foreground/5"
           >
             {t('thankYou.impact')} <span>→</span>
           </Link>
@@ -93,7 +93,7 @@ export default function Contact() {
 
   return (
     <>
-      <div className="text-foreground mb-16 min-h-screen bg-[#F7F4EC] p-8 md:p-16">
+      <div className="text-foreground mb-16 min-h-screen p-8 md:p-16">
         <div className="mx-auto max-w-3xl pt-8">
           <h1 className="text-foreground/80 mb-4 text-[64px] font-[300]">
             {t('title')}
