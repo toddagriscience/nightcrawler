@@ -14,26 +14,26 @@
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 
   /* Shadcn/ui CSS variables mapped to Todd theme */
-  --background: #FCFBF8; /* Your cream background */
+  --background: #fcfbf8; /* Your cream background */
   --background-secondary: #ccc5b5; /* Your light card background */
-  --foreground: #2A2727; /* Your primary text */
+  --foreground: #2a2727; /* Your primary text */
   --card: #ccc5b5; /* Your light card background */
-  --card-foreground: #2A2727; /* Your primary text */
-  --popover: #FCFBF8; /* Your cream background */
-  --popover-foreground: #2A2727; /* Your primary text */
-  --primary: #2A2727; /* Your primary color */
-  --primary-foreground: #FCFBF8; /* Your secondary/inverse */
+  --card-foreground: #2a2727; /* Your primary text */
+  --popover: #fcfbf8; /* Your cream background */
+  --popover-foreground: #2a2727; /* Your primary text */
+  --primary: #2a2727; /* Your primary color */
+  --primary-foreground: #fcfbf8; /* Your secondary/inverse */
   --secondary: #ccc5b5; /* Your light card */
-  --secondary-foreground: #2A2727; /* Your primary text */
-  --muted: #2A2727;
+  --secondary-foreground: #2a2727; /* Your primary text */
+  --muted: #2a2727;
   --muted-foreground: #555555; /* Your secondary text */
   --accent: #ccc5b5; /* Your light card */
-  --accent-foreground: #2A2727; /* Your primary text */
+  --accent-foreground: #2a2727; /* Your primary text */
   --destructive: #dc2626; /* Red for errors */
   --destructive-foreground: #fafafa;
-  --border: #2A2727; /* Your border color */
+  --border: #2a2727; /* Your border color */
   --input: #ccc5b5; /* Your light card */
-  --ring: #2A2727; /* Focus rings */
+  --ring: #2a2727; /* Focus rings */
   --radius: 0.5rem;
 
   transition: all 1.2s ease-in-out;
@@ -51,36 +51,36 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #FCFBF8;
-    --foreground: #2A2727;
+    --background: #fcfbf8;
+    --foreground: #2a2727;
   }
 }
 
 .dark {
   /* Dark mode Shadcn/ui variables */
-  --background: #FCFBF8; /* Keep cream background even in dark mode */
+  --background: #fcfbf8; /* Keep cream background even in dark mode */
   --background-secondary: #ccc5b5; /* Keep light card background even in dark mode */
-  --foreground: #2A2727; /* Your inverse text */
-  --card: #2A2727; /* Your dark card */
-  --card-foreground: #FCFBF8; /* Your inverse text */
-  --popover: #2A2727; /* Your dark background */
-  --popover-foreground: #FCFBF8; /* Your inverse text */
-  --primary: #FCFBF8; /* Your inverse/light */
-  --primary-foreground: #2A2727; /* Your dark */
-  --secondary: #2A2727; /* Your dark card */
-  --secondary-foreground: #FCFBF8; /* Your inverse text */
-  --muted: #2A2727; /* Your dark card */
+  --foreground: #2a2727; /* Your inverse text */
+  --card: #2a2727; /* Your dark card */
+  --card-foreground: #fcfbf8; /* Your inverse text */
+  --popover: #2a2727; /* Your dark background */
+  --popover-foreground: #fcfbf8; /* Your inverse text */
+  --primary: #fcfbf8; /* Your inverse/light */
+  --primary-foreground: #2a2727; /* Your dark */
+  --secondary: #2a2727; /* Your dark card */
+  --secondary-foreground: #fcfbf8; /* Your inverse text */
+  --muted: #2a2727; /* Your dark card */
   --muted-foreground: #aaaaaa; /* Light secondary text */
-  --accent: #2A2727; /* Your dark card */
-  --accent-foreground: #FCFBF8; /* Your inverse text */
-  --border: #FCFBF8; /* Your dark border */
-  --input: #2A2727; /* Your dark card */
-  --ring: #FCFBF8; /* Dark focus rings */
+  --accent: #2a2727; /* Your dark card */
+  --accent-foreground: #fcfbf8; /* Your inverse text */
+  --border: #fcfbf8; /* Your dark border */
+  --input: #2a2727; /* Your dark card */
+  --ring: #fcfbf8; /* Dark focus rings */
 }
 
 body {
   color: var(--foreground);
-  background: #FCFBF8;
+  background: #fcfbf8;
   overflow-x: hidden;
   font-family: var(--font-haas);
 }
