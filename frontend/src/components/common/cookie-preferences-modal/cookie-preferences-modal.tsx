@@ -20,12 +20,17 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 /**
- * Cookie Preferences Modal Component
- * Allows users to toggle cookies on/off
+ * Cookie Preferences modal. Allows users to toggle cookies on/off.
+ *
+ * @param {React.ReactNode} trigger - The element that opens the modal. Optional, defaults to a button.
+ * @returns {JSX.Element} - The Cookie Preferences modal with related logic.
  */
-export default function CookiePreferencesModal() {
+export default function CookiePreferencesModal({
+  trigger = undefined,
+}: {
+  trigger?: React.ReactNode;
+}) {
   const t = useTranslations('cookiePreferences');
-  const [internalOpen, setInternalOpen] = useState(false);
   const { areCookiesEnabled, updatePreferences, isLoading } =
     useCookiePreferences();
   const [localEnabled, setLocalEnabled] = useState(areCookiesEnabled);
@@ -37,6 +42,7 @@ export default function CookiePreferencesModal() {
       async function helper() {
         setLocalEnabled(areCookiesEnabled);
       }
+      helper();
     }
   }, [areCookiesEnabled, isLoading, isOpen]);
 
@@ -56,41 +62,51 @@ export default function CookiePreferencesModal() {
       onOpenChange={isOpen ? () => setIsOpen(false) : () => {}}
     >
       <DialogTrigger asChild>
-        <div>
-          <button
-            type="button"
+        {trigger ? (
+          <Button
+            className="text-base p-0 h-min m-0 hover:cursor-pointer"
             onClick={() => setIsOpen(true)}
-            className="hover:cursor-pointer flex items-center gap-1.5 text-foreground"
+            asChild
+          >
+            {trigger}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant={'outline'}
+            onClick={() => setIsOpen(true)}
           >
             {t('managePreferences')}
             <Image alt="" src={'/privacyoptions.svg'} width={29} height={14} />
-          </button>
-        </div>
+          </Button>
+        )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          <div className="flex items-center space-x-3">
-            <Checkbox
-              id="cookie-toggle"
-              checked={localEnabled}
-              onCheckedChange={(checked) => setLocalEnabled(checked === true)}
-            />
-            <div className="flex-1">
+        <div className="py-1">
+          <div className="flex space-x-3 flex-col items-start gap-2">
+            <div className="flex flex-row flex-nowrap gap-3 items-center">
               <Label
                 htmlFor="cookie-toggle"
                 className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
               >
                 {t('toggleLabel')}
               </Label>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t('toggleDescription')}
-              </p>
+              <Checkbox
+                id="cookie-toggle"
+                checked={localEnabled}
+                onCheckedChange={(checked) => setLocalEnabled(checked === true)}
+              />
             </div>
           </div>
+        </div>
+        <div className="flex-1">
+          <p className="text-xs text-muted-foreground mt-1">
+            {t('toggleDescription')}
+          </p>
         </div>
         <DialogFooter>
           <Button className="hover:cursor-pointer" onClick={handleCancel}>

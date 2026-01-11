@@ -22,6 +22,7 @@ import {
  */
 const Footer = () => {
   const t = useTranslations('footer');
+  const tCookiePreferences = useTranslations('cookiePreferences');
 
   const siteLinks = [
     { href: '/who-we-are', label: t('links.whoWeAre') },
@@ -118,7 +119,9 @@ const Footer = () => {
               {val.label}
             </Link>
           ))}
-          <CookiePreferencesModal />
+          <CookiePreferencesModal
+            trigger={<span>{tCookiePreferences('managePreferences')}</span>}
+          />
         </div>
         <div className="flex flex-row gap-6 flex-wrap">
           {socialMediaIcons.map((val, index) => (
