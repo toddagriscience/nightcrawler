@@ -1,7 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ShieldCheck } from 'lucide-react';
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 
 /**
  * Privacy page component
@@ -9,6 +15,8 @@ import Link from 'next/link';
  */
 export default function PrivacyPage() {
   const t = useTranslations('privacy');
+  const cookieT = useTranslations('cookiePreferences');
+  const [cookieModalOpen, setCookieModalOpen] = useState(false);
 
   return (
     <div className="mx-auto mt-20 max-w-4xl bg-white p-6">
@@ -19,6 +27,9 @@ export default function PrivacyPage() {
           {t('websitePrivacyPolicy')}
         </h2>
         <p className="text-sm text-gray-600">{t('effective')}</p>
+        <div className="mt-4">
+          <CookiePreferencesModal />
+        </div>
       </div>
 
       {/* Supplements Notice */}

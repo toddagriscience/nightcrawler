@@ -1,0 +1,11 @@
+{
+  "cookiePreferences": {
+    "title": "Cookie Preferences",
+    "description": "Manage your cookie preferences. You can enable or disable cookies at any time.",
+    "toggleLabel": "Enable Cookies",
+    "toggleDescription": "When enabled, we use cookies to analyze site usage and improve your experience. You can change this setting at any time.",
+    "save": "Save Preferences",
+    "cancel": "Cancel",
+    "managePreferences": "Your Privacy Choices"
+  }
+}

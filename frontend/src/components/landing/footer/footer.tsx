@@ -2,10 +2,13 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Link } from '@/i18n/config';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { ShieldCheck } from 'lucide-react';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -115,6 +118,7 @@ const Footer = () => {
               {val.label}
             </Link>
           ))}
+          <CookiePreferencesModal />
         </div>
         <div className="flex flex-row gap-6 flex-wrap">
           {socialMediaIcons.map((val, index) => (

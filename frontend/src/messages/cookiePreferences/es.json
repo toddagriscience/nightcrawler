@@ -1,0 +1,11 @@
+{
+  "cookiePreferences": {
+    "title": "Preferencias de Cookies",
+    "description": "Administre sus preferencias de cookies. Puede habilitar o deshabilitar las cookies en cualquier momento.",
+    "toggleLabel": "Habilitar Cookies",
+    "toggleDescription": "Cuando está habilitado, utilizamos cookies para analizar el uso del sitio y mejorar su experiencia. Puede cambiar esta configuración en cualquier momento.",
+    "save": "Guardar Preferencias",
+    "cancel": "Cancelar",
+    "managePreferences": "Sus Opciones de Privacidad"
+  }
+}
