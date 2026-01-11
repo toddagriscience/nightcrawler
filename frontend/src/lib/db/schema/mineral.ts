@@ -9,9 +9,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
-
-/** A "brief" overview of the level of a given mineral. See the mineral table for more context. */
-export const mineralLevel = pgEnum('mineral_level', ['Low', 'Med', 'High']);
+import { levelCategory } from './level-category';
 
 /** A table that describes a single mineral and its values for a given analysis. */
 export const mineral = pgTable('mineral', {
@@ -28,7 +26,7 @@ export const mineral = pgTable('mineral', {
   /** The ideal value of the mineral (see the unit field for units) */
   ideal_value: numeric({ precision: 9, scale: 4 }).notNull(),
   /** A general tag (is this value low, high, etc.) */
-  tag: mineralLevel(),
+  tag: levelCategory(),
   /** This field set to true refers to a severe soil quality issue. Specifically, it refers to a state where the soil is "inactive" (refer to Vincent for more details). The trigger for this field being true is all 4 of the generic minerals (calcium, magnesium, sodium, and potassium) being low at the same time.*/
   four_lows: boolean().notNull(),
   /** The unit which this mineral is being measured in. */
