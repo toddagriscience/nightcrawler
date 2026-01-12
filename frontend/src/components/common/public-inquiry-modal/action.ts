@@ -17,7 +17,9 @@ export async function submitPublicInquiry(
         ? formData.get('lastKnownEmail')
         : '',
     response:
-      typeof formData.get('response') === 'string' ? formData.get('response') : '',
+      typeof formData.get('response') === 'string'
+        ? formData.get('response')
+        : '',
   };
 
   const validated = publicInquirySchema.safeParse(raw);
@@ -26,12 +28,14 @@ export async function submitPublicInquiry(
     return { error: msg, data: null };
   }
 
-  const name = validated.data.name?.trim?.() ?? String(validated.data.name ?? '').trim();
+  const name =
+    validated.data.name?.trim?.() ?? String(validated.data.name ?? '').trim();
   const lastKnownEmail =
     validated.data.lastKnownEmail?.trim?.() ??
     String(validated.data.lastKnownEmail ?? '').trim();
   const response =
-    validated.data.response?.trim?.() ?? String(validated.data.response ?? '').trim();
+    validated.data.response?.trim?.() ??
+    String(validated.data.response ?? '').trim();
 
   if (!name) return { error: 'Name is required.', data: null };
   if (!lastKnownEmail) return { error: 'Email is required.', data: null };
