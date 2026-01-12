@@ -5,52 +5,23 @@
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import logger from '@/lib/logger';
 import type { ActionResponse } from '@/lib/types/action-response';
-import z from 'zod';
-
-// Make these match the modal's <input name="..."> attributes.
-const schema = z.object({
-  name: z.string().trim().max(200, 'Name is too long.').optional(),
-  lastKnownEmail: z
-    .string()
-    .trim()
-    .email('Please enter a valid email.')
-    .max(320, 'Email is too long.')
-    .optional(),
-  response: z
-    .string()
-    .trim()
-    .max(1500, 'Response is too long (max 1500 characters).')
-    .optional(),
-});
-
-function readOptionalString(
-  formData: FormData,
-  key: string
-): string | undefined {
-  const v = formData.get(key);
-  if (typeof v !== 'string') return undefined;
-  const t = v.trim();
-  return t.length ? t : undefined;
-}
+import { publicInquirySchema } from './types';
 
 export async function submitPublicInquiry(
   formData: FormData
 ): Promise<ActionResponse> {
-  // Read fields (all optional)
   const raw = {
-    name: readOptionalString(formData, 'name'),
-    lastKnownEmail: readOptionalString(formData, 'lastKnownEmail'),
-    response: readOptionalString(formData, 'response'),
+    name: formData.get('name'),
+    lastKnownEmail: formData.get('lastKnownEmail'),
+    response: formData.get('response'),
   };
 
-  // Validate: only enforces rules if a value is present
-  const validated = schema.safeParse(raw);
+  const validated = publicInquirySchema.safeParse(raw);
   if (!validated.success) {
     const msg = validated.error.issues[0]?.message ?? 'Invalid submission.';
     return { error: msg, data: null };
   }
 
-  // Use the same env var pattern as contact, unless the team has a dedicated one.
   const scriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
   if (!scriptUrl) {
     return {
@@ -60,15 +31,13 @@ export async function submitPublicInquiry(
   }
 
   try {
-    // Ensure we only submit the fields we care about (optional, but clean)
     const payload = new FormData();
-    if (validated.data.name) payload.set('name', validated.data.name);
-    if (validated.data.lastKnownEmail)
-      payload.set('lastKnownEmail', validated.data.lastKnownEmail);
-    if (validated.data.response)
-      payload.set('response', validated.data.response);
+    const { name, lastKnownEmail, response } = validated.data;
 
-    // Using the pre-existing Google Sheets helper
+    if (name) payload.set('name', name);
+    if (lastKnownEmail) payload.set('lastKnownEmail', lastKnownEmail);
+    if (response) payload.set('response', response);
+
     await submitToGoogleSheets(payload, scriptUrl);
 
     return { error: null, data: null };

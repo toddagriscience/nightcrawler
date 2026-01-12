@@ -2,19 +2,20 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const submitToGoogleSheetsMock = vi.fn();
+// hoisted-safe mocks
+const mocks = vi.hoisted(() => ({
+  submitToGoogleSheets: vi.fn(),
+  loggerError: vi.fn(),
+}));
+
 vi.mock('@/lib/actions/googleSheets', () => ({
-  submitToGoogleSheets: submitToGoogleSheetsMock,
+  submitToGoogleSheets: mocks.submitToGoogleSheets,
 }));
 
-const loggerErrorMock = vi.fn();
 vi.mock('@/lib/logger', () => ({
-  default: {
-    error: loggerErrorMock,
-  },
+  default: { error: mocks.loggerError },
 }));
 
-// Import AFTER mocks so action.ts uses mocked modules
 import { submitPublicInquiry } from './action';
 
 function makeFormData(fields: Record<string, string | undefined>) {
@@ -33,8 +34,7 @@ beforeEach(() => {
 describe('submitPublicInquiry', () => {
   it('returns success and submits to Google Sheets when inputs are valid', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-
-    submitToGoogleSheetsMock.mockResolvedValueOnce(undefined);
+    mocks.submitToGoogleSheets.mockResolvedValueOnce(undefined);
 
     const fd = makeFormData({
       name: 'Inban',
@@ -45,14 +45,11 @@ describe('submitPublicInquiry', () => {
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ error: null, data: null });
-    expect(submitToGoogleSheetsMock).toHaveBeenCalledTimes(1);
+    expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
 
-    // Called with: (payloadFormData, scriptUrl)
-    const [payload, url] = submitToGoogleSheetsMock.mock.calls[0];
+    const [payload, url] = mocks.submitToGoogleSheets.mock.calls[0];
     expect(url).toBe('https://example.com/script');
     expect(payload).toBeInstanceOf(FormData);
-
-    // payload only includes provided fields
     expect(payload.get('name')).toBe('Inban');
     expect(payload.get('lastKnownEmail')).toBe('inban@example.com');
     expect(payload.get('response')).toBe('Hello!');
@@ -60,15 +57,15 @@ describe('submitPublicInquiry', () => {
 
   it('allows all fields to be optional (empty form still succeeds)', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-    submitToGoogleSheetsMock.mockResolvedValueOnce(undefined);
+    mocks.submitToGoogleSheets.mockResolvedValueOnce(undefined);
 
-    const fd = makeFormData({}); // no fields
+    const fd = makeFormData({});
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ error: null, data: null });
-    expect(submitToGoogleSheetsMock).toHaveBeenCalledTimes(1);
+    expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
 
-    const [payload] = submitToGoogleSheetsMock.mock.calls[0];
+    const [payload] = mocks.submitToGoogleSheets.mock.calls[0];
     expect(payload.get('name')).toBeNull();
     expect(payload.get('lastKnownEmail')).toBeNull();
     expect(payload.get('response')).toBeNull();
@@ -77,56 +74,50 @@ describe('submitPublicInquiry', () => {
   it('returns validation error if email is provided but invalid', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
-    const fd = makeFormData({
-      lastKnownEmail: 'not-an-email',
-    });
-
+    const fd = makeFormData({ lastKnownEmail: 'not-an-email' });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
       error: 'Please enter a valid email.',
       data: null,
     });
-    expect(submitToGoogleSheetsMock).not.toHaveBeenCalled();
+    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
   it('returns validation error if response is over 1500 chars', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
-    const fd = makeFormData({
-      response: 'a'.repeat(1501),
-    });
-
+    const fd = makeFormData({ response: 'a'.repeat(1501) });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
       error: 'Response is too long (max 1500 characters).',
       data: null,
     });
-    expect(submitToGoogleSheetsMock).not.toHaveBeenCalled();
+    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
   it('returns config error if CONTACT_GOOGLE_SCRIPT_URL is missing', async () => {
     const fd = makeFormData({ name: 'Inban' });
-
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
       error: 'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL',
       data: null,
     });
-    expect(submitToGoogleSheetsMock).not.toHaveBeenCalled();
+    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
   it('returns error when submitToGoogleSheets throws, and logs it', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-    submitToGoogleSheetsMock.mockRejectedValueOnce(new Error('Sheets is down'));
+    mocks.submitToGoogleSheets.mockRejectedValueOnce(
+      new Error('Sheets is down')
+    );
 
     const fd = makeFormData({ response: 'Test' });
-
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ error: 'Sheets is down', data: null });
-    expect(loggerErrorMock).toHaveBeenCalledTimes(1);
+    expect(mocks.loggerError).toHaveBeenCalledTimes(1);
   });
 });
