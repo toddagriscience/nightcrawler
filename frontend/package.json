@@ -97,7 +97,6 @@
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "resize-observer-polyfill": "^1.5.1",
-    "sharp": "^0.34.4",
     "storybook": "^10.0.2",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
