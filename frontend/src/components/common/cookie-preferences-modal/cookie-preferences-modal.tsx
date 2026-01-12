@@ -2,22 +2,21 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { useCookiePreferences } from '@/lib/hooks/useCookiePreferences';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { Link } from '@/i18n/config';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 /**
  * Cookie Preferences modal. Allows users to toggle cookies on/off.
@@ -31,30 +30,8 @@ export default function CookiePreferencesModal({
   trigger?: React.ReactNode;
 }) {
   const t = useTranslations('cookiePreferences');
-  const { areCookiesEnabled, updatePreferences, isLoading } =
-    useCookiePreferences();
-  const [localEnabled, setLocalEnabled] = useState(areCookiesEnabled);
+  const { isCapturing, applyPostHogPreference } = useCookiePreferences();
   const [isOpen, setIsOpen] = useState(false);
-
-  // Update local state when preferences change or modal opens
-  useEffect(() => {
-    if (!isLoading && isOpen) {
-      async function helper() {
-        setLocalEnabled(areCookiesEnabled);
-      }
-      helper();
-    }
-  }, [areCookiesEnabled, isLoading, isOpen]);
-
-  const handleSave = () => {
-    updatePreferences(localEnabled);
-    setIsOpen(false);
-  };
-
-  const handleCancel = () => {
-    setLocalEnabled(areCookiesEnabled);
-    setIsOpen(false);
-  };
 
   return (
     <Dialog
@@ -64,7 +41,7 @@ export default function CookiePreferencesModal({
       <DialogTrigger asChild>
         {trigger ? (
           <Button
-            className="text-base p-0 h-min m-0 hover:cursor-pointer"
+            className="m-0 h-min p-0 text-base hover:cursor-pointer"
             onClick={() => setIsOpen(true)}
             asChild
           >
@@ -75,46 +52,45 @@ export default function CookiePreferencesModal({
             type="button"
             variant={'outline'}
             onClick={() => setIsOpen(true)}
+            className="hover:cursor-pointer"
           >
-            {t('managePreferences')}
-            <Image alt="" src={'/privacyoptions.svg'} width={29} height={14} />
+            {t('buttonText')}
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
-        <div className="py-1">
-          <div className="flex space-x-3 flex-col items-start gap-2">
-            <div className="flex flex-row flex-nowrap gap-3 items-center">
-              <Label
-                htmlFor="cookie-toggle"
-                className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                {t('toggleLabel')}
-              </Label>
-              <Checkbox
-                id="cookie-toggle"
-                checked={localEnabled}
-                onCheckedChange={(checked) => setLocalEnabled(checked === true)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex-1">
-          <p className="text-xs text-muted-foreground mt-1">
-            {t('toggleDescription')}
-          </p>
+        <div className="flex flex-col gap-4">
+          <p>{t('description')}</p>
+          <p>{t('toggleDescription')}</p>
         </div>
         <DialogFooter>
-          <Button className="hover:cursor-pointer" onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
-          <Button className="hover:cursor-pointer" onClick={handleSave}>
-            {t('save')}
-          </Button>
+          <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row md:gap-0">
+            <Link
+              onClick={() => setIsOpen(false)}
+              locale="en"
+              href={'/privacy'}
+              className="underline"
+            >
+              US Privacy Policy
+            </Link>
+            <div className="flex flex-row items-center gap-2">
+              <Switch
+                className={isCapturing ? 'bg-green-500' : 'bg-gray-500'}
+                checked={isCapturing}
+                onCheckedChange={(checked) => applyPostHogPreference(checked)}
+              />
+              <Label>Do not sell or share my personal information</Label>
+            </div>
+            <Button
+              className="rounded-4xl border border-solid border-black px-8 py-2 hover:cursor-pointer"
+              onClick={() => setIsOpen(false)}
+            >
+              {t('save')}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

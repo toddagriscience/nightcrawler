@@ -1,11 +1,12 @@
 {
   "cookiePreferences": {
-    "title": "Cookie Preferences",
-    "description": "Manage your cookie preferences. You can enable or disable cookies at any time.",
+    "buttonText": "Cookie Settings",
+    "title": "Your Privacy Choices",
+    "description": "Todd uses non-essential cookies and similar tracking technologies to measure the performance of its website and services.",
     "toggleLabel": "Enable Cookies",
-    "toggleDescription": "Todd uses non-essential cookies and similar tracking technologies to measure the performance of its website and services. These activities may be considered “sales” or “sharing” under applicable US state laws. You may opt-out of these non-essential activities by using the toggle below or by visiting our website with a legally-recognized opt-out preference signal enabled, such as the Global Privacy Control (GPC). Note that requests to opt-out of these activities are unique to the browser you are using. You will need to renew your opt-out choice if you visit with another browser or device, or if you clear your cookies.",
-    "save": "Save Preferences",
+    "toggleDescription": "These activities may be considered “sales” or “sharing” under applicable US state laws. You may opt-out of these non-essential activities by using the toggle below or by visiting our website with a legally-recognized opt-out preference signal enabled, such as the Global Privacy Control (GPC). Note that requests to opt-out of these activities are unique to the browser you are using. You will need to renew your opt-out choice if you visit with another browser or device, or if you clear your cookies.",
+    "save": "Confirm",
     "cancel": "Cancel",
-    "managePreferences": "Manage Your Privacy Choices"
+    "managePreferences": "Your Privacy Choices"
   }
 }

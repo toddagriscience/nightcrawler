@@ -1,11 +1,12 @@
 {
   "cookiePreferences": {
-    "title": "Preferencias de Cookies",
-    "description": "Administre sus preferencias de cookies. Puede habilitar o deshabilitar las cookies en cualquier momento.",
-    "toggleLabel": "Habilitar Cookies",
-    "toggleDescription": "Cuando está habilitado, utilizamos cookies para analizar el uso del sitio y mejorar su experiencia. Puede cambiar esta configuración en cualquier momento.",
-    "save": "Guardar Preferencias",
+    "buttonText": "Configuración de cookies",
+    "title": "Tus opciones de privacidad",
+    "description": "Todd utiliza cookies no esenciales y tecnologías de seguimiento similares para medir el rendimiento de su sitio web y servicios.",
+    "toggleLabel": "Habilitar cookies",
+    "toggleDescription": "Estas actividades pueden considerarse “ventas” o “compartición” según las leyes estatales aplicables de EE. UU. Puedes optar por no participar en estas actividades no esenciales usando el interruptor a continuación o visitando nuestro sitio web con una señal de preferencia de exclusión legalmente reconocida habilitada, como Global Privacy Control (GPC). Ten en cuenta que las solicitudes para excluirte de estas actividades son únicas para el navegador que estás utilizando. Deberás renovar tu elección de exclusión si visitas el sitio con otro navegador o dispositivo, o si borras tus cookies.",
+    "save": "Confirmar",
     "cancel": "Cancelar",
-    "managePreferences": "Administra tus opciones de privacidad"
+    "managePreferences": "Tus opciones de privacidad"
   }
 }
