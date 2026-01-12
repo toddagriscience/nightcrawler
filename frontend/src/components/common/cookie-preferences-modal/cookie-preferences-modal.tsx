@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -61,9 +62,11 @@ export default function CookiePreferencesModal({
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription className="text-base">
+            {t('description')}
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <p>{t('description')}</p>
           <p>{t('toggleDescription')}</p>
         </div>
         <DialogFooter>
