@@ -83,7 +83,10 @@ describe('submitPublicInquiry', () => {
 
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({ error: 'Please enter a valid email.', data: null });
+    expect(result).toEqual({
+      error: 'Please enter a valid email.',
+      data: null,
+    });
     expect(submitToGoogleSheetsMock).not.toHaveBeenCalled();
   });
 

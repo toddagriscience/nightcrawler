@@ -23,7 +23,10 @@ const schema = z.object({
     .optional(),
 });
 
-function readOptionalString(formData: FormData, key: string): string | undefined {
+function readOptionalString(
+  formData: FormData,
+  key: string
+): string | undefined {
   const v = formData.get(key);
   if (typeof v !== 'string') return undefined;
   const t = v.trim();
@@ -62,7 +65,8 @@ export async function submitPublicInquiry(
     if (validated.data.name) payload.set('name', validated.data.name);
     if (validated.data.lastKnownEmail)
       payload.set('lastKnownEmail', validated.data.lastKnownEmail);
-    if (validated.data.response) payload.set('response', validated.data.response);
+    if (validated.data.response)
+      payload.set('response', validated.data.response);
 
     // Using the pre-existing Google Sheets helper
     await submitToGoogleSheets(payload, scriptUrl);
