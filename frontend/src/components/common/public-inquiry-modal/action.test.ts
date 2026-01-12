@@ -55,26 +55,25 @@ describe('submitPublicInquiry', () => {
     expect(payload.get('response')).toBe('Hello!');
   });
 
-  it('allows all fields to be optional (empty form still succeeds)', async () => {
+  it('returns an error when required fields are missing', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-    mocks.submitToGoogleSheets.mockResolvedValueOnce(undefined);
 
     const fd = makeFormData({});
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({ error: null, data: null });
-    expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
-
-    const [payload] = mocks.submitToGoogleSheets.mock.calls[0];
-    expect(payload.get('name')).toBeNull();
-    expect(payload.get('lastKnownEmail')).toBeNull();
-    expect(payload.get('response')).toBeNull();
+    expect(result.error).toBeTruthy();
+    expect(result.data).toBeNull();
+    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
   it('returns validation error if email is provided but invalid', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
-    const fd = makeFormData({ lastKnownEmail: 'not-an-email' });
+    const fd = makeFormData({
+      name: 'Inban',
+      lastKnownEmail: 'not-an-email',
+      response: 'Hello!',
+    });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -87,7 +86,11 @@ describe('submitPublicInquiry', () => {
   it('returns validation error if response is over 1500 chars', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
-    const fd = makeFormData({ response: 'a'.repeat(1501) });
+    const fd = makeFormData({
+      name: 'Inban',
+      lastKnownEmail: 'inban@example.com',
+      response: 'a'.repeat(1501),
+    });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -98,7 +101,11 @@ describe('submitPublicInquiry', () => {
   });
 
   it('returns config error if CONTACT_GOOGLE_SCRIPT_URL is missing', async () => {
-    const fd = makeFormData({ name: 'Inban' });
+    const fd = makeFormData({
+      name: 'Inban',
+      lastKnownEmail: 'inban@example.com',
+      response: 'Hello!',
+    });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -114,7 +121,11 @@ describe('submitPublicInquiry', () => {
       new Error('Sheets is down')
     );
 
-    const fd = makeFormData({ response: 'Test' });
+    const fd = makeFormData({
+      name: 'Inban',
+      lastKnownEmail: 'inban@example.com',
+      response: 'Test',
+    });
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ error: 'Sheets is down', data: null });
