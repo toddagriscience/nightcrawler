@@ -20,7 +20,6 @@ export {
   organicApplicationBasic,
   organicApplicationCertification,
   organicApplicationSplitOperation,
-  organicApplicationPerson,
   organicApplicationCropInfo,
   organicApplicationPastActivity,
   organicApplicationProductionFacility,
