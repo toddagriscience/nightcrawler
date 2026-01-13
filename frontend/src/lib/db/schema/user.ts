@@ -35,6 +35,10 @@ export const user = pgTable(
     job: varchar({ length: 200 }),
     /** The internal role of the user. */
     role: userRoleEnum('role').notNull(),
+    /** Did this person own and control the parcel for the past 3 years? */
+    didOwnAndControlParcel: boolean(),
+    /** Did this person manage and control (but not own) the parcel for the past 3 years? */
+    didManageAndControl: boolean(),
   },
   (table) => [uniqueIndex('user_email_idx').on(table.email)]
 );
