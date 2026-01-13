@@ -5,8 +5,8 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
 
-// @ts-ignore type error due to lack of types from this polyfill
 import userEvent from '@testing-library/user-event';
+// @ts-ignore type error due to lack of types from this polyfill
 import IntersectionObserver from 'intersection-observer-polyfill';
 
 global.ResizeObserver = ResizeObserver;
