@@ -9,7 +9,7 @@ export const farmApplicationActivities = pgTable(
   {
     farmId: integer()
       .primaryKey()
-      .references(() => farm.id),
+      .references(() => farm.id, { onDelete: 'cascade' }),
     /** If there is a potential for contamination, what measures are in place to prevent or otherwise avoid contamination? */
     contamination: text(),
     /** What, if any, are the farm's management strategies to reduce weed, insect or dieseases? */
@@ -34,7 +34,7 @@ export const farmApplicationFarmInfo = pgTable(
   {
     farmId: integer('farm_id')
       .primaryKey()
-      .references(() => farm.id),
+      .references(() => farm.id, { onDelete: 'cascade' }),
     /** Who are your target customers? */
     targetCustomers: text('target_customers'),
     /** What is your budget? */

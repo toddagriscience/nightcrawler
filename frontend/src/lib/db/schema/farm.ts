@@ -13,8 +13,12 @@ import {
 export const farm = pgTable('farm', {
   /** Auto increment id */
   id: serial().primaryKey().notNull(),
-  /** Name of the business */
-  businessName: varchar({ length: 200 }).notNull(),
+  /** Informal/non-legal name of the farm. Collected during Inbound Onboarding */
+  informalName: varchar({ length: 200 }),
+  /** Legal name of the farm. Collected during Internal Onboarding */
+  businessName: varchar({ length: 200 }),
+  /** The website of the farm */
+  businessWebsite: varchar({ length: 200 }),
   /** The date the farm was founded. Collected during Internal Onboarding */
   founded: date('founded'),
 });
@@ -23,7 +27,7 @@ export const farm = pgTable('farm', {
 export const farmLocation = pgTable('farmLocation', {
   /** Foreign key relationship back to the client */
   farmId: varchar({ length: 13 })
-    .references(() => farm.id)
+    .references(() => farm.id, { onDelete: 'cascade' })
     .notNull()
     .primaryKey(),
   /** The literal longitude/latitude position of the client. The exact location from where these coordinates were taken *does not matter.* */
@@ -50,7 +54,7 @@ export const farmCertificate = pgTable('farm_certificate', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
   farmId: varchar({ length: 13 })
-    .references(() => farm.id)
+    .references(() => farm.id, { onDelete: 'cascade' })
     .notNull(),
   /** The kind of certificate. See the certificateType enum for more info. */
   kind: certificateType().notNull(),

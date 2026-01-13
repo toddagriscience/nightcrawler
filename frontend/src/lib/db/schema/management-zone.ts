@@ -19,7 +19,7 @@ export const managementZone = pgTable('management_zone', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
   clientId: varchar({ length: 13 })
-    .references(() => farm.id)
+    .references(() => farm.id, { onDelete: 'cascade' })
     .notNull(),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
   location: point({ mode: 'tuple' }),
@@ -45,7 +45,7 @@ export const crop = pgTable('crop', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** The name of the crop -- realistically, a maximum length of 50 characters would be appropriate, but there's likely some obscure crop that has an extremely long name/variant. */
   name: varchar({ length: 200 }).notNull(),
@@ -65,7 +65,7 @@ export const fertilizer = pgTable('fertilizer', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** The name of the fertilizer */
   name: varchar({ length: 200 }),
@@ -83,7 +83,7 @@ export const livestock = pgTable('livestock', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** The name/description of the animal currently deployed at a management zone */
   animal: varchar({ length: 200 }),
@@ -106,7 +106,7 @@ export const pest = pgTable('pest', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** The formal name of this pest (which may either be a disease or an insect) */
   name: varchar({ length: 200 }).notNull(),

@@ -5,9 +5,8 @@ import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
-import { ActionResponse } from './types/action-response';
 
-/** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
+/**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
  * With that:
  *
@@ -93,7 +92,7 @@ export async function logout(): Promise<AuthResponse> {
 }
 
 /**
- * ONLY USE ON CLIENT SIDE! Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ * Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
  * @returns {Promise<boolean>} - True if the user is authenticated. */
 export async function checkAuthenticated(): Promise<boolean> {

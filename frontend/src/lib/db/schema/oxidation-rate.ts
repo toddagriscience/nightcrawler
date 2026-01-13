@@ -16,7 +16,9 @@ export const oxidationRate = pgTable('oxidation_rate', {
   /** Auto increment id -- no specific format for IDs for oxidation rate */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
-  analysisId: varchar({ length: 13 }).references(() => analysis.id),
+  analysisId: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'cascade',
+  }),
   /** The measured calcium to potassium ratio (read as Ca/K) */
   real_caK: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal calcium to potassium ratio (read as Ca/K) */

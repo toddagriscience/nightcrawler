@@ -10,7 +10,7 @@ export const solubility = pgTable('solubility', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
   analysisId: varchar({ length: 13 })
-    .references(() => analysis.id)
+    .references(() => analysis.id, { onDelete: 'cascade' })
     .notNull(),
   /** The real value of the mineral (see the unit field for units) */
   real_value: numeric({ precision: 9, scale: 4 }).notNull(),

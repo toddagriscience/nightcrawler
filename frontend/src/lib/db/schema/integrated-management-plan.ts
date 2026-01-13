@@ -10,13 +10,12 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** Foreign key relationship to the given analysis */
   analysis: varchar({ length: 13 })
     .primaryKey()
-    .notNull()
-    .references(() => analysis.id),
+    .references(() => analysis.id, { onDelete: 'set null' }),
   /** Written plan for management zone */
   plan: text(),
   /** The date this plan was written */

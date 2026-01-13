@@ -10,7 +10,7 @@ export const ph = pgTable('ph', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
   analysisId: varchar({ length: 13 })
-    .references(() => analysis.id)
+    .references(() => analysis.id, { onDelete: 'cascade' })
     .notNull(),
   /** The real ph value */
   realValue: numeric({ precision: 9, scale: 4 }).notNull(),

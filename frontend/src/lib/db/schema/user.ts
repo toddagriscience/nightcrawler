@@ -23,7 +23,7 @@ export const user = pgTable(
   'user',
   {
     id: serial().primaryKey(),
-    farmId: integer().references(() => farm.id),
+    farmId: integer().references(() => farm.id, { onDelete: 'cascade' }),
     firstName: varchar({ length: 200 }).notNull(),
     lastName: varchar({ length: 200 }).notNull(),
     email: citext().notNull().unique(),
@@ -46,7 +46,7 @@ export const userTacAcceptance = pgTable(
     id: serial().primaryKey(),
     userId: integer()
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: 'cascade' }),
     /** The time this was accepted, down to the second. */
     timeAccepted: timestamp('time_accepted').notNull(),
     /** Possibly redundant field, exists for extra legal security. */

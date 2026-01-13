@@ -9,7 +9,7 @@ export const analysis = pgTable('analysis', {
   id: varchar({ length: 13 }).primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id)
+    .references(() => managementZone.id, { onDelete: 'cascade' })
     .notNull(),
   /** Date of the analysis */
   analysisDate: date({ mode: 'date' }).notNull(),
