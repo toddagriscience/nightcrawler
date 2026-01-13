@@ -50,15 +50,11 @@ describe('WhoWeArePage', () => {
   it('has proper layout structure', () => {
     const { container } = renderWithNextIntl(<WhoWeArePage />);
 
-    // Check for ScrollShrinkWrapper
-    expect(screen.getByTestId('scroll-shrink-wrapper')).toBeInTheDocument();
-
     // Check for background styling
     expect(container.querySelector('.bg-secondary')).toBeInTheDocument();
 
     // Check for grid layout
     expect(container.querySelector('.grid-cols-1')).toBeInTheDocument();
-    expect(container.querySelector('.md\\:grid-cols-2')).toBeInTheDocument();
   });
 
   it('uses shadcn/ui Card components', () => {

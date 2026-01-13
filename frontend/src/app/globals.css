@@ -1,6 +1,7 @@
 /* Copyright Todd Agriscience, Inc. All rights reserved. */
 
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 /* Custom Wordmark Class */
 .wordmark {
@@ -228,6 +229,27 @@ header {
 /* Active state for navigation items */
 .text-underline-active::after {
   width: 100%;
+}
+
+/* Style for loading pages */
+.ellipsis::after {
+  content: '';
+  animation: ellipsis 1.5s infinite steps(4, end);
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '. .';
+  }
+  75% {
+    content: '. . .';
+  }
 }
 
 /* Underline animation expanding from the left */

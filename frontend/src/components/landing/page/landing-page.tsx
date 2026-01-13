@@ -67,22 +67,21 @@ export default function LandingPage() {
   }, [detectTheme]);
 
   return (
-    <div className="mb-32">
-      <ScrollShrinkWrapper>
+    // Note the use of `sm:` and `stopWidth={640}`
+    <div className="mb-32 sm:max-w-232 sm:mx-auto sm:w-[80%]">
+      <ScrollShrinkWrapper stopWidth={640}>
         <div ref={heroRef} className="h-[40vh]">
           <Hero />
         </div>
         <motion.div
-          className="flex h-fit  mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
+          className="flex h-fit pt-6 mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
           animate={{
             backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
             color: contextIsDark ? '#FDFDFB' : '#2A2727',
           }}
           ref={newsCarouselRef}
         >
-          <div className="xl:max-w-400 max-w-200 mx-auto">
-            <NewsHighlights />
-          </div>
+          <NewsHighlights />
           <Quote isDark={contextIsDark} />
         </motion.div>
       </ScrollShrinkWrapper>
