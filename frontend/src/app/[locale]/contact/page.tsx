@@ -35,7 +35,8 @@ export default function Contact() {
     getValues,
     clearErrors,
     setValue,
-    formState: { errors },
+    setError,
+    formState: { errors, isValid },
   } = useForm<ContactFormData>({
     defaultValues: {
       name: undefined,
@@ -44,6 +45,7 @@ export default function Contact() {
       farmName: '',
       email: '',
       phone: '',
+      website: undefined,
       isOrganic: undefined,
       isHydroponic: false,
       producesSprouts: false,
@@ -65,16 +67,11 @@ export default function Contact() {
     api?.scrollPrev();
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (!api) return;
 
     if (slide === 0) {
-      const isValid =
-        getValues().firstName &&
-        getValues().lastName &&
-        getValues().farmName &&
-        getValues().email &&
-        getValues().phone;
+      await trigger();
 
       if (isValid) {
         api.scrollNext();
@@ -82,7 +79,6 @@ export default function Contact() {
       } else {
         trigger();
       }
-      // Unfilled fields are automatically handled by useFormState
     } else {
       api.scrollNext();
     }
@@ -213,9 +209,11 @@ export default function Contact() {
                   placeholder={t('placeholders.phone')}
                   type="tel"
                   required
+                  defaultValue={'+1'}
                   {...register('phone', {
                     required: 'This field is required.',
                   })}
+                  maxLength={10}
                 />
               </Field>
             </FieldSet>

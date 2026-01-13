@@ -30,7 +30,7 @@
     },
     "questions": {
       "website": "What is {farm}'s website?",
-      "organic": "Is {farm} certified organic or biodynamic?",
+      "organic": "Does {farm} grow using organic, biodynamic or regenerative principles?",
       "hydroponic": "Is {farm} hydroponic?",
       "sprouts": "Does {farm} produce sprouts or other non-medium crops as a main product?"
     },

@@ -8,9 +8,23 @@ export const contactFormSchema = z.object({
   lastName: z.string().min(1, 'Last name is required').max(100),
   farmName: z.string().min(1, 'Farm name is required').max(100),
   email: z.email('Invalid email address').max(100),
-  phone: z.string().min(1, 'Phone number is required').max(100),
-  website: z.url('Invalid website URL').max(100).optional(),
-  isOrganic: z.boolean(),
+  // Very basic phone number handling
+  phone: z.preprocess((phone: string) => {
+    // 5554443333
+    // 555-444-3333
+    if ([10, 12].includes(phone.length) && phone.slice(1) != '+') {
+      return '+1' + phone.replaceAll('-', '');
+    }
+    // +15554443333
+    // +1-555-444-3333
+    else if ([12, 15].includes(phone.length)) {
+      return phone.replaceAll('-', '');
+    }
+    return phone;
+  }, z.e164('Invalid phone number')),
+  // Yes, this is stupid. See: https://github.com/colinhacks/zod/discussions/2801
+  website: z.string().url().or(z.literal('')),
+  isOrganic: z.boolean().optional(),
   isHydroponic: z.boolean(),
   producesSprouts: z.boolean(),
 });
