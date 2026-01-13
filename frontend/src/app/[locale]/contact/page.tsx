@@ -44,7 +44,9 @@ export default function Contact() {
       farmName: '',
       email: '',
       phone: '',
-      isOrganic: false,
+      isOrganic: undefined,
+      isHydroponic: false,
+      producesSprouts: false,
     },
     resolver: zodResolver(contactFormSchema),
   });
@@ -86,17 +88,23 @@ export default function Contact() {
     }
   }
 
+  const isMatch =
+    (isWorkEmail(getValues().email) || getValues().website) &&
+    (getValues().isOrganic || getValues().isOrganic === undefined) &&
+    !getValues().isHydroponic &&
+    !getValues().producesSprouts;
+
   return (
     <form action={submitEmailAction}>
       <Carousel
         setApi={setApi}
-        className="max-w-[800px] w-[80vw] mx-auto h-[90vh] flex flex-col justify-center"
+        className="mx-auto flex h-[90vh] w-[80vw] max-w-[800px] flex-col justify-center"
         plugins={[Fade()]}
         opts={{ duration: 30, watchDrag: false }}
       >
-        <CarouselContent>
+        <CarouselContent className="p-1">
           <CarouselItem>
-            <FieldSet className="gap-4 flex flex-col">
+            <FieldSet className="flex flex-col gap-4">
               {/** Honeypot */}
               <Field className="hidden">
                 <FieldLabel>{t('fields.name')}</FieldLabel>
@@ -238,7 +246,7 @@ export default function Contact() {
               <div className="flex gap-8">
                 <Button
                   type="button"
-                  className="text-lg hover:cursor-pointer text-underline"
+                  className="text-underline text-lg hover:cursor-pointer"
                   onClick={() => {
                     setValue('isOrganic', true);
                     api?.scrollNext();
@@ -249,7 +257,7 @@ export default function Contact() {
 
                 <Button
                   type="button"
-                  className="text-lg hover:cursor-pointer text-underline"
+                  className="text-underline text-lg hover:cursor-pointer"
                   onClick={() => {
                     setValue('isOrganic', false);
                     api?.scrollNext();
@@ -262,15 +270,77 @@ export default function Contact() {
           </CarouselItem>
 
           <CarouselItem>
-            {isWorkEmail(getValues().email) || getValues().website ? (
-              <div className="flex flex-col text-center justify-center h-full gap-8">
+            <FieldSet>
+              <h2>
+                {t('questions.hydroponic', { farm: getValues().farmName })}
+              </h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isHydroponic', true);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isHydroponic', false);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </CarouselItem>
+
+          <CarouselItem>
+            <FieldSet>
+              <h2>{t('questions.sprouts', { farm: getValues().farmName })}</h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('producesSprouts', true);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('producesSprouts', false);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </CarouselItem>
+
+          <CarouselItem>
+            {isMatch ? (
+              <div className="flex h-full flex-col justify-center gap-8 text-center">
                 <h1 className="text-xl md:text-5xl">
                   {t('results.matchTitle')}
                 </h1>
                 <p>{t('results.matchBody')}</p>
               </div>
             ) : (
-              <div className="flex flex-col text-center justify-center h-full gap-8">
+              <div className="flex h-full flex-col justify-center gap-8 text-center">
                 <h1 className="text-xl md:text-5xl">
                   {t('results.noMatchTitle')}
                 </h1>
@@ -280,7 +350,7 @@ export default function Contact() {
           </CarouselItem>
         </CarouselContent>
 
-        <div className="flex justify-between mt-4 min-h-10">
+        <div className="mt-4 flex min-h-10 justify-between">
           {slide !== 0 && slide !== totalSlides - 1 ? (
             <FadeIn>
               <Button

@@ -30,7 +30,9 @@
     },
     "questions": {
       "website": "¿Cuál es el sitio web de {farm}?",
-      "organic": "¿{farm} está certificada como orgánica o biodinámica?"
+      "organic": "¿{farm} está certificada como orgánica o biodinámica?",
+      "hydroponic": "¿{farm} es hidropónica?",
+      "sprouts": "¿{farm} produce brotes u otros cultivos sin medio como producto principal?"
     },
     "results": {
       "matchTitle": "¡Es una coincidencia!",

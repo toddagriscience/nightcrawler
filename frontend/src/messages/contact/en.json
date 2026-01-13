@@ -30,7 +30,9 @@
     },
     "questions": {
       "website": "What is {farm}'s website?",
-      "organic": "Is {farm} certified organic or biodynamic?"
+      "organic": "Is {farm} certified organic or biodynamic?",
+      "hydroponic": "Is {farm} hydroponic?",
+      "sprouts": "Does {farm} produce sprouts or other non-medium crops as a main product?"
     },
     "results": {
       "matchTitle": "It's a match!",
