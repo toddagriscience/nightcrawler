@@ -107,7 +107,6 @@ export async function handleAuthRouting(
  */
 export function isRouteProtected(pathname: string): boolean {
   return protectedUrls.some((pattern) => {
-    
     // Handle exact match for '/'
     if (pattern === '/' && pathname.length > 1) {
       return false;
