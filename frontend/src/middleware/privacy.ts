@@ -46,6 +46,7 @@ export function applyPrivacyControls(
 
     cookiesToRemove.forEach((cookieName) => {
       if (request.cookies.has(cookieName)) {
+        // eslint-disable-next-line
         response.cookies.delete(cookieName);
         logger.log(`[GPC] Removed non-essential cookie: ${cookieName}`);
       }

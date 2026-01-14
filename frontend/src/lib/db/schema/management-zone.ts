@@ -6,27 +6,22 @@ import {
   pgTable,
   point,
   serial,
+  timestamp,
   varchar,
   boolean,
   text,
 } from 'drizzle-orm/pg-core';
-import { client } from './client';
-
-/** The current risk of contamination for a given management zone, calculated from other metrics. */
-export const contaminationRisk = pgEnum('contamination_risk', [
-  'low',
-  'med',
-  'high',
-]);
+import { farm } from './farm';
+import { levelCategory } from './level-category';
 
 /** A management zone. For the majority of the time, you may think of this as a field. */
 export const managementZone = pgTable('management_zone', {
   /** Auto increment id -- no specific format for IDs for management zones */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
-  clientId: varchar({ length: 13 })
-    .references(() => client.id)
-    .notNull(),
+  clientId: varchar({ length: 13 }).references(() => farm.id, {
+    onDelete: 'set null',
+  }),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
   location: point({ mode: 'tuple' }),
   /** The formal name of a given management zone */
@@ -42,7 +37,9 @@ export const managementZone = pgTable('management_zone', {
   /** Some areas have aqueducts that feed to fields -- if this is false, the farm is either receiving plenty of water or has enough runoff to feed back into the aqueduct. If this field is true, the aqueduct is currently being restricted.  */
   waterConvservation: boolean(),
   /** The evaluated contimation risk of the zone. See the documentation of the enum for more details. */
-  contaminationRisk: contaminationRisk(),
+  contaminationRisk: levelCategory(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** Represents a crop for a given field. */
@@ -50,9 +47,9 @@ export const crop = pgTable('crop', {
   /** Auto increment id -- no specific format for IDs for crops */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id)
-    .notNull(),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name of the crop -- realistically, a maximum length of 50 characters would be appropriate, but there's likely some obscure crop that has an extremely long name/variant. */
   name: varchar({ length: 200 }).notNull(),
   /** The date this crop was planted. */
@@ -63,6 +60,8 @@ export const crop = pgTable('crop', {
   isCovercrop: boolean(),
   /** Generic notes for each crop (a given client might want to list their reasoning behind using this crop, etc.) */
   notes: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** Represents a fertilizer that was used on a field */
@@ -70,9 +69,9 @@ export const fertilizer = pgTable('fertilizer', {
   /** Auto increment id -- no specific format for IDs for fertilizer */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id)
-    .notNull(),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name of the fertilizer */
   name: varchar({ length: 200 }),
   /** The date that the fertilizer was initially used */
@@ -81,6 +80,8 @@ export const fertilizer = pgTable('fertilizer', {
   last_used: date({ mode: 'date' }).notNull(),
   /** Generic notes for each livestock */
   notes: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** Describes some animal/group of animals living on or spending the majority of their time on a given management zone. Also details when this animal/group of animals is "deployed" (when they're in the management zone). */
@@ -88,9 +89,9 @@ export const livestock = pgTable('livestock', {
   /** Auto increment id -- no specific format for IDs for livestock */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id)
-    .notNull(),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name/description of the animal currently deployed at a management zone */
   animal: varchar({ length: 200 }),
   /** The date this group of animals was initially deployed. */
@@ -101,6 +102,8 @@ export const livestock = pgTable('livestock', {
   currentlyDeployed: boolean().notNull(),
   /** Generic notes for each livestock */
   notes: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** The type of pest, either an insect or a disease. */
@@ -111,9 +114,9 @@ export const pest = pgTable('pest', {
   /** Auto increment id -- no specific format for IDs for pests */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id)
-    .notNull(),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The formal name of this pest (which may either be a disease or an insect) */
   name: varchar({ length: 200 }).notNull(),
   /** The first time this pest was spotted. */
@@ -124,4 +127,6 @@ export const pest = pgTable('pest', {
   type: pestType().notNull(),
   /** Generic notes for each pest */
   notes: text(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

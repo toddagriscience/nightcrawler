@@ -1,19 +1,23 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import {
+  numeric,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
-
-/** A general tag for the ph of a given analysis */
-export const phTag = pgEnum('ph_tag', ['Low', 'Med', 'High']);
+import { levelCategory } from './level-category';
 
 /** The ph data for a given analysis. */
 export const ph = pgTable('ph', {
   /** Auto increment id -- no specific format for IDs for oxidation rate */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
-  analysisId: varchar({ length: 13 })
-    .references(() => analysis.id)
-    .notNull(),
+  analysisId: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'set null',
+  }),
   /** The real ph value */
   realValue: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal upper value (ex. the ph value should be between idealValueLower and idealValueUpper) */
@@ -25,5 +29,7 @@ export const ph = pgTable('ph', {
   /** The value that, if the real ph value is greater than, warrants a tag of "high" */
   high: numeric({ precision: 9, scale: 4 }).notNull(),
   /** A general tag for the results of a ph analysis */
-  tag: phTag(),
+  tag: levelCategory(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

@@ -177,8 +177,11 @@ describe('Privacy Middleware', () => {
 
       applyPrivacyControls(mockRequest, mockResponse, true);
 
+      // eslint-disable-next-line
       expect(mockResponse.cookies.delete).toHaveBeenCalledWith('analytics');
+      // eslint-disable-next-line
       expect(mockResponse.cookies.delete).toHaveBeenCalledWith('tracking');
+      // eslint-disable-next-line
       expect(mockResponse.cookies.delete).toHaveBeenCalledWith('marketing');
       expect(logger.log).toHaveBeenCalledWith(
         '[GPC] Removed non-essential cookie: analytics'
