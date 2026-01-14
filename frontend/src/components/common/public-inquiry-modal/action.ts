@@ -5,41 +5,31 @@
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import logger from '@/lib/logger';
 import type { ActionResponse } from '@/lib/types/action-response';
+import z from 'zod';
 import { publicInquirySchema } from './types';
 
 export async function submitPublicInquiry(
   formData: FormData
 ): Promise<ActionResponse> {
   const raw = {
-    name: typeof formData.get('name') === 'string' ? formData.get('name') : '',
-    lastKnownEmail:
-      typeof formData.get('lastKnownEmail') === 'string'
-        ? formData.get('lastKnownEmail')
-        : '',
-    response:
-      typeof formData.get('response') === 'string'
-        ? formData.get('response')
-        : '',
+    name: formData.get('name'),
+    lastKnownEmail: formData.get('lastKnownEmail'),
+    response: formData.get('response'),
   };
 
   const validated = publicInquirySchema.safeParse(raw);
   if (!validated.success) {
-    const msg = validated.error.issues[0]?.message ?? 'Invalid submission.';
+    const tree = z.treeifyError(validated.error);
+
+    const msg =
+      tree.errors[0] ??
+      tree.properties?.name?.errors[0] ??
+      tree.properties?.lastKnownEmail?.errors[0] ??
+      tree.properties?.response?.errors[0] ??
+      'Invalid submission.';
+
     return { error: msg, data: null };
   }
-
-  const name =
-    validated.data.name?.trim?.() ?? String(validated.data.name ?? '').trim();
-  const lastKnownEmail =
-    validated.data.lastKnownEmail?.trim?.() ??
-    String(validated.data.lastKnownEmail ?? '').trim();
-  const response =
-    validated.data.response?.trim?.() ??
-    String(validated.data.response ?? '').trim();
-
-  if (!name) return { error: 'Name is required.', data: null };
-  if (!lastKnownEmail) return { error: 'Email is required.', data: null };
-  if (!response) return { error: 'Response is required.', data: null };
 
   const scriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
   if (!scriptUrl) {
@@ -50,12 +40,8 @@ export async function submitPublicInquiry(
   }
 
   try {
-    const payload = new FormData();
-    payload.set('name', name);
-    payload.set('lastKnownEmail', lastKnownEmail);
-    payload.set('response', response);
-
-    await submitToGoogleSheets(payload, scriptUrl);
+    // Per review: if we've validated successfully, just submit the original formData
+    await submitToGoogleSheets(formData, scriptUrl);
 
     return { error: null, data: null };
   } catch (err) {

@@ -47,12 +47,13 @@ describe('submitPublicInquiry', () => {
     expect(result).toEqual({ error: null, data: null });
     expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
 
-    const [payload, url] = mocks.submitToGoogleSheets.mock.calls[0];
+    const [submittedFormData, url] = mocks.submitToGoogleSheets.mock.calls[0];
     expect(url).toBe('https://example.com/script');
-    expect(payload).toBeInstanceOf(FormData);
-    expect(payload.get('name')).toBe('Inban');
-    expect(payload.get('lastKnownEmail')).toBe('inban@example.com');
-    expect(payload.get('response')).toBe('Hello!');
+    expect(submittedFormData).toBeInstanceOf(FormData);
+
+    expect(submittedFormData.get('name')).toBe('Inban');
+    expect(submittedFormData.get('lastKnownEmail')).toBe('inban@example.com');
+    expect(submittedFormData.get('response')).toBe('Hello!');
   });
 
   it('returns an error when required fields are missing', async () => {
@@ -61,8 +62,7 @@ describe('submitPublicInquiry', () => {
     const fd = makeFormData({});
     const result = await submitPublicInquiry(fd);
 
-    expect(result.error).toBeTruthy();
-    expect(result.data).toBeNull();
+    expect(result).toEqual({ error: 'Name is required.', data: null });
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
@@ -74,6 +74,7 @@ describe('submitPublicInquiry', () => {
       lastKnownEmail: 'not-an-email',
       response: 'Hello!',
     });
+
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -91,6 +92,7 @@ describe('submitPublicInquiry', () => {
       lastKnownEmail: 'inban@example.com',
       response: 'a'.repeat(1501),
     });
+
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -106,6 +108,7 @@ describe('submitPublicInquiry', () => {
       lastKnownEmail: 'inban@example.com',
       response: 'Hello!',
     });
+
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({
@@ -126,6 +129,7 @@ describe('submitPublicInquiry', () => {
       lastKnownEmail: 'inban@example.com',
       response: 'Test',
     });
+
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ error: 'Sheets is down', data: null });
