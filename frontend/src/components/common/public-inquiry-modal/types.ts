@@ -9,10 +9,7 @@ const trimToString = (v: unknown) => {
 export const publicInquirySchema = z.object({
   name: z.preprocess(
     trimToString,
-    z
-      .string()
-      .min(1, 'Name is required.')
-      .max(200, 'Name is too long.')
+    z.string().min(1, 'Name is required.').max(200, 'Name is too long.')
   ),
   lastKnownEmail: z.preprocess(
     trimToString,
