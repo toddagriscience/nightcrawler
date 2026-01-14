@@ -1,4 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import z from 'zod';
 
 const trimToString = (v: unknown) => {
