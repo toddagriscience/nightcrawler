@@ -8,8 +8,6 @@ import {
   varchar,
   timestamp,
   cidr,
-  uniqueIndex,
-  index,
 } from 'drizzle-orm/pg-core';
 import { pgEnum } from 'drizzle-orm/pg-core';
 import { farm } from './farm';
@@ -42,17 +40,20 @@ export const user = pgTable('user', {
 });
 
 /** THIS SHOULD NEVER BE MODIFIED AFTER IT IS CREATED! A "copy" of the digital acceptance of the Terms and Conditions from Todd. */
-export const userTacAcceptance = pgTable('user_tac_acceptance', {
-  id: serial().primaryKey(),
-  userId: integer().references(() => user.id, { onDelete: 'set null' }),
-  /** The time this was accepted, down to the second. */
-  timeAccepted: timestamp('time_accepted').notNull(),
-  /** Possibly redundant field, exists for extra legal security. */
-  accepted: boolean().notNull().default(false),
-  /** The IP address of the user that accepted the agreement. Keep in mind that this is still tied to a row in the `user` table -- i.e. the IP address is NOT the sole bit of proof that a certain user accepted the TAC.*/
-  ipAddress: cidr().notNull(),
-  /** The version of the TAC accepted. */
-  version: varchar({ length: 200 }).notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
-});
+export const accountAgreementAcceptance = pgTable(
+  'account_agreement_acceptance',
+  {
+    id: serial().primaryKey(),
+    userId: integer().references(() => user.id, { onDelete: 'set null' }),
+    /** The time this was accepted, down to the second. */
+    timeAccepted: timestamp('time_accepted').notNull(),
+    /** Possibly redundant field, exists for extra legal security. */
+    accepted: boolean().notNull().default(false),
+    /** The IP address of the user that accepted the agreement. Keep in mind that this is still tied to a row in the `user` table -- i.e. the IP address is NOT the sole bit of proof that a certain user accepted the TAC.*/
+    ipAddress: cidr().notNull(),
+    /** The version of the TAC accepted. */
+    version: varchar({ length: 200 }).notNull(),
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow(),
+  }
+);

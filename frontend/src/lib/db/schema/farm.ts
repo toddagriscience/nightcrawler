@@ -52,8 +52,6 @@ export const farmLocation = pgTable('farmLocation', {
 
 /** Some farms have certain certificates that require them to act and/or behave in a certain manner, and in some scenarios, Todd has to adjust their practices to accomdate these requirements. These certificates may be abbreviated as NOP, DEM, GAP, and LFI respectively. */
 export const certificateType = pgEnum('certificate_type', [
-  'National Organic Program',
-  'Demeter',
   'Good Agriculture Practices',
   'Local/Facility Inspection',
   'Organic',
@@ -66,8 +64,9 @@ export const farmCertificate = pgTable('farm_certificate', {
   /** Auto increment id -- no specific format for IDs for client certificates */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
-  farmId: varchar({ length: 13 })
-    .references(() => farm.id, { onDelete: 'set null' }),
+  farmId: varchar({ length: 13 }).references(() => farm.id, {
+    onDelete: 'set null',
+  }),
   /** The kind of certificate. See the certificateType enum for more info. */
   kind: certificateType().notNull(),
   /** The date this certificate was granted/initialized. Expiry date is not given because certificates can be pulled before they expire. */
