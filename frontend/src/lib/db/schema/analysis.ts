@@ -8,8 +8,9 @@ export const analysis = pgTable('analysis', {
   /** Soil analysis ID in the form of XXXXXX-XXXXXX, where X is an alphanumeric character. */
   id: varchar({ length: 13 }).primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'set null' }),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** Date of the analysis */
   analysisDate: date({ mode: 'date' }).notNull(),
   createdAt: timestamp().notNull().defaultNow(),

@@ -19,8 +19,9 @@ export const managementZone = pgTable('management_zone', {
   /** Auto increment id -- no specific format for IDs for management zones */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
-  clientId: varchar({ length: 13 })
-    .references(() => farm.id, { onDelete: 'set null' }),
+  clientId: varchar({ length: 13 }).references(() => farm.id, {
+    onDelete: 'set null',
+  }),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
   location: point({ mode: 'tuple' }),
   /** The formal name of a given management zone */
@@ -46,8 +47,9 @@ export const crop = pgTable('crop', {
   /** Auto increment id -- no specific format for IDs for crops */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'set null' }),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name of the crop -- realistically, a maximum length of 50 characters would be appropriate, but there's likely some obscure crop that has an extremely long name/variant. */
   name: varchar({ length: 200 }).notNull(),
   /** The date this crop was planted. */
@@ -67,8 +69,9 @@ export const fertilizer = pgTable('fertilizer', {
   /** Auto increment id -- no specific format for IDs for fertilizer */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'set null' }),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name of the fertilizer */
   name: varchar({ length: 200 }),
   /** The date that the fertilizer was initially used */
@@ -86,8 +89,9 @@ export const livestock = pgTable('livestock', {
   /** Auto increment id -- no specific format for IDs for livestock */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'set null' }),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The name/description of the animal currently deployed at a management zone */
   animal: varchar({ length: 200 }),
   /** The date this group of animals was initially deployed. */
@@ -110,8 +114,9 @@ export const pest = pgTable('pest', {
   /** Auto increment id -- no specific format for IDs for pests */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
-  managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'set null' }),
+  managementZone: serial().references(() => managementZone.id, {
+    onDelete: 'set null',
+  }),
   /** The formal name of this pest (which may either be a disease or an insect) */
   name: varchar({ length: 200 }).notNull(),
   /** The first time this pest was spotted. */

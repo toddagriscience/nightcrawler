@@ -1,6 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgEnum, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  numeric,
+  pgEnum,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 
 /** A general tag for the oxidation rate of a given analysis. */

@@ -1,6 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  numeric,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 import { levelCategory } from './level-category';
 
@@ -9,8 +15,9 @@ export const ph = pgTable('ph', {
   /** Auto increment id -- no specific format for IDs for oxidation rate */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
-  analysisId: varchar({ length: 13 })
-    .references(() => analysis.id, { onDelete: 'set null' }),
+  analysisId: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'set null',
+  }),
   /** The real ph value */
   realValue: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal upper value (ex. the ph value should be between idealValueLower and idealValueUpper) */

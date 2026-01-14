@@ -16,8 +16,9 @@ export const mineral = pgTable('mineral', {
   /** Auto increment id -- no specific format for IDs for minerals */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
-  analysisId: varchar({ length: 13 })
-    .references(() => analysis.id, { onDelete: 'set null' }),
+  analysisId: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'set null',
+  }),
   /** The name of the mineral in reference. */
   name: varchar({ length: 200 }).notNull(),
   /** The real value of the mineral (see the unit field for units) */
