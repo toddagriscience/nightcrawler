@@ -15,6 +15,7 @@
 
   /* Shadcn/ui CSS variables mapped to Todd theme */
   --background: #fcfbf8; /* Your cream background */
+  --background-platform: #ffffff; /* Platform background for authenticated routes */
   --background-secondary: #ccc5b5; /* Your light card background */
   --foreground: #2a2727; /* Your primary text */
   --card: #ccc5b5; /* Your light card background */
