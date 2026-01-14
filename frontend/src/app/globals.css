@@ -1,6 +1,7 @@
 /* Copyright Todd Agriscience, Inc. All rights reserved. */
 
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 /* Custom Wordmark Class */
 .wordmark {

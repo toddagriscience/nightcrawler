@@ -1,7 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 
 /**
  * Privacy page component
@@ -19,6 +22,9 @@ export default function PrivacyPage() {
           {t('websitePrivacyPolicy')}
         </h2>
         <p className="text-sm text-gray-600">{t('effective')}</p>
+        <div className="mt-8">
+          <CookiePreferencesModal />
+        </div>
       </div>
 
       {/* Supplements Notice */}

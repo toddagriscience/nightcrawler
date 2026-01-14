@@ -1,6 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import {
+  numeric,
+  pgEnum,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 
 /** A general tag for the oxidation rate of a given analysis. */
@@ -16,7 +23,9 @@ export const oxidationRate = pgTable('oxidation_rate', {
   /** Auto increment id -- no specific format for IDs for oxidation rate */
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
-  analysisId: varchar({ length: 13 }).references(() => analysis.id),
+  analysisId: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'set null',
+  }),
   /** The measured calcium to potassium ratio (read as Ca/K) */
   real_caK: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal calcium to potassium ratio (read as Ca/K) */
@@ -29,4 +38,6 @@ export const oxidationRate = pgTable('oxidation_rate', {
   tag: oxidationRateTag(),
   /** The unit which this mineral is being measured in. */
   units: varchar({ length: 100 }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
