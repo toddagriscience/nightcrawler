@@ -103,7 +103,7 @@ export async function handleAuthRouting(
  * Helper function to check for protected routes as seen in `protectedUrls`.
  *
  * @param pathname The entire path, from request.nextUrl.pathname
- * @returns Whether the route meets the given criteria for an internationalized protectedRoute
+ * @returns Whether the route matches any pattern in protectedUrls
  */
 export function isRouteProtected(pathname: string): boolean {
   return protectedUrls.some((pattern) => {
