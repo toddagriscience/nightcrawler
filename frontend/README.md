@@ -159,6 +159,15 @@ If you'd like to:
 
 We utilize multiple different UI libraries as well as Tailwind v4. Global styles are contained in `./src/app/globals.css`
 
+#### Background Colors
+
+The site uses two separate background colors:
+
+- **Marketing Site Background** (`#fcfbf8`): Used for all unauthenticated routes (marketing site pages under `[locale]` routes). Defined as `--background` CSS variable in `globals.css`.
+- **Platform Background** (`#ffffff`): Used for all authenticated routes (platform pages like `/`, `/account`, etc.). Defined as `--background-platform` CSS variable in `globals.css` and can be used with the `bg-background-platform` Tailwind class.
+
+Both colors can be modified in `./src/app/globals.css` in the `:root` CSS variables section.
+
 ## 📝 Contributing
 
 Refer to `CONTRIBUTING.md`
