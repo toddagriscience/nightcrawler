@@ -2,264 +2,384 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import Link from 'next/link';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { FadeIn } from '@/components/common';
-import { submitToGoogleSheetsHelper } from './action';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import { Input } from '@/components/ui/input';
+import { submitEmail } from '../careers/action';
+import isWorkEmail from '@/lib/utils/is-work-email';
+import { Button } from '@/components/ui';
+import { ContactFormData, contactFormSchema } from './types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Fade from 'embla-carousel-fade';
+import { ErrorMessage } from '@hookform/error-message';
+import { useForm } from 'react-hook-form';
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 
 export default function Contact() {
   const t = useTranslations('contactPage');
-  const MAX_MESSAGE_LENGTH = 1500;
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    reason: '',
-    message: '',
+  const [state, submitEmailAction] = useActionState(submitEmail, null);
+  const [slide, setSlide] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(-1);
+  const [api, setApi] = useState<CarouselApi>();
+  const {
+    register,
+    trigger,
+    getValues,
+    clearErrors,
+    setValue,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<ContactFormData>({
+    defaultValues: {
+      name: undefined,
+      firstName: '',
+      lastName: '',
+      farmName: '',
+      email: '',
+      phone: '',
+      website: undefined,
+      isOrganic: undefined,
+      isHydroponic: false,
+      producesSprouts: false,
+    },
+    resolver: zodResolver(contactFormSchema),
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!api) return;
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    setTotalSlides(api.slideNodes().length);
+    setSlide(api.selectedScrollSnap());
 
-    if (formData.message.length > MAX_MESSAGE_LENGTH) {
-      setError(
-        `Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters.`
-      );
-      return;
-    }
+    api.on('select', () => setSlide(api.selectedScrollSnap()));
+    api.on('slidesChanged', () => setTotalSlides(api.slideNodes().length));
+  }, [api]);
 
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const submissionData: Record<string, string> = {
-        ...formData,
-      };
-
-      const submitFormData = new FormData();
-
-      for (const key in submissionData) {
-        const value = submissionData[key];
-
-        if (value !== undefined && value !== null) {
-          submitFormData.append(key, String(value));
-        }
-      }
-
-      await submitToGoogleSheetsHelper(submitFormData);
-      setIsSuccessfulSubmit(true);
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setError(
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (isSuccessfulSubmit) {
-    return (
-      <FadeIn>
-        <section className="flex h-screen flex-col items-center justify-center px-6 text-center text-muted-foreground">
-          <h1 className="mb-6 text-[70px] leading-none font-light md:text-[110px]">
-            {t('thankYou.title')}
-          </h1>
-          <p className="mb-8 max-w-2xl text-xl leading-relaxed font-light md:text-[24px]">
-            {t('thankYou.content')}
-          </p>
-          <Link
-            href="/impact"
-            className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-6 py-3 text-lg transition hover:bg-foreground/5"
-          >
-            {t('thankYou.impact')} <span>→</span>
-          </Link>
-        </section>
-      </FadeIn>
-    );
+  function handleBack() {
+    api?.scrollPrev();
   }
 
-  return (
-    <>
-      <div className="text-foreground mb-16 min-h-screen p-8 md:p-16">
-        <div className="mx-auto max-w-3xl pt-8">
-          <h1 className="text-foreground/80 mb-4 text-[64px] font-[300]">
-            {t('title')}
-          </h1>
-          <p className="text-foreground/60 mb-16 text-xl font-[200]">
-            {t('description')}
-          </p>
+  async function handleNext() {
+    if (!api) return;
 
-          <form onSubmit={handleSubmit} className="space-y-16">
-            {error && (
-              <div className="rounded-md border border-red-100 bg-red-50 p-4">
-                <p className="text-sm font-[200] text-red-600">{error}</p>
+    if (slide === 0) {
+      await trigger();
+
+      if (isValid) {
+        api.scrollNext();
+        clearErrors();
+      } else {
+        trigger();
+      }
+    } else {
+      api.scrollNext();
+    }
+  }
+
+  const isMatch =
+    (isWorkEmail(getValues().email) || getValues().website) &&
+    (getValues().isOrganic || getValues().isOrganic === undefined) &&
+    !getValues().isHydroponic &&
+    !getValues().producesSprouts;
+
+  return (
+    <form action={submitEmailAction}>
+      <Carousel
+        setApi={setApi}
+        className="mx-auto flex h-[90vh] w-[80vw] max-w-[800px] flex-col justify-center"
+        plugins={[Fade()]}
+        opts={{ duration: 30, watchDrag: false }}
+      >
+        <CarouselContent className="p-1">
+          <CarouselItem>
+            <FieldSet className="flex flex-col gap-4">
+              {/** Honeypot */}
+              <Field className="hidden">
+                <FieldLabel>{t('fields.name')}</FieldLabel>
+                <Input
+                  placeholder={t('placeholders.name')}
+                  type="text"
+                  {...register('name')}
+                />
+              </Field>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>{t('fields.firstName')}</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="firstName"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Input
+                    placeholder={t('placeholders.firstName')}
+                    required
+                    {...register('firstName', {
+                      required: 'This field is required.',
+                    })}
+                  />
+                </Field>
+
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>{t('fields.lastName')}</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="lastName"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Input
+                    placeholder={t('placeholders.lastName')}
+                    required
+                    {...register('lastName', {
+                      required: 'This field is required.',
+                    })}
+                  />
+                </Field>
+              </div>
+
+              <Field>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.farmName')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="farmName"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
+                <Input
+                  placeholder={t('placeholders.farmName')}
+                  required
+                  {...register('farmName', {
+                    required: 'This field is required.',
+                  })}
+                />
+              </Field>
+
+              <Field>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.email')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
+                <Input
+                  placeholder={t('placeholders.email')}
+                  type="email"
+                  required
+                  {...register('email', {
+                    required: 'This field is required.',
+                  })}
+                />
+              </Field>
+
+              <Field>
+                <div className="flex flex-row justify-between">
+                  <FieldLabel>{t('fields.phone')}</FieldLabel>
+                  <ErrorMessage
+                    errors={errors}
+                    name="phone"
+                    render={({ message }) => (
+                      <FormErrorMessage errorMessage={message} />
+                    )}
+                  />
+                </div>
+                <Input
+                  placeholder={t('placeholders.phone')}
+                  type="tel"
+                  required
+                  defaultValue={'+1'}
+                  {...register('phone', {
+                    required: 'This field is required.',
+                  })}
+                  maxLength={10}
+                />
+              </Field>
+            </FieldSet>
+          </CarouselItem>
+
+          {!isWorkEmail(getValues().email) && (
+            <CarouselItem>
+              <FieldSet>
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>
+                      {t('questions.website', { farm: getValues().farmName })}
+                    </FieldLabel>
+                  </div>
+                  <Input
+                    placeholder={t('placeholders.website')}
+                    {...register('website')}
+                  />
+                </Field>
+              </FieldSet>
+            </CarouselItem>
+          )}
+
+          <CarouselItem>
+            <FieldSet>
+              <h2>{t('questions.organic', { farm: getValues().farmName })}</h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isOrganic', true);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isOrganic', false);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </CarouselItem>
+
+          <CarouselItem>
+            <FieldSet>
+              <h2>
+                {t('questions.hydroponic', { farm: getValues().farmName })}
+              </h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isHydroponic', true);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('isHydroponic', false);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </CarouselItem>
+
+          <CarouselItem>
+            <FieldSet>
+              <h2>{t('questions.sprouts', { farm: getValues().farmName })}</h2>
+
+              <div className="flex gap-8">
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('producesSprouts', true);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.yes')}
+                </Button>
+
+                <Button
+                  type="button"
+                  className="text-underline text-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setValue('producesSprouts', false);
+                    api?.scrollNext();
+                  }}
+                >
+                  {t('buttons.no')}
+                </Button>
+              </div>
+            </FieldSet>
+          </CarouselItem>
+
+          <CarouselItem>
+            {isMatch ? (
+              <div className="flex h-full flex-col justify-center gap-8 text-center">
+                <h1 className="text-xl md:text-5xl">
+                  {t('results.matchTitle')}
+                </h1>
+                <p>{t('results.matchBody')}</p>
+              </div>
+            ) : (
+              <div className="flex h-full flex-col justify-center gap-8 text-center">
+                <h1 className="text-xl md:text-5xl">
+                  {t('results.noMatchTitle')}
+                </h1>
+                <p>{t('results.noMatchBody')}</p>
               </div>
             )}
+          </CarouselItem>
+        </CarouselContent>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="fullName"
-                className="text-foreground/80 text-xl font-[200]"
+        <div className="mt-4 flex min-h-10 justify-between">
+          {slide !== 0 && slide !== totalSlides - 1 ? (
+            <FadeIn>
+              <Button
+                className="text-xl hover:cursor-pointer"
+                type="button"
+                onClick={handleBack}
+                data-testid="button-back"
               >
-                {t('nameLabel')}
-              </label>
-              <input
-                id="fullName"
-                type="text"
-                data-testid="name-input"
-                required
-                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.fullName}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, fullName: e.target.value }))
-                }
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
+                {t('buttons.back')}
+              </Button>
+            </FadeIn>
+          ) : (
+            <div />
+          )}
 
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="text-foreground/80 text-xl font-[200]"
+          {slide < totalSlides - 2 ? (
+            <FadeIn>
+              <Button
+                className="text-xl hover:cursor-pointer"
+                type="button"
+                onClick={handleNext}
+                data-testid="button-next"
               >
-                {t('emailLabel')}
-              </label>
-              <input
-                id="email"
-                type="email"
-                data-testid="email-input"
-                required
-                className="border-foreground/20 w-full border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
-                }
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
-
-            <div className="relative space-y-2">
-              <label
-                htmlFor="reason"
-                className="text-foreground/80 text-xl font-[200]"
-              >
-                {t('reasonLabel')}
-              </label>
-              <Select
-                required
-                onValueChange={(value: string) =>
-                  setFormData((prev) => ({ ...prev, reason: value }))
-                }
-              >
-                <SelectTrigger className="border-foreground/20 mt-4 rounded-none border-b pr-0 text-xl font-light">
-                  <SelectValue placeholder="Select..." />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-foreground/20 text-lg">
-                  <SelectItem
-                    className="opacity-80 transition hover:opacity-100"
-                    value="general"
-                  >
-                    {t('contactOptions.generalInquiry')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="support"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.clientSupport')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="business"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.employmentInquiry')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="media"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.media')}
-                  </SelectItem>
-
-                  <SelectItem
-                    value="other"
-                    data-testid="other"
-                    className="opacity-80 transition hover:opacity-100"
-                  >
-                    {t('contactOptions.other')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="message"
-                className="text-foreground/80 text-xl font-[200]"
-              >
-                {t('messageLabel')}
-              </label>
-              <textarea
-                id="message"
-                data-testid="message-input"
-                required
-                rows={6}
-                className="border-foreground/20 w-full resize-none border-b bg-transparent py-2 text-xl font-[200] transition-colors focus:border-[#2A2727]/40 focus:outline-none"
-                value={formData.message}
-                onChange={(e) => {
-                  const message = e.target.value;
-                  if (message.length <= MAX_MESSAGE_LENGTH) {
-                    // Prevent state update if over limit
-                    setFormData((prev) => ({ ...prev, message: message }));
-                  }
-                }}
-                maxLength={MAX_MESSAGE_LENGTH}
-              />
-              <p className="text-foreground/40 text-sm font-[200]">
-                * {t('required')}
-                <span className="text-foreground/60">
-                  ({formData.message.length}/{MAX_MESSAGE_LENGTH} characters)
-                </span>
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="text-foreground/80 group flex items-center gap-2 text-xl font-[200] transition-colors hover:cursor-pointer hover:text-[#2A2727] disabled:opacity-50"
-            >
-              <span>
-                {isSubmitting ? t('inProgressSubmit') : t('submitButton')}
-              </span>
-              <span className="transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </button>
-          </form>
+                {t('buttons.next')}
+              </Button>
+            </FadeIn>
+          ) : (
+            <div />
+          )}
         </div>
-      </div>
-    </>
+      </Carousel>
+    </form>
   );
 }

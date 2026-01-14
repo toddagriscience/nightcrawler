@@ -48,3 +48,6 @@ storybook-static
 .swc/
 .vercel
 .env*.local
+
+# drawio
+diagrams/.$*
