@@ -43,6 +43,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-platform: var(--background-platform);
   --color-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

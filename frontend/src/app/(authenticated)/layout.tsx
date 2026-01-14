@@ -11,12 +11,5 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div
-      className="min-h-screen"
-      style={{ background: 'var(--background-platform)' }}
-    >
-      {children}
-    </div>
-  );
+  return <div className="min-h-screen bg-background-platform">{children}</div>;
 }
