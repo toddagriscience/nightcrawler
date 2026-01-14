@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { numeric, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 import { levelCategory } from './level-category';
 
@@ -10,8 +10,7 @@ export const solubility = pgTable('solubility', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
   analysisId: varchar({ length: 13 })
-    .references(() => analysis.id, { onDelete: 'cascade' })
-    .notNull(),
+    .references(() => analysis.id, { onDelete: 'set null' }),
   /** The real value of the mineral (see the unit field for units) */
   real_value: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal value of the mineral (see the unit field for units) */
@@ -20,4 +19,6 @@ export const solubility = pgTable('solubility', {
   tag: levelCategory(),
   /** The unit which this mineral is being measured in. */
   units: varchar({ length: 100 }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

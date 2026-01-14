@@ -3,9 +3,9 @@
 import {
   boolean,
   numeric,
-  pgEnum,
   pgTable,
   serial,
+  timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
@@ -17,8 +17,7 @@ export const mineral = pgTable('mineral', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
   analysisId: varchar({ length: 13 })
-    .references(() => analysis.id, { onDelete: 'cascade' })
-    .notNull(),
+    .references(() => analysis.id, { onDelete: 'set null' }),
   /** The name of the mineral in reference. */
   name: varchar({ length: 200 }).notNull(),
   /** The real value of the mineral (see the unit field for units) */
@@ -31,4 +30,6 @@ export const mineral = pgTable('mineral', {
   four_lows: boolean().notNull(),
   /** The unit which this mineral is being measured in. */
   units: varchar({ length: 100 }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

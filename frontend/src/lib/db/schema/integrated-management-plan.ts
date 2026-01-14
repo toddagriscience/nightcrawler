@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { date, pgTable, text, serial, varchar } from 'drizzle-orm/pg-core';
+import { date, pgTable, text, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { managementZone } from './management-zone';
 import { analysis } from './analysis';
 
@@ -10,8 +10,7 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given management zone */
   managementZone: serial()
-    .references(() => managementZone.id, { onDelete: 'cascade' })
-    .notNull(),
+    .references(() => managementZone.id, { onDelete: 'set null' }),
   /** Foreign key relationship to the given analysis */
   analysis: varchar({ length: 13 })
     .primaryKey()
@@ -22,4 +21,6 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   initialized: date({ mode: 'date' }).notNull(),
   /** The date this plan was updated, if it ever was */
   updated: date({ mode: 'date' }),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

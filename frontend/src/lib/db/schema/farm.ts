@@ -8,6 +8,7 @@ import {
   point,
   serial,
   text,
+  timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
 
@@ -23,14 +24,15 @@ export const farm = pgTable('farm', {
   businessWebsite: varchar({ length: 200 }),
   /** The date the farm started. Collected during Internal Onboarding */
   managementStartDate: date(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** Client location data. This table *should* be internationally compatible, and all fields that aren't documented should be completely self explanatory. */
 export const farmLocation = pgTable('farmLocation', {
   /** Foreign key relationship back to the client */
   farmId: varchar({ length: 13 })
-    .references(() => farm.id, { onDelete: 'cascade' })
-    .notNull()
+    .references(() => farm.id, { onDelete: 'set null' })
     .primaryKey(),
   /** The literal longitude/latitude position of the client. The exact location from where these coordinates were taken *does not matter.* */
   location: point({ mode: 'tuple' }),
@@ -44,6 +46,8 @@ export const farmLocation = pgTable('farmLocation', {
   postalCode: varchar({ length: 20 }),
   state: varchar({ length: 100 }),
   country: varchar({ length: 200 }),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });
 
 /** Some farms have certain certificates that require them to act and/or behave in a certain manner, and in some scenarios, Todd has to adjust their practices to accomdate these requirements. These certificates may be abbreviated as NOP, DEM, GAP, and LFI respectively. */
@@ -52,6 +56,9 @@ export const certificateType = pgEnum('certificate_type', [
   'Demeter',
   'Good Agriculture Practices',
   'Local/Facility Inspection',
+  'Organic',
+  'Biodynamic',
+  'Regenerative Organic',
 ]);
 
 /** Any certificates that the client's business/farm has. See the certificateType enum for more info. */
@@ -60,12 +67,11 @@ export const farmCertificate = pgTable('farm_certificate', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to the client */
   farmId: varchar({ length: 13 })
-    .references(() => farm.id, { onDelete: 'cascade' })
-    .notNull(),
+    .references(() => farm.id, { onDelete: 'set null' }),
   /** The kind of certificate. See the certificateType enum for more info. */
   kind: certificateType().notNull(),
-  /** The date this certificate was granted/initialized */
+  /** The date this certificate was granted/initialized. Expiry date is not given because certificates can be pulled before they expire. */
   date: date({ mode: 'date' }).notNull(),
-  /** The date this certificate expires */
-  expDate: date({ mode: 'date' }).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

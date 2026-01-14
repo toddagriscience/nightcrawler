@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { numeric, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { numeric, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
 import { levelCategory } from './level-category';
 
@@ -10,8 +10,7 @@ export const ph = pgTable('ph', {
   id: serial().primaryKey().notNull(),
   /** Foreign key relationship back to given analysis */
   analysisId: varchar({ length: 13 })
-    .references(() => analysis.id, { onDelete: 'cascade' })
-    .notNull(),
+    .references(() => analysis.id, { onDelete: 'set null' }),
   /** The real ph value */
   realValue: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The ideal upper value (ex. the ph value should be between idealValueLower and idealValueUpper) */
@@ -24,4 +23,6 @@ export const ph = pgTable('ph', {
   high: numeric({ precision: 9, scale: 4 }).notNull(),
   /** A general tag for the results of a ph analysis */
   tag: levelCategory(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
 });

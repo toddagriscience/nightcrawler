@@ -12,42 +12,7 @@ export { ph } from './ph';
 export { solubility } from './solubility';
 export { farm, farmCertificate, farmLocation } from './farm';
 export { user, userTacAcceptance, userRoleEnum } from './user';
-export {
-  farmApplicationFarmInfo,
-  farmApplicationActivities,
-} from './internal-application';
-export {
-  organicApplicationBasic,
-  organicApplicationCertification,
-  organicApplicationSplitOperation,
-  organicApplicationCropInfo,
-  organicApplicationPastActivity,
-  organicApplicationProductionFacility,
-  organicApplicationCultivation,
-  organicApplicationPestControl,
-  organicApplicationOffFarmProducts,
-  organicApplicationSeeds,
-  organicApplicationSyntheticMaterials,
-  organicApplicationEquipment,
-  organicApplicationIrrigation,
-  organicApplicationErosionContamination,
-  organicApplicationHarvest,
-  organicApplicationPostHarvest,
-  organicApplicationMarkets,
-  applicationCertificationType,
-  splitOperationType,
-  productionAlternationStatus,
-  pastActivityType,
-  productionFacilityType,
-  pestControlType,
-  seedTypeCategory,
-  transplantTypeCategory,
-  irrigationSourceType,
-  harvestManagementType,
-  disinfectantType,
-  marketVenueType,
-  productDifferentiationType,
-} from './organic-application';
+export { farmInfoInternalApplication } from './internal-application';
 
 const db = drizzle({
   connection: process.env.DATABASE_URL!,
