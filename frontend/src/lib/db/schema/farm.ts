@@ -1,15 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
-  boolean,
   date,
   pgEnum,
   pgTable,
   point,
   serial,
-  text,
   timestamp,
   varchar,
+  integer,
 } from 'drizzle-orm/pg-core';
 
 /** The "top" table. A given client's core information. "Client" may refer to the owner of a given business involved with Todd Agriscience or a representative. */
@@ -30,8 +29,8 @@ export const farm = pgTable('farm', {
 
 /** Client location data. This table *should* be internationally compatible, and all fields that aren't documented should be completely self explanatory. */
 export const farmLocation = pgTable('farmLocation', {
-  /** Foreign key relationship back to the client */
-  farmId: varchar({ length: 13 })
+  /** Foreign key relationship back to the farm */
+  farmId: integer()
     .references(() => farm.id, { onDelete: 'set null' })
     .primaryKey(),
   /** The literal longitude/latitude position of the client. The exact location from where these coordinates were taken *does not matter.* */
@@ -63,8 +62,8 @@ export const certificateType = pgEnum('certificate_type', [
 export const farmCertificate = pgTable('farm_certificate', {
   /** Auto increment id -- no specific format for IDs for client certificates */
   id: serial().primaryKey().notNull(),
-  /** Foreign key relationship back to the client */
-  farmId: varchar({ length: 13 }).references(() => farm.id, {
+  /** Foreign key relationship back to the farm */
+  farmId: integer().references(() => farm.id, {
     onDelete: 'set null',
   }),
   /** The kind of certificate. See the certificateType enum for more info. */

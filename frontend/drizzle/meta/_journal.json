@@ -15,6 +15,13 @@
       "when": 1768404150641,
       "tag": "0001_steady_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768450275084,
+      "tag": "0002_bent_dreadnoughts",
+      "breakpoints": true
     }
   ]
 }
