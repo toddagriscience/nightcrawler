@@ -3,10 +3,8 @@
 'use client';
 
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { useState } from 'react';
 import { FadeIn } from '@/components/common';
 import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
-import { redirect } from 'next/navigation';
 
 /** The careers page. Currently only provides information on the externship and allows applicants to submit their email..
  *

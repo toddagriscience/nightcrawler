@@ -13,7 +13,7 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
-import { submitEmail } from '../careers/action';
+import { submitEmail } from './action';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { Button } from '@/components/ui';
 import { ContactFormData, contactFormSchema } from './types';
