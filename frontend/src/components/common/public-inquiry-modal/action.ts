@@ -19,16 +19,10 @@ export async function submitPublicInquiry(
 
   const validated = publicInquirySchema.safeParse(raw);
   if (!validated.success) {
-    const tree = z.treeifyError(validated.error);
-
-    const msg =
-      tree.errors[0] ??
-      tree.properties?.name?.errors[0] ??
-      tree.properties?.lastKnownEmail?.errors[0] ??
-      tree.properties?.response?.errors[0] ??
-      'Invalid submission.';
-
-    return { error: msg, data: null };
+    return {
+      data: null,
+      error: z.treeifyError(validated.error),
+    };
   }
 
   const scriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
@@ -40,9 +34,8 @@ export async function submitPublicInquiry(
   }
 
   try {
-    // Per review: if we've validated successfully, just submit the original formData
+    // Validated → safe to submit original formData
     await submitToGoogleSheets(formData, scriptUrl);
-
     return { error: null, data: null };
   } catch (err) {
     logger.error('Public inquiry submission error:', err);

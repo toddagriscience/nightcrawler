@@ -62,7 +62,15 @@ describe('submitPublicInquiry', () => {
     const fd = makeFormData({});
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({ error: 'Name is required.', data: null });
+    expect(result.data).toBeNull();
+    expect(result.error).toBeTruthy();
+
+    // action.ts now returns z.treeifyError(...) as `error`
+    expect(result.error).toHaveProperty('properties.name.errors');
+    expect(result.error.properties.name.errors[0]).toBe(
+      'Invalid input: expected string, received null'
+    );
+
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
@@ -77,10 +85,14 @@ describe('submitPublicInquiry', () => {
 
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({
-      error: 'Please enter a valid email.',
-      data: null,
-    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBeTruthy();
+
+    expect(result.error).toHaveProperty('properties.lastKnownEmail.errors');
+    expect(result.error.properties.lastKnownEmail.errors[0]).toBe(
+      'Please enter a valid email.'
+    );
+
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
@@ -95,10 +107,14 @@ describe('submitPublicInquiry', () => {
 
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({
-      error: 'Response is too long (max 1500 characters).',
-      data: null,
-    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBeTruthy();
+
+    expect(result.error).toHaveProperty('properties.response.errors');
+    expect(result.error.properties.response.errors[0]).toBe(
+      'Response is too long (max 1500 characters).'
+    );
+
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
