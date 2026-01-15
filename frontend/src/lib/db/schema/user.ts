@@ -22,7 +22,7 @@ export const user = pgTable('user', {
   farmId: integer().references(() => farm.id, { onDelete: 'set null' }),
   firstName: varchar({ length: 200 }).notNull(),
   lastName: varchar({ length: 200 }).notNull(),
-  email: citext().notNull().unique(),
+  email: varchar().notNull().unique(),
   /** Phone number in E164 format */
   phone: varchar({ length: 15 }),
   /** Is this user approved? If they are, assume that the user is currently being billed. This is handled manually at the moment. */

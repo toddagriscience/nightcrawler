@@ -1,4 +1,4 @@
-CREATE TYPE "public"."certificate_type" AS ENUM('National Organic Program', 'Demeter', 'Good Agriculture Practices', 'Local/Facility Inspection', 'Organic', 'Biodynamic', 'Regenerative Organic');--> statement-breakpoint
+CREATE TYPE "public"."certificate_type" AS ENUM('Good Agriculture Practices', 'Local/Facility Inspection', 'Organic', 'Biodynamic', 'Regenerative Organic');--> statement-breakpoint
 CREATE TYPE "public"."user_role" AS ENUM('Admin', 'Viewer');--> statement-breakpoint
 CREATE TYPE "public"."level_category" AS ENUM('Low', 'Med', 'High');--> statement-breakpoint
 CREATE TYPE "public"."pest_type" AS ENUM('Insect', 'Disease');--> statement-breakpoint
@@ -23,7 +23,7 @@ CREATE TABLE "farm" (
 --> statement-breakpoint
 CREATE TABLE "farm_certificate" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"farmId" varchar(13),
+	"farmId" integer,
 	"kind" "certificate_type" NOT NULL,
 	"date" date NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE "farm_certificate" (
 );
 --> statement-breakpoint
 CREATE TABLE "farmLocation" (
-	"farmId" varchar(13) PRIMARY KEY NOT NULL,
+	"farmId" integer PRIMARY KEY NOT NULL,
 	"location" "point",
 	"apn" varchar(100),
 	"countyState" varchar(200),
@@ -45,8 +45,19 @@ CREATE TABLE "farmLocation" (
 	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "account_agreement_acceptance" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"userId" integer,
+	"time_accepted" timestamp NOT NULL,
+	"accepted" boolean DEFAULT false NOT NULL,
+	"ipAddress" "cidr" NOT NULL,
+	"version" varchar(200) NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "farm_info_internal_application" (
-	"farmId" varchar(13) PRIMARY KEY NOT NULL,
+	"farmId" integer PRIMARY KEY NOT NULL,
 	"splitOperation" jsonb,
 	"alternateFarming" jsonb,
 	"totalGrossIncome" numeric(8, 2),
@@ -86,7 +97,7 @@ CREATE TABLE "farm_info_internal_application" (
 CREATE TABLE "integrated_management_plan" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"managementZone" serial NOT NULL,
-	"analysis" varchar(13) PRIMARY KEY NOT NULL,
+	"analysis" varchar(13),
 	"plan" text,
 	"initialized" date NOT NULL,
 	"updated" date,
@@ -96,7 +107,7 @@ CREATE TABLE "integrated_management_plan" (
 --> statement-breakpoint
 CREATE TABLE "management_zone" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"clientId" varchar(13),
+	"farmId" integer,
 	"location" "point",
 	"name" varchar(200),
 	"rotationYear" date,
@@ -164,7 +175,7 @@ CREATE TABLE "user" (
 	"farmId" integer,
 	"firstName" varchar(200) NOT NULL,
 	"lastName" varchar(200) NOT NULL,
-	"email" "citext" NOT NULL,
+	"email" varchar NOT NULL,
 	"phone" varchar(15),
 	"approved" boolean DEFAULT false,
 	"job" varchar(200),
@@ -174,17 +185,6 @@ CREATE TABLE "user" (
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
-);
---> statement-breakpoint
-CREATE TABLE "user_tac_acceptance" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"userId" integer,
-	"time_accepted" timestamp NOT NULL,
-	"accepted" boolean DEFAULT false NOT NULL,
-	"ipAddress" "cidr" NOT NULL,
-	"version" varchar(200) NOT NULL,
-	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "crop" (
@@ -237,16 +237,16 @@ CREATE TABLE "pest" (
 ALTER TABLE "analysis" ADD CONSTRAINT "analysis_managementZone_management_zone_id_fk" FOREIGN KEY ("managementZone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "farm_certificate" ADD CONSTRAINT "farm_certificate_farmId_farm_id_fk" FOREIGN KEY ("farmId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "farmLocation" ADD CONSTRAINT "farmLocation_farmId_farm_id_fk" FOREIGN KEY ("farmId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "account_agreement_acceptance" ADD CONSTRAINT "account_agreement_acceptance_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "farm_info_internal_application" ADD CONSTRAINT "farm_info_internal_application_farmId_farm_id_fk" FOREIGN KEY ("farmId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "integrated_management_plan" ADD CONSTRAINT "integrated_management_plan_managementZone_management_zone_id_fk" FOREIGN KEY ("managementZone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "integrated_management_plan" ADD CONSTRAINT "integrated_management_plan_analysis_analysis_id_fk" FOREIGN KEY ("analysis") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "management_zone" ADD CONSTRAINT "management_zone_clientId_farm_id_fk" FOREIGN KEY ("clientId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "management_zone" ADD CONSTRAINT "management_zone_farmId_farm_id_fk" FOREIGN KEY ("farmId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "mineral" ADD CONSTRAINT "mineral_analysisId_analysis_id_fk" FOREIGN KEY ("analysisId") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "oxidation_rate" ADD CONSTRAINT "oxidation_rate_analysisId_analysis_id_fk" FOREIGN KEY ("analysisId") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ph" ADD CONSTRAINT "ph_analysisId_analysis_id_fk" FOREIGN KEY ("analysisId") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "solubility" ADD CONSTRAINT "solubility_analysisId_analysis_id_fk" FOREIGN KEY ("analysisId") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user" ADD CONSTRAINT "user_farmId_farm_id_fk" FOREIGN KEY ("farmId") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "user_tac_acceptance" ADD CONSTRAINT "user_tac_acceptance_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "crop" ADD CONSTRAINT "crop_managementZone_management_zone_id_fk" FOREIGN KEY ("managementZone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "fertilizer" ADD CONSTRAINT "fertilizer_managementZone_management_zone_id_fk" FOREIGN KEY ("managementZone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "livestock" ADD CONSTRAINT "livestock_managementZone_management_zone_id_fk" FOREIGN KEY ("managementZone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
