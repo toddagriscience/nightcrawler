@@ -8,6 +8,7 @@ Crawl-delay: 1
 Allow: /
 Disallow: /admin/
 Disallow: /cdn-cgi/
+Disallow: /incoming/
 Disallow: /login/
 Disallow: /api/
 Disallow: /*/*?*ls=*&ls=*
@@ -23,6 +24,7 @@ Disallow: /api/
 Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /incoming/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
@@ -35,6 +37,7 @@ Disallow: /api/
 Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /incoming/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
@@ -57,6 +60,7 @@ Disallow: /api/
 Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /incoming/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
@@ -73,6 +77,7 @@ Disallow: /api/
 Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /incoming/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*

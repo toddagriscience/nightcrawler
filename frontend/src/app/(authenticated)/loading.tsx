@@ -5,7 +5,7 @@
  */
 export default async function DashboardLoading() {
   return (
-    <div className="bg-background min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-2xl">
           Thinking
