@@ -6,7 +6,66 @@ labels: ['feat']
 
 body:
   - type: textarea
+    id: problem-statement
     attributes:
-      label: Open a feature request issue
+      label: Problem Statement
+      description: Describe the problem this feature solves or the functionality it adds.
       placeholder: |
-        Please describe the problem this feature solves, how this feature intends to solve it, any additional resources, and any caveats (performance issues, etc.)
+        Example: This issue should add logic for adding two numbers together
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide background information about why this feature is needed and how it fits into the larger system.
+      placeholder: |
+        Example: This issue will act as a core part of the software that we're building, which includes a calculator. The calculator will help clients calculate their income.
+    validations:
+      required: false
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: List any limitations or things this feature should NOT do.
+      placeholder: |
+        This issue should not:
+        - Touch any code in `example.js`
+        - Modify existing functionality
+        - Introduce breaking changes
+    validations:
+      required: false
+
+  - type: textarea
+    id: technical-details
+    attributes:
+      label: Technical Details
+      description: Specify any technical requirements such as dependencies, packages, or implementation details.
+      placeholder: |
+        Example: This should add the npm package `package-name`
+    validations:
+      required: false
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: Describe the feature from the user's perspective using the "As a... I want... so that..." format.
+      placeholder: |
+        As a user, I want to be able to [action], so I can [benefit].
+    validations:
+      required: false
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Provide a step-by-step example of how the feature will be used.
+      placeholder: |
+        - User wants to perform an action
+        - User imports logic from `filename.js`
+        - User calls the relevant function
+    validations:
+      required: false
