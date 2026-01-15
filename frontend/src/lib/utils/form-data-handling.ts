@@ -6,7 +6,9 @@
  *
  * @param {FormDataEntryValue | Null} value - The JSON string
  * @returns {object | undefined} - Either the "cleaned" JSON value or undefined */
-function parseJsonField(value: FormDataEntryValue | null): object | undefined {
+export function parseJsonField(
+  value: FormDataEntryValue | null
+): object | undefined {
   if (!value || typeof value !== 'string' || value.trim() === '') {
     return undefined;
   }
@@ -21,7 +23,7 @@ function parseJsonField(value: FormDataEntryValue | null): object | undefined {
  *
  * @param {FormDataEntryValue | null} value - The string value
  * @returns {string | undefined} - Either the trimmed string or undefined */
-function parseStringField(
+export function parseStringField(
   value: FormDataEntryValue | null
 ): string | undefined {
   if (!value || typeof value !== 'string' || value.trim() === '') {
@@ -34,7 +36,7 @@ function parseStringField(
  *
  * @param {FormDataEntryValue | null} value - The integer string
  * @returns {number | undefined} - Either the parsed integer or undefined */
-function parseIntegerField(
+export function parseIntegerField(
   value: FormDataEntryValue | null
 ): number | undefined {
   if (!value || typeof value !== 'string' || value.trim() === '') {
@@ -48,7 +50,7 @@ function parseIntegerField(
  *
  * @param {FormDataEntryValue | null} value - The numeric string
  * @returns {string | undefined} - Either the trimmed numeric string or undefined */
-function parseNumericField(
+export function parseNumericField(
   value: FormDataEntryValue | null
 ): string | undefined {
   if (!value || typeof value !== 'string' || value.trim() === '') {

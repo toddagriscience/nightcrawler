@@ -7,6 +7,12 @@ import { db, farmInfoInternalApplication, user } from '@/lib/db/schema';
 import { ActionResponse } from '@/lib/types/action-response';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 import { eq } from 'drizzle-orm';
+import {
+  parseJsonField,
+  parseStringField,
+  parseIntegerField,
+  parseNumericField,
+} from '@/lib/utils/form-data-handling';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
