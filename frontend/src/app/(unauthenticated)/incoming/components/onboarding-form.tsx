@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ErrorMessage } from '@hookform/error-message';
@@ -11,7 +9,6 @@ import { userInfoType } from '@/lib/types/onboarding';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
 
 /**
@@ -31,8 +28,15 @@ export default function OnboardingForm({
   farmName = '',
   email = '',
   phone = '',
+  routerPushCallback,
+}: {
+  firstName: string;
+  lastName: string;
+  farmName: string;
+  email: string;
+  phone: string;
+  routerPushCallback: (route: string) => void;
 }) {
-  const router = useRouter();
   // This page isn't using `handleSubmit()` becaues I was having trouble getting it working.
   const {
     register,
@@ -63,7 +67,7 @@ export default function OnboardingForm({
         email: getValues().email,
         phone: getValues().phone,
       });
-      router.push(`/join?${params.toString()}`);
+      routerPushCallback(`/join?${params.toString()}`);
     }
   }
 
