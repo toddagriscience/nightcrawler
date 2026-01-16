@@ -9,7 +9,7 @@
  * The `FormData` interface can handle this appropriately.
  * */
 export async function submitToGoogleSheets(
-  formData: FormData,
+  formData: FormData | Object,
   googleScriptUrl: string
 ) {
   try {
@@ -17,9 +17,25 @@ export async function submitToGoogleSheets(
     url.searchParams.append('timestamp', Date.now().toString());
 
     const submissionData: Record<string, string> = {};
-    formData.forEach((value, key) => {
-      submissionData[key] = value.toString();
-    });
+
+    if (formData instanceof FormData) {
+      formData.forEach((value, key) => {
+        submissionData[key] = value.toString();
+      });
+    } else {
+      // Not the cleanest logic but it works
+      for (const [key, value] of Object.entries(formData)) {
+        if (value) {
+          try {
+            submissionData[key] = value.toString();
+          } catch {
+            submissionData[key] = '';
+          }
+        } else {
+          submissionData[key] = '';
+        }
+      }
+    }
 
     const response = await fetch(url.toString(), {
       method: 'POST',

@@ -13,6 +13,7 @@ import {
   parseIntegerField,
   parseNumericField,
 } from '@/lib/utils/form-data-handling';
+import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
@@ -132,6 +133,58 @@ export async function saveApplication(
         ...toInsertInfo,
       });
     }
+
+    return { error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Unknown error' };
+  }
+}
+
+/** Sends an applicant's information to Google Sheets. This isn't a long term solution, but it'll work for now.
+ *
+ * @returns {ActionResponse} - Returns nothing if successful, returns an error if else.
+ * */
+export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
+  // Don't process any data before we ensure that the user is authenticated
+  const email = await getUserEmail();
+
+  if (!email) {
+    return { error: "No email registered with this user's account" };
+  }
+
+  try {
+    const [currentUser] = await db
+      .select({ farmId: user.farmId })
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1);
+
+    if (!currentUser) {
+      return { error: 'User not found' };
+    }
+
+    if (!currentUser.farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
+    const farmId = currentUser.farmId;
+
+    const applicationData = await db
+      .select()
+      .from(farmInfoInternalApplication)
+      .where(eq(farmInfoInternalApplication.farmId, farmId))
+      .limit(1);
+
+    if (!applicationData) {
+      return { error: 'Application not found' };
+    }
+
+    const googleSheetsUrl = process.env.INTERNAL_APPLICATION_GOOGLE_SCRIPT_URL!;
+
+    await submitToGoogleSheets(applicationData[0], googleSheetsUrl);
 
     return { error: null };
   } catch (error) {
