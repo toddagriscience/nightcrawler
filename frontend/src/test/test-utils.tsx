@@ -113,6 +113,14 @@ vitest.mock('framer-motion', () => {
  */
 vitest.mock('next/navigation', () => ({
   usePathname: vitest.fn(() => '/'),
+  useRouter: vitest.fn(() => ({
+    push: vitest.fn(),
+    replace: vitest.fn(),
+    back: vitest.fn(),
+    forward: vitest.fn(),
+    prefetch: vitest.fn(),
+    refresh: vitest.fn(),
+  })),
 }));
 
 /**

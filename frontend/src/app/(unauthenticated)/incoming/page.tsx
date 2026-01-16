@@ -2,9 +2,8 @@
 
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import OnboardingForm from './components/onboarding-form';
-import { useRouter } from '@/i18n/config';
 
 /** This is more commonly referred to as "outbound onboarding". I.e, we've contacted a client and they've agreed to join our platform, and this is the form that we send them.
  *

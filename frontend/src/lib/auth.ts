@@ -126,12 +126,19 @@ export async function getUserEmail(): Promise<string | null> {
  * */
 export async function signUpUser(
   email: string,
-  password: string
+  password: string,
+  name?: string
 ): Promise<object | Error> {
   const supabase = await createServerClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      emailRedirectTo: 'https://toddagriscience.com/login',
+      data: {
+        name: name || 'User',
+      },
+    },
   });
 
   if (error) {

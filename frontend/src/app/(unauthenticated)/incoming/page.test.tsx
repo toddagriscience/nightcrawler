@@ -11,6 +11,12 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => ({
     get: mockGet,
   }),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+  })),
 }));
 
 describe('Onboarding Page', () => {

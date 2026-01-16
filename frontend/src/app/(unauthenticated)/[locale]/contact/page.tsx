@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { FadeIn } from '@/components/common';
@@ -13,7 +13,6 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
-import { submitEmail } from './action';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { Button } from '@/components/ui';
 import { ContactFormData, contactFormSchema } from './types';
@@ -22,11 +21,13 @@ import Fade from 'embla-carousel-fade';
 import { ErrorMessage } from '@hookform/error-message';
 import { useForm } from 'react-hook-form';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { useRouter } from 'next/navigation';
 
 export default function Contact() {
   const t = useTranslations('contactPage');
-  const [state, submitEmailAction] = useActionState(submitEmail, null);
   const [slide, setSlide] = useState(0);
+  const router = useRouter();
   const [totalSlides, setTotalSlides] = useState(-1);
   const [api, setApi] = useState<CarouselApi>();
   const {
@@ -35,7 +36,6 @@ export default function Contact() {
     getValues,
     clearErrors,
     setValue,
-    setError,
     formState: { errors, isValid },
   } = useForm<ContactFormData>({
     defaultValues: {
@@ -70,7 +70,7 @@ export default function Contact() {
   async function handleNext() {
     if (!api) return;
 
-    if (slide === 0) {
+    if (slide === 0 || slide === 1) {
       await trigger();
 
       if (isValid) {
@@ -84,6 +84,22 @@ export default function Contact() {
     }
   }
 
+  // This function is triggered directly by the <SubmitButton/> because onSubmit via the form itself isn't working for some reason.
+  async function onSubmit() {
+    await trigger();
+
+    if (isValid) {
+      const params = new URLSearchParams({
+        first_name: getValues().firstName,
+        last_name: getValues().lastName,
+        farm_name: getValues().farmName,
+        email: getValues().email,
+        phone: getValues().phone,
+      });
+      router.push(`/join?${params.toString()}`);
+    }
+  }
+
   const isMatch =
     (isWorkEmail(getValues().email) || getValues().website) &&
     (getValues().isOrganic || getValues().isOrganic === undefined) &&
@@ -91,7 +107,15 @@ export default function Contact() {
     !getValues().producesSprouts;
 
   return (
-    <form action={submitEmailAction}>
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && isValid) {
+          e.preventDefault();
+          api?.scrollNext();
+        }
+      }}
+    >
       <Carousel
         setApi={setApi}
         className="mx-auto flex h-[90vh] w-[80vw] max-w-[800px] flex-col justify-center"
@@ -227,6 +251,13 @@ export default function Contact() {
                     <FieldLabel>
                       {t('questions.website', { farm: getValues().farmName })}
                     </FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="website"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
                   </div>
                   <Input
                     placeholder={t('placeholders.website')}
@@ -336,6 +367,11 @@ export default function Contact() {
                   {t('results.matchTitle')}
                 </h1>
                 <p>{t('results.matchBody')}</p>
+                <SubmitButton
+                  className="max-w-60 mx-auto"
+                  buttonText="JOIN US"
+                  onClickFunction={onSubmit}
+                />
               </div>
             ) : (
               <div className="flex h-full flex-col justify-center gap-8 text-center">
