@@ -5,7 +5,7 @@ import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
-import { createClient } from './supabase/server';
+import { createClient as createServerClient } from './supabase/server';
 
 /**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -108,7 +108,7 @@ export async function checkAuthenticated(): Promise<boolean> {
  *
  * @returns {Promise<string | null>} - A string (the user's email) if authenticated, null if they aren't authenticated.*/
 export async function getUserEmail(): Promise<string | null> {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
 
   const { data, error } = await supabase.auth.getClaims();
 
@@ -117,4 +117,26 @@ export async function getUserEmail(): Promise<string | null> {
   }
 
   return data.claims.email || null;
+}
+
+/** SERVER SIDE FUNCTION. Signs up (or creates) a user and sends a confirmation email.
+ *
+ * @param {string} email - The user's email
+ * @param {string} password - The user's password
+ * */
+export async function signUpUser(
+  email: string,
+  password: string
+): Promise<object | Error> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
 }

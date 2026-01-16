@@ -11,6 +11,8 @@ import { userInfoType } from '@/lib/types/onboarding';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { useRouter } from 'next/navigation';
+import { FormEvent } from 'react';
 
 /**
  * Onboarding form component for outbound onboarding flow.
@@ -30,9 +32,13 @@ export default function OnboardingForm({
   email = '',
   phone = '',
 }) {
+  const router = useRouter();
+  // This page isn't using `handleSubmit()` becaues I was having trouble getting it working.
   const {
     register,
-    formState: { errors },
+    getValues,
+    trigger,
+    formState: { errors, isValid },
   } = useForm<userInfoType>({
     defaultValues: {
       firstName,
@@ -44,11 +50,31 @@ export default function OnboardingForm({
     resolver: zodResolver(userInfo),
   });
 
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    await trigger();
+
+    if (isValid) {
+      const params = new URLSearchParams({
+        first_name: getValues().firstName,
+        last_name: getValues().lastName,
+        farm_name: getValues().farmName,
+        email: getValues().email,
+        phone: getValues().phone,
+      });
+      router.push(`/join?${params.toString()}`);
+    }
+  }
+
   return (
     <div className="mx-auto flex h-screen max-w-[800px] flex-col items-center justify-center gap-6">
       <h1 className="text-3xl">Let&apos;s get started.</h1>
       <p>Is this the correct information?</p>
-      <form className="flex w-screen max-w-[800px] flex-col gap-4 px-4">
+      <form
+        className="flex w-screen max-w-[800px] flex-col gap-4 px-4"
+        onSubmit={(e) => onSubmit(e)}
+      >
         <FieldSet className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
