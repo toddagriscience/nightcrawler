@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description:
       'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
     url: 'https://toddagriscience.com/en/',
-    siteName: 'Todd',
+    siteName: 'Todd United States',
     locale: 'en',
     type: 'website',
     images: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         width: 1300,
         height: 740,
         type: 'image/png',
-        alt: 'Todd Agriscience',
+        alt: 'Todd United States',
       },
     ],
   },
