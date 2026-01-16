@@ -3,7 +3,7 @@
 'use client';
 
 import { logout } from '@/lib/auth';
-import { useRouter } from '@/i18n/config';
+import { useRouter } from 'next/navigation';
 
 /**
  * Logout link component - styled as a simple clickable link matching the platform style
