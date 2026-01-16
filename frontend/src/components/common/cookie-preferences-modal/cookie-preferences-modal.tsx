@@ -42,7 +42,7 @@ export default function CookiePreferencesModal({
       <DialogTrigger asChild>
         {trigger ? (
           <Button
-            className="m-0 h-min p-0 text-base hover:cursor-pointer"
+            className="m-0 h-min w-auto !justify-start p-0 text-base font-light hover:cursor-pointer"
             onClick={() => setIsOpen(true)}
             asChild
           >
