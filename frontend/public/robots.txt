@@ -9,6 +9,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /cdn-cgi/
 Disallow: /incoming/
+Disallow: /join/
 Disallow: /*/careers/externship
 Disallow: /login/
 Disallow: /api/
@@ -25,6 +26,7 @@ Disallow: /api/
 Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
+Disallow: /join/
 Disallow: /*/careers/externship
 Disallow: /incoming/
 Disallow: /login/
@@ -41,6 +43,7 @@ Disallow: /*/careers/externship
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
 Disallow: /incoming/
+Disallow: /join/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
@@ -64,6 +67,7 @@ Disallow: /apple-app-site-association
 Disallow: /cdn-cgi/
 Disallow: /en-us*data=route*
 Disallow: /incoming/
+Disallow: /join/
 Disallow: /*/careers/externship
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
@@ -83,6 +87,7 @@ Disallow: /cdn-cgi/
 Disallow: /*/careers/externship
 Disallow: /en-us*data=route*
 Disallow: /incoming/
+Disallow: /join/
 Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*

@@ -12,7 +12,7 @@ import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 export default function Careers() {
   const url =
     // eslint-disable-next-line no-secrets/no-secrets
-    'https://docs.google.com/forms/d/e/1FAIpQLSdtYSxNWiZt-vFOLGKFxA9Zvk1tl5CXA_V0NQAv4y4Kh9psSA/viewform';
+    'https://docs.google.com/forms/d/e/1FAIpQLSfi8yeNdjHuJCrO1sPSUhh8uCICsA6KGevRM-Mk9iND-aYkBQ/viewform';
 
   return (
     <div>

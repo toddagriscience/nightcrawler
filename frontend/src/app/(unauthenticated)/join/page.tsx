@@ -43,15 +43,12 @@ export default function Join() {
       <div className="w-[90vw] max-w-[inherit]">
         <FadeIn>
           {isSuccess ? (
-            <>
-              <h1 className="mb-6 text-center text-3xl">
+            <div className="flex h-full flex-col justify-center gap-8 text-center">
+              <h1 className="text-xl md:text-5xl">
                 ACCOUNT CREATED SUCCESSFULLY
               </h1>
-              <p className="mb-6 text-center">
-                Please check your email to verify your account before logging
-                in.
-              </p>
-            </>
+              <p>Please check your email for a verification link.</p>
+            </div>
           ) : (
             <>
               <h1 className="mb-6 text-center text-3xl">JOIN US</h1>

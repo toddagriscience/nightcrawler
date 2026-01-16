@@ -1,7 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
-import { login, checkAuthenticated, logout, getUserEmail } from './auth';
+import {
+  login,
+  checkAuthenticated,
+  logout,
+  getUserEmail,
+  signUpUser,
+} from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
 vitest.mock(import('./logger'), async (importActual) => {
@@ -16,6 +22,7 @@ const mockSignInWithPassword = vitest.fn();
 const mockGetUser = vitest.fn();
 const mockSignOut = vitest.fn();
 const mockGetClaims = vitest.fn();
+const mockSignUp = vitest.fn();
 
 vitest.mock('./supabase/client', async (importActual) => {
   const actual = await importActual<typeof import('./supabase/client')>();
@@ -38,6 +45,7 @@ vitest.mock('./supabase/server', async (importActual) => {
     createClient: vitest.fn(() => ({
       auth: {
         getClaims: mockGetClaims,
+        signUp: mockSignUp,
       },
     })),
   };
@@ -207,5 +215,110 @@ describe('getUserEmail', () => {
     const result = await getUserEmail();
 
     expect(result).toBeNull();
+  });
+});
+
+describe('signUpUser', () => {
+  beforeEach(() => {
+    vitest.clearAllMocks();
+  });
+
+  it('returns data on successful signup', async () => {
+    const fakeData = { user: { id: 'user-123', email: 'test@example.com' } };
+
+    mockSignUp.mockResolvedValue({
+      data: fakeData,
+      error: null,
+    });
+
+    const result = await signUpUser('test@example.com', 'securePassword123');
+
+    expect(result).toEqual(fakeData);
+    expect(mockSignUp).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'securePassword123',
+      options: {
+        emailRedirectTo: 'https://toddagriscience.com/login',
+        data: {
+          name: 'User',
+        },
+      },
+    });
+  });
+
+  it('returns error when Supabase signup fails', async () => {
+    const fakeError = new AuthError('User already registered');
+
+    mockSignUp.mockResolvedValue({
+      data: null,
+      error: fakeError,
+    });
+
+    const result = await signUpUser('existing@example.com', 'password123');
+
+    expect(result).toBe(fakeError);
+  });
+
+  it('uses provided name in signup options', async () => {
+    const fakeData = { user: { id: 'user-456' } };
+
+    mockSignUp.mockResolvedValue({
+      data: fakeData,
+      error: null,
+    });
+
+    const result = await signUpUser(
+      'john@example.com',
+      'password123',
+      'John Doe'
+    );
+
+    expect(result).toEqual(fakeData);
+    expect(mockSignUp).toHaveBeenCalledWith({
+      email: 'john@example.com',
+      password: 'password123',
+      options: {
+        emailRedirectTo: 'https://toddagriscience.com/login',
+        data: {
+          name: 'John Doe',
+        },
+      },
+    });
+  });
+
+  it('uses default name "User" when name is not provided', async () => {
+    mockSignUp.mockResolvedValue({
+      data: { user: { id: 'user-789' } },
+      error: null,
+    });
+
+    await signUpUser('jane@example.com', 'password123');
+
+    expect(mockSignUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          data: {
+            name: 'User',
+          },
+        }),
+      })
+    );
+  });
+
+  it('includes correct emailRedirectTo in signup options', async () => {
+    mockSignUp.mockResolvedValue({
+      data: { user: { id: 'user-abc' } },
+      error: null,
+    });
+
+    await signUpUser('redirect@example.com', 'password123');
+
+    expect(mockSignUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          emailRedirectTo: 'https://toddagriscience.com/login',
+        }),
+      })
+    );
   });
 });
