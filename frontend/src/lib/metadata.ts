@@ -7,8 +7,8 @@ import type { Metadata, Viewport } from 'next';
  * @returns {const} - The site configuration
  */
 const siteConfig = {
-  name: 'Todd',
-  title: 'Todd',
+  name: 'Todd United States',
+  title: 'Todd United States',
   description:
     'Todd Agriscience is a first-generation generative agriculture firm.',
   url: 'https://www.toddagriscience.com',
@@ -49,7 +49,7 @@ export const defaultMetadata: Metadata = {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'Todd Agriscience',
+        alt: 'Todd United States',
       },
     ],
     type: 'website',
