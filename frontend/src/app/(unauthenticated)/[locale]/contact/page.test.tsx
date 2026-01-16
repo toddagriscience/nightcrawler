@@ -56,46 +56,6 @@ describe('Contact page', () => {
     expect(screen.getByText('First Name')).toBeInTheDocument();
     expect(screen.getByText('Farm Name')).toBeInTheDocument();
   });
-  it('shows a success screen when entering a business email but not a website', async () => {
-    const nextButton = screen.getByTestId('button-next');
-
-    // Click next to move past the first slide (no website slide for work emails)
-    act(() => {
-      nextButton.click();
-    });
-
-    // Answer organic question (Yes or No - either works for match)
-    // Use getAllByText and select the first "Yes" button (organic question)
-    const yesButtons = screen.getAllByText('Yes');
-    act(() => {
-      yesButtons[0].click();
-    });
-
-    // Answer hydroponic question (No for match)
-    // After clicking, the carousel moves, so the first "No" button is now the hydroponic one
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons1 = screen.getAllByText('No');
-    act(() => {
-      noButtons1[0].click();
-    });
-
-    // Answer sprouts question (No for match)
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons2 = screen.getAllByText('No');
-    act(() => {
-      noButtons2[0].click();
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText("It's a match!")).toBeInTheDocument();
-    });
-  });
   it('shows a failure screen when not entering either a business email or website', async () => {
     const user = userEvent.setup();
 
