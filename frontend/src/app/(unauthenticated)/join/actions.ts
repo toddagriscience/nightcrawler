@@ -46,7 +46,7 @@ export async function signUp(
     validated.data;
 
   // Sign up the user with Supabase
-  const signUpResult = await signUpUser(email, password);
+  const signUpResult = await signUpUser(email, password, firstName);
 
   if (signUpResult instanceof Error) {
     logger.warn(`Failed to sign up user in Supabase: ${signUpResult.message}`);

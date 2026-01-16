@@ -127,7 +127,7 @@ export async function getUserEmail(): Promise<string | null> {
 export async function signUpUser(
   email: string,
   password: string,
-  name?: string
+  name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient();
   const { data, error } = await supabase.auth.signUp({
@@ -136,7 +136,10 @@ export async function signUpUser(
     options: {
       emailRedirectTo: 'https://toddagriscience.com/login',
       data: {
-        name: name || 'User',
+        // This is for the email template
+        first_name: name,
+        // This is for Supabase Display Name, nothing more than QOL
+        name: name,
       },
     },
   });
