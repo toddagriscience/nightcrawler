@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Link } from '@/i18n/config';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 /**

@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import Link from 'next/link';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { Link } from '@/i18n/config';
 
 /**
  * Header component for authenticated/platform pages
