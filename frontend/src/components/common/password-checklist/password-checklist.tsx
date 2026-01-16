@@ -1,11 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { PasswordRequirements } from '@/lib/types/auth';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** A password checklist that updates based off of what password the user has entered.
  *
  * @param {string} password - The current password
+ * @param {string} confirmationPassword - The confirmation password
  * @param {string} className - Any extra classes for the main div
  * @returns {JSX.Element} - A password checklist*/
 export default function PasswordChecklist({
@@ -19,41 +20,43 @@ export default function PasswordChecklist({
   className?: string;
   setIsPasswordValid?: (arg0: boolean) => unknown;
 }) {
-  const innerPasswordRequirements = useMemo(
-    () => ({
-      has8Characters: password.length >= 8,
-      hasSpecialCharacter: /[^A-Za-z0-9]/.test(password),
-      hasNumber: /\d/.test(password),
-      hasUpperCase: /[A-Z]/.test(password),
-      isConfirmationSame: password === confirmationPassword,
-    }),
-    [password, confirmationPassword]
-  );
-
-  const [passwordRequirements] = useState<PasswordRequirements>(
-    () => innerPasswordRequirements
-  );
+  const [passwordRequirements, setPasswordRequirements] =
+    useState<PasswordRequirements>({
+      has8Characters: false,
+      hasSpecialCharacter: false,
+      hasNumber: false,
+      hasUpperCase: false,
+      isConfirmationSame: false,
+    });
 
   useEffect(() => {
-    if (setIsPasswordValid) {
-      if (
-        innerPasswordRequirements.has8Characters &&
-        innerPasswordRequirements.hasSpecialCharacter &&
-        innerPasswordRequirements.hasNumber &&
-        innerPasswordRequirements.hasUpperCase &&
-        innerPasswordRequirements.isConfirmationSame
-      ) {
-        setIsPasswordValid(true);
-      } else {
-        setIsPasswordValid(false);
+    async function helper() {
+      const innerPasswordRequirements = {
+        has8Characters: password.length >= 8,
+        hasSpecialCharacter: /[^A-Za-z0-9]/.test(password),
+        hasNumber: /\d/.test(password),
+        hasUpperCase: /[A-Z]/.test(password),
+        isConfirmationSame: password === confirmationPassword,
+      };
+
+      setPasswordRequirements(innerPasswordRequirements);
+
+      if (setIsPasswordValid) {
+        if (
+          innerPasswordRequirements.has8Characters &&
+          innerPasswordRequirements.hasSpecialCharacter &&
+          innerPasswordRequirements.hasNumber &&
+          innerPasswordRequirements.hasUpperCase &&
+          innerPasswordRequirements.isConfirmationSame
+        ) {
+          setIsPasswordValid(true);
+        } else {
+          setIsPasswordValid(false);
+        }
       }
     }
-  }, [
-    password,
-    confirmationPassword,
-    setIsPasswordValid,
-    innerPasswordRequirements,
-  ]);
+    helper();
+  }, [password, confirmationPassword, setIsPasswordValid]);
 
   return (
     <div className={`${className}`}>
