@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   applyPrivacyControls,
   ensureNextResponse,
@@ -9,6 +9,8 @@ import {
 } from './middleware/export';
 import { handleAuthRouting } from './middleware/auth';
 import isAllUserRoute from './middleware/all-users-page';
+import { permanentRedirect } from 'next/navigation';
+import specialRedirect from './middleware/special-redirect';
 
 /**
  * Middleware for internationalization, authorization, and privacy controls
@@ -17,6 +19,12 @@ import isAllUserRoute from './middleware/all-users-page';
  * @returns {NextResponse} - The response object
  */
 export default async function middleware(request: NextRequest) {
+  const shouldSpecialRedirect = specialRedirect(request);
+
+  if (shouldSpecialRedirect) {
+    return shouldSpecialRedirect;
+  }
+
   // Check for Global Privacy Control (GPC) signal
   const gpcEnabled = hasGPCEnabled(request);
 
