@@ -1,14 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { Metadata } from 'next';
-import LogoutLink from '@/components/common/utils/logout-link/logout-link';
+'use client';
 
-/**
- * Account page metadata
- */
-export const metadata: Metadata = {
-  title: 'Account | Todd',
-};
+import LogoutLink from '@/components/common/utils/logout-link/logout-link';
 
 /**
  * Account page - displays account information and logout option
