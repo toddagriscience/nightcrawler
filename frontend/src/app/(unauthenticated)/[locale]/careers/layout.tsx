@@ -14,13 +14,15 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'careers.metadata' });
 
   return {
-    title: t('shortTitle'),
+    title: {
+      absolute: `${t('shortTitle')} | Todd United States`,
+    },
     description: t('description'),
     openGraph: {
       title: t('title'),
       description: t('description'),
       url: `${env.baseUrl}/${locale}/careers`,
-      siteName: 'Todd',
+      siteName: 'Todd United States',
       locale: locale,
       type: 'website',
       images: [

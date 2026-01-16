@@ -46,7 +46,7 @@ export async function generateMetadata({
       title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
-      siteName: 'Todd',
+      siteName: 'Todd United States',
       locale: ogLocale,
       type: 'website',
       images: [
@@ -55,7 +55,7 @@ export async function generateMetadata({
           width: 1300,
           height: 740,
           type: 'image/png',
-          alt: 'Todd Agriscience',
+          alt: 'Todd United States',
         },
       ],
     },
