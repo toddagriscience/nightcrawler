@@ -10,6 +10,7 @@ import {
   varchar,
   boolean,
   text,
+  integer,
 } from 'drizzle-orm/pg-core';
 import { farm } from './farm';
 import { levelCategory } from './level-category';
@@ -18,8 +19,8 @@ import { levelCategory } from './level-category';
 export const managementZone = pgTable('management_zone', {
   /** Auto increment id -- no specific format for IDs for management zones */
   id: serial().primaryKey().notNull(),
-  /** Foreign key relationship back to the client */
-  clientId: varchar({ length: 13 }).references(() => farm.id, {
+  /** Foreign key relationship back to the farm */
+  farmId: integer().references(() => farm.id, {
     onDelete: 'set null',
   }),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */

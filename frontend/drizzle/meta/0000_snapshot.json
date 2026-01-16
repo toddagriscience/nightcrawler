@@ -1,5 +1,5 @@
 {
-  "id": "c446c676-8115-4eb4-9e10-3924314f0055",
+  "id": "2f06f95a-330d-42ed-8152-345a5d7e3d26",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -128,7 +128,7 @@
         },
         "farmId": {
           "name": "farmId",
-          "type": "varchar(13)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -184,7 +184,7 @@
       "columns": {
         "farmId": {
           "name": "farmId",
-          "type": "varchar(13)",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true
         },
@@ -275,13 +275,87 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.account_agreement_acceptance": {
+      "name": "account_agreement_acceptance",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_accepted": {
+          "name": "time_accepted",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accepted": {
+          "name": "accepted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "ipAddress": {
+          "name": "ipAddress",
+          "type": "cidr",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "account_agreement_acceptance_userId_user_id_fk": {
+          "name": "account_agreement_acceptance_userId_user_id_fk",
+          "tableFrom": "account_agreement_acceptance",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.farm_info_internal_application": {
       "name": "farm_info_internal_application",
       "schema": "",
       "columns": {
         "farmId": {
           "name": "farmId",
-          "type": "varchar(13)",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true
         },
@@ -529,8 +603,8 @@
         "analysis": {
           "name": "analysis",
           "type": "varchar(13)",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         },
         "plan": {
           "name": "plan",
@@ -602,9 +676,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "clientId": {
-          "name": "clientId",
-          "type": "varchar(13)",
+        "farmId": {
+          "name": "farmId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -674,11 +748,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "management_zone_clientId_farm_id_fk": {
-          "name": "management_zone_clientId_farm_id_fk",
+        "management_zone_farmId_farm_id_fk": {
+          "name": "management_zone_farmId_farm_id_fk",
           "tableFrom": "management_zone",
           "tableTo": "farm",
-          "columnsFrom": ["clientId"],
+          "columnsFrom": ["farmId"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1052,7 +1126,7 @@
         },
         "email": {
           "name": "email",
-          "type": "citext",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -1129,80 +1203,6 @@
           "columns": ["email"]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.user_tac_acceptance": {
-      "name": "user_tac_acceptance",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "time_accepted": {
-          "name": "time_accepted",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "accepted": {
-          "name": "accepted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "ipAddress": {
-          "name": "ipAddress",
-          "type": "cidr",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "version": {
-          "name": "version",
-          "type": "varchar(200)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_tac_acceptance_userId_user_id_fk": {
-          "name": "user_tac_acceptance_userId_user_id_fk",
-          "tableFrom": "user_tac_acceptance",
-          "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1524,8 +1524,6 @@
       "name": "certificate_type",
       "schema": "public",
       "values": [
-        "National Organic Program",
-        "Demeter",
         "Good Agriculture Practices",
         "Local/Facility Inspection",
         "Organic",

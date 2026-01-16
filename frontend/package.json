@@ -32,6 +32,7 @@
     "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.3.15",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@portabletext/types": "^4.0.0",
@@ -54,6 +55,7 @@
     "commitlint": "^20.2.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
+    "drizzle-seed": "^0.3.1",
     "drizzle-zod": "^0.8.3",
     "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",

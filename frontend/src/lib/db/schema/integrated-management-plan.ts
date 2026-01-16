@@ -20,9 +20,9 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
     onDelete: 'set null',
   }),
   /** Foreign key relationship to the given analysis */
-  analysis: varchar({ length: 13 })
-    .primaryKey()
-    .references(() => analysis.id, { onDelete: 'set null' }),
+  analysis: varchar({ length: 13 }).references(() => analysis.id, {
+    onDelete: 'set null',
+  }),
   /** Written plan for management zone */
   plan: text(),
   /** The date this plan was written */
