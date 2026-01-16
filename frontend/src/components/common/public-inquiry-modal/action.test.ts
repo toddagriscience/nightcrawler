@@ -65,10 +65,9 @@ describe('submitPublicInquiry', () => {
     expect(result.data).toBeNull();
     expect(result.error).toBeTruthy();
 
-    // action.ts now returns z.treeifyError(...) as `error`
-    expect(result.error).toHaveProperty('properties.name.errors');
-    expect(result.error.properties.name.errors[0]).toBe(
-      'Invalid input: expected string, received null'
+    // error is a ZodErrorTree
+    expect((result.error as any).properties?.name?.errors?.[0]).toBe(
+      'Name is required.'
     );
 
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
@@ -86,10 +85,7 @@ describe('submitPublicInquiry', () => {
     const result = await submitPublicInquiry(fd);
 
     expect(result.data).toBeNull();
-    expect(result.error).toBeTruthy();
-
-    expect(result.error).toHaveProperty('properties.lastKnownEmail.errors');
-    expect(result.error.properties.lastKnownEmail.errors[0]).toBe(
+    expect((result.error as any).properties?.lastKnownEmail?.errors?.[0]).toBe(
       'Please enter a valid email.'
     );
 
@@ -108,10 +104,7 @@ describe('submitPublicInquiry', () => {
     const result = await submitPublicInquiry(fd);
 
     expect(result.data).toBeNull();
-    expect(result.error).toBeTruthy();
-
-    expect(result.error).toHaveProperty('properties.response.errors');
-    expect(result.error.properties.response.errors[0]).toBe(
+    expect((result.error as any).properties?.response?.errors?.[0]).toBe(
       'Response is too long (max 1500 characters).'
     );
 
