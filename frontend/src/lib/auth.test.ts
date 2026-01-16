@@ -231,7 +231,11 @@ describe('signUpUser', () => {
       error: null,
     });
 
-    const result = await signUpUser('test@example.com', 'securePassword123');
+    const result = await signUpUser(
+      'test@example.com',
+      'securePassword123',
+      'Oscar'
+    );
 
     expect(result).toEqual(fakeData);
     expect(mockSignUp).toHaveBeenCalledWith({
@@ -240,7 +244,8 @@ describe('signUpUser', () => {
       options: {
         emailRedirectTo: 'https://toddagriscience.com/login',
         data: {
-          name: 'User',
+          first_name: 'Oscar',
+          name: 'Oscar',
         },
       },
     });
@@ -254,7 +259,11 @@ describe('signUpUser', () => {
       error: fakeError,
     });
 
-    const result = await signUpUser('existing@example.com', 'password123');
+    const result = await signUpUser(
+      'existing@example.com',
+      'password123',
+      'Oscar'
+    );
 
     expect(result).toBe(fakeError);
   });
@@ -281,44 +290,9 @@ describe('signUpUser', () => {
         emailRedirectTo: 'https://toddagriscience.com/login',
         data: {
           name: 'John Doe',
+          first_name: 'John Doe',
         },
       },
     });
-  });
-
-  it('uses default name "User" when name is not provided', async () => {
-    mockSignUp.mockResolvedValue({
-      data: { user: { id: 'user-789' } },
-      error: null,
-    });
-
-    await signUpUser('jane@example.com', 'password123');
-
-    expect(mockSignUp).toHaveBeenCalledWith(
-      expect.objectContaining({
-        options: expect.objectContaining({
-          data: {
-            name: 'User',
-          },
-        }),
-      })
-    );
-  });
-
-  it('includes correct emailRedirectTo in signup options', async () => {
-    mockSignUp.mockResolvedValue({
-      data: { user: { id: 'user-abc' } },
-      error: null,
-    });
-
-    await signUpUser('redirect@example.com', 'password123');
-
-    expect(mockSignUp).toHaveBeenCalledWith(
-      expect.objectContaining({
-        options: expect.objectContaining({
-          emailRedirectTo: 'https://toddagriscience.com/login',
-        }),
-      })
-    );
   });
 });
