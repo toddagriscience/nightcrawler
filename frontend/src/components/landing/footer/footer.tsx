@@ -66,17 +66,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-background text-foreground mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
+    <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
-          <ToddHeader className="md:text-5xl lg:text-6xl" />
+          <ToddHeader className="md:text-4xl lg:text-5xl" />
           <div className="flex flex-row gap-32 max-md:mt-8 md:ml-auto">
             <div className="flex flex-col gap-4">
               {siteLinks.slice(0, 4).map((val, index) => (
                 <Link
                   key={index}
                   href={val.href}
-                  className="text-md md:text-lg"
+                  className="text-base md:text-base"
                 >
                   <span className="link text-underline-left text-underline-left-black text-black">
                     {val.label}
@@ -89,7 +89,7 @@ const Footer = () => {
                 <Link
                   key={index}
                   href={val.href}
-                  className="text-md md:text-lg"
+                  className="text-base md:text-base"
                 >
                   <span className="link text-underline-left text-underline-left-black text-black">
                     {val.label}
@@ -113,7 +113,7 @@ const Footer = () => {
           <span>{t('location')}</span>
         </div>
         <p>© Todd Agriscience 2025</p>
-        <div className="flex flex-col flex-wrap gap-6 md:flex-row">
+        <div className="flex flex-col flex-wrap gap-6 items-start md:flex-row">
           {legalLinks.map((val, index) => (
             <Link key={index} href={val.href}>
               {val.label}
@@ -121,7 +121,7 @@ const Footer = () => {
           ))}
           <CookiePreferencesModal
             trigger={
-              <div>
+              <div className="flex items-center gap-2">
                 <span>{tCookiePreferences('managePreferences')}</span>
                 <Image
                   alt=""

@@ -4,7 +4,6 @@ import {
   pgTable,
   integer,
   text,
-  varchar,
   jsonb,
   numeric,
   timestamp,
@@ -20,7 +19,7 @@ import { farm } from './farm';
 export const farmInfoInternalApplication = pgTable(
   'farm_info_internal_application',
   {
-    farmId: varchar({ length: 13 })
+    farmId: integer()
       .references(() => farm.id, { onDelete: 'set null' })
       .primaryKey(),
     /** A split operation is an operation that produces both organic and conventional crops. Mark any of the following that apply to your operation: */

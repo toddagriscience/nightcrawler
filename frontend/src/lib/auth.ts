@@ -5,6 +5,7 @@ import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
+import { createClient } from './supabase/server';
 
 /**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -24,7 +25,7 @@ import { redirect } from 'next/navigation';
  */
 
 /**
- * ONLY USE ON CLIENT SIDE! Logs a user in using Supabase, and handles errors accordingly.
+ * CLIENT SIDE FUNCTION. Logs a user in using Supabase, and handles errors accordingly.
  *
  * @param email The email of the user
  * @param password The password of the user
@@ -57,7 +58,7 @@ export async function login(
   };
 }
 
-/** ONLY USE ON CLIENT SIDE! Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
+/** CLIENT SIDE FUNCTION. Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
  *
  * @returns {Promise<AuthResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
 export async function logout(): Promise<AuthResponse> {
@@ -92,7 +93,7 @@ export async function logout(): Promise<AuthResponse> {
 }
 
 /**
- * Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ * CLIENT SIDE FUNCTION. Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
  * @returns {Promise<boolean>} - True if the user is authenticated. */
 export async function checkAuthenticated(): Promise<boolean> {
@@ -101,4 +102,19 @@ export async function checkAuthenticated(): Promise<boolean> {
   } = await createBrowserClient().auth.getUser();
 
   return !(user == null);
+}
+
+/** SERVER SIDE FUNCTION. Returns the email of a user, if they're logged in. This effectively "doubles" as a server side version of `checkAuthenticated()`
+ *
+ * @returns {Promise<string | null>} - A string (the user's email) if authenticated, null if they aren't authenticated.*/
+export async function getUserEmail(): Promise<string | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    return null;
+  }
+
+  return data.claims.email || null;
 }

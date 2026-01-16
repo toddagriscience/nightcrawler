@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
-import { login, checkAuthenticated, logout } from './auth';
+import { login, checkAuthenticated, logout, getUserEmail } from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
 vitest.mock(import('./logger'), async (importActual) => {
@@ -15,6 +15,7 @@ vitest.mock(import('./logger'), async (importActual) => {
 const mockSignInWithPassword = vitest.fn();
 const mockGetUser = vitest.fn();
 const mockSignOut = vitest.fn();
+const mockGetClaims = vitest.fn();
 
 vitest.mock('./supabase/client', async (importActual) => {
   const actual = await importActual<typeof import('./supabase/client')>();
@@ -25,6 +26,18 @@ vitest.mock('./supabase/client', async (importActual) => {
         signInWithPassword: mockSignInWithPassword,
         getUser: mockGetUser,
         signOut: mockSignOut,
+      },
+    })),
+  };
+});
+
+vitest.mock('./supabase/server', async (importActual) => {
+  const actual = await importActual<typeof import('./supabase/server')>();
+  return {
+    ...actual,
+    createClient: vitest.fn(() => ({
+      auth: {
+        getClaims: mockGetClaims,
       },
     })),
   };
@@ -144,5 +157,55 @@ describe('checkAuthenticated', () => {
     const result = await checkAuthenticated();
 
     expect(result).toBe(false);
+  });
+});
+
+describe('getUserEmail', () => {
+  beforeEach(() => {
+    vitest.clearAllMocks();
+  });
+
+  it('returns email when claims exist', async () => {
+    mockGetClaims.mockResolvedValue({
+      data: { claims: { email: 'user@example.com' } },
+      error: null,
+    });
+
+    const result = await getUserEmail();
+
+    expect(result).toBe('user@example.com');
+  });
+
+  it('returns null when error occurs', async () => {
+    mockGetClaims.mockResolvedValue({
+      data: null,
+      error: new Error('Failed to get claims'),
+    });
+
+    const result = await getUserEmail();
+
+    expect(result).toBeNull();
+  });
+
+  it('returns null when claims is null', async () => {
+    mockGetClaims.mockResolvedValue({
+      data: { claims: null },
+      error: null,
+    });
+
+    const result = await getUserEmail();
+
+    expect(result).toBeNull();
+  });
+
+  it('returns null when claims has no email', async () => {
+    mockGetClaims.mockResolvedValue({
+      data: { claims: {} },
+      error: null,
+    });
+
+    const result = await getUserEmail();
+
+    expect(result).toBeNull();
   });
 });
