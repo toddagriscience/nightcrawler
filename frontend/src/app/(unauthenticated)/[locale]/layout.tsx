@@ -34,7 +34,7 @@ export async function generateMetadata({
       template: '%s | Todd United States',
     },
     description: t('description'),
-    metadataBase: new URL(env.baseUrl),
+    metadataBase: new URL('https://toddagriscience.com'),
     alternates: {
       canonical: `${env.baseUrl}/${locale}`,
       languages: Object.fromEntries([
@@ -51,7 +51,7 @@ export async function generateMetadata({
       type: 'website',
       images: [
         {
-          url: 'https://www.toddagriscience.com/opengraph-image.png',
+          url: '/opengraph-image.png',
           width: 1300,
           height: 740,
           type: 'image/png',
@@ -64,7 +64,7 @@ export async function generateMetadata({
       site: '@ToddAgriscience',
       title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
-      images: ['https://www.toddagriscience.com/opengraph-image.png'],
+      images: ['/opengraph-image.png'],
     },
     robots: {
       index: true,
