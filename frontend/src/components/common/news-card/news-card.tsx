@@ -43,7 +43,7 @@ const NewsCard = ({
             alt={image.alt}
             width={image.width || 600}
             height={image.height || 600}
-            className={`mx-auto`}
+            className={`mx-auto w-[70vw]`}
             fallbackText="News Image"
             isDark={isDark}
           />

@@ -14,6 +14,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'careers.metadata' });
 
   return {
+    metadataBase: new URL('https://toddagriscience.com'),
     title: {
       absolute: `${t('shortTitle')} | Todd United States`,
     },
@@ -27,7 +28,7 @@ export async function generateMetadata({
       type: 'website',
       images: [
         {
-          url: 'https://www.toddagriscience.com/career-opengraph-image.png',
+          url: '/career-opengraph-image.png',
           width: 2796,
           height: 1460,
           type: 'image/png',
@@ -40,7 +41,7 @@ export async function generateMetadata({
       site: '@ToddAgriscience',
       title: t('title'),
       description: t('description'),
-      images: ['https://www.toddagriscience.com/career-opengraph-image.png'],
+      images: ['/career-opengraph-image.png'],
     },
   };
 }

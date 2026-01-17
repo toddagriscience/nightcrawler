@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
  * Homepage metadata
  */
 export const metadata: Metadata = {
+  metadataBase: new URL('https://toddagriscience.com'),
   title: {
     absolute: 'Todd | Global Leader in Sustainable Agriculture',
   },
