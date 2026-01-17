@@ -17,7 +17,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => ({
     get: mockGet,
   }),
-  usePathname: () => '/join',
+  usePathname: () => '/signup',
   redirect: (path: string) => {
     mockRedirect(path);
     // Throw to simulate redirect behavior and stop component rendering

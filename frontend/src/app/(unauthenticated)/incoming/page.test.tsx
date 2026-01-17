@@ -89,7 +89,7 @@ describe('Onboarding Page', () => {
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledTimes(1);
       const calledUrl = mockPush.mock.calls[0][0];
-      expect(calledUrl).toContain('/join?');
+      expect(calledUrl).toContain('/signup?');
       expect(calledUrl).toContain('first_name=John');
       expect(calledUrl).toContain('last_name=Doe');
       expect(calledUrl).toContain('farm_name=Green+Acres');

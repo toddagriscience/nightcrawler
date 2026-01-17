@@ -12,6 +12,7 @@ import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { redirect, useSearchParams } from 'next/navigation';
 import { useActionState, useState } from 'react';
 import { signUp } from './actions';
+import posthog from 'posthog-js';
 
 /** Both outbound (/incoming) and inbound (/en/contact) onboarding will redirect here. We only ask for the password since we already have the user's email.
  *
@@ -37,6 +38,11 @@ export default function Join() {
 
   const errors = state ? formatActionResponseErrors(state) : null;
   const isSuccess = state && !state.error;
+
+  // When the user creates their account, we can opt them in without asking
+  if (isSuccess) {
+    posthog.opt_in_capturing();
+  }
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">

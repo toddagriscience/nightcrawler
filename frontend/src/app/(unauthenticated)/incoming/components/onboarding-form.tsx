@@ -67,7 +67,7 @@ export default function OnboardingForm({
         email: getValues().email,
         phone: getValues().phone,
       });
-      routerPushCallback(`/join?${params.toString()}`);
+      routerPushCallback(`/signup?${params.toString()}`);
     }
   }
 

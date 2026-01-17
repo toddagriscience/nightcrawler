@@ -42,7 +42,7 @@ describe('OnboardingForm component', () => {
     await waitFor(() => {
       expect(mockRouterPushCallback).toHaveBeenCalledTimes(1);
       const calledUrl = mockRouterPushCallback.mock.calls[0][0];
-      expect(calledUrl).toContain('/join?');
+      expect(calledUrl).toContain('/signup?');
       expect(calledUrl).toContain('first_name=Jane');
       expect(calledUrl).toContain('last_name=Smith');
       expect(calledUrl).toContain('farm_name=Sunny+Farms');
@@ -82,7 +82,7 @@ describe('OnboardingForm component', () => {
     await waitFor(() => {
       expect(mockRouterPushCallback).toHaveBeenCalledTimes(1);
       const calledUrl = mockRouterPushCallback.mock.calls[0][0];
-      expect(calledUrl).toContain('/join?');
+      expect(calledUrl).toContain('/signup?');
       expect(calledUrl).toContain('first_name=Janet');
       expect(calledUrl).toContain('farm_name=New+Farm+Name');
     });

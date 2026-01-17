@@ -96,7 +96,7 @@ export default function Contact() {
         email: getValues().email,
         phone: getValues().phone,
       });
-      router.push(`/join?${params.toString()}`);
+      router.push(`/signup?${params.toString()}`);
     }
   }
 
