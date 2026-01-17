@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
-import { login, checkAuthenticated, logout } from './auth';
 import { AuthError } from '@supabase/supabase-js';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { checkAuthenticated, login, logout } from './auth';
 
 vitest.mock(import('./logger'), async (importActual) => {
   const actual = await importActual();
