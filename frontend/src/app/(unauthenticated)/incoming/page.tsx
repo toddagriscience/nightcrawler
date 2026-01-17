@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import OnboardingForm from './components/onboarding-form';
 
 /** This is more commonly referred to as "outbound onboarding". I.e, we've contacted a client and they've agreed to join our platform, and this is the form that we send them.
@@ -10,6 +10,11 @@ import OnboardingForm from './components/onboarding-form';
  * @returns {JSX.Element} The onboarding form */
 export default function Onboarding() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  function routerPushCallback(route: string) {
+    router.push(route);
+  }
 
   return (
     <OnboardingForm
@@ -18,6 +23,7 @@ export default function Onboarding() {
       farmName={searchParams.get('farm_name') || ''}
       email={searchParams.get('email') || ''}
       phone={searchParams.get('phone') || ''}
+      routerPushCallback={routerPushCallback}
     />
   );
 }

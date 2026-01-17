@@ -1,19 +1,33 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Onboarding from './page';
+import OnboardingForm from './components/onboarding-form';
 
 // Mock useSearchParams from next/navigation
 const mockGet = vi.fn();
+const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useSearchParams: () => ({
     get: mockGet,
   }),
+  useRouter: vi.fn(() => ({
+    push: mockPush,
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+  })),
 }));
 
 describe('Onboarding Page', () => {
+  beforeEach(() => {
+    mockPush.mockClear();
+    mockGet.mockClear();
+  });
+
   it('renders without crashing', () => {
     mockGet.mockReturnValue(null);
 
@@ -53,5 +67,34 @@ describe('Onboarding Page', () => {
     expect(screen.getByPlaceholderText('Phone Number')).toHaveValue(
       '5551234567'
     );
+  });
+
+  it('calls router.push with correct URL parameters on form submission', async () => {
+    mockGet.mockImplementation((key: string) => {
+      const params: Record<string, string> = {
+        first_name: 'John',
+        last_name: 'Doe',
+        farm_name: 'Green Acres',
+        email: 'john@example.com',
+        phone: '5551234567',
+      };
+      return params[key] || null;
+    });
+
+    render(<Onboarding />);
+
+    const submitButton = screen.getByText('CONFIRM INFORMATION');
+    await userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
+      expect(calledUrl).toContain('/signup?');
+      expect(calledUrl).toContain('first_name=John');
+      expect(calledUrl).toContain('last_name=Doe');
+      expect(calledUrl).toContain('farm_name=Green+Acres');
+      expect(calledUrl).toContain('email=john%40example.com');
+      expect(calledUrl).toContain('phone=5551234567');
+    });
   });
 });

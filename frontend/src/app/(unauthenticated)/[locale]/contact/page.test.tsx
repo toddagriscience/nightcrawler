@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { act, renderWithNextIntl, screen, waitFor } from '@/test/test-utils';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
@@ -8,9 +9,50 @@ import Contact from './page';
 import userEvent from '@testing-library/user-event';
 // @ts-ignore type error due to lack of types from this polyfill
 import IntersectionObserver from 'intersection-observer-polyfill';
+import { NextIntlClientProvider } from 'next-intl';
+import { ThemeProvider } from '@/context/theme/ThemeContext';
+import React from 'react';
 
 global.ResizeObserver = ResizeObserver;
 global.IntersectionObserver = IntersectionObserver;
+
+// Mock for router.push
+const mockPush = vi.fn();
+
+vi.mock('next/navigation', () => ({
+  usePathname: vi.fn(() => '/'),
+  useRouter: vi.fn(() => ({
+    push: mockPush,
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    prefetch: vi.fn(),
+    refresh: vi.fn(),
+  })),
+}));
+
+// Mock framer-motion
+vi.mock('framer-motion', () => {
+  const MockMotionComponent = ({
+    children,
+    ...props
+  }: React.HTMLProps<HTMLDivElement>) => {
+    const { ...rest } = props;
+    return <div {...rest}>{children}</div>;
+  };
+
+  return {
+    useScroll: vi.fn(() => ({ scrollYProgress: 0 })),
+    useMotionValueEvent: vi.fn(),
+    motion: {
+      div: MockMotionComponent,
+      button: MockMotionComponent,
+    },
+    AnimatePresence: ({ children }: { children: React.ReactNode }) => (
+      <>{children}</>
+    ),
+  };
+});
 
 // Mocks for Embla Carousel, taken from https://github.com/davidjerleke/embla-carousel/blob/master/packages/embla-carousel/src/__tests__/mocks/index.ts
 Object.defineProperty(window, 'matchMedia', {
@@ -27,9 +69,19 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+// Helper to render with NextIntl provider
+const renderWithIntl = (ui: React.ReactElement) => {
+  return render(
+    <NextIntlClientProvider locale="en" messages={{}}>
+      <ThemeProvider>{ui}</ThemeProvider>
+    </NextIntlClientProvider>
+  );
+};
+
 describe('Contact page', () => {
   beforeEach(async () => {
-    renderWithNextIntl(<Contact />);
+    mockPush.mockClear();
+    renderWithIntl(<Contact />);
     const user = userEvent.setup();
 
     // First name
@@ -144,6 +196,74 @@ describe('Contact page', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
+    });
+  });
+
+  it('calls router.push with correct URL parameters on successful form submission', async () => {
+    const user = userEvent.setup();
+
+    // Clear existing email and set a work email (to skip the website slide)
+    const email = screen.getByPlaceholderText(/email/i);
+    await user.clear(email);
+    await user.type(email, 'jane@greenvalley.com');
+
+    const nextButton = screen.getByTestId('button-next');
+
+    // Click next to move past the first slide
+    act(() => {
+      nextButton.click();
+    });
+
+    // Answer organic question (Yes)
+    await waitFor(() => {
+      const yesButtons = screen.getAllByText('Yes');
+      expect(yesButtons.length).toBeGreaterThan(0);
+    });
+    const yesButtons = screen.getAllByText('Yes');
+    act(() => {
+      yesButtons[0].click();
+    });
+
+    // Answer hydroponic question (No)
+    await waitFor(() => {
+      const noButtons = screen.getAllByText('No');
+      expect(noButtons.length).toBeGreaterThan(0);
+    });
+    const noButtons1 = screen.getAllByText('No');
+    act(() => {
+      noButtons1[0].click();
+    });
+
+    // Answer sprouts question (No)
+    await waitFor(() => {
+      const noButtons = screen.getAllByText('No');
+      expect(noButtons.length).toBeGreaterThan(0);
+    });
+    const noButtons2 = screen.getAllByText('No');
+    act(() => {
+      noButtons2[0].click();
+    });
+
+    // Wait for the success screen and click JOIN US
+    await waitFor(() => {
+      expect(screen.getByText('JOIN US')).toBeInTheDocument();
+    });
+
+    const joinButton = screen.getByText('JOIN US');
+    await act(async () => {
+      joinButton.click();
+    });
+
+    // Verify router.push was called with the correct URL
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
+      expect(calledUrl).toContain('/signup?');
+      expect(calledUrl).toContain('first_name=Jane');
+      expect(calledUrl).toContain('last_name=Doe');
+      expect(calledUrl).toContain('farm_name=Green+Valley+Farms');
+      expect(calledUrl).toContain('email=jane%40greenvalley.com');
+      expect(calledUrl).toContain('phone=555-123-4567');
     });
   });
 });
