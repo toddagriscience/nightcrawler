@@ -14,7 +14,7 @@ import {
   parseNumericField,
 } from '@/lib/utils/form-data-handling';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
-import { userSchema } from '@/lib/zod-schemas/db';
+import { userInsertSchema } from '@/lib/zod-schemas/db';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
@@ -211,9 +211,10 @@ export async function inviteUserToFarm(
   }
 
   // Don't require the user's new ID to be sent with formData
-  // Convert FormData to plain object for Zod validation
   const formDataObject = Object.fromEntries(formData);
-  const validated = userSchema.omit({ id: true }).safeParse(formDataObject);
+  const validated = userInsertSchema
+    .omit({ id: true })
+    .safeParse(formDataObject);
 
   if (!validated.success) {
     return { error: 'Invalid form data' };

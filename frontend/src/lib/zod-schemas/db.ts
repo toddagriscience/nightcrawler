@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { user } from '../db/schema';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema } from 'drizzle-zod';
 
-export const userSchema = createInsertSchema(user);
-export const userSelectSchema = createSelectSchema(user);
+export const userInsertSchema = createInsertSchema(user);
