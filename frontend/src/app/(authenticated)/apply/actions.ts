@@ -5,16 +5,12 @@
 import { getUserEmail, inviteUser } from '@/lib/auth';
 import { db, farmInfoInternalApplication, user } from '@/lib/db/schema';
 import { ActionResponse } from '@/lib/types/action-response';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 import { eq } from 'drizzle-orm';
-import {
-  parseJsonField,
-  parseStringField,
-  parseIntegerField,
-  parseNumericField,
-} from '@/lib/utils/form-data-handling';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import { userInsertSchema } from '@/lib/zod-schemas/db';
+import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import z from 'zod';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
@@ -24,94 +20,29 @@ import { userInsertSchema } from '@/lib/zod-schemas/db';
 export async function saveApplication(
   formData: FormData
 ): Promise<ActionResponse> {
-  // Don't process any data before we ensure that the user is authenticated
-  const email = await getUserEmail();
-
-  if (!email) {
-    return { error: "No email registered with this user's account" };
-  }
-
   try {
-    const [currentUser] = await db
-      .select({ farmId: user.farmId })
-      .from(user)
-      .where(eq(user.email, email))
-      .limit(1);
+    const result = await getAuthenticatedInfo({ farmId: user.farmId });
 
-    if (!currentUser) {
-      return { error: 'User not found' };
+    if (!result.data) {
+      return result;
     }
 
-    if (!currentUser.farmId) {
-      return { error: 'User is not associated with a farm' };
+    if (!('farmId' in result.data)) {
+      return { error: 'No farm ID given' };
     }
 
-    const farmId = currentUser.farmId;
+    const farmId = result.data.farmId as number;
+    const formDataObject = Object.fromEntries(formData);
+    const validated = farmInfoInternalApplicationInsertSchema
+      .omit({
+        createdAt: true,
+        updatedAt: true,
+      })
+      .safeParse({ ...formDataObject, farmId });
 
-    // Extract all fields from formData
-    const toInsertInfo: Omit<
-      FarmInfoInternalApplicationInsert,
-      'farmId' | 'createdAt' | 'updatedAt'
-    > = {
-      splitOperation: parseJsonField(formData.get('splitOperation')),
-      alternateFarming: parseJsonField(formData.get('alternateFarming')),
-      totalGrossIncome: parseNumericField(formData.get('totalGrossIncome')),
-      conservationPlan: parseStringField(formData.get('conservationPlan')),
-      mainCrops: parseStringField(formData.get('mainCrops')),
-      totalAcreage: parseIntegerField(formData.get('totalAcreage')),
-      managementZoneStructure: parseStringField(
-        formData.get('managementZoneStructure')
-      ),
-      farmActivites: parseJsonField(formData.get('farmActivites')),
-      productionLocation: parseJsonField(formData.get('productionLocation')),
-      cultivationPractices: parseJsonField(
-        formData.get('cultivationPractices')
-      ),
-      livestockIncorporation: parseStringField(
-        formData.get('livestockIncorporation')
-      ),
-      weedInsectDiseasesControl: parseStringField(
-        formData.get('weedInsectDiseasesControl')
-      ),
-      pestControl: parseJsonField(formData.get('pestControl')),
-      offFarmProducts: parseJsonField(formData.get('offFarmProducts')),
-      otherMaterials: parseJsonField(formData.get('otherMaterials')),
-      mechanicalEquipment: parseStringField(
-        formData.get('mechanicalEquipment')
-      ),
-      supplierContracts: parseStringField(formData.get('supplierContracts')),
-      irrigationWaterSource: parseJsonField(
-        formData.get('irrigationWaterSource')
-      ),
-      irrigationScheduling: parseStringField(
-        formData.get('irrigationScheduling')
-      ),
-      soilMoistureMonitoring: parseStringField(
-        formData.get('soilMoistureMonitoring')
-      ),
-      irrigationMaterials: parseStringField(
-        formData.get('irrigationMaterials')
-      ),
-      waterConservation: parseStringField(formData.get('waterConservation')),
-      waterQualityProtection: parseStringField(
-        formData.get('waterQualityProtection')
-      ),
-      erosionPrevention: parseStringField(formData.get('erosionPrevention')),
-      nearContaminationSource: parseJsonField(
-        formData.get('nearContaminationSource')
-      ),
-      activeWildAreas: parseJsonField(formData.get('activeWildAreas')),
-      naturalResources: parseStringField(formData.get('naturalResources')),
-      manageHarvests: parseJsonField(formData.get('manageHarvests')),
-      waterUsedPostHarvest: parseJsonField(
-        formData.get('waterUsedPostHarvest')
-      ),
-      primaryMarketVenues: parseJsonField(formData.get('primaryMarketVenues')),
-      branding: parseJsonField(formData.get('branding')),
-      productDifferentiation: parseJsonField(
-        formData.get('productDifferentiation')
-      ),
-    };
+    if (!validated.success) {
+      return { error: z.treeifyError(validated.error) };
+    }
 
     // Does farmInfoInternalApplication exist yet for this farm?
     const existingApplication = await db
@@ -124,14 +55,13 @@ export async function saveApplication(
       await db
         .update(farmInfoInternalApplication)
         .set({
-          ...toInsertInfo,
+          ...validated.data,
           updatedAt: new Date(),
         })
         .where(eq(farmInfoInternalApplication.farmId, farmId));
     } else {
       await db.insert(farmInfoInternalApplication).values({
-        farmId,
-        ...toInsertInfo,
+        ...validated.data,
       });
     }
 
@@ -149,30 +79,18 @@ export async function saveApplication(
  * @returns {ActionResponse} - Returns nothing if successful, returns an error if else.
  * */
 export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
-  // Don't process any data before we ensure that the user is authenticated
-  const email = await getUserEmail();
-
-  if (!email) {
-    return { error: "No email registered with this user's account" };
-  }
-
   try {
-    const [currentUser] = await db
-      .select({ farmId: user.farmId })
-      .from(user)
-      .where(eq(user.email, email))
-      .limit(1);
+    const result = await getAuthenticatedInfo({ farmId: user.farmId });
 
-    if (!currentUser) {
-      return { error: 'User not found' };
+    if (!result.data) {
+      return result;
     }
 
-    if (!currentUser.farmId) {
-      return { error: 'User is not associated with a farm' };
+    if (!('farmId' in result.data)) {
+      return { error: 'No farm ID given' };
     }
 
-    const farmId = currentUser.farmId;
-
+    const farmId = result.data.farmId as number;
     const applicationData = await db
       .select()
       .from(farmInfoInternalApplication)
