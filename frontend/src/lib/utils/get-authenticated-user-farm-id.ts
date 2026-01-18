@@ -6,14 +6,17 @@ import { getUserEmail } from '../auth';
 import { db, user } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { ActionResponse } from '../types/action-response';
+import { SelectedFields } from 'drizzle-orm/pg-core';
 
 /**
- * Gets the authenticated user's farm ID. Returns an error ActionResponse if the user
+ * Gets the authenticated user's requested information. Returns an error ActionResponse if the user
  * is not authenticated, not found, or not associated with a farm.
  *
- * @returns {Promise<ActionResponse>} - If successful, the farm ID, else an ActionResponse containing an error
+ * @returns {Promise<ActionResponse>} - If successful, the requested user's information via an ActionResponse, else an ActionResponse containing an error
  */
-export async function getAuthenticatedUserFarmId(): Promise<ActionResponse> {
+export async function getAuthenticatedInfo(
+  fields: SelectedFields
+): Promise<ActionResponse> {
   const email = await getUserEmail();
 
   if (!email) {
@@ -22,7 +25,7 @@ export async function getAuthenticatedUserFarmId(): Promise<ActionResponse> {
 
   try {
     const [currentUser] = await db
-      .select({ farmId: user.farmId })
+      .select(fields)
       .from(user)
       .where(eq(user.email, email))
       .limit(1);

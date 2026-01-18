@@ -2,12 +2,12 @@
 
 'use server';
 
-import { db, farmInfoInternalApplication } from '@/lib/db/schema';
+import { db, farmInfoInternalApplication, user } from '@/lib/db/schema';
 import { ActionResponse } from '@/lib/types/action-response';
 import { eq } from 'drizzle-orm';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
-import { getAuthenticatedUserFarmId } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import z from 'zod';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
@@ -19,7 +19,7 @@ export async function saveApplication(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedUserFarmId();
+    const result = await getAuthenticatedInfo({ farmId: user.farmId });
 
     if (!result.data) {
       return result;
@@ -78,7 +78,7 @@ export async function saveApplication(
  * */
 export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedUserFarmId();
+    const result = await getAuthenticatedInfo({ farmId: user.farmId });
 
     if (!result.data) {
       return result;
