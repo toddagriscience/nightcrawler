@@ -7,7 +7,7 @@ import { ActionResponse } from '@/lib/types/action-response';
 import { eq } from 'drizzle-orm';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
-import { getAuthenticatedUserFarmId } from '@/lib/utils/actions';
+import { getAuthenticatedUserFarmId } from '@/lib/utils/get-authenticated-user-farm-id';
 import z from 'zod';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
