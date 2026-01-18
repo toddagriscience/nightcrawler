@@ -38,7 +38,7 @@ export async function getAuthenticatedInfo(
       return { error: 'User is not associated with a farm' };
     }
 
-    return { data: { farmId: currentUser.farmId }, error: null };
+    return { data: { ...currentUser }, error: null };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

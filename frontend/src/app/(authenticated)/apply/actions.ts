@@ -121,39 +121,32 @@ export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
 export async function inviteUserToFarm(
   formData: FormData
 ): Promise<ActionResponse> {
-  // Don't process any data before we ensure that the user is authenticated
-  const email = await getUserEmail();
-
-  if (!email) {
-    return { error: "No email registered with this user's account" };
-  }
-
-  // Don't require the user's new ID to be sent with formData
-  const formDataObject = Object.fromEntries(formData);
-  const validated = userInsertSchema
-    .omit({ id: true })
-    .safeParse(formDataObject);
-
-  if (!validated.success) {
-    return { error: 'Invalid form data' };
-  }
-
   try {
-    const [currentUser] = await db
-      .select({ farmId: user.farmId })
-      .from(user)
-      .where(eq(user.email, email))
-      .limit(1);
+    const currentUser = await getAuthenticatedInfo({
+      farmId: user.farmId,
+      role: user.role,
+    });
 
-    if (!currentUser) {
-      return { error: 'User not found' };
+    if (!currentUser.data) {
+      return currentUser;
+    }
+    if (!('farmId' in currentUser.data) || !('role' in currentUser.data)) {
+      return { error: 'Farm ID or role not provided' };
+    }
+    if (currentUser.data.role !== 'Admin') {
+      return { error: 'User initiating invite is not an Admin' };
     }
 
-    if (!currentUser.farmId) {
-      return { error: 'User is not associated with a farm' };
+    const formDataObject = Object.fromEntries(formData);
+    // Don't require the user's new ID to be sent with formData
+    const validated = userInsertSchema
+      .omit({ id: true })
+      .safeParse(formDataObject);
+    if (!validated.success) {
+      return { error: 'Invalid form data' };
     }
 
-    const farmId = currentUser.farmId;
+    const farmId = currentUser.data.farmId as number;
     const didInvite = await inviteUser(
       validated.data.email,
       validated.data.firstName
