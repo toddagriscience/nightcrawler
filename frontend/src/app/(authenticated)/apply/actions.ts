@@ -2,7 +2,7 @@
 
 'use server';
 
-import { getUserEmail } from '@/lib/auth';
+import { getUserEmail, inviteUser } from '@/lib/auth';
 import { db, farmInfoInternalApplication, user } from '@/lib/db/schema';
 import { ActionResponse } from '@/lib/types/action-response';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
@@ -14,6 +14,7 @@ import {
   parseNumericField,
 } from '@/lib/utils/form-data-handling';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
+import { userSchema } from '@/lib/zod-schemas/db';
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
@@ -185,6 +186,66 @@ export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
     const googleSheetsUrl = process.env.INTERNAL_APPLICATION_GOOGLE_SCRIPT_URL!;
 
     await submitToGoogleSheets(applicationData[0], googleSheetsUrl);
+
+    return { error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Unknown error' };
+  }
+}
+
+/** Invites a user to "join" the farm.
+ *
+ * @param {FormData} formData - The user's information, validated by a Zod schema generated from the Drizzle schema
+ * @returns {Promise<ActionResponse>} - Returns nothing if successful, returns an error if else. */
+export async function inviteUserToFarm(
+  formData: FormData
+): Promise<ActionResponse> {
+  // Don't process any data before we ensure that the user is authenticated
+  const email = await getUserEmail();
+
+  if (!email) {
+    return { error: "No email registered with this user's account" };
+  }
+
+  // Don't require the user's new ID to be sent with formData
+  // Convert FormData to plain object for Zod validation
+  const formDataObject = Object.fromEntries(formData);
+  const validated = userSchema.omit({ id: true }).safeParse(formDataObject);
+
+  if (!validated.success) {
+    return { error: 'Invalid form data' };
+  }
+
+  try {
+    const [currentUser] = await db
+      .select({ farmId: user.farmId })
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1);
+
+    if (!currentUser) {
+      return { error: 'User not found' };
+    }
+
+    if (!currentUser.farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
+    const farmId = currentUser.farmId;
+    const didInvite = await inviteUser(
+      validated.data.email,
+      validated.data.firstName
+    );
+
+    if (didInvite instanceof Error) {
+      return { error: didInvite.message };
+    }
+
+    // If inviteUser() succeeds, create a new user
+    await db.insert(user).values({ ...validated.data, farmId });
 
     return { error: null };
   } catch (error) {

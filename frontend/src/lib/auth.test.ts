@@ -7,6 +7,7 @@ import {
   logout,
   getUserEmail,
   signUpUser,
+  inviteUser,
 } from './auth';
 import { AuthError } from '@supabase/supabase-js';
 
@@ -23,6 +24,7 @@ const mockGetUser = vitest.fn();
 const mockSignOut = vitest.fn();
 const mockGetClaims = vitest.fn();
 const mockSignUp = vitest.fn();
+const mockInviteUserByEmail = vitest.fn();
 
 vitest.mock('./supabase/client', async (importActual) => {
   const actual = await importActual<typeof import('./supabase/client')>();
@@ -46,6 +48,9 @@ vitest.mock('./supabase/server', async (importActual) => {
       auth: {
         getClaims: mockGetClaims,
         signUp: mockSignUp,
+        admin: {
+          inviteUserByEmail: mockInviteUserByEmail,
+        },
       },
     })),
   };
@@ -294,5 +299,83 @@ describe('signUpUser', () => {
         },
       },
     });
+  });
+});
+
+describe('inviteUser', () => {
+  beforeEach(() => {
+    vitest.clearAllMocks();
+  });
+
+  it('returns data on successful invite', async () => {
+    const fakeData = { user: { id: 'user-123', email: 'invited@example.com' } };
+
+    mockInviteUserByEmail.mockResolvedValue({
+      data: fakeData,
+      error: null,
+    });
+
+    const result = await inviteUser('invited@example.com', 'Jane');
+
+    expect(result).toEqual(fakeData);
+    expect(mockInviteUserByEmail).toHaveBeenCalledWith('invited@example.com', {
+      redirectTo: 'https://toddagriscience.com/login',
+      data: {
+        first_name: 'Jane',
+        name: 'Jane',
+      },
+    });
+  });
+
+  it('returns error when invite fails', async () => {
+    const fakeError = new AuthError('User already exists');
+
+    mockInviteUserByEmail.mockResolvedValue({
+      data: null,
+      error: fakeError,
+    });
+
+    const result = await inviteUser('existing@example.com', 'John');
+
+    expect(result).toBe(fakeError);
+  });
+
+  it('includes correct redirectTo and username in invite options', async () => {
+    const fakeData = { user: { id: 'user-456' } };
+
+    mockInviteUserByEmail.mockResolvedValue({
+      data: fakeData,
+      error: null,
+    });
+
+    await inviteUser('new@example.com', 'Bob');
+
+    expect(mockInviteUserByEmail).toHaveBeenCalledWith(
+      'new@example.com',
+      expect.objectContaining({
+        redirectTo: 'https://toddagriscience.com/login',
+      })
+    );
+  });
+
+  it('includes first_name and name in data options', async () => {
+    const fakeData = { user: { id: 'user-789' } };
+
+    mockInviteUserByEmail.mockResolvedValue({
+      data: fakeData,
+      error: null,
+    });
+
+    await inviteUser('alice@example.com', 'Alice');
+
+    expect(mockInviteUserByEmail).toHaveBeenCalledWith(
+      'alice@example.com',
+      expect.objectContaining({
+        data: {
+          first_name: 'Alice',
+          name: 'Alice',
+        },
+      })
+    );
   });
 });

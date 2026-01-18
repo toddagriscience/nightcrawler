@@ -123,7 +123,8 @@ export async function getUserEmail(): Promise<string | null> {
  *
  * @param {string} email - The user's email
  * @param {string} password - The user's password
- * */
+ * @param {string} name - The user's name, for QOL
+ * @returns {Promise<object | Error>} - An object with user data if successful, an error if not successful. */
 export async function signUpUser(
   email: string,
   password: string,
@@ -141,6 +142,33 @@ export async function signUpUser(
         // This is for Supabase Display Name, nothing more than QOL
         name: name,
       },
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+}
+
+/** SERVER SIDE FUNCTION. Invites a user via email.
+ *
+ * @param {string} email - The user's email
+ * @params {string} name - The user's first name, for QOL
+ * @returns {Promise<object | Error>} - An object with user data if successful, an error if not successful. */
+export async function inviteUser(
+  email: string,
+  name: string
+): Promise<object | Error> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+    redirectTo: 'https://toddagriscience.com/login',
+    data: {
+      // This is for the email template
+      first_name: name,
+      // This is for Supabase Display Name, nothing more than QOL
+      name: name,
     },
   });
 
