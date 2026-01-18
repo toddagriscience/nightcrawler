@@ -2,21 +2,24 @@
 
 'use server';
 
+import { SelectResult } from 'drizzle-orm/query-builders/select.types';
 import { getUserEmail } from '../auth';
 import { db, user } from '../db/schema';
 import { eq } from 'drizzle-orm';
-import { ActionResponse } from '../types/action-response';
 import { SelectedFields } from 'drizzle-orm/pg-core';
+import { User } from '@/lib/types/db';
 
 /**
  * Gets the authenticated user's requested information. Returns an error ActionResponse if the user
  * is not authenticated, not found, or not associated with a farm.
  *
+ * At the moment, this simply returns all of the user's information for sake of type simplicity. This should be optimized in the future.
+ *
  * @returns {Promise<ActionResponse>} - If successful, the requested user's information via an ActionResponse, else an ActionResponse containing an error
  */
-export async function getAuthenticatedInfo(
-  fields: SelectedFields
-): Promise<ActionResponse> {
+export async function getAuthenticatedInfo(): Promise<
+  User | { error: string }
+> {
   const email = await getUserEmail();
 
   if (!email) {
@@ -25,7 +28,7 @@ export async function getAuthenticatedInfo(
 
   try {
     const [currentUser] = await db
-      .select(fields)
+      .select()
       .from(user)
       .where(eq(user.email, email))
       .limit(1);
@@ -38,7 +41,7 @@ export async function getAuthenticatedInfo(
       return { error: 'User is not associated with a farm' };
     }
 
-    return { data: { ...currentUser }, error: null };
+    return currentUser;
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

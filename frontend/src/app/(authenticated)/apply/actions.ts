@@ -21,17 +21,16 @@ export async function saveApplication(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo({ farmId: user.farmId });
+    const result = await getAuthenticatedInfo();
 
-    if (!result.data) {
+    if ('error' in result) {
       return result;
     }
-
-    if (!('farmId' in result.data)) {
-      return { error: 'No farm ID given' };
+    if (!result.farmId) {
+      return { error: 'No farmId given' };
     }
 
-    const farmId = result.data.farmId as number;
+    const farmId = result.farmId;
     const formDataObject = Object.fromEntries(formData);
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
@@ -80,17 +79,16 @@ export async function saveApplication(
  * */
 export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo({ farmId: user.farmId });
+    const result = await getAuthenticatedInfo();
 
-    if (!result.data) {
+    if ('error' in result) {
       return result;
     }
-
-    if (!('farmId' in result.data)) {
-      return { error: 'No farm ID given' };
+    if (!result.farmId) {
+      return { error: 'No farmId given' };
     }
 
-    const farmId = result.data.farmId as number;
+    const farmId = result.farmId;
     const applicationData = await db
       .select()
       .from(farmInfoInternalApplication)
@@ -122,19 +120,13 @@ export async function inviteUserToFarm(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const currentUser = await getAuthenticatedInfo({
-      farmId: user.farmId,
-      role: user.role,
-    });
+    const result = await getAuthenticatedInfo();
 
-    if (!currentUser.data) {
-      return currentUser;
+    if ('error' in result) {
+      return result;
     }
-    if (!('farmId' in currentUser.data) || !('role' in currentUser.data)) {
-      return { error: 'Farm ID or role not provided' };
-    }
-    if (currentUser.data.role !== 'Admin') {
-      return { error: 'User initiating invite is not an Admin' };
+    if (!result.farmId) {
+      return { error: 'No farmId given' };
     }
 
     const formDataObject = Object.fromEntries(formData);
@@ -146,7 +138,7 @@ export async function inviteUserToFarm(
       return { error: 'Invalid form data' };
     }
 
-    const farmId = currentUser.data.farmId as number;
+    const farmId = result.farmId;
     const didInvite = await inviteUser(
       validated.data.email,
       validated.data.firstName
