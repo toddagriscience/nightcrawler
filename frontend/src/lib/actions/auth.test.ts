@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 // src/lib/actions/auth.test.ts
 import { login, sendResetPasswordEmail, updateUser } from '@/lib/actions/auth';
 import { AuthResponseTypes } from '@/lib/types/auth';

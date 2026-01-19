@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
 
 /** Notes table, separated to improve performance. */
