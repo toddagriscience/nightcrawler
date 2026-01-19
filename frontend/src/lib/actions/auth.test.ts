@@ -86,7 +86,9 @@ describe('auth.ts', () => {
 
       const result = await sendResetPasswordEmail({}, formData);
 
-      expect(result.responseType).toBe(AuthResponseTypes.SendResetPasswordEmail);
+      expect(result.responseType).toBe(
+        AuthResponseTypes.SendResetPasswordEmail
+      );
       expect(result.error).toBeDefined();
     });
 

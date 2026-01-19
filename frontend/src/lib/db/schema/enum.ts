@@ -1,12 +1,7 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
 /** A general tag for different levels of quantity. */
-export const level_category = pgEnum('amt_category', [
-  'Low',
-  'Med',
-  'High',
-]);
-
+export const level_category = pgEnum('amt_category', ['Low', 'Med', 'High']);
 
 /** Renamed tags for solubility, pH, etc. */
 export const solubilityLevel = level_category.enumValues;
