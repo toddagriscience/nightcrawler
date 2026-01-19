@@ -28,7 +28,7 @@ export const farm = pgTable('farm', {
 });
 
 /** Client location data. This table *should* be internationally compatible, and all fields that aren't documented should be completely self explanatory. */
-export const farmLocation = pgTable('farmLocation', {
+export const farmLocation = pgTable('farm_location', {
   /** Foreign key relationship back to the farm */
   farmId: integer()
     .references(() => farm.id, { onDelete: 'set null' })
