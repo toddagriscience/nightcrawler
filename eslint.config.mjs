@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import licenseHeader from "eslint-plugin-license-header";
+import drizzle from "eslint-plugin-drizzle";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import noSecrets from "eslint-plugin-no-secrets";
@@ -31,9 +32,11 @@ const eslintConfig = defineConfig([
       "license-header": licenseHeaderPlugin,
       "no-secrets": noSecrets,
       vitest,
+      drizzle,
     },
     rules: {
       ...vitest.configs.recommended.rules,
+      ...drizzle.configs.recommended.rules,
       "license-header/header": [2, "./license-header.txt"],
       "no-secrets/no-secrets": "error",
     },

@@ -4,8 +4,8 @@ import { isRouteInternationalized } from '@/lib/routing';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
-/** Any protected URLs */
-const protectedUrls = ['/', '/account/reset-password'];
+// Any protected URLs - supports wildcards with `*`
+const protectedUrls = ['/', '/account/*'];
 
 /**
  * Handle authentication-based routing. If the user is:
@@ -103,16 +103,42 @@ export async function handleAuthRouting(
  * Helper function to check for protected routes as seen in `protectedUrls`.
  *
  * @param pathname The entire path, from request.nextUrl.pathname
- * @returns Whether the route meets the given criteria for an internationalized protectedRoute
- * */
-function isRouteProtected(pathname: string) {
-  return protectedUrls
-    .map((url) => {
-      // Handle '/' appropriately
-      if (pathname.length > 1 && url === '/') {
-        return false;
-      }
-      return pathname.startsWith(url);
-    })
-    .some((val) => val);
+ * @returns Whether the route matches any pattern in protectedUrls
+ */
+export function isRouteProtected(pathname: string): boolean {
+  return protectedUrls.some((pattern) => {
+    // Handle exact match for '/'
+    if (pattern === '/' && pathname.length > 1) {
+      return false;
+    }
+
+    // Check if pattern contains wildcard
+    if (pattern.includes('*')) {
+      return matchWildcardPattern(pathname, pattern);
+    }
+
+    // For non-wildcard patterns, check if pathname starts with the pattern
+    return pathname.startsWith(pattern);
+  });
+}
+
+/**
+ * Matches a pathname against a wildcard pattern.
+ * Supports '*' as a wildcard that matches any characters including nested paths.
+ *
+ * Examples:
+ * '/account/*' matches '/account/settings', '/account/settings/profile', etc.
+
+ * @param pathname The path to test
+ * @param pattern The pattern with optional wildcards
+ * @returns Whether the pathname matches the pattern
+ */
+function matchWildcardPattern(pathname: string, pattern: string): boolean {
+  // Escape special regex characters except '*'
+  const regexPattern = pattern
+    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*');
+
+  const regex = new RegExp(`^${regexPattern}$`);
+  return regex.test(pathname);
 }

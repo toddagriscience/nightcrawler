@@ -5,8 +5,9 @@ import { redirect } from 'next/navigation';
 import logger from './logger';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
+import { createClient as createServerClient } from './supabase/server';
 
-/** This file is STRICTLY for CLIENT SIDE AUTH. Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
+/**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
  * With that:
  *
@@ -24,7 +25,7 @@ import { AuthResponse, AuthResponseTypes } from './types/auth';
  */
 
 /**
- * ONLY USE ON CLIENT SIDE! Logs a user in using Supabase, and handles errors accordingly.
+ * CLIENT SIDE FUNCTION. Logs a user in using Supabase, and handles errors accordingly.
  *
  * @param email The email of the user
  * @param password The password of the user
@@ -57,7 +58,7 @@ export async function login(
   };
 }
 
-/** ONLY USE ON CLIENT SIDE! Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
+/** CLIENT SIDE FUNCTION. Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
  *
  * @returns {Promise<AuthResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
 export async function logout(): Promise<AuthResponse> {
@@ -92,7 +93,7 @@ export async function logout(): Promise<AuthResponse> {
 }
 
 /**
- * ONLY USE ON CLIENT SIDE! Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
+ * CLIENT SIDE FUNCTION. Returns whether a user is authenticated or not. Uses `getUser()` and not `getSession()` because of the potential security risks that come with it.
  *
  * @returns {Promise<boolean>} - True if the user is authenticated. */
 export async function checkAuthenticated(): Promise<boolean> {
@@ -101,4 +102,79 @@ export async function checkAuthenticated(): Promise<boolean> {
   } = await createBrowserClient().auth.getUser();
 
   return !(user == null);
+}
+
+/** SERVER SIDE FUNCTION. Returns the email of a user, if they're logged in. This effectively "doubles" as a server side version of `checkAuthenticated()`
+ *
+ * @returns {Promise<string | null>} - A string (the user's email) if authenticated, null if they aren't authenticated.*/
+export async function getUserEmail(): Promise<string | null> {
+  const supabase = await createServerClient();
+
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    return null;
+  }
+
+  return data.claims.email || null;
+}
+
+/** SERVER SIDE FUNCTION. Signs up (or creates) a user and sends a confirmation email.
+ *
+ * @param {string} email - The user's email
+ * @param {string} password - The user's password
+ * @param {string} name - The user's name, for QOL
+ * @returns {Promise<object | Error>} - An object with user data if successful, an error if not successful. */
+export async function signUpUser(
+  email: string,
+  password: string,
+  name: string
+): Promise<object | Error> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: 'https://toddagriscience.com/login',
+      data: {
+        // This is for the email template
+        first_name: name,
+        // This is for Supabase Display Name, nothing more than QOL
+        name: name,
+      },
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+}
+
+/** SERVER SIDE FUNCTION. Invites a user via email.
+ *
+ * @param {string} email - The user's email
+ * @params {string} name - The user's first name, for QOL
+ * @returns {Promise<object | Error>} - An object with user data if successful, an error if not successful. */
+export async function inviteUser(
+  email: string,
+  name: string
+): Promise<object | Error> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+    redirectTo: 'https://toddagriscience.com/login',
+    data: {
+      // This is for the email template
+      first_name: name,
+      // This is for Supabase Display Name, nothing more than QOL
+      name: name,
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
 }

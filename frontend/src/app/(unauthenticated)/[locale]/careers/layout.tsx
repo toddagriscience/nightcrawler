@@ -14,18 +14,21 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'careers.metadata' });
 
   return {
-    title: t('shortTitle'),
+    metadataBase: new URL('https://toddagriscience.com'),
+    title: {
+      absolute: `${t('shortTitle')} | Todd United States`,
+    },
     description: t('description'),
     openGraph: {
       title: t('title'),
       description: t('description'),
       url: `${env.baseUrl}/${locale}/careers`,
-      siteName: 'Todd',
+      siteName: 'Todd United States',
       locale: locale,
       type: 'website',
       images: [
         {
-          url: 'https://www.toddagriscience.com/career-opengraph-image.png',
+          url: '/career-opengraph-image.png',
           width: 2796,
           height: 1460,
           type: 'image/png',
@@ -38,7 +41,7 @@ export async function generateMetadata({
       site: '@ToddAgriscience',
       title: t('title'),
       description: t('description'),
-      images: ['https://www.toddagriscience.com/career-opengraph-image.png'],
+      images: ['/career-opengraph-image.png'],
     },
   };
 }

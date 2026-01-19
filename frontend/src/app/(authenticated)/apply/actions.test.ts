@@ -1,0 +1,285 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import { user } from '@/lib/db/schema/user';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  saveApplication,
+  sendApplicationToGoogleSheets,
+  inviteUserToFarm,
+} from './actions';
+
+const mockGetClaims = vi.fn();
+
+vi.mock('@/lib/supabase/server', async (importActual) => {
+  const actual = await importActual<typeof import('@/lib/supabase/server')>();
+  return {
+    ...actual,
+    createClient: vi.fn(() => ({
+      auth: {
+        getClaims: mockGetClaims,
+      },
+    })),
+  };
+});
+
+vi.mock('@/lib/actions/googleSheets', () => ({
+  submitToGoogleSheets: mockSubmitToGoogleSheets,
+}));
+
+const mockInviteUser = vi.fn();
+vi.mock('@/lib/auth', async () => {
+  return {
+    getUserEmail: async () => {
+      const result = mockGetClaims();
+      if (result.error || !result.data?.claims) {
+        return null;
+      }
+      return result.data.claims.email || null;
+    },
+    inviteUser: (...args: unknown[]) => mockInviteUser(...args),
+  };
+});
+
+const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
+  async () => {
+    const { drizzle } = await import('drizzle-orm/pglite');
+    const { migrate } = await import('drizzle-orm/pglite/migrator');
+    const { seed } = await import('drizzle-seed');
+    const schema = await import('@/lib/db/schema');
+    const { user, farm } = await import('@/lib/db/schema');
+
+    const db = drizzle({ schema });
+    await migrate(db, { migrationsFolder: 'drizzle' });
+    await seed(db, { farm });
+
+    const newFarm = await db.select({ farmId: farm.id }).from(farm);
+    const { farmId } = newFarm[0];
+    await db.insert(user).values({
+      firstName: 'Bob',
+      lastName: 'Racha',
+      email: 'testtest@example.com',
+      role: 'Admin',
+      farmId,
+    });
+
+    const testUserEmail = 'testtest@example.com';
+    const mockSubmitToGoogleSheets = vi.fn();
+
+    return {
+      db,
+      mockSubmitToGoogleSheets,
+      testUserEmail,
+    };
+  }
+);
+
+vi.mock('@/lib/db/schema', async (importOriginal) => {
+  return {
+    ...(await importOriginal<typeof import('@/lib/db/schema')>()),
+    db,
+  };
+});
+
+describe('saveApplication', () => {
+  it('saves with no information given', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    const result = await saveApplication(new FormData());
+    expect(result.error).toBeNull();
+  });
+
+  it('saves with some information given', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    const data = new FormData();
+    data.set('splitOperation', JSON.stringify({ foo: 'bar' }));
+    data.set('livestockIncorporation', 'zoo');
+
+    const result = await saveApplication(data);
+    expect(result.error).toBeNull();
+  });
+
+  it('throws error with incorrect email', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { email: '' },
+      error: null,
+    });
+
+    const result = await saveApplication(new FormData());
+    expect(result.error).not.toBeNull();
+  });
+});
+
+describe('sendApplicationToGoogleSheets', () => {
+  beforeEach(() => {
+    mockSubmitToGoogleSheets.mockReset();
+  });
+
+  it('sends application', async () => {
+    process.env.INTERNAL_APPLICATION_GOOGLE_SCRIPT_URL = 'https://google.com';
+
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockSubmitToGoogleSheets.mockResolvedValue(undefined);
+
+    const result = await sendApplicationToGoogleSheets();
+    expect(result.error).toBeNull();
+    expect(mockSubmitToGoogleSheets).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('inviteUserToFarm', () => {
+  afterEach(async () => {
+    mockInviteUser.mockReset();
+  });
+
+  /** Creates valid FormData that resembles the user schema from Drizzle */
+  const createValidUserFormData = (overrides: Record<string, string> = {}) => {
+    const formData = new FormData();
+    formData.set('firstName', overrides.firstName ?? 'Jane');
+    formData.set('lastName', overrides.lastName ?? 'Smith');
+    // Use unique email to avoid conflicts with seeded data
+    formData.set(
+      'email',
+      overrides.email ??
+        `test-${Date.now()}-${Math.random().toString(36).slice(2)}@example.com`
+    );
+    formData.set('phone', overrides.phone ?? '+15551234567');
+    formData.set('role', overrides.role ?? 'Viewer');
+    formData.set('job', overrides.job ?? 'Farm Manager');
+    return formData;
+  };
+
+  it('successfully invites a user with valid form data', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockInviteUser.mockResolvedValue({ user: { id: 'new-user-id' } });
+
+    const newUserEmail = `invite-test-${Date.now()}@example.com`;
+    const formData = createValidUserFormData({ email: newUserEmail });
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBeNull();
+    expect(mockInviteUser).toHaveBeenCalledWith(newUserEmail, 'Jane');
+  });
+
+  it('returns error when user is not authenticated', async () => {
+    mockGetClaims.mockReturnValue({
+      data: null,
+      error: new Error('Not authenticated'),
+    });
+
+    const formData = createValidUserFormData();
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBe("No email registered with this user's account");
+    expect(mockInviteUser).not.toHaveBeenCalled();
+  });
+
+  it('returns error when form data is invalid (missing required fields)', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    // Missing required fields
+    const formData = new FormData();
+    formData.set('firstName', 'John');
+    // Missing lastName, email, role
+
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBe('Invalid form data');
+    expect(mockInviteUser).not.toHaveBeenCalled();
+  });
+
+  it('returns error when inviteUser fails', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockInviteUser.mockResolvedValue(new Error('User already exists'));
+
+    const formData = createValidUserFormData();
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBe('User already exists');
+  });
+
+  it('returns error when current user is not found', async () => {
+    // Use an email that doesn't exist in the database
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: 'nonexistent@example.com' } },
+      error: null,
+    });
+
+    const formData = createValidUserFormData();
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBe('User not found');
+    expect(mockInviteUser).not.toHaveBeenCalled();
+  });
+
+  it('creates user record in database after successful invite', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockInviteUser.mockResolvedValue({ user: { id: 'supabase-user-id' } });
+
+    const uniqueEmail = `invited-${Date.now()}@example.com`;
+    const formData = createValidUserFormData({ email: uniqueEmail });
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBeNull();
+
+    // Verify the new user was created in the database
+    const { eq } = await import('drizzle-orm');
+    const [newUser] = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, uniqueEmail))
+      .limit(1);
+
+    expect(newUser).toBeDefined();
+    expect(newUser.firstName).toBe('Jane');
+    expect(newUser.lastName).toBe('Smith');
+    expect(newUser.email).toBe(uniqueEmail);
+    expect(newUser.role).toBe('Viewer');
+  });
+
+  it('invites user with Admin role', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockInviteUser.mockResolvedValue({ user: { id: 'admin-user-id' } });
+
+    const uniqueEmail = `admin-${Date.now()}@example.com`;
+    const formData = createValidUserFormData({
+      email: uniqueEmail,
+      role: 'Admin',
+      firstName: 'Admin',
+      lastName: 'User',
+    });
+    const result = await inviteUserToFarm(formData);
+
+    expect(result.error).toBeNull();
+    expect(mockInviteUser).toHaveBeenCalledWith(uniqueEmail, 'Admin');
+  });
+});
