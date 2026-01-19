@@ -2,8 +2,15 @@
 
 'use server';
 
-import { getUserEmail, inviteUser } from '@/lib/auth';
-import { db, farmInfoInternalApplication, user } from '@/lib/db/schema';
+import { inviteUser } from '@/lib/auth';
+import {
+  farm,
+  farmCertificate,
+  farmInfoInternalApplication,
+  farmLocation,
+  user,
+} from '@/lib/db/schema';
+import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { eq } from 'drizzle-orm';
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
@@ -11,6 +18,107 @@ import { userInsertSchema } from '@/lib/zod-schemas/db';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import z from 'zod';
+import {
+  GeneralBusinessInformationInsert,
+  generalBusinessInformationInsertSchema,
+} from './types';
+import {
+  FarmCertificateInsert,
+  FarmInsert,
+  FarmLocationInsert,
+} from '@/lib/types/db';
+
+/** Saves general business information to the farm, farmLocation, and farmCertificate tables.
+ *
+ * @param {FormData} formData - Data from the form submission.
+ * @returns {ActionResponse} - Returns nothing if successful, returns an error if else.
+ */
+export async function saveGeneralBusinessInformation(
+  formData: GeneralBusinessInformationInsert
+) {
+  try {
+    const result = await getAuthenticatedInfo();
+
+    if ('error' in result) {
+      return result;
+    }
+    if (!result.farmId) {
+      return { error: 'No farmId given' };
+    }
+
+    const farmId = result.farmId;
+    const validated = generalBusinessInformationInsertSchema.safeParse({
+      ...formData,
+      farmId,
+    });
+
+    if (!validated.success) {
+      return { error: z.treeifyError(validated.error) };
+    }
+
+    // As far as I'm aware, manually picking these fields out is the best way to go about this.
+    const farmInfo: FarmInsert = {
+      ...validated.data,
+    };
+    const farmLocationInfo: FarmLocationInsert = {
+      ...validated.data,
+    };
+    const farmCertificates: FarmCertificateInsert = {
+      ...validated.data,
+    };
+
+    // Update the farm table. Guaranteed to already exist.
+    await db
+      .update(farm)
+      .set({
+        ...farmInfo,
+      })
+      .where(eq(farm.id, farmId));
+
+    // Upsert farmLocation
+    const existingLocation = await db
+      .select({ farmId: farmLocation.farmId })
+      .from(farmLocation)
+      .where(eq(farmLocation.farmId, farmId))
+      .limit(1);
+
+    if (existingLocation.length > 0) {
+      await db
+        .update(farmLocation)
+        .set({
+          ...farmLocationInfo,
+        })
+        .where(eq(farmLocation.farmId, farmId));
+    } else {
+      await db.insert(farmLocation).values({
+        ...farmLocationInfo,
+      });
+    }
+
+    // Upsert farmCertificate
+    const existingCertificate = await db
+      .select({ id: farmCertificate.id })
+      .from(farmCertificate)
+      .where(eq(farmCertificate.farmId, farmId))
+      .limit(1);
+
+    if (existingCertificate.length > 0) {
+      await db
+        .update(farmCertificate)
+        .set(farmCertificates)
+        .where(eq(farmCertificate.id, existingCertificate[0].id));
+    } else {
+      await db.insert(farmCertificate).values(farmCertificates);
+    }
+
+    return { error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Unknown error' };
+  }
+}
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *

@@ -2,11 +2,10 @@
 
 'use server';
 
-import { SelectResult } from 'drizzle-orm/query-builders/select.types';
 import { getUserEmail } from '../auth';
-import { db, user } from '../db/schema';
+import { user } from '../db/schema';
+import { db } from '../db/schema/connection';
 import { eq } from 'drizzle-orm';
-import { SelectedFields } from 'drizzle-orm/pg-core';
 import { User } from '@/lib/types/db';
 
 /**
