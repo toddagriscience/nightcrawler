@@ -2,13 +2,11 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Link } from '@/i18n/config';
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { ShieldCheck } from 'lucide-react';
-import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import { Link } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -65,6 +63,8 @@ const Footer = () => {
     },
   ];
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
       <div className="flex flex-col md:flex-row">
@@ -112,7 +112,7 @@ const Footer = () => {
           />
           <span>{t('location')}</span>
         </div>
-        <p>© Todd Agriscience 2025</p>
+        <p>© Todd Agriscience {currentYear}</p>
         <div className="flex flex-col flex-wrap gap-6 items-start md:flex-row">
           {legalLinks.map((val, index) => (
             <Link key={index} href={val.href}>
