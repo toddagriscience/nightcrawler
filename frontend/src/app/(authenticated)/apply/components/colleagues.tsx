@@ -22,8 +22,9 @@ import FormErrorMessage from '@/components/common/form-error-message/form-error-
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { FadeIn } from '@/components/common';
 import { inviteUserToFarm } from '../actions';
+import { userRoleEnum } from '@/lib/db/schema';
 
-const USER_ROLES = ['Admin', 'Viewer'] as const;
+const USER_ROLES = userRoleEnum.enumValues;
 
 /** The second tab for inviting colleagues to the Todd platform. */
 export default function Colleagues({ allUsers }: { allUsers: User[] }) {
