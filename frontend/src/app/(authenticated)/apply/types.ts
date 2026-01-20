@@ -12,6 +12,8 @@ import {
   farmLocationUpdateSchema,
   farmUpdateSchema,
 } from '@/lib/zod-schemas/db';
+import { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 
 export const generalBusinessInformationInsertSchema = z.intersection(
   farmLocationInsertSchema,
@@ -39,3 +41,25 @@ export type GeneralBusinessInformationSelect = z.infer<
 export type GeneralBusinessInformationUpdate = z.infer<
   typeof generalBusinessInformationUpdateSchema
 >;
+
+/** Base props for farm form fields using Controller */
+export interface FarmFormControlProps {
+  control: Control<FarmInfoInternalApplicationInsert>;
+  errors: FieldErrors<FarmInfoInternalApplicationInsert>;
+}
+
+/** Props for farm form fields that also need the farm name */
+export interface FarmFormControlWithFarmNameProps extends FarmFormControlProps {
+  farmName?: string;
+}
+
+/** Props for farm form fields using register instead of Controller */
+export interface FarmFormRegisterProps {
+  register: UseFormRegister<FarmInfoInternalApplicationInsert>;
+  errors: FieldErrors<FarmInfoInternalApplicationInsert>;
+}
+
+/** Props for farm form fields using register with farm name */
+export interface FarmFormRegisterWithFarmNameProps extends FarmFormRegisterProps {
+  farmName?: string;
+}

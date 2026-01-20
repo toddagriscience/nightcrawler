@@ -12,27 +12,28 @@ import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { FadeIn } from '@/components/common';
 import { saveApplication } from '../actions';
-import { Checkbox } from '@/components/ui/checkbox';
-import SplitOperation from './internal-application/split-operation';
-import AlternateFarming from './internal-application/alternate-farming';
-import FarmActivities from './internal-application/farm-activities';
-import ProductionLocation from './internal-application/production-location';
-import CultivationPractices from './internal-application/cultivation-practices';
-import PestControl from './internal-application/pest-control';
-import OffFarmProducts from './internal-application/off-farm-products';
-import SupplierContracts from './internal-application/supplier-contracts';
-import IrrigationWaterSource from './internal-application/irrigation-water-source';
-import NearContaminationSource from './internal-application/near-contamination-source';
-import ActiveWildAreas from './internal-application/active-wild-areas';
-import ManageHarvests from './internal-application/manage-harvests';
-import WaterUsedPostHarvest from './internal-application/water-used-post-harvest';
-import PrimaryMarketVenues from './internal-application/primary-market-venues';
-import Branding from './internal-application/branding';
-import ProductDifferentiation from './internal-application/product-differentiation';
+import {
+  ActiveWildAreas,
+  AlternateFarming,
+  Branding,
+  CultivationPractices,
+  FarmActivities,
+  IrrigationWaterSource,
+  ManageHarvests,
+  NearContaminationSource,
+  OffFarmProducts,
+  PestControl,
+  PrimaryMarketVenues,
+  ProductDifferentiation,
+  ProductionLocation,
+  SplitOperation,
+  SupplierContracts,
+  WaterUsedPostHarvest,
+} from './farm';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm({

@@ -7,18 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
-
-interface ProductDifferentiationProps {
-  control: Control<FarmInfoInternalApplicationInsert>;
-  errors: FieldErrors<FarmInfoInternalApplicationInsert>;
-}
+import { Controller } from 'react-hook-form';
+import { FarmFormControlProps } from '../../types';
 
 export default function ProductDifferentiation({
   control,
   errors,
-}: ProductDifferentiationProps) {
+}: FarmFormControlProps) {
   return (
     <Field>
       <div className="flex flex-row justify-between">

@@ -6,15 +6,10 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { Controller } from 'react-hook-form';
+import { FarmFormControlProps } from '../../types';
 
-interface BrandingProps {
-  control: Control<FarmInfoInternalApplicationInsert>;
-  errors: FieldErrors<FarmInfoInternalApplicationInsert>;
-}
-
-export default function Branding({ control, errors }: BrandingProps) {
+export default function Branding({ control, errors }: FarmFormControlProps) {
   return (
     <Field>
       <div className="flex flex-row justify-between">
