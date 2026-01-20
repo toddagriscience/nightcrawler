@@ -26,6 +26,7 @@ import {
   FarmCertificateInsert,
   FarmInsert,
   FarmLocationInsert,
+  UserInsert,
 } from '@/lib/types/db';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
@@ -222,10 +223,10 @@ export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
 
 /** Invites a user to "join" the farm.
  *
- * @param {FormData} formData - The user's information, validated by a Zod schema generated from the Drizzle schema
+ * @param {UserInsert} formData - The user's information, validated by a Zod schema generated from the Drizzle schema
  * @returns {Promise<ActionResponse>} - Returns nothing if successful, returns an error if else. */
 export async function inviteUserToFarm(
-  formData: FormData
+  formData: UserInsert
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
@@ -237,13 +238,10 @@ export async function inviteUserToFarm(
       return { error: 'No farmId given' };
     }
 
-    const formDataObject = Object.fromEntries(formData);
     // Don't require the user's new ID to be sent with formData
-    const validated = userInsertSchema
-      .omit({ id: true })
-      .safeParse(formDataObject);
+    const validated = userInsertSchema.omit({ id: true }).safeParse(formData);
     if (!validated.success) {
-      return { error: 'Invalid form data' };
+      return { error: z.treeifyError(validated.error) };
     }
 
     const farmId = result.farmId;

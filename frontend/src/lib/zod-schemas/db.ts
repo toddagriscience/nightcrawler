@@ -10,7 +10,6 @@ import {
 } from 'drizzle-zod';
 
 export const userInsertSchema = createInsertSchema(user);
-
 export const farmInfoInternalApplicationInsertSchema = createInsertSchema(
   farmInfoInternalApplication
 );

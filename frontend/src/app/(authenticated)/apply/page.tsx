@@ -3,8 +3,9 @@
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import GeneralBusinessInformation from './components/general-business-information';
+import Colleagues from './components/colleagues';
 import { db } from '@/lib/db/schema/connection';
-import { farm, farmCertificate, farmLocation } from '@/lib/db/schema';
+import { farm, farmCertificate, farmLocation, user } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 /** The apply page
@@ -25,6 +26,8 @@ export default async function Apply() {
     .fullJoin(farmLocation, eq(farmLocation.farmId, farmId))
     .fullJoin(farmCertificate, eq(farmCertificate.farmId, farmId))
     .limit(1);
+
+  const allUsers = await db.select().from(user).where(eq(user.farmId, farmId));
 
   return (
     <div>
@@ -49,7 +52,9 @@ export default async function Apply() {
           />
         </TabsContent>
 
-        <TabsContent value="colleagues">{/* Colleagues content */}</TabsContent>
+        <TabsContent value="colleagues">
+          <Colleagues allUsers={allUsers} />
+        </TabsContent>
 
         <TabsContent value="farm">{/* Farm Information content */}</TabsContent>
 
