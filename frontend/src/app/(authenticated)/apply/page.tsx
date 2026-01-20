@@ -5,8 +5,15 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id
 import GeneralBusinessInformation from './components/general-business-information';
 import Colleagues from './components/colleagues';
 import { db } from '@/lib/db/schema/connection';
-import { farm, farmCertificate, farmLocation, user } from '@/lib/db/schema';
+import {
+  farm,
+  farmCertificate,
+  farmInfoInternalApplication,
+  farmLocation,
+  user,
+} from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import Farm from './components/farm';
 
 /** The apply page
  *
@@ -28,6 +35,11 @@ export default async function Apply() {
     .limit(1);
 
   const allUsers = await db.select().from(user).where(eq(user.farmId, farmId));
+  const [internalApplication] = await db
+    .select()
+    .from(farmInfoInternalApplication)
+    .where(eq(farmInfoInternalApplication.farmId, farmId))
+    .limit(1);
 
   return (
     <div>
@@ -56,7 +68,9 @@ export default async function Apply() {
           <Colleagues allUsers={allUsers} />
         </TabsContent>
 
-        <TabsContent value="farm">{/* Farm Information content */}</TabsContent>
+        <TabsContent value="farm">
+          <Farm defaultValues={{ ...internalApplication, farmId }} />
+        </TabsContent>
 
         <TabsContent value="terms">{/* Terms content */}</TabsContent>
       </Tabs>

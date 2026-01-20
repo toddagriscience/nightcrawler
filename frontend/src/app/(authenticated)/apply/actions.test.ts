@@ -7,6 +7,7 @@ import {
   sendApplicationToGoogleSheets,
   inviteUserToFarm,
 } from './actions';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 
 const mockGetClaims = vi.fn();
 
@@ -87,7 +88,7 @@ describe('saveApplication', () => {
       error: null,
     });
 
-    const result = await saveApplication(new FormData());
+    const result = await saveApplication({ farmId: 1 });
     expect(result.error).toBeNull();
   });
 
@@ -97,9 +98,11 @@ describe('saveApplication', () => {
       error: null,
     });
 
-    const data = new FormData();
-    data.set('splitOperation', JSON.stringify({ foo: 'bar' }));
-    data.set('livestockIncorporation', 'zoo');
+    const data: FarmInfoInternalApplicationInsert = {
+      farmId: 1,
+      splitOperation: { foo: 'bar' },
+      livestockIncorporation: 'zoo',
+    };
 
     const result = await saveApplication(data);
     expect(result.error).toBeNull();
@@ -111,7 +114,7 @@ describe('saveApplication', () => {
       error: null,
     });
 
-    const result = await saveApplication(new FormData());
+    const result = await saveApplication({ farmId: 1 });
     expect(result.error).not.toBeNull();
   });
 });

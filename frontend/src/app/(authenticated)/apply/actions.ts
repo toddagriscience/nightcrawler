@@ -24,6 +24,7 @@ import {
 } from './types';
 import {
   FarmCertificateInsert,
+  FarmInfoInternalApplicationInsert,
   FarmInsert,
   FarmLocationInsert,
   UserInsert,
@@ -123,11 +124,11 @@ export async function saveGeneralBusinessInformation(
 
 /** Creates or updates an internal application based off of the given information. All fields are optional.
  *
- * @param {FormData} formData - Data from the form submission.
+ * @param {FarmInfoInternalApplicationInsert} formData - Data from the form submission.
  * @returns {ActionResponse} - Returns nothing if successful, returns an error if else.
  * */
 export async function saveApplication(
-  formData: FormData
+  formData: FarmInfoInternalApplicationInsert
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
@@ -140,13 +141,12 @@ export async function saveApplication(
     }
 
     const farmId = result.farmId;
-    const formDataObject = Object.fromEntries(formData);
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
         createdAt: true,
         updatedAt: true,
       })
-      .safeParse({ ...formDataObject, farmId });
+      .safeParse({ ...formData, farmId });
 
     if (!validated.success) {
       return { error: z.treeifyError(validated.error) };
@@ -162,10 +162,7 @@ export async function saveApplication(
     if (existingApplication.length > 0) {
       await db
         .update(farmInfoInternalApplication)
-        .set({
-          ...validated.data,
-          updatedAt: new Date(),
-        })
+        .set(validated.data)
         .where(eq(farmInfoInternalApplication.farmId, farmId));
     } else {
       await db.insert(farmInfoInternalApplication).values({
