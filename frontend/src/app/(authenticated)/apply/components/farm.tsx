@@ -33,7 +33,7 @@ import {
   SplitOperation,
   SupplierContracts,
   WaterUsedPostHarvest,
-} from './farm';
+} from './farm/index';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm({
