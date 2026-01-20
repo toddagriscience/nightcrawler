@@ -23,6 +23,16 @@ import FarmActivities from './internal-application/farm-activities';
 import ProductionLocation from './internal-application/production-location';
 import CultivationPractices from './internal-application/cultivation-practices';
 import PestControl from './internal-application/pest-control';
+import OffFarmProducts from './internal-application/off-farm-products';
+import SupplierContracts from './internal-application/supplier-contracts';
+import IrrigationWaterSource from './internal-application/irrigation-water-source';
+import NearContaminationSource from './internal-application/near-contamination-source';
+import ActiveWildAreas from './internal-application/active-wild-areas';
+import ManageHarvests from './internal-application/manage-harvests';
+import WaterUsedPostHarvest from './internal-application/water-used-post-harvest';
+import PrimaryMarketVenues from './internal-application/primary-market-venues';
+import Branding from './internal-application/branding';
+import ProductDifferentiation from './internal-application/product-differentiation';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm({
@@ -47,7 +57,7 @@ export default function Farm({
       <div className="max-w-3xl">
         <form onSubmit={handleSubmit(saveApplication)}>
           <h2 className="text-lg font-semibold">General Farm Information</h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
+          <FieldSet className="mb-8 flex flex-col gap-6">
             <Field>
               <div className="flex flex-row justify-between">
                 <FieldLabel>
@@ -156,10 +166,10 @@ export default function Farm({
             <FarmActivities control={control} errors={errors} />
           </FieldSet>
 
-          <h2 className="text-lg font-semibold mt-6">
+          <h2 className="mt-6 text-lg font-semibold">
             Production &amp; Cultivation
           </h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
+          <FieldSet className="mb-8 flex flex-col gap-6">
             <ProductionLocation control={control} errors={errors} />
 
             <CultivationPractices control={control} errors={errors} />
@@ -229,25 +239,9 @@ export default function Farm({
           </FieldSet>
 
           {/* Inputs & Materials */}
-          <h2 className="text-lg font-semibold mt-6">Inputs &amp; Materials</h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
-            {/* JSON field placeholder: offFarmProducts */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  What off-farm products are used (compost, manure, fertilizers,
-                  etc.)?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="offFarmProducts"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+          <h2 className="mt-6 text-lg font-semibold">Inputs &amp; Materials</h2>
+          <FieldSet className="mb-8 flex flex-col gap-6">
+            <OffFarmProducts control={control} errors={errors} />
 
             {/* JSON field placeholder: otherMaterials */}
             <Field>
@@ -267,44 +261,12 @@ export default function Farm({
               <Input type="text" placeholder="To be implemented" disabled />
             </Field>
 
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Is the farm in any supplier contracts?</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="supplierContracts"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input
-                type="text"
-                placeholder="Describe any supplier contracts"
-                {...register('supplierContracts')}
-              />
-            </Field>
+            <SupplierContracts register={register} errors={errors} />
           </FieldSet>
 
-          {/* Irrigation & Water */}
-          <h2 className="text-lg font-semibold mt-6">Irrigation &amp; Water</h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
-            {/* JSON field placeholder: irrigationWaterSource */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  What is the source of your irrigation water?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="irrigationWaterSource"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+          <h2 className="mt-6 text-lg font-semibold">Irrigation &amp; Water</h2>
+          <FieldSet className="mb-8 flex flex-col gap-6">
+            <IrrigationWaterSource control={control} errors={errors} />
 
             <Field>
               <div className="flex flex-row justify-between">
@@ -406,10 +368,10 @@ export default function Farm({
           </FieldSet>
 
           {/* Environmental & Conservation */}
-          <h2 className="text-lg font-semibold mt-6">
+          <h2 className="mt-6 text-lg font-semibold">
             Environmental &amp; Conservation
           </h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
+          <FieldSet className="mb-8 flex flex-col gap-6">
             <Field>
               <div className="flex flex-row justify-between">
                 <FieldLabel>
@@ -430,41 +392,9 @@ export default function Farm({
               />
             </Field>
 
-            {/* JSON field placeholder: nearContaminationSource */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  Is the farm near conventional agriculture or mining that may
-                  contaminate?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="nearContaminationSource"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <NearContaminationSource control={control} errors={errors} />
 
-            {/* JSON field placeholder: activeWildAreas */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  Are active wild areas reserved for biodiversity on or near the
-                  farm?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="activeWildAreas"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <ActiveWildAreas control={control} errors={errors} />
 
             <Field>
               <div className="flex flex-row justify-between">
@@ -488,88 +418,17 @@ export default function Farm({
           </FieldSet>
 
           {/* Harvest & Markets */}
-          <h2 className="text-lg font-semibold mt-6">Harvest &amp; Markets</h2>
-          <FieldSet className="flex flex-col gap-6 mb-8">
-            {/* JSON field placeholder: manageHarvests */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>How do you manage your harvests?</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="manageHarvests"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+          <h2 className="mt-6 text-lg font-semibold">Harvest &amp; Markets</h2>
+          <FieldSet className="mb-8 flex flex-col gap-6">
+            <ManageHarvests control={control} errors={errors} />
 
-            {/* JSON field placeholder: waterUsedPostHarvest */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  Is water used in direct contact with produce post-harvest?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="waterUsedPostHarvest"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <WaterUsedPostHarvest control={control} errors={errors} />
 
-            {/* JSON field placeholder: primaryMarketVenues */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>What are your primary market venues?</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="primaryMarketVenues"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <PrimaryMarketVenues control={control} errors={errors} />
 
-            {/* JSON field placeholder: branding */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  Is your produce packed for another brand or third party?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="branding"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <Branding control={control} errors={errors} />
 
-            {/* JSON field placeholder: productDifferentiation */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  How do you differentiate your produce to consumers?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="productDifferentiation"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <ProductDifferentiation control={control} errors={errors} />
           </FieldSet>
 
           <div className="mt-6">

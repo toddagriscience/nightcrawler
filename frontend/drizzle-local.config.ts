@@ -14,6 +14,6 @@ export default defineConfig({
     user: process.env.LOCAL_DATABASE_USER,
     password: process.env.LOCAL_DATABASE_PASSWORD,
     database: process.env.LOCAL_DATABASE_DATABASE!,
-    ssl: Boolean(process.env.LOCAL_DATABASE_SSL),
+    ssl: process.env.LOCAL_DATABASE_SSL === 'true',
   },
 });

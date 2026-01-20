@@ -49,15 +49,15 @@ export const farmInfoInternalApplication = pgTable(
     /** What, if any, measures are taken to prevent or control pests? */
     pestControl: jsonb().$type<Record<string, any>>(),
     /** What, if any, off-farm products, including commerical compost, manure, gypsum, limestone, micronutrients, or other fertilizers/soil amendments. */
-    offFarmProducts: jsonb().$type<Object>(),
+    offFarmProducts: jsonb().$type<Record<string, any>>(),
     /** What, if any, synthedic fertilizers, pesticides, fungicides, or any other materials such as treated seed (including coatings, pelleting materials, and inoculants), growing media (substrate, planting mix, potting soil), adjuvants, etc. */
-    otherMaterials: jsonb().$type<Object>(),
+    otherMaterials: jsonb().$type<Record<string, any>>(),
     /** What, if any, mechnaical equipment and/or seeding/planting equipment for production? */
     mechanicalEquipment: text(),
     /** Is `farm name` in any supplier contracts? */
     supplierContracts: text(),
     /** What is the source of your irrigation water? (select all that apply) */
-    irrigationWaterSource: jsonb().$type<Object>(),
+    irrigationWaterSource: jsonb().$type<Record<string, any>>(),
     /** What, if any, crop requirements, rainfall, soil types, and evaporation rate are considered in irrigation scheduling? */
     irrigationScheduling: text(),
     /** How is soil moisture monitored to improve irrigation efficiency in order to avoid excessive water application? */
@@ -71,21 +71,21 @@ export const farmInfoInternalApplication = pgTable(
     /** What, if any, measures are taken to prevent or minimize erosion? (No-till or permanent cover, Strip cropping, Leveling, Contour farming, Terraces, Cover cropping, Conservation (minimum) tillage, Micro-irrigate, Windbreaks, Minimize bare ground via crop rotation) */
     erosionPrevention: text(),
     /** Is `farm name` near conventional agriculture or mining that may present the potential for contamination? */
-    nearContaminationSource: jsonb().$type<Object>(),
+    nearContaminationSource: jsonb().$type<Record<string, any>>(),
     /** Are active wild areas reserved for biolocical diversity located on or near the farm? including soil type and condition, bodies of water, nearby wetlands and woodlands, wildlife, windbreaks, hedgerows, native habitat and beneficial plantings. Include any problem areas such as erosion and invasive species. */
-    activeWildAreas: jsonb().$type<Object>(),
+    activeWildAreas: jsonb().$type<Record<string, any>>(),
     /** How, if in action, do you improve and/or maintain natural resources in non-crop areas, such as borders, fallow land, and non farming habitats? */
     naturalResources: text(),
     /** How do you manage your harvests? */
-    manageHarvests: jsonb().$type<Object>(),
+    manageHarvests: jsonb().$type<Record<string, any>>(),
     /** Is water used in direct contact with produce post-harvest? */
-    waterUsedPostHarvest: jsonb().$type<Object>(),
+    waterUsedPostHarvest: jsonb().$type<Record<string, any>>(),
     /** What are your primary market venues? */
-    primaryMarketVenues: jsonb().$type<Object>(),
+    primaryMarketVenues: jsonb().$type<Record<string, any>>(),
     /** Is your produce packed for another brand, or do you use branding owned by a third party? */
-    branding: jsonb().$type<Object>(),
+    branding: jsonb().$type<Record<string, any>>(),
     /** How do you differentiate your produce to your consumers? (select all that apply) */
-    productDifferentiation: jsonb().$type<Object>(),
+    productDifferentiation: jsonb().$type<Record<string, any>>(),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp().notNull().defaultNow(),
   }
