@@ -48,20 +48,10 @@ export interface FarmFormControlProps {
   errors: FieldErrors<FarmInfoInternalApplicationInsert>;
 }
 
-/** Props for farm form fields that also need the farm name */
-export interface FarmFormControlWithFarmNameProps extends FarmFormControlProps {
-  farmName?: string;
-}
-
 /** Props for farm form fields using register instead of Controller */
 export interface FarmFormRegisterProps {
   register: UseFormRegister<FarmInfoInternalApplicationInsert>;
   errors: FieldErrors<FarmInfoInternalApplicationInsert>;
-}
-
-/** Props for farm form fields using register with farm name */
-export interface FarmFormRegisterWithFarmNameProps extends FarmFormRegisterProps {
-  farmName?: string;
 }
 
 export type TabTypes = 'general' | 'colleagues' | 'farm' | 'terms';

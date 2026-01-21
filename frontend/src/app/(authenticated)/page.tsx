@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { Button } from '@/components/ui';
+import ApplyButton from './components/apply-button';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -46,7 +47,7 @@ export default async function DashboardPage() {
             </Link>
           </>
         ) : (
-          <Button>Apply</Button>
+          <ApplyButton />
         )}
       </div>
     </div>

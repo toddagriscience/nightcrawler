@@ -11,6 +11,7 @@ import {
 } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import ApplicationTabs from './components/application-tabs';
+import { redirect } from 'next/navigation';
 
 /** The apply page
  *
@@ -19,7 +20,16 @@ export default async function Apply() {
   const currentUser = await getAuthenticatedInfo();
 
   if ('error' in currentUser) {
-    return <div></div>;
+    return (
+      <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
+        <h1>There was an error with authentication</h1>
+        <p>{currentUser.error}</p>
+      </div>
+    );
+  }
+
+  if (currentUser.approved) {
+    redirect('/');
   }
 
   const farmId = currentUser.farmId!;

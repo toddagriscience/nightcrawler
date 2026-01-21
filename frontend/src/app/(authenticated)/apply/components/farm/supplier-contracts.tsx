@@ -6,17 +6,16 @@ import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { FarmFormRegisterWithFarmNameProps } from '../../types';
+import { FarmFormRegisterProps } from '../../types';
 
 export default function SupplierContracts({
   register,
   errors,
-  farmName = 'The farm',
-}: FarmFormRegisterWithFarmNameProps) {
+}: FarmFormRegisterProps) {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>Is {farmName} in any supplier contracts?</FieldLabel>
+        <FieldLabel>Is your farm in any supplier contracts?</FieldLabel>
         <ErrorMessage
           errors={errors}
           name="supplierContracts"

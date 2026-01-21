@@ -8,18 +8,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
-import { FarmFormControlWithFarmNameProps } from '../../types';
+import { FarmFormControlProps } from '../../types';
 
 export default function NearContaminationSource({
   control,
   errors,
-  farmName = 'The farm',
-}: FarmFormControlWithFarmNameProps) {
+}: FarmFormControlProps) {
   return (
     <Field>
       <div className="flex flex-row justify-between">
         <FieldLabel>
-          Is {farmName} near conventional agriculture or mining that may present
+          Is your farm near conventional agriculture or mining that may present
           the potential for contamination?
         </FieldLabel>
         <ErrorMessage

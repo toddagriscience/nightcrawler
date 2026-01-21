@@ -57,8 +57,8 @@ export default function Certifications({
           </div>
           {watch('hasGAP') && (
             <>
-              <div className="mt-2 ml-7 flex flex-col gap-2">
-                <div className="flex flex-row justify-between">
+              <div className="mt-2 flex flex-col gap-2 w-auto">
+                <div className="flex flex-row justify-between ml-6">
                   <FieldLabel>GAP Certification Date</FieldLabel>
                   <ErrorMessage
                     errors={errors}
@@ -68,13 +68,16 @@ export default function Certifications({
                     )}
                   />
                 </div>
-                <Input type="date" {...register('GAPDate')} />
+                <Input
+                  type="date"
+                  {...register('GAPDate')}
+                  className="w-auto ml-6"
+                />
               </div>
             </>
           )}
         </Field>
 
-        {/* Local/Facility Inspection */}
         <Field>
           <div className="flex flex-row items-center gap-3">
             <Controller
@@ -100,8 +103,8 @@ export default function Certifications({
             />
           </div>
           {watch('hasLocalInspection') && (
-            <div className="mt-2 ml-7 flex flex-col gap-2">
-              <div className="flex flex-row justify-between">
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="flex flex-row justify-between ml-6">
                 <FieldLabel>Local Inspection Date</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -111,12 +114,15 @@ export default function Certifications({
                   )}
                 />
               </div>
-              <Input type="date" {...register('localInspectionDate')} />
+              <Input
+                type="date"
+                {...register('localInspectionDate')}
+                className="w-auto ml-6"
+              />
             </div>
           )}
         </Field>
 
-        {/* Organic */}
         <Field>
           <div className="flex flex-row items-center gap-3">
             <Controller
@@ -140,8 +146,8 @@ export default function Certifications({
             />
           </div>
           {watch('hasOrganic') && (
-            <div className="mt-2 ml-7 flex flex-col gap-2">
-              <div className="flex flex-row justify-between">
+            <div className="mt-2  flex flex-col gap-2">
+              <div className="flex flex-row justify-between ml-6">
                 <FieldLabel>Organic Certification Date</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -151,12 +157,15 @@ export default function Certifications({
                   )}
                 />
               </div>
-              <Input type="date" {...register('organicDate')} />
+              <Input
+                type="date"
+                {...register('organicDate')}
+                className="w-auto ml-6"
+              />
             </div>
           )}
         </Field>
 
-        {/* Biodynamic */}
         <Field>
           <div className="flex flex-row items-center gap-3">
             <Controller
@@ -180,8 +189,8 @@ export default function Certifications({
             />
           </div>
           {watch('hasBiodynamic') && (
-            <div className="mt-2 ml-7 flex flex-col gap-2">
-              <div className="flex flex-row justify-between">
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="flex flex-row justify-between ml-6">
                 <FieldLabel>Biodynamic Certification Date</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -191,12 +200,15 @@ export default function Certifications({
                   )}
                 />
               </div>
-              <Input type="date" {...register('biodynamicDate')} />
+              <Input
+                type="date"
+                {...register('biodynamicDate')}
+                className="w-auto ml-6"
+              />
             </div>
           )}
         </Field>
 
-        {/* Regenerative Organic */}
         <Field>
           <div className="flex flex-row items-center gap-3">
             <Controller
@@ -222,8 +234,8 @@ export default function Certifications({
             />
           </div>
           {watch('hasRegenerativeOrganic') && (
-            <div className="mt-2 ml-7 flex flex-col gap-2">
-              <div className="flex flex-row justify-between">
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="flex flex-row justify-between ml-6">
                 <FieldLabel>Regenerative Organic Date</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -233,7 +245,11 @@ export default function Certifications({
                   )}
                 />
               </div>
-              <Input type="date" {...register('regenerativeOrganic')} />
+              <Input
+                type="date"
+                {...register('regenerativeOrganic')}
+                className="ml-6 w-auto"
+              />
             </div>
           )}
         </Field>
