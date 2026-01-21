@@ -152,7 +152,7 @@ export default function ProductDifferentiation({
               </FieldLabel>
             </Field>
             {field.value?.notApplicable?.isNotApplicable && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe why not applicable"
                   value={field.value?.notApplicable?.description ?? ''}

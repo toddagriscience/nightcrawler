@@ -47,7 +47,7 @@ export default function CultivationPractices({
               </FieldLabel>
             </Field>
             {field.value?.manure?.isManure && (
-              <div className="mb-4">
+              <div className="mb-4 ml-6">
                 <FieldLabel className="mb-4">
                   Do you apply raw animal manure (including any compost, compost
                   tea, or vermicompost containing manure is not composted),
@@ -152,7 +152,7 @@ export default function CultivationPractices({
               </FieldLabel>
             </Field>
             {field.value?.compostWithManure?.isCompostWithManure && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe ingredients, what percentage is produced on the farm, are Biodynamic preparations used"
                   value={field.value?.compostWithManure?.description ?? ''}
@@ -191,7 +191,7 @@ export default function CultivationPractices({
               </FieldLabel>
             </Field>
             {field.value?.compostWithoutManure?.isCompostWithoutManure && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe ingredients, what percentage is produced on the farm, are Biodynamic preparations used"
                   value={field.value?.compostWithoutManure?.description ?? ''}
@@ -409,7 +409,7 @@ export default function CultivationPractices({
               </FieldLabel>
             </Field>
             {field.value?.other?.isOther && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe..."
                   value={field.value?.other?.description ?? ''}

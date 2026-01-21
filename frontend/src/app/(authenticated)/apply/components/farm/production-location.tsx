@@ -61,7 +61,7 @@ export default function ProductionLocation({
               </FieldLabel>
             </Field>
             {field.value?.greenhouse?.isGreenhouse && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="ml-6 mb-4 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe..."
                   value={field.value?.greenhouse?.description ?? ''}
@@ -92,7 +92,7 @@ export default function ProductionLocation({
               </FieldLabel>
             </Field>
             {field.value?.shadehouse?.isShadehouse && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe..."
                   value={field.value?.shadehouse?.description ?? ''}
@@ -123,7 +123,7 @@ export default function ProductionLocation({
               </FieldLabel>
             </Field>
             {field.value?.buildings?.isBuildings && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 flex flex-row ml-6 flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe..."
                   value={field.value?.buildings?.description ?? ''}
@@ -154,7 +154,7 @@ export default function ProductionLocation({
               </FieldLabel>
             </Field>
             {field.value?.other?.isOther && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe..."
                   value={field.value?.other?.description ?? ''}
@@ -237,7 +237,7 @@ export default function ProductionLocation({
                   </FieldLabel>
                 </Field>
                 {field.value?.conventionalProduction?.isOther && (
-                  <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                  <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                     <Textarea
                       placeholder="Describe..."
                       value={

@@ -147,7 +147,7 @@ export default function OtherMaterials({
               </FieldLabel>
             </Field>
             {field.value?.usesNpk?.isUsesNpk && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe NPK usage..."
                   value={field.value?.usesNpk?.description ?? ''}
@@ -182,7 +182,7 @@ export default function OtherMaterials({
               </FieldLabel>
             </Field>
             {field.value?.usesSodiumNitrate?.isUsesSodiumNitrate && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe sodium nitrate usage..."
                   value={field.value?.usesSodiumNitrate?.description ?? ''}
@@ -218,7 +218,7 @@ export default function OtherMaterials({
               </FieldLabel>
             </Field>
             {field.value?.treatedLumber?.isTreatedLumber && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe treated lumber installations..."
                   value={field.value?.treatedLumber?.description ?? ''}

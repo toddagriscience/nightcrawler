@@ -78,7 +78,7 @@ export default function PestControl({ control, errors }: FarmFormControlProps) {
               </FieldLabel>
             </Field>
             {field.value?.pestControlMaterials?.isPestControlMaterials && (
-              <div className="mb-4 flex flex-col gap-4">
+              <div className="mb-4 ml-6 flex flex-col gap-4">
                 <div>
                   <FieldLabel htmlFor="preventContamination" className="mb-2">
                     Describe how you prevent pest control materials from

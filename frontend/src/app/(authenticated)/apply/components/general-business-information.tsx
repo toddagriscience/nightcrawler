@@ -138,9 +138,11 @@ export default function GeneralBusinessInformation({
             </Button>
           </div>
         </div>
-        <FieldSet className={hasAddress !== 'unanswered' ? 'mb-6' : ''}>
+        <FieldSet
+          className={`flex flex-col gap-4 ${hasAddress !== 'unanswered' ? 'mb-6' : ''}`}
+        >
           {hasAddress === 'yes' ? (
-            <FadeIn className="flex flex-col gap-4">
+            <>
               <Field>
                 <div className="flex flex-row justify-between">
                   <FieldLabel>Address Line 1</FieldLabel>
@@ -250,9 +252,9 @@ export default function GeneralBusinessInformation({
                   {...register('country')}
                 />
               </Field>
-            </FadeIn>
+            </>
           ) : hasAddress === 'no' ? (
-            <FadeIn className="flex flex-col gap-4">
+            <>
               <Field>
                 <div className="flex flex-row justify-between">
                   <FieldLabel>
@@ -292,7 +294,7 @@ export default function GeneralBusinessInformation({
                   {...register('apn')}
                 />
               </Field>
-            </FadeIn>
+            </>
           ) : null}
         </FieldSet>
 
