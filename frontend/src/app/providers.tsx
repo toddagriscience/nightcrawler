@@ -12,9 +12,9 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
       api_host:
         process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
-      person_profiles: 'always',
+      person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
       defaults: '2025-05-24',
-      cookieless_mode: 'always',
+      cookieless_mode: 'on_reject',
     });
   }, []);
 
