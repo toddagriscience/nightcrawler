@@ -8,6 +8,7 @@ import {
   type GeneralBusinessInformationInsert,
   type GeneralBusinessInformationUpdate,
   generalBusinessInformationInsertSchema,
+  TabTypes,
 } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
@@ -17,29 +18,51 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { FadeIn } from '@/components/common';
 import { saveGeneralBusinessInformation } from '../actions';
 import { Address, Certifications } from './general-business-information/index';
+import { useState } from 'react';
 
 /** The 1st tab in the application page for general business information */
 export default function GeneralBusinessInformation({
   defaultValues,
+  setCurrentTab,
 }: {
   defaultValues?: GeneralBusinessInformationUpdate;
+  setCurrentTab: (arg0: TabTypes) => void;
 }) {
   const {
     register,
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<GeneralBusinessInformationInsert>({
     defaultValues: defaultValues ?? {},
     resolver: zodResolver(generalBusinessInformationInsertSchema),
   });
 
+  const [lastSaved, setLastSaved] = useState<Date>(new Date());
+
+  async function save(formData: GeneralBusinessInformationInsert) {
+    await saveGeneralBusinessInformation(formData);
+  }
+
+  async function onChangeHelper() {
+    const delay = 5 * 1000;
+    if (new Date().getTime() - lastSaved.getTime() > delay) {
+      handleSubmit(save)();
+      setLastSaved(new Date());
+    }
+  }
+
   return (
     <FadeIn className="mt-6">
       <form
         className="mt-6 flex max-w-3xl flex-col gap-6"
-        onSubmit={handleSubmit(saveGeneralBusinessInformation)}
+        onSubmit={() => {
+          handleSubmit(save)();
+          setCurrentTab('colleagues');
+          scrollTo(0, 0);
+        }}
+        onChange={onChangeHelper}
       >
         <h2 className="text-lg font-semibold">Business Information</h2>
         <FieldSet className="flex flex-col gap-6">
@@ -131,7 +154,10 @@ export default function GeneralBusinessInformation({
           register={register}
         />
 
-        <SubmitButton buttonText="SAVE AND NEXT"></SubmitButton>
+        <SubmitButton
+          buttonText="SAVE AND NEXT"
+          reactHookFormPending={isSubmitting}
+        ></SubmitButton>
       </form>
     </FadeIn>
   );

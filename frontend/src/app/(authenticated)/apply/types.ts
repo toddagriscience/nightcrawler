@@ -63,3 +63,5 @@ export interface FarmFormRegisterProps {
 export interface FarmFormRegisterWithFarmNameProps extends FarmFormRegisterProps {
   farmName?: string;
 }
+
+export type TabTypes = 'general' | 'colleagues' | 'farm' | 'terms';

@@ -1,9 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import GeneralBusinessInformation from './components/general-business-information';
-import Colleagues from './components/colleagues';
 import { db } from '@/lib/db/schema/connection';
 import {
   farm,
@@ -13,7 +10,7 @@ import {
   user,
 } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import Farm from './components/farm';
+import ApplicationTabs from './components/application-tabs';
 
 /** The apply page
  *
@@ -43,36 +40,15 @@ export default async function Apply() {
 
   return (
     <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
-      <Tabs defaultValue="general">
-        <TabsList className="flex h-auto flex-wrap items-center justify-start gap-3 bg-transparent max-md:mt-6">
-          <TabsTrigger value="general">
-            General Business Information
-          </TabsTrigger>
-          <TabsTrigger value="colleagues">Colleagues</TabsTrigger>
-          <TabsTrigger value="farm">Farm Information</TabsTrigger>
-          <TabsTrigger value="terms">Terms</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="general">
-          <GeneralBusinessInformation
-            defaultValues={{
-              ...farmInfo.farm,
-              ...farmInfo.farm_location,
-              ...farmInfo.farm_certificate,
-            }}
-          />
-        </TabsContent>
-
-        <TabsContent value="colleagues">
-          <Colleagues allUsers={allUsers} />
-        </TabsContent>
-
-        <TabsContent value="farm">
-          <Farm defaultValues={{ ...internalApplication, farmId }} />
-        </TabsContent>
-
-        <TabsContent value="terms">{/* Terms content */}</TabsContent>
-      </Tabs>
+      <ApplicationTabs
+        farmInfo={{
+          ...farmInfo.farm,
+          ...farmInfo.farm_location,
+          ...farmInfo.farm_certificate,
+        }}
+        allUsers={allUsers}
+        internalApplication={internalApplication}
+      />
     </div>
   );
 }

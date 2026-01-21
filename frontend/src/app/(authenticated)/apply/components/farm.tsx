@@ -36,31 +36,52 @@ import {
   WaterUsedPostHarvest,
 } from './farm/index';
 import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
+import { TabTypes } from '../types';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm({
   defaultValues,
+  setCurrentTab,
 }: {
   defaultValues?: FarmInfoInternalApplicationSelect;
+  setCurrentTab: (arg0: TabTypes) => void;
 }) {
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FarmInfoInternalApplicationInsert>({
     defaultValues: defaultValues ?? {},
     resolver: zodResolver(farmInfoInternalApplicationInsertSchema),
   });
 
-  console.log(errors);
+  const [lastSaved, setLastSaved] = useState<Date>(new Date());
+
+  async function save(formData: FarmInfoInternalApplicationInsert) {
+    await saveApplication(formData);
+  }
+
+  async function onChangeHelper() {
+    const delay = 5 * 1000;
+    if (new Date().getTime() - lastSaved.getTime() > delay) {
+      handleSubmit(save)();
+      setLastSaved(new Date());
+    }
+  }
 
   return (
     <FadeIn className="mt-6">
       <div>
         <form
           className="mt-6 flex max-w-3xl flex-col gap-6"
-          onSubmit={handleSubmit(saveApplication)}
+          onSubmit={() => {
+            handleSubmit(save)();
+            setCurrentTab('terms');
+            scrollTo(0, 0);
+          }}
+          onChange={onChangeHelper}
         >
           <h2 className="text-lg font-semibold">General Farm Information</h2>
           <FieldSet className="mx-auto mb-8 flex flex-col gap-6">
@@ -417,9 +438,10 @@ export default function Farm({
             <ProductDifferentiation control={control} errors={errors} />
           </FieldSet>
 
-          <div className="mt-6">
-            <SubmitButton buttonText="SAVE AND NEXT" />
-          </div>
+          <SubmitButton
+            reactHookFormPending={isSubmitting}
+            buttonText="SAVE AND NEXT"
+          />
         </form>
       </div>
     </FadeIn>

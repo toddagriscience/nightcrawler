@@ -23,6 +23,8 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { FadeIn } from '@/components/common';
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
+import { Button } from '@/components/ui';
+import { TabTypes } from '../types';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -39,7 +41,13 @@ const userRolesWithDescription: Record<string, any>[] = [
 ];
 
 /** The second tab for inviting colleagues to the Todd platform. */
-export default function Colleagues({ allUsers }: { allUsers: User[] }) {
+export default function Colleagues({
+  allUsers,
+  setCurrentTab,
+}: {
+  allUsers: User[];
+  setCurrentTab: (arg0: TabTypes) => void;
+}) {
   const [users, setUsers] = useState(allUsers);
   const {
     register,
@@ -58,8 +66,6 @@ export default function Colleagues({ allUsers }: { allUsers: User[] }) {
       // Add the new user to the list and reset the form
       setUsers([...users, data as User]);
       reset();
-    } else {
-      console.log(result);
     }
   }
 
@@ -278,8 +284,22 @@ export default function Colleagues({ allUsers }: { allUsers: User[] }) {
             </Field>
           </FieldSet>
 
-          <div className="mt-6">
-            <SubmitButton buttonText="INVITE TEAM MEMBER" />
+          <div className="mt-10 flex flex-row gap-6">
+            <SubmitButton
+              buttonText="INVITE TEAM MEMBER"
+              className="basis-2/3"
+            />
+            <Button
+              onClick={() => {
+                setCurrentTab('farm');
+                scrollTo(0, 0);
+              }}
+              className="basis-1/3 
+        w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 
+            "
+            >
+              NEXT
+            </Button>
           </div>
         </form>
       </div>
