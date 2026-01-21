@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -31,9 +31,8 @@ export default function CultivationPractices({
         control={control}
         name="cultivationPractices"
         render={({ field }) => (
-          <FieldSet>
-            <Field>
-              <FieldLabel htmlFor="manure">Manure</FieldLabel>
+          <FieldSet className="flex flex-col gap-2">
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.manure?.isManure}
                 onCheckedChange={(e) =>
@@ -43,16 +42,20 @@ export default function CultivationPractices({
                   })
                 }
               />
-              {field.value?.manure?.isManure && (
-                <Field>
-                  <FieldLabel>
-                    Do you apply raw animal manure (including any compost,
-                    compost tea, or vermicompost containing manure is not
-                    composted), and/or do you have planned grazing of animals in
-                    your organic crop production areas?
-                  </FieldLabel>
-                  <Field>
-                    <FieldLabel htmlFor="manureNo">No</FieldLabel>
+              <FieldLabel htmlFor="manure" className="whitespace-nowrap">
+                Manure
+              </FieldLabel>
+            </Field>
+            {field.value?.manure?.isManure && (
+              <div className="mb-4">
+                <FieldLabel className="mb-4">
+                  Do you apply raw animal manure (including any compost, compost
+                  tea, or vermicompost containing manure is not composted),
+                  and/or do you have planned grazing of animals in your organic
+                  crop production areas?
+                </FieldLabel>
+                <div className="flex flex-col gap-2">
+                  <Field orientation="horizontal">
                     <Checkbox
                       checked={field.value?.manure?.rawManure?.no}
                       onCheckedChange={(e) =>
@@ -70,9 +73,14 @@ export default function CultivationPractices({
                         })
                       }
                     />
+                    <FieldLabel
+                      htmlFor="manureNo"
+                      className="whitespace-nowrap"
+                    >
+                      No
+                    </FieldLabel>
                   </Field>
-                  <Field>
-                    <FieldLabel htmlFor="manureYes">Yes</FieldLabel>
+                  <Field orientation="horizontal">
                     <Checkbox
                       checked={field.value?.manure?.rawManure?.yes}
                       onCheckedChange={(e) =>
@@ -90,12 +98,14 @@ export default function CultivationPractices({
                         })
                       }
                     />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="manurePlannedGrazing">
-                      Yes, my operation uses planned grazing of animals in
-                      organic crop production areas
+                    <FieldLabel
+                      htmlFor="manureYes"
+                      className="whitespace-nowrap"
+                    >
+                      Yes
                     </FieldLabel>
+                  </Field>
+                  <Field orientation="horizontal">
                     <Checkbox
                       checked={field.value?.manure?.rawManure?.plannedGrazing}
                       onCheckedChange={(e) =>
@@ -113,14 +123,15 @@ export default function CultivationPractices({
                         })
                       }
                     />
+                    <FieldLabel htmlFor="manurePlannedGrazing">
+                      Yes, my operation uses planned grazing of animals in
+                      organic crop production areas
+                    </FieldLabel>
                   </Field>
-                </Field>
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="compostWithManure">
-                Compost with manure
-              </FieldLabel>
+                </div>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.compostWithManure?.isCompostWithManure}
                 onCheckedChange={(e) =>
@@ -133,8 +144,16 @@ export default function CultivationPractices({
                   })
                 }
               />
-              {field.value?.compostWithManure?.isCompostWithManure && (
-                <Input
+              <FieldLabel
+                htmlFor="compostWithManure"
+                className="whitespace-nowrap"
+              >
+                Compost with manure
+              </FieldLabel>
+            </Field>
+            {field.value?.compostWithManure?.isCompostWithManure && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe ingredients, what percentage is produced on the farm, are Biodynamic preparations used"
                   value={field.value?.compostWithManure?.description ?? ''}
                   onChange={(e) =>
@@ -147,12 +166,9 @@ export default function CultivationPractices({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="compostWithoutManure">
-                Compost without manure
-              </FieldLabel>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={
                   field.value?.compostWithoutManure?.isCompostWithoutManure
@@ -167,8 +183,16 @@ export default function CultivationPractices({
                   })
                 }
               />
-              {field.value?.compostWithoutManure?.isCompostWithoutManure && (
-                <Input
+              <FieldLabel
+                htmlFor="compostWithoutManure"
+                className="whitespace-nowrap"
+              >
+                Compost without manure
+              </FieldLabel>
+            </Field>
+            {field.value?.compostWithoutManure?.isCompostWithoutManure && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe ingredients, what percentage is produced on the farm, are Biodynamic preparations used"
                   value={field.value?.compostWithoutManure?.description ?? ''}
                   onChange={(e) =>
@@ -181,12 +205,9 @@ export default function CultivationPractices({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="incorporationOfCropResidue">
-                Incorporation of crop residue
-              </FieldLabel>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.incorporationOfCropResidue}
                 onCheckedChange={(e) =>
@@ -196,11 +217,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="minedGypsumOrLimestone">
-                Mined gypsum or limestone
+              <FieldLabel
+                htmlFor="incorporationOfCropResidue"
+                className="whitespace-nowrap"
+              >
+                Incorporation of crop residue
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.minedGypsumOrLimestone}
                 onCheckedChange={(e) =>
@@ -210,11 +234,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="foliarFertilizers">
-                Foliar fertilizers
+              <FieldLabel
+                htmlFor="minedGypsumOrLimestone"
+                className="whitespace-nowrap"
+              >
+                Mined gypsum or limestone
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.foliarFertilizers}
                 onCheckedChange={(e) =>
@@ -224,9 +251,14 @@ export default function CultivationPractices({
                   })
                 }
               />
+              <FieldLabel
+                htmlFor="foliarFertilizers"
+                className="whitespace-nowrap"
+              >
+                Foliar fertilizers
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="cropRotation">Crop rotation</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.cropRotation}
                 onCheckedChange={(e) =>
@@ -236,11 +268,11 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="blendedFertilizers">
-                Blended fertilizers
+              <FieldLabel htmlFor="cropRotation" className="whitespace-nowrap">
+                Crop rotation
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.blendedFertilizers}
                 onCheckedChange={(e) =>
@@ -250,11 +282,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="minedMineralsOrPowders">
-                Mined minerals or powders
+              <FieldLabel
+                htmlFor="blendedFertilizers"
+                className="whitespace-nowrap"
+              >
+                Blended fertilizers
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.minedMineralsOrPowders}
                 onCheckedChange={(e) =>
@@ -264,9 +299,14 @@ export default function CultivationPractices({
                   })
                 }
               />
+              <FieldLabel
+                htmlFor="minedMineralsOrPowders"
+                className="whitespace-nowrap"
+              >
+                Mined minerals or powders
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="plantMaterials">Plant materials</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.plantMaterials}
                 onCheckedChange={(e) =>
@@ -276,11 +316,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="biodynamicPreparations">
-                Biodynamic preparations
+              <FieldLabel
+                htmlFor="plantMaterials"
+                className="whitespace-nowrap"
+              >
+                Plant materials
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.biodynamicPreparations}
                 onCheckedChange={(e) =>
@@ -290,9 +333,14 @@ export default function CultivationPractices({
                   })
                 }
               />
+              <FieldLabel
+                htmlFor="biodynamicPreparations"
+                className="whitespace-nowrap"
+              >
+                Biodynamic preparations
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="soilInoculants">Soil inoculants</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.soilInoculants}
                 onCheckedChange={(e) =>
@@ -302,11 +350,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="coverCropsIncludingGreenManures">
-                Cover crops including green manures
+              <FieldLabel
+                htmlFor="soilInoculants"
+                className="whitespace-nowrap"
+              >
+                Soil inoculants
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.coverCropsIncludingGreenManures}
                 onCheckedChange={(e) =>
@@ -316,11 +367,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="sideDressingOrDripApplications">
-                Side dressing or drip applications
+              <FieldLabel
+                htmlFor="coverCropsIncludingGreenManures"
+                className="whitespace-nowrap"
+              >
+                Cover crops including green manures
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.sideDressingOrDripApplications}
                 onCheckedChange={(e) =>
@@ -330,11 +384,14 @@ export default function CultivationPractices({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="otherCultivationPractice">
-                Other describe:
+              <FieldLabel
+                htmlFor="sideDressingOrDripApplications"
+                className="whitespace-nowrap"
+              >
+                Side dressing or drip applications
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.other?.isOther}
                 onCheckedChange={(e) =>
@@ -344,8 +401,17 @@ export default function CultivationPractices({
                   })
                 }
               />
-              {field.value?.other?.isOther && (
-                <Input
+              <FieldLabel
+                htmlFor="otherCultivationPractice"
+                className="whitespace-nowrap"
+              >
+                Other, describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.other?.isOther && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  placeholder="Describe..."
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -357,8 +423,8 @@ export default function CultivationPractices({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
           </FieldSet>
         )}
       />

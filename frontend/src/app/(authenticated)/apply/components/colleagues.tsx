@@ -24,7 +24,19 @@ import { FadeIn } from '@/components/common';
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 
-const USER_ROLES = userRoleEnum.enumValues;
+const userRoles = userRoleEnum.enumValues;
+
+// Yes, this is hardcoded. Sue me.
+const userRolesWithDescription: Record<string, any>[] = [
+  {
+    role: userRoles[0],
+    description: 'Administrators can control any and all information',
+  },
+  {
+    role: userRoles[1],
+    description: 'Viewers can only view information regarding the farm',
+  },
+];
 
 /** The second tab for inviting colleagues to the Todd platform. */
 export default function Colleagues({ allUsers }: { allUsers: User[] }) {
@@ -52,26 +64,26 @@ export default function Colleagues({ allUsers }: { allUsers: User[] }) {
   }
 
   return (
-    <FadeIn>
+    <FadeIn className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="text-lg font-semibold mb-4">Current Team Members</h2>
+        <h2 className="mb-4 text-lg font-semibold">Current Team Members</h2>
         <div className="mb-8">
           {users.length > 0 ? (
             <div className="flex flex-col gap-2">
               {users.map((singleUser, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center p-3 border rounded-md"
+                  className="flex flex-row items-center justify-between rounded-md border p-3"
                 >
-                  <div>
-                    <span className="font-medium">
+                  <div className="flex w-full flex-col sm:flex-row">
+                    <p className="font-medium">
                       {singleUser.firstName} {singleUser.lastName}
-                    </span>
-                    <span className="text-muted-foreground ml-2">
+                    </p>
+                    <p className="text-muted-foreground sm:ml-2">
                       ({singleUser.email})
-                    </span>
+                    </p>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     {singleUser.role}
                   </span>
                 </div>
@@ -82,7 +94,7 @@ export default function Colleagues({ allUsers }: { allUsers: User[] }) {
           )}
         </div>
 
-        <h2 className="text-lg font-semibold mb-4">Invite a New Team Member</h2>
+        <h2 className="mb-4 text-lg font-semibold">Invite a New Team Member</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldSet className="flex flex-col gap-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -192,14 +204,17 @@ export default function Colleagues({ allUsers }: { allUsers: User[] }) {
                 name="role"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="border rounded-md px-3">
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ''}
+                  >
+                    <SelectTrigger className="rounded-md border px-3">
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {USER_ROLES.map((role) => (
-                        <SelectItem key={role} value={role}>
-                          {role}
+                    <SelectContent className="bg-white">
+                      {userRolesWithDescription.map((role) => (
+                        <SelectItem key={role.role} value={role.role}>
+                          {role.role} - {role.description}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -27,12 +27,8 @@ export default function PestControl({ control, errors }: FarmFormControlProps) {
         control={control}
         name="pestControl"
         render={({ field }) => (
-          <FieldSet>
-            <Field>
-              <FieldLabel htmlFor="preventionPractices">
-                Prevention practices are effective and additional controls are
-                not needed at this time.
-              </FieldLabel>
+          <FieldSet className="flex flex-col gap-2">
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.preventionPractices}
                 onCheckedChange={(e) =>
@@ -42,12 +38,12 @@ export default function PestControl({ control, errors }: FarmFormControlProps) {
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="mechanicalOrPhysicalControls">
-                Mechanical or physical controls, including traps, light, or
-                sound.
+              <FieldLabel htmlFor="preventionPractices">
+                Prevention practices are effective and additional controls are
+                not needed at this time.
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.mechanicalOrPhysicalControls}
                 onCheckedChange={(e) =>
@@ -57,11 +53,12 @@ export default function PestControl({ control, errors }: FarmFormControlProps) {
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="pestControlMaterials">
-                Pest control materials (e.g. applied via fumigation or fogging)
+              <FieldLabel htmlFor="mechanicalOrPhysicalControls">
+                Mechanical or physical controls, including traps, light, or
+                sound.
               </FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={
                   field.value?.pestControlMaterials?.isPestControlMaterials
@@ -76,53 +73,58 @@ export default function PestControl({ control, errors }: FarmFormControlProps) {
                   })
                 }
               />
-              {field.value?.pestControlMaterials?.isPestControlMaterials && (
-                <>
-                  <Field>
-                    <FieldLabel htmlFor="preventContamination">
-                      Describe how you prevent pest control materials from
-                      contaminating soil and crops:
-                    </FieldLabel>
-                    <Input
-                      value={
-                        field.value?.pestControlMaterials
-                          ?.preventContamination ?? ''
-                      }
-                      onChange={(e) =>
-                        field.onChange({
-                          ...field.value,
-                          pestControlMaterials: {
-                            ...field.value?.pestControlMaterials,
-                            preventContamination: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="recordPestControlUse">
-                      Describe how you record pest control material use and
-                      measures taken to protect organic crops:
-                    </FieldLabel>
-                    <Input
-                      value={
-                        field.value?.pestControlMaterials
-                          ?.recordPestControlUse ?? ''
-                      }
-                      onChange={(e) =>
-                        field.onChange({
-                          ...field.value,
-                          pestControlMaterials: {
-                            ...field.value?.pestControlMaterials,
-                            recordPestControlUse: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                </>
-              )}
+              <FieldLabel htmlFor="pestControlMaterials">
+                Pest control materials (e.g. applied via fumigation or fogging)
+              </FieldLabel>
             </Field>
+            {field.value?.pestControlMaterials?.isPestControlMaterials && (
+              <div className="mb-4 flex flex-col gap-4">
+                <div>
+                  <FieldLabel htmlFor="preventContamination" className="mb-2">
+                    Describe how you prevent pest control materials from
+                    contaminating soil and crops:
+                  </FieldLabel>
+                  <Textarea
+                    placeholder="Describe..."
+                    value={
+                      field.value?.pestControlMaterials?.preventContamination ??
+                      ''
+                    }
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        pestControlMaterials: {
+                          ...field.value?.pestControlMaterials,
+                          preventContamination: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel htmlFor="recordPestControlUse" className="mb-2">
+                    Describe how you record pest control material use and
+                    measures taken to protect organic crops:
+                  </FieldLabel>
+                  <Textarea
+                    placeholder="Describe..."
+                    value={
+                      field.value?.pestControlMaterials?.recordPestControlUse ??
+                      ''
+                    }
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        pestControlMaterials: {
+                          ...field.value?.pestControlMaterials,
+                          recordPestControlUse: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
           </FieldSet>
         )}
       />

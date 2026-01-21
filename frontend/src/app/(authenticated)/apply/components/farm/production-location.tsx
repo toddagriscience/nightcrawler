@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -31,9 +31,8 @@ export default function ProductionLocation({
         control={control}
         name="productionLocation"
         render={({ field }) => (
-          <FieldSet>
-            <Field>
-              <FieldLabel htmlFor="notApplicable">Not applicable</FieldLabel>
+          <FieldSet className="flex flex-col gap-2">
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.notApplicable}
                 onCheckedChange={(e) =>
@@ -43,9 +42,11 @@ export default function ProductionLocation({
                   })
                 }
               />
+              <FieldLabel htmlFor="notApplicable" className="whitespace-nowrap">
+                Not applicable
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="greenhouse">Greenhouse</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.greenhouse?.isGreenhouse}
                 onCheckedChange={(e) =>
@@ -55,8 +56,14 @@ export default function ProductionLocation({
                   })
                 }
               />
-              {field.value?.greenhouse?.isGreenhouse && (
-                <Input
+              <FieldLabel htmlFor="greenhouse" className="whitespace-nowrap">
+                Greenhouse
+              </FieldLabel>
+            </Field>
+            {field.value?.greenhouse?.isGreenhouse && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  placeholder="Describe..."
                   value={field.value?.greenhouse?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -68,10 +75,9 @@ export default function ProductionLocation({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="shadehouse">Shadehouse</FieldLabel>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.shadehouse?.isShadehouse}
                 onCheckedChange={(e) =>
@@ -81,8 +87,14 @@ export default function ProductionLocation({
                   })
                 }
               />
-              {field.value?.shadehouse?.isShadehouse && (
-                <Input
+              <FieldLabel htmlFor="shadehouse" className="whitespace-nowrap">
+                Shadehouse
+              </FieldLabel>
+            </Field>
+            {field.value?.shadehouse?.isShadehouse && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  placeholder="Describe..."
                   value={field.value?.shadehouse?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -94,10 +106,9 @@ export default function ProductionLocation({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="buildings">Buildings</FieldLabel>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.buildings?.isBuildings}
                 onCheckedChange={(e) =>
@@ -107,8 +118,14 @@ export default function ProductionLocation({
                   })
                 }
               />
-              {field.value?.buildings?.isBuildings && (
-                <Input
+              <FieldLabel htmlFor="buildings" className="whitespace-nowrap">
+                Buildings
+              </FieldLabel>
+            </Field>
+            {field.value?.buildings?.isBuildings && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  placeholder="Describe..."
                   value={field.value?.buildings?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -120,10 +137,9 @@ export default function ProductionLocation({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="otherLocation">Other</FieldLabel>
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.other?.isOther}
                 onCheckedChange={(e) =>
@@ -133,8 +149,14 @@ export default function ProductionLocation({
                   })
                 }
               />
-              {field.value?.other?.isOther && (
-                <Input
+              <FieldLabel htmlFor="otherLocation" className="whitespace-nowrap">
+                Other
+              </FieldLabel>
+            </Field>
+            {field.value?.other?.isOther && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  placeholder="Describe..."
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -146,83 +168,96 @@ export default function ProductionLocation({
                     })
                   }
                 />
-              )}
-            </Field>
-            <Field>
-              <FieldLabel>
+              </div>
+            )}
+            <div className="mt-4">
+              <FieldLabel className="mb-4">
                 Does your operation also have conventional production in
                 greenhouses, shadehouses, or buildings?
               </FieldLabel>
-              <Field>
-                <FieldLabel htmlFor="conventionalProductionYes">
-                  Yes, organic and nonorganic production take place in adjacent
-                  growing areas (e.g. adjacent structures)
-                </FieldLabel>
-                <Checkbox
-                  checked={field.value?.conventionalProduction?.yes}
-                  onCheckedChange={(e) =>
-                    field.onChange({
-                      ...field.value,
-                      conventionalProduction: {
-                        ...field.value?.conventionalProduction,
-                        yes: e,
-                        no: false,
-                      },
-                    })
-                  }
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="conventionalProductionNo">No</FieldLabel>
-                <Checkbox
-                  checked={field.value?.conventionalProduction?.no}
-                  onCheckedChange={(e) =>
-                    field.onChange({
-                      ...field.value,
-                      conventionalProduction: {
-                        ...field.value?.conventionalProduction,
-                        no: e,
-                        yes: false,
-                      },
-                    })
-                  }
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="conventionalProductionOther">
-                  Other, describe:
-                </FieldLabel>
-                <Checkbox
-                  checked={field.value?.conventionalProduction?.isOther}
-                  onCheckedChange={(e) =>
-                    field.onChange({
-                      ...field.value,
-                      conventionalProduction: {
-                        ...field.value?.conventionalProduction,
-                        isOther: e,
-                      },
-                    })
-                  }
-                />
-                {field.value?.conventionalProduction?.isOther && (
-                  <Input
-                    value={
-                      field.value?.conventionalProduction?.otherDescription ??
-                      ''
-                    }
-                    onChange={(e) =>
+              <div className="flex flex-col gap-2">
+                <Field orientation="horizontal">
+                  <Checkbox
+                    checked={field.value?.conventionalProduction?.yes}
+                    onCheckedChange={(e) =>
                       field.onChange({
                         ...field.value,
                         conventionalProduction: {
                           ...field.value?.conventionalProduction,
-                          otherDescription: e.target.value,
+                          yes: e,
+                          no: false,
                         },
                       })
                     }
                   />
+                  <FieldLabel htmlFor="conventionalProductionYes">
+                    Yes, organic and nonorganic production take place in
+                    adjacent growing areas (e.g. adjacent structures)
+                  </FieldLabel>
+                </Field>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    checked={field.value?.conventionalProduction?.no}
+                    onCheckedChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        conventionalProduction: {
+                          ...field.value?.conventionalProduction,
+                          no: e,
+                          yes: false,
+                        },
+                      })
+                    }
+                  />
+                  <FieldLabel
+                    htmlFor="conventionalProductionNo"
+                    className="whitespace-nowrap"
+                  >
+                    No
+                  </FieldLabel>
+                </Field>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    checked={field.value?.conventionalProduction?.isOther}
+                    onCheckedChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        conventionalProduction: {
+                          ...field.value?.conventionalProduction,
+                          isOther: e,
+                        },
+                      })
+                    }
+                  />
+                  <FieldLabel
+                    htmlFor="conventionalProductionOther"
+                    className="whitespace-nowrap"
+                  >
+                    Other, describe:
+                  </FieldLabel>
+                </Field>
+                {field.value?.conventionalProduction?.isOther && (
+                  <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                    <Textarea
+                      placeholder="Describe..."
+                      value={
+                        field.value?.conventionalProduction?.otherDescription ??
+                        ''
+                      }
+                      onChange={(e) =>
+                        field.onChange({
+                          ...field.value,
+                          conventionalProduction: {
+                            ...field.value?.conventionalProduction,
+                            otherDescription: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
                 )}
-              </Field>
-            </Field>
+              </div>
+            </div>
           </FieldSet>
         )}
       />

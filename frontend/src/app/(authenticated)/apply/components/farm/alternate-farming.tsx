@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Field, FieldLabel } from '@/components/ui/field';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
@@ -14,8 +14,8 @@ export default function AlternateFarming({
   errors,
 }: FarmFormControlProps) {
   return (
-    <div className="flex flex-row justify-between">
-      <FieldLabel>
+    <div className="flex flex-col justify-between">
+      <FieldLabel className="mb-4">
         Does your operation alternate organic and conventional farming?
       </FieldLabel>
       <ErrorMessage
@@ -27,9 +27,8 @@ export default function AlternateFarming({
         control={control}
         name="alternateFarming"
         render={({ field }) => (
-          <>
-            <Field>
-              <FieldLabel htmlFor="alternateFarmingNo">No</FieldLabel>
+          <FieldSet className="gap-2">
+            <Field orientation={'horizontal'}>
               <Checkbox
                 id="alternateFarmingNo"
                 checked={field.value?.no}
@@ -40,11 +39,9 @@ export default function AlternateFarming({
                   })
                 }
               />
+              <FieldLabel htmlFor="alternateFarmingNo">No</FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="alternateFarmingPast">
-                Yes, in the past
-              </FieldLabel>
+            <Field orientation={'horizontal'}>
               <Checkbox
                 id="alternateFarmingPast"
                 checked={field.value?.yesInThePast}
@@ -55,11 +52,11 @@ export default function AlternateFarming({
                   })
                 }
               />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="alternateFarmingCurrent">
-                Yes, we currently alternate production
+              <FieldLabel htmlFor="alternateFarmingPast">
+                Yes, in the past
               </FieldLabel>
+            </Field>
+            <Field orientation={'horizontal'}>
               <Checkbox
                 id="alternateFarmingCurrent"
                 checked={field.value?.yesCurrently}
@@ -70,8 +67,11 @@ export default function AlternateFarming({
                   })
                 }
               />
+              <FieldLabel htmlFor="alternateFarmingCurrent">
+                Yes, we currently alternate production
+              </FieldLabel>
             </Field>
-          </>
+          </FieldSet>
         )}
       />
     </div>

@@ -26,6 +26,7 @@ import {
   ManageHarvests,
   NearContaminationSource,
   OffFarmProducts,
+  OtherMaterials,
   PestControl,
   PrimaryMarketVenues,
   ProductDifferentiation,
@@ -34,6 +35,7 @@ import {
   SupplierContracts,
   WaterUsedPostHarvest,
 } from './farm/index';
+import { Textarea } from '@/components/ui/textarea';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm({
@@ -54,11 +56,14 @@ export default function Farm({
   console.log(errors);
 
   return (
-    <FadeIn>
-      <div className="max-w-3xl">
-        <form onSubmit={handleSubmit(saveApplication)}>
+    <FadeIn className="mt-6">
+      <div>
+        <form
+          className="mt-6 flex max-w-3xl flex-col gap-6"
+          onSubmit={handleSubmit(saveApplication)}
+        >
           <h2 className="text-lg font-semibold">General Farm Information</h2>
-          <FieldSet className="mb-8 flex flex-col gap-6">
+          <FieldSet className="mx-auto mb-8 flex flex-col gap-6">
             <Field>
               <div className="flex flex-row justify-between">
                 <FieldLabel>
@@ -112,8 +117,7 @@ export default function Farm({
                   )}
                 />
               </div>
-              <Input
-                type="text"
+              <Textarea
                 placeholder="e.g., Tomatoes, Lettuce, Carrots"
                 {...register('mainCrops')}
               />
@@ -133,8 +137,7 @@ export default function Farm({
                   )}
                 />
               </div>
-              <Input
-                type="text"
+              <Textarea
                 placeholder="If yes, describe your conservation plan"
                 {...register('conservationPlan')}
               />
@@ -153,8 +156,7 @@ export default function Farm({
                   )}
                 />
               </div>
-              <Input
-                type="text"
+              <Textarea
                 placeholder="Include acreage, main crops, practices, irrigation, soil issues"
                 {...register('managementZoneStructure')}
               />
@@ -244,23 +246,7 @@ export default function Farm({
           <FieldSet className="mb-8 flex flex-col gap-6">
             <OffFarmProducts control={control} errors={errors} />
 
-            {/* JSON field placeholder: otherMaterials */}
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
-                  What synthetic fertilizers, pesticides, or other materials are
-                  used?
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="otherMaterials"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input type="text" placeholder="To be implemented" disabled />
-            </Field>
+            <OtherMaterials control={control} errors={errors} />
 
             <SupplierContracts register={register} errors={errors} />
           </FieldSet>
@@ -418,7 +404,6 @@ export default function Farm({
             </Field>
           </FieldSet>
 
-          {/* Harvest & Markets */}
           <h2 className="mt-6 text-lg font-semibold">Harvest &amp; Markets</h2>
           <FieldSet className="mb-8 flex flex-col gap-6">
             <ManageHarvests control={control} errors={errors} />

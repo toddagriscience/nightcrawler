@@ -5,6 +5,7 @@
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -30,10 +31,9 @@ export default function IrrigationWaterSource({
         control={control}
         name="irrigationWaterSource"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* Well */}
-            <Field>
-              <FieldLabel htmlFor="well">Well</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.well}
                 onCheckedChange={(e) =>
@@ -43,11 +43,13 @@ export default function IrrigationWaterSource({
                   })
                 }
               />
+              <FieldLabel htmlFor="well" className="whitespace-nowrap">
+                Well
+              </FieldLabel>
             </Field>
 
             {/* Reservoir */}
-            <Field>
-              <FieldLabel htmlFor="reservoir">Reservoir</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.reservoir}
                 onCheckedChange={(e) =>
@@ -57,11 +59,13 @@ export default function IrrigationWaterSource({
                   })
                 }
               />
+              <FieldLabel htmlFor="reservoir" className="whitespace-nowrap">
+                Reservoir
+              </FieldLabel>
             </Field>
 
             {/* Water district */}
-            <Field>
-              <FieldLabel htmlFor="waterDistrict">Water district</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.waterDistrict?.isWaterDistrict}
                 onCheckedChange={(e) =>
@@ -74,42 +78,80 @@ export default function IrrigationWaterSource({
                   })
                 }
               />
-              {field.value?.waterDistrict?.isWaterDistrict && (
-                <FieldSet className="ml-6 flex flex-col gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="districtName">
-                      Name of district:
-                    </FieldLabel>
-                    <Input
-                      placeholder="Enter district name"
-                      value={field.value?.waterDistrict?.districtName ?? ''}
-                      onChange={(e) =>
-                        field.onChange({
-                          ...field.value,
-                          waterDistrict: {
-                            ...field.value?.waterDistrict,
-                            districtName: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel>
-                      Does your cropland share irrigation lines or irrigation
-                      water (including tail water) with other cropland?
-                    </FieldLabel>
-                    <FieldSet className="flex flex-col gap-2">
-                      <Field>
-                        <FieldLabel htmlFor="sharesIrrigationYes">
-                          Yes, describe:
-                        </FieldLabel>
-                        <Checkbox
-                          checked={
+              <FieldLabel htmlFor="waterDistrict" className="whitespace-nowrap">
+                Water district
+              </FieldLabel>
+            </Field>
+            {field.value?.waterDistrict?.isWaterDistrict && (
+              <div className="mb-4 ml-6 flex flex-col gap-4">
+                <div>
+                  <FieldLabel htmlFor="districtName" className="mb-2">
+                    Name of district:
+                  </FieldLabel>
+                  <Input
+                    placeholder="Enter district name"
+                    value={field.value?.waterDistrict?.districtName ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        waterDistrict: {
+                          ...field.value?.waterDistrict,
+                          districtName: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel className="mb-4">
+                    Does your cropland share irrigation lines or irrigation
+                    water (including tail water) with other cropland?
+                  </FieldLabel>
+                  <div className="flex flex-col gap-2">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={
+                          field.value?.waterDistrict?.sharesIrrigation?.yes
+                            ?.isYes
+                        }
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            waterDistrict: {
+                              ...field.value?.waterDistrict,
+                              sharesIrrigation: {
+                                ...field.value?.waterDistrict?.sharesIrrigation,
+                                yes: {
+                                  ...field.value?.waterDistrict
+                                    ?.sharesIrrigation?.yes,
+                                  isYes: e,
+                                },
+                                no: e
+                                  ? false
+                                  : field.value?.waterDistrict?.sharesIrrigation
+                                      ?.no,
+                              },
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="sharesIrrigationYes"
+                        className="whitespace-nowrap"
+                      >
+                        Yes, describe:
+                      </FieldLabel>
+                    </Field>
+                    {field.value?.waterDistrict?.sharesIrrigation?.yes
+                      ?.isYes && (
+                      <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                        <Textarea
+                          placeholder="Describe shared irrigation"
+                          value={
                             field.value?.waterDistrict?.sharesIrrigation?.yes
-                              ?.isYes
+                              ?.description ?? ''
                           }
-                          onCheckedChange={(e) =>
+                          onChange={(e) =>
                             field.onChange({
                               ...field.value,
                               waterDistrict: {
@@ -120,81 +162,51 @@ export default function IrrigationWaterSource({
                                   yes: {
                                     ...field.value?.waterDistrict
                                       ?.sharesIrrigation?.yes,
-                                    isYes: e,
+                                    description: e.target.value,
                                   },
-                                  no: e
-                                    ? false
-                                    : field.value?.waterDistrict
-                                        ?.sharesIrrigation?.no,
                                 },
                               },
                             })
                           }
                         />
-                        {field.value?.waterDistrict?.sharesIrrigation?.yes
-                          ?.isYes && (
-                          <Input
-                            placeholder="Describe shared irrigation"
-                            value={
-                              field.value?.waterDistrict?.sharesIrrigation?.yes
-                                ?.description ?? ''
-                            }
-                            onChange={(e) =>
-                              field.onChange({
-                                ...field.value,
-                                waterDistrict: {
-                                  ...field.value?.waterDistrict,
-                                  sharesIrrigation: {
-                                    ...field.value?.waterDistrict
-                                      ?.sharesIrrigation,
-                                    yes: {
-                                      ...field.value?.waterDistrict
-                                        ?.sharesIrrigation?.yes,
-                                      description: e.target.value,
-                                    },
-                                  },
-                                },
-                              })
-                            }
-                          />
-                        )}
-                      </Field>
-                      <Field>
-                        <FieldLabel htmlFor="sharesIrrigationNo">No</FieldLabel>
-                        <Checkbox
-                          checked={
-                            field.value?.waterDistrict?.sharesIrrigation?.no
-                          }
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              waterDistrict: {
-                                ...field.value?.waterDistrict,
-                                sharesIrrigation: {
-                                  ...field.value?.waterDistrict
-                                    ?.sharesIrrigation,
-                                  no: e,
-                                  yes: e
-                                    ? { isYes: false, description: '' }
-                                    : field.value?.waterDistrict
-                                        ?.sharesIrrigation?.yes,
-                                },
+                      </div>
+                    )}
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={
+                          field.value?.waterDistrict?.sharesIrrigation?.no
+                        }
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            waterDistrict: {
+                              ...field.value?.waterDistrict,
+                              sharesIrrigation: {
+                                ...field.value?.waterDistrict?.sharesIrrigation,
+                                no: e,
+                                yes: e
+                                  ? { isYes: false, description: '' }
+                                  : field.value?.waterDistrict?.sharesIrrigation
+                                      ?.yes,
                               },
-                            })
-                          }
-                        />
-                      </Field>
-                    </FieldSet>
-                  </Field>
-                </FieldSet>
-              )}
-            </Field>
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="sharesIrrigationNo"
+                        className="whitespace-nowrap"
+                      >
+                        No
+                      </FieldLabel>
+                    </Field>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Fish bearing river, stream, or lake */}
-            <Field>
-              <FieldLabel htmlFor="fishBearingWater">
-                Fish bearing river, stream, or lake
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.fishBearingWater?.isFishBearingWater}
                 onCheckedChange={(e) =>
@@ -207,33 +219,33 @@ export default function IrrigationWaterSource({
                   })
                 }
               />
-              {field.value?.fishBearingWater?.isFishBearingWater && (
-                <FieldSet className="ml-6 flex flex-col gap-2">
-                  <Field>
-                    <FieldLabel htmlFor="waterBodyName">
-                      Name of water body:
-                    </FieldLabel>
-                    <Input
-                      placeholder="Enter water body name"
-                      value={field.value?.fishBearingWater?.waterBodyName ?? ''}
-                      onChange={(e) =>
-                        field.onChange({
-                          ...field.value,
-                          fishBearingWater: {
-                            ...field.value?.fishBearingWater,
-                            waterBodyName: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                </FieldSet>
-              )}
+              <FieldLabel htmlFor="fishBearingWater">
+                Fish bearing river, stream, or lake
+              </FieldLabel>
             </Field>
+            {field.value?.fishBearingWater?.isFishBearingWater && (
+              <div className="mb-4 ml-6">
+                <FieldLabel htmlFor="waterBodyName" className="mb-2">
+                  Name of water body:
+                </FieldLabel>
+                <Input
+                  placeholder="Enter water body name"
+                  value={field.value?.fishBearingWater?.waterBodyName ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      fishBearingWater: {
+                        ...field.value?.fishBearingWater,
+                        waterBodyName: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
 
             {/* Effluent */}
-            <Field>
-              <FieldLabel htmlFor="effluent">Effluent</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.effluent}
                 onCheckedChange={(e) =>
@@ -243,6 +255,9 @@ export default function IrrigationWaterSource({
                   })
                 }
               />
+              <FieldLabel htmlFor="effluent" className="whitespace-nowrap">
+                Effluent
+              </FieldLabel>
             </Field>
           </FieldSet>
         )}

@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -28,12 +28,9 @@ export default function ManageHarvests({
         control={control}
         name="manageHarvests"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* My operation performs the harvest */}
-            <Field>
-              <FieldLabel htmlFor="operationPerformsHarvest">
-                My operation performs the harvest.
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.operationPerformsHarvest}
                 onCheckedChange={(e) =>
@@ -43,14 +40,13 @@ export default function ManageHarvests({
                   })
                 }
               />
+              <FieldLabel htmlFor="operationPerformsHarvest">
+                My operation performs the harvest.
+              </FieldLabel>
             </Field>
 
             {/* Contract harvester */}
-            <Field>
-              <FieldLabel htmlFor="contractHarvester">
-                My operation (or my contracting handler, e.g. shipper, marketer,
-                buyer) hires a contract harvester to harvest my crop
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.contractHarvester?.isContractHarvester}
                 onCheckedChange={(e) =>
@@ -63,101 +59,103 @@ export default function ManageHarvests({
                   })
                 }
               />
-              {field.value?.contractHarvester?.isContractHarvester && (
-                <FieldSet className="ml-6 flex flex-col gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="harvesterNameAddress">
-                      Name and address of contract harvester
-                    </FieldLabel>
-                    <Input
-                      placeholder="Enter name and address"
-                      value={
-                        field.value?.contractHarvester?.nameAndAddress ?? ''
-                      }
-                      onChange={(e) =>
-                        field.onChange({
-                          ...field.value,
-                          contractHarvester: {
-                            ...field.value?.contractHarvester,
-                            nameAndAddress: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel>
-                      Is ownership of crops transferred before or upon delivery
-                      to the facility?
-                    </FieldLabel>
-                    <FieldSet className="flex flex-col gap-2">
-                      <Field>
-                        <FieldLabel htmlFor="ownershipTransferYes">
-                          Yes
-                        </FieldLabel>
-                        <Checkbox
-                          checked={
-                            field.value?.contractHarvester?.ownershipTransfer
-                              ?.yes
-                          }
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              contractHarvester: {
-                                ...field.value?.contractHarvester,
-                                ownershipTransfer: {
-                                  ...field.value?.contractHarvester
-                                    ?.ownershipTransfer,
-                                  yes: e,
-                                  no: e
-                                    ? false
-                                    : field.value?.contractHarvester
-                                        ?.ownershipTransfer?.no,
-                                },
-                              },
-                            })
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel htmlFor="ownershipTransferNo">
-                          No
-                        </FieldLabel>
-                        <Checkbox
-                          checked={
-                            field.value?.contractHarvester?.ownershipTransfer
-                              ?.no
-                          }
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              contractHarvester: {
-                                ...field.value?.contractHarvester,
-                                ownershipTransfer: {
-                                  ...field.value?.contractHarvester
-                                    ?.ownershipTransfer,
-                                  no: e,
-                                  yes: e
-                                    ? false
-                                    : field.value?.contractHarvester
-                                        ?.ownershipTransfer?.yes,
-                                },
-                              },
-                            })
-                          }
-                        />
-                      </Field>
-                    </FieldSet>
-                  </Field>
-                </FieldSet>
-              )}
-            </Field>
-
-            {/* Other responsibility */}
-            <Field>
-              <FieldLabel htmlFor="otherResponsibility">
-                Other responsibility for harvest, describe:
+              <FieldLabel htmlFor="contractHarvester">
+                My operation (or my contracting handler, e.g. shipper, marketer,
+                buyer) hires a contract harvester to harvest my crop
               </FieldLabel>
+            </Field>
+            {field.value?.contractHarvester?.isContractHarvester && (
+              <div className="mb-4 ml-6 flex flex-col gap-4">
+                <div>
+                  <FieldLabel htmlFor="harvesterNameAddress" className="mb-2">
+                    Name and address of contract harvester
+                  </FieldLabel>
+                  <Textarea
+                    placeholder="Enter name and address"
+                    value={field.value?.contractHarvester?.nameAndAddress ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        contractHarvester: {
+                          ...field.value?.contractHarvester,
+                          nameAndAddress: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel className="mb-4">
+                    Is ownership of crops transferred before or upon delivery to
+                    the facility?
+                  </FieldLabel>
+                  <div className="flex flex-col gap-2">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={
+                          field.value?.contractHarvester?.ownershipTransfer?.yes
+                        }
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            contractHarvester: {
+                              ...field.value?.contractHarvester,
+                              ownershipTransfer: {
+                                ...field.value?.contractHarvester
+                                  ?.ownershipTransfer,
+                                yes: e,
+                                no: e
+                                  ? false
+                                  : field.value?.contractHarvester
+                                      ?.ownershipTransfer?.no,
+                              },
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="ownershipTransferYes"
+                        className="whitespace-nowrap"
+                      >
+                        Yes
+                      </FieldLabel>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={
+                          field.value?.contractHarvester?.ownershipTransfer?.no
+                        }
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            contractHarvester: {
+                              ...field.value?.contractHarvester,
+                              ownershipTransfer: {
+                                ...field.value?.contractHarvester
+                                  ?.ownershipTransfer,
+                                no: e,
+                                yes: e
+                                  ? false
+                                  : field.value?.contractHarvester
+                                      ?.ownershipTransfer?.yes,
+                              },
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="ownershipTransferNo"
+                        className="whitespace-nowrap"
+                      >
+                        No
+                      </FieldLabel>
+                    </Field>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <Field orientation="horizontal">
               <Checkbox
                 checked={
                   field.value?.otherResponsibility?.isOtherResponsibility
@@ -172,8 +170,13 @@ export default function ManageHarvests({
                   })
                 }
               />
-              {field.value?.otherResponsibility?.isOtherResponsibility && (
-                <Input
+              <FieldLabel htmlFor="otherResponsibility">
+                Other responsibility for harvest, describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.otherResponsibility?.isOtherResponsibility && (
+              <div className="mb-4 ml-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe other responsibility for harvest"
                   value={field.value?.otherResponsibility?.description ?? ''}
                   onChange={(e) =>
@@ -186,15 +189,10 @@ export default function ManageHarvests({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
 
-            {/* Not applicable */}
-            <Field>
-              <FieldLabel htmlFor="notApplicable">
-                Not applicable, no responsibility for harvest (e.g. crop is sold
-                &quot;in the field&quot;). Describe:
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.notApplicable?.isNotApplicable}
                 onCheckedChange={(e) =>
@@ -207,8 +205,14 @@ export default function ManageHarvests({
                   })
                 }
               />
-              {field.value?.notApplicable?.isNotApplicable && (
-                <Input
+              <FieldLabel htmlFor="notApplicable">
+                Not applicable, no responsibility for harvest (e.g. crop is sold
+                &quot;in the field&quot;). Describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.notApplicable?.isNotApplicable && (
+              <div className="mb-4 ml-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe why not applicable"
                   value={field.value?.notApplicable?.description ?? ''}
                   onChange={(e) =>
@@ -221,8 +225,8 @@ export default function ManageHarvests({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
           </FieldSet>
         )}
       />

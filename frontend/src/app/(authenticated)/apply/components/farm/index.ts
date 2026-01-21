@@ -9,6 +9,7 @@ export { default as IrrigationWaterSource } from './irrigation-water-source';
 export { default as ManageHarvests } from './manage-harvests';
 export { default as NearContaminationSource } from './near-contamination-source';
 export { default as OffFarmProducts } from './off-farm-products';
+export { default as OtherMaterials } from './other-materials';
 export { default as PestControl } from './pest-control';
 export { default as PrimaryMarketVenues } from './primary-market-venues';
 export { default as ProductDifferentiation } from './product-differentiation';

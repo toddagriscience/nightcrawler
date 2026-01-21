@@ -42,9 +42,9 @@ export default async function Apply() {
     .limit(1);
 
   return (
-    <div>
+    <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
       <Tabs defaultValue="general">
-        <TabsList>
+        <TabsList className="flex h-auto flex-wrap items-center justify-start gap-3 bg-transparent max-md:mt-6">
           <TabsTrigger value="general">
             General Business Information
           </TabsTrigger>
@@ -55,7 +55,6 @@ export default async function Apply() {
 
         <TabsContent value="general">
           <GeneralBusinessInformation
-            currentUser={currentUser}
             defaultValues={{
               ...farmInfo.farm,
               ...farmInfo.farm_location,

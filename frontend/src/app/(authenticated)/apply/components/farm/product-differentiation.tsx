@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -31,12 +31,9 @@ export default function ProductDifferentiation({
         control={control}
         name="productDifferentiation"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* Twist Ties, Stickers or Rubber Bands */}
-            <Field>
-              <FieldLabel htmlFor="twistTies">
-                Twist Ties, Stickers or Rubber Bands (upload sample)
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.twistTies}
                 onCheckedChange={(e) =>
@@ -46,13 +43,13 @@ export default function ProductDifferentiation({
                   })
                 }
               />
+              <FieldLabel htmlFor="twistTies">
+                Twist Ties, Stickers or Rubber Bands
+              </FieldLabel>
             </Field>
 
             {/* Newsletter or Delivery List */}
-            <Field>
-              <FieldLabel htmlFor="newsletter">
-                Newsletter or Delivery List (upload sample)
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.newsletter}
                 onCheckedChange={(e) =>
@@ -62,13 +59,13 @@ export default function ProductDifferentiation({
                   })
                 }
               />
+              <FieldLabel htmlFor="newsletter">
+                Newsletter or Delivery List
+              </FieldLabel>
             </Field>
 
             {/* Description on Website or Marketing Material */}
-            <Field>
-              <FieldLabel htmlFor="websiteDescription">
-                Description on Website or Marketing Material (upload sample)
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.websiteDescription}
                 onCheckedChange={(e) =>
@@ -78,11 +75,13 @@ export default function ProductDifferentiation({
                   })
                 }
               />
+              <FieldLabel htmlFor="websiteDescription">
+                Description on Website or Marketing Material
+              </FieldLabel>
             </Field>
 
             {/* Signage */}
-            <Field>
-              <FieldLabel htmlFor="signage">Signage (upload sample)</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.signage}
                 onCheckedChange={(e) =>
@@ -92,13 +91,11 @@ export default function ProductDifferentiation({
                   })
                 }
               />
+              <FieldLabel htmlFor="signage">Signage </FieldLabel>
             </Field>
 
             {/* Other */}
-            <Field>
-              <FieldLabel htmlFor="differentiationOther">
-                Other, describe:
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.other?.isOther}
                 onCheckedChange={(e) =>
@@ -111,8 +108,16 @@ export default function ProductDifferentiation({
                   })
                 }
               />
-              {field.value?.other?.isOther && (
-                <Input
+              <FieldLabel
+                htmlFor="differentiationOther"
+                className="whitespace-nowrap"
+              >
+                Other, describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.other?.isOther && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe other differentiation method"
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>
@@ -125,14 +130,11 @@ export default function ProductDifferentiation({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
 
             {/* Not applicable */}
-            <Field>
-              <FieldLabel htmlFor="differentiationNotApplicable">
-                Not applicable, describe:
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.notApplicable?.isNotApplicable}
                 onCheckedChange={(e) =>
@@ -145,8 +147,13 @@ export default function ProductDifferentiation({
                   })
                 }
               />
-              {field.value?.notApplicable?.isNotApplicable && (
-                <Input
+              <FieldLabel htmlFor="differentiationNotApplicable">
+                Not applicable, describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.notApplicable?.isNotApplicable && (
+              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
                   placeholder="Describe why not applicable"
                   value={field.value?.notApplicable?.description ?? ''}
                   onChange={(e) =>
@@ -159,8 +166,8 @@ export default function ProductDifferentiation({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
           </FieldSet>
         )}
       />

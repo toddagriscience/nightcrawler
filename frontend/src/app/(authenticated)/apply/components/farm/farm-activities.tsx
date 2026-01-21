@@ -9,14 +9,15 @@ import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
 import { FarmFormControlProps } from '../../types';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function FarmActivities({
   control,
   errors,
 }: FarmFormControlProps) {
   return (
-    <div className="flex flex-row justify-between">
-      <FieldLabel>
+    <div className="flex flex-col justify-between">
+      <FieldLabel className="mb-4">
         What activities have occurred at the farm during the past three years?
       </FieldLabel>
       <ErrorMessage
@@ -28,9 +29,8 @@ export default function FarmActivities({
         control={control}
         name="farmActivites"
         render={({ field }) => (
-          <FieldSet>
-            <Field>
-              <FieldLabel htmlFor="alternateFarmingPast">Fallow</FieldLabel>
+          <FieldSet className="flex flex-col gap-2">
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.fallow.isFallow}
                 onCheckedChange={(e) =>
@@ -40,53 +40,47 @@ export default function FarmActivities({
                   })
                 }
               />
-              {field.value?.fallow.isFallow && (
-                <>
-                  <Input
-                    type="date"
-                    value={field.value?.fallow.from || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        fallow: {
-                          ...field.value?.fallow,
-                          from: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <span>to</span>
-                  <Input
-                    type="date"
-                    value={field.value?.fallow?.to || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        fallow: {
-                          ...field.value?.fallow,
-                          to: e.target.value,
-                        },
-                      })
-                    }
-                  />
-
-                  <Input
-                    value={field.value?.fallow?.crops ?? ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        fallow: {
-                          ...field.value?.fallow,
-                          crops: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </>
-              )}
+              <FieldLabel
+                htmlFor="alternateFarmingPast"
+                className="whitespace-nowrap"
+              >
+                Fallow
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="coverCropping">Cover Cropping</FieldLabel>
+            {field.value?.fallow.isFallow && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.fallow.from || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      fallow: {
+                        ...field.value?.fallow,
+                        from: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <span>to</span>
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.fallow?.to || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      fallow: {
+                        ...field.value?.fallow,
+                        to: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.coverCropping?.isCoverCropping}
                 onCheckedChange={(e) =>
@@ -99,53 +93,57 @@ export default function FarmActivities({
                   })
                 }
               />
-              {field.value?.coverCropping?.isCoverCropping && (
-                <>
-                  <Input
-                    type="date"
-                    value={field.value?.coverCropping?.from || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        coverCropping: {
-                          ...field.value?.coverCropping,
-                          from: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <span>to</span>
-                  <Input
-                    type="date"
-                    value={field.value?.coverCropping?.to || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        coverCropping: {
-                          ...field.value?.coverCropping,
-                          to: e.target.value,
-                        },
-                      })
-                    }
-                  />
-
-                  <Input
-                    value={field.value?.coverCropping?.crops ?? ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        coverCropping: {
-                          ...field.value?.coverCropping,
-                          crops: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </>
-              )}
+              <FieldLabel htmlFor="coverCropping" className="whitespace-nowrap">
+                Cover Cropping
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="pasture">Pasture</FieldLabel>
+            {field.value?.coverCropping?.isCoverCropping && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.coverCropping?.from || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      coverCropping: {
+                        ...field.value?.coverCropping,
+                        from: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <span>to</span>
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.coverCropping?.to || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      coverCropping: {
+                        ...field.value?.coverCropping,
+                        to: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <Input
+                  placeholder="List crops..."
+                  value={field.value?.coverCropping?.crops ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      coverCropping: {
+                        ...field.value?.coverCropping,
+                        crops: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.pasture?.isPasture}
                 onCheckedChange={(e) =>
@@ -155,55 +153,57 @@ export default function FarmActivities({
                   })
                 }
               />
-              {field.value?.pasture?.isPasture && (
-                <>
-                  <Input
-                    type="date"
-                    value={field.value?.pasture?.from || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        pasture: {
-                          ...field.value?.pasture,
-                          from: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <span>to</span>
-                  <Input
-                    type="date"
-                    value={field.value?.pasture?.to || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        pasture: {
-                          ...field.value?.pasture,
-                          to: e.target.value,
-                        },
-                      })
-                    }
-                  />
-
-                  <Input
-                    value={field.value?.pasture?.crops ?? ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        pasture: {
-                          ...field.value?.pasture,
-                          crops: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </>
-              )}
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="productionOfCrops">
-                Production of Crops
+              <FieldLabel htmlFor="pasture" className="whitespace-nowrap">
+                Pasture
               </FieldLabel>
+            </Field>
+            {field.value?.pasture?.isPasture && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.pasture?.from || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      pasture: {
+                        ...field.value?.pasture,
+                        from: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <span>to</span>
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.pasture?.to || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      pasture: {
+                        ...field.value?.pasture,
+                        to: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <Input
+                  placeholder="List crops..."
+                  value={field.value?.pasture?.crops ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      pasture: {
+                        ...field.value?.pasture,
+                        crops: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.productionOfCrops?.isProductionOfCrops}
                 onCheckedChange={(e) =>
@@ -216,53 +216,60 @@ export default function FarmActivities({
                   })
                 }
               />
-              {field.value?.productionOfCrops?.isProductionOfCrops && (
-                <>
-                  <Input
-                    type="date"
-                    value={field.value?.productionOfCrops?.from || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        productionOfCrops: {
-                          ...field.value?.productionOfCrops,
-                          from: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <span>to</span>
-                  <Input
-                    type="date"
-                    value={field.value?.productionOfCrops?.to || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        productionOfCrops: {
-                          ...field.value?.productionOfCrops,
-                          to: e.target.value,
-                        },
-                      })
-                    }
-                  />
-
-                  <Input
-                    value={field.value?.productionOfCrops?.crops ?? ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        productionOfCrops: {
-                          ...field.value?.productionOfCrops,
-                          crops: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </>
-              )}
+              <FieldLabel
+                htmlFor="productionOfCrops"
+                className="whitespace-nowrap"
+              >
+                Production of Crops
+              </FieldLabel>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="other">Other</FieldLabel>
+            {field.value?.productionOfCrops?.isProductionOfCrops && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.productionOfCrops?.from || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      productionOfCrops: {
+                        ...field.value?.productionOfCrops,
+                        from: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <span>to</span>
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.productionOfCrops?.to || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      productionOfCrops: {
+                        ...field.value?.productionOfCrops,
+                        to: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <Input
+                  placeholder="List crops..."
+                  value={field.value?.productionOfCrops?.crops ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      productionOfCrops: {
+                        ...field.value?.productionOfCrops,
+                        crops: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.other?.isOther}
                 onCheckedChange={(e) =>
@@ -272,51 +279,56 @@ export default function FarmActivities({
                   })
                 }
               />
-              {field.value?.other?.isOther && (
-                <>
-                  <Input
-                    type="date"
-                    value={field.value?.other?.from || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        other: {
-                          ...field.value?.other,
-                          from: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <span>to</span>
-                  <Input
-                    type="date"
-                    value={field.value?.other?.to || ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        other: {
-                          ...field.value?.other,
-                          to: e.target.value,
-                        },
-                      })
-                    }
-                  />
-
-                  <Input
-                    value={field.value?.other?.crops ?? ''}
-                    onChange={(e) =>
-                      field.onChange({
-                        ...field.value,
-                        other: {
-                          ...field.value?.other,
-                          crops: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </>
-              )}
+              <FieldLabel htmlFor="other" className="whitespace-nowrap">
+                Other
+              </FieldLabel>
             </Field>
+            {field.value?.other?.isOther && (
+              <FieldSet className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.other?.from || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      other: {
+                        ...field.value?.other,
+                        from: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <span>to</span>
+                <Input
+                  className="basis-1/4"
+                  type="date"
+                  value={field.value?.other?.to || ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      other: {
+                        ...field.value?.other,
+                        to: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <Textarea
+                  placeholder="Describe the activites that occurred"
+                  value={field.value?.other?.crops ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      other: {
+                        ...field.value?.other,
+                        crops: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </FieldSet>
+            )}
           </FieldSet>
         )}
       />

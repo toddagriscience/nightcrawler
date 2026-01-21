@@ -4,7 +4,6 @@
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { User } from '@/lib/types/db';
 import {
   type GeneralBusinessInformationInsert,
   type GeneralBusinessInformationUpdate,
@@ -23,10 +22,8 @@ import { saveGeneralBusinessInformation } from '../actions';
 
 /** The 1st tab in the application page for general business information */
 export default function GeneralBusinessInformation({
-  currentUser,
   defaultValues,
 }: {
-  currentUser: User;
   defaultValues?: GeneralBusinessInformationUpdate;
 }) {
   const {
@@ -40,16 +37,13 @@ export default function GeneralBusinessInformation({
     resolver: zodResolver(generalBusinessInformationInsertSchema),
   });
   const [hasAddress, setHasAddress] = useState<'yes' | 'no' | 'unanswered'>(
-    'unanswered'
+    defaultValues?.address1 ? 'yes' : defaultValues?.apn ? 'no' : 'unanswered'
   );
 
-  console.log(errors);
-
   return (
-    <FadeIn>
-      <h1>Welcome back, {currentUser.firstName}</h1>
+    <FadeIn className="mt-6">
       <form
-        className="max-w-3xl"
+        className="mt-6 flex max-w-3xl flex-col gap-6"
         onSubmit={handleSubmit(saveGeneralBusinessInformation)}
       >
         <h2 className="text-lg font-semibold">Business Information</h2>
@@ -123,20 +117,30 @@ export default function GeneralBusinessInformation({
           </Field>
         </FieldSet>
 
-        <h2 className="text-lg font-semibold mt-6">Address Information</h2>
+        <h2 className="mt-6 text-lg font-semibold">Address Information</h2>
 
-        <h3>Does your farm have a physical address?</h3>
-        <div className="flex flex-row gap-6">
-          <Button type="button" onClick={() => setHasAddress('yes')}>
-            Yes
-          </Button>
-          <Button type="button" onClick={() => setHasAddress('no')}>
-            No
-          </Button>
+        <div className="gap-2">
+          <h3>Does your farm have a physical address?</h3>
+          <div className="flex flex-row gap-4">
+            <Button
+              type="button"
+              onClick={() => setHasAddress('yes')}
+              className={`hover:cursor-pointer ${hasAddress === 'yes' ? 'rounded-none border-b border-b-black' : ''}`}
+            >
+              Yes
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setHasAddress('no')}
+              className={`hover:cursor-pointer ${hasAddress === 'no' ? 'rounded-none border-b border-b-black' : ''}`}
+            >
+              No
+            </Button>
+          </div>
         </div>
-        <FieldSet>
+        <FieldSet className={hasAddress !== 'unanswered' ? 'mb-6' : ''}>
           {hasAddress === 'yes' ? (
-            <FadeIn>
+            <FadeIn className="flex flex-col gap-4">
               <Field>
                 <div className="flex flex-row justify-between">
                   <FieldLabel>Address Line 1</FieldLabel>
@@ -248,7 +252,7 @@ export default function GeneralBusinessInformation({
               </Field>
             </FadeIn>
           ) : hasAddress === 'no' ? (
-            <FadeIn>
+            <FadeIn className="flex flex-col gap-4">
               <Field>
                 <div className="flex flex-row justify-between">
                   <FieldLabel>
@@ -292,11 +296,8 @@ export default function GeneralBusinessInformation({
           ) : null}
         </FieldSet>
 
-        <h2 className="text-lg font-semibold mt-6">
-          Certification Information
-        </h2>
-        <FieldSet className="flex flex-col gap-6">
-          {/* Good Agriculture Practices (GAP) */}
+        <h2 className="text-lg font-semibold">Certification Information</h2>
+        <FieldSet className="mb-6 flex flex-col gap-6">
           <Field>
             <div className="flex flex-row items-center gap-3">
               <Controller
@@ -323,7 +324,7 @@ export default function GeneralBusinessInformation({
             </div>
             {watch('hasGAP') && (
               <FadeIn>
-                <div className="mt-2 ml-7">
+                <div className="mt-2 ml-7 flex flex-col gap-2">
                   <div className="flex flex-row justify-between">
                     <FieldLabel>GAP Certification Date</FieldLabel>
                     <ErrorMessage
@@ -367,7 +368,7 @@ export default function GeneralBusinessInformation({
             </div>
             {watch('hasLocalInspection') && (
               <FadeIn>
-                <div className="mt-2 ml-7">
+                <div className="mt-2 ml-7 flex flex-col gap-2">
                   <div className="flex flex-row justify-between">
                     <FieldLabel>Local Inspection Date</FieldLabel>
                     <ErrorMessage
@@ -409,7 +410,7 @@ export default function GeneralBusinessInformation({
             </div>
             {watch('hasOrganic') && (
               <FadeIn>
-                <div className="mt-2 ml-7">
+                <div className="mt-2 ml-7 flex flex-col gap-2">
                   <div className="flex flex-row justify-between">
                     <FieldLabel>Organic Certification Date</FieldLabel>
                     <ErrorMessage
@@ -451,7 +452,7 @@ export default function GeneralBusinessInformation({
             </div>
             {watch('hasBiodynamic') && (
               <FadeIn>
-                <div className="mt-2 ml-7">
+                <div className="mt-2 ml-7 flex flex-col gap-2">
                   <div className="flex flex-row justify-between">
                     <FieldLabel>Biodynamic Certification Date</FieldLabel>
                     <ErrorMessage
@@ -495,7 +496,7 @@ export default function GeneralBusinessInformation({
             </div>
             {watch('hasRegenerativeOrganic') && (
               <FadeIn>
-                <div className="mt-2 ml-7">
+                <div className="mt-2 ml-7 flex flex-col gap-2">
                   <div className="flex flex-row justify-between">
                     <FieldLabel>Regenerative Organic Date</FieldLabel>
                     <ErrorMessage

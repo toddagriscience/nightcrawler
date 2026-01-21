@@ -3,8 +3,8 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
@@ -30,10 +30,9 @@ export default function WaterUsedPostHarvest({
         control={control}
         name="waterUsedPostHarvest"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* No */}
-            <Field>
-              <FieldLabel htmlFor="waterPostHarvestNo">No</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.no}
                 onCheckedChange={(e) =>
@@ -44,11 +43,16 @@ export default function WaterUsedPostHarvest({
                   })
                 }
               />
+              <FieldLabel
+                htmlFor="waterPostHarvestNo"
+                className="whitespace-nowrap"
+              >
+                No
+              </FieldLabel>
             </Field>
 
             {/* Yes */}
-            <Field>
-              <FieldLabel htmlFor="waterPostHarvestYes">Yes</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.yes?.isYes}
                 onCheckedChange={(e) =>
@@ -62,489 +66,513 @@ export default function WaterUsedPostHarvest({
                   })
                 }
               />
-              {field.value?.yes?.isYes && (
-                <FieldSet className="ml-6 flex flex-col gap-4">
-                  {/* Safe Drinking Water Act Standards */}
-                  <div>
-                    <FieldLabel>
-                      If you treat wash water on-site (e.g. RO, UV, carbon
-                      filtration, water softeners, pH adjustment), does treated
-                      water meet Safe Drinking Water Act Standards?
-                    </FieldLabel>
-                    <FieldSet className="flex flex-col gap-2">
-                      <Field>
-                        <FieldLabel htmlFor="safeDrinkingWaterYes">
-                          Yes
-                        </FieldLabel>
-                        <Checkbox
-                          checked={field.value?.yes?.safeDrinkingWater?.yes}
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              yes: {
-                                ...field.value?.yes,
-                                safeDrinkingWater: {
-                                  ...field.value?.yes?.safeDrinkingWater,
-                                  yes: e,
-                                  notApplicable: e
-                                    ? false
-                                    : field.value?.yes?.safeDrinkingWater
-                                        ?.notApplicable,
-                                },
+              <FieldLabel
+                htmlFor="waterPostHarvestYes"
+                className="whitespace-nowrap"
+              >
+                Yes
+              </FieldLabel>
+            </Field>
+            {field.value?.yes?.isYes && (
+              <div className="mb-4 ml-6 flex flex-col gap-4">
+                {/* Safe Drinking Water Act Standards */}
+                <div>
+                  <FieldLabel className="mb-4">
+                    If you treat wash water on-site (e.g. RO, UV, carbon
+                    filtration, water softeners, pH adjustment), does treated
+                    water meet Safe Drinking Water Act Standards?
+                  </FieldLabel>
+                  <div className="flex flex-col gap-2">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={field.value?.yes?.safeDrinkingWater?.yes}
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            yes: {
+                              ...field.value?.yes,
+                              safeDrinkingWater: {
+                                ...field.value?.yes?.safeDrinkingWater,
+                                yes: e,
+                                notApplicable: e
+                                  ? false
+                                  : field.value?.yes?.safeDrinkingWater
+                                      ?.notApplicable,
                               },
-                            })
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel htmlFor="safeDrinkingWaterNA">
-                          Not applicable
-                        </FieldLabel>
-                        <Checkbox
-                          checked={
-                            field.value?.yes?.safeDrinkingWater?.notApplicable
-                          }
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              yes: {
-                                ...field.value?.yes,
-                                safeDrinkingWater: {
-                                  ...field.value?.yes?.safeDrinkingWater,
-                                  notApplicable: e,
-                                  yes: e
-                                    ? false
-                                    : field.value?.yes?.safeDrinkingWater?.yes,
-                                },
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="safeDrinkingWaterYes"
+                        className="whitespace-nowrap"
+                      >
+                        Yes
+                      </FieldLabel>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={
+                          field.value?.yes?.safeDrinkingWater?.notApplicable
+                        }
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            yes: {
+                              ...field.value?.yes,
+                              safeDrinkingWater: {
+                                ...field.value?.yes?.safeDrinkingWater,
+                                notApplicable: e,
+                                yes: e
+                                  ? false
+                                  : field.value?.yes?.safeDrinkingWater?.yes,
                               },
-                            })
-                          }
-                        />
-                      </Field>
-                    </FieldSet>
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="safeDrinkingWaterNA"
+                        className="whitespace-nowrap"
+                      >
+                        Not applicable
+                      </FieldLabel>
+                    </Field>
                   </div>
+                </div>
 
-                  {/* Disinfectants */}
-                  <div>
-                    <FieldLabel>Are disinfectants used?</FieldLabel>
-                    <FieldSet className="flex flex-col gap-2">
-                      <Field>
-                        <FieldLabel htmlFor="disinfectantsNo">No</FieldLabel>
-                        <Checkbox
-                          checked={field.value?.yes?.disinfectants?.no}
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              yes: {
-                                ...field.value?.yes,
-                                disinfectants: {
-                                  ...field.value?.yes?.disinfectants,
-                                  no: e,
-                                  yes: e
-                                    ? { isYes: false }
-                                    : field.value?.yes?.disinfectants?.yes,
+                {/* Disinfectants */}
+                <div>
+                  <FieldLabel className="mb-4">
+                    Are disinfectants used?
+                  </FieldLabel>
+                  <div className="flex flex-col gap-2">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={field.value?.yes?.disinfectants?.no}
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            yes: {
+                              ...field.value?.yes,
+                              disinfectants: {
+                                ...field.value?.yes?.disinfectants,
+                                no: e,
+                                yes: e
+                                  ? { isYes: false }
+                                  : field.value?.yes?.disinfectants?.yes,
+                              },
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="disinfectantsNo"
+                        className="whitespace-nowrap"
+                      >
+                        No
+                      </FieldLabel>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        checked={field.value?.yes?.disinfectants?.yes?.isYes}
+                        onCheckedChange={(e) =>
+                          field.onChange({
+                            ...field.value,
+                            yes: {
+                              ...field.value?.yes,
+                              disinfectants: {
+                                ...field.value?.yes?.disinfectants,
+                                no: e
+                                  ? false
+                                  : field.value?.yes?.disinfectants?.no,
+                                yes: {
+                                  ...field.value?.yes?.disinfectants?.yes,
+                                  isYes: e,
                                 },
                               },
-                            })
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel htmlFor="disinfectantsYes">Yes</FieldLabel>
-                        <Checkbox
-                          checked={field.value?.yes?.disinfectants?.yes?.isYes}
-                          onCheckedChange={(e) =>
-                            field.onChange({
-                              ...field.value,
-                              yes: {
-                                ...field.value?.yes,
-                                disinfectants: {
-                                  ...field.value?.yes?.disinfectants,
-                                  no: e
-                                    ? false
-                                    : field.value?.yes?.disinfectants?.no,
-                                  yes: {
-                                    ...field.value?.yes?.disinfectants?.yes,
-                                    isYes: e,
+                            },
+                          })
+                        }
+                      />
+                      <FieldLabel
+                        htmlFor="disinfectantsYes"
+                        className="whitespace-nowrap"
+                      >
+                        Yes
+                      </FieldLabel>
+                    </Field>
+                    {field.value?.yes?.disinfectants?.yes?.isYes && (
+                      <div className="mb-4 ml-6 flex flex-col gap-2">
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes?.detergent
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      detergent: e,
+                                    },
                                   },
                                 },
-                              },
-                            })
-                          }
-                        />
-                        {field.value?.yes?.disinfectants?.yes?.isYes && (
-                          <FieldSet className="ml-6 flex flex-col gap-2">
-                            <Field>
-                              <FieldLabel htmlFor="detergent">
-                                Detergent, soap or cleaner
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.detergent
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="detergent">
+                            Detergent, soap or cleaner
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes?.chlorine
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
                                     yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          detergent: e,
-                                        },
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      chlorine: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="chlorine">
+                            Chlorine (calcium hypochlorite, chlorine dioxide,
+                            sodium hypochlorite, or hypochlorous acid generated
+                            from electrolyzed water)
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.chlorineOther?.isChlorineOther
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      chlorineOther: {
+                                        ...field.value?.yes?.disinfectants?.yes
+                                          ?.chlorineOther,
+                                        isChlorineOther: e,
                                       },
                                     },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="chlorine">
-                                Chlorine (calcium hypochlorite, chlorine
-                                dioxide, sodium hypochlorite, or hypochlorous
-                                acid generated from electrolyzed water)
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes?.chlorine
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          chlorine: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="chlorineOther">
-                                Chlorine, other:
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.chlorineOther?.isChlorineOther
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          chlorineOther: {
-                                            ...field.value?.yes?.disinfectants
-                                              ?.yes?.chlorineOther,
-                                            isChlorineOther: e,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                              {field.value?.yes?.disinfectants?.yes
-                                ?.chlorineOther?.isChlorineOther && (
-                                <Input
-                                  placeholder="Describe other chlorine type"
-                                  value={
-                                    field.value?.yes?.disinfectants?.yes
-                                      ?.chlorineOther?.description ?? ''
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange({
-                                      ...field.value,
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel
+                            htmlFor="chlorineOther"
+                            className="whitespace-nowrap"
+                          >
+                            Chlorine, other:
+                          </FieldLabel>
+                        </Field>
+                        {field.value?.yes?.disinfectants?.yes?.chlorineOther
+                          ?.isChlorineOther && (
+                          <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                            <Textarea
+                              placeholder="Describe other chlorine type"
+                              value={
+                                field.value?.yes?.disinfectants?.yes
+                                  ?.chlorineOther?.description ?? ''
+                              }
+                              onChange={(e) =>
+                                field.onChange({
+                                  ...field.value,
+                                  yes: {
+                                    ...field.value?.yes,
+                                    disinfectants: {
+                                      ...field.value?.yes?.disinfectants,
                                       yes: {
-                                        ...field.value?.yes,
-                                        disinfectants: {
-                                          ...field.value?.yes?.disinfectants,
-                                          yes: {
-                                            ...field.value?.yes?.disinfectants
-                                              ?.yes,
-                                            chlorineOther: {
-                                              ...field.value?.yes?.disinfectants
-                                                ?.yes?.chlorineOther,
-                                              description: e.target.value,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    })
-                                  }
-                                />
-                              )}
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="peraceticAcid">
-                                Peracetic acid/peroxyacetic acid
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.peraceticAcid
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
+                                        ...field.value?.yes?.disinfectants?.yes,
+                                        chlorineOther: {
                                           ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          peraceticAcid: e,
+                                            ?.yes?.chlorineOther,
+                                          description: e.target.value,
                                         },
                                       },
                                     },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="phosphoricAcid">
-                                Phosphoric acid
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.phosphoricAcid
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          phosphoricAcid: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="ethanolIsopropanol">
-                                Ethanol or Isopropanol
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.ethanolIsopropanol
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          ethanolIsopropanol: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="citricAcid">
-                                Citric acid
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.citricAcid
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          citricAcid: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="hydrogenPeroxide">
-                                Hydrogen peroxide
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.hydrogenPeroxide
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          hydrogenPeroxide: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="ozone">Ozone</FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes?.ozone
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          ozone: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="quaternaryAmmonium">
-                                Quaternary ammonium
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes
-                                    ?.quaternaryAmmonium
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          quaternaryAmmonium: e,
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field>
-                              <FieldLabel htmlFor="disinfectantOther">
-                                Other, describe:
-                              </FieldLabel>
-                              <Checkbox
-                                checked={
-                                  field.value?.yes?.disinfectants?.yes?.other
-                                    ?.isOther
-                                }
-                                onCheckedChange={(e) =>
-                                  field.onChange({
-                                    ...field.value,
-                                    yes: {
-                                      ...field.value?.yes,
-                                      disinfectants: {
-                                        ...field.value?.yes?.disinfectants,
-                                        yes: {
-                                          ...field.value?.yes?.disinfectants
-                                            ?.yes,
-                                          other: {
-                                            ...field.value?.yes?.disinfectants
-                                              ?.yes?.other,
-                                            isOther: e,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  })
-                                }
-                              />
-                              {field.value?.yes?.disinfectants?.yes?.other
-                                ?.isOther && (
-                                <Input
-                                  placeholder="Describe other disinfectant"
-                                  value={
-                                    field.value?.yes?.disinfectants?.yes?.other
-                                      ?.description ?? ''
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange({
-                                      ...field.value,
-                                      yes: {
-                                        ...field.value?.yes,
-                                        disinfectants: {
-                                          ...field.value?.yes?.disinfectants,
-                                          yes: {
-                                            ...field.value?.yes?.disinfectants
-                                              ?.yes,
-                                            other: {
-                                              ...field.value?.yes?.disinfectants
-                                                ?.yes?.other,
-                                              description: e.target.value,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    })
-                                  }
-                                />
-                              )}
-                            </Field>
-                          </FieldSet>
+                                  },
+                                })
+                              }
+                            />
+                          </div>
                         )}
-                      </Field>
-                    </FieldSet>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.peraceticAcid
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      peraceticAcid: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="peraceticAcid">
+                            Peracetic acid/peroxyacetic acid
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.phosphoricAcid
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      phosphoricAcid: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="phosphoricAcid">
+                            Phosphoric acid
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.ethanolIsopropanol
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      ethanolIsopropanol: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="ethanolIsopropanol">
+                            Ethanol or Isopropanol
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes?.citricAcid
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      citricAcid: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="citricAcid">
+                            Citric acid
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.hydrogenPeroxide
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      hydrogenPeroxide: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="hydrogenPeroxide">
+                            Hydrogen peroxide
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes?.ozone
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      ozone: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel
+                            htmlFor="ozone"
+                            className="whitespace-nowrap"
+                          >
+                            Ozone
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes
+                                ?.quaternaryAmmonium
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      quaternaryAmmonium: e,
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel htmlFor="quaternaryAmmonium">
+                            Quaternary ammonium
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <Checkbox
+                            checked={
+                              field.value?.yes?.disinfectants?.yes?.other
+                                ?.isOther
+                            }
+                            onCheckedChange={(e) =>
+                              field.onChange({
+                                ...field.value,
+                                yes: {
+                                  ...field.value?.yes,
+                                  disinfectants: {
+                                    ...field.value?.yes?.disinfectants,
+                                    yes: {
+                                      ...field.value?.yes?.disinfectants?.yes,
+                                      other: {
+                                        ...field.value?.yes?.disinfectants?.yes
+                                          ?.other,
+                                        isOther: e,
+                                      },
+                                    },
+                                  },
+                                },
+                              })
+                            }
+                          />
+                          <FieldLabel
+                            htmlFor="disinfectantOther"
+                            className="whitespace-nowrap"
+                          >
+                            Other, describe:
+                          </FieldLabel>
+                        </Field>
+                        {field.value?.yes?.disinfectants?.yes?.other
+                          ?.isOther && (
+                          <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+                            <Textarea
+                              placeholder="Describe other disinfectant"
+                              value={
+                                field.value?.yes?.disinfectants?.yes?.other
+                                  ?.description ?? ''
+                              }
+                              onChange={(e) =>
+                                field.onChange({
+                                  ...field.value,
+                                  yes: {
+                                    ...field.value?.yes,
+                                    disinfectants: {
+                                      ...field.value?.yes?.disinfectants,
+                                      yes: {
+                                        ...field.value?.yes?.disinfectants?.yes,
+                                        other: {
+                                          ...field.value?.yes?.disinfectants
+                                            ?.yes?.other,
+                                          description: e.target.value,
+                                        },
+                                      },
+                                    },
+                                  },
+                                })
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                </FieldSet>
-              )}
-            </Field>
+                </div>
+              </div>
+            )}
           </FieldSet>
         )}
       />

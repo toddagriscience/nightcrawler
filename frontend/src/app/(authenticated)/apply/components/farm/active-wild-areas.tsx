@@ -3,12 +3,13 @@
 'use client';
 
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Controller } from 'react-hook-form';
 import { FarmFormControlProps } from '../../types';
+import { Label } from '@/components/ui/label';
 
 export default function ActiveWildAreas({
   control,
@@ -31,10 +32,9 @@ export default function ActiveWildAreas({
         control={control}
         name="activeWildAreas"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* No */}
-            <Field>
-              <FieldLabel htmlFor="activeWildAreasNo">No</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.no}
                 onCheckedChange={(e) =>
@@ -47,13 +47,16 @@ export default function ActiveWildAreas({
                   })
                 }
               />
+              <FieldLabel
+                htmlFor="activeWildAreasNo"
+                className="whitespace-nowrap"
+              >
+                No
+              </FieldLabel>
             </Field>
 
             {/* Yes */}
-            <Field>
-              <FieldLabel htmlFor="activeWildAreasYes">
-                Yes, describe:
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.yes?.isYes}
                 onCheckedChange={(e) =>
@@ -67,9 +70,22 @@ export default function ActiveWildAreas({
                   })
                 }
               />
-              {field.value?.yes?.isYes && (
-                <Input
-                  placeholder="Include soil type and condition, bodies of water, nearby wetlands and woodlands, wildlife, windbreaks, hedgerows, native habitat and beneficial plantings. Include any problem areas such as erosion and invasive species."
+              <FieldLabel
+                htmlFor="activeWildAreasYes"
+                className="whitespace-nowrap"
+              >
+                Yes, describe:
+              </FieldLabel>
+            </Field>
+            {field.value?.yes?.isYes && (
+              <div className="mb-4 ml-4 flex flex-row flex-wrap items-center gap-3">
+                <FieldLabel>
+                  Include soil type and condition, bodies of water, nearby
+                  wetlands and woodlands, wildlife, windbreaks, hedgerows,
+                  native habitat and beneficial plantings. Include any problem
+                  areas such as erosion and invasive species.
+                </FieldLabel>
+                <Textarea
                   value={field.value?.yes?.description ?? ''}
                   onChange={(e) =>
                     field.onChange({
@@ -81,8 +97,8 @@ export default function ActiveWildAreas({
                     })
                   }
                 />
-              )}
-            </Field>
+              </div>
+            )}
           </FieldSet>
         )}
       />

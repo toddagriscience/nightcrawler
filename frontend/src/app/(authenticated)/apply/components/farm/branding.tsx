@@ -27,13 +27,9 @@ export default function Branding({ control, errors }: FarmFormControlProps) {
         control={control}
         name="branding"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-4">
+          <FieldSet className="flex flex-col gap-2">
             {/* Not applicable */}
-            <Field>
-              <FieldLabel htmlFor="brandingNotApplicable">
-                Not applicable, no branded labels or packaging, or only pack
-                into my operation&apos;s own labels/brand
-              </FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.notApplicable}
                 onCheckedChange={(e) =>
@@ -44,11 +40,14 @@ export default function Branding({ control, errors }: FarmFormControlProps) {
                   })
                 }
               />
+              <FieldLabel htmlFor="brandingNotApplicable">
+                Not applicable, no branded labels or packaging, or only pack
+                into my operation&apos;s own labels/brand
+              </FieldLabel>
             </Field>
 
             {/* Yes */}
-            <Field>
-              <FieldLabel htmlFor="brandingYes">Yes</FieldLabel>
+            <Field orientation="horizontal">
               <Checkbox
                 checked={field.value?.yes?.isYes}
                 onCheckedChange={(e) =>
@@ -62,14 +61,18 @@ export default function Branding({ control, errors }: FarmFormControlProps) {
                   })
                 }
               />
-              {field.value?.yes?.isYes && (
-                <FieldSet className="ml-6 flex flex-col gap-4">
-                  <FieldLabel>
-                    Indicate the certification status for each company whose
-                    brand(s) your crops are packed into. Mark all that apply.
-                  </FieldLabel>
-                  <Field>
-                    <FieldLabel htmlFor="uncertified">Uncertified</FieldLabel>
+              <FieldLabel htmlFor="brandingYes" className="whitespace-nowrap">
+                Yes
+              </FieldLabel>
+            </Field>
+            {field.value?.yes?.isYes && (
+              <div className="mb-4 ml-6 flex flex-col gap-4">
+                <FieldLabel className="mt-4 mb-1">
+                  Indicate the certification status for each company whose
+                  brand(s) your crops are packed into. Mark all that apply.
+                </FieldLabel>
+                <div className="flex flex-col gap-2">
+                  <Field orientation="horizontal">
                     <Checkbox
                       checked={
                         field.value?.yes?.certificationStatus?.uncertified
@@ -87,11 +90,14 @@ export default function Branding({ control, errors }: FarmFormControlProps) {
                         })
                       }
                     />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="organicBiodynamic">
-                      Organic, Biodynamic or Regenerative Organic Certification
+                    <FieldLabel
+                      htmlFor="uncertified"
+                      className="whitespace-nowrap"
+                    >
+                      Uncertified
                     </FieldLabel>
+                  </Field>
+                  <Field orientation="horizontal">
                     <Checkbox
                       checked={
                         field.value?.yes?.certificationStatus?.organicBiodynamic
@@ -109,10 +115,13 @@ export default function Branding({ control, errors }: FarmFormControlProps) {
                         })
                       }
                     />
+                    <FieldLabel htmlFor="organicBiodynamic">
+                      Organic, Biodynamic or Regenerative Organic Certification
+                    </FieldLabel>
                   </Field>
-                </FieldSet>
-              )}
-            </Field>
+                </div>
+              </div>
+            )}
           </FieldSet>
         )}
       />
