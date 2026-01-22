@@ -3,12 +3,12 @@
 'use client';
 
 import { FadeIn } from '@/components/common';
+import PublicInquiryModal from '@/components/common/public-inquiry-modal/public-inquiry-modal';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/actions/auth';
-import Link from 'next/link';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useActionState, useState } from 'react';
 
@@ -84,12 +84,9 @@ export default function Login() {
                       Show Password
                     </FieldLabel>
                   </div>
-                  <Link
-                    href={'/forgot-password'}
-                    className="basis-[min-content] text-sm text-nowrap underline"
-                  >
-                    Forgot Password
-                  </Link>
+                 
+                <PublicInquiryModal trigger={<span className="basis-[min-content] text-base text-nowrap underline">Help</span>} />
+                  
                 </Field>
               </FieldGroup>
             </FieldSet>
