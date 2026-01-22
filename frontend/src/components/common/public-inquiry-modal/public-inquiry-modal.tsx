@@ -2,6 +2,7 @@
 
 'use client';
 
+import { FadeIn } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -58,7 +59,7 @@ export default function PublicInquiryModal({
           </Button>
         )}
       </DialogTrigger>
-      {/* <FadeIn duration={0.6}> */}
+      <FadeIn duration={0.6}>
         <DialogContent className="sm:max-w-[430px] gap-8">
           <DialogHeader className="gap-1">
             <DialogTitle className="text-xl font-bold leading-tight">
@@ -86,7 +87,7 @@ export default function PublicInquiryModal({
             </Button>
           </DialogFooter>
         </DialogContent>
-      {/* </FadeIn> */}
+      </FadeIn>
     </Dialog>
   );
 }
