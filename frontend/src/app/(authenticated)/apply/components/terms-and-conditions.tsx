@@ -50,7 +50,7 @@ export default function TermsAndConditions() {
           There was an error submitting your application.
         </p>
       )}
-      <div className="w-full max-w-300 mb-6 gap-4 flex flex-col font-light">
+      <div className="w-full max-w-300 mb-6 gap-4 flex flex-col font-light mt-12">
         <h2 className="font-medium text-xl">
           Electronic Delivery of Documents
         </h2>

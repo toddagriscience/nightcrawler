@@ -33,7 +33,9 @@ export default async function ApplicationSuccess() {
     <div className="h-[calc(100vh-8rem)] flex flex-col justify-center items-center gap-4">
       <h1 className="text-3xl">Thanks for submitting your application</h1>
       <p>We&apos;ll reach out to you as soon as possible.</p>
-      <Link href={'/'}>Home</Link>
+      <Link href={'/'} className="underline">
+        Home
+      </Link>
     </div>
   );
 }
