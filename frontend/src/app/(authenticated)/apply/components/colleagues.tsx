@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { User, UserInsert } from '@/lib/types/db';
+import { UserSelect, UserInsert } from '@/lib/types/db';
 import { userInsertSchema } from '@/lib/zod-schemas/db';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -48,8 +48,8 @@ export default function Colleagues({
   setCurrentTab,
   currentUser,
 }: {
-  allUsers: User[];
-  currentUser: User;
+  allUsers: UserSelect[];
+  currentUser: UserSelect;
   setCurrentTab: (arg0: TabTypes) => void;
 }) {
   const [users, setUsers] = useState(allUsers);
@@ -69,7 +69,7 @@ export default function Colleagues({
     const result = await inviteUserToFarm(data);
     if (result.error === null) {
       // Add the new user to the list and reset the form
-      setUsers([...users, data as User]);
+      setUsers([...users, data as UserSelect]);
       reset();
     }
     setError('role', { message: formatActionResponseErrors(result)[0] });

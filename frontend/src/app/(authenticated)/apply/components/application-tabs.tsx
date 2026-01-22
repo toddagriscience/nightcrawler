@@ -7,7 +7,7 @@ import GeneralBusinessInformation from './general-business-information';
 import Colleagues from './colleagues';
 import Farm from './farm';
 import { GeneralBusinessInformationUpdate, TabTypes } from '../types';
-import { FarmInfoInternalApplicationSelect, User } from '@/lib/types/db';
+import { FarmInfoInternalApplicationSelect, UserSelect } from '@/lib/types/db';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
@@ -22,8 +22,8 @@ export default function ApplicationTabs({
   currentUser,
 }: {
   farmInfo: GeneralBusinessInformationUpdate;
-  allUsers: User[];
-  currentUser: User;
+  allUsers: UserSelect[];
+  currentUser: UserSelect;
   internalApplication: FarmInfoInternalApplicationSelect;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>('general');

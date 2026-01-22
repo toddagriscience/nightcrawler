@@ -6,7 +6,7 @@ import { getUserEmail } from '../auth';
 import { user } from '../db/schema';
 import { db } from '../db/schema/connection';
 import { eq } from 'drizzle-orm';
-import { User } from '@/lib/types/db';
+import { UserSelect } from '@/lib/types/db';
 
 /**
  * Gets the authenticated user's requested information. Returns an error ActionResponse if the user
@@ -17,7 +17,7 @@ import { User } from '@/lib/types/db';
  * @returns {Promise<ActionResponse>} - If successful, the requested user's information via an ActionResponse, else an ActionResponse containing an error
  */
 export async function getAuthenticatedInfo(): Promise<
-  User | { error: string }
+  UserSelect | { error: string }
 > {
   const email = await getUserEmail();
 

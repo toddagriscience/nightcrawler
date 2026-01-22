@@ -5,10 +5,10 @@ import { farm, farmCertificate, farmLocation } from '../db/schema/farm';
 import { user } from '../db/schema/user';
 import { farmInfoInternalApplication } from '../db/schema';
 
-export type User = InferSelectModel<typeof user>;
-export type FarmLocation = InferSelectModel<typeof farmLocation>;
-export type Farm = InferSelectModel<typeof farm>;
-export type FarmCertificate = InferSelectModel<typeof farmCertificate>;
+export type UserSelect = InferSelectModel<typeof user>;
+export type FarmLocationSelect = InferSelectModel<typeof farmLocation>;
+export type FarmSelect = InferSelectModel<typeof farm>;
+export type FarmCertificateSelect = InferSelectModel<typeof farmCertificate>;
 export type FarmInfoInternalApplicationSelect = InferSelectModel<
   typeof farmInfoInternalApplication
 >;
