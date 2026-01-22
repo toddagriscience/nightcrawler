@@ -5,19 +5,19 @@
 import { FadeIn } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { useState } from 'react';
 import { PublicInquiryOption } from './types/public-inquiry-modal';
 
 /**
- * Public Inquiry modal. Allows users to submit a public inquiry support ticket.
+ * Public Inquiry modal. Allows users to navigate to the support page or password reset page.
  *
  * @param {React.ReactNode} trigger - The element that opens the modal. Optional, defaults to a button.
  * @returns {JSX.Element} - The Public Inquiry modal with related logic.
