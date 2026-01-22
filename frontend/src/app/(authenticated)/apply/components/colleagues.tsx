@@ -25,6 +25,8 @@ import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 import { Button } from '@/components/ui';
 import { TabTypes } from '../types';
+import SelfSelectAdmin from './colleagues/self-select-admin';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -44,8 +46,10 @@ const userRolesWithDescription: Record<string, any>[] = [
 export default function Colleagues({
   allUsers,
   setCurrentTab,
+  currentUser,
 }: {
   allUsers: User[];
+  currentUser: User;
   setCurrentTab: (arg0: TabTypes) => void;
 }) {
   const [users, setUsers] = useState(allUsers);
@@ -53,8 +57,9 @@ export default function Colleagues({
     register,
     handleSubmit,
     control,
+    setError,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<UserInsert>({
     defaultValues: {},
     resolver: zodResolver(userInsertSchema.omit({ id: true })),
@@ -67,6 +72,7 @@ export default function Colleagues({
       setUsers([...users, data as User]);
       reset();
     }
+    setError('role', { message: formatActionResponseErrors(result)[0] });
   }
 
   return (
@@ -99,6 +105,7 @@ export default function Colleagues({
             <p className="text-muted-foreground">No team members added yet.</p>
           )}
         </div>
+        <SelfSelectAdmin role={currentUser.role} />
 
         <h2 className="mb-4 text-lg font-semibold">Invite a New Team Member</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -288,6 +295,7 @@ export default function Colleagues({
             <SubmitButton
               buttonText="INVITE TEAM MEMBER"
               className="basis-2/3"
+              reactHookFormPending={isSubmitting}
             />
             <Button
               onClick={() => {

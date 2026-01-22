@@ -10,7 +10,7 @@ import {
   farmLocation,
   user,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import ApplicationTabs from './components/application-tabs';
 import { redirect } from 'next/navigation';
 
@@ -52,7 +52,11 @@ export default async function Apply() {
     .fullJoin(farmCertificate, eq(farmCertificate.farmId, farmId))
     .limit(1);
 
-  const allUsers = await db.select().from(user).where(eq(user.farmId, farmId));
+  // All users EXCEPT the current user
+  const allUsers = await db
+    .select()
+    .from(user)
+    .where(and(eq(user.farmId, farmId), ne(user.id, currentUser.id)));
   const [internalApplication] = await db
     .select()
     .from(farmInfoInternalApplication)
@@ -67,6 +71,7 @@ export default async function Apply() {
           ...farmInfo.farm_location,
           ...farmInfo.farm_certificate,
         }}
+        currentUser={currentUser}
         allUsers={allUsers}
         internalApplication={internalApplication}
       />

@@ -248,6 +248,20 @@ export async function inviteUserToFarm(
       return { error: 'No farmId given' };
     }
 
+    // Multiple admins aren't allowed
+    const [doesAdminExist] = await db
+      .select({ role: user.role })
+      .from(user)
+      .where(eq(user.role, 'Admin'))
+      .limit(1);
+
+    if (doesAdminExist && formData.role === 'Admin') {
+      return {
+        error:
+          'Multiple administrators are not allowed. Please contact support for more information.',
+      };
+    }
+
     // Don't require the user's new ID to be sent with formData
     const validated = userInsertSchema.omit({ id: true }).safeParse(formData);
     if (!validated.success) {

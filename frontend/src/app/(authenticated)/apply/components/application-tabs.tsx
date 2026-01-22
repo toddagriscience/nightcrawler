@@ -19,9 +19,11 @@ export default function ApplicationTabs({
   farmInfo,
   allUsers,
   internalApplication,
+  currentUser,
 }: {
   farmInfo: GeneralBusinessInformationUpdate;
   allUsers: User[];
+  currentUser: User;
   internalApplication: FarmInfoInternalApplicationSelect;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>();
@@ -56,7 +58,11 @@ export default function ApplicationTabs({
       </TabsContent>
 
       <TabsContent value="colleagues">
-        <Colleagues allUsers={allUsers} setCurrentTab={setCurrentTab} />
+        <Colleagues
+          currentUser={currentUser}
+          allUsers={allUsers}
+          setCurrentTab={setCurrentTab}
+        />
       </TabsContent>
 
       <TabsContent value="farm">

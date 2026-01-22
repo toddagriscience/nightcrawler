@@ -279,7 +279,7 @@ describe('inviteUserToFarm', () => {
     expect(newUser.role).toBe('Viewer');
   });
 
-  it('invites user with Admin role', async () => {
+  it('does not invite user with Admin role', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -296,7 +296,26 @@ describe('inviteUserToFarm', () => {
     });
     const result = await inviteUserToFarm(userData);
 
+    expect(result.error).not.toBeNull();
+  });
+
+  it('does invite user with Viewer role', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    mockInviteUser.mockResolvedValue({ user: { id: 'admin-user-id' } });
+
+    const uniqueEmail = `admin-${Date.now()}@example.com`;
+    const userData = createValidUserData({
+      email: uniqueEmail,
+      role: 'Viewer',
+      firstName: 'Admin',
+      lastName: 'User',
+    });
+    const result = await inviteUserToFarm(userData);
+
     expect(result.error).toBeNull();
-    expect(mockInviteUser).toHaveBeenCalledWith(uniqueEmail, 'Admin');
   });
 });
