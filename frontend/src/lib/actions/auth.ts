@@ -2,12 +2,12 @@
 
 'use server';
 
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 import logger from '../logger';
 import { AuthResponse, AuthResponseTypes } from '../types/auth';
 import { emailSchema, loginSchema } from '../zod-schemas/auth';
-import { z } from 'zod';
 
 /** This file is STRICTLY for SERVER SIDE authentication. Server-side authentication should be generally preferred over client-side authentication. You can read more about this in `./src/lib/auth.ts` */
 
