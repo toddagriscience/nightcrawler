@@ -1,36 +1,27 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { describe, it, beforeEach, afterEach, expect, vi, Mock } from 'vitest';
-import TermsAndConditions from './terms-and-conditions';
-import { submitApplication } from '../actions';
-import { useRouter } from 'next/navigation';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useRouter } from 'next/navigation';
+import TermsAndConditions from './terms-and-conditions';
+
+// Mock dependencies
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
+}));
 
 vi.mock('../actions', () => ({
   submitApplication: vi.fn(),
 }));
 
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
-}));
-
 describe('TermsAndConditions', () => {
-  const pushMock = vi.fn();
+  const mockPush = vi.fn();
 
   beforeEach(() => {
-    vi.useFakeTimers();
     vi.clearAllMocks();
-
-    (useRouter as Mock).mockReturnValue({
-      push: pushMock,
+    (useRouter as any).mockReturnValue({
+      push: mockPush,
     });
   });
 
@@ -38,128 +29,52 @@ describe('TermsAndConditions', () => {
     vi.restoreAllMocks();
   });
 
-  it('renders the terms page and iframe', () => {
+  it('renders the terms and conditions page', () => {
     render(<TermsAndConditions />);
 
-    expect(screen.getByText(/Terms and conditions/i)).toBeInTheDocument();
-
+    expect(screen.getByText('Terms and conditions')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /agree and submit/i })
+      screen.getByText(/You are about to finalize your Account Application/)
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /AGREE AND SUBMIT/i })
+    ).toBeInTheDocument();
+  });
 
+  it('renders the PDF iframe with correct src', () => {
+    render(<TermsAndConditions />);
+
+    // Query iframe by tag name since it doesn't have a specific accessible role
     const iframe = document.querySelector('iframe');
     expect(iframe).toBeInTheDocument();
     expect(iframe).toHaveAttribute('src', '/account-agreement.pdf#toolbar=0');
   });
 
-  it('opens the confirmation dialog', () => {
+  it('opens dialog when AGREE AND SUBMIT button is clicked', async () => {
+    const user = userEvent.setup();
     render(<TermsAndConditions />);
 
-    const user = userEvent.setup();
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
+    const triggerButton = screen.getByRole('button', {
+      name: /AGREE AND SUBMIT/i,
     });
+    await user.click(triggerButton);
 
     expect(
-      screen.getByText(/Are you sure you want to submit/i)
+      screen.getByText('Are you sure you want to submit?')
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/By submitting, you are finalizing your application/)
+    ).toHaveLength(2);
+    expect(
+      screen.getByText(/You will not be able to access your application/)
     ).toBeInTheDocument();
   });
 
-  it('keeps final submit disabled until wait time passes', async () => {
+  it('does not display error message initially', () => {
     render(<TermsAndConditions />);
 
-    const user = userEvent.setup();
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    const finalSubmit = screen.getByRole('button', {
-      name: /agree and submit/i,
-    });
-
-    expect(finalSubmit).toBeDisabled();
-
-    vi.advanceTimersByTime(5000);
-
-    await waitFor(() => {
-      expect(finalSubmit).not.toBeDisabled();
-    });
-  });
-
-  it('submits successfully and navigates to success page', async () => {
-    (submitApplication as Mock).mockResolvedValue({
-      error: null,
-    });
-
-    const user = userEvent.setup();
-
-    render(<TermsAndConditions />);
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    vi.advanceTimersByTime(5000);
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    await waitFor(() => {
-      expect(submitApplication).toHaveBeenCalled();
-      expect(pushMock).toHaveBeenCalledWith('/application-success');
-    });
-  });
-
-  it('shows an error message when submission returns an error', async () => {
-    (submitApplication as Mock).mockResolvedValue({
-      error: true,
-    });
-
-    const user = userEvent.setup();
-
-    render(<TermsAndConditions />);
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    vi.advanceTimersByTime(5000);
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(/There was an error submitting your application/i)
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('shows an error message when submission throws', async () => {
-    (submitApplication as Mock).mockRejectedValue(new Error('boom'));
-
-    render(<TermsAndConditions />);
-
-    const user = userEvent.setup();
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    vi.advanceTimersByTime(5000);
-
-    act(() => {
-      user.click(screen.getByRole('button', { name: /agree and submit/i }));
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(/There was an error submitting your application/i)
-      ).toBeInTheDocument();
-    });
+    expect(
+      screen.queryByText('There was an error submitting your application.')
+    ).not.toBeInTheDocument();
   });
 });

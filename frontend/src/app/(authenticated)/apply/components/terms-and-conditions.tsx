@@ -88,7 +88,7 @@ export default function TermsAndConditions() {
             the terms of service.
           </p>
           <p>
-            You will not be able to access your application after you've
+            You will not be able to access your application after you&apos;ve
             submitted it.
           </p>
           <DialogClose asChild>

@@ -1,13 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { user } from '@/lib/db/schema/user';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import {
   saveApplication,
-  sendApplicationToGoogleSheets,
+  submitApplication,
   inviteUserToFarm,
 } from './actions';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import * as nextHeaders from 'next/headers';
 
 const mockGetClaims = vi.fn();
 
@@ -81,6 +82,17 @@ vi.mock('@/lib/db/schema/connection', async (importOriginal) => {
   };
 });
 
+vi.mock('next/headers', () => {
+  return {
+    headers: () =>
+      new Map<string, string>([
+        ['x-forwarded-for', '127.0.0.1'],
+        ['user-agent', 'vitest'],
+        ['host', 'localhost:3000'],
+      ]),
+  };
+});
+
 describe('saveApplication', () => {
   it('saves with no information given', async () => {
     mockGetClaims.mockReturnValue({
@@ -134,7 +146,7 @@ describe('sendApplicationToGoogleSheets', () => {
 
     mockSubmitToGoogleSheets.mockResolvedValue(undefined);
 
-    const result = await sendApplicationToGoogleSheets();
+    const result = await submitApplication();
     expect(result.error).toBeNull();
     expect(mockSubmitToGoogleSheets).toHaveBeenCalledTimes(1);
   });
