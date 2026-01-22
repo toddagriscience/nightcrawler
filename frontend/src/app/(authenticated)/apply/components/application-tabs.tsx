@@ -26,7 +26,7 @@ export default function ApplicationTabs({
   currentUser: User;
   internalApplication: FarmInfoInternalApplicationSelect;
 }) {
-  const [currentTab, setCurrentTab] = useState<TabTypes>();
+  const [currentTab, setCurrentTab] = useState<TabTypes>('general');
 
   return (
     <Tabs defaultValue="general" value={currentTab}>

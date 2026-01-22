@@ -32,22 +32,13 @@ describe('TermsAndConditions', () => {
   it('renders the terms and conditions page', () => {
     render(<TermsAndConditions />);
 
-    expect(screen.getByText('Terms and conditions')).toBeInTheDocument();
+    expect(
+      screen.getByText('Electronic Delivery of Documents')
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/You are about to finalize your Account Application/)
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /AGREE AND SUBMIT/i })
-    ).toBeInTheDocument();
-  });
-
-  it('renders the PDF iframe with correct src', () => {
-    render(<TermsAndConditions />);
-
-    // Query iframe by tag name since it doesn't have a specific accessible role
-    const iframe = document.querySelector('iframe');
-    expect(iframe).toBeInTheDocument();
-    expect(iframe).toHaveAttribute('src', '/account-agreement.pdf#toolbar=0');
+    expect(screen.getByRole('button', { name: /AGREE/i })).toBeInTheDocument();
   });
 
   it('opens dialog when AGREE AND SUBMIT button is clicked', async () => {
@@ -55,7 +46,7 @@ describe('TermsAndConditions', () => {
     render(<TermsAndConditions />);
 
     const triggerButton = screen.getByRole('button', {
-      name: /AGREE AND SUBMIT/i,
+      name: /AGREE/i,
     });
     await user.click(triggerButton);
 

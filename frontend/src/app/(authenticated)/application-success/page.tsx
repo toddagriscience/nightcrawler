@@ -4,6 +4,7 @@ import { accountAgreementAcceptance } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { eq } from 'drizzle-orm';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function ApplicationSuccess() {
@@ -29,9 +30,10 @@ export default async function ApplicationSuccess() {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col justify-center items-center">
+    <div className="h-[calc(100vh-8rem)] flex flex-col justify-center items-center gap-4">
       <h1 className="text-3xl">Thanks for submitting your application</h1>
       <p>We&apos;ll reach out to you as soon as possible.</p>
+      <Link href={'/'}>Home</Link>
     </div>
   );
 }

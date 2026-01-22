@@ -37,6 +37,7 @@ export default function OtherMaterials({
           <FieldSet className="flex flex-col gap-2">
             <Field orientation="horizontal">
               <Checkbox
+                defaultChecked={true}
                 checked={field.value?.noMaterials?.isNoMaterials}
                 onCheckedChange={(e) =>
                   field.onChange({
@@ -49,10 +50,10 @@ export default function OtherMaterials({
                 }
               />
               <FieldLabel htmlFor="noMaterials">
-                No materials of any kind are used
+                We do not use any of the above materials
               </FieldLabel>
             </Field>
-            {field.value?.noMaterials?.isNoMaterials && (
+            {!field.value?.noMaterials?.isNoMaterials && (
               <div className="ml-6 mb-4 flex flex-col gap-4">
                 <div>
                   <FieldLabel htmlFor="productName" className="mb-2">
@@ -126,6 +127,23 @@ export default function OtherMaterials({
                     }
                   />
                 </div>
+                <div>
+                  <FieldLabel htmlFor="otherInformation" className="mb-2">
+                    Other information:
+                  </FieldLabel>
+                  <Textarea
+                    value={field.value?.noMaterials?.otherInformation ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          otherInformation: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
               </div>
             )}
 
@@ -142,7 +160,7 @@ export default function OtherMaterials({
                   })
                 }
               />
-              <FieldLabel htmlFor="usesNpk">Our farm uses NPK:</FieldLabel>
+              <FieldLabel htmlFor="usesNpk">Our farm uses NPK</FieldLabel>
             </Field>
             {field.value?.usesNpk?.isUsesNpk && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
@@ -176,7 +194,7 @@ export default function OtherMaterials({
                 }
               />
               <FieldLabel htmlFor="usesSodiumNitrate">
-                Our farm uses sodium (Chilean) nitrate:
+                Our farm uses sodium (Chilean) nitrate
               </FieldLabel>
             </Field>
             {field.value?.usesSodiumNitrate?.isUsesSodiumNitrate && (
@@ -212,7 +230,7 @@ export default function OtherMaterials({
               />
               <FieldLabel htmlFor="treatedLumber">
                 There are existing installations of lumber treated with
-                arsenate, describe (e.g. endpost, trellis, stakes, etc.):
+                arsenate, describe (e.g. endpost, trellis, stakes, etc.)
               </FieldLabel>
             </Field>
             {field.value?.treatedLumber?.isTreatedLumber && (

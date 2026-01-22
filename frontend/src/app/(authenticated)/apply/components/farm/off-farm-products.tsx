@@ -20,7 +20,7 @@ export default function OffFarmProducts({
         <FieldLabel>
           What, if any, off-farm products, including commercial compost, manure,
           gypsum, limestone, micronutrients, or other fertilizers/soil
-          amendments.
+          amendments are used?
         </FieldLabel>
         <ErrorMessage
           errors={errors}
