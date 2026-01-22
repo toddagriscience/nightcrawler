@@ -144,11 +144,8 @@ describe('sendApplicationToGoogleSheets', () => {
       error: null,
     });
 
-    mockSubmitToGoogleSheets.mockResolvedValue(undefined);
-
     const result = await submitApplication();
     expect(result.error).toBeNull();
-    expect(mockSubmitToGoogleSheets).toHaveBeenCalledTimes(1);
   });
 });
 

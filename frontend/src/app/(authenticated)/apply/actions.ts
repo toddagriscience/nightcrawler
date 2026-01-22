@@ -213,10 +213,6 @@ export async function submitApplication(): Promise<ActionResponse> {
       return { error: 'Application not found' };
     }
 
-    const googleSheetsUrl = process.env.INTERNAL_APPLICATION_GOOGLE_SCRIPT_URL!;
-
-    await submitToGoogleSheets(applicationData[0], googleSheetsUrl);
-
     await db.insert(accountAgreementAcceptance).values({
       timeAccepted,
       // This is fine, we don't desperately need the user's IP
