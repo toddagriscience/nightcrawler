@@ -4,6 +4,7 @@
 
 import { inviteUser } from '@/lib/auth';
 import {
+  accountAgreementAcceptance,
   farm,
   farmCertificate,
   farmInfoInternalApplication,
@@ -29,6 +30,8 @@ import {
   FarmLocationInsert,
   UserInsert,
 } from '@/lib/types/db';
+import { headers } from 'next/headers';
+import termsAndConditionsVersion from './terms-and-conditions-version';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
  *
@@ -179,11 +182,16 @@ export async function saveApplication(
   }
 }
 
-/** Sends an applicant's information to Google Sheets. This isn't a long term solution, but it'll work for now.
+/** Sends an applicant's information to Google Sheets AND adds an entry to the database for their acceptance. ONLY call this function if the user has accepted the Terms and Conditions. This isn't a long term solution, but it'll work for now.
  *
  * @returns {ActionResponse} - Returns nothing if successful, returns an error if else.
  * */
-export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
+export async function submitApplication(): Promise<ActionResponse> {
+  // Get user information for `accountAgreementAcceptance` at the very start of the action for best accuracy
+  const timeAccepted = new Date();
+  const requestHeaders = await headers();
+  const userIpAddress = requestHeaders.get('x-forwarded-for');
+
   try {
     const result = await getAuthenticatedInfo();
 
@@ -208,6 +216,15 @@ export async function sendApplicationToGoogleSheets(): Promise<ActionResponse> {
     const googleSheetsUrl = process.env.INTERNAL_APPLICATION_GOOGLE_SCRIPT_URL!;
 
     await submitToGoogleSheets(applicationData[0], googleSheetsUrl);
+
+    await db.insert(accountAgreementAcceptance).values({
+      timeAccepted,
+      // This is fine, we don't desperately need the user's IP
+      ipAddress: userIpAddress || 'NO x-forwarded-for HEADER GIVEN',
+      userId: result.id,
+      accepted: true,
+      version: termsAndConditionsVersion,
+    });
 
     return { error: null };
   } catch (error) {

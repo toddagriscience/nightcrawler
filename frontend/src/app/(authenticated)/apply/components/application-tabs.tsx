@@ -9,6 +9,10 @@ import Farm from './farm';
 import { GeneralBusinessInformationUpdate, TabTypes } from '../types';
 import { FarmInfoInternalApplicationSelect, User } from '@/lib/types/db';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
+  ssr: false,
+});
 
 /** The tabs for the application */
 export default function ApplicationTabs({
@@ -62,7 +66,9 @@ export default function ApplicationTabs({
         />
       </TabsContent>
 
-      <TabsContent value="terms">{/* Terms content */}</TabsContent>
+      <TabsContent value="terms">
+        <TermsAndConditions />
+      </TabsContent>
     </Tabs>
   );
 }

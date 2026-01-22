@@ -3,6 +3,7 @@
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { db } from '@/lib/db/schema/connection';
 import {
+  accountAgreementAcceptance,
   farm,
   farmCertificate,
   farmInfoInternalApplication,
@@ -30,6 +31,16 @@ export default async function Apply() {
 
   if (currentUser.approved) {
     redirect('/');
+  }
+
+  const [hasApplied] = await db
+    .select({ userId: accountAgreementAcceptance.userId })
+    .from(accountAgreementAcceptance)
+    .where(eq(accountAgreementAcceptance.userId, currentUser.id))
+    .limit(1);
+
+  if (hasApplied) {
+    redirect('/application-success');
   }
 
   const farmId = currentUser.farmId!;

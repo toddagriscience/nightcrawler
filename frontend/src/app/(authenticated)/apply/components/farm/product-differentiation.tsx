@@ -116,7 +116,7 @@ export default function ProductDifferentiation({
               </FieldLabel>
             </Field>
             {field.value?.other?.isOther && (
-              <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
                   placeholder="Describe other differentiation method"
                   value={field.value?.other?.description ?? ''}

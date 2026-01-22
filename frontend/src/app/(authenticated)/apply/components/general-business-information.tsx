@@ -122,7 +122,7 @@ export default function GeneralBusinessInformation({
 
           <Field>
             <div className="flex flex-row justify-between">
-              <FieldLabel>Management Start Date</FieldLabel>
+              <FieldLabel>When did you begin managing this parcel?</FieldLabel>
               <ErrorMessage
                 errors={errors}
                 name="managementStartDate"

@@ -139,7 +139,7 @@ export default function IrrigationWaterSource({
                         htmlFor="sharesIrrigationYes"
                         className="whitespace-nowrap"
                       >
-                        Yes, describe:
+                        Yes
                       </FieldLabel>
                     </Field>
                     {field.value?.waterDistrict?.sharesIrrigation?.yes

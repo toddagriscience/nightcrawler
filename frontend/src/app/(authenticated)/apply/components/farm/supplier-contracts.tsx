@@ -24,7 +24,7 @@ export default function SupplierContracts({
       </div>
       <Input
         type="text"
-        placeholder="If so, what are the products or services?"
+        placeholder="What are the products or services?"
         {...register('supplierContracts')}
       />
     </Field>

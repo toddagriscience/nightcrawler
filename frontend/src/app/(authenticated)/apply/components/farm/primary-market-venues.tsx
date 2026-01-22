@@ -429,7 +429,7 @@ export default function PrimaryMarketVenues({
                     }
                   />
                   <FieldLabel htmlFor="sellsNonOrganic">
-                    Do they sell non-organic produce
+                    Do they sell non-organic produce?
                   </FieldLabel>
                 </Field>
               </div>

@@ -120,7 +120,7 @@ export default function Farm({
               </div>
               <Input
                 type="number"
-                placeholder="e.g., 500"
+                placeholder="e.g., 7"
                 {...register('totalAcreage', { valueAsNumber: true })}
               />
             </Field>

@@ -22,7 +22,7 @@ export default function OtherMaterials({
           What, if any, synthetic fertilizers, pesticides, fungicides, or any
           other materials such as treated seed (including coatings, pelleting
           materials, and inoculants), growing media (substrate, planting mix,
-          potting soil), adjuvants, etc.
+          potting soil), adjuvants, etc. are used on your farm?
         </FieldLabel>
         <ErrorMessage
           errors={errors}
@@ -142,9 +142,7 @@ export default function OtherMaterials({
                   })
                 }
               />
-              <FieldLabel htmlFor="usesNpk">
-                Farm uses NPK, describe:
-              </FieldLabel>
+              <FieldLabel htmlFor="usesNpk">Our farm uses NPK:</FieldLabel>
             </Field>
             {field.value?.usesNpk?.isUsesNpk && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
@@ -178,7 +176,7 @@ export default function OtherMaterials({
                 }
               />
               <FieldLabel htmlFor="usesSodiumNitrate">
-                Farm uses sodium (Chilean) nitrate, describe:
+                Our farm uses sodium (Chilean) nitrate:
               </FieldLabel>
             </Field>
             {field.value?.usesSodiumNitrate?.isUsesSodiumNitrate && (
