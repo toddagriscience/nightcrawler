@@ -5,6 +5,7 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from 'next-intl';
 
 /**
  * Support page. Allows users to submit a public inquiry support ticket.
@@ -12,27 +13,28 @@ import { Textarea } from '@/components/ui/textarea';
  * @returns {JSX.Element} - The support page with related logic.
  * */
 export default function Support() {
+  const t = useTranslations('supportPage');
 
 
   return (
     <main> 
-        <FadeIn>
-        <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
-        <div className="w-[90vw] max-w-[inherit]">
-        <section className="text-center mx-auto max-w-3xl px-2 pt-8">
-            <h1 className="mt-16 mb-8 text-4xl font-light">Need Help?</h1>
+      <FadeIn>
+        <section className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
+          <div className="w-[90vw] max-w-[inherit]">
+            <div className="text-center mx-auto max-w-3xl px-2 pt-8">
+              <h1 className="mt-16 mb-8 text-4xl font-light">{t('hero.title')}</h1>
                 <p className="mb-8 text-sm text-gray-500">
-                    We're here to help you get the most out of our platform.
+                    {t('hero.subtitle')}
                 </p>
-        </section>
+            </div>
           <form className="flex flex-col gap-4">
             <FieldSet className="mb-8">
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <FieldLabel htmlFor="name">{t('fields.name')}</FieldLabel>
                   <Input
                     className="focus:ring-0!"
-                    placeholder="Name"
+                    placeholder={t('placeholders.name')}
                     id="name"
                     data-testid="name"
                     name="name"
@@ -41,23 +43,23 @@ export default function Support() {
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                  <FieldLabel htmlFor="email">{t('fields.email')}</FieldLabel>
                   <Input
                     id="email"
                     data-testid="email"
                     type="email"
-                    placeholder="Email Address"
+                    placeholder={t('placeholders.email')}
                     className="focus:ring-0!"
                     name="email"
                     required
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="message">Message</FieldLabel>
+                  <FieldLabel htmlFor="message">{t('fields.message')}</FieldLabel>
                   <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
                     <Textarea
                       id="message"
-                      placeholder="Message"
+                      placeholder={t('placeholders.message')}
                       name="message"
                       rows={4}
                       className="focus:ring-0! w-full"
@@ -67,11 +69,12 @@ export default function Support() {
               </FieldGroup>
             </FieldSet>
             <SubmitButton
-              buttonText="SUBMIT"
+              buttonText={t('buttons.submit')}
             />
           </form>
         </div>
-      </div>
+    
+      </section>
     </FadeIn>
     </main>
   );

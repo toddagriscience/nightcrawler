@@ -80,7 +80,7 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full rounded-full px-6 py-6 text-base font-bold hover:cursor-pointer hover:bg-[var(--popover-foreground)] hover:text-[var(--primary-foreground)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
+              className="w-full px-6 py-6 text-base font-bold hover:cursor-pointer hover:bg-[var(--popover-foreground)] hover:text-[var(--primary-foreground)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
               onClick={() => setIsOpen(false)}
             >
               Cancel

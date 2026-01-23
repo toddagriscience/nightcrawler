@@ -1,0 +1,22 @@
+{
+    "supportPage": {
+      "title": "Support",
+      "hero": {
+        "title": "Need Help?",
+        "subtitle": "We're here to help you get the most out of our platform."
+      },
+      "fields": {
+        "name": "Name",
+        "email": "Email Address",
+        "message": "Message"
+      },
+      "placeholders": {
+        "name": "Name",
+        "email": "Email Address",
+        "message": "Message"
+      },
+      "buttons": {
+        "submit": "SUBMIT"
+      }
+    }
+  }
