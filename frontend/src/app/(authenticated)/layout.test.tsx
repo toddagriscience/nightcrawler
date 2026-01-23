@@ -4,9 +4,12 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AuthenticatedLayout from './layout';
 
-vi.mock('@/components/common/authenticated-header/authenticated-header', () => ({
-  default: () => <div data-testid="authenticated-header" />,
-}));
+vi.mock(
+  '@/components/common/authenticated-header/authenticated-header',
+  () => ({
+    default: () => <div data-testid="authenticated-header" />,
+  })
+);
 
 describe('AuthenticatedLayout', () => {
   it('should render "authenticated-root" class', () => {
