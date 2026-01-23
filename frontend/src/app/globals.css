@@ -88,6 +88,15 @@ body {
   font-family: var(--font-haas);
 }
 
+/*
+ * Enforce the platform background on authenticated routes
+ */
+html:has(.authenticated-root),
+body:has(.authenticated-root) {
+  background: var(--background-platform);
+  background-color: var(--background-platform);
+}
+
 /* Hide scrollbars globally */
 ::-webkit-scrollbar {
   display: none;
