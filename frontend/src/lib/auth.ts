@@ -161,7 +161,7 @@ export async function inviteUser(
   email: string,
   name: string
 ): Promise<object | Error> {
-  const supabase = await createServerClient();
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
     redirectTo: 'https://toddagriscience.com/login',
     data: {

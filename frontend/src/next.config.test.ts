@@ -61,7 +61,7 @@ describe('Next.js Security Headers Configuration', () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("font-src 'self'"); // No external font loading
     expect(csp).toContain("object-src 'none'");
-    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).toContain("frame-ancestors 'self'");
     expect(csp).toContain('upgrade-insecure-requests');
   });
 

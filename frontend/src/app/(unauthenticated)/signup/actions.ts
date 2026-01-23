@@ -3,7 +3,8 @@
 'use server';
 
 import { signUpUser } from '@/lib/auth';
-import { db, farm, user } from '@/lib/db/schema';
+import { farm, user } from '@/lib/db/schema';
+import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import { z } from 'zod';
