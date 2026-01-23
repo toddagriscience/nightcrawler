@@ -23,7 +23,7 @@ const { db } = await vi.hoisted(async () => {
   const schema = await import('@/lib/db/schema');
   const { migrate } = await import('drizzle-orm/pglite/migrator');
 
-  const db = drizzle({ schema });
+  const db = drizzle({ schema, casing: 'snake_case' });
   await migrate(db, { migrationsFolder: 'drizzle' });
 
   return { db };
