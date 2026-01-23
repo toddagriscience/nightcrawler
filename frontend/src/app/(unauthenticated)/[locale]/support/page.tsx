@@ -1,11 +1,20 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import { FadeIn } from '@/components/common';
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
+import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { submitPublicInquiry } from './action';
+import { PublicInquiryData, publicInquirySchema } from './types';
 
 /**
  * Support page. Allows users to submit a public inquiry support ticket.
@@ -13,7 +22,40 @@ import { useTranslations } from 'next-intl';
  * @returns {JSX.Element} - The support page with related logic.
  * */
 export default function Support() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm<PublicInquiryData>({
+    defaultValues: {
+      name: '',
+      lastKnownEmail: '',
+      response: '',
+    },
+    resolver: zodResolver(publicInquirySchema),
+    mode: 'onChange',
+  });
   const t = useTranslations('supportPage');
+
+  const onSubmit = async (data: PublicInquiryData) => {
+    const formData = new FormData();
+    formData.set('name', data.name);
+    formData.set('lastKnownEmail', data.lastKnownEmail);
+    formData.set('response', data.response);
+
+    const result = await submitPublicInquiry(formData);
+    if (result?.error) {
+      const formatted = formatActionResponseErrors(result);
+      setError('root', {
+        message: formatted[0] ?? 'Something went wrong. Please try again.',
+      });
+      return;
+    }
+
+    reset();
+  };
 
 
   return (
@@ -27,49 +69,85 @@ export default function Support() {
                     {t('hero.subtitle')}
                 </p>
             </div>
-          <form className="flex flex-col gap-4">
+          {errors.root?.message && (
+            <FormErrorMessage errorMessage={errors.root.message} />
+          )}
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <FieldSet className="mb-8">
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="name">{t('fields.name')}</FieldLabel>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel htmlFor="name">{t('fields.name')}</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="name"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
                   <Input
                     className="focus:ring-0!"
                     placeholder={t('placeholders.name')}
                     id="name"
                     data-testid="name"
-                    name="name"
+                    {...register('name')}
                     type="text"
                     required
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="email">{t('fields.email')}</FieldLabel>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel htmlFor="lastKnownEmail">
+                      {t('fields.email')}
+                    </FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="lastKnownEmail"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
                   <Input
-                    id="email"
-                    data-testid="email"
+                    id="lastKnownEmail"
+                    data-testid="lastKnownEmail"
                     type="email"
                     placeholder={t('placeholders.email')}
                     className="focus:ring-0!"
-                    name="email"
+                    {...register('lastKnownEmail')}
                     required
                   />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="message">{t('fields.message')}</FieldLabel>
-                  <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
-                    <Textarea
-                      id="message"
-                      placeholder={t('placeholders.message')}
-                      name="message"
-                      rows={4}
-                      className="focus:ring-0! w-full"
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel htmlFor="response">
+                      {t('fields.message')}
+                    </FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="response"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
                     />
                   </div>
-                </Field>
+                  <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
+                    <Textarea
+                      id="response"
+                      placeholder={t('placeholders.message')}
+                      {...register('response')}
+                      rows={4}
+                      className="focus:ring-0! w-full"
+                      required
+                    />
+                  </div>
+                </Field>  
               </FieldGroup>
             </FieldSet>
             <SubmitButton
               buttonText={t('buttons.submit')}
+              disabled={isSubmitting || !isValid}
             />
           </form>
         </div>

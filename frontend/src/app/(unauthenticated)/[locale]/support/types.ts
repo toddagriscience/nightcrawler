@@ -18,3 +18,6 @@ export const publicInquirySchema = z.object({
     .min(1, 'Response is required.')
     .max(1500, 'Response is too long (max 1500 characters).'),
 });
+
+
+export type PublicInquiryData = z.infer<typeof publicInquirySchema>;
