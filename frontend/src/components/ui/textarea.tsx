@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
