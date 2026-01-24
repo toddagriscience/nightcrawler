@@ -74,7 +74,8 @@ export default function Login() {
                   />
                 </Field>
                 <Field className="flex flex-row items-center justify-between">
-                  <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
+                  <div className="flex flex-1 flex-row items-center gap-2">
+                    <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
                     <Checkbox
                       id="show-password"
                       className="max-h-4 max-w-4 focus:ring-0!"
@@ -83,10 +84,17 @@ export default function Login() {
                     <FieldLabel htmlFor="show-password">
                       Show Password
                     </FieldLabel>
+                    </div>
+                    <div className="ml-auto">
+                      <PublicInquiryModal
+                        trigger={
+                          <span className="basis-[min-content] text-base text-nowrap underline">
+                            Help
+                          </span>
+                        }
+                      />
+                    </div>
                   </div>
-                 
-                <PublicInquiryModal trigger={<span className="basis-[min-content] text-base text-nowrap underline">Help</span>} />
-                  
                 </Field>
               </FieldGroup>
             </FieldSet>

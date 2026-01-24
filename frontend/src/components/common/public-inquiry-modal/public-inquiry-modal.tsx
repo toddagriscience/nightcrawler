@@ -71,7 +71,7 @@ export default function PublicInquiryModal({
               <Link
                 key={option.label}
                 href={option.href}
-                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-medium text-foreground transition hover:bg-[var(--background-secondary)]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
+                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-medium text-foreground transition hover:bg-[var(--background-secondary)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
               >
                 {option.label}
               </Link>
@@ -80,10 +80,10 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full px-6 py-6 text-base font-bold hover:cursor-pointer hover:bg-[var(--popover-foreground)] hover:text-[var(--primary-foreground)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
+              className="w-full px-6 py-6 text-base font-bold hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
               onClick={() => setIsOpen(false)}
             >
-              Cancel
+              CANCEL
             </Button>
           </DialogFooter>
         </DialogContent>

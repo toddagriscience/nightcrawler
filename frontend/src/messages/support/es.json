@@ -17,6 +17,11 @@
       },
       "buttons": {
         "submit": "ENVIAR"
+      },
+      "success": {
+        "title": "MENSAJE ENVIADO",
+        "subtitle": "Gracias por contactarnos. Te responderemos pronto.",
+        "cta": "INICIO"
       }
     }
   }

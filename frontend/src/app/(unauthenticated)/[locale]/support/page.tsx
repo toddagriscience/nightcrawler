@@ -5,6 +5,7 @@
 import { FadeIn } from '@/components/common';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { Button } from '@/components/ui';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +13,8 @@ import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { submitPublicInquiry } from './action';
 import { PublicInquiryData, publicInquirySchema } from './types';
@@ -22,6 +25,7 @@ import { PublicInquiryData, publicInquirySchema } from './types';
  * @returns {JSX.Element} - The support page with related logic.
  * */
 export default function Support() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -38,23 +42,37 @@ export default function Support() {
     mode: 'onChange',
   });
   const t = useTranslations('supportPage');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: PublicInquiryData) => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.set('name', data.name);
     formData.set('lastKnownEmail', data.lastKnownEmail);
     formData.set('response', data.response);
 
-    const result = await submitPublicInquiry(formData);
-    if (result?.error) {
-      const formatted = formatActionResponseErrors(result);
-      setError('root', {
-        message: formatted[0] ?? 'Something went wrong. Please try again.',
-      });
-      return;
-    }
+    try {
+      const result = await submitPublicInquiry(formData);
+      if (result?.error) {
+        const formatted = formatActionResponseErrors(result);
+        setError('root', {
+          message: formatted[0] ?? 'Something went wrong. Please try again.',
+        });
+        return;
+      }
 
-    reset();
+      reset();
+      setIsSubmitted(true);
+    } catch (error) {
+      setError('root', {
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Something went wrong. Please try again.',
+      });
+    }
+    setIsLoading(false);
   };
 
 
@@ -64,92 +82,115 @@ export default function Support() {
         <section className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
           <div className="w-[90vw] max-w-[inherit]">
             <div className="text-center mx-auto max-w-3xl px-2 pt-8">
-              <h1 className="mt-16 mb-8 text-4xl font-light">{t('hero.title')}</h1>
-                <p className="mb-8 text-sm text-gray-500">
-                    {t('hero.subtitle')}
-                </p>
+              <h1 className="mt-16 mb-8 text-4xl font-light">
+                {isSubmitted ? t('success.title') : t('hero.title')}
+              </h1>
+              <p className="mb-8 text-sm">
+                {isSubmitted ? t('success.subtitle') : t('hero.subtitle')}
+              </p>
             </div>
-          {errors.root?.message && (
-            <FormErrorMessage errorMessage={errors.root.message} />
+          {isSubmitted ? (
+            <>
+              <div className="flex justify-center">
+                <Button
+                  onClick={() => router.push('/')}
+                  className="mt-8 w-5/8 bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                  type="button"
+                >
+                  {t('success.cta')}
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              {errors.root?.message && (
+                <FormErrorMessage errorMessage={errors.root.message} />
+              )}
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+              >
+                <FieldSet className="mb-8">
+                  <FieldGroup>
+                    <Field>
+                      <div className="flex flex-row justify-between">
+                        <FieldLabel htmlFor="name">
+                          {t('fields.name')}
+                        </FieldLabel>
+                        <ErrorMessage
+                          errors={errors}
+                          name="name"
+                          render={({ message }) => (
+                            <FormErrorMessage errorMessage={message} />
+                          )}
+                        />
+                      </div>
+                      <Input
+                        className="focus:ring-0! bg-[var(--background-secondary)]/10"
+                        placeholder={t('placeholders.name')}
+                        id="name"
+                        data-testid="name"
+                        {...register('name')}
+                        type="text"
+                        required
+                      />
+                    </Field>
+                    <Field>
+                      <div className="flex flex-row justify-between">
+                        <FieldLabel htmlFor="lastKnownEmail">
+                          {t('fields.email')}
+                        </FieldLabel>
+                        <ErrorMessage
+                          errors={errors}
+                          name="lastKnownEmail"
+                          render={({ message }) => (
+                            <FormErrorMessage errorMessage={message} />
+                          )}
+                        />
+                      </div>
+                      <Input
+                        id="lastKnownEmail"
+                        data-testid="lastKnownEmail"
+                        type="email"
+                        placeholder={t('placeholders.email')}
+                        className="focus:ring-0! bg-[var(--background-secondary)]/10"
+                        {...register('lastKnownEmail')}
+                        required
+                      />
+                    </Field>
+                    <Field>
+                      <div className="flex flex-row justify-between">
+                        <FieldLabel htmlFor="response">
+                          {t('fields.message')}
+                        </FieldLabel>
+                        <ErrorMessage
+                          errors={errors}
+                          name="response"
+                          render={({ message }) => (
+                            <FormErrorMessage errorMessage={message} />
+                          )}
+                        />
+                      </div>
+                      <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
+                        <Textarea
+                          id="response"
+                          placeholder={t('placeholders.message')}
+                          {...register('response')}
+                          rows={4}
+                          className="focus:ring-0! w-full bg-[var(--background-secondary)]/10"
+                          required
+                        />
+                      </div>
+                    </Field>
+                  </FieldGroup>
+                </FieldSet>
+                <SubmitButton
+                  buttonText={t('buttons.submit')}
+                  disabled={isSubmitting || !isValid}
+                />
+              </form>
+            </>
           )}
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <FieldSet className="mb-8">
-              <FieldGroup>
-                <Field>
-                  <div className="flex flex-row justify-between">
-                    <FieldLabel htmlFor="name">{t('fields.name')}</FieldLabel>
-                    <ErrorMessage
-                      errors={errors}
-                      name="name"
-                      render={({ message }) => (
-                        <FormErrorMessage errorMessage={message} />
-                      )}
-                    />
-                  </div>
-                  <Input
-                    className="focus:ring-0!"
-                    placeholder={t('placeholders.name')}
-                    id="name"
-                    data-testid="name"
-                    {...register('name')}
-                    type="text"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <div className="flex flex-row justify-between">
-                    <FieldLabel htmlFor="lastKnownEmail">
-                      {t('fields.email')}
-                    </FieldLabel>
-                    <ErrorMessage
-                      errors={errors}
-                      name="lastKnownEmail"
-                      render={({ message }) => (
-                        <FormErrorMessage errorMessage={message} />
-                      )}
-                    />
-                  </div>
-                  <Input
-                    id="lastKnownEmail"
-                    data-testid="lastKnownEmail"
-                    type="email"
-                    placeholder={t('placeholders.email')}
-                    className="focus:ring-0!"
-                    {...register('lastKnownEmail')}
-                    required
-                  />
-                </Field>
-                <Field>
-                  <div className="flex flex-row justify-between">
-                    <FieldLabel htmlFor="response">
-                      {t('fields.message')}
-                    </FieldLabel>
-                    <ErrorMessage
-                      errors={errors}
-                      name="response"
-                      render={({ message }) => (
-                        <FormErrorMessage errorMessage={message} />
-                      )}
-                    />
-                  </div>
-                  <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
-                    <Textarea
-                      id="response"
-                      placeholder={t('placeholders.message')}
-                      {...register('response')}
-                      rows={4}
-                      className="focus:ring-0! w-full"
-                      required
-                    />
-                  </div>
-                </Field>  
-              </FieldGroup>
-            </FieldSet>
-            <SubmitButton
-              buttonText={t('buttons.submit')}
-              disabled={isSubmitting || !isValid}
-            />
-          </form>
         </div>
     
       </section>

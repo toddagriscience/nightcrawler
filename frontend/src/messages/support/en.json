@@ -17,6 +17,11 @@
       },
       "buttons": {
         "submit": "SUBMIT"
+      },
+      "success": {
+        "title": "MESSAGE SENT",
+        "subtitle": "Thanks for reaching out. We'll get back to you soon.",
+        "cta": "HOME"
       }
     }
   }
