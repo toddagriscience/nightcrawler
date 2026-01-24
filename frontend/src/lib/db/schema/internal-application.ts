@@ -87,6 +87,9 @@ export const farmInfoInternalApplication = pgTable(
     /** How do you differentiate your produce to your consumers? (select all that apply) */
     productDifferentiation: jsonb().$type<Record<string, any>>(),
     createdAt: timestamp().notNull().defaultNow(),
-    updatedAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp()
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   }
 );
