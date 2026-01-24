@@ -70,11 +70,11 @@ export default function Support() {
   };
 
   return (
-    <main>
+    <main className="pt-2 sm:pt-24">
       <FadeIn>
         <section className="mx-auto sm:h-[70vh] h-[90vh] flex w-[90vw] max-w-[550px] flex-col items-center justify-center">
           <div className="w-[90vw] max-w-[inherit]">
-            <div className="text-center mx-auto max-w-3xl px-2 mt-24">
+            <div className="text-center mx-auto max-w-3xl px-2 mt-16">
               <h1 className="mb-8 text-4xl">
                 {isSubmitted ? t('success.title') : t('hero.title')}
               </h1>
