@@ -76,14 +76,14 @@ export default function Login() {
                 <Field className="flex flex-row items-center justify-between">
                   <div className="flex flex-1 flex-row items-center gap-2">
                     <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
-                    <Checkbox
-                      id="show-password"
-                      className="max-h-4 max-w-4 focus:ring-0!"
-                      onCheckedChange={() => setShowPassword(!showPassword)}
-                    />
-                    <FieldLabel htmlFor="show-password">
-                      Show Password
-                    </FieldLabel>
+                      <Checkbox
+                        id="show-password"
+                        className="max-h-4 max-w-4 focus:ring-0!"
+                        onCheckedChange={() => setShowPassword(!showPassword)}
+                      />
+                      <FieldLabel htmlFor="show-password">
+                        Show Password
+                      </FieldLabel>
                     </div>
                     <div className="ml-auto">
                       <PublicInquiryModal

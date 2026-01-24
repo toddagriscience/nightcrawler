@@ -20,13 +20,15 @@ describe('PublicInquiryModal', () => {
       ).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('link', { name: 'Forgot Email' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Forgot Email' })
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Forgot Password' })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Contact Support' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'CANCEL' })).toBeInTheDocument();
   });
 });
