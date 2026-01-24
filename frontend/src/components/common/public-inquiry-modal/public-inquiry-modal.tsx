@@ -62,7 +62,7 @@ export default function PublicInquiryModal({
       <FadeIn duration={0.6}>
         <DialogContent className="sm:max-w-[430px] gap-8">
           <DialogHeader className="gap-1">
-            <DialogTitle className="text-xl font-bold leading-tight">
+            <DialogTitle className="text-xl font-normal leading-tight">
               What can we help with?
             </DialogTitle>
           </DialogHeader>
@@ -71,7 +71,7 @@ export default function PublicInquiryModal({
               <Link
                 key={option.label}
                 href={option.href}
-                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-medium text-foreground transition hover:bg-[var(--background-secondary)]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
+                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-normal text-foreground transition hover:bg-[var(--background-secondary)]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
               >
                 {option.label}
               </Link>
@@ -80,7 +80,7 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full font-bold hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
+              className="w-full hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
               onClick={() => setIsOpen(false)}
             >
               CANCEL
