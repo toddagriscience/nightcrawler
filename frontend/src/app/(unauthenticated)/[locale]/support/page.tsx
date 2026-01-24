@@ -119,7 +119,7 @@ export default function Support() {
                           />
                         </div>
                         <Input
-                          className="focus:ring-0! bg-[var(--background-secondary)]/10"
+                          className="focus:ring-0!"
                           placeholder={t('placeholders.name')}
                           id="name"
                           data-testid="name"
@@ -146,7 +146,7 @@ export default function Support() {
                           data-testid="lastKnownEmail"
                           type="email"
                           placeholder={t('placeholders.email')}
-                          className="focus:ring-0! bg-[var(--background-secondary)]/10"
+                          className="focus:ring-0!"
                           {...register('lastKnownEmail')}
                           required
                         />
@@ -170,7 +170,7 @@ export default function Support() {
                             placeholder={t('placeholders.message')}
                             {...register('response')}
                             rows={4}
-                            className="focus:ring-0! w-full bg-[var(--background-secondary)]/10"
+                            className="focus:ring-0! w-full"
                             required
                           />
                         </div>
