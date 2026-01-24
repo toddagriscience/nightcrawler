@@ -3,8 +3,11 @@
 // This is a separate export for server-side logic only
 import { drizzle } from 'drizzle-orm/node-postgres';
 import 'dotenv/config';
+import { Pool } from 'pg';
 
-export const db = drizzle({
-  connection: process.env.DATABASE_URL!,
-  casing: 'snake_case',
+const client = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
 });
+
+export const db = drizzle(client, { casing: 'snake_case' });

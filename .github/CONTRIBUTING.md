@@ -210,10 +210,28 @@ A few notes:
    This runs: format check → type check → lint → tests → build
 
 5. **Start development**
+
    ```bash
    bun dev
    ```
+
    Open [http://localhost:3000](http://localhost:3000)
+
+6. **(Optional) Configure environment variables for database**
+
+You have two options for running a database; either run your own instance locally or connecting to the testing database that we all share.
+
+If you'd like to run a database locally:
+
+1. Configure your database via Docker or another platform
+2. Fill out the `DATABASE_URL`, `LOCAL_DATABASE_HOST`, `LOCAL_DATABASE_USER`, `LOCAL_DATABASE_PASSWORD`, `LOCAL_DATABASE_DATABASE`, and `LOCAL_DATABASE_SSL` accordingly.
+
+If you'd like to use the testing database:
+
+1. Get database credentials from a higherup at Todd
+2. Fill out the `DATABASE_URL`, `PROD_DATABASE_HOST`, `PROD_DATABASE_USER`, `PROD_DATABASE_PASSWORD`, `PROD_DATABASE_DATABASE`, and `PROD_DATABASE_SSL` accordingly.
+
+In regards to all of the above, mind that authentication is handled _separately_ from the database via Supabase.
 
 ## Standards/General information
 

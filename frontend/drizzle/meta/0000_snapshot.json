@@ -1,5 +1,5 @@
 {
-  "id": "2f06f95a-330d-42ed-8152-345a5d7e3d26",
+  "id": "cd9bfdfa-55ae-4025-a0b8-f5941694c0a2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,27 +14,27 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
-        "analysisDate": {
-          "name": "analysisDate",
+        "analysis_date": {
+          "name": "analysis_date",
           "type": "date",
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -43,11 +43,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "analysis_managementZone_management_zone_id_fk": {
-          "name": "analysis_managementZone_management_zone_id_fk",
+        "analysis_management_zone_management_zone_id_fk": {
+          "name": "analysis_management_zone_management_zone_id_fk",
           "tableFrom": "analysis",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -69,39 +69,39 @@
           "primaryKey": true,
           "notNull": true
         },
-        "informalName": {
-          "name": "informalName",
+        "informal_name": {
+          "name": "informal_name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
-        "businessName": {
-          "name": "businessName",
+        "business_name": {
+          "name": "business_name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
-        "businessWebsite": {
-          "name": "businessWebsite",
+        "business_website": {
+          "name": "business_website",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
-        "managementStartDate": {
-          "name": "managementStartDate",
+        "management_start_date": {
+          "name": "management_start_date",
           "type": "date",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -126,34 +126,87 @@
           "primaryKey": true,
           "notNull": true
         },
-        "farmId": {
-          "name": "farmId",
+        "farm_id": {
+          "name": "farm_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2147483647
+        },
+        "has_gap": {
+          "name": "has_gap",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "gap_date": {
+          "name": "gap_date",
+          "type": "date",
           "primaryKey": false,
           "notNull": false
         },
-        "kind": {
-          "name": "kind",
-          "type": "certificate_type",
-          "typeSchema": "public",
+        "has_local_inspection": {
+          "name": "has_local_inspection",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": false
         },
-        "date": {
-          "name": "date",
+        "local_inspection_date": {
+          "name": "local_inspection_date",
           "type": "date",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "has_organic": {
+          "name": "has_organic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "organic_date": {
+          "name": "organic_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_biodynamic": {
+          "name": "has_biodynamic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "biodynamic_date": {
+          "name": "biodynamic_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_regenerative_organic": {
+          "name": "has_regenerative_organic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "regenerative_organic": {
+          "name": "regenerative_organic",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -162,13 +215,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "farm_certificate_farmId_farm_id_fk": {
-          "name": "farm_certificate_farmId_farm_id_fk",
+        "farm_certificate_farm_id_farm_id_fk": {
+          "name": "farm_certificate_farm_id_farm_id_fk",
           "tableFrom": "farm_certificate",
           "tableTo": "farm",
-          "columnsFrom": ["farmId"],
+          "columnsFrom": ["farm_id"],
           "columnsTo": ["id"],
-          "onDelete": "set null",
+          "onDelete": "set default",
           "onUpdate": "no action"
         }
       },
@@ -178,15 +231,16 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.farmLocation": {
-      "name": "farmLocation",
+    "public.farm_location": {
+      "name": "farm_location",
       "schema": "",
       "columns": {
-        "farmId": {
-          "name": "farmId",
+        "farm_id": {
+          "name": "farm_id",
           "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": 2147483647
         },
         "location": {
           "name": "location",
@@ -200,8 +254,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "countyState": {
-          "name": "countyState",
+        "county_state": {
+          "name": "county_state",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
@@ -224,8 +278,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "postalCode": {
-          "name": "postalCode",
+        "postal_code": {
+          "name": "postal_code",
           "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false
@@ -242,15 +296,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -259,13 +313,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "farmLocation_farmId_farm_id_fk": {
-          "name": "farmLocation_farmId_farm_id_fk",
-          "tableFrom": "farmLocation",
+        "farm_location_farm_id_farm_id_fk": {
+          "name": "farm_location_farm_id_farm_id_fk",
+          "tableFrom": "farm_location",
           "tableTo": "farm",
-          "columnsFrom": ["farmId"],
+          "columnsFrom": ["farm_id"],
           "columnsTo": ["id"],
-          "onDelete": "set null",
+          "onDelete": "set default",
           "onUpdate": "no action"
         }
       },
@@ -285,8 +339,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "userId": {
-          "name": "userId",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -304,8 +358,8 @@
           "notNull": true,
           "default": false
         },
-        "ipAddress": {
-          "name": "ipAddress",
+        "ip_address": {
+          "name": "ip_address",
           "type": "cidr",
           "primaryKey": false,
           "notNull": true
@@ -316,15 +370,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -333,11 +387,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_agreement_acceptance_userId_user_id_fk": {
-          "name": "account_agreement_acceptance_userId_user_id_fk",
+        "account_agreement_acceptance_user_id_user_id_fk": {
+          "name": "account_agreement_acceptance_user_id_user_id_fk",
           "tableFrom": "account_agreement_acceptance",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
+          "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -353,188 +407,188 @@
       "name": "farm_info_internal_application",
       "schema": "",
       "columns": {
-        "farmId": {
-          "name": "farmId",
+        "farm_id": {
+          "name": "farm_id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true
         },
-        "splitOperation": {
-          "name": "splitOperation",
+        "split_operation": {
+          "name": "split_operation",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "alternateFarming": {
-          "name": "alternateFarming",
+        "alternate_farming": {
+          "name": "alternate_farming",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "totalGrossIncome": {
-          "name": "totalGrossIncome",
+        "total_gross_income": {
+          "name": "total_gross_income",
           "type": "numeric(8, 2)",
           "primaryKey": false,
           "notNull": false
         },
-        "conservationPlan": {
-          "name": "conservationPlan",
+        "conservation_plan": {
+          "name": "conservation_plan",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "mainCrops": {
-          "name": "mainCrops",
+        "main_crops": {
+          "name": "main_crops",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "totalAcreage": {
-          "name": "totalAcreage",
+        "total_acreage": {
+          "name": "total_acreage",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "managementZoneStructure": {
-          "name": "managementZoneStructure",
+        "management_zone_structure": {
+          "name": "management_zone_structure",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "farmActivites": {
-          "name": "farmActivites",
+        "farm_activites": {
+          "name": "farm_activites",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "productionLocation": {
-          "name": "productionLocation",
+        "production_location": {
+          "name": "production_location",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "cultivationPractices": {
-          "name": "cultivationPractices",
+        "cultivation_practices": {
+          "name": "cultivation_practices",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "livestockIncorporation": {
-          "name": "livestockIncorporation",
+        "livestock_incorporation": {
+          "name": "livestock_incorporation",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "weedInsectDiseasesControl": {
-          "name": "weedInsectDiseasesControl",
+        "weed_insect_diseases_control": {
+          "name": "weed_insect_diseases_control",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "pestControl": {
-          "name": "pestControl",
+        "pest_control": {
+          "name": "pest_control",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "offFarmProducts": {
-          "name": "offFarmProducts",
+        "off_farm_products": {
+          "name": "off_farm_products",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "otherMaterials": {
-          "name": "otherMaterials",
+        "other_materials": {
+          "name": "other_materials",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "mechanicalEquipment": {
-          "name": "mechanicalEquipment",
+        "mechanical_equipment": {
+          "name": "mechanical_equipment",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "supplierContracts": {
-          "name": "supplierContracts",
+        "supplier_contracts": {
+          "name": "supplier_contracts",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "irrigationWaterSource": {
-          "name": "irrigationWaterSource",
+        "irrigation_water_source": {
+          "name": "irrigation_water_source",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "irrigationScheduling": {
-          "name": "irrigationScheduling",
+        "irrigation_scheduling": {
+          "name": "irrigation_scheduling",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "soilMoistureMonitoring": {
-          "name": "soilMoistureMonitoring",
+        "soil_moisture_monitoring": {
+          "name": "soil_moisture_monitoring",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "irrigationMaterials": {
-          "name": "irrigationMaterials",
+        "irrigation_materials": {
+          "name": "irrigation_materials",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "waterConservation": {
-          "name": "waterConservation",
+        "water_conservation": {
+          "name": "water_conservation",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "waterQualityProtection": {
-          "name": "waterQualityProtection",
+        "water_quality_protection": {
+          "name": "water_quality_protection",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "erosionPrevention": {
-          "name": "erosionPrevention",
+        "erosion_prevention": {
+          "name": "erosion_prevention",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "nearContaminationSource": {
-          "name": "nearContaminationSource",
+        "near_contamination_source": {
+          "name": "near_contamination_source",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "activeWildAreas": {
-          "name": "activeWildAreas",
+        "active_wild_areas": {
+          "name": "active_wild_areas",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "naturalResources": {
-          "name": "naturalResources",
+        "natural_resources": {
+          "name": "natural_resources",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "manageHarvests": {
-          "name": "manageHarvests",
+        "manage_harvests": {
+          "name": "manage_harvests",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "waterUsedPostHarvest": {
-          "name": "waterUsedPostHarvest",
+        "water_used_post_harvest": {
+          "name": "water_used_post_harvest",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "primaryMarketVenues": {
-          "name": "primaryMarketVenues",
+        "primary_market_venues": {
+          "name": "primary_market_venues",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
@@ -545,21 +599,21 @@
           "primaryKey": false,
           "notNull": false
         },
-        "productDifferentiation": {
-          "name": "productDifferentiation",
+        "product_differentiation": {
+          "name": "product_differentiation",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -568,11 +622,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "farm_info_internal_application_farmId_farm_id_fk": {
-          "name": "farm_info_internal_application_farmId_farm_id_fk",
+        "farm_info_internal_application_farm_id_farm_id_fk": {
+          "name": "farm_info_internal_application_farm_id_farm_id_fk",
           "tableFrom": "farm_info_internal_application",
           "tableTo": "farm",
-          "columnsFrom": ["farmId"],
+          "columnsFrom": ["farm_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -594,8 +648,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -624,15 +678,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -641,11 +695,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "integrated_management_plan_managementZone_management_zone_id_fk": {
-          "name": "integrated_management_plan_managementZone_management_zone_id_fk",
+        "integrated_management_plan_management_zone_management_zone_id_fk": {
+          "name": "integrated_management_plan_management_zone_management_zone_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -676,8 +730,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "farmId": {
-          "name": "farmId",
+        "farm_id": {
+          "name": "farm_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -694,8 +748,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "rotationYear": {
-          "name": "rotationYear",
+        "rotation_year": {
+          "name": "rotation_year",
           "type": "date",
           "primaryKey": false,
           "notNull": false
@@ -706,8 +760,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "npkLastUsed": {
-          "name": "npkLastUsed",
+        "npk_last_used": {
+          "name": "npk_last_used",
           "type": "date",
           "primaryKey": false,
           "notNull": false
@@ -718,28 +772,28 @@
           "primaryKey": false,
           "notNull": false
         },
-        "waterConvservation": {
-          "name": "waterConvservation",
+        "water_convservation": {
+          "name": "water_convservation",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
-        "contaminationRisk": {
-          "name": "contaminationRisk",
+        "contamination_risk": {
+          "name": "contamination_risk",
           "type": "level_category",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -748,11 +802,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "management_zone_farmId_farm_id_fk": {
-          "name": "management_zone_farmId_farm_id_fk",
+        "management_zone_farm_id_farm_id_fk": {
+          "name": "management_zone_farm_id_farm_id_fk",
           "tableFrom": "management_zone",
           "tableTo": "farm",
-          "columnsFrom": ["farmId"],
+          "columnsFrom": ["farm_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -774,8 +828,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "analysisId": {
-          "name": "analysisId",
+        "analysis_id": {
+          "name": "analysis_id",
           "type": "varchar(13)",
           "primaryKey": false,
           "notNull": false
@@ -817,15 +871,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -834,11 +888,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "mineral_analysisId_analysis_id_fk": {
-          "name": "mineral_analysisId_analysis_id_fk",
+        "mineral_analysis_id_analysis_id_fk": {
+          "name": "mineral_analysis_id_analysis_id_fk",
           "tableFrom": "mineral",
           "tableTo": "analysis",
-          "columnsFrom": ["analysisId"],
+          "columnsFrom": ["analysis_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -860,32 +914,32 @@
           "primaryKey": true,
           "notNull": true
         },
-        "analysisId": {
-          "name": "analysisId",
+        "analysis_id": {
+          "name": "analysis_id",
           "type": "varchar(13)",
           "primaryKey": false,
           "notNull": false
         },
-        "real_caK": {
-          "name": "real_caK",
+        "real_ca_k": {
+          "name": "real_ca_k",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
         },
-        "ideal_caK": {
-          "name": "ideal_caK",
+        "ideal_ca_k": {
+          "name": "ideal_ca_k",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
         },
-        "real_NaMg": {
-          "name": "real_NaMg",
+        "real_na_mg": {
+          "name": "real_na_mg",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
         },
-        "ideal_NaMg": {
-          "name": "ideal_NaMg",
+        "ideal_na_mg": {
+          "name": "ideal_na_mg",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
@@ -903,15 +957,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -920,11 +974,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "oxidation_rate_analysisId_analysis_id_fk": {
-          "name": "oxidation_rate_analysisId_analysis_id_fk",
+        "oxidation_rate_analysis_id_analysis_id_fk": {
+          "name": "oxidation_rate_analysis_id_analysis_id_fk",
           "tableFrom": "oxidation_rate",
           "tableTo": "analysis",
-          "columnsFrom": ["analysisId"],
+          "columnsFrom": ["analysis_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -946,26 +1000,26 @@
           "primaryKey": true,
           "notNull": true
         },
-        "analysisId": {
-          "name": "analysisId",
+        "analysis_id": {
+          "name": "analysis_id",
           "type": "varchar(13)",
           "primaryKey": false,
           "notNull": false
         },
-        "realValue": {
-          "name": "realValue",
+        "real_value": {
+          "name": "real_value",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
         },
-        "idealValueLower": {
-          "name": "idealValueLower",
+        "ideal_value_lower": {
+          "name": "ideal_value_lower",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
         },
-        "idealValueUpper": {
-          "name": "idealValueUpper",
+        "ideal_value_upper": {
+          "name": "ideal_value_upper",
           "type": "numeric(9, 4)",
           "primaryKey": false,
           "notNull": true
@@ -989,15 +1043,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1006,11 +1060,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ph_analysisId_analysis_id_fk": {
-          "name": "ph_analysisId_analysis_id_fk",
+        "ph_analysis_id_analysis_id_fk": {
+          "name": "ph_analysis_id_analysis_id_fk",
           "tableFrom": "ph",
           "tableTo": "analysis",
-          "columnsFrom": ["analysisId"],
+          "columnsFrom": ["analysis_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1032,8 +1086,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "analysisId": {
-          "name": "analysisId",
+        "analysis_id": {
+          "name": "analysis_id",
           "type": "varchar(13)",
           "primaryKey": false,
           "notNull": false
@@ -1063,15 +1117,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1080,11 +1134,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "solubility_analysisId_analysis_id_fk": {
-          "name": "solubility_analysisId_analysis_id_fk",
+        "solubility_analysis_id_analysis_id_fk": {
+          "name": "solubility_analysis_id_analysis_id_fk",
           "tableFrom": "solubility",
           "tableTo": "analysis",
-          "columnsFrom": ["analysisId"],
+          "columnsFrom": ["analysis_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1106,20 +1160,20 @@
           "primaryKey": true,
           "notNull": true
         },
-        "farmId": {
-          "name": "farmId",
+        "farm_id": {
+          "name": "farm_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "firstName": {
-          "name": "firstName",
+        "first_name": {
+          "name": "first_name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
         },
-        "lastName": {
-          "name": "lastName",
+        "last_name": {
+          "name": "last_name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
@@ -1156,27 +1210,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "didOwnAndControlParcel": {
-          "name": "didOwnAndControlParcel",
+        "did_own_and_control_parcel": {
+          "name": "did_own_and_control_parcel",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
-        "didManageAndControl": {
-          "name": "didManageAndControl",
+        "did_manage_and_control": {
+          "name": "did_manage_and_control",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1185,11 +1239,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_farmId_farm_id_fk": {
-          "name": "user_farmId_farm_id_fk",
+        "user_farm_id_farm_id_fk": {
+          "name": "user_farm_id_farm_id_fk",
           "tableFrom": "user",
           "tableTo": "farm",
-          "columnsFrom": ["farmId"],
+          "columnsFrom": ["farm_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1217,8 +1271,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -1241,8 +1295,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "isCovercrop": {
-          "name": "isCovercrop",
+        "is_covercrop": {
+          "name": "is_covercrop",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
@@ -1253,15 +1307,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1270,11 +1324,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "crop_managementZone_management_zone_id_fk": {
-          "name": "crop_managementZone_management_zone_id_fk",
+        "crop_management_zone_management_zone_id_fk": {
+          "name": "crop_management_zone_management_zone_id_fk",
           "tableFrom": "crop",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1296,8 +1350,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -1326,15 +1380,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1343,11 +1397,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "fertilizer_managementZone_management_zone_id_fk": {
-          "name": "fertilizer_managementZone_management_zone_id_fk",
+        "fertilizer_management_zone_management_zone_id_fk": {
+          "name": "fertilizer_management_zone_management_zone_id_fk",
           "tableFrom": "fertilizer",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1369,8 +1423,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -1381,8 +1435,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "initialDeployment": {
-          "name": "initialDeployment",
+        "initial_deployment": {
+          "name": "initial_deployment",
           "type": "date",
           "primaryKey": false,
           "notNull": true
@@ -1393,8 +1447,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "currentlyDeployed": {
-          "name": "currentlyDeployed",
+        "currently_deployed": {
+          "name": "currently_deployed",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
@@ -1405,15 +1459,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1422,11 +1476,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "livestock_managementZone_management_zone_id_fk": {
-          "name": "livestock_managementZone_management_zone_id_fk",
+        "livestock_management_zone_management_zone_id_fk": {
+          "name": "livestock_management_zone_management_zone_id_fk",
           "tableFrom": "livestock",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1448,8 +1502,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "managementZone": {
-          "name": "managementZone",
+        "management_zone": {
+          "name": "management_zone",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -1460,14 +1514,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "initialEncounter": {
-          "name": "initialEncounter",
+        "initial_encounter": {
+          "name": "initial_encounter",
           "type": "date",
           "primaryKey": false,
           "notNull": true
         },
-        "mostRecentEncounter": {
-          "name": "mostRecentEncounter",
+        "most_recent_encounter": {
+          "name": "most_recent_encounter",
           "type": "date",
           "primaryKey": false,
           "notNull": false
@@ -1485,15 +1539,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1502,11 +1556,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "pest_managementZone_management_zone_id_fk": {
-          "name": "pest_managementZone_management_zone_id_fk",
+        "pest_management_zone_management_zone_id_fk": {
+          "name": "pest_management_zone_management_zone_id_fk",
           "tableFrom": "pest",
           "tableTo": "management_zone",
-          "columnsFrom": ["managementZone"],
+          "columnsFrom": ["management_zone"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -1520,17 +1574,6 @@
     }
   },
   "enums": {
-    "public.certificate_type": {
-      "name": "certificate_type",
-      "schema": "public",
-      "values": [
-        "Good Agriculture Practices",
-        "Local/Facility Inspection",
-        "Organic",
-        "Biodynamic",
-        "Regenerative Organic"
-      ]
-    },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",

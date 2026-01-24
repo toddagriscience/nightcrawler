@@ -42,6 +42,8 @@ Unless you're directly working on the CMS (located in `/sanity-studio`), the maj
 
 Copy any and all environment variables from `env.example` to `.env.local` and update any empty variables as necessary.
 
+**If you need to use a database**: refer to `CONTRIBUTING.md`'s `First-Time Setup`.
+
 6. **Start development server**
 
    ```bash

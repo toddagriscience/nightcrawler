@@ -50,7 +50,7 @@ const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
     const schema = await import('@/lib/db/schema');
     const { user, farm } = await import('@/lib/db/schema');
 
-    const db = drizzle({ schema });
+    const db = drizzle({ schema, casing: 'snake_case' });
     await migrate(db, { migrationsFolder: 'drizzle' });
     await seed(db, { farm });
 
