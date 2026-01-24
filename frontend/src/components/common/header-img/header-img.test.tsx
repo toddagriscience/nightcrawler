@@ -36,6 +36,8 @@ describe('HeaderImg', () => {
 
     const image = screen.getByAltText('Test image');
     expect(image).toHaveClass('test-image');
-    expect(image.closest('div')).toHaveClass('test-wrapper');
+
+    const wrapper = image.parentElement?.parentElement;
+    expect(wrapper).toHaveClass('test-wrapper');
   });
 });
