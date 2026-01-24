@@ -1,9 +1,22 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import WhoWeArePage from './page';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import WhoWeArePage from './page';
+
+vi.mock('next/image', () => ({
+  default: ({
+    src,
+    alt,
+    ...props
+  }: {
+    src: string | { src: string };
+    alt: string;
+  }) => (
+    <img src={typeof src === 'string' ? src : src.src} alt={alt} {...props} />
+  ),
+}));
 
 // Mock the ScrollShrinkWrapper component
 vi.mock('@/components/landing', () => ({
@@ -22,6 +35,12 @@ describe('WhoWeArePage', () => {
         'Learn about our mission, vision, and values that drive our work in regenerative agriculture.'
       )
     ).toBeInTheDocument();
+  });
+
+  it('renders the header image', () => {
+    renderWithNextIntl(<WhoWeArePage />);
+
+    expect(screen.getByAltText('Meadow')).toBeInTheDocument();
   });
 
   it('renders mission and vision cards', () => {
