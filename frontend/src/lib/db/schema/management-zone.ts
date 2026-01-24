@@ -37,7 +37,7 @@ export const managementZone = pgTable('management_zone', {
   irrigation: boolean(),
   /** Some areas have aqueducts that feed to fields -- if this is false, the farm is either receiving plenty of water or has enough runoff to feed back into the aqueduct. If this field is true, the aqueduct is currently being restricted.  */
   waterConservation: boolean(),
-  /** The evaluated contimation risk of the zone. See the documentation of the enum for more details. */
+  /** The evaluated contamination risk of the zone. See the documentation of the enum for more details. */
   contaminationRisk: levelCategory(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
