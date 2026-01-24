@@ -13,7 +13,7 @@
     "placeholders": {
       "name": "Nombre",
       "email": "Correo Electrónico",
-      "message": "Mensaje"
+      "message": "¿En qué podemos ayudarte?"
     },
     "buttons": {
       "submit": "ENVIAR"

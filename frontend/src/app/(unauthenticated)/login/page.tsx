@@ -88,7 +88,7 @@ export default function Login() {
                     <div className="ml-auto">
                       <PublicInquiryModal
                         trigger={
-                          <span className="basis-[min-content] text-base text-nowrap underline">
+                          <span className="basis-[min-content] text-sm text-nowrap underline">
                             Help
                           </span>
                         }

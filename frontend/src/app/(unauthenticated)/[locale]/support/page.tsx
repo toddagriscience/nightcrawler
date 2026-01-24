@@ -14,7 +14,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { submitPublicInquiry } from './action';
 import { PublicInquiryData, publicInquirySchema } from './types';
@@ -31,7 +30,7 @@ export default function Support() {
     handleSubmit,
     reset,
     setError,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isSubmitted, isValid },
   } = useForm<PublicInquiryData>({
     defaultValues: {
       name: '',
@@ -42,11 +41,8 @@ export default function Support() {
     mode: 'onChange',
   });
   const t = useTranslations('supportPage');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: PublicInquiryData) => {
-    setIsLoading(true);
     const formData = new FormData();
     formData.set('name', data.name);
     formData.set('lastKnownEmail', data.lastKnownEmail);
@@ -63,7 +59,6 @@ export default function Support() {
       }
 
       reset();
-      setIsSubmitted(true);
     } catch (error) {
       setError('root', {
         message:
@@ -72,16 +67,15 @@ export default function Support() {
             : 'Something went wrong. Please try again.',
       });
     }
-    setIsLoading(false);
   };
 
   return (
     <main>
       <FadeIn>
-        <section className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
+        <section className="mx-auto sm:h-[70vh] h-[90vh] flex w-[90vw] max-w-[550px] flex-col items-center justify-center">
           <div className="w-[90vw] max-w-[inherit]">
-            <div className="text-center mx-auto max-w-3xl px-2 pt-8">
-              <h1 className="mt-16 mb-8 text-4xl font-light">
+            <div className="text-center mx-auto max-w-3xl px-2 mt-24">
+              <h1 className="mb-8 text-4xl font-medium">
                 {isSubmitted ? t('success.title') : t('hero.title')}
               </h1>
               <p className="mb-8 text-sm">
@@ -90,10 +84,10 @@ export default function Support() {
             </div>
             {isSubmitted ? (
               <>
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-12 mb-12">
                   <Button
                     onClick={() => router.push('/')}
-                    className="mt-8 w-5/8 bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                    className="w-5/8 bg-black text-white hover:cursor-pointer hover:bg-black/80"
                     type="button"
                   >
                     {t('success.cta')}
@@ -107,7 +101,7 @@ export default function Support() {
                 )}
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col gap-4"
+                  className="flex flex-col gap-4 mb-24"
                 >
                   <FieldSet className="mb-8">
                     <FieldGroup>

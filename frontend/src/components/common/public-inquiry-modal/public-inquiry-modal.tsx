@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { useState } from 'react';
-import { PublicInquiryOption } from './types/public-inquiry-modal';
+import { PublicInquiryOption } from './types';
 
 /**
  * Public Inquiry modal. Allows users to navigate to the support page or password reset page.
@@ -42,7 +42,7 @@ export default function PublicInquiryModal({
       <DialogTrigger asChild>
         {trigger ? (
           <Button
-            className="m-0 h-min w-auto !justify-start p-0 text-base font-medium hover:cursor-pointer hover:no-underline"
+            className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline"
             onClick={() => setIsOpen(true)}
             asChild
           >
@@ -71,7 +71,7 @@ export default function PublicInquiryModal({
               <Link
                 key={option.label}
                 href={option.href}
-                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-medium text-foreground transition hover:bg-[var(--background-secondary)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
+                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-medium text-foreground transition hover:bg-[var(--background-secondary)]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
               >
                 {option.label}
               </Link>
@@ -80,7 +80,7 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full px-6 py-6 text-base font-bold hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
+              className="w-full font-bold hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
               onClick={() => setIsOpen(false)}
             >
               CANCEL
