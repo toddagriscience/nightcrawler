@@ -4,8 +4,6 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import People1 from '@public/marketing/who-we-are-people.png';
-import People2 from '@public/marketing/who-we-are-people-2.png';
 import { Link } from '@/i18n/config';
 import HeaderImg from '@/components/common/header-img/header-img';
 
@@ -56,9 +54,19 @@ export default function WhoWeArePage() {
           </div>
         </div>
 
-        <div className="flex flex-row flex-wrap gap-4 my-12 w-[90vw] items-center justify-center">
-          <Image src={People1} alt="" className="max-w-100 w-[90vw]" />
-          <Image src={People2} alt="" className="max-w-120" />
+        <div className="flex flex-row flex-wrap gap-4 my-12 w-[90vw] md:w-auto items-center justify-center mx-auto">
+          <Image
+            src={'/marketing/who-we-are-people.png'}
+            alt=""
+            height={500}
+            width={400}
+          />
+          <Image
+            src={'/marketing/who-we-are-people-2.png'}
+            alt=""
+            height={500}
+            width={400}
+          />
         </div>
 
         <div className="space-y-16">
