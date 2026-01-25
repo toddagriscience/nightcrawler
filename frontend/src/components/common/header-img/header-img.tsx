@@ -44,7 +44,7 @@ export default function HeaderImg({
           alt={alt}
           fill
           sizes="100vw"
-          className={`object-cover ${imageClassName}`.trim()}
+          className={`object-cover ${imageClassName}`.trim() + ' rounded-sm'}
         />
         {overlayClassName ? (
           <div
