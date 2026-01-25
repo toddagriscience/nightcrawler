@@ -11,10 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
 
 /**
@@ -23,6 +24,13 @@ import { HiArrowLongRight } from 'react-icons/hi2';
  */
 export default function WhatWeDoPage() {
   const t = useTranslations('whatWeDo');
+  const imageSectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: imageSectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const leftImageY = useTransform(scrollYProgress, [0, 2], [50, -100]);
+  const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 100]);
 
   const principles = t.raw('principlesAndSustainability.principles') as Record<
     string,
@@ -70,24 +78,37 @@ export default function WhatWeDoPage() {
           </div>
         </div>
         {/* Image Section */}
-        <div className="w-full mb-10 flex flex-col items-center bg-secondary h-fit py-8 md:py-10">
+        <div
+          ref={imageSectionRef}
+          className="w-full mb-10 flex flex-col items-center bg-secondary h-fit py-8 md:py-10"
+        >
           <div className="mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-14">
-            <Image
-              src="/pinklemonade.webp"
-              alt="Farmer"
-              width={500}
-              height={500}
-              sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
-              className="h-auto w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
-            />
-            <Image
-              src="/farmer.webp"
-              alt="Pink Lemonade"
-              width={500}
-              height={500}
-              sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
-              className="h-auto w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
-            />
+            <motion.div
+              style={{ y: leftImageY }}
+              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
+            >
+              <Image
+                src="/pinklemonade.webp"
+                alt="Farmer"
+                width={500}
+                height={500}
+                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
+                className="h-auto w-full"
+              />
+            </motion.div>
+            <motion.div
+              style={{ y: rightImageY }}
+              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
+            >
+              <Image
+                src="/farmer.webp"
+                alt="Pink Lemonade"
+                width={500}
+                height={500}
+                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
+                className="h-auto w-full"
+              />
+            </motion.div>
           </div>
         </div>
         {/* Our Strategy Section */}
