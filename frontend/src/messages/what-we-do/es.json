@@ -1,0 +1,67 @@
+{
+  "whatWeDo": {
+    "title": "Apoyamos las granjas más importantes del mundo",
+    "subtitle": "Nuestra investigación revela insights que otros no han imaginado y nos movemos rápidamente para regenerar el suelo. Trabajamos con granjas que han demostrado un compromiso con prácticas de gestión ecológica y socialmente responsables y han forjado conexiones emocionales profundas con sus consumidores objetivo.",
+    "approach": {
+      "title": "Nuestra Aproximación",
+      "description": "Nos centramos en equilibrar y remineralizar el suelo. Nos proponemos guiar a tu granja en una trayectoria más reflexionada que la que se podría lograr sola."
+    },
+    "strategy": {
+      "title": "Cinco Principios. Una Estrategia.",
+      "description": "Nuestros principios guían cómo creamos valor para nuestros clientes. Todd proporciona un ecosistema holístico desde la gestión del suelo hasta la marketing de productos. Todo para ayudar a las granjas a mejorar la salud del suelo y a implementar soluciones rápidamente."
+    },
+    "principlesAndSustainability": {
+      "principles": {
+        "1": {
+          "title": "Investigación Avanzada con Selección de Datos Disciplinada",
+          "description": "Nos esforzamos por ser un socio de elección dado nuestro equipo de expertos, recursos y capacidades complementarias."
+        },
+        "2": {
+          "title": "Producción de Cultivos y Seguridad de Productos Basada en Datos",
+          "description": "Utilizamos analítica diferenciada y capacidades digitales para entender la mitigación de enfermedades y plagas."
+        },
+        "3": {
+          "title": "Gestión de Operaciones en Diferentes Categorías de Agricultura",
+          "description": "Centrándonos en un pequeño grupo de granjas en nuestras categorías de gestión."
+        },
+        "4": {
+          "title": "Integridad NOP y Demeter",
+          "description": "Requerimos a todos nuestros clientes que cumplan con los requisitos de NOP o Demeter, aunque ciertas tolerancias necesitadas por circunstancias existentes se consideren. "
+        },
+        "5": {
+          "title": "Entrada al Mercado y Concienciación del Consumidor",
+          "description": "Utilizar el equipo de Todd como empresarios explorando el marketing directo al consumidor y CSA."
+        }
+      },
+      "redefiningAgriculture": {
+        "title": "Buscando Sustentabilidad. Redefiniendo la Agricultura.",
+        "1": {
+          "title": "Representación de la Firma",
+          "description": "Todd está creando una firma diseñada para reflejar las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de individuos, comunidades y la tierra, con el fin de tomar las decisiones de gestión que creemos que son las mejores."
+        },
+        "2": {
+          "title": "Enfoque en el Equipo",
+          "description": "Buscamos inculcar responsabilidad y sustentabilidad en nuestros valores y cultura, y nos esforzamos por asociarnos con granjas autosuficientes que valoren la capacidad potencial del equipo de Todd para generar cambios en esta área."
+        },
+        "3": {
+          "title": "Alineación e Integración de la Granja",
+          "description": "Acuerdo e implementación de prácticas de gestión de granjas en un esfuerzo por alcanzar objetivos bien definidos enfocados en responsabilidad y sustentabilidad."
+        },
+        "4": {
+          "title": "Comunidades Más Amplias",
+          "description": "Creemos que nuestros agricultores deberían buscar imitar y promover los valores responsables y sustentables de nuestra Firma en las comunidades en las que operan y con los consumidores que tocan."
+        }
+      }
+    },
+    "buildABetterFarm": {
+      "title": "Construir una granja mejor"
+    },
+    "disclaimers": {
+      "0": "Los servicios de asesoría y gestión de Todd no deben considerarse una garantía de que no se producirán pérdidas. Existen riesgos que no son monitoreados ni controlados por Todd y riesgos que pueden ser mayores a los previstos por Todd, especialmente en condiciones ambientales inusuales. Pueden producirse pérdidas significativas o totales como resultado de estos riesgos u otras razones, a pesar de los protocolos de gestión de Todd o de cualquier información proporcionada en el presente documento.",
+      "1": "Todd puede solicitar pruebas de agentes tóxicos en áreas que se determine presentan un riesgo elevado de contaminación. No se incluyen los factores ambientales que puedan poner en peligro la comercialización de los productos, independientemente de su condición orgánica. Los niveles máximos de tolerancia a agentes tóxicos son determinados por Todd en el momento de la Solicitud de Cuenta. Si la contaminación persiste más allá de un período reconocido, Todd puede pausar o terminar el acceso futuro a los servicios y productos de semillas. La contaminación debe ser monitoreada de forma continua y debe mantenerse documentación que verifique el cumplimiento.",
+      "2": "La aplicación de fertilizantes y productos químicos sintéticos está prohibida sin autorización por escrito.",
+      "3": "No se permiten operaciones divididas ni producción paralela.",
+      "4": "Los servicios y productos están sujetos a elegibilidad y no están garantizados. Todd puede restringir el uso de productos en áreas con producción conocida de cultivos genéticamente modificados."
+    }
+  }
+}
