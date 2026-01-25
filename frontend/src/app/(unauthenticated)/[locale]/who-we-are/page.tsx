@@ -1,12 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { PageHero } from '@/components/common';
-import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
-import HeaderImg from '@/components/common/header-img/header-img';
-import { Card, CardContent } from '@/components/ui';
-import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
-import ValuesCard from './components/values-card';
+import { Button } from '@/components/ui';
+import { Metadata } from 'next';
+import Image from 'next/image';
+import HeaderImage from '@/../public/marketing/who-we-are-header.png';
+import People1 from '@/../public/marketing/who-we-are-people.png';
+import People2 from '@/../public/marketing/who-we-are-people-2.png';
+import { Link } from '@/i18n/config';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -19,42 +20,61 @@ export const metadata: Metadata = {
 export default function WhoWeArePage() {
   const t = useTranslations('whoWeAre');
 
+  const introParagraphs = t.raw('intro.paragraphs') as string[];
+  const competencies = t.raw('competencies.items') as string[];
+
   return (
-    <>
-      <HeaderImg
-        src="/meadow-2.webp"
-        alt="Meadow"
-        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
-      />
-      <PageHero title={t('title')} subtitle={t('subtitle')} />
-      <div className="w-full mb-32 flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
-        <div className="flex flex-col gap-4 max-w-[900px] mx-auto">
-          <div className="flex lg:flex-row flex-col flex-wrap gap-4">
-            <Card className="lg:max-w-110">
-              <CardContent className="p-4 h-full flex flex-col justify-center">
-                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
-                  {t('mission.title')}
-                </h2>
-                <p className="md:text-lg text-base font-light">
-                  {t('mission.description')}
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="lg:max-w-110">
-              <CardContent className="p-4 h-full flex flex-col justify-center">
-                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
-                  {t('vision.title')}
-                </h2>
-                <p className="md:text-lg text-base font-light">
-                  {t('vision.description')}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          <ValuesCard />
+    <div className="flex flex-col justify-center items-center gap-16 mt-12 max-w-250 w-[90vw] mx-auto">
+      <div>
+        <Image src={HeaderImage} alt="" />
+      </div>
+
+      <div className="space-y-8">
+        <h1 className="text-left text-3xl md:text-4xl">{t('title')}</h1>
+
+        <div className="font-light space-y-4">
+          {introParagraphs.map((text, i) => (
+            <p key={i}>{text}</p>
+          ))}
         </div>
       </div>
-      <Disclaimer translationLoc="whoWeAre.disclaimers" disclaimerCount={7} />
-    </>
+
+      <div className="flex flex-col md:flex-row gap-6 md:gap-32">
+        <h2 className="text-2xl md:text-3xl flex flex-col text-nowrap">
+          <span>{t('culture.heading.line1')}</span>
+          <span>{t('culture.heading.line2')}</span>
+        </h2>
+
+        <div className="flex flex-col font-light gap-4">
+          <p>{t('culture.description')}</p>
+
+          <Button
+            variant="outline"
+            className="rounded-4xl py-5 px-10 max-w-[200px] mx-auto"
+          >
+            <Link href="/careers">{t('culture.cta.careers')}</Link>
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-row flex-wrap gap-4 my-12 items-center justify-center">
+        <Image src={People1} alt="" className="max-w-100" />
+        <Image src={People2} alt="" className="max-w-120" />
+      </div>
+
+      <div className="space-y-16">
+        <h2 className="text-2xl md:text-3xl">{t('competencies.title')}</h2>
+
+        <div className="font-light flex flex-col justify-center items-center gap-16">
+          {competencies.map((item, i) => (
+            <p key={i}>{item}</p>
+          ))}
+        </div>
+      </div>
+
+      <Button variant="ghost" className="mx-auto text-3xl my-32">
+        <Link href="/what-we-do">{t('navigation.whatWeDo')}</Link>
+      </Button>
+    </div>
   );
 }
