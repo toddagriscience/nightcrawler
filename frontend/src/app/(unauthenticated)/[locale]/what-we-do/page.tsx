@@ -14,7 +14,7 @@ import {
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/config';
 import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
 
@@ -209,7 +209,7 @@ export default function WhatWeDoPage() {
         {/* Build a Better Farm Section */}
         <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
           <Link
-            href="/"
+            href="/contact"
             className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
           >
             {t('buildABetterFarm.title')}
