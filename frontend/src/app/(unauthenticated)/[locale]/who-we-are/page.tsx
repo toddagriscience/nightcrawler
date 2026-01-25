@@ -6,7 +6,6 @@ import HeaderImg from '@/components/common/header-img/header-img';
 import { Card, CardContent } from '@/components/ui';
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
-import Meadow from '../../../../../public/meadow-2.webp';
 import ValuesCard from './components/values-card';
 
 export const metadata: Metadata = {
@@ -23,7 +22,7 @@ export default function WhoWeArePage() {
   return (
     <>
       <HeaderImg
-        src={Meadow}
+        src="/meadow-2.webp"
         alt="Meadow"
         overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
       />
