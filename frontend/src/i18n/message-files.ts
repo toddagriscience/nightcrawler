@@ -11,6 +11,7 @@ export const messageFiles = [
   'footer',
   'homepage',
   'who-we-are',
+  'what-we-do',
   'investors',
   'governance',
   'contact',
