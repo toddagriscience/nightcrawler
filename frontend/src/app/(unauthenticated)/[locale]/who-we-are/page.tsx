@@ -1,11 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { useTranslations } from 'next-intl';
 import { PageHero } from '@/components/common';
-import { Card, CardContent } from '@/components/ui';
-import ValuesCard from './components/values-card';
-import { Metadata } from 'next';
 import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
+import HeaderImg from '@/components/common/header-img/header-img';
+import { Card, CardContent } from '@/components/ui';
+import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
+import ValuesCard from './components/values-card';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -20,6 +21,11 @@ export default function WhoWeArePage() {
 
   return (
     <>
+      <HeaderImg
+        src="/meadow-2.webp"
+        alt="Meadow"
+        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+      />
       <PageHero title={t('title')} subtitle={t('subtitle')} />
       <div className="w-full mb-32 flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
         <div className="flex flex-col gap-4 max-w-[900px] mx-auto">
