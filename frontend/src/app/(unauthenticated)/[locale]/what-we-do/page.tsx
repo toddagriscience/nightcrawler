@@ -52,7 +52,7 @@ export default function WhatWeDoPage() {
         {/* Hero Text Section */}
         <motion.div
           className="w-full flex flex-col bg-secondary h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-24"
-          initial={{ opacity: 0, y: 34 }}
+          initial={{ opacity: 0.5, y: 34 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.3, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
@@ -125,7 +125,13 @@ export default function WhatWeDoPage() {
         {/* Principles Section */}
         <div className="w-full mb-14 gap-4 md:gap-6 lg:gap-10 flex flex-col md:flex-row flex-wrap justify-center bg-secondary h-fit px-12 md:px-20 lg:px-20 py-8 md:py-10">
           {Object.entries(principles).map(([key, principle]) => (
-            <div key={key}>
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.3, ease: 'easeOut' }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
               <Card className="max-w-[320px] mx-auto border-none shadow-none">
                 <CardHeader>
                   <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2">
@@ -138,7 +144,7 @@ export default function WhatWeDoPage() {
                   </CardDescription>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
           ))}
         </div>
         {/* Redefining Agriculture Section */}
@@ -157,7 +163,13 @@ export default function WhatWeDoPage() {
                 'description' in item
             )
             .map(([key, item]) => (
-              <div key={key}>
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.3, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.3 }}
+              >
                 <Card className="max-w-[350px] lg:max-w-[400px] mx-auto border-none shadow-none">
                   <CardHeader>
                     <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2">
@@ -170,7 +182,7 @@ export default function WhatWeDoPage() {
                     </CardDescription>
                   </CardContent>
                 </Card>
-              </div>
+              </motion.div>
             ))}
         </div>
         {/* Build a Better Farm Section */}
