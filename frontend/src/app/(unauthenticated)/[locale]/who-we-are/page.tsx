@@ -4,10 +4,10 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import HeaderImage from '@public/marketing/who-we-are-header.png';
 import People1 from '@public/marketing/who-we-are-people.png';
 import People2 from '@public/marketing/who-we-are-people-2.png';
 import { Link } from '@/i18n/config';
+import HeaderImg from '@/components/common/header-img/header-img';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -20,61 +20,61 @@ export const metadata: Metadata = {
 export default function WhoWeArePage() {
   const t = useTranslations('whoWeAre');
 
-  const introParagraphs = t.raw('intro.paragraphs') as string[];
-  const competencies = t.raw('competencies.items') as string[];
-
   return (
-    <div className="flex flex-col justify-center items-center gap-16 mt-12 max-w-250 w-[90vw] mx-auto">
-      <div>
-        <Image src={HeaderImage} alt="" />
-      </div>
+    <>
+      <HeaderImg
+        src="/marketing/who-we-are-header.webp"
+        alt="Meadow"
+        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+      />
+      <div className="flex flex-col justify-center items-center gap-16 mt-12 max-w-250 w-[90vw] mx-auto">
+        <div className="space-y-8">
+          <h1 className="text-left text-3xl md:text-4xl">{t('title')}</h1>
 
-      <div className="space-y-8">
-        <h1 className="text-left text-3xl md:text-4xl">{t('title')}</h1>
-
-        <div className="font-light space-y-4">
-          {introParagraphs.map((text, i) => (
-            <p key={i}>{text}</p>
-          ))}
+          <div className="font-light space-y-4">
+            <p>{t('intro.paragraphs.0')}</p>
+            <p>{t('intro.paragraphs.1')}</p>
+            <p>{t('intro.paragraphs.2')}</p>
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-col md:flex-row gap-6 md:gap-32">
-        <h2 className="text-2xl md:text-3xl flex flex-col text-nowrap">
-          <span>{t('culture.heading.line1')}</span>
-          <span>{t('culture.heading.line2')}</span>
-        </h2>
+        <div className="flex flex-col md:flex-row gap-6 md:gap-32">
+          <h2 className="text-2xl md:text-3xl flex flex-col text-nowrap">
+            <span>{t('culture.heading.line1')}</span>
+            <span>{t('culture.heading.line2')}</span>
+          </h2>
 
-        <div className="flex flex-col font-light gap-4">
-          <p>{t('culture.description')}</p>
+          <div className="flex flex-col font-light gap-4">
+            <p>{t('culture.description')}</p>
 
-          <Button
-            variant="outline"
-            className="rounded-4xl py-5 px-10 max-w-[200px] mx-auto"
-          >
-            <Link href="/careers">{t('culture.cta.careers')}</Link>
-          </Button>
+            <Button
+              variant="outline"
+              className="rounded-4xl py-5 px-10 max-w-[200px] mx-auto"
+            >
+              <Link href="/careers">{t('culture.cta.careers')}</Link>
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-row flex-wrap gap-4 my-12 items-center justify-center">
-        <Image src={People1} alt="" className="max-w-100" />
-        <Image src={People2} alt="" className="max-w-120" />
-      </div>
-
-      <div className="space-y-16">
-        <h2 className="text-2xl md:text-3xl">{t('competencies.title')}</h2>
-
-        <div className="font-light flex flex-col justify-center items-center gap-16">
-          {competencies.map((item, i) => (
-            <p key={i}>{item}</p>
-          ))}
+        <div className="flex flex-row flex-wrap gap-4 my-12 w-[90vw] items-center justify-center">
+          <Image src={People1} alt="" className="max-w-100 w-[90vw]" />
+          <Image src={People2} alt="" className="max-w-120" />
         </div>
-      </div>
 
-      <Button variant="ghost" className="mx-auto text-3xl my-32">
-        <Link href="/what-we-do">{t('navigation.whatWeDo')}</Link>
-      </Button>
-    </div>
+        <div className="space-y-16">
+          <h2 className="text-2xl md:text-3xl">{t('competencies.title')}</h2>
+
+          <div className="font-light flex flex-col justify-center items-center gap-16">
+            <p>{t('competencies.items.0')}</p>
+            <p>{t('competencies.items.1')}</p>
+            <p>{t('competencies.items.2')}</p>
+          </div>
+        </div>
+
+        <Button variant="ghost" className="mx-auto text-3xl my-32">
+          <Link href="/what-we-do">{t('navigation.whatWeDo')}</Link>
+        </Button>
+      </div>
+    </>
   );
 }
