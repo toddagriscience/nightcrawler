@@ -22,7 +22,11 @@ export default function WhoWeArePage() {
 
   return (
     <>
-      <HeaderImg src={Meadow} alt="Meadow" />
+      <HeaderImg
+        src={Meadow}
+        alt="Meadow"
+        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+      />
       <PageHero title={t('title')} subtitle={t('subtitle')} />
       <div className="w-full mb-32 flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
         <div className="flex flex-col gap-4 max-w-[900px] mx-auto">

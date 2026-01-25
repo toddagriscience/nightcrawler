@@ -16,11 +16,13 @@ export default function HeaderImg({
   alt,
   wrapperClassName = '',
   imageClassName = '',
+  overlayClassName = '',
 }: {
   src: StaticImageData | string;
   alt: string;
   wrapperClassName?: string;
   imageClassName?: string;
+  overlayClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -34,7 +36,7 @@ export default function HeaderImg({
   return (
     <div
       ref={ref}
-      className={`relative mx-6 mt-6 lg:h-[805px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
+      className={`relative mx-6 mt-6 lg:h-[795px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
     >
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
@@ -44,6 +46,11 @@ export default function HeaderImg({
           sizes="100vw"
           className={`object-cover ${imageClassName}`.trim()}
         />
+        {overlayClassName ? (
+          <div
+            className={`pointer-events-none absolute inset-0 ${overlayClassName}`.trim()}
+          />
+        ) : null}
       </motion.div>
     </div>
   );
