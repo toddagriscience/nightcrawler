@@ -4,9 +4,9 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import HeaderImage from '@/../public/marketing/who-we-are-header.png';
-import People1 from '@/../public/marketing/who-we-are-people.png';
-import People2 from '@/../public/marketing/who-we-are-people-2.png';
+import HeaderImage from '@public/marketing/who-we-are-header.png';
+import People1 from '@public/marketing/who-we-are-people.png';
+import People2 from '@public/marketing/who-we-are-people-2.png';
 import { Link } from '@/i18n/config';
 
 export const metadata: Metadata = {
