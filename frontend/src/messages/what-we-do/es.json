@@ -12,6 +12,7 @@
     },
     "principlesAndSustainability": {
       "principles": {
+        "count": "5",
         "1": {
           "title": "Investigación Avanzada con Selección de Datos Disciplinada",
           "description": "Nos esforzamos por ser un socio de elección dado nuestro equipo de expertos, recursos y capacidades complementarias."
@@ -34,6 +35,7 @@
         }
       },
       "redefiningAgriculture": {
+        "count": "4",
         "title": "Buscando Sustentabilidad. Redefiniendo la Agricultura.",
         "1": {
           "title": "Representación de la Firma",

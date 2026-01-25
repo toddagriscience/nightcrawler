@@ -12,6 +12,7 @@
     },
     "principlesAndSustainability": {
       "principles": {
+        "count": "5",
         "1": {
           "title": "Advanced Research with Disciplined Data Selection",
           "description": "We strive to be a partner of choice given our team’s expertise, resources and complementary capabilities."
@@ -34,6 +35,7 @@
         }
       },
       "redefiningAgriculture": {
+        "count": "4",
         "title": "Seeking Sustainability. Redefining Agriculture.",
         "1": {
           "title": "Firm Representation",

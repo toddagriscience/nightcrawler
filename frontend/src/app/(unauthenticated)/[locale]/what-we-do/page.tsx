@@ -32,14 +32,41 @@ export default function WhatWeDoPage() {
   const leftImageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
   const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 200]);
 
-  const principles = t.raw('principlesAndSustainability.principles') as Record<
-    string,
-    { title: string; description: string }
-  >;
+  const principlesCount = Number(
+    t('principlesAndSustainability.principles.count')
+  );
+  const principles = Array.from(
+    { length: Number.isFinite(principlesCount) ? principlesCount : 0 },
+    (_, index) => {
+      const key = String(index + 1);
+      return {
+        key,
+        title: t(`principlesAndSustainability.principles.${key}.title`),
+        description: t(
+          `principlesAndSustainability.principles.${key}.description`
+        ),
+      };
+    }
+  );
 
-  const redefiningAgriculture = t.raw(
-    'principlesAndSustainability.redefiningAgriculture'
-  ) as Record<string, { title: string; description: string }>;
+  const redefiningCount = Number(
+    t('principlesAndSustainability.redefiningAgriculture.count')
+  );
+  const redefiningAgriculture = Array.from(
+    { length: Number.isFinite(redefiningCount) ? redefiningCount : 0 },
+    (_, index) => {
+      const key = String(index + 1);
+      return {
+        key,
+        title: t(
+          `principlesAndSustainability.redefiningAgriculture.${key}.title`
+        ),
+        description: t(
+          `principlesAndSustainability.redefiningAgriculture.${key}.description`
+        ),
+      };
+    }
+  );
 
   return (
     <>
@@ -125,9 +152,9 @@ export default function WhatWeDoPage() {
         </div>
         {/* Principles Section */}
         <div className="w-full mb-32 gap-4 md:gap-6 lg:gap-10 flex flex-col md:flex-row flex-wrap justify-center h-fit px-12 md:px-20 lg:px-20 py-8 md:py-10">
-          {Object.entries(principles).map(([key, principle]) => (
+          {principles.map((principle) => (
             <motion.div
-              key={key}
+              key={principle.key}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.3, ease: 'easeOut' }}
@@ -156,35 +183,28 @@ export default function WhatWeDoPage() {
         </div>
         {/* Redefining Agriculture Content */}
         <div className="w-full mb-20 gap-4 md:gap-6 lg:gap-6 grid grid-cols-1 md:grid-cols-2 justify-center h-fit px-12 md:px-20 lg:px-20 py-8 md:py-10">
-          {Object.entries(redefiningAgriculture)
-            .filter(
-              ([, item]) =>
-                typeof item === 'object' &&
-                item !== null &&
-                'description' in item
-            )
-            .map(([key, item]) => (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.3, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                <Card className="max-w-[350px] lg:max-w-[400px] mx-auto border-none bg-transparent shadow-none">
-                  <CardHeader>
-                    <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2">
-                      {(item as { title: string }).title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="px-6">
-                    <CardDescription className="text-sm md:text-normal leading-relaxed font-light">
-                      {(item as { description: string }).description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+          {redefiningAgriculture.map((item) => (
+            <motion.div
+              key={item.key}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.3, ease: 'easeOut' }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <Card className="max-w-[350px] lg:max-w-[400px] mx-auto border-none bg-transparent shadow-none">
+                <CardHeader>
+                  <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="px-6">
+                  <CardDescription className="text-sm md:text-normal leading-relaxed font-light">
+                    {item.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
         {/* Build a Better Farm Section */}
         <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
