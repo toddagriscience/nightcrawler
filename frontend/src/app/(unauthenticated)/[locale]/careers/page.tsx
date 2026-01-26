@@ -46,7 +46,7 @@ export default function Careers() {
         <main className="flex flex-col mx-auto max-w-[1200px]">
           {/* Hero Text Section */}
           <motion.div
-            className="w-full mb-10 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+            className="w-full mb-16 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
             initial={{ opacity: 0.5, y: 34 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.3, ease: 'easeOut' }}
@@ -85,12 +85,12 @@ export default function Careers() {
                 style={{ y: rightImageY }}
                 className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
               >
-                <div className="flex flex-col gap-14 md:items-start md:justify-between max-w-[1000px]">
+                <div className="flex flex-col gap-14 items-center md:items-start md:justify-between max-w-[1000px]">
                   <h2 className="text-3xl md:text-3xl lg:text-4xl leading-normal font-thin md:max-w-[280px] lg:max-w-[350px]">
                     {t('apply.title')}
                   </h2>
                   <Button
-                    className="max-w-[250px] w-[90vw] gap-6 font-thin"
+                    className="max-w-[235px] w-[90vw] gap-6 font-thin"
                     text={t('apply.button')}
                     href={url}
                   />
