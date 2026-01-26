@@ -56,7 +56,7 @@ export default function Careers() {
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
                 {t('title')}
               </h2>
-              <p className="md:text-normal text-sm font-light leading-loose max-w-[600px]">
+              <p className="md:text-base text-sm font-light leading-loose max-w-[600px]">
                 {t('subtitle')}
               </p>
             </div>
@@ -66,7 +66,7 @@ export default function Careers() {
 
           <div className="w-full mb-10 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-8 md:py-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-0 max-w-[1000px]">
-              <h2 className="text-3xl md:text-3xl lg:text-4xl leading-tight font-light md:basis-1/3">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-light md:basis-1/3">
                 {t('program.title')}
               </h2>
               <p className="text-sm md:text-base font-light leading-relaxed md:basis-2/3">
