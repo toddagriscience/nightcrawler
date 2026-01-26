@@ -10,16 +10,15 @@
     },
     "culture": {
       "heading": {
-        "line1": "Empowered by",
-        "line2": "Our Culture"
+        "line1": "Empowered by Our Culture"
       },
       "description": "We’ve built a distinctive culture that shapes everything we do—whether we’re working, socializing or supporting our communities. Our leadership shares a determination and responsibility for growing and developing our next generation of leaders.",
       "cta": {
-        "careers": "Careers →"
+        "careers": "Careers"
       }
     },
     "competencies": {
-      "title": "Todd is differentiated by a combination of three core competencies",
+      "title": "Todd is differentiated by a combination of three core competencies.",
       "items": {
         "0": "Organic & Biodynamic Management Expertise",
         "1": "Understanding of Modern Consumer Demands and Channels",
@@ -27,7 +26,7 @@
       }
     },
     "navigation": {
-      "whatWeDo": "What We Do"
+      "whatWeDo": "What we do"
     }
   }
 }
