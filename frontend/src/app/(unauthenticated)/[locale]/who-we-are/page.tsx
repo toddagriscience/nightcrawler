@@ -48,7 +48,7 @@ export default function WhoWeArePage() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
               {t('title')}
             </h2>
-            <div className="md:text-base text-normal lg:text-lg font-light leading-loose space-y-4">
+            <div className="text-sm md:text-normal lg:text-base font-light leading-relaxed space-y-4">
               <p>{t('intro.paragraphs.0')}</p>
               <p>{t('intro.paragraphs.1')}</p>
               <p>{t('intro.paragraphs.2')}</p>
