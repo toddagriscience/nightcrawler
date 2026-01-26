@@ -11,10 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
+import { Link } from '@/i18n/config';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { Link } from '@/i18n/config';
 import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
 
@@ -88,7 +88,7 @@ export default function WhatWeDoPage() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
               {t('title')}
             </h2>
-            <p className="md:text-normal text-sm font-light leading-loose max-w-[600px]">
+            <p className="md:text-base text-sm lg:text-lg font-light leading-loose max-w-[770px]">
               {t('subtitle')}
             </p>
           </div>
@@ -96,11 +96,11 @@ export default function WhatWeDoPage() {
         {/* Our Approach Section */}
 
         <div className="w-full mb-12 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-8 md:py-10">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-0 max-w-[1000px]">
-            <h2 className="text-3xl md:text-3xl lg:text-4xl leading-tight font-light md:basis-1/3">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-0 lg:gap-5 max-w-[1100px]">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-light md:basis-1/3">
               {t('approach.title')}
             </h2>
-            <p className="text-sm md:text-base font-light leading-relaxed md:basis-2/3">
+            <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed md:basis-2/3">
               {t('approach.description')}
             </p>
           </div>
@@ -142,7 +142,7 @@ export default function WhatWeDoPage() {
         {/* Our Strategy Section */}
         <div className="w-full flex flex-col h-fit px-12 md:px-36 lg:px-26 py-8 md:py-6">
           <div className="flex flex-col gap-6 lg:flex-row md:justify-between lg:justify-around lg:gap-50 lg:max-w-[1000px]">
-            <h2 className="text-3xl md:text-3xl lg:text-4xl max-w-[200px] md:max-w-[250px] lg:max-w-[300px] leading-tight font-light md:basis-1/2">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[200px] md:max-w-[250px] lg:max-w-[320px] leading-tight font-light md:basis-5/8">
               {t('strategy.title')}
             </h2>
             <p className="text-sm md:text-base font-light leading-relaxed md:basis-1/2">
@@ -162,12 +162,12 @@ export default function WhatWeDoPage() {
             >
               <Card className="max-w-[320px] mx-auto border-none bg-transparent shadow-none">
                 <CardHeader>
-                  <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2">
+                  <CardTitle className="text-2xl md:text-2xl lg:text-3xl font-thin mb-2 tracking-normal">
                     {principle.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="px-6">
-                  <CardDescription className="text-sm md:text-normal leading-relaxed font-light">
+                  <CardDescription className="text-sm md:text-normal lg:text-base leading-relaxed font-light">
                     {principle.description}
                   </CardDescription>
                 </CardContent>
@@ -177,7 +177,7 @@ export default function WhatWeDoPage() {
         </div>
         {/* Redefining Agriculture Section */}
         <div className="w-full flex flex-col justify-center text-center sm:text-left items-center md:items-start md:px-28 lg:px-40">
-          <h2 className="text-3xl md:text-3xl lg:text-4xl max-w-[350px] lg:max-w-[500px] leading-tight font-thin">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[350px] lg:max-w-[500px] leading-tight font-thin">
             {t('principlesAndSustainability.redefiningAgriculture.title')}
           </h2>
         </div>
