@@ -12,5 +12,17 @@
       "3": "Under the U.S. Transparency in Coverage act, Todd is required to provide U.S. pricing information to U.S. consumers before they receive care under our insurance plans. To review Todd’s U.S. medical insurance pricing structure, please click here: https://transparency-in-coverage.collectivehealth.com/index.html.",
       "4": "To learn more about how we process your personal information and your rights in regards to your personal information as a Todd Applicant, please visit our Privacy Policy."
     }
+  },
+  "externship": {
+    "title": "Early Career at Todd",
+    "subtitle": "The most important decision of your career is choosing where it starts. Our accelerated externship for outlier early talent is designed to build strong foundations for a lifetime of learning and achievement.",
+    "program": {
+      "title": "Externship Accelerator",
+      "description": "The Todd Externship Program is a 4-week accelerator that provides students with hands-on experience in a startup environment. Paired into small teams, you will work together to ship a real project, and “graduate” with a diploma you actually earned."
+    },
+    "apply": {
+      "title": "Applications for Spring ‘26 now open.",
+      "button": "Apply Now"
+    }
   }
 }
