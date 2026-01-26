@@ -47,7 +47,8 @@ const NewsCard = ({
             fallbackText="News Image"
             isDark={isDark}
           />
-          <div className={`p-4 ${isDark ? 'text-white' : ''}`}>
+          {/* <div className={`p-4 ${isDark ? 'text-white' : ''}`}> */}
+          <div className={`p-4`}>
             <h2>{title}</h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}

@@ -2,10 +2,10 @@
 
 'use client';
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
-import { Button } from '../../common';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { useTranslations } from 'next-intl';
+import React from 'react';
+import { Button } from '../../common';
 import { QuoteProps } from './types/quote';
 
 /**
@@ -23,19 +23,18 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
   return (
     <section
       id="who-we-are"
-      className="flex flex-col justify-center items-center text-center h-screen px-0 lg:px-0"
+      className="flex flex-col justify-center items-center text-center px-0 lg:px-0 h-[80vh] py-80"
       role="region"
     >
-      <h1 className="text-2xl lg:text-6xl tracking-tight font-thin text-center max-w-4xl w-[80%] mx-auto">
-        {t('quote')}
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-thin text-center w-[85%] sm:w-[95%] md:w-[82%] lg:w-[92%] mx-auto">
+        <span className="tracking-normal leading-tight">{t('quote')}</span>
       </h1>
       <Button
         href="/who-we-are"
-        text={t('learnMore')}
+        text={t('whoWeAre')}
         variant="outline"
-        size="lg"
-        isDark={isDark}
-        className="mt-8 lg:mt-16 mx-auto"
+        // isDark={isDark}
+        className="mt-16 lg:mt-20 mx-auto w-[225px] font-thin"
       />
     </section>
   );

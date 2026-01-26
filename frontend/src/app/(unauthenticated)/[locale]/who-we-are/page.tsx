@@ -2,13 +2,14 @@
 
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui';
-import Image from 'next/image';
-import { Link } from '@/i18n/config';
 import HeaderImg from '@/components/common/header-img/header-img';
+import { Button } from '@/components/ui';
+import { Link } from '@/i18n/config';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useRef } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 
 /**
  * Who We Are page component
@@ -106,9 +107,17 @@ export default function WhoWeArePage() {
           </div>
         </div>
 
-        <Button variant="ghost" className="mx-auto text-3xl my-32">
-          <Link href="/what-we-do">{t('navigation.whatWeDo')}</Link>
-        </Button>
+        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
+          <Link
+            href="/what-we-do"
+            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
+          >
+            {t('navigation.whatWeDo')}
+            <span className="mt-1">
+              <HiArrowLongRight className="size-12" />
+            </span>
+          </Link>
+        </div>
       </div>
     </>
   );
