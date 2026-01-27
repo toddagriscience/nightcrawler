@@ -15,6 +15,7 @@ import { useFormStatus } from 'react-dom';
  * @param {number} cooldownTime - The amount of time, in seconds, that the user has to wait before submitting again. Defaults to 10 seconds. This parameter being provided does not "activate" the cooldown functionality. See the `cooldownClickHandler` parameter for that.
  * @param {function} cooldownClickHandler - If provided, forces the button to have a cooldown (default 10 seconds, see `cooldownTime`). This function is called if the button is clicked during the cooldown period.
  * @param {function} sendCooldownTime - Sends the exact time that the cooldown started. Helps with calculating amount of time to display an error message.
+ * @param {boolean} reactHookFormPending - For cross compatability with React Hook Form. `useFormStatus()` doesn't work with React Hook Form, consequently this acts as a drop in for the loading state.
  *
  * @returns {JSX.Element} - The submit button component. */
 export default function SubmitButton({
@@ -25,6 +26,7 @@ export default function SubmitButton({
   cooldownTime = 10,
   cooldownClickHandler = undefined,
   sendCooldownTime = undefined,
+  reactHookFormPending = undefined,
 }: {
   buttonText: string;
   className?: string;
@@ -33,6 +35,7 @@ export default function SubmitButton({
   cooldownTime?: number;
   cooldownClickHandler?: () => void;
   sendCooldownTime?: (arg0: Date) => void;
+  reactHookFormPending?: boolean;
 }) {
   const { pending } = useFormStatus();
   const [cooldown, setCooldown] = useState(false);
@@ -63,7 +66,11 @@ export default function SubmitButton({
       disabled={disabled || pending}
       onClick={handleClick}
     >
-      {pending ? <Spinner className="mx-auto w-5 h-5" /> : buttonText}
+      {pending || reactHookFormPending ? (
+        <Spinner className="mx-auto w-5 h-5" />
+      ) : (
+        buttonText
+      )}
     </Button>
   );
 }

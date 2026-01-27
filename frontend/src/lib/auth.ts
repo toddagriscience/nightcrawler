@@ -1,10 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import logger from './logger';
-import { AuthResponse, AuthResponseTypes } from './types/auth';
-import { createClient as createBrowserClient } from './supabase/client';
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
+import logger from './logger';
+import { createClient as createBrowserClient } from './supabase/client';
+import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createServerClient } from './supabase/server';
 
 /**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
@@ -161,7 +161,7 @@ export async function inviteUser(
   email: string,
   name: string
 ): Promise<object | Error> {
-  const supabase = await createServerClient();
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
     redirectTo: 'https://toddagriscience.com/login',
     data: {

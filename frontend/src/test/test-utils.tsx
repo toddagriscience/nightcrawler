@@ -96,6 +96,7 @@ vitest.mock('framer-motion', () => {
   return {
     ...vitest.importActual('framer-motion'),
     useScroll: vitest.fn(() => ({ scrollYProgress: 0 })),
+    useTransform: vitest.fn(() => 0),
     useMotionValueEvent: vitest.fn(),
     motion: {
       div: MockMotionComponent,

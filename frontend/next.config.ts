@@ -76,8 +76,8 @@ const securityHeaders = [
       "object-src 'none'", // Block object/embed/applet
       "base-uri 'self'", // Restrict base tag URLs
       "form-action 'self'", // Restrict form submissions
-      "frame-ancestors 'none'", // Prevent embedding in frames
-      'frame-src https://challenges.cloudflare.com',
+      "frame-ancestors 'self'", // Prevent embedding in frames
+      "frame-src https://challenges.cloudflare.com 'self'",
       'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
     ].join('; '),
   },

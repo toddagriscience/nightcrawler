@@ -23,9 +23,9 @@ export const farmInfoInternalApplication = pgTable(
       .references(() => farm.id, { onDelete: 'set null' })
       .primaryKey(),
     /** A split operation is an operation that produces both organic and conventional crops. Mark any of the following that apply to your operation: */
-    splitOperation: jsonb(),
+    splitOperation: jsonb().$type<Record<string, any>>(),
     /** Does your operation alternate organic and convestional farming?	*/
-    alternateFarming: jsonb(),
+    alternateFarming: jsonb().$type<Record<string, any>>(),
     /** Total gross income on certified crops/products or total market value of agricultural product for the preceding twelve months */
     totalGrossIncome: numeric({ precision: 8, scale: 2 }),
     /** Do you have a current conservation plan/contract with the USDA Natural Resources Conservation Service (NRCS) or other conservation agency? */
@@ -37,27 +37,27 @@ export const farmInfoInternalApplication = pgTable(
     /** How do you structure your management zones or fields? include acerage, main crops, different practices per field, irrigation, soil issues */
     managementZoneStructure: text(),
     /** What crop production or other activities have occurred at `farm name` during the past three years? */
-    farmActivites: jsonb(),
+    farmActivites: jsonb().$type<Record<string, any>>(),
     /** Does any production take place in greenhouses, shadehouses, or buildings? */
-    productionLocation: jsonb(),
+    productionLocation: jsonb().$type<Record<string, any>>(),
     /** What cultivation practices are performed throughout the crop season to maintain or improve the physical, chemical, or biological condition of the soil? */
-    cultivationPractices: jsonb(),
+    cultivationPractices: jsonb().$type<Record<string, any>>(),
     /** Is livestock incorperated into your farming system? (Describe. Include the species and amount or what reasons for not having livestock, in situations such as intensive grazing, how is the manure incorperated into compost. When animales have access, and removed.) */
     livestockIncorporation: text(),
     /** What, if any, measures are taken to reduce weed, insect and dieseases? (the planned sequence of plant families, cover crops, and any fallow periods; the length of each planting or stage in the sequence; the total length of time to complete the planned rotation sequence) */
     weedInsectDiseasesControl: text(),
     /** What, if any, measures are taken to prevent or control pests? */
-    pestControl: jsonb(),
+    pestControl: jsonb().$type<Record<string, any>>(),
     /** What, if any, off-farm products, including commerical compost, manure, gypsum, limestone, micronutrients, or other fertilizers/soil amendments. */
-    offFarmProducts: jsonb(),
+    offFarmProducts: jsonb().$type<Record<string, any>>(),
     /** What, if any, synthedic fertilizers, pesticides, fungicides, or any other materials such as treated seed (including coatings, pelleting materials, and inoculants), growing media (substrate, planting mix, potting soil), adjuvants, etc. */
-    otherMaterials: jsonb(),
+    otherMaterials: jsonb().$type<Record<string, any>>(),
     /** What, if any, mechnaical equipment and/or seeding/planting equipment for production? */
     mechanicalEquipment: text(),
     /** Is `farm name` in any supplier contracts? */
     supplierContracts: text(),
     /** What is the source of your irrigation water? (select all that apply) */
-    irrigationWaterSource: jsonb(),
+    irrigationWaterSource: jsonb().$type<Record<string, any>>(),
     /** What, if any, crop requirements, rainfall, soil types, and evaporation rate are considered in irrigation scheduling? */
     irrigationScheduling: text(),
     /** How is soil moisture monitored to improve irrigation efficiency in order to avoid excessive water application? */
@@ -71,21 +71,21 @@ export const farmInfoInternalApplication = pgTable(
     /** What, if any, measures are taken to prevent or minimize erosion? (No-till or permanent cover, Strip cropping, Leveling, Contour farming, Terraces, Cover cropping, Conservation (minimum) tillage, Micro-irrigate, Windbreaks, Minimize bare ground via crop rotation) */
     erosionPrevention: text(),
     /** Is `farm name` near conventional agriculture or mining that may present the potential for contamination? */
-    nearContaminationSource: jsonb(),
+    nearContaminationSource: jsonb().$type<Record<string, any>>(),
     /** Are active wild areas reserved for biolocical diversity located on or near the farm? including soil type and condition, bodies of water, nearby wetlands and woodlands, wildlife, windbreaks, hedgerows, native habitat and beneficial plantings. Include any problem areas such as erosion and invasive species. */
-    activeWildAreas: jsonb(),
+    activeWildAreas: jsonb().$type<Record<string, any>>(),
     /** How, if in action, do you improve and/or maintain natural resources in non-crop areas, such as borders, fallow land, and non farming habitats? */
     naturalResources: text(),
     /** How do you manage your harvests? */
-    manageHarvests: jsonb(),
+    manageHarvests: jsonb().$type<Record<string, any>>(),
     /** Is water used in direct contact with produce post-harvest? */
-    waterUsedPostHarvest: jsonb(),
+    waterUsedPostHarvest: jsonb().$type<Record<string, any>>(),
     /** What are your primary market venues? */
-    primaryMarketVenues: jsonb(),
+    primaryMarketVenues: jsonb().$type<Record<string, any>>(),
     /** Is your produce packed for another brand, or do you use branding owned by a third party? */
-    branding: jsonb(),
+    branding: jsonb().$type<Record<string, any>>(),
     /** How do you differentiate your produce to your consumers? (select all that apply) */
-    productDifferentiation: jsonb(),
+    productDifferentiation: jsonb().$type<Record<string, any>>(),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp().notNull().defaultNow(),
   }

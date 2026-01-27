@@ -14,7 +14,7 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background-platform">
+    <div className="min-h-screen bg-background-platform authenticated-root">
       <AuthenticatedHeader />
       {children}
     </div>

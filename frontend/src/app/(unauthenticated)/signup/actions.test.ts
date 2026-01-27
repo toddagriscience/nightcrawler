@@ -23,15 +23,15 @@ const { db } = await vi.hoisted(async () => {
   const schema = await import('@/lib/db/schema');
   const { migrate } = await import('drizzle-orm/pglite/migrator');
 
-  const db = drizzle({ schema });
+  const db = drizzle({ schema, casing: 'snake_case' });
   await migrate(db, { migrationsFolder: 'drizzle' });
 
   return { db };
 });
 
-vi.mock('@/lib/db/schema', async (importOriginal) => {
+vi.mock('@/lib/db/schema/connection', async (importOriginal) => {
   return {
-    ...(await importOriginal<typeof import('@/lib/db/schema')>()),
+    ...(await importOriginal<typeof import('@/lib/db/schema/connection')>()),
     db,
   };
 });
