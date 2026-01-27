@@ -32,21 +32,21 @@ export default function Careers() {
     <>
       <div className="max-w-[520px] sm:max-w-[600px] md:max-w-[1200px] mx-auto text-center sm:text-left">
         <HeaderImg
-          src="/marketing/todd-university-xs.png"
+          src="/marketing/todd-university-xs1.png"
           alt="Todd University"
-          wrapperClassName="block sm:hidden"
+          wrapperClassName="block md:hidden"
           imageClassName="transition-all duration-500 ease-in-out"
         />
         <HeaderImg
-          src="/marketing/todd-university.png"
+          src="/marketing/todd-university1.png"
           alt="Todd University"
-          wrapperClassName="hidden sm:block"
+          wrapperClassName="hidden md:block"
           imageClassName="transition-all duration-500 ease-in-out"
         />
         <main className="flex flex-col mx-auto max-w-[1200px]">
           {/* Hero Text Section */}
           <motion.div
-            className="w-full mb-16 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+            className="w-full mb-10 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
             initial={{ opacity: 0.5, y: 34 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.3, ease: 'easeOut' }}
@@ -56,20 +56,20 @@ export default function Careers() {
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
                 {t('title')}
               </h2>
-              <p className="md:text-base text-sm font-light leading-loose max-w-[600px]">
+              <p className="text-sm md:text-normal lg:text-base font-light leading-relaxed font-light max-w-[600px]">
                 {t('subtitle')}
               </p>
             </div>
           </motion.div>
 
-          {/* Our Approach Section */}
+          {/* Our Program Section */}
 
           <div className="w-full mb-10 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-8 md:py-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-0 max-w-[1000px]">
               <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-light md:basis-1/3">
                 {t('program.title')}
               </h2>
-              <p className="text-sm md:text-base font-light leading-relaxed md:basis-2/3">
+              <p className="text-normal md:text-base lg:text-lg font-light leading-relaxed md:basis-2/3">
                 {t('program.description')}
               </p>
             </div>

@@ -109,7 +109,7 @@ export default function WhoWeArePage() {
               />
             </motion.div>
           </div>
-
+        </div>
         {/* Competencies Section */}
         <div className="w-full mb-30 flex justify-center text-center items-center md:px-28 lg:px-40">
           <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[450px] lg:max-w-[550px] leading-tight font-thin">
