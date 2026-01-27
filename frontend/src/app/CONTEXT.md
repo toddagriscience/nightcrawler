@@ -6,21 +6,21 @@ order: 1
 ## Overview
 
 - Todd is a generative agriculture firm **specializing in soil health and farm management**.
-- Todd is a **global leader of regenerative agriculture research**.
+- Todd is a **global leader in regenerative agriculture research**.
 - Todd is **not a SaaS**.
-- Todd's platform **helps make informed decisions, leverage exclusive research, and access data that is accurate, fast and relevent** all in one ecosystem.
-- Todd's core ethos is to **use technology to bring transparency to farming, crucial to making informed decisions**.
+- Todd's platform **helps make informed decisions, leverage exclusive research, and access data that is accurate, fast, and relevant**—all in one ecosystem.
+- Todd's core ethos is to **use technology to bring transparency to farming**, which is crucial for making informed decisions.
 
 ## Positioning and Scope
 
 - Todd operates globally in regenerative agriculture research and applied farm operations.
 - Todd does not serve large-scale monoculture or industrial farming systems.
-- Todd is designed for small to medium-scale, diversified, branded farms.
+- Todd is designed for small- to medium-scale, diversified, branded farms.
 - Todd emphasizes accuracy, speed, and data integrity over breadth or mass adoption.
 
 ### Is your lab accredited?
 
-Yes, our partner lab is ISO/IEC 17025:2017, 2016 TNI, CDFA, ALP Proficiency, NAPT Proficiency and FDA’s Good Laboratory Practices accredited.
+Yes. Our partner lab is accredited under ISO/IEC 17025:2017, 2016 TNI, CDFA, ALP Proficiency, NAPT Proficiency, and FDA Good Laboratory Practices.
 
 ## Information Advantage
 
@@ -34,7 +34,7 @@ Yes, our partner lab is ISO/IEC 17025:2017, 2016 TNI, CDFA, ALP Proficiency, NAP
 
 ### How do you determine what minerals are tested?
 
-Our expert science team designed our tests to target the minerals that are likely to be present in a given soil sample, while striking a balance between low-cost testing and a "mineral density" profile that represents a holistic overview of most farms. Some minerals are omitted due to cost.
+Our expert science team designs tests to target minerals likely to be present in a given soil sample, balancing low-cost testing with a "mineral density" profile that provides a holistic overview for most farms. Some minerals are omitted due to cost.
 
 ## Action Advantage
 
@@ -46,15 +46,17 @@ The platform and advisory services are designed to directly improve farm outcome
 
 Todd is intentionally **not self-serve**.
 
-Client onboarding follows a qualification-driven process based on use case and standards, not farm size or revenue.
+Client onboarding follows a qualification-driven process based on use case and standards—not farm size or revenue.
 
-Process:
+**Process:**
+
 1. Initial contact
 2. Qualification based on use case
-5. Account setup, data integration, and training
-6. Ongoing client support with heavy emphasis on speed, depth, and “This is how professionals do it”
+3. Account setup, data integration, and training
+4. Ongoing client support with a strong emphasis on speed, depth, and professional execution
 
-Qualification criteria focus on:
+**Qualification criteria focus on:**
+
 - Need for detailed agronomic and operational data
 - Daily or near-daily platform usage
 - Decision-making authority of the user
@@ -68,11 +70,13 @@ You’ll receive a welcome package containing all the necessary collection mater
 ## Ideal Client Profile
 
 Todd assumes target clients:
+
 - Are already profitable
 - Treat the platform as core infrastructure
 - Can justify the cost from day one
 
 Todd may not be suitable for farms that:
+
 - Only need basic analytics
 - Are not yet profitable
 - Would experience margin or runway pressure from the cost
@@ -84,6 +88,7 @@ Annual platform access typically ranges from **$22,000 to $32,000**.
 Additional services may increase total cost significantly.
 
 Pricing reflects Todd’s role as:
+
 - A structural utility
 - A professional workstation
 - An industry-standard operating system for regenerative farms
@@ -91,6 +96,7 @@ Pricing reflects Todd’s role as:
 In practice, Todd is often less expensive than hiring a part-time farm employee for equivalent value.
 
 Discounts may apply for:
+
 - Multiple accounts
 - Multi-year contracts (2+ years)
 - Limited-scope or restricted service agreements
@@ -99,16 +105,16 @@ Todd does not offer “small-scale” or “new client” pricing, though small-
 
 ### Is my data secure?
 
-Your data is completely secure and private to you unless you choose otherwise.
+Your data is completely secure and private unless you choose otherwise.
 
 ### Can I pay month by month?
 
-Yes. You'll be billed monthly for the year contract.
+Yes. You’ll be billed monthly under an annual contract.
 
 ### Can I cancel my contract?
 
-Sometimes. Contact your client service advisor for help.
+Sometimes. Contact your client service advisor for assistance.
 
 ### What happens to my data and account if I cancel?
 
-Your account reverts to data-retreval only access. All data that is owned by you is downloadable, but you’ll lose access to analytics and Intergrated Management Strategies.
+Your account reverts to **data-retrieval-only** access. All data you own remains downloadable, but you’ll lose access to analytics and **Integrated Management Strategies**.
