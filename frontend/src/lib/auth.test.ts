@@ -319,7 +319,7 @@ describe('inviteUser', () => {
 
     expect(result).toEqual(fakeData);
     expect(mockInviteUserByEmail).toHaveBeenCalledWith('invited@example.com', {
-      redirectTo: 'https://toddagriscience.com/login',
+      redirectTo: 'https://toddagriscience.com/accept',
       data: {
         first_name: 'Jane',
         name: 'Jane',
@@ -353,7 +353,7 @@ describe('inviteUser', () => {
     expect(mockInviteUserByEmail).toHaveBeenCalledWith(
       'new@example.com',
       expect.objectContaining({
-        redirectTo: 'https://toddagriscience.com/login',
+        redirectTo: 'https://toddagriscience.com/accept',
       })
     );
   });
