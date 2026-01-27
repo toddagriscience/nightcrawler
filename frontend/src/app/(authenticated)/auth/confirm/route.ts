@@ -27,6 +27,14 @@ export async function GET(request: NextRequest) {
     });
 
     if (!error) {
+      const { data } = await supabase.auth.getUser();
+      const email = data.user?.email;
+
+      // Add email to query params for accept page
+      if (email) {
+        redirectTo.searchParams.set('email', email);
+      }
+
       return NextResponse.redirect(redirectTo);
     }
   }
