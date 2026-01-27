@@ -31,12 +31,12 @@ export default function HeaderImg({
   });
 
   // Start at -40% to hide top, then move further for parallax
-  const y = useTransform(scrollYProgress, [0, 1], ['-40%', '20%']);
+  const y = useTransform(scrollYProgress, [-0.5, 1], ['-40%', '20%']);
 
   return (
     <div
       ref={ref}
-      className={`relative mx-6 mt-6 lg:h-[795px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
+      className={`relative mx-6 mt-6 lg:h-[780px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
     >
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
