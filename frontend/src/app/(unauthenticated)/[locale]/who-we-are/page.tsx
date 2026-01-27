@@ -76,7 +76,7 @@ export default function WhoWeArePage() {
               />
             </div>
           </div>
-
+        </div>
         <div
           ref={imageSectionRef}
           className="w-full mb-40 flex flex-col items-center h-fit py-8 md:py-10"
