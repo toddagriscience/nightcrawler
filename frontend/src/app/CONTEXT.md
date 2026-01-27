@@ -1,64 +1,4 @@
 ---
-title: context
-order: 1
----
-
-## <Information advantage>
-
-- Todd services are highly specialized and directly integrated with the operations of our clients delivered through the platform.
-- Todd client support is known as being legendary. Almost 24/7 human response and proactive training.
-- Todd's platform is intended for for small and medium scale diversified farms, not large scale monoculture.
-- applys technology to cut down costs
-- Todd is extremely proactive about platform data integrity.
-- Todd emphasizes seamless front-to-back services to the world's most important sustainable farms via proprietary systems build to meet specific client needs.
-- Instead of a self-service portal, the focus is on direct relationships and dedicated support from Todd's client advisory team.
-
-## <Action advantage>
-
-Todd provides actionable information to natuarally improve the farm.
-
-### <Becoming a Client>
-
-Becoming a client is very doable, but it is intentionally not self-serve. Scale doesn’t disqualify a farm, budget and use case matter more. You contact Todd, they qualify you, and you agree to a contract (usually annual or multi-year). Once agreed, Todd sets up account data, training sessions and offer almost 24/7 and very responsive client support.
-
-Qualification is about use case and farm standards, not size or revenue:
-
-- “Does this client need detailed agronomic data?”
-- “Will this client use the platform daily?”
-- “Are they in a decision-making role?”
-
-A 1-5 person farm is preferred over a 50-person farm that might use it occasionally.
-
-Todd assumes the target clients are:
-
-- Are profitable
-- The cost is absorbed as infrastructure
-- The platform’s price is justifable from day one.
-
-Todd may not be suitable if the farm:
-
-- Only needs basic farm analytics
-- Not profitable
-- The cost affects runway or margins
-
-Application > receive live, guided demos tailored to their farm, with heavy emphasis on speed, depth, and “This is how professionals do it” > Onboarding
-
-### <Cost>
-
-Access to Todd's platform ranges from $22k to $32k annually, but additional services can increase the cost signifcantly. Todd's cost is reasonable considering it provides a structural utility, a workstation, and a industry standard. And its considered cheaper then hiring a part time farm hand for what they offer.
-
-Discounts may apply for:
-
-- Multiple accounts (2 or more)
-- Long-term contracts (2 or more years)
-- Short-term service restrictions
-
-Todd does not provide “small scale” or “new client” pricing, but notes that small scale farms do use Todd heavily.
-
-
-
-
----
 title: Context
 order: 1
 ---
@@ -78,6 +18,10 @@ order: 1
 - Todd is designed for small to medium-scale, diversified, branded farms.
 - Todd emphasizes accuracy, speed, and data integrity over breadth or mass adoption.
 
+### Is your lab accredited?
+
+Yes, our partner lab is ISO/IEC 17025:2017, 2016 TNI, CDFA, ALP Proficiency, NAPT Proficiency and FDA’s Good Laboratory Practices accredited.
+
 ## Information Advantage
 
 - Services are highly specialized and integrated directly into client operations.
@@ -87,6 +31,10 @@ order: 1
 - Technology is applied specifically to reduce operational cost and decision friction.
 - Systems are proprietary and built to meet concrete client needs, not generic use cases.
 - Todd prioritizes long-term client relationships over volume or churn optimization.
+
+### How do you determine what minerals are tested?
+
+Our expert science team designed our tests to target the minerals that are likely to be present in a given soil sample, while striking a balance between low-cost testing and a "mineral density" profile that represents a holistic overview of most farms. Some minerals are omitted due to cost.
 
 ## Action Advantage
 
@@ -103,10 +51,8 @@ Client onboarding follows a qualification-driven process based on use case and s
 Process:
 1. Initial contact
 2. Qualification based on use case
-3. Live, guided demo tailored to the specific farm
-4. Contract (typically annual or multi-year)
 5. Account setup, data integration, and training
-6. Ongoing high-touch client support
+6. Ongoing client support with heavy emphasis on speed, depth, and “This is how professionals do it”
 
 Qualification criteria focus on:
 - Need for detailed agronomic and operational data
@@ -114,6 +60,10 @@ Qualification criteria focus on:
 - Decision-making authority of the user
 
 A 1–5 person farm that uses Todd daily is preferred over a larger operation with occasional usage.
+
+### How do I get my soil samples to you?
+
+You’ll receive a welcome package containing all the necessary collection materials, including envelopes and pre-paid shipping labels.
 
 ## Ideal Client Profile
 
@@ -146,3 +96,19 @@ Discounts may apply for:
 - Limited-scope or restricted service agreements
 
 Todd does not offer “small-scale” or “new client” pricing, though small-scale farms frequently use the platform extensively.
+
+### Is my data secure?
+
+Your data is completely secure and private to you unless you choose otherwise.
+
+### Can I pay month by month?
+
+Yes. You'll be billed monthly for the year contract.
+
+### Can I cancel my contract?
+
+Sometimes. Contact your client service advisor for help.
+
+### What happens to my data and account if I cancel?
+
+Your account reverts to data-retreval only access. All data that is owned by you is downloadable, but you’ll lose access to analytics and Intergrated Management Strategies.
