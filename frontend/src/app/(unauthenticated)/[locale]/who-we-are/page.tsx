@@ -2,13 +2,14 @@
 
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui';
-import Image from 'next/image';
-import { Link } from '@/i18n/config';
+import { Button } from '@/components/common';
 import HeaderImg from '@/components/common/header-img/header-img';
+import { Link } from '@/i18n/config';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useRef } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 
 /**
  * Who We Are page component
@@ -23,6 +24,7 @@ export default function WhoWeArePage() {
   });
   const leftImageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
   const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 200]);
+  const easeOutCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
   return (
     <>
@@ -33,38 +35,52 @@ export default function WhoWeArePage() {
           overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
         />
       </div>
-      <div className="flex flex-col justify-center items-center gap-16 mt-12 max-w-250 w-[90vw] mx-auto">
-        <div className="space-y-8">
-          <h1 className="text-left text-3xl md:text-4xl">{t('title')}</h1>
-
-          <div className="font-light space-y-4">
-            <p>{t('intro.paragraphs.0')}</p>
-            <p>{t('intro.paragraphs.1')}</p>
-            <p>{t('intro.paragraphs.2')}</p>
+      <main className="flex flex-col mx-auto max-w-[1200px]">
+        {/* Hero Text Section */}
+        <motion.div
+          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+          initial={{ opacity: 0.5, y: 34 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.3, ease: 'easeOut' }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <div className="flex mb-10 flex-col max-w-[910px]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
+              {t('title')}
+            </h2>
+            <div className="text-sm md:text-normal lg:text-base font-light leading-relaxed space-y-4">
+              <p>{t('intro.paragraphs.0')}</p>
+              <p>{t('intro.paragraphs.1')}</p>
+              <p>{t('intro.paragraphs.2')}</p>
+            </div>
           </div>
-        </div>
+        </motion.div>
+        {/* Culture Section */}
+        <div className="w-full flex flex-col h-fit px-12 md:px-36 lg:px-26 py-8 md:py-6">
+          <div className="flex flex-col gap-6 lg:flex-row md:justify-between lg:justify-around lg:gap-18 lg:max-w-[1200px]">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[200px] md:max-w-[250px] lg:max-w-[350px] leading-tight font-light md:basis-5/8">
+              {t('culture.heading.line1')}
+            </h2>
+            <div className="flex items-left flex-col md:basis-2/3 items-left">
+              <p className="text-normal md:text-base lg:text-lg font-thin leading-relaxed">
+                {t('culture.description')}
+              </p>
 
-        <div className="flex flex-col md:flex-row gap-6 md:gap-32">
-          <h2 className="text-2xl md:text-3xl flex flex-col text-nowrap">
-            <span>{t('culture.heading.line1')}</span>
-            <span>{t('culture.heading.line2')}</span>
-          </h2>
-
-          <div className="flex flex-col font-light gap-4">
-            <p>{t('culture.description')}</p>
-
-            <Button
-              variant="outline"
-              className="rounded-4xl py-5 px-10 max-w-[200px] mx-auto"
-            >
-              <Link href="/careers">{t('culture.cta.careers')}</Link>
-            </Button>
+              <Button
+                variant="outline"
+                size="md"
+                className="px-6 py-2 max-w-[210px] self-start font-thin mt-8"
+                text={t('culture.cta.careers')}
+                href="/careers"
+                showArrow={true}
+              />
+            </div>
           </div>
         </div>
 
         <div
           ref={imageSectionRef}
-          className="w-full mb-50 flex flex-col items-center h-fit py-8 md:py-10"
+          className="w-full mb-40 flex flex-col items-center h-fit py-8 md:py-10"
         >
           <div className="mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-20">
             <motion.div
@@ -96,20 +112,45 @@ export default function WhoWeArePage() {
           </div>
         </div>
 
-        <div className="space-y-16">
-          <h2 className="text-2xl md:text-3xl">{t('competencies.title')}</h2>
-
-          <div className="font-light flex flex-col justify-center items-center gap-16">
-            <p>{t('competencies.items.0')}</p>
-            <p>{t('competencies.items.1')}</p>
-            <p>{t('competencies.items.2')}</p>
-          </div>
+        {/* Competencies Section */}
+        <div className="w-full mb-30 flex justify-center text-center items-center md:px-28 lg:px-40">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[450px] lg:max-w-[550px] leading-tight font-thin">
+            {t('competencies.title')}
+          </h2>
         </div>
+        {/* Competencies Items Section */}
 
-        <Button variant="ghost" className="mx-auto text-3xl my-32">
-          <Link href="/what-we-do">{t('navigation.whatWeDo')}</Link>
-        </Button>
-      </div>
+        <motion.div className="mb-30 space-y-16 font-light flex flex-col justify-center items-center gap-16 max-w-[350px] md:max-w-[550px] lg:max-w-[550px] mx-auto">
+          {[0, 1, 2].map((index) => (
+            <motion.p
+              key={`competencies-items-${index}`}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 1.3,
+                ease: easeOutCurve,
+                delay: index * 0.2,
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="text-normal md:text-base lg:text-lg font-thin leading-relaxed"
+            >
+              {t(`competencies.items.${index}`)}
+            </motion.p>
+          ))}
+        </motion.div>
+
+        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
+          <Link
+            href="/what-we-do"
+            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
+          >
+            {t('navigation.whatWeDo')}
+            <span className="mt-1">
+              <HiArrowLongRight className="size-12" />
+            </span>
+          </Link>
+        </div>
+      </main>
     </>
   );
 }

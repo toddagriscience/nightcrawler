@@ -10,16 +10,15 @@
     },
     "culture": {
       "heading": {
-        "line1": "Impulsados por",
-        "line2": "Nuestra Cultura"
+        "line1": "Impulsados por nuestra Cultura"
       },
       "description": "Hemos construido una cultura distintiva que define todo lo que hacemos, ya sea trabajando, socializando o apoyando a nuestras comunidades. Nuestro liderazgo comparte la determinación y la responsabilidad de formar y desarrollar a la próxima generación de líderes.",
       "cta": {
-        "careers": "Carreras →"
+        "careers": "Carreras"
       }
     },
     "competencies": {
-      "title": "Todd se diferencia por una combinación de tres competencias clave",
+      "title": "Todd se diferencia por una combinación de tres competencias clave.",
       "items": [
         "Experiencia en gestión orgánica y biodinámica",
         "Comprensión de las demandas y canales del consumidor moderno",
@@ -27,7 +26,7 @@
       ]
     },
     "navigation": {
-      "whatWeDo": "Qué Hacemos →"
+      "whatWeDo": "Qué hacemos"
     }
   }
 }
