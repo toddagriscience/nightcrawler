@@ -32,13 +32,13 @@ export default function Careers() {
     <>
       <div className="max-w-[520px] sm:max-w-[600px] md:max-w-[1200px] mx-auto text-center sm:text-left">
         <HeaderImg
-          src="/marketing/todd-university-xs1.png"
+          src="/marketing/todd-university-xs-header.png"
           alt="Todd University"
           wrapperClassName="block md:hidden"
           imageClassName="transition-all duration-500 ease-in-out"
         />
         <HeaderImg
-          src="/marketing/todd-university1.png"
+          src="/marketing/todd-university-header.png"
           alt="Todd University"
           wrapperClassName="hidden md:block"
           imageClassName="transition-all duration-500 ease-in-out"
