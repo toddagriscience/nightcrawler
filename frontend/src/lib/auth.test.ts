@@ -305,6 +305,7 @@ describe('signUpUser', () => {
 describe('inviteUser', () => {
   beforeEach(() => {
     vitest.clearAllMocks();
+    process.env.NEXT_PUBLIC_BASE_URL = 'https://toddagriscience.com';
   });
 
   it('returns data on successful invite', async () => {
