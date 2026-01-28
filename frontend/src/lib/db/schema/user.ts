@@ -36,7 +36,10 @@ export const user = pgTable('user', {
   /** Did this person manage and control (but not own) the parcel for the past 3 years? */
   didManageAndControl: boolean(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** THIS SHOULD NEVER BE MODIFIED AFTER IT IS CREATED! A "copy" of the digital acceptance of the Terms and Conditions from Todd. */
@@ -54,6 +57,9 @@ export const accountAgreementAcceptance = pgTable(
     /** The version of the TAC accepted. */
     version: varchar({ length: 200 }).notNull(),
     createdAt: timestamp().notNull().defaultNow(),
-    updatedAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp()
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   }
 );
