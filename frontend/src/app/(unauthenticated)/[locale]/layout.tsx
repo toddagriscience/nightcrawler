@@ -85,7 +85,7 @@ const webSiteStructuredData: WithContext<WebSite> = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Todd Agriscience',
-  alternateName: ['Todd', 'Todd Agriscience'],
+  alternateName: ['Todd Agriscience'],
 };
 
 export const viewport: Viewport = {
