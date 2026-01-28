@@ -2,13 +2,14 @@
 
 'use client';
 
-import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
-import Link from 'next/link';
+import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 import clsx from 'clsx';
+import { ExternalLink } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { SanityDocument } from 'next-sanity';
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import Link from 'next/link';
+import { useState } from 'react';
+import { HiArrowLongDown } from 'react-icons/hi2';
 
 interface LatestNewsTableProps {
   items: SanityDocument[];
@@ -37,7 +38,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
         <div
           key={item.slug.current}
           className={clsx(
-            'grid sm:grid-cols-3 grid-cols-4 items-center px-4 py-4 text-sm',
+            'grid sm:grid-cols-3 grid-cols-4 items-center px-4 py-2 md:py-3 lg:py-4 text-xs md:text-sm font-normal md:font-light',
             index !== visibleCount - 1 &&
               index !== items.length - 1 &&
               'border-b border-[#555555]'
@@ -54,7 +55,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             rel="noopener noreferrer"
             aria-label={`Open ${item.title} in this tab`}
           >
-            <div className="flex items-center justify-end gap-1 hover:underline">
+            <div className="flex items-center justify-end text-right gap-1 hover:underline">
               {item.source}
               <ExternalLink className="h-3.5 w-3.5 transition" />
             </div>
@@ -74,9 +75,10 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
         <div
           role="button"
           onClick={handleLoadMore}
-          className="cursor-pointer px-4 py-4 text-left text-sm hover:underline"
+          className="mt-4 ml-4 cursor-pointer text-left text-base md:text-lg hover:underline w-fit"
         >
-          Load more ↓
+          Load more{' '}
+          <HiArrowLongDown className="mt-1 size-6 md:size-8 inline-block" />
         </div>
       )}
     </div>

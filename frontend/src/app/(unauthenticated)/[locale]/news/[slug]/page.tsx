@@ -1,24 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import ShareArticleButtons from '@/components/common/share-article/share-article';
-import SanityImage from '@/components/sanity/sanity-image';
+import SanityHeaderImage from '@/components/sanity/sanity-header-image';
 import SanityNormal from '@/components/sanity/sanity-normal';
 import { Link } from '@/i18n/config';
 import sanityQuery from '@/lib/sanity/query';
+import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound, redirect } from 'next/navigation';
 import { HiArrowLongLeft } from 'react-icons/hi2';
-import ArticleHeaderImage from './components/article-header-image';
-
-/** Sanity helpers. See: https://github.com/portabletext/react-portabletext#customizing-components */
-const portableTextComponents: Partial<PortableTextReactComponents> = {
-  types: {
-    image: SanityImage,
-  },
-  block: {
-    normal: SanityNormal,
-  },
-};
 
 /**
  * A news article page, rendered with Sanity CMS.
@@ -45,9 +35,20 @@ export default async function NewsPage({
     redirect(article.offSiteUrl);
   }
 
+  const headerImageUrl = article.headerImage
+    ? urlFor(article.headerImage)?.url()
+    : undefined;
+
+  /** Sanity helpers. See: https://github.com/portabletext/react-portabletext#customizing-components */
+  const portableTextComponents: Partial<PortableTextReactComponents> = {
+    block: {
+      normal: (props) => <SanityNormal {...props} summary={article.summary} />,
+    },
+  };
+
   return (
     <div className="max-w-[80%] mx-auto">
-      <main className="mt-20 mb-20 container mx-auto min-h-screen flex flex-col gap-6 md:gap-4">
+      <main className="mt-20 container mx-auto min-h-screen flex flex-col gap-10 md:gap-4">
         {/* Navigation back to /news page */}
         <div className="flex flex-col gap-2 w-fit">
           <Link
@@ -59,7 +60,7 @@ export default async function NewsPage({
           </Link>
         </div>
         {/* Article Header */}
-        <div className="flex mb-5 md:mb-9 flex-col items-center justify-center max-w-[80%] lg:px-5 mx-auto">
+        <div className="flex lg:mb-6 flex-col items-center justify-center max-w-[78%] mx-auto">
           <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl w-full text-left leading-tight font-thin md:mb-6 mb-10 lg:mb-12 mt-4">
             {article.title}
           </h2>
@@ -76,16 +77,19 @@ export default async function NewsPage({
           </div>
         </div>
         {/* Article Header Image */}
-        <div className=" mb-16 flex flex-col items-center justify-center w-full mx-auto">
-          <ArticleHeaderImage
-            src="/pinklemonade.webp"
-            alt="test image"
-            wrapperClassName="w-full"
-            overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
-          />
-        </div>
+        {article.headerImage && (
+          <div className="mb-8 md:mb-12 lg:mb-16 flex flex-col items-center justify-center w-full mx-auto">
+            <SanityHeaderImage
+              headerImage={article.headerImage}
+              src={headerImageUrl}
+              alt={article.headerImage.alt ?? article.title ?? ''}
+              wrapperClassName="w-full"
+              overlayClassName="transition-all duration-200 ease-in-out"
+            />
+          </div>
+        )}
         {/* Article Content */}
-        <div className="mb-20 md:mb-44 flex flex-col gap-10 items-center justify-center max-w-[85%] mx-auto text-normal md:text-base lg:text-base font-light leading-relaxed text-center">
+        <div className="mb-10 sm:mb-20 md:mb-30 flex flex-col gap-10 items-center justify-center max-w-[80%] md:max-w-[70%] mx-auto text-normal md:text-base lg:text-base font-light leading-relaxed text-center">
           {Array.isArray(article.content) && (
             <PortableText
               value={article.content}

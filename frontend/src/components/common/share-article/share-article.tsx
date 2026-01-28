@@ -41,13 +41,13 @@ export default function ShareArticleButtons({ title }: { title: string }) {
       <IconWrapper
         link={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
       >
-        <FaXTwitter />
+        <FaXTwitter className="text-foreground/80" />
       </IconWrapper>
 
       <IconWrapper
         link={`https://www.linkedin.com/feed?shareActive&mini=true&text=${encodedUrl}`}
       >
-        <FaLinkedinIn />
+        <FaLinkedinIn className="text-foreground/80" />
       </IconWrapper>
 
       {/** Same idea as other uses of IconWrapper, just requires a tooltip. See docs for this component. */}
@@ -65,7 +65,7 @@ export default function ShareArticleButtons({ title }: { title: string }) {
                 size="icon"
                 aria-label="Share on Facebook"
               >
-                <FaFacebookF />
+                <FaFacebookF className="text-foreground/80" />
               </Button>
             </div>
           </TooltipTrigger>
@@ -81,7 +81,7 @@ export default function ShareArticleButtons({ title }: { title: string }) {
       </div>
 
       <IconWrapper link={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}>
-        <HiOutlineMail />
+        <HiOutlineMail className="text-foreground/80" />
       </IconWrapper>
     </>
   );

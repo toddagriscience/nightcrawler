@@ -48,12 +48,16 @@ const NewsCard = ({
             isDark={isDark}
           />
           {/* <div className={`p-4 ${isDark ? 'text-white' : ''}`}> */}
-          <div className={`p-4`}>
-            <h2>{title}</h2>
+          <div className="p-4 gap-1 flex flex-col">
+            <h2 className="text-sm md:text-normal lg:text-base font-thin">
+              {title}
+            </h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
-            <h3 className="text-xl">{excerpt}</h3>
+            <h3 className="text-lg md:text-xl italic font-light">
+              {excerpt.length > 50 ? `${excerpt.slice(0, 126)}...` : excerpt}
+            </h3>
           </div>
         </div>
       </Link>
