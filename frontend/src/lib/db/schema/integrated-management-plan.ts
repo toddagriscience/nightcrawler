@@ -30,5 +30,8 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   /** The date this plan was updated, if it ever was */
   updated: date({ mode: 'date' }),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

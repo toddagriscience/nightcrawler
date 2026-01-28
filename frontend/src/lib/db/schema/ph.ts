@@ -31,5 +31,8 @@ export const ph = pgTable('ph', {
   /** A general tag for the results of a ph analysis */
   tag: levelCategory(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
