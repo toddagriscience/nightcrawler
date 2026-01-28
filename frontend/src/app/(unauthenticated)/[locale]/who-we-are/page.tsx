@@ -1,15 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { useTranslations } from 'next-intl';
-import { PageHero } from '@/components/common';
-import { Card, CardContent } from '@/components/ui';
-import ValuesCard from './components/values-card';
-import { Metadata } from 'next';
-import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Who We Are',
-};
+import { Button } from '@/components/common';
+import HeaderImg from '@/components/common/header-img/header-img';
+import { Link } from '@/i18n/config';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { useRef } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 
 /**
  * Who We Are page component
@@ -17,38 +17,138 @@ export const metadata: Metadata = {
  */
 export default function WhoWeArePage() {
   const t = useTranslations('whoWeAre');
+  const imageSectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: imageSectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const leftImageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
+  const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 200]);
+  const easeOutCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
   return (
     <>
-      <PageHero title={t('title')} subtitle={t('subtitle')} />
-      <div className="w-full mb-32 flex flex-col bg-secondary h-fit px-8 lg:px-16 py-16 lg:py-24">
-        <div className="flex flex-col gap-4 max-w-[900px] mx-auto">
-          <div className="flex lg:flex-row flex-col flex-wrap gap-4">
-            <Card className="lg:max-w-110">
-              <CardContent className="p-4 h-full flex flex-col justify-center">
-                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
-                  {t('mission.title')}
-                </h2>
-                <p className="md:text-lg text-base font-light">
-                  {t('mission.description')}
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="lg:max-w-110">
-              <CardContent className="p-4 h-full flex flex-col justify-center">
-                <h2 className="text-4xl font-light md:mb-6 mb-4 lg:mb-14">
-                  {t('vision.title')}
-                </h2>
-                <p className="md:text-lg text-base font-light">
-                  {t('vision.description')}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          <ValuesCard />
-        </div>
+      <div className="max-w-[1400px] mx-auto">
+        <HeaderImg
+          src="/marketing/who-we-are-header.webp"
+          alt="Meadow"
+          overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+        />
       </div>
-      <Disclaimer translationLoc="whoWeAre.disclaimers" disclaimerCount={7} />
+      <main className="flex flex-col mx-auto max-w-[1200px]">
+        {/* Hero Text Section */}
+        <motion.div
+          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+          initial={{ opacity: 0.5, y: 34 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.3, ease: 'easeOut' }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <div className="flex mb-10 flex-col max-w-[910px]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
+              {t('title')}
+            </h2>
+            <div className="text-sm md:text-normal lg:text-base font-light leading-relaxed space-y-4">
+              <p>{t('intro.paragraphs.0')}</p>
+              <p>{t('intro.paragraphs.1')}</p>
+              <p>{t('intro.paragraphs.2')}</p>
+            </div>
+          </div>
+        </motion.div>
+        {/* Culture Section */}
+        <div className="w-full flex flex-col h-fit px-12 md:px-36 lg:px-26 py-8 md:py-6">
+          <div className="flex flex-col gap-6 lg:flex-row md:justify-between lg:justify-around lg:gap-18 lg:max-w-[1200px]">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[200px] md:max-w-[250px] lg:max-w-[350px] leading-tight font-light md:basis-5/8">
+              {t('culture.heading.line1')}
+            </h2>
+            <div className="flex items-left flex-col md:basis-2/3 items-left">
+              <p className="text-normal md:text-base lg:text-lg font-thin leading-relaxed">
+                {t('culture.description')}
+              </p>
+
+              <Button
+                variant="outline"
+                size="md"
+                className="px-6 py-2 max-w-[210px] self-start font-thin mt-8"
+                text={t('culture.cta.careers')}
+                href="/careers"
+                showArrow={true}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          ref={imageSectionRef}
+          className="w-full mb-40 flex flex-col items-center h-fit py-8 md:py-10"
+        >
+          <div className="mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-20">
+            <motion.div
+              style={{ y: leftImageY }}
+              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
+            >
+              <Image
+                src="/marketing/who-we-are-people.png"
+                alt=""
+                width={500}
+                height={500}
+                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
+                className="h-auto w-full bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
+              />
+            </motion.div>
+            <motion.div
+              style={{ y: rightImageY }}
+              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
+            >
+              <Image
+                src="/marketing/who-we-are-people-2.png"
+                alt=""
+                width={500}
+                height={500}
+                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
+                className="h-auto w-full bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
+              />
+            </motion.div>
+          </div>
+        </div>
+        {/* Competencies Section */}
+        <div className="w-full mb-30 flex justify-center text-center items-center md:px-28 lg:px-40">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[450px] lg:max-w-[550px] leading-tight font-thin">
+            {t('competencies.title')}
+          </h2>
+        </div>
+        {/* Competencies Items Section */}
+
+        <motion.div className="mb-30 space-y-16 font-light flex flex-col justify-center items-center gap-16 max-w-[350px] md:max-w-[550px] lg:max-w-[550px] mx-auto">
+          {[0, 1, 2].map((index) => (
+            <motion.p
+              key={`competencies-items-${index}`}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 1.3,
+                ease: easeOutCurve,
+                delay: index * 0.2,
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="text-normal md:text-base lg:text-lg font-thin leading-relaxed"
+            >
+              {t(`competencies.items.${index}`)}
+            </motion.p>
+          ))}
+        </motion.div>
+
+        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
+          <Link
+            href="/what-we-do"
+            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
+          >
+            {t('navigation.whatWeDo')}
+            <span className="mt-1">
+              <HiArrowLongRight className="size-12" />
+            </span>
+          </Link>
+        </div>
+      </main>
     </>
   );
 }

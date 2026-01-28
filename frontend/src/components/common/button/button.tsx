@@ -2,11 +2,12 @@
 
 'use client';
 
-import React from 'react';
 import { Link } from '@/i18n/config';
-import { ArrowRight } from 'lucide-react';
-import { ButtonProps } from './types/button';
+import { cn } from '@/lib/utils';
+import React from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 import { buttonVariants } from './themes/button';
+import { ButtonProps } from './types/button';
 
 /**
  * Basic button component
@@ -45,11 +46,11 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <Link
       href={href || ''}
-      className={combinedClasses}
+      className={cn(combinedClasses, 'flex items-center justify-center gap-2')}
       data-testid="button-component"
     >
       {text}
-      {showArrow && <ArrowRight className="text-2xl" />}
+      {showArrow && <HiArrowLongRight className="size-8" />}
     </Link>
   );
 };

@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import Quote from './quote';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import Quote from './quote';
 
 describe('Quote', () => {
   it('renders without crashing', () => {
@@ -25,7 +25,7 @@ describe('Quote', () => {
     const aboutLink = screen.getByTestId('button-component');
     expect(aboutLink).toBeInTheDocument();
     expect(aboutLink).toHaveAttribute('href', '/who-we-are');
-    expect(aboutLink).toHaveTextContent('Learn More');
+    expect(aboutLink).toHaveTextContent('Who We Are');
   });
 
   it('renders normally without isLoading prop', () => {

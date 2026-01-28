@@ -6,11 +6,23 @@
       "title": "Careers at Todd"
     },
     "disclaimers": {
-      "0": "Todd is a equal opportunity employer in the regions where we operate.",
-      "1": "Todd Agriscience, Inc. and our business entities are committed to offering an equal opportunity for all applicants. We do not discriminate based on race, color, religion, national origin, age, sex, marital status, ancestry, neurotype, disability, veteran status, gender identity, sexual orientation or any other category protected by local law.",
-      "2": "If you need additional assistance throughout the hiring process related to a health condition or there is something our team can do to enable a more accessible experience, please notify our team at support@toddagriscience.com",
-      "3": "Under the U.S. Transparency in Coverage act, Todd is required to provide U.S. pricing information to U.S. consumers before they receive care under our insurance plans. To review Todd’s U.S. medical insurance pricing structure, please click here: https://transparency-in-coverage.collectivehealth.com/index.html.",
-      "4": "To learn more about how we process your personal information and your rights in regards to your personal information as a Todd Applicant, please visit our Privacy Policy."
+      "0": "Todd es un empleador de igualdad de oportunidades en las regiones donde operamos.",
+      "1": "Todd Agriscience, Inc. y nuestras entidades comerciales están comprometidas con ofrecer una oportunidad igual para todos los candidatos. No discriminamos basados en raza, color, religión, origen nacional, edad, sexo, estado civil, ascendencia, neurotipo, discapacidad, estado de veterano, identidad de género, orientación sexual o cualquier otra categoría protegida por la ley local.",
+      "2": "Si necesitas asistencia adicional durante el proceso de contratación relacionada con una condición de salud o hay algo que nuestro equipo puede hacer para habilitar una experiencia más accesible, por favor infórmanos a nuestro equipo en support@toddagriscience.com",
+      "3": "Bajo la Ley de Transparencia en Cobertura de EE. UU., Todd está obligado a proporcionar información de precios de EE. UU. a consumidores de EE. UU. antes de que reciban atención bajo nuestros planes de seguro. Para revisar la estructura de precios de seguros médicos de EE. UU. de Todd, por favor haz clic aquí: https://transparency-in-coverage.collectivehealth.com/index.html.",
+      "4": "Para aprender más sobre cómo procesamos tu información personal y tus derechos en relación a tu información personal como candidato de Todd, por favor visita nuestra Política de Privacidad."
+    }
+  },
+  "externship": {
+    "title": "Carreras Tempranas en Todd",
+    "subtitle": "La decisión más importante de tu carrera es elegir dónde comienza. Nuestro externship acelerado para talento temprano es diseñado para construir fundamentos sólidos para una vida de aprendizaje y logro.",
+    "program": {
+      "title": "Acelerador de Externship",
+      "description": "El programa de Externship de Todd es un acelerador de 4 semanas que proporciona experiencia práctica a estudiantes en un entorno de startup. Emparejado en equipos pequeños, trabajarás junto a otros para entregar un proyecto real, y “graduar” con un diploma que realmente has ganado."
+    },
+    "apply": {
+      "title": "Aplicaciones para Primavera ‘26 ahora abiertas.",
+      "button": "Aplicar ahora"
     }
   }
 }

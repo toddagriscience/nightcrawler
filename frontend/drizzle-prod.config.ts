@@ -14,6 +14,6 @@ export default defineConfig({
     user: process.env.PROD_DATABASE_USER,
     password: process.env.PROD_DATABASE_PASSWORD,
     database: process.env.PROD_DATABASE_DATABASE!,
-    ssl: 'verify-full',
+    ssl: { ca: process.env.PROD_DATABASE_PEM_CERT!, rejectUnauthorized: false },
   },
 });
