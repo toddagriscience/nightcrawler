@@ -4,12 +4,11 @@ import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
-
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
+import { WebSite, WithContext } from 'schema-dts';
 
 /**
  * Generate metadata for each locale
@@ -82,6 +81,13 @@ export async function generateMetadata({
   };
 }
 
+const webSiteStructuredData: WithContext<WebSite> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Todd Agriscience',
+  alternateName: ['Todd', 'Todd Agriscience'],
+};
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -124,6 +130,12 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webSiteStructuredData),
+        }}
+      />
       <SmoothScroll>
         <Header />
         <FadeIn>{children}</FadeIn>
