@@ -2,19 +2,18 @@
 
 'use client';
 
-import { RiLinkedinLine } from 'react-icons/ri';
-import { FaXTwitter } from 'react-icons/fa6';
-import { FaFacebook } from 'react-icons/fa';
-import { HiOutlineMail } from 'react-icons/hi';
 import { Button } from '@/components/ui';
-import logger from '@/lib/logger';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useState } from 'react';
 import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import logger from '@/lib/logger';
+import { useState } from 'react';
+import { FaFacebookF } from 'react-icons/fa';
+import { FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
+import { HiOutlineMail } from 'react-icons/hi';
 
 /** Primarily used for `/en/news/[slug]`. Provides a few buttons that automatically share articles to social platforms. Facebook is the one exception: due to needing to make an account, among other things, with Facebook's developer platform, clicking on the Facebook icon only copies the link of the article to your clipboard and displays a small "Copied!" dialog.
  *
@@ -48,7 +47,7 @@ export default function ShareArticleButtons({ title }: { title: string }) {
       <IconWrapper
         link={`https://www.linkedin.com/feed?shareActive&mini=true&text=${encodedUrl}`}
       >
-        <RiLinkedinLine />
+        <FaLinkedinIn />
       </IconWrapper>
 
       {/** Same idea as other uses of IconWrapper, just requires a tooltip. See docs for this component. */}
@@ -58,20 +57,22 @@ export default function ShareArticleButtons({ title }: { title: string }) {
           open={isFbTooltipOpen}
         >
           <TooltipTrigger asChild>
-            <Button
-              onMouseOut={() => setIsFbCopied(false)}
-              onClick={() => copyToClipboard()}
-              variant="ghost"
-              size="icon"
-              aria-label="Share on Facebook"
-            >
-              <FaFacebook />
-            </Button>
+            <div className="flex items-center border border-foreground/80 rounded-full justify-center w-full h-full">
+              <Button
+                onMouseOut={() => setIsFbCopied(false)}
+                onClick={() => copyToClipboard()}
+                variant="ghost"
+                size="icon"
+                aria-label="Share on Facebook"
+              >
+                <FaFacebookF />
+              </Button>
+            </div>
           </TooltipTrigger>
 
           <TooltipContent
             side="bottom"
-            className="px-2 py-0.5 text-sm m-0 relative bottom-2"
+            className="px-2 py-0.5 text-sm m-0 relative bottom-2 bg-background"
             onClick={() => copyToClipboard()}
           >
             <p>{isFbCopied ? 'Copied!' : 'Click to copy'}</p>
@@ -94,13 +95,15 @@ function IconWrapper({
   link: string;
 }) {
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => window.open(link, '_blank')}
-      aria-label="Share via Email"
-    >
-      {children}
-    </Button>
+    <div className="flex items-center border border-foreground/80 rounded-full justify-center w-full h-full">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => window.open(link, '_blank')}
+        aria-label="Share via Email"
+      >
+        {children}
+      </Button>
+    </div>
   );
 }
