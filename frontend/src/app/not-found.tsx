@@ -3,21 +3,22 @@
 import { FadeIn, SmoothScroll } from '@/components/common';
 import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
 import { Footer, Header } from '@/components/landing';
+import { Link } from '@/i18n/config';
 import { createClient } from '@/lib/supabase/server';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
-import Link from 'next/link';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 export default async function NotFound() {
-  const t = await getTranslations({ locale: 'en', namespace: 'common' });
-  const messages = await getMessages({ locale: 'en' });
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: 'common' });
+  const messages = await getMessages({ locale });
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   return (
-    <NextIntlClientProvider locale="en" messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <SmoothScroll>
         {user ? <AuthenticatedHeader /> : <Header />}
         <FadeIn>

@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import NotFound from './not-found';
 
@@ -33,6 +33,7 @@ vi.mock('@/components/common', () => ({
 vi.mock('next-intl/server', () => ({
   getTranslations: vi.fn(),
   getMessages: vi.fn().mockResolvedValue({}),
+  getLocale: vi.fn(),
 }));
 
 vi.mock('next-intl', () => ({
@@ -54,6 +55,8 @@ vi.mock('@/lib/supabase/server', () => ({
 describe('NotFound Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    (getLocale as Mock).mockResolvedValue('en');
 
     // Default translation mock
     (getTranslations as unknown as Mock).mockResolvedValue(
@@ -113,5 +116,15 @@ describe('NotFound Page', () => {
     render(jsx);
 
     expect(screen.getByText('Page not available')).toBeInTheDocument();
+  });
+
+  it('should use the correct locale', async () => {
+    (getLocale as Mock).mockResolvedValue('es');
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+
+    const jsx = await NotFound();
+    render(jsx);
+
+    expect(getTranslations).toHaveBeenCalledWith({ locale: 'es', namespace: 'common' });
   });
 });
