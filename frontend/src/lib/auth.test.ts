@@ -1,15 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { AuthError } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import {
-  login,
   checkAuthenticated,
-  logout,
   getUserEmail,
-  signUpUser,
   inviteUser,
+  login,
+  logout,
+  signUpUser,
 } from './auth';
-import { AuthError } from '@supabase/supabase-js';
 
 vitest.mock(import('./logger'), async (importActual) => {
   const actual = await importActual();
@@ -305,6 +305,7 @@ describe('signUpUser', () => {
 describe('inviteUser', () => {
   beforeEach(() => {
     vitest.clearAllMocks();
+    process.env.NEXT_PUBLIC_BASE_URL = 'https://toddagriscience.com';
   });
 
   it('returns data on successful invite', async () => {
@@ -319,7 +320,8 @@ describe('inviteUser', () => {
 
     expect(result).toEqual(fakeData);
     expect(mockInviteUserByEmail).toHaveBeenCalledWith('invited@example.com', {
-      redirectTo: 'https://toddagriscience.com/login',
+      redirectTo:
+        'https://toddagriscience.com/accept?email=invited%40example.com',
       data: {
         first_name: 'Jane',
         name: 'Jane',
@@ -353,7 +355,8 @@ describe('inviteUser', () => {
     expect(mockInviteUserByEmail).toHaveBeenCalledWith(
       'new@example.com',
       expect.objectContaining({
-        redirectTo: 'https://toddagriscience.com/login',
+        redirectTo:
+          'https://toddagriscience.com/accept?email=new%40example.com',
       })
     );
   });
