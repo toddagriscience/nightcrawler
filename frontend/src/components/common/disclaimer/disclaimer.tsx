@@ -20,7 +20,7 @@ export function Disclaimer({
   const t = useTranslations(translationLoc);
 
   return (
-    <section className="mb-32 max-w-[1200px] w-[80vw] mx-auto space-y-1 text-sm leading-relaxed font-light">
+    <section className="mb-32 max-w-[1200px] w-[80vw] mx-auto space-y-1 text-sm leading-relaxed font-light pl-8 indent-[-1rem]">
       {Array.from({ length: disclaimerCount }).map((_, i) => (
         <p key={i}>
           {i + 1}. {t(String(i))}

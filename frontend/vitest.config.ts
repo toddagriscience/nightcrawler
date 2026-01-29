@@ -20,6 +20,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // Alias '@' to the './src' directory
+      '@public': path.resolve(__dirname, './public'), // Alias '@' to the './src' directory
       '@assets': path.resolve(__dirname, './src/assets'), // Example of another alias
     },
   },

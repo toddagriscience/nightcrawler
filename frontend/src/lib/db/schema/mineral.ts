@@ -32,5 +32,8 @@ export const mineral = pgTable('mineral', {
   /** The unit which this mineral is being measured in. */
   units: varchar({ length: 100 }).notNull(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

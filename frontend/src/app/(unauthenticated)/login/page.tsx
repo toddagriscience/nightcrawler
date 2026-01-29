@@ -3,12 +3,12 @@
 'use client';
 
 import { FadeIn } from '@/components/common';
+import PublicInquiryModal from '@/components/common/public-inquiry-modal/public-inquiry-modal';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/actions/auth';
-import Link from 'next/link';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useActionState, useState } from 'react';
 
@@ -74,22 +74,27 @@ export default function Login() {
                   />
                 </Field>
                 <Field className="flex flex-row items-center justify-between">
-                  <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
-                    <Checkbox
-                      id="show-password"
-                      className="max-h-4 max-w-4 focus:ring-0!"
-                      onCheckedChange={() => setShowPassword(!showPassword)}
-                    />
-                    <FieldLabel htmlFor="show-password">
-                      Show Password
-                    </FieldLabel>
+                  <div className="flex flex-1 flex-row items-center gap-2">
+                    <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
+                      <Checkbox
+                        id="show-password"
+                        className="max-h-4 max-w-4 focus:ring-0!"
+                        onCheckedChange={() => setShowPassword(!showPassword)}
+                      />
+                      <FieldLabel htmlFor="show-password">
+                        Show Password
+                      </FieldLabel>
+                    </div>
+                    <div className="ml-auto">
+                      <PublicInquiryModal
+                        trigger={
+                          <span className="basis-[min-content] text-sm text-nowrap underline">
+                            Help
+                          </span>
+                        }
+                      />
+                    </div>
                   </div>
-                  <Link
-                    href={'/forgot-password'}
-                    className="basis-[min-content] text-sm text-nowrap underline"
-                  >
-                    Forgot Password
-                  </Link>
                 </Field>
               </FieldGroup>
             </FieldSet>

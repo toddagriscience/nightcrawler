@@ -40,7 +40,10 @@ export const managementZone = pgTable('management_zone', {
   /** The evaluated contamination risk of the zone. See the documentation of the enum for more details. */
   contaminationRisk: levelCategory(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** Represents a crop for a given field. */
@@ -62,7 +65,10 @@ export const crop = pgTable('crop', {
   /** Generic notes for each crop (a given client might want to list their reasoning behind using this crop, etc.) */
   notes: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** Represents a fertilizer that was used on a field */
@@ -82,7 +88,10 @@ export const fertilizer = pgTable('fertilizer', {
   /** Generic notes for each livestock */
   notes: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** Describes some animal/group of animals living on or spending the majority of their time on a given management zone. Also details when this animal/group of animals is "deployed" (when they're in the management zone). */
@@ -104,7 +113,10 @@ export const livestock = pgTable('livestock', {
   /** Generic notes for each livestock */
   notes: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** The type of pest, either an insect or a disease. */
@@ -129,5 +141,8 @@ export const pest = pgTable('pest', {
   /** Generic notes for each pest */
   notes: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

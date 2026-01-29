@@ -14,5 +14,8 @@ export const analysis = pgTable('analysis', {
   /** Date of the analysis */
   analysisDate: date({ mode: 'date' }).notNull(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

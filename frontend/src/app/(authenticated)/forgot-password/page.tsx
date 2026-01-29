@@ -59,7 +59,7 @@ export default function ForgotPassword() {
                     <Field>
                       <FieldLabel htmlFor="email">Email Address</FieldLabel>
                       <Input
-                        className="focus:ring-0!"
+                        className="focus:ring-0! bg-transparent"
                         placeholder="Email Address"
                         id="email"
                         data-testid="email"

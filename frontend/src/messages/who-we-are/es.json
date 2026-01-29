@@ -1,82 +1,32 @@
 {
   "whoWeAre": {
     "title": "Quiénes Somos",
-    "subtitle": "Aprende sobre nuestra misión, visión y valores que impulsan nuestro trabajo en agricultura regenerativa.",
-    "mission": {
-      "title": "Misión",
-      "description": "Nuestra misión es entregar resultados diferenciados a nuestros clientes aprovechando nuestra experiencia complementaria en agricultura regenerativa para satisfacer las necesidades del agricultor moderno."
+    "intro": {
+      "paragraphs": [
+        "Todd es una firma de agricultura generativa con múltiples estrategias, enfocada en generar valor agrícola superior a largo plazo para nuestros clientes.",
+        "Reunimos a personas extraordinarias, las equipamos con recursos y tecnología incomparables y las empoderamos para explorar nuevas posibilidades en la agricultura sostenible.",
+        "Nuestra firma despliega recursos para apoyar a explotaciones agrícolas prometedoras cuyas innovaciones están cambiando el mundo, impulsando un círculo virtuoso de mejora en la calidad del suelo y alimentos más saludables. Nuestro equipo de agronomía respalda la misión crítica de los productores de alimentos del mundo, desde reconocidas fincas costeras hasta regiones montañosas remotas."
+      ]
     },
-    "vision": {
-      "title": "Visión",
-      "description": "Asociar a grandes, crecientes, marcas de agricultura orgánica y biodinámica enfocadas en prácticas de agricultura regenerativa y forjar conexiones emocionales profundas con sus consumidores objetivo."
-    },
-    "values": {
-      "personalValues": {
-        "title": "Valores Personales",
-        "kindnessRespectIntegrity": {
-          "title": "Amabilidad, Respeto e Integridad",
-          "description": "Tratar a otros como queremos ser tratados, interna y externamente."
-        },
-        "humility": {
-          "title": "Humildad",
-          "description": "Escuchar y aprender unos de otros."
-        },
-        "transparency": {
-          "title": "Transparencia",
-          "description": "Comunicarse abiertamente y proporcionar comentarios honestos."
-        },
-        "giveBack": {
-          "title": "Retribuir",
-          "description": "Mejorar las comunidades en las que operamos."
-        }
+    "culture": {
+      "heading": {
+        "line1": "Impulsados por nuestra Cultura"
       },
-      "professionalValues": {
-        "title": "Valores Profesionales",
-        "drivenByExcellence": {
-          "title": "Impulsados por la Excelencia",
-          "description": "Buscar operar con los más altos estándares y entregar resultados diferenciados."
-        },
-        "clientFocused": {
-          "title": "Enfocados en el Cliente",
-          "description": "Recordar quiénes son nuestros stakeholders más importantes."
-        },
-        "creative": {
-          "title": "Creativos",
-          "description": "Pensar fuera de la caja; esforzarse por no estar limitados por las normas de la industria."
-        },
-        "missionDriven": {
-          "title": "Impulsados por la Misión",
-          "description": "Buscar incorporar perspectivas únicas en nuestros planes de valor y creación."
-        }
-      },
-      "ourCulture": {
-        "title": "Nuestra Cultura",
-        "teamFirst": {
-          "title": "Equipo Primero",
-          "description": "Enfoque colaborativo—juntos podemos ganar."
-        },
-        "inclusivity": {
-          "title": "Inclusividad",
-          "description": "Cada miembro del equipo desempeña un papel importante para llegar a las mejores decisiones."
-        },
-        "diversity": {
-          "title": "Diversidad",
-          "description": "Nuestro equipo valora profundamente el poder de la diversidad."
-        },
-        "talentDevelopment": {
-          "title": "Desarrollo de Talento",
-          "description": "Compromiso duradero para ayudar a los miembros de nuestro equipo a alcanzar su máximo potencial."
-        }
+      "description": "Hemos construido una cultura distintiva que define todo lo que hacemos, ya sea trabajando, socializando o apoyando a nuestras comunidades. Nuestro liderazgo comparte la determinación y la responsabilidad de formar y desarrollar a la próxima generación de líderes.",
+      "cta": {
+        "careers": "Carreras"
       }
     },
-    "disclaimers": {
-      "0": "Los servicios de asesoría y gestión de Todd no deben considerarse una garantía de que no se producirán pérdidas. Existen riesgos que no son monitoreados ni controlados por Todd y riesgos que pueden ser mayores a los previstos por Todd, especialmente en condiciones ambientales inusuales.",
-      "1": "Pueden producirse pérdidas significativas o totales como resultado de estos riesgos u otras razones, a pesar de los protocolos de gestión de Todd o de cualquier información proporcionada en el presente documento.",
-      "2": "Todd podrá solicitar pruebas de agentes tóxicos en áreas que se determine presentan un riesgo elevado de contaminación. No se incluyen los factores ambientales que puedan poner en peligro la comercialización de los productos, independientemente de su condición orgánica. Los niveles máximos de tolerancia a agentes tóxicos son determinados por Todd en el momento de la Solicitud de Cuenta. Si la contaminación persiste más allá de un período reconocido, Todd podrá pausar o terminar el acceso futuro a los servicios y productos de semillas.",
-      "3": "La contaminación debe ser monitoreada de forma continua y debe mantenerse documentación que verifique el cumplimiento.",
-      "4": "La aplicación de fertilizantes y productos químicos sintéticos está prohibida sin autorización por escrito.",
-      "5": "No se permiten operaciones divididas ni producción paralela.",
-      "6": "Los servicios y productos están sujetos a elegibilidad y no están garantizados. Todd puede restringir el uso de productos en áreas con producción conocida de cultivos genéticamente modificados."
+    "competencies": {
+      "title": "Todd se diferencia por una combinación de tres competencias clave.",
+      "items": [
+        "Experiencia en gestión orgánica y biodinámica",
+        "Comprensión de las demandas y canales del consumidor moderno",
+        "Posicionados en la vanguardia de la agricultura sostenible"
+      ]
+    },
+    "navigation": {
+      "whatWeDo": "Qué hacemos"
     }
   }
 }

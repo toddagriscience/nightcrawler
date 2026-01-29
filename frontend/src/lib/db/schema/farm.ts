@@ -25,7 +25,10 @@ export const farm = pgTable('farm', {
   /** The date the farm started. Collected during Internal Onboarding */
   managementStartDate: date(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** Client location data. This table *should* be internationally compatible, and all fields that aren't documented should be completely self explanatory. */
@@ -48,7 +51,10 @@ export const farmLocation = pgTable('farm_location', {
   state: varchar({ length: 100 }),
   country: varchar({ length: 200 }),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 /** Any certificates that the client's business/farm has. See the certificateType enum for more info. */
@@ -73,5 +79,8 @@ export const farmCertificate = pgTable('farm_certificate', {
   hasRegenerativeOrganic: boolean().default(false),
   regenerativeOrganic: date(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
