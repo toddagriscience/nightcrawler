@@ -27,7 +27,8 @@ export function FeaturedNewsCarousel({
           title={article.title}
           key={article.slug.current}
           isDark={false}
-          className="min-w-[450px] m:min-w-[580px] lg:min-w-[600px] w-full"
+          className="flex-none h-auto w-[90vw] sm:w-[90%] md:max-w-[500px] lg:max-w-[500px]"
+          // "min-w-[480px] sm:min-w-[500px] md:min-w-[580px] lg:min-w-[600px] w-full"
           image={
             article.thumbnail && article.thumbnail.asset
               ? {

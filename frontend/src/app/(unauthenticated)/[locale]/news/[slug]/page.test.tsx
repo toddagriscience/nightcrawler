@@ -35,7 +35,7 @@ const { item } = vi.hoisted(() => {
         _type: 'image',
         alt: 'Header image',
         asset: {
-          _ref: 'image-test-ref',
+          _ref: 'image-36fe5a297abdb21a18401a74ce3c60a2c88a731e-2518x1690-png',
           _type: 'reference',
         },
       },

@@ -46,7 +46,7 @@ export default function NewsHighlights() {
         </FadeIn>
       ) : (
         <FadeIn>
-          <div className="mb-8 mt-8 mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:gap-10 lg:flex-row justify-center text-center lg:text-left">
+          <div className="mb-8 mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:gap-4 lg:flex-row justify-center text-center lg:text-left h-full">
             {featuredNews.map((article) => (
               <NewsCard
                 key={article.slug.current}
@@ -57,14 +57,14 @@ export default function NewsHighlights() {
                     ? {
                         url: urlFor(article.thumbnail)?.url(),
                         alt: article.thumbnail.alt,
-                        height: 450,
-                        width: 450,
+                        height: 400,
+                        width: 400,
                       }
                     : {
                         url: articlePlaceholderRoute,
                         alt: '',
-                        height: 450,
-                        width: 450,
+                        height: 400,
+                        width: 400,
                       }
                 }
                 source={article.source}
@@ -73,11 +73,7 @@ export default function NewsHighlights() {
                   month: 'long',
                   day: 'numeric',
                 })}
-                excerpt={
-                  article.summary.length > 50
-                    ? `${article.summary.slice(0, 50)}...`
-                    : article.summary
-                }
+                excerpt={article.summary}
                 link={
                   article.offSiteUrl && article.offSiteUrl.length > 0
                     ? article.offSiteUrl

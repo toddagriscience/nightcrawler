@@ -27,18 +27,18 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const windowHref = useCurrentUrl();
 
   return (
-    <div className="rounded-md text-[#555555] mx-auto px-6">
-      <div className="grid sm:grid-cols-3 grid-cols-4 border-b border-[#555555] px-4 py-2 text-xs uppercase">
+    <div className="rounded-md text-[#555555] mx-auto px-2 md:px-6 flex flex-col justify-center">
+      <div className="grid sm:grid-cols-3 grid-cols-3 border-b border-[#555555] px-2 md:px-4 py-2 text-xs uppercase">
         <span>Headline</span>
         <span className="text-right">Source</span>
-        <span className="text-right max-sm:col-span-2">Date</span>
+        <span className="text-right">Date</span>
       </div>
 
       {items.slice(0, visibleCount).map((item, index) => (
         <div
           key={item.slug.current}
           className={clsx(
-            'grid sm:grid-cols-3 grid-cols-4 items-center px-4 py-2 md:py-3 lg:py-4 text-xs md:text-sm font-normal md:font-light',
+            'grid sm:grid-cols-3 grid-cols-3 items-center px-2 md:px-4 py-3 md:py-4 lg:py-5 text-sm sm:text-normal font-light',
             index !== visibleCount - 1 &&
               index !== items.length - 1 &&
               'border-b border-[#555555]'
@@ -61,7 +61,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             </div>
           </Link>
 
-          <div className="text-right max-sm:col-span-2">
+          <div className="text-right">
             {new Date(item.date).toLocaleDateString(locale, {
               year: 'numeric',
               month: 'long',
@@ -75,7 +75,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
         <div
           role="button"
           onClick={handleLoadMore}
-          className="mt-6 ml-4 cursor-pointer text-left text-base sm:text-lg md:text-xl hover:underline w-fit"
+          className="mt-6 md:mt-8 ml-2 md:ml-4 cursor-pointer text-left text-base sm:text-lg md:text-xl hover:underline w-fit"
         >
           Load more{' '}
           <HiArrowLongDown className="mt-1 size-6 md:size-8 inline-block" />
