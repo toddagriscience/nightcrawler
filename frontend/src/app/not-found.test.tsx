@@ -125,6 +125,9 @@ describe('NotFound Page', () => {
     const jsx = await NotFound();
     render(jsx);
 
-    expect(getTranslations).toHaveBeenCalledWith({ locale: 'es', namespace: 'common' });
+    expect(getTranslations).toHaveBeenCalledWith({
+      locale: 'es',
+      namespace: 'common',
+    });
   });
 });
