@@ -3,13 +3,13 @@
 'use client';
 
 import { FadeIn, NewsCard } from '@/components/common';
-import { useTheme } from '@/context/theme/ThemeContext';
-import { useLocale } from 'next-intl';
-import { useEffect, useState } from 'react';
-import sanityQuery from '@/lib/sanity/query';
-import { SanityDocument } from 'next-sanity';
-import { urlFor } from '@/lib/sanity/utils';
 import { Spinner } from '@/components/ui/spinner';
+import { useTheme } from '@/context/theme/ThemeContext';
+import sanityQuery from '@/lib/sanity/query';
+import { urlFor } from '@/lib/sanity/utils';
+import { useLocale } from 'next-intl';
+import { SanityDocument } from 'next-sanity';
+import { useEffect, useState } from 'react';
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
@@ -46,7 +46,7 @@ export default function NewsHighlights() {
         </FadeIn>
       ) : (
         <FadeIn>
-          <div className="mb-8 gap-8 mx-auto items-center flex flex-row max-w-[95%] flex-wrap justify-center">
+          <div className="mb-8 mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:gap-4 lg:flex-row justify-center text-center lg:text-left h-full">
             {featuredNews.map((article) => (
               <NewsCard
                 key={article.slug.current}
