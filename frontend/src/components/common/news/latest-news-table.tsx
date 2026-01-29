@@ -75,7 +75,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
         <div
           role="button"
           onClick={handleLoadMore}
-          className="mt-4 ml-4 cursor-pointer text-left text-base md:text-lg hover:underline w-fit"
+          className="mt-6 ml-4 cursor-pointer text-left text-base sm:text-lg md:text-xl hover:underline w-fit"
         >
           Load more{' '}
           <HiArrowLongDown className="mt-1 size-6 md:size-8 inline-block" />
