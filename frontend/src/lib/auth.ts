@@ -162,8 +162,11 @@ export async function inviteUser(
   name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const params = new URLSearchParams({
+    email,
+  });
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept',
+    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept?' + params ,
     data: {
       // This is for the email template
       first_name: name,
