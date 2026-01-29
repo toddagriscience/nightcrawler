@@ -3,13 +3,13 @@
 'use client';
 
 import { FadeIn, NewsCard } from '@/components/common';
-import { useTheme } from '@/context/theme/ThemeContext';
-import { useLocale } from 'next-intl';
-import { useEffect, useState } from 'react';
-import sanityQuery from '@/lib/sanity/query';
-import { SanityDocument } from 'next-sanity';
-import { urlFor } from '@/lib/sanity/utils';
 import { Spinner } from '@/components/ui/spinner';
+import { useTheme } from '@/context/theme/ThemeContext';
+import sanityQuery from '@/lib/sanity/query';
+import { urlFor } from '@/lib/sanity/utils';
+import { useLocale } from 'next-intl';
+import { SanityDocument } from 'next-sanity';
+import { useEffect, useState } from 'react';
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
@@ -46,7 +46,7 @@ export default function NewsHighlights() {
         </FadeIn>
       ) : (
         <FadeIn>
-          <div className="mb-8 gap-8 mx-auto items-center flex flex-row max-w-[95%] flex-wrap justify-center">
+          <div className="mb-8 mt-8 mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:gap-10 lg:flex-row justify-center text-center lg:text-left">
             {featuredNews.map((article) => (
               <NewsCard
                 key={article.slug.current}
@@ -57,14 +57,14 @@ export default function NewsHighlights() {
                     ? {
                         url: urlFor(article.thumbnail)?.url(),
                         alt: article.thumbnail.alt,
-                        height: 400,
-                        width: 400,
+                        height: 450,
+                        width: 450,
                       }
                     : {
                         url: articlePlaceholderRoute,
                         alt: '',
-                        height: 400,
-                        width: 400,
+                        height: 450,
+                        width: 450,
                       }
                 }
                 source={article.source}
@@ -73,7 +73,11 @@ export default function NewsHighlights() {
                   month: 'long',
                   day: 'numeric',
                 })}
-                excerpt={article.summary}
+                excerpt={
+                  article.summary.length > 50
+                    ? `${article.summary.slice(0, 50)}...`
+                    : article.summary
+                }
                 link={
                   article.offSiteUrl && article.offSiteUrl.length > 0
                     ? article.offSiteUrl

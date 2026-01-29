@@ -4,9 +4,8 @@
 
 import { Carousel, NewsCard } from '@/components/common';
 import { urlFor } from '@/lib/sanity/utils';
-import { SanityDocument } from 'next-sanity';
 import { useLocale } from 'next-intl';
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import { SanityDocument } from 'next-sanity';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
@@ -28,6 +27,7 @@ export function FeaturedNewsCarousel({
           title={article.title}
           key={article.slug.current}
           isDark={false}
+          className="min-w-[450px] m:min-w-[580px] lg:min-w-[600px] w-full"
           image={
             article.thumbnail && article.thumbnail.asset
               ? {

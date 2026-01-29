@@ -97,6 +97,21 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'headerImage',
+      title: 'Header Image',
+      type: 'image',
+      description:
+        'A header image for the article detail page. This image appears above the body content.',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          validation: (rule) => rule.required(),
+        },
+      ],
+    }),
+    defineField({
       name: 'offSiteUrl',
       title: 'Off Site Link',
       type: 'url',

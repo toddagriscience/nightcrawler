@@ -68,7 +68,7 @@ const PlaceholderImage = ({
         aria-label={alt}
       >
         <div className="text-center">
-          <ImageIcon className="mx-auto h-12 w-12" />
+          <ImageIcon className="mx-auto h-14 w-14" />
           <p className="mt-2 text-sm">{fallbackText}</p>
         </div>
       </div>

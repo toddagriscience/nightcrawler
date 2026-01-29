@@ -102,7 +102,7 @@ const Carousel = ({ children, loop = true, className = '' }: CarouselProps) => {
         <button
           onClick={scrollPrev}
           ref={prevBtnRef}
-          className="absolute top-1/2 left-0 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+          className="absolute top-5/8 sm:top-1/2 left-[-15px] md:left-0 lg:left-4 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Previous slide"
           data-testid="left-button"
         >
@@ -111,7 +111,7 @@ const Carousel = ({ children, loop = true, className = '' }: CarouselProps) => {
         <button
           onClick={scrollNext}
           ref={nextBtnRef}
-          className="absolute top-1/2 right-0 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+          className="absolute top-5/8 sm:top-1/2 right-[-15px] md:right-0 lg:right-3 z-10 -translate-y-1/2 transform rounded-full bg-black/10 p-1 transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
           aria-label="Next slide"
           data-testid="right-button"
         >

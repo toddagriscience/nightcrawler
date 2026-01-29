@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl, act } from '@/test/test-utils';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
+import { describe, expect, it, vi } from 'vitest';
 import News from './page';
-import { vi, describe, it, expect } from 'vitest';
 
 const { items } = vi.hoisted(() => {
   return {
@@ -134,7 +134,7 @@ describe('News Page', () => {
   it('renders without exploding', async () => {
     renderWithNextIntl(await News());
 
-    expect(screen.getByText('Todd Newsroom')).toBeInTheDocument();
+    expect(screen.getByText('Newsroom')).toBeInTheDocument();
 
     expect(screen.getByText('Latest News')).toBeInTheDocument();
   });

@@ -34,7 +34,7 @@ const NewsCard = ({
 }: NewsCardProps) => {
   return (
     <div
-      className={`text-foreground max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
+      className={`text-foreground w-full max-w-[320px] px-2 py-4 font-light transition-colors duration-300 ${className}`}
     >
       <Link href={link} className="mb-16">
         <div className="rounded-xl bg-transparent">
@@ -43,17 +43,21 @@ const NewsCard = ({
             alt={image.alt}
             width={image.width || 600}
             height={image.height || 600}
-            className={`mx-auto w-[70vw]`}
+            className="mx-auto w-full"
             fallbackText="News Image"
             isDark={isDark}
           />
           {/* <div className={`p-4 ${isDark ? 'text-white' : ''}`}> */}
-          <div className={`p-4`}>
-            <h2>{title}</h2>
+          <div className="p-4 gap-1 flex flex-col">
+            <h2 className="text-sm md:text-normal lg:text-base font-thin">
+              {title}
+            </h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
-            <h3 className="text-xl">{excerpt}</h3>
+            <h3 className="text-lg md:text-xl italic font-light">
+              {excerpt.length > 50 ? `${excerpt.slice(0, 126)}...` : excerpt}
+            </h3>
           </div>
         </div>
       </Link>
