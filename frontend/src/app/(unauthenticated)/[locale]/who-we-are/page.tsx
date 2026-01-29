@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import Partners from './components/partners';
 
 /**
  * Who We Are page component
@@ -118,7 +119,7 @@ export default function WhoWeArePage() {
         </div>
         {/* Competencies Items Section */}
 
-        <motion.div className="mb-30 space-y-16 font-light flex flex-col justify-center items-center gap-16 max-w-[350px] md:max-w-[550px] lg:max-w-[550px] mx-auto">
+        <motion.div className="mb-60 space-y-16 font-light flex flex-col justify-center items-center gap-16 max-w-[350px] md:max-w-[550px] lg:max-w-[550px] mx-auto">
           {[0, 1, 2].map((index) => (
             <motion.p
               key={`competencies-items-${index}`}
@@ -135,6 +136,16 @@ export default function WhoWeArePage() {
               {t(`competencies.items.${index}`)}
             </motion.p>
           ))}
+        </motion.div>
+
+        <motion.div
+          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+          initial={{ opacity: 0.5, y: 34 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.3, ease: 'easeOut' }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <Partners />
         </motion.div>
 
         <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
