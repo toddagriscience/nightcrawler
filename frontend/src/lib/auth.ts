@@ -119,6 +119,28 @@ export async function getUserEmail(): Promise<string | null> {
   return data.claims.email || null;
 }
 
+/** SERVER SIDE FUNCTION. Returns the email verification status of the user. If they're not logged in or something goes wrong with `getClaims()`, this function will simply return false. */
+export async function isVerified(): Promise<boolean> {
+  const supabase = await createServerClient();
+
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    return false;
+  }
+
+  if (!data.claims.user_metadata) {
+    return false;
+  }
+
+  if (!('email_verified' in data.claims.user_metadata)) {
+    return false;
+  }
+
+  // This is a boolean field
+  return data.claims.user_metadata.email_verified;
+}
+
 /** SERVER SIDE FUNCTION. Signs up (or creates) a user and sends a confirmation email.
  *
  * @param {string} email - The user's email
