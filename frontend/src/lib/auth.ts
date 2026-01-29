@@ -4,8 +4,8 @@ import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import logger from './logger';
 import { createClient as createBrowserClient } from './supabase/client';
-import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createServerClient } from './supabase/server';
+import { AuthResponse, AuthResponseTypes } from './types/auth';
 
 /**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -184,8 +184,11 @@ export async function inviteUser(
   name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const params = new URLSearchParams({
+    email,
+  });
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: 'https://toddagriscience.com/login',
+    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept?' + params,
     data: {
       // This is for the email template
       first_name: name,
