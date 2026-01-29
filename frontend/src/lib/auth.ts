@@ -166,7 +166,7 @@ export async function inviteUser(
     email,
   });
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept?' + params ,
+    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept?' + params,
     data: {
       // This is for the email template
       first_name: name,
