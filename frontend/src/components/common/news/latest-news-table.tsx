@@ -27,7 +27,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const windowHref = useCurrentUrl();
 
   return (
-    <div className="rounded-md text-[#555555]">
+    <div className="rounded-md text-[#555555] mx-auto px-6">
       <div className="grid sm:grid-cols-3 grid-cols-4 border-b border-[#555555] px-4 py-2 text-xs uppercase">
         <span>Headline</span>
         <span className="text-right">Source</span>

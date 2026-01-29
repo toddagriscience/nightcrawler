@@ -34,7 +34,7 @@ const NewsCard = ({
 }: NewsCardProps) => {
   return (
     <div
-      className={`text-foreground max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
+      className={`text-foreground w-full max-w-[320px] px-2 py-4 font-light transition-colors duration-300 ${className}`}
     >
       <Link href={link} className="mb-16">
         <div className="rounded-xl bg-transparent">
@@ -43,7 +43,7 @@ const NewsCard = ({
             alt={image.alt}
             width={image.width || 600}
             height={image.height || 600}
-            className={`mx-auto w-[70vw]`}
+            className="mx-auto w-full"
             fallbackText="News Image"
             isDark={isDark}
           />
