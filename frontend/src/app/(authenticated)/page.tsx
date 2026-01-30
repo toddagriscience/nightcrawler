@@ -1,13 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { Button } from '@/components/ui';
-import ApplyButton from './components/apply-button';
-import { db } from '@/lib/db/schema/connection';
 import { accountAgreementAcceptance } from '@/lib/db/schema';
+import { db } from '@/lib/db/schema/connection';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import ApplyButton from './components/apply-button';
 
 /**
  * Dashboard homepage metadata - uses specific title without template

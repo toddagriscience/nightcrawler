@@ -5,16 +5,15 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { fontVariables } from '@/lib/fonts';
 import type { Metadata } from 'next';
-import './globals.css';
-import { PostHogProvider } from './providers';
-
+import '../globals.css';
+import { PostHogProvider } from '../providers';
 /**
  * Root layout metadata for pages outside [locale] directory
  */
 export const metadata: Metadata = {
   title: {
     default: 'Todd United States',
-    template: '%s',
+    template: '%s | Todd United States',
   },
 };
 
