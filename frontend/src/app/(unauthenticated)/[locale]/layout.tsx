@@ -9,6 +9,7 @@ import { env } from '@/lib/env';
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { Footer, Header } from '@/components/landing';
 import { WebSite, WithContext } from 'schema-dts';
+import Script from 'next/script';
 
 /**
  * Generate metadata for each locale
@@ -130,11 +131,12 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(webSiteStructuredData),
         }}
+        id="my-script"
       />
       <SmoothScroll>
         <Header />
