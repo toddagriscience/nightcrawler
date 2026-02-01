@@ -101,7 +101,7 @@
     "@types/pg": "^8.16.0",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
-    "@vitest/coverage-v8": "4.0.16",
+    "@vitest/coverage-v8": "4.0.18",
     "baseline-browser-mapping": "^2.9.19",
     "drizzle-kit": "^0.31.8",
     "husky": "^9.1.7",
