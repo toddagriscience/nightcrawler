@@ -9,7 +9,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.0",
+    "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-license-header": "^0.8.0"
   },
@@ -17,12 +17,21 @@
     "clean": "rm -rf node_modules frontend/node_modules sanity-studio/node_modules bun.lockb frontend/bun.lockb sanity-studio/bun.lockb"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.53.0",
-    "@typescript-eslint/parser": "^8.53.0",
-    "@vitest/eslint-plugin": "^1.5.4",
-    "esbuild": "^0.27.2",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@vitest/eslint-plugin": "^1.6.6",
+    "esbuild": "^0.25.0",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-no-secrets": "^2.2.1",
-    "storybook": "^10.1.10"
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
+    "storybook": "^10.2.3",
+    "undici": "^6.23.0"
+  },
+  "overrides": {
+    "undici": "^6.23.0",
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
+    "esbuild": "^0.25.0"
   }
 }
