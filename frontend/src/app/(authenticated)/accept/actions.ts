@@ -66,7 +66,6 @@ export async function acceptInvite(
   }
 
   try {
-    // 1. Update password if provided. This also sets verified to true in Supabase metadata.
     if (password) {
       const { error: authError } = await setPassword(password);
       if (authError) {
@@ -83,7 +82,6 @@ export async function acceptInvite(
       }
     }
 
-    // 2. Update user info in database
     await db
       .update(user)
       .set({
