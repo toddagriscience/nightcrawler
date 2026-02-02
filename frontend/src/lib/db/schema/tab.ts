@@ -9,10 +9,14 @@ export const tab = pgTable(
   'tab',
   {
     id: serial().primaryKey().notNull(),
-    user: integer().references(() => user.id, { onDelete: 'cascade' }),
-    managementZone: integer().references(() => managementZone.id, {
-      onDelete: 'cascade',
-    }),
+    user: integer()
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull(),
+    managementZone: integer()
+      .references(() => managementZone.id, {
+        onDelete: 'cascade',
+      })
+      .notNull(),
   },
   (t) => [unique().on(t.managementZone, t.user)]
 );
