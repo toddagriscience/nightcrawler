@@ -203,3 +203,19 @@ export async function inviteUser(
 
   return data;
 }
+/** SERVER SIDE FUNCTION. Sets a user's password.
+ *
+ * @param {string} password - The user's new password
+ * @returns {Promise<AuthResponse>} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-updateuser
+ */
+export async function setPassword(password: string): Promise<AuthResponse> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.updateUser({
+    password,
+    data: {
+      email_verified: true,
+    },
+  });
+
+  return { data, error, responseType: AuthResponseTypes.UpdateUser };
+}
