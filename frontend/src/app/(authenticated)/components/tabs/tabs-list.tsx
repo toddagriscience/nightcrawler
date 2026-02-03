@@ -7,6 +7,8 @@ import { Tab } from './types';
 import { Button } from '@/components/ui';
 import { getTabHash } from './helpers';
 
+const maxTabs = 8;
+
 export default function PlatformTabsList({
   currentTabs,
 }: {
@@ -36,9 +38,11 @@ export default function PlatformTabsList({
             </TabsTrigger>
           ))
         )}
-        <Button className="cursor-pointer text-4xl font-light ml-2 min-w-10">
-          <span className="absolute top-[-3.5px]">+</span>
-        </Button>
+        {currentTabs.length <= maxTabs && (
+          <Button className="cursor-pointer text-4xl font-light ml-2 min-w-10">
+            <span className="absolute top-[-3.5px]">+</span>
+          </Button>
+        )}
         <div className="grow"></div>
       </TabsList>
     </div>
