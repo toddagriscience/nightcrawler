@@ -10,6 +10,7 @@ import { urlFor } from '@/lib/sanity/utils';
 import { useLocale } from 'next-intl';
 import { SanityDocument } from 'next-sanity';
 import { useEffect, useState } from 'react';
+
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
 /**
@@ -46,16 +47,20 @@ export default function NewsHighlights() {
         </FadeIn>
       ) : (
         <FadeIn>
-          <div className="mb-8 mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:gap-4 lg:flex-row justify-center text-center lg:text-left h-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-4 mb-8 mx-auto justify-items-center">
             {featuredNews.map((article) => (
               <NewsCard
+                className="basis-1 lg:basis-1/2"
                 key={article.slug.current}
                 title={article.title}
                 isDark={contextIsDark}
                 image={
                   article.thumbnail && article.thumbnail.asset
                     ? {
-                        url: urlFor(article.thumbnail)?.url(),
+                        url: urlFor(article.thumbnail)
+                          ?.width(400)
+                          .height(400)
+                          .url(),
                         alt: article.thumbnail.alt,
                         height: 400,
                         width: 400,
