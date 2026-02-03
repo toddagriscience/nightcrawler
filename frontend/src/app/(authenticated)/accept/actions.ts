@@ -9,11 +9,12 @@ import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
+import { UserInsert } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { acceptInviteSchema } from '@/lib/zod-schemas/accept';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
-import z from 'zod';
+import { z } from 'zod';
+import { acceptInviteSchema } from './types';
 
 /** Accepts an invitation, updates user information, and sets their password.
  *
@@ -41,6 +42,8 @@ export async function acceptInvite(
     lastName: formData.get('lastName'),
     phone: formData.get('phone'),
     job: formData.get('job'),
+    didOwnAndControlParcel: formData.get('didOwnAndControlParcel') === 'on',
+    didManageAndControl: formData.get('didManageAndControl') === 'on',
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   };
@@ -54,7 +57,15 @@ export async function acceptInvite(
     };
   }
 
-  const { firstName, lastName, phone, job, password } = validated.data;
+  const {
+    firstName,
+    lastName,
+    phone,
+    job,
+    didOwnAndControlParcel,
+    didManageAndControl,
+    password,
+  } = validated.data;
 
   // Get current user to ensure we're updating the right one
   const currentUser = await getAuthenticatedInfo();
@@ -82,15 +93,16 @@ export async function acceptInvite(
       }
     }
 
-    await db
-      .update(user)
-      .set({
-        firstName,
-        lastName,
-        phone,
-        job,
-      })
-      .where(eq(user.id, currentUser.id));
+    const updateData: Partial<UserInsert> = {
+      firstName,
+      lastName,
+      phone,
+      job,
+      didOwnAndControlParcel,
+      didManageAndControl,
+    };
+
+    await db.update(user).set(updateData).where(eq(user.id, currentUser.id));
 
     logger.info(
       `User ${currentUser.email} successfully accepted invitation and updated profile.`

@@ -1,7 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { userInsertSchema } from '@/lib/zod-schemas/db';
+import { userInfo } from '@/lib/zod-schemas/onboarding';
 import { z } from 'zod';
-import { userInfo } from './onboarding';
+
+const { didOwnAndControlParcel, didManageAndControl } = userInsertSchema.shape;
 
 /** Schema for accepting an invitation */
 export const acceptInviteSchema = userInfo
@@ -11,7 +14,9 @@ export const acceptInviteSchema = userInfo
     phone: true,
   })
   .extend({
-    job: z.string().max(200).optional(),
+    job: userInsertSchema.shape.job,
+    didOwnAndControlParcel,
+    didManageAndControl,
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
