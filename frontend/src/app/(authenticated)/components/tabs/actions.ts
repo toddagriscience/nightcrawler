@@ -119,3 +119,46 @@ export async function deleteTab(
     return { error: 'Failed to delete tab' };
   }
 }
+
+/** Create tab, given a management zone's id. A maximum of 8 tabs can be created.
+ * @param managementZoneId - The ID of the management zone that this tab is being created for*/
+export async function createTab(
+  managementZoneId: number
+): Promise<ActionResponse> {
+  const maxTabs = 8;
+
+  try {
+    const result = await getAuthenticatedInfo();
+
+    if ('error' in result) {
+      return result;
+    }
+
+    if (!result.id) {
+      return { error: 'No user id present in database' };
+    }
+
+    const userId = result.id;
+
+    // Check to see if user has the max tabs saved
+    const currentTabs = await db
+      .select({})
+      .from(tab)
+      .where(eq(tab.user, userId));
+
+    if (currentTabs.length >= maxTabs) {
+      return { error: `Can't create more than ${maxTabs} tabs` };
+    }
+
+    await db
+      .insert(tab)
+      .values({ managementZone: managementZoneId, user: userId });
+
+    return { error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Failed to delete tab' };
+  }
+}
