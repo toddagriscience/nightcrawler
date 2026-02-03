@@ -9,6 +9,7 @@ import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound, redirect } from 'next/navigation';
 import { HiArrowLongLeft } from 'react-icons/hi2';
+import SanityLink from '../../../../../components/sanity/sanity-link';
 
 /**
  * A news article page, rendered with Sanity CMS.
@@ -43,6 +44,9 @@ export default async function NewsPage({
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
       normal: (props) => <SanityNormal {...props} summary={article.summary} />,
+    },
+    marks: {
+      link: (props) => <SanityLink {...props} />,
     },
   };
 
