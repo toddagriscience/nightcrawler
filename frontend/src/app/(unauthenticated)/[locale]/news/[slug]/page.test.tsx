@@ -1,25 +1,43 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import '@testing-library/jest-dom';
-import { vi, describe, it, expect } from 'vitest';
-import NewsPage from './page';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
+import '@testing-library/jest-dom';
+import { describe, expect, it, vi } from 'vitest';
+import NewsPage from './page';
 
 const { item } = vi.hoisted(() => {
   return {
     item: {
       title: 'New AI Model Sets Performance Record',
-      isDark: false,
       source: 'TechCrunch',
-      date: 'November 20, 2024',
+      date: '2024-11-20T00:00:00.000Z',
       summary:
         'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
-      link: 'https://example.com/news/new-ai-model-sets-record',
       slug: { current: 'new-ai' },
-      thumbnail: {
-        url: 'https://example.com/markets.jpg',
-        alt: 'Stock market graph',
+      content: [
+        {
+          _key: 'ce12009ed6af',
+          _type: 'block',
+          children: [
+            {
+              _key: '64e6a6b07265',
+              _type: 'span',
+              marks: [],
+              text: 'Test content.',
+            },
+          ],
+          markDefs: [],
+          style: 'normal',
+        },
+      ],
+      headerImage: {
+        _type: 'image',
+        alt: 'Header image',
+        asset: {
+          _ref: 'image-test-asset-2518x1690-png',
+          _type: 'reference',
+        },
       },
     },
   };
@@ -76,10 +94,20 @@ describe('News Page', () => {
       </TooltipProvider>
     );
 
-    expect(
-      screen.getByText('New AI Model Sets Performance Record')
-    ).toBeInTheDocument();
+    expect(screen.getByText(item.title)).toBeInTheDocument();
 
-    expect(screen.getByText('11/20/2024')).toBeInTheDocument();
+    const formattedDate = new Date(item.date)
+      .toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+      .replace(/\s(\d{4})$/, ', $1');
+
+    expect(screen.getByText(formattedDate)).toBeInTheDocument();
+    expect(screen.getByText(item.summary)).toBeInTheDocument();
+    expect(
+      screen.getByText(item.content[0].children[0].text)
+    ).toBeInTheDocument();
   });
 });
