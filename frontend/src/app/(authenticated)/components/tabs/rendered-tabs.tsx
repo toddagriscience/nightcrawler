@@ -7,9 +7,7 @@ import { getTabHash } from './helpers';
 import PlatformTabsList from './tabs-list';
 
 /**  
-   Scaling is a little bit scuffed here. We're taking a div and shoving it into `AuthenticatedHeader` manually, then scaling it accordingly with variables #'s of tabs. This technically works with up to 25 tabs on the smallest screen size. This is "fine" for two reasons:
-  
-   1. We won't be sticking with this model forever -- eventually, we'll move to a tab system where the user can have a maximum of 8 tabs open.
+   Scaling is a little bit scuffed here. We're taking a div and shoving it into `AuthenticatedHeader` manually, then scaling it accordingly with variables #'s of tabs. This technically works with up to 25 tabs on the smallest screen size. This is fine because the user will be limited to a maximum of 8 tabs.
    */
 export default function RenderedTabs({ currentTabs }: { currentTabs: Tab[] }) {
   return (

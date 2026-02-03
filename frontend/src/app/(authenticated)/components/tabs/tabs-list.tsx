@@ -25,12 +25,12 @@ export default function PlatformTabsList({
         ) : (
           currentTabs.map((tab, index) => (
             <TabsTrigger
-              className="border-none data-[state=active]:bg-gray-200 max-w-36 truncate min-w-36"
+              className="border-none data-[state=active]:bg-gray-200 max-w-36 truncate min-w-36 group"
               key={tab.id}
               value={getTabHash(tab)}
             >
               <input
-                className="cursor-pointer max-w-[100%] h-4 outline-none ring-0 focus:outline-none focus:ring-0"
+                className="cursor-pointer max-w-[100%] text-center group-data-[state=active]:pointer-events-none outline-none ring-0 focus:outline-none focus:ring-0"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
               />
             </TabsTrigger>
