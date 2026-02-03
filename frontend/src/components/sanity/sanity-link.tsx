@@ -9,7 +9,7 @@ interface SanityLinkValue extends TypedObject {
 
 /**
  * SanityLink component for displaying a link in PortableText.
- * @param {PortableTextMarkComponentProps<SanityLinkValue>} props - The props for the SanityLink component
+ * @param props - The props for the SanityLink component
  * @returns {JSX.Element} - The SanityLink component
  */
 export default function SanityLink({
