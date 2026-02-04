@@ -9,6 +9,7 @@ import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound, redirect } from 'next/navigation';
 import { HiArrowLongLeft } from 'react-icons/hi2';
+import SanityLink from '../../../../../components/sanity/sanity-link';
 
 /**
  * A news article page, rendered with Sanity CMS.
@@ -43,6 +44,35 @@ export default async function NewsPage({
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
       normal: (props) => <SanityNormal {...props} summary={article.summary} />,
+
+      h1: ({ children }) => (
+        <h1 className="mt-6 mb-2 text-3xl md:text-4xl lg:text-5xl font-normal leading-snug">
+          {children}
+        </h1>
+      ),
+      h2: ({ children }) => (
+        <h2 className="mt-6 mb-2 text-2xl md:text-3xl lg:text-4xl font-normal leading-snug">
+          {children}
+        </h2>
+      ),
+      h3: ({ children }) => (
+        <h3 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+          {children}
+        </h3>
+      ),
+      h4: ({ children }) => (
+        <h4 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+          {children}
+        </h4>
+      ),
+      h5: ({ children }) => (
+        <h5 className="mt-4 mb-2 text-lg md:text-xl lg:text-2xl font-normal leading-snug">
+          {children}
+        </h5>
+      ),
+    },
+    marks: {
+      link: (props) => <SanityLink {...props} />,
     },
   };
 

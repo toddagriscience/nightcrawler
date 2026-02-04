@@ -20,9 +20,18 @@
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
     "@vitest/eslint-plugin": "^1.6.6",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.25.0",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-no-secrets": "^2.2.1",
-    "storybook": "^10.2.1"
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
+    "storybook": "^10.2.3",
+    "undici": "^6.23.0"
+  },
+  "overrides": {
+    "undici": "^6.23.0",
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
+    "esbuild": "^0.25.0"
   }
 }

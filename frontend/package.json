@@ -8,6 +8,7 @@
     "bun": ">=1.0.0"
   },
   "overrides": {
+    "@isaacs/brace-expansion": "^5.0.1",
     "glob": "^11.1.0",
     "esbuild": "^0.24.2"
   },
