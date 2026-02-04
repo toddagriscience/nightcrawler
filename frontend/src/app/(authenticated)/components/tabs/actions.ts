@@ -7,8 +7,6 @@ import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { and, eq } from 'drizzle-orm';
-import { getTablessManagementZones } from './utils';
-import { ManagementZoneSelect } from '@/lib/types/db';
 
 /** Update the name of a tab, which is actually the name of the related management zone.
  *
@@ -16,11 +14,15 @@ import { ManagementZoneSelect } from '@/lib/types/db';
  * @param oldName - The old name of the tab
  * @param tabId - The ID of the tab. If oldName is provided, this will not be used.
  * */
-export default async function updateTabName(
-  newName: string,
-  oldName?: string,
-  tabId?: number
-): Promise<ActionResponse> {
+export default async function updateTabName({
+  newName,
+  oldName,
+  tabId,
+}: {
+  newName: string;
+  oldName?: string;
+  tabId?: number;
+}): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
 
@@ -35,10 +37,6 @@ export default async function updateTabName(
     const userId = result.id;
     const farmId = result.farmId;
 
-    if (!oldName && !tabId) {
-      return { error: 'Please provide either oldName or tabId' };
-    }
-
     if (oldName) {
       await db
         .update(managementZone)
@@ -51,7 +49,7 @@ export default async function updateTabName(
         );
     } else if (tabId) {
       const [zone] = await db
-        .select({ id: tab.id })
+        .select({ id: tab.managementZone })
         .from(tab)
         .where(and(eq(tab.user, userId), eq(tab.id, tabId)))
         .limit(1);
@@ -60,6 +58,8 @@ export default async function updateTabName(
         .update(managementZone)
         .set({ name: newName })
         .where(eq(managementZone.id, zone.id));
+    } else {
+      return { error: 'Please provide either oldName or tabId' };
     }
 
     return { error: null };
