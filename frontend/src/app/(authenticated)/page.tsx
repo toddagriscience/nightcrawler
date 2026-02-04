@@ -5,7 +5,7 @@ import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { and, asc, eq, ne } from 'drizzle-orm';
+import { and, asc, eq, exists, ne, notExists } from 'drizzle-orm';
 import { NamedTab } from './components/tabs/types';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import Landing from './components/landing';
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
 
   if ('error' in currentUser || !currentUser.farmId) {
     return (
-      <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
+      <div className="mx-auto flex min-h-[calc(100vh-64px)] w-[90vw] max-w-[500px] flex-col items-center justify-center">
         <h1>There was an error with authentication</h1>
         <p>
           {'error' in currentUser
@@ -56,17 +56,22 @@ export default async function DashboardPage() {
     .orderBy(asc(managementZone.name))
     .where(eq(tab.user, currentUser.id));
 
-  // The following bit is a bit sloppy, couldn't figure out querying. It'll do for now though, most farms won't have more than 10 zones.
   const managementZones = await db
     .select({ managementZone })
     .from(managementZone)
-    .leftJoin(tab, ne(managementZone.id, tab.managementZone))
     .where(
       and(
         eq(managementZone.farmId, currentUser.farmId),
-        eq(managementZone.id, tab.managementZone)
+        notExists(
+          db
+            .select({ id: tab.id })
+            .from(tab)
+            .where(eq(managementZone.id, tab.managementZone))
+        )
       )
     );
+
+  // The following bit is a bit sloppy, couldn't figure out querying. It'll do for now though, most farms won't have more than 10 zones.
   const flattenedManagementZones: ManagementZoneSelect[] = managementZones.map(
     (row) => row.managementZone
   );

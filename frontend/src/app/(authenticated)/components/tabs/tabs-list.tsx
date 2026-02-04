@@ -52,30 +52,30 @@ export default function PlatformTabsList({
 
     // Remove added management zone from list
     const newManagementZones = zones.filter(
-      (zone) => zone.farmId !== managementZoneId
+      (zone) => zone.id !== managementZoneId
     );
     setZones(newManagementZones);
   }
 
   return (
-    <div className="absolute left-40 top-4 min-[107rem]:w-[107rem] min-[107rem]:left-0 min-[107rem]:right-0 min-[107rem]:m-auto  max-w-[70vw] min-[107rem]:max-w-350">
-      <TabsList className="bg-transparent flex flex-row flex-nowrap gap-2 justify-start">
+    <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-350">
+      <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
         {!tabs.length ? (
           <TabsTrigger
             value="home"
-            className="border-none data-[state=active]:bg-gray-200 flex-1  overflow-hidden text-ellipsis whitespace-nowrap max-w-56 truncate text-left w-36"
+            className="w-36 max-w-56 flex-1 truncate overflow-hidden border-none text-left text-ellipsis whitespace-nowrap data-[state=active]:bg-gray-200"
           >
             Home
           </TabsTrigger>
         ) : (
           tabs.map((tab, index) => (
             <TabsTrigger
-              className="border-none data-[state=active]:bg-gray-200 max-w-36 truncate min-w-36 group"
+              className="group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200"
               key={tab.id}
               value={getTabHash(tab)}
             >
               <input
-                className="cursor-pointer max-w-[100%] text-center group-data-[state=active]:pointer-events-none outline-none ring-0 focus:outline-none focus:ring-0"
+                className="max-w-[100%] cursor-pointer text-center ring-0 outline-none group-data-[state=active]:pointer-events-none focus:ring-0 focus:outline-none"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
               />
             </TabsTrigger>
@@ -83,7 +83,7 @@ export default function PlatformTabsList({
         )}
         {tabs.length <= maxTabs && (
           <NewTabDropdown managementZones={zones} addTab={addTab}>
-            <Button className="cursor-pointer text-4xl font-light ml-2 min-w-10">
+            <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:outline-none">
               <span className="absolute top-[-3.5px]">+</span>
             </Button>
           </NewTabDropdown>
