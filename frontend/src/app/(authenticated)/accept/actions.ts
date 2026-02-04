@@ -2,8 +2,6 @@
 
 'use server';
 
-import 'server-only';
-
 import { isVerified, setPassword } from '@/lib/auth';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
