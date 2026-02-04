@@ -150,12 +150,12 @@ export async function createTab(
       return { error: `Can't create more than ${maxTabs} tabs` };
     }
 
-    const [tabId] = await db
+    const [newTab] = await db
       .insert(tab)
       .values({ managementZone: managementZoneId, user: userId })
-      .returning({ tabId: tab.id });
+      .returning({ id: tab.id });
 
-    return { data: { tabId }, error: null };
+    return { data: { tabId: newTab.id }, error: null };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
