@@ -5,13 +5,11 @@ import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { and, asc, eq, exists, ne, notExists } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import { NamedTab } from './components/tabs/types';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
-import Landing from './components/landing';
-import { getTabHash } from './components/tabs/helpers';
-import PlatformTabsList from './components/tabs/tabs-list';
-import { ManagementZoneSelect } from '@/lib/types/db';
+import { getTablessManagementZones } from './components/tabs/utils';
+import PlatformTabs from './components/tabs/tabs';
+import PlatformTabContent from './components/tabs/tab-content';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -56,48 +54,15 @@ export default async function DashboardPage() {
     .orderBy(asc(managementZone.name))
     .where(eq(tab.user, currentUser.id));
 
-  const managementZones = await db
-    .select({ managementZone })
-    .from(managementZone)
-    .where(
-      and(
-        eq(managementZone.farmId, currentUser.farmId),
-        notExists(
-          db
-            .select({ id: tab.id })
-            .from(tab)
-            .where(eq(managementZone.id, tab.managementZone))
-        )
-      )
-    );
-
-  // The following bit is a bit sloppy, couldn't figure out querying. It'll do for now though, most farms won't have more than 10 zones.
-  const flattenedManagementZones: ManagementZoneSelect[] = managementZones.map(
-    (row) => row.managementZone
-  );
+  const managementZones = await getTablessManagementZones(currentUser.farmId);
 
   return (
-    <Tabs
-      defaultValue={
-        currentTabs.length !== 0 ? getTabHash(currentTabs[0]) : 'home'
-      }
+    <PlatformTabs
+      managementZones={managementZones}
+      currentTabs={currentTabs}
+      currentUser={currentUser}
     >
-      <PlatformTabsList
-        currentTabs={currentTabs}
-        managementZones={flattenedManagementZones}
-        currentUser={currentUser}
-      />
-      {!currentTabs.length ? (
-        <TabsContent value="home">
-          <Landing />
-        </TabsContent>
-      ) : (
-        currentTabs.map((tab) => (
-          <TabsContent key={tab.id} value={getTabHash(tab)}>
-            <h1>{tab.name}</h1>
-          </TabsContent>
-        ))
-      )}
-    </Tabs>
+      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+    </PlatformTabs>
   );
 }
