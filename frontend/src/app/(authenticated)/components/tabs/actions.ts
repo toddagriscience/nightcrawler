@@ -7,6 +7,8 @@ import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import { and, eq } from 'drizzle-orm';
+import { getTablessManagementZones } from './utils';
+import { ManagementZoneSelect } from '@/lib/types/db';
 
 /** Update the name of a tab, which is actually the name of the related management zone.
  *
@@ -74,15 +76,18 @@ export default async function updateTabName(
  * @param name - Name of the tab (AKA the name of the management zone)
  * @param tabId - The literal id of the tab
  * */
-export async function deleteTab(
-  name?: string,
-  tabId?: number
-): Promise<ActionResponse> {
+export async function deleteTab({
+  name,
+  tabId,
+}: {
+  name?: string;
+  tabId?: number;
+}): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
 
     if ('error' in result) {
-      return result;
+      return { error: result.error };
     }
 
     if (!result.id || !result.farmId) {
@@ -124,7 +129,7 @@ export async function deleteTab(
  * @param managementZoneId - The ID of the management zone that this tab is being created for*/
 export async function createTab(
   managementZoneId: number
-): Promise<ActionResponse> {
+): Promise<{ data?: { tabId: number }; error?: string | null }> {
   const maxTabs = 8;
 
   try {
@@ -153,9 +158,9 @@ export async function createTab(
     const [newTab] = await db
       .insert(tab)
       .values({ managementZone: managementZoneId, user: userId })
-      .returning({ id: tab.id });
+      .returning();
 
-    return { data: { tabId: newTab.id }, error: null };
+    return { data: { tabId: newTab.id } };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

@@ -1,23 +1,17 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
 import ApplyButton from './apply-button';
 import { db } from '@/lib/db/schema/connection';
 import { accountAgreementAcceptance } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { UserSelect } from '@/lib/types/db';
 
-export default async function Landing() {
-  const currentUser = await getAuthenticatedInfo();
-
-  if ('error' in currentUser) {
-    return (
-      <div>
-        <p>{currentUser.error}</p>
-      </div>
-    );
-  }
-
+export default async function Landing({
+  currentUser,
+}: {
+  currentUser: UserSelect;
+}) {
   const [hasApplied] = await db
     .select({ userId: accountAgreementAcceptance.userId })
     .from(accountAgreementAcceptance)
