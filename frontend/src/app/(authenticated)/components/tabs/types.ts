@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-export type Tab = {
-  name: string | null;
-  id: number;
-  managementZone: number | null;
-};
+import { TabSelect } from '@/lib/types/db';
+
+export type NamedTab = TabSelect & { name: string | null };
