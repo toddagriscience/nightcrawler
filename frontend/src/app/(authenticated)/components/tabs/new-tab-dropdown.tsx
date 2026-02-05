@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { ManagementZoneSelect } from '@/lib/types/db';
 
@@ -25,16 +26,23 @@ export default function NewTabDropdown({
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent>
         {managementZones.length > 0 ? (
-          managementZones.map((zone) => (
-            <DropdownMenuItem
-              key={zone.id}
-              onClick={() => addTab(zone.id, zone.name)}
-            >
-              {zone.name || 'Untitled Zone'}
-            </DropdownMenuItem>
+          managementZones.map((zone, index) => (
+            <div key={zone.id}>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => addTab(zone.id, zone.name)}
+              >
+                {zone.name || 'Untitled Zone'}
+              </DropdownMenuItem>
+              {index < managementZones.length - 1 && (
+                <DropdownMenuSeparator className="w-[95%] mx-auto" />
+              )}
+            </div>
           ))
         ) : (
-          <DropdownMenuLabel>No management zones</DropdownMenuLabel>
+          <DropdownMenuLabel className="font-normal">
+            No management zones
+          </DropdownMenuLabel>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
