@@ -2,6 +2,7 @@
 
 'use server';
 
+import { setPassword } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -143,11 +144,8 @@ export async function updateUser(
     };
   }
 
-  const toUpdate = { password: newPassword.toString() };
-  const client = await createClient();
-
   try {
-    const { error } = await client.auth.updateUser(toUpdate);
+    const { error } = await setPassword(newPassword.toString());
 
     if (error) {
       logger.warn(
