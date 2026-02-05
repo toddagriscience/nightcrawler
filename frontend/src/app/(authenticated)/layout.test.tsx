@@ -11,6 +11,13 @@ vi.mock(
   })
 );
 
+vi.mock('next/font/local', () => ({
+  default: () => ({
+    className: 'mock-font',
+    variable: 'mock-font-variable',
+  }),
+}));
+
 describe('AuthenticatedLayout', () => {
   it('should render "authenticated-root" class', () => {
     render(
