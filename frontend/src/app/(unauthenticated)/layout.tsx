@@ -5,9 +5,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { fontVariables } from '@/lib/fonts';
 import type { Metadata } from 'next';
-import './globals.css';
-import { PostHogProvider } from './providers';
 import { Organization, WebSite, WithContext } from 'schema-dts';
+import '../globals.css';
+import { PostHogProvider } from '../providers';
 
 /**
  * Root layout metadata for pages outside [locale] directory
