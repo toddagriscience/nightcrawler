@@ -15,6 +15,7 @@ import logger from '@/lib/logger';
 import NewTabDropdown from './new-tab-dropdown';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { X } from 'lucide-react';
 
 const maxTabs = 8;
 
@@ -34,11 +35,25 @@ export default function PlatformTabs({
     currentTabs.length !== 0 ? getTabHash(currentTabs[0]) : 'home'
   );
 
-  async function setCurTabHelper({ newTabId }: { newTabId?: NamedTab }) {
-    if (currentTabs.length === 0) {
-      setCurTab('home');
-    } else if (newTabId) {
-      setCurTab(getTabHash(newTabId));
+  async function setCurTabHelper({
+    newTab,
+    deletedTab,
+  }: {
+    newTab?: NamedTab;
+    deletedTab?: NamedTab;
+  }) {
+    if (newTab) {
+      setCurTab(getTabHash(newTab));
+    } else if (deletedTab) {
+      if (deletedTab && currentTabs.length === 1) {
+        setCurTab('home');
+      }
+      for (const tab of currentTabs) {
+        if (getTabHash(tab) !== getTabHash(deletedTab)) {
+          setCurTab(getTabHash(tab));
+          break;
+        }
+      }
     } else {
       setCurTab(getTabHash(currentTabs[0]));
     }
@@ -58,7 +73,7 @@ export default function PlatformTabs({
     router.refresh();
 
     setCurTabHelper({
-      newTabId: {
+      newTab: {
         name: managementZoneName || 'Untitled Zone',
         managementZone: managementZoneId,
         id: maybeNewTab.data!.tabId,
@@ -78,7 +93,7 @@ export default function PlatformTabs({
 
     router.refresh();
 
-    setCurTabHelper({});
+    setCurTabHelper({ deletedTab: tab });
   }
 
   async function updateTab(newName: string, tabId: number) {
@@ -107,26 +122,28 @@ export default function PlatformTabs({
           ) : (
             currentTabs.map((tab, index) => (
               <TabsTrigger
-                className="pl-2 group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
+                className="px-2 flex flex-row justify-between items-center group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
                 key={tab.id}
                 value={getTabHash(tab)}
-                onClick={() => setCurTabHelper({ newTabId: tab })}
+                onClick={() => setCurTabHelper({ newTab: tab })}
               >
                 <input
-                  className="max-w-[100%] cursor-pointer text-center ring-0 outline-none group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
+                  className="max-w-25 truncate cursor-pointer group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
                   defaultValue={tab.name || `Untitled Zone ${index}`}
                   onChange={(e) => updateTab(e.target.value, tab.id)}
+                  onBlur={(e) => (e.target.scrollLeft = 0)}
                 />
-                {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                <div
-                  aria-roledescription="Close the current tab"
-                  role="button"
-                  onClick={() => deleteTab(tab)}
-                  className="group-hover:block hidden p-0 h-min"
-                >
-                  X
+                <div>
+                  {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
+                  <div
+                    aria-roledescription="Close the current tab"
+                    role="button"
+                    onClick={() => deleteTab(tab)}
+                    className=" p-0 h-min"
+                  >
+                    <X className="w-4 h-min" />
+                  </div>
                 </div>
-                <div className="group-hover:hidden block min-w-2"></div>
               </TabsTrigger>
             ))
           )}
@@ -135,15 +152,15 @@ export default function PlatformTabs({
               managementZones={managementZones}
               addTab={createTab}
             >
-              <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:outline-none">
+              <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:ring-offset-0!">
                 <span className="absolute top-[-3.5px]">+</span>
               </Button>
             </NewTabDropdown>
           )}
           <div className="grow"></div>
         </TabsList>
-        {children}
       </div>
+      {children}
     </Tabs>
   );
 }
