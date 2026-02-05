@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import CompetenciesSection from './components/competencies-section/competencies-section';
 import Partners from './components/partners';
 
 /**
@@ -25,7 +26,6 @@ export default function WhoWeArePage() {
   });
   const leftImageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
   const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 200]);
-  const easeOutCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
   return (
     <>
@@ -111,38 +111,16 @@ export default function WhoWeArePage() {
             </motion.div>
           </div>
         </div>
-        {/* Competencies Section */}
-        <div className="w-full mb-30 flex justify-center text-center items-center md:px-28 lg:px-40">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[450px] lg:max-w-[550px] leading-tight font-thin">
-            {t('competencies.title')}
-          </h2>
-        </div>
-        {/* Competencies Items Section */}
-
-        <motion.div className="mb-60 space-y-16 font-light flex flex-col justify-center items-center gap-16 max-w-[350px] md:max-w-[550px] lg:max-w-[550px] mx-auto">
-          {[0, 1, 2].map((index) => (
-            <motion.p
-              key={`competencies-items-${index}`}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 1.3,
-                ease: easeOutCurve,
-                delay: index * 0.2,
-              }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="text-normal md:text-base lg:text-lg font-thin leading-relaxed"
-            >
-              {t(`competencies.items.${index}`)}
-            </motion.p>
-          ))}
-        </motion.div>
-
+      </main>
+      {/* Competencies Section */}
+      <CompetenciesSection t={t} />
+      <main className="flex flex-col mx-auto max-w-[1200px]">
+        {/* Partners Section */}
         <motion.div
           className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
           initial={{ opacity: 0.5, y: 34 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.3, ease: 'easeOut' }}
+          transition={{ duration: 1.8, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
         >
           <Partners />
