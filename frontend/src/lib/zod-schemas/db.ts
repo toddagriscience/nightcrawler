@@ -1,8 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { farm, farmCertificate, farmLocation } from '../db/schema/';
-import { user } from '../db/schema/user';
-import { farmInfoInternalApplication } from '../db/schema/internal-application';
+import {
+  farm,
+  farmCertificate,
+  farmLocation,
+  user,
+  farmInfoInternalApplication,
+} from '../db/schema/';
 import {
   createInsertSchema,
   createSelectSchema,

@@ -1,9 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { InferInsertModel, type InferSelectModel } from 'drizzle-orm';
-import { farm, farmCertificate, farmLocation } from '../db/schema/farm';
-import { user } from '../db/schema/user';
-import { farmInfoInternalApplication } from '../db/schema';
+import {
+  farmInfoInternalApplication,
+  user,
+  farm,
+  farmCertificate,
+  farmLocation,
+  tab,
+  managementZone,
+} from '../db/schema';
 
 export type UserSelect = InferSelectModel<typeof user>;
 export type FarmLocationSelect = InferSelectModel<typeof farmLocation>;
@@ -12,6 +18,8 @@ export type FarmCertificateSelect = InferSelectModel<typeof farmCertificate>;
 export type FarmInfoInternalApplicationSelect = InferSelectModel<
   typeof farmInfoInternalApplication
 >;
+export type TabSelect = InferSelectModel<typeof tab>;
+export type ManagementZoneSelect = InferSelectModel<typeof managementZone>;
 
 export type FarmInsert = InferInsertModel<typeof farm>;
 export type FarmLocationInsert = InferInsertModel<typeof farmLocation>;
