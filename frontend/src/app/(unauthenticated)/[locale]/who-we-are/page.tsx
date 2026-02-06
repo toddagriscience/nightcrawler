@@ -36,9 +36,10 @@ export default function WhoWeArePage() {
           overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
         />
       </div>
-      <main className="flex flex-col mx-auto max-w-[1200px]">
-        {/* Hero Text Section */}
-        <motion.div
+      <main>
+        <div className="flex flex-col mx-auto max-w-[1200px]">
+          {/* Hero Text Section */}
+          <motion.div
           className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
           initial={{ opacity: 0.5, y: 34 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,31 +112,32 @@ export default function WhoWeArePage() {
             </motion.div>
           </div>
         </div>
-      </main>
-      {/* Competencies Section */}
-      <CompetenciesSection t={t} />
-      <main className="flex flex-col mx-auto max-w-[1200px]">
-        {/* Partners Section */}
-        <motion.div
-          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
-          initial={{ opacity: 0.5, y: 34 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.8, ease: 'easeOut' }}
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Partners />
-        </motion.div>
-
-        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
-          <Link
-            href="/what-we-do"
-            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
+      </div>
+        {/* Competencies Section */}
+        <CompetenciesSection t={t} />
+        <div className="flex flex-col mx-auto max-w-[1200px]">
+          {/* Partners Section */}
+          <motion.div
+            className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+            initial={{ opacity: 0.5, y: 34 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.8, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.3 }}
           >
-            {t('navigation.whatWeDo')}
-            <span className="mt-1">
-              <HiArrowLongRight className="size-12" />
-            </span>
-          </Link>
+            <Partners />
+          </motion.div>
+
+          <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
+            <Link
+              href="/what-we-do"
+              className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
+            >
+              {t('navigation.whatWeDo')}
+              <span className="mt-1">
+                <HiArrowLongRight className="size-12" />
+              </span>
+            </Link>
+          </div>
         </div>
       </main>
     </>

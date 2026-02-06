@@ -59,7 +59,7 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
               [0, 1, 1, 0]
             ),
           }}
-          className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden"
+          className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none"
         >
           <motion.div
             style={{ height: progressBarHeight }}
