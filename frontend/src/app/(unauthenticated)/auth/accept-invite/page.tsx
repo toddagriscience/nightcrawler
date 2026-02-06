@@ -58,5 +58,12 @@ export default function AcceptInvite() {
     );
   }
 
-  return <div>Processing your invitation...</div>;
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <h1 className="text-2xl">
+        Processing your invitation
+        <span className="ellipsis" />
+      </h1>
+    </div>
+  );
 }
