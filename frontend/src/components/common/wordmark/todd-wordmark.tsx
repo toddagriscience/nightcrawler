@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import Link from 'next/link';
 import Wordmark from '@public/wordmark.svg';
 import Image from 'next/image';
@@ -15,7 +17,9 @@ export default function ToddHeader({ className = '' }: { className?: string }) {
       className={`wordmark leading-none ${className}`}
       data-testid="wordmark-link"
     >
-      <Image src={Wordmark} alt="" />
+      <div className="relative w-20 h-20">
+        <Image src={Wordmark} alt="" fill />
+      </div>
     </Link>
   );
 }
