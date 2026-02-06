@@ -20,6 +20,7 @@ export enum AuthResponseTypes {
   Logout,
   SendResetPasswordEmail,
   UpdateUser,
+  SignIn,
 }
 
 /** Generic interface for a response from a server action/API route involving authentication.
