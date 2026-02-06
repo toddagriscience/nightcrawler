@@ -172,7 +172,7 @@ function CompetencyCircle({
       }}
       className="flex items-center justify-center text-center left-1/2"
     >
-      <div className="flex size-48 md:size-64 flex-col items-center justify-center rounded-full border-0 bg-black/5 p-6 md:p-8 transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10">
+      <div className="flex size-48 md:size-64 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 md:p-8 transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10">
         <motion.p
           style={{ opacity: numberOpacity }}
           className="absolute text-3xl md:text-4xl font-thin"
