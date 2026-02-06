@@ -12,19 +12,18 @@ export const acceptInviteSchema = userInfo
     firstName: true,
     lastName: true,
     phone: true,
+    email: true,
   })
   .extend({
     job: userInsertSchema.shape.job,
     didOwnAndControlParcel,
     didManageAndControl,
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .optional()
-      .or(z.literal('')),
-    confirmPassword: z.string().optional().or(z.literal('')),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });
+
+export type AcceptInvite = z.infer<typeof acceptInviteSchema>;

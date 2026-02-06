@@ -2,7 +2,7 @@
 
 'use server';
 
-import { isVerified, setPassword } from '@/lib/auth';
+import { isVerified, setPassword, signIn } from '@/lib/auth';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
@@ -12,7 +12,7 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { acceptInviteSchema } from './types';
+import { AcceptInvite, acceptInviteSchema } from './types';
 
 /** Accepts an invitation, updates user information, and sets their password.
  *
@@ -21,10 +21,8 @@ import { acceptInviteSchema } from './types';
  * @returns {Promise<ActionResponse>} - Returns a success message if successful, or an error if not
  */
 export async function acceptInvite(
-  _: unknown,
-  formData: FormData
+  formData: AcceptInvite
 ): Promise<ActionResponse> {
-  // If the user's email is not verified (see isVerified()) return an error immediately.
   const verified = await isVerified();
 
   if (!verified) {
@@ -35,18 +33,7 @@ export async function acceptInvite(
     };
   }
 
-  const rawData = {
-    firstName: formData.get('firstName'),
-    lastName: formData.get('lastName'),
-    phone: formData.get('phone'),
-    job: formData.get('job'),
-    didOwnAndControlParcel: formData.get('didOwnAndControlParcel') === 'on',
-    didManageAndControl: formData.get('didManageAndControl') === 'on',
-    password: formData.get('password'),
-    confirmPassword: formData.get('confirmPassword'),
-  };
-
-  const validated = acceptInviteSchema.safeParse(rawData);
+  const validated = acceptInviteSchema.safeParse(formData);
 
   if (!validated.success) {
     logger.info('Invitation acceptance data was not valid');
@@ -63,6 +50,7 @@ export async function acceptInvite(
     didOwnAndControlParcel,
     didManageAndControl,
     password,
+    confirmPassword,
   } = validated.data;
 
   // Get current user to ensure we're updating the right one
@@ -76,6 +64,10 @@ export async function acceptInvite(
 
   try {
     if (password) {
+      if (password != confirmPassword) {
+        return { error: "Passwords don't match" };
+      }
+
       const { error: authError } = await setPassword(password);
       if (authError) {
         const message =
@@ -89,6 +81,14 @@ export async function acceptInvite(
         );
         return { error: message };
       }
+    } else {
+      return { error: 'No password provided' };
+    }
+
+    const { error } = await signIn(validated.data.email, password);
+
+    if (error) {
+      return { error: error };
     }
 
     const updateData: Partial<UserInsert> = {
@@ -114,6 +114,5 @@ export async function acceptInvite(
         error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
-
   redirect('/');
 }
