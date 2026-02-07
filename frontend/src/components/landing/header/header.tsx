@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
           <LoginLink />
         </div>
       </div>
-      <div className="sm:hidden pl-5 pt-3">
+      <div className="sm:hidden relative flex pl-5 pt-3">
         <ToddHeader />
       </div>
       <div
