@@ -14,10 +14,16 @@ export default function ToddHeader({ className = '' }: { className?: string }) {
   return (
     <Link
       href="/"
-      className={`wordmark leading-none relative w-20 h-20 ${className}`}
+      className={`wordmark leading-none  ${className}`}
       data-testid="wordmark-link"
     >
-      <Image src={Wordmark} alt="" fill />
+      <Image
+        src={Wordmark}
+        alt=""
+        className="object-contain"
+        width={76}
+        height={25}
+      />
     </Link>
   );
 }
