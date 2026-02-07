@@ -111,42 +111,32 @@ export default function PlatformTabs({
     <Tabs value={curTab}>
       <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-350">
         <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
-          {!currentTabs.length ? (
+          {currentTabs.map((tab, index) => (
             <TabsTrigger
-              value="home"
-              className="w-36 max-w-56 flex-1 truncate overflow-hidden border-none text-left text-ellipsis whitespace-nowrap data-[state=active]:bg-gray-200"
-              onClick={() => setCurTabHelper({})}
+              className="px-2 flex flex-row justify-between items-center group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
+              key={tab.id}
+              value={getTabHash(tab)}
+              onClick={() => setCurTabHelper({ newTab: tab })}
             >
-              Home
-            </TabsTrigger>
-          ) : (
-            currentTabs.map((tab, index) => (
-              <TabsTrigger
-                className="px-2 flex flex-row justify-between items-center group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
-                key={tab.id}
-                value={getTabHash(tab)}
-                onClick={() => setCurTabHelper({ newTab: tab })}
-              >
-                <input
-                  className="max-w-25 truncate cursor-pointer group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
-                  defaultValue={tab.name || `Untitled Zone ${index}`}
-                  onChange={(e) => updateTab(e.target.value, tab.id)}
-                  onBlur={(e) => (e.target.scrollLeft = 0)}
-                />
-                <div>
-                  {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                  <div
-                    aria-roledescription="Close the current tab"
-                    role="button"
-                    onClick={() => deleteTab(tab)}
-                    className=" p-0 h-min"
-                  >
-                    <X className="w-4 h-min" />
-                  </div>
+              <input
+                className="max-w-25 truncate cursor-pointer group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
+                defaultValue={tab.name || `Untitled Zone ${index}`}
+                onChange={(e) => updateTab(e.target.value, tab.id)}
+                onBlur={(e) => (e.target.scrollLeft = 0)}
+              />
+              <div>
+                {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
+                <div
+                  aria-roledescription="Close the current tab"
+                  role="button"
+                  onClick={() => deleteTab(tab)}
+                  className=" p-0 h-min"
+                >
+                  <X className="w-4 h-min" />
                 </div>
-              </TabsTrigger>
-            ))
-          )}
+              </div>
+            </TabsTrigger>
+          ))}
           {currentTabs.length <= maxTabs && (
             <NewTabDropdown
               managementZones={managementZones}
