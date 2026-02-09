@@ -86,6 +86,8 @@ const PlaceholderImage = ({
       onError={handleError}
       onLoad={() => setImageError(false)}
       loading={loading}
+      fetchPriority="high"
+      preload
     />
   );
 };
