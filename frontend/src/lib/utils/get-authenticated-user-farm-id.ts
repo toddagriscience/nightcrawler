@@ -38,7 +38,7 @@ export async function getAuthenticatedInfo(): Promise<AuthenticatedUser> {
       throw new Error('User not found');
     }
 
-    if (!currentUser.farmId) {
+    if (currentUser.farmId === null || currentUser.farmId === undefined) {
       throw new Error('User is not associated with a farm');
     }
 
