@@ -1,9 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { 
-  accountAgreementAcceptance, 
-  managementZone 
-} from '@/lib/db/schema';
+import { accountAgreementAcceptance, managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
