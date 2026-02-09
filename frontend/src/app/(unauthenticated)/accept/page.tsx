@@ -16,16 +16,15 @@ export default async function AcceptPage({
     redirect('/');
   }
 
-  const currentUser = await getAuthenticatedInfo();
-
-  if ('error' in currentUser) {
+  try {
+    const currentUser = await getAuthenticatedInfo();
+    return <AcceptForm currentUser={currentUser} />;
+  } catch (error) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
         <h1>There was an error with authentication</h1>
-        <p>{currentUser.error}</p>
+        <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     );
-  } else {
-    return <AcceptForm currentUser={currentUser} />;
   }
 }

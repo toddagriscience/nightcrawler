@@ -8,21 +8,23 @@ import { db } from '../db/schema/connection';
 import { eq } from 'drizzle-orm';
 import { UserSelect } from '@/lib/types/db';
 
+/** User with a guaranteed farm (returned by getAuthenticatedInfo). */
+export type AuthenticatedUser = Omit<UserSelect, 'farmId'> & { farmId: number };
+
 /**
- * Gets the authenticated user's requested information. Returns an error ActionResponse if the user
+ * Gets the authenticated user's information. Throws an error if the user
  * is not authenticated, not found, or not associated with a farm.
  *
  * At the moment, this simply returns all of the user's information for sake of type simplicity. This should be optimized in the future.
  *
- * @returns {Promise<ActionResponse>} - If successful, the requested user's information via an ActionResponse, else an ActionResponse containing an error
+ * @returns {Promise<AuthenticatedUser>} - The authenticated user's information
+ * @throws {Error} - If user is not authenticated, not found, or not associated with a farm
  */
-export async function getAuthenticatedInfo(): Promise<
-  UserSelect | { error: string }
-> {
+export async function getAuthenticatedInfo(): Promise<AuthenticatedUser> {
   const email = await getUserEmail();
 
   if (!email) {
-    return { error: "No email registered with this user's account" };
+    throw new Error("No email registered with this user's account");
   }
 
   try {
@@ -33,18 +35,20 @@ export async function getAuthenticatedInfo(): Promise<
       .limit(1);
 
     if (!currentUser) {
-      return { error: 'User not found' };
+      throw new Error('User not found');
     }
 
     if (!currentUser.farmId) {
-      return { error: 'User is not associated with a farm' };
+      throw new Error('User is not associated with a farm');
     }
 
-    return currentUser;
+    return { ...currentUser, farmId: currentUser.farmId };
   } catch (error) {
+    // If it's already an error we threw, re-throw it
     if (error instanceof Error) {
-      return { error: error.message };
+      throw error;
     }
-    return { error: 'Error with querying for the current user.' };
+    // Otherwise wrap the unknown error
+    throw new Error('Error with querying for the current user.');
   }
 }

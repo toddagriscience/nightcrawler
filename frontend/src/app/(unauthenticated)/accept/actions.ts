@@ -53,16 +53,10 @@ export async function acceptInvite(
     confirmPassword,
   } = validated.data;
 
-  // Get current user to ensure we're updating the right one
-  const currentUser = await getAuthenticatedInfo();
-  if ('error' in currentUser) {
-    logger.warn(
-      `Failed to get authenticated info during invite acceptance: ${currentUser.error}`
-    );
-    return { error: currentUser.error };
-  }
-
   try {
+    // Get current user to ensure we're updating the right one
+    const currentUser = await getAuthenticatedInfo();
+
     if (password) {
       if (password != confirmPassword) {
         return { error: "Passwords don't match" };
@@ -109,10 +103,18 @@ export async function acceptInvite(
     logger.error(
       `Failed to update user info during invite acceptance: ${error}`
     );
+
+    if (error instanceof Error) {
+      logger.warn(
+        `Failed to get authenticated info during invite acceptance: ${error.message}`
+      );
+      return { error: error.message };
+    }
+
     return {
-      error:
-        error instanceof Error ? error.message : 'An unexpected error occurred',
+      error: 'An unexpected error occurred',
     };
   }
+
   redirect('/');
 }

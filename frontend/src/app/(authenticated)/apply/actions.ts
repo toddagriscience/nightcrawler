@@ -43,14 +43,6 @@ export async function saveGeneralBusinessInformation(
 ) {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
     const validated = generalBusinessInformationInsertSchema.safeParse({
       ...formData,
@@ -135,14 +127,6 @@ export async function saveApplication(
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
@@ -194,14 +178,6 @@ export async function submitApplication(): Promise<ActionResponse> {
 
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
     const applicationData = await db
       .select()
@@ -240,13 +216,7 @@ export async function inviteUserToFarm(
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
+    const farmId = result.farmId;
 
     // Multiple admins aren't allowed
     const [doesAdminExist] = await db
@@ -268,7 +238,6 @@ export async function inviteUserToFarm(
       return { error: z.treeifyError(validated.error) };
     }
 
-    const farmId = result.farmId;
     const didInvite = await inviteUser(
       validated.data.email,
       validated.data.firstName
