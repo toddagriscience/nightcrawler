@@ -87,7 +87,7 @@ export default function Colleagues({
   }
 
   return (
-    <FadeIn className="mt-6">
+    <div className="mt-6">
       <div className="max-w-3xl">
         <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
         <p className="mb-5">
@@ -111,7 +111,7 @@ export default function Colleagues({
                     </p>
                   </div>
                   <span
-                    className={`text-muted-foreground text-nowrap mr-4 rounded-4xl px-2 py-1 text-sm border-black/40 border border-solid select-none ${isVerified(singleUser) ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
+                    className={`text-muted-foreground mr-4 rounded-4xl border border-solid border-black/40 px-2 py-1 text-sm text-nowrap select-none ${isVerified(singleUser) ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
                   >
                     {isVerified(singleUser) ? 'Verified' : 'Not verified'}
                   </span>
@@ -322,15 +322,13 @@ export default function Colleagues({
                 setCurrentTab('farm');
                 scrollTo(0, 0);
               }}
-              className="basis-1/3 
-        w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 
-            "
+              className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
             >
               NEXT
             </Button>
           </div>
         </form>
       </div>
-    </FadeIn>
+    </div>
   );
 }
