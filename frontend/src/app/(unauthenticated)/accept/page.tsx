@@ -16,9 +16,10 @@ export default async function AcceptPage({
     redirect('/');
   }
 
+  let currentUser;
+
   try {
-    const currentUser = await getAuthenticatedInfo();
-    return <AcceptForm currentUser={currentUser} />;
+    currentUser = await getAuthenticatedInfo();
   } catch (error) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
@@ -27,4 +28,6 @@ export default async function AcceptPage({
       </div>
     );
   }
+
+  return <AcceptForm currentUser={currentUser} />;
 }

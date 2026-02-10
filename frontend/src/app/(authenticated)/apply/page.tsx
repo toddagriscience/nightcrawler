@@ -18,8 +18,14 @@ import { redirect } from 'next/navigation';
  *
  * @returns {JSX.Element} - The application page*/
 export default async function Apply() {
+  let currentUser;
+  let farmId;
+  let farmInfo;
+  let allUsers;
+  let internalApplication;
+
   try {
-    const currentUser = await getAuthenticatedInfo();
+    currentUser = await getAuthenticatedInfo();
 
     if (currentUser.approved) {
       redirect('/');
@@ -35,8 +41,8 @@ export default async function Apply() {
       redirect('/application-success');
     }
 
-    const farmId = currentUser.farmId;
-    const [farmInfo] = await db
+    farmId = currentUser.farmId;
+    [farmInfo] = await db
       .select()
       .from(farm)
       .where(eq(farm.id, farmId))
@@ -45,30 +51,16 @@ export default async function Apply() {
       .limit(1);
 
     // All users EXCEPT the current user
-    const allUsers = await db
+    allUsers = await db
       .select()
       .from(user)
       .where(and(eq(user.farmId, farmId), ne(user.id, currentUser.id)));
-    const [internalApplication] = await db
+
+    [internalApplication] = await db
       .select()
       .from(farmInfoInternalApplication)
       .where(eq(farmInfoInternalApplication.farmId, farmId))
       .limit(1);
-
-    return (
-      <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
-        <ApplicationTabs
-          farmInfo={{
-            ...farmInfo.farm,
-            ...farmInfo.farm_location,
-            ...farmInfo.farm_certificate,
-          }}
-          currentUser={currentUser}
-          allUsers={allUsers}
-          internalApplication={internalApplication}
-        />
-      </div>
-    );
   } catch (error) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
@@ -77,4 +69,19 @@ export default async function Apply() {
       </div>
     );
   }
+
+  return (
+    <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
+      <ApplicationTabs
+        farmInfo={{
+          ...farmInfo.farm,
+          ...farmInfo.farm_location,
+          ...farmInfo.farm_certificate,
+        }}
+        currentUser={currentUser}
+        allUsers={allUsers}
+        internalApplication={internalApplication}
+      />
+    </div>
+  );
 }
