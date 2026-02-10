@@ -89,7 +89,11 @@ export default function Colleagues({
   return (
     <FadeIn className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="mb-4 text-lg font-semibold">Current Team Members</h2>
+        <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
+        <p className="mb-5">
+          Only one viewer account is allowed per user. Please contact support
+          for more information.
+        </p>
         <div className="mb-8">
           {users.length > 0 ? (
             <div className="flex flex-col gap-2">
