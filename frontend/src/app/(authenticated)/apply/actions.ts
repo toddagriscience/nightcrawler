@@ -14,7 +14,6 @@ import {
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { eq } from 'drizzle-orm';
-import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import { userInsertSchema } from '@/lib/zod-schemas/db';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
@@ -259,6 +258,20 @@ export async function inviteUserToFarm(
       return {
         error:
           'Multiple administrators are not allowed. Please contact support for more information.',
+      };
+    }
+
+    // Multiple users aren't allowed (for now)
+    const [doesViewerExist] = await db
+      .select({ role: user.role })
+      .from(user)
+      .where(eq(user.role, 'Viewer'))
+      .limit(1);
+
+    if (doesViewerExist && formData.role === 'Viewer') {
+      return {
+        error:
+          'Multiple viewers are not allowed. Please contact support for more information.',
       };
     }
 
