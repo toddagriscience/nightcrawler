@@ -11,6 +11,16 @@ import { UserSelect } from '@/lib/types/db';
 /** User with a guaranteed farm (returned by getAuthenticatedInfo). */
 export type AuthenticatedUser = Omit<UserSelect, 'farmId'> & { farmId: number };
 
+const KNOWN_AUTH_ERROR_MESSAGES: readonly string[] = [
+  "No email registered with this user's account",
+  'User not found',
+  'User is not associated with a farm',
+];
+
+function isKnownAuthError(error: Error): boolean {
+  return KNOWN_AUTH_ERROR_MESSAGES.includes(error.message);
+}
+
 /**
  * Gets the authenticated user's information. Throws an error if the user
  * is not authenticated, not found, or not associated with a farm.
@@ -44,11 +54,11 @@ export async function getAuthenticatedInfo(): Promise<AuthenticatedUser> {
 
     return { ...currentUser, farmId: currentUser.farmId };
   } catch (error) {
-    // If it's already an error we threw, re-throw it
-    if (error instanceof Error) {
+    if (error instanceof Error && isKnownAuthError(error)) {
       throw error;
     }
-    // Otherwise wrap the unknown error
-    throw new Error('Error with querying for the current user.');
+    throw new Error('Error with querying for the current user.', {
+      cause: error,
+    });
   }
 }

@@ -25,15 +25,6 @@ export default async function updateTabName({
 }): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-
-    if (!result.id || !result.farmId) {
-      return { error: 'No user or farm ID provided in database model' };
-    }
-
     const userId = result.id;
     const farmId = result.farmId;
 
@@ -85,15 +76,6 @@ export async function deleteTab({
 }): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return { error: result.error };
-    }
-
-    if (!result.id || !result.farmId) {
-      return { error: 'No user or farm ID provided in database' };
-    }
-
     const userId = result.id;
     const farmId = result.farmId;
 
@@ -134,15 +116,6 @@ export async function createTab(
 
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-
-    if (!result.id) {
-      return { error: 'No user id present in database' };
-    }
-
     const userId = result.id;
 
     // Check to see if user has the max tabs saved
@@ -165,6 +138,6 @@ export async function createTab(
     if (error instanceof Error) {
       return { error: error.message };
     }
-    return { error: 'Failed to delete tab' };
+    return { error: 'Failed to create tab' };
   }
 }
