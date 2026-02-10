@@ -51,15 +51,22 @@ const Footer = () => {
     {
       icon: <FaInstagram role="img" />,
       href: 'https://www.instagram.com/toddagriscience/',
+      ariaLabel: 'Visit our Instagram page',
     },
     {
       icon: <FaLinkedinIn role="img" />,
       href: 'https://www.linkedin.com/company/toddagriscience/',
+      ariaLabel: 'Visit our LinkedIn page',
     },
-    { icon: <FaXTwitter role="img" />, href: 'https://x.com/toddagriscience' },
+    {
+      icon: <FaXTwitter role="img" />,
+      href: 'https://x.com/toddagriscience',
+      ariaLabel: 'Visit our X (Twitter) page',
+    },
     {
       icon: <FaYoutube role="img" />,
       href: 'http://www.youtube.com/@toddagriscience',
+      ariaLabel: 'Visit our YouTube channel',
     },
   ];
 
@@ -135,7 +142,7 @@ const Footer = () => {
         </div>
         <div className="flex flex-row flex-wrap gap-6">
           {socialMediaIcons.map((val, index) => (
-            <Link key={index} href={val.href}>
+            <Link key={index} href={val.href} aria-label={val.ariaLabel}>
               {val.icon}
             </Link>
           ))}
