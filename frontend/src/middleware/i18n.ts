@@ -12,6 +12,7 @@ const unauthUnintlRoutes = [
   'incoming',
   'signup',
   'auth',
+  'externship-terms',
 ];
 
 /**
