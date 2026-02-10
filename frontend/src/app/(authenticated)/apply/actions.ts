@@ -13,16 +13,6 @@ import {
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
-import { eq } from 'drizzle-orm';
-import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
-import { userInsertSchema } from '@/lib/zod-schemas/db';
-import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import z from 'zod';
-import {
-  GeneralBusinessInformationInsert,
-  generalBusinessInformationInsertSchema,
-} from './types';
 import {
   FarmCertificateInsert,
   FarmInfoInternalApplicationInsert,
@@ -30,8 +20,19 @@ import {
   FarmLocationInsert,
   UserInsert,
 } from '@/lib/types/db';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import {
+  farmInfoInternalApplicationInsertSchema,
+  userInsertSchema,
+} from '@/lib/zod-schemas/db';
+import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import z from 'zod';
 import termsAndConditionsVersion from './terms-and-conditions-version';
+import {
+  GeneralBusinessInformationInsert,
+  generalBusinessInformationInsertSchema,
+} from './types';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
  *

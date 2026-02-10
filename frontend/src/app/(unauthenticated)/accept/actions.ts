@@ -8,7 +8,7 @@ import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import { UserInsert } from '@/lib/types/db';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';

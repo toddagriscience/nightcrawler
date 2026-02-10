@@ -1,14 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { accountAgreementAcceptance, managementZone } from '@/lib/db/schema';
+import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import PlatformTabContent from './components/tabs/tab-content';
 import PlatformTabs from './components/tabs/tabs';
-import { NamedTab } from './components/tabs/types';
 import { getTablessManagementZones } from './components/tabs/utils';
 
 /**
@@ -27,14 +26,9 @@ export const metadata: Metadata = {
  * @returns {React.ReactNode} - The dashboard page component
  */
 export default async function DashboardPage() {
-  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
-  let currentTabs: NamedTab[];
-  let managementZones: Awaited<ReturnType<typeof getTablessManagementZones>>;
-
   try {
-    currentUser = await getAuthenticatedInfo();
-
-    currentTabs = await db
+    const currentUser = await getAuthenticatedInfo();
+    const currentTabs = await db
       .select({
         id: tab.id,
         managementZone: tab.managementZone,
@@ -46,7 +40,22 @@ export default async function DashboardPage() {
       .orderBy(asc(managementZone.name))
       .where(eq(tab.user, currentUser.id));
 
-    managementZones = await getTablessManagementZones(currentUser.farmId);
+    const managementZones = await getTablessManagementZones(
+      currentUser.farmId!
+    );
+
+    return (
+      <PlatformTabs
+        managementZones={managementZones}
+        currentTabs={currentTabs}
+        currentUser={currentUser}
+      >
+        <PlatformTabContent
+          currentTabs={currentTabs}
+          currentUser={currentUser}
+        />
+      </PlatformTabs>
+    );
   } catch (error) {
     return (
       <div className="mx-auto flex min-h-[calc(100vh-64px)] w-[90vw] max-w-[500px] flex-col items-center justify-center">
@@ -55,14 +64,4 @@ export default async function DashboardPage() {
       </div>
     );
   }
-
-  return (
-    <PlatformTabs
-      managementZones={managementZones}
-      currentTabs={currentTabs}
-      currentUser={currentUser}
-    >
-      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
-    </PlatformTabs>
-  );
 }

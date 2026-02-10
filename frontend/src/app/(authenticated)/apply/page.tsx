@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { db } from '@/lib/db/schema/connection';
 import {
   accountAgreementAcceptance,
   farm,
@@ -10,43 +8,26 @@ import {
   farmLocation,
   user,
 } from '@/lib/db/schema';
-import type {
-  FarmCertificateSelect,
-  FarmInfoInternalApplicationSelect,
-  FarmLocationSelect,
-  FarmSelect,
-  UserSelect,
-} from '@/lib/types/db';
+import { db } from '@/lib/db/schema/connection';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq, ne } from 'drizzle-orm';
-import ApplicationTabs from './components/application-tabs';
 import { redirect } from 'next/navigation';
+import ApplicationTabs from './components/application-tabs';
 
 /** The apply page
  *
  * @returns {JSX.Element} - The application page*/
 export default async function Apply() {
-  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
-  let farmId: number;
-  let farmInfo: {
-    farm: FarmSelect | null;
-    farm_location: FarmLocationSelect | null;
-    farm_certificate: FarmCertificateSelect | null;
-  };
-  let allUsers: UserSelect[];
-  let internalApplication: FarmInfoInternalApplicationSelect;
-  let hasApplied: { userId: number | null } | undefined;
-
   try {
-    currentUser = await getAuthenticatedInfo();
-
-    [hasApplied] = await db
+    const currentUser = await getAuthenticatedInfo();
+    const [hasApplied] = await db
       .select({ userId: accountAgreementAcceptance.userId })
       .from(accountAgreementAcceptance)
       .where(eq(accountAgreementAcceptance.userId, currentUser.id))
       .limit(1);
 
-    farmId = currentUser.farmId;
-    [farmInfo] = await db
+    const farmId = currentUser.farmId!;
+    const [farmInfo] = await db
       .select()
       .from(farm)
       .where(eq(farm.id, farmId))
@@ -55,16 +36,39 @@ export default async function Apply() {
       .limit(1);
 
     // All users EXCEPT the current user
-    allUsers = await db
+    const allUsers = await db
       .select()
       .from(user)
       .where(and(eq(user.farmId, farmId), ne(user.id, currentUser.id)));
 
-    [internalApplication] = await db
+    const [internalApplication] = await db
       .select()
       .from(farmInfoInternalApplication)
       .where(eq(farmInfoInternalApplication.farmId, farmId))
       .limit(1);
+
+    if (currentUser.approved) {
+      redirect('/');
+    }
+
+    if (hasApplied) {
+      redirect('/application-success');
+    }
+
+    return (
+      <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
+        <ApplicationTabs
+          farmInfo={{
+            ...farmInfo.farm,
+            ...farmInfo.farm_location,
+            ...farmInfo.farm_certificate,
+          }}
+          currentUser={currentUser}
+          allUsers={allUsers}
+          internalApplication={internalApplication}
+        />
+      </div>
+    );
   } catch (error) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
@@ -73,26 +77,4 @@ export default async function Apply() {
       </div>
     );
   }
-
-  if (currentUser.approved) {
-    redirect('/');
-  }
-  if (hasApplied) {
-    redirect('/application-success');
-  }
-
-  return (
-    <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
-      <ApplicationTabs
-        farmInfo={{
-          ...farmInfo.farm,
-          ...farmInfo.farm_location,
-          ...farmInfo.farm_certificate,
-        }}
-        currentUser={currentUser}
-        allUsers={allUsers}
-        internalApplication={internalApplication}
-      />
-    </div>
-  );
 }

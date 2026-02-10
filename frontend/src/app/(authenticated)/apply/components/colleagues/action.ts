@@ -5,7 +5,7 @@
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 
 /** Updates a client's role. Takes no arguments, simply flips the user's role (viewer -> admin, admin -> viewer) */
