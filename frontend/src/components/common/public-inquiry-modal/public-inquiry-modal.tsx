@@ -59,19 +59,19 @@ export default function PublicInquiryModal({
           </Button>
         )}
       </DialogTrigger>
-      <FadeIn duration={0.6}>
-        <DialogContent className="sm:max-w-[430px] gap-8">
+      <FadeIn>
+        <DialogContent className="gap-8 sm:max-w-[430px]">
           <DialogHeader className="gap-1">
-            <DialogTitle className="text-xl font-normal leading-tight">
+            <DialogTitle className="text-xl leading-tight font-normal">
               What can we help with?
             </DialogTitle>
           </DialogHeader>
-          <div className="border-b border-[#2A2727]/60 divide-y divide-[#2A2727]/60">
+          <div className="divide-y divide-[#2A2727]/60 border-b border-[#2A2727]/60">
             {options.map((option) => (
               <Link
                 key={option.label}
                 href={option.href}
-                className="flex w-full items-center justify-between px-4 py-4 text-left text-base font-normal text-foreground transition hover:bg-[var(--background-secondary)]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary hover:transition-all hover:duration-300 hover:ease-in-out"
+                className="text-foreground focus-visible:outline-primary flex w-full items-center justify-between px-4 py-4 text-left text-base font-normal transition hover:bg-[var(--background-secondary)]/30 hover:transition-all hover:duration-300 hover:ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
               >
                 {option.label}
               </Link>
@@ -80,7 +80,7 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] focus:outline-none hover:transition-all hover:duration-300 hover:ease-in-out"
+              className="w-full hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:transition-all hover:duration-300 hover:ease-in-out focus:outline-none"
               onClick={() => setIsOpen(false)}
             >
               CANCEL
