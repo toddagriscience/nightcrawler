@@ -16,7 +16,7 @@ export default async function AcceptPage({
     redirect('/');
   }
 
-  let currentUser;
+  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
 
   try {
     currentUser = await getAuthenticatedInfo();

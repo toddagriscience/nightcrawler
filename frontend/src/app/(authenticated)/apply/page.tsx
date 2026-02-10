@@ -10,6 +10,13 @@ import {
   farmLocation,
   user,
 } from '@/lib/db/schema';
+import type {
+  FarmCertificateSelect,
+  FarmInfoInternalApplicationSelect,
+  FarmLocationSelect,
+  FarmSelect,
+  UserSelect,
+} from '@/lib/types/db';
 import { and, eq, ne } from 'drizzle-orm';
 import ApplicationTabs from './components/application-tabs';
 import { redirect } from 'next/navigation';
@@ -18,28 +25,25 @@ import { redirect } from 'next/navigation';
  *
  * @returns {JSX.Element} - The application page*/
 export default async function Apply() {
-  let currentUser;
-  let farmId;
-  let farmInfo;
-  let allUsers;
-  let internalApplication;
+  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
+  let farmId: number;
+  let farmInfo: {
+    farm: FarmSelect | null;
+    farm_location: FarmLocationSelect | null;
+    farm_certificate: FarmCertificateSelect | null;
+  };
+  let allUsers: UserSelect[];
+  let internalApplication: FarmInfoInternalApplicationSelect;
+  let hasApplied: { userId: number | null } | undefined;
 
   try {
     currentUser = await getAuthenticatedInfo();
 
-    if (currentUser.approved) {
-      redirect('/');
-    }
-
-    const [hasApplied] = await db
+    [hasApplied] = await db
       .select({ userId: accountAgreementAcceptance.userId })
       .from(accountAgreementAcceptance)
       .where(eq(accountAgreementAcceptance.userId, currentUser.id))
       .limit(1);
-
-    if (hasApplied) {
-      redirect('/application-success');
-    }
 
     farmId = currentUser.farmId;
     [farmInfo] = await db
@@ -68,6 +72,13 @@ export default async function Apply() {
         <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     );
+  }
+
+  if (currentUser.approved) {
+    redirect('/');
+  }
+  if (hasApplied) {
+    redirect('/application-success');
   }
 
   return (

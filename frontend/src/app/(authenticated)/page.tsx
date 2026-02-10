@@ -27,9 +27,9 @@ export const metadata: Metadata = {
  * @returns {React.ReactNode} - The dashboard page component
  */
 export default async function DashboardPage() {
-  let currentUser;
+  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
   let currentTabs: NamedTab[];
-  let managementZones;
+  let managementZones: Awaited<ReturnType<typeof getTablessManagementZones>>;
 
   try {
     currentUser = await getAuthenticatedInfo();

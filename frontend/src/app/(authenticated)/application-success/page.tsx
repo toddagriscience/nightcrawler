@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function ApplicationSuccess() {
-  let currentUser;
-  let hasApplied;
+  let currentUser: Awaited<ReturnType<typeof getAuthenticatedInfo>>;
+  let hasApplied: { userId: number | null } | undefined;
 
   try {
     currentUser = await getAuthenticatedInfo();
@@ -19,10 +19,6 @@ export default async function ApplicationSuccess() {
       .from(accountAgreementAcceptance)
       .where(eq(accountAgreementAcceptance.userId, currentUser.id))
       .limit(1);
-
-    if (!hasApplied) {
-      redirect('/');
-    }
   } catch (error) {
     return (
       <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
@@ -30,6 +26,10 @@ export default async function ApplicationSuccess() {
         <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     );
+  }
+
+  if (!hasApplied) {
+    redirect('/');
   }
 
   return (
