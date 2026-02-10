@@ -51,7 +51,10 @@ export default async function DashboardPage() {
         currentTabs={currentTabs}
         currentUser={currentUser}
       >
-        <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+        <PlatformTabContent
+          currentTabs={currentTabs}
+          currentUser={currentUser}
+        />
       </PlatformTabs>
     );
   } catch (error) {
