@@ -15,7 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { UserSelect, UserInsert } from '@/lib/types/db';
 import { userInsertSchema } from '@/lib/zod-schemas/db';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
@@ -27,6 +27,7 @@ import { Button } from '@/components/ui';
 import { TabTypes } from '../types';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
+import { ApplicationContext } from './application-tabs';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -44,14 +45,13 @@ const userRolesWithDescription: Record<string, any>[] = [
 
 /** The second tab for inviting colleagues to the Todd platform. */
 export default function Colleagues({
-  allUsers,
   setCurrentTab,
-  currentUser,
 }: {
-  allUsers: UserSelect[];
-  currentUser: UserSelect;
   setCurrentTab: (arg0: TabTypes) => void;
 }) {
+  const { currentUser, allUsers, invitedUserVerificationStatus } =
+    useContext(ApplicationContext);
+
   const [users, setUsers] = useState(allUsers);
   const {
     register,
@@ -75,10 +75,25 @@ export default function Colleagues({
     setError('role', { message: formatActionResponseErrors(result)[0] });
   }
 
+  // Technically not the best code - refactor me
+  function isVerified(user: UserSelect) {
+    for (const invitedUser of invitedUserVerificationStatus) {
+      if (invitedUser.email === user.email && invitedUser.verified) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   return (
     <FadeIn className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="mb-4 text-lg font-semibold">Current Team Members</h2>
+        <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
+        <p className="mb-5">
+          Only one viewer account is allowed per user. Please contact support
+          for more information.
+        </p>
         <div className="mb-8">
           {users.length > 0 ? (
             <div className="flex flex-col gap-2">
@@ -95,6 +110,11 @@ export default function Colleagues({
                       ({singleUser.email})
                     </p>
                   </div>
+                  <span
+                    className={`text-muted-foreground text-nowrap mr-4 rounded-4xl px-2 py-1 text-sm border-black/40 border border-solid select-none ${isVerified(singleUser) ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
+                  >
+                    {isVerified(singleUser) ? 'Verified' : 'Not verified'}
+                  </span>
                   <span className="text-muted-foreground text-sm">
                     {singleUser.role}
                   </span>

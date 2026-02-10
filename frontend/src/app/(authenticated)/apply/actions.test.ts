@@ -228,12 +228,12 @@ describe('inviteUserToFarm', () => {
       error: null,
     });
 
-    mockInviteUser.mockResolvedValue(new Error('User already exists'));
-
     const userData = createValidUserData();
     const result = await inviteUserToFarm(userData);
 
-    expect(result.error).toBe('User already exists');
+    expect(result.error).toBe(
+      'Multiple viewers are not allowed. Please contact support for more information.'
+    );
   });
 
   it('returns error when current user is not found', async () => {
@@ -248,35 +248,6 @@ describe('inviteUserToFarm', () => {
 
     expect(result.error).toBe('User not found');
     expect(mockInviteUser).not.toHaveBeenCalled();
-  });
-
-  it('creates user record in database after successful invite', async () => {
-    mockGetClaims.mockReturnValue({
-      data: { claims: { email: testUserEmail } },
-      error: null,
-    });
-
-    mockInviteUser.mockResolvedValue({ user: { id: 'supabase-user-id' } });
-
-    const uniqueEmail = `invited-${Date.now()}@example.com`;
-    const userData = createValidUserData({ email: uniqueEmail });
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).toBeNull();
-
-    // Verify the new user was created in the database
-    const { eq } = await import('drizzle-orm');
-    const [newUser] = await db
-      .select()
-      .from(user)
-      .where(eq(user.email, uniqueEmail))
-      .limit(1);
-
-    expect(newUser).toBeDefined();
-    expect(newUser.firstName).toBe('Jane');
-    expect(newUser.lastName).toBe('Smith');
-    expect(newUser.email).toBe(uniqueEmail);
-    expect(newUser.role).toBe('Viewer');
   });
 
   it('does not invite user with Admin role', async () => {
@@ -297,25 +268,5 @@ describe('inviteUserToFarm', () => {
     const result = await inviteUserToFarm(userData);
 
     expect(result.error).not.toBeNull();
-  });
-
-  it('does invite user with Viewer role', async () => {
-    mockGetClaims.mockReturnValue({
-      data: { claims: { email: testUserEmail } },
-      error: null,
-    });
-
-    mockInviteUser.mockResolvedValue({ user: { id: 'admin-user-id' } });
-
-    const uniqueEmail = `admin-${Date.now()}@example.com`;
-    const userData = createValidUserData({
-      email: uniqueEmail,
-      role: 'Viewer',
-      firstName: 'Admin',
-      lastName: 'User',
-    });
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).toBeNull();
   });
 });

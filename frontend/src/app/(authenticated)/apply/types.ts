@@ -13,7 +13,11 @@ import {
   farmUpdateSchema,
 } from '@/lib/zod-schemas/db';
 import { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import {
+  FarmInfoInternalApplicationInsert,
+  FarmInfoInternalApplicationSelect,
+  UserSelect,
+} from '@/lib/types/db';
 
 export const generalBusinessInformationInsertSchema = z.intersection(
   farmLocationInsertSchema,
@@ -55,3 +59,5 @@ export interface FarmFormRegisterProps {
 }
 
 export type TabTypes = 'general' | 'colleagues' | 'farm' | 'terms';
+
+export type VerificationStatus = { email: string; verified: boolean };
