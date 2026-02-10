@@ -63,16 +63,10 @@ export default async function Apply() {
 
   /**
     * get_email_verification_from_email is equivalent to the following function:
-    *
-    * create or replace function get_email_verification_from_email(email_address text)
-      returns uuid
-      language plpgsql
-      security definer -- This allows the function to bypass RLS and look at auth.users
-      as $$
+    * 
       begin
         return (select email_verified_at from auth.users where email = email_address limit 1);
       end;
-      $$;
     * 
     * email_verified_at is either null or a timestamp.
     * */
