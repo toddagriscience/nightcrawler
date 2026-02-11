@@ -1,13 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { FadeIn, SmoothScroll } from '@/components/common';
+import { Footer, Header } from '@/components/landing';
+import { routing } from '@/i18n/config';
+import { env } from '@/lib/env';
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/config';
-import { env } from '@/lib/env';
-import { FadeIn, SmoothScroll } from '@/components/common';
-import { Footer, Header } from '@/components/landing';
 
 /**
  * Generate metadata for each locale
@@ -123,9 +123,11 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <SmoothScroll>
-        <Header />
-        <FadeIn>{children}</FadeIn>
-        <Footer />
+        <FadeIn>
+          <Header />
+            {children}
+          <Footer />
+        </FadeIn>
       </SmoothScroll>
     </NextIntlClientProvider>
   );

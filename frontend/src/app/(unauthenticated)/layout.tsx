@@ -71,6 +71,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en">
       <head>
@@ -89,14 +90,14 @@ export default function RootLayout({
         />
       </head>
       <body className={fontVariables}>
-        <PostHogProvider>
-          <ThemeProvider>
-            <TooltipProvider delayDuration={0} skipDelayDuration={0}>
-              <ThemeReset />
-              {children}
-            </TooltipProvider>
-          </ThemeProvider>
-        </PostHogProvider>
+          <PostHogProvider>
+            <ThemeProvider>
+              <TooltipProvider delayDuration={0} skipDelayDuration={0}>
+                <ThemeReset />
+                {children}
+              </TooltipProvider>
+            </ThemeProvider>
+          </PostHogProvider>
       </body>
     </html>
   );
