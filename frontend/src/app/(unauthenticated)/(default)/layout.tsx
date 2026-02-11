@@ -6,7 +6,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import '../../globals.css';
 
-
 /**
  * Default layout for unauthenticated, non-locale pages
  * @param {React.ReactNode} children - The children of the default layout
@@ -14,16 +13,18 @@ import '../../globals.css';
  */
 export default async function DefaultLayout({
   children,
-}: {children: React.ReactNode;}) {
+}: {
+  children: React.ReactNode;
+}) {
   const locale = (await getLocale()) ?? 'en';
   const messages = await getMessages({ locale });
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <SmoothScroll>
-          <Header />
-            {children}
-          <Footer />
+        <Header />
+        {children}
+        <Footer />
       </SmoothScroll>
     </NextIntlClientProvider>
   );

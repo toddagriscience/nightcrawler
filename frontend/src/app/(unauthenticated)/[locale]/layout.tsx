@@ -125,7 +125,7 @@ export default async function LocaleLayout({
       <SmoothScroll>
         <FadeIn>
           <Header />
-            {children}
+          {children}
           <Footer />
         </FadeIn>
       </SmoothScroll>
