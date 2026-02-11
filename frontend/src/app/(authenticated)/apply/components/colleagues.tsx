@@ -20,7 +20,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { FadeIn } from '@/components/common';
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 import { Button } from '@/components/ui';
@@ -28,6 +27,9 @@ import { TabTypes } from '../types';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ApplicationContext } from './application-tabs';
+import { resendVerificationEmail } from './colleagues/action';
+import { RefreshCw } from 'lucide-react';
+import InvitedUser from './colleagues/invited-user';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -98,31 +100,17 @@ export default function Colleagues({
           {users.length > 0 ? (
             <div className="flex flex-col gap-2">
               {users.map((singleUser, index) => (
-                <div
+                <InvitedUser
+                  invitedUser={singleUser}
                   key={index}
-                  className="flex flex-row items-center justify-between rounded-md border p-3"
-                >
-                  <div className="flex w-full flex-col sm:flex-row">
-                    <p className="font-medium">
-                      {singleUser.firstName} {singleUser.lastName}
-                    </p>
-                    <p className="text-muted-foreground sm:ml-2">
-                      ({singleUser.email})
-                    </p>
-                  </div>
-                  <span
-                    className={`text-muted-foreground mr-4 rounded-4xl border border-solid border-black/40 px-2 py-1 text-sm text-nowrap select-none ${isVerified(singleUser) ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
-                  >
-                    {isVerified(singleUser) ? 'Verified' : 'Not verified'}
-                  </span>
-                  <span className="text-muted-foreground text-sm">
-                    {singleUser.role}
-                  </span>
-                </div>
+                  isVerified={isVerified(singleUser)}
+                />
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No team members added yet.</p>
+            <p className="text-muted-foreground text-sm">
+              No team members added yet.
+            </p>
           )}
         </div>
         <SelfSelectAdmin role={currentUser.role} />
