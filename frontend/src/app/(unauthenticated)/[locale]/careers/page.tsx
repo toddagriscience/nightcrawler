@@ -86,7 +86,6 @@ export default function Careers() {
                 style={{ y: rightImageY }}
                 className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
               >
-
                 {/* Apply Section 
                 - Closed: Show closed message and link to LinkedIn
                 - Open: Show open message and button to apply
@@ -98,11 +97,15 @@ export default function Careers() {
                   <p className="text-normal md:text-base lg:text-lg font-light leading-relaxed max-w-[300px] sm:max-w-[420px] md:max-w-[460px] lg:max-w-[600px]">
                     {t('applyClosed.description')}
                   </p>
-                  <Link href="https://www.linkedin.com/company/toddagriscience/" target="_blank" className="text-sm md:text-normal lg:text-base font-normal underline leading-relaxed max-w-[300px] md:max-w-[460px] lg:max-w-[600px]">
+                  <Link
+                    href="https://www.linkedin.com/company/toddagriscience/"
+                    target="_blank"
+                    className="text-sm md:text-normal lg:text-base font-normal underline leading-relaxed max-w-[300px] md:max-w-[460px] lg:max-w-[600px]"
+                  >
                     {t('applyClosed.linkText')}
                   </Link>
 
-                {/* Add application button back in when application period is open- currently closed */}
+                  {/* Add application button back in when application period is open- currently closed */}
                   {/* <Button
                     className="max-w-[235px] w-[90vw] gap-6 font-thin"
                     text={t('apply.button')}
