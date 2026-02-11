@@ -119,22 +119,21 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  rewrites() {
-    return {
-      beforeFiles: [
-        // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected. If they access https://go.toddagriscience.com though, they're allowed through.
-        {
-          source: '/:path(invite|creator|partner)',
-          has: [
-            {
-              type: 'host',
-              value: String(process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN),
-            },
-          ],
-          destination: '/',
-        },
-      ],
-    };
+  redirects() {
+    return [
+      // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected. If they access https://go.toddagriscience.com though, they're allowed through.
+      {
+        source: '/:path(invite|creator|partner)',
+        has: [
+          {
+            type: 'host',
+            value: String(process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN),
+          },
+        ],
+        permanent: true,
+        destination: '/',
+      },
+    ];
   },
 
   // Disable powered-by header to reduce information disclosure
