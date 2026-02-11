@@ -46,7 +46,7 @@ export default function WhoWeArePage() {
             transition={{ duration: 1.3, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <div className="flex mb-10 flex-col max-w-[910px]">
+            <div className="flex mb-16 flex-col max-w-[910px]">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
                 {t('title')}
               </h2>
