@@ -53,7 +53,6 @@ export default function WhoWeArePage() {
               <div className="text-sm md:text-normal lg:text-base font-light leading-relaxed space-y-4">
                 <p>{t('intro.paragraphs.0')}</p>
                 <p>{t('intro.paragraphs.1')}</p>
-                <p>{t('intro.paragraphs.2')}</p>
               </div>
             </div>
           </motion.div>

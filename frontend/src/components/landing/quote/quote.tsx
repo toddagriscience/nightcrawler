@@ -26,7 +26,7 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
       className="flex flex-col justify-center items-center text-center px-0 lg:px-0 h-[65vh] md:h-[75vh]"
       role="region"
     >
-      <h1 className="text-3xl md:text-4xl font-thin text-center w-[85%] sm:w-[95%] md:w-[93%] lg:w-[75%] mx-auto">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-thin text-center w-[85%] sm:w-[95%] md:w-[93%] lg:w-[75%] mx-auto">
         <span className="tracking-normal leading-tight">{t('quote')}</span>
       </h1>
       <Button
