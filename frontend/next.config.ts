@@ -67,9 +67,9 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'", // Only allow resources from same origin
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://challenges.cloudflare.com",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com",
       "style-src 'self' 'unsafe-inline' https://*.posthog.com", // Allow inline styles for CSS-in-JS
-      "img-src 'self' blob: data: https://*.posthog.com", // Allow images from self, blob URLs, and data URLs
+      "img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io", // Allow images from self, blob URLs, and data URLs
       "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
       "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co", // Allow PostHog analytics in cookieless mode
       "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
@@ -77,7 +77,7 @@ const securityHeaders = [
       "base-uri 'self'", // Restrict base tag URLs
       "form-action 'self'", // Restrict form submissions
       "frame-ancestors 'self'", // Prevent embedding in frames
-      "frame-src https://challenges.cloudflare.com 'self'",
+      "frame-src 'self'",
       'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
     ].join('; '),
   },
@@ -108,7 +108,34 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  images: { remotePatterns: [new URL('https://cdn.sanity.io/**')] },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
+  rewrites() {
+    return {
+      beforeFiles: [
+        // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected. If they access https://go.toddagriscience.com though, they're allowed through.
+        {
+          source: '/:path(invite|creator|partner)',
+          has: [
+            {
+              type: 'host',
+              value: String(process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN),
+            },
+          ],
+          destination: '/',
+        },
+      ],
+    };
+  },
 
   // Disable powered-by header to reduce information disclosure
   poweredByHeader: false,

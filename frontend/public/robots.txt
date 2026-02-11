@@ -18,6 +18,9 @@ Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
 Disallow: /apple-app-site-association
 Disallow: /en-us*data=route*
+Disallow: /invite
+Disallow: /creator
+Disallow: /partner
 
 User-agent: AhrefsBot
 Crawl-delay: 10
@@ -33,6 +36,9 @@ Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /invite
+Disallow: /creator
+Disallow: /partner
 
 User-agent: AhrefsSiteAudit
 Crawl-delay: 10
@@ -48,6 +54,9 @@ Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /invite
+Disallow: /creator
+Disallow: /partner
 
 User-agent: AliyunSpider
 Disallow: /
@@ -73,6 +82,9 @@ Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /invite
+Disallow: /creator
+Disallow: /partner
 
 User-agent: CCBot
 Disallow: /
@@ -92,6 +104,9 @@ Disallow: /login/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /invite
+Disallow: /creator
+Disallow: /partner
 
 User-agent: Huawei
 Disallow: /

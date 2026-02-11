@@ -184,16 +184,64 @@ export async function inviteUser(
   name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
-  const params = new URLSearchParams({
-    email,
-  });
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/accept?' + params,
+    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
     data: {
       // This is for the email template
       first_name: name,
       // This is for Supabase Display Name, nothing more than QOL
       name: name,
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+}
+
+/** SERVER SIDE FUNCTION. Sets a user's password.
+ *
+ * @param {string} password - The user's new password
+ * @returns {Promise<AuthResponse>} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-updateuser
+ */
+export async function setPassword(password: string): Promise<AuthResponse> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.updateUser({
+    password,
+    data: {
+      email_verified: true,
+    },
+  });
+
+  return { data, error, responseType: AuthResponseTypes.UpdateUser };
+}
+
+/** SERVER SIDE FUNCTION. Logs in a user. */
+export async function signIn(
+  email: string,
+  password: string
+): Promise<AuthResponse> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    password,
+    email,
+  });
+
+  return { data, error, responseType: AuthResponseTypes.SignIn };
+}
+
+/** SERVER SIDE FUNCTION. Resend an invite. */
+export async function resendEmailInvite(
+  email: string
+): Promise<object | Error> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const { data, error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
     },
   });
 
