@@ -30,11 +30,22 @@ describe('Footer', () => {
     expect(internalLinks.length).toBeGreaterThan(0);
   });
 
-  it('has social media links with correct structure', () => {
+  it('has social media links with accessible names via aria-label', () => {
     renderWithNextIntl(<Footer />);
 
-    const socialLinks = screen.getAllByRole('img');
-    expect(socialLinks).toHaveLength(5); // social media icons + flag
+    // Verify each social media link has the correct accessible name
+    expect(
+      screen.getByRole('link', { name: 'Visit our Instagram page' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Visit our LinkedIn page' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Visit our X (Twitter) page' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Visit our YouTube channel' })
+    ).toBeInTheDocument();
   });
 
   it('renders normally without isLoading prop', () => {

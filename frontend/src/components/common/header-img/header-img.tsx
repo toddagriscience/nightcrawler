@@ -36,6 +36,8 @@ export default function HeaderImg({
   return (
     <div
       ref={ref}
+      role="banner"
+      aria-label="Page header image"
       className={`relative mx-6 mt-6 lg:h-[780px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
     >
       <motion.div style={{ y }} className="absolute inset-0">
