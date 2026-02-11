@@ -200,6 +200,7 @@ export async function inviteUser(
 
   return data;
 }
+
 /** SERVER SIDE FUNCTION. Sets a user's password.
  *
  * @param {string} password - The user's new password
@@ -229,4 +230,24 @@ export async function signIn(
   });
 
   return { data, error, responseType: AuthResponseTypes.SignIn };
+}
+
+/** SERVER SIDE FUNCTION. Resend an invite. */
+export async function resendEmailInvite(
+  email: string
+): Promise<object | Error> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const { data, error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
 }
