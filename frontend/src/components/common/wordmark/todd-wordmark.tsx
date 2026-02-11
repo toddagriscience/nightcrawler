@@ -16,6 +16,7 @@ export default function ToddHeader({ className = '' }: { className?: string }) {
       href="/"
       className={`wordmark leading-none  ${className}`}
       data-testid="wordmark-link"
+      aria-label="Todd Agriscience home page"
     >
       <Image
         src={Wordmark}
