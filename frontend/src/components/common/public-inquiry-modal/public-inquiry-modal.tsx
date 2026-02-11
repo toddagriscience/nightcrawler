@@ -31,7 +31,11 @@ export default function PublicInquiryModal({
   const [isOpen, setIsOpen] = useState(false);
   const options: PublicInquiryOption[] = [
     { label: 'Forgot Email', href: '/support', intent: 'forgot-email' },
-    { label: 'Forgot Password', href: '/forgot-password', intent: 'forgot-password' },
+    {
+      label: 'Forgot Password',
+      href: '/forgot-password',
+      intent: 'forgot-password',
+    },
     { label: 'Contact Support', href: '/support', intent: 'contact-support' },
   ];
   const pathname = usePathname();
