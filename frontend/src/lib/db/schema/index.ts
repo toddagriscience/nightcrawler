@@ -11,3 +11,4 @@ export { farm, farmCertificate, farmLocation } from './farm';
 export { user, accountAgreementAcceptance, userRoleEnum } from './user';
 export { farmInfoInternalApplication } from './internal-application';
 export { tab } from './tab';
+export { widget, widgetEnum } from './widget';
