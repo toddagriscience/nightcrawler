@@ -34,11 +34,7 @@ export async function resendVerificationEmail(
   email: string
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
+    await getAuthenticatedInfo();
 
     await resendEmailInvite(email);
 
