@@ -43,7 +43,6 @@ export default function Support() {
   const t = useTranslations('supportPage');
   const searchParams = useSearchParams();
   const intent = searchParams.get('intent');
-  console.log('*****Intent:', intent);
   const emailType = intent === 'forgot-email' ? '.forgotEmail' : '.email';
 
   const onSubmit = async (data: PublicInquiryData) => {

@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { PublicInquiryOption } from './types';
 
@@ -38,7 +37,6 @@ export default function PublicInquiryModal({
     },
     { label: 'Contact Support', href: '/support', intent: 'contact-support' },
   ];
-  const pathname = usePathname();
 
   return (
     <Dialog

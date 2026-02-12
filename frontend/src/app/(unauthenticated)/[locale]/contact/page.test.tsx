@@ -1,16 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
 
 import userEvent from '@testing-library/user-event';
 // @ts-ignore type error due to lack of types from this polyfill
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 import IntersectionObserver from 'intersection-observer-polyfill';
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from '@/context/theme/ThemeContext';
 import React from 'react';
 
 global.ResizeObserver = ResizeObserver;
