@@ -2,14 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { MenuIcon } from 'lucide-react';
-import { useTheme } from '@/context/theme/ThemeContext';
-import { HeaderProps } from './types/header';
-import NextLink from 'next/link';
-import HeaderItems from './header-items';
-import { MenuItem } from '@/lib/types/components';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Button } from '@/components/ui';
 import {
   Drawer,
@@ -17,7 +10,14 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import { useTheme } from '@/context/theme/ThemeContext';
+import { MenuItem } from '@/lib/types/components';
+import { MenuIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import NextLink from 'next/link';
+import { useState } from 'react';
+import HeaderItems from './header-items';
+import { HeaderProps } from './types/header';
 
 /**
  * Header component

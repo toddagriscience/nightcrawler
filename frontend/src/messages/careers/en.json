@@ -20,8 +20,15 @@
       "title": "Externship Accelerator",
       "description": "The Todd Externship Program is a 4-week accelerator that provides students with hands-on experience in a startup environment. Paired into small teams, you will work together to ship a real project, and “graduate” with a diploma you actually earned."
     },
-    "apply": {
+    "applyClosed": {
+      "title": "Applications are currently closed.",
+      "description": "We will be accepting applications for the Summer ‘26 program in the coming months.",
+      "linkText": "Follow us on LinkedIn for career opportunities.",
+      "button": "Apply Now"
+    },
+    "applyOpen": {
       "title": "Applications for Spring ‘26 now open.",
+      "description": "We are accepting applications for the Spring ‘26 program. Apply now to join our team.",
       "button": "Apply Now"
     }
   }
