@@ -2,6 +2,7 @@
 
 import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
 import { fontVariables } from '../../lib/fonts';
+import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import '../globals.css';
 
 /**
@@ -16,13 +17,11 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={fontVariables}>
-        <div className="min-h-screen bg-background-platform authenticated-root">
-          <AuthenticatedHeader />
-          {children}
-        </div>
-      </body>
-    </html>
+    <DesktopGate>
+      <div className="min-h-screen bg-background-platform authenticated-root">
+        <AuthenticatedHeader />
+        {children}
+      </div>
+    </DesktopGate>
   );
 }
