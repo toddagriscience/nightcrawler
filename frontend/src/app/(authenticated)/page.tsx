@@ -1,16 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { accountAgreementAcceptance, managementZone } from '@/lib/db/schema';
+import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import ApplyButton from './components/apply-button';
 import PlatformTabContent from './components/tabs/tab-content';
 import PlatformTabs from './components/tabs/tabs';
-import { NamedTab } from './components/tabs/types';
 import { getTablessManagementZones } from './components/tabs/utils';
 
 /**
@@ -30,21 +27,7 @@ export const metadata: Metadata = {
  */
 export default async function DashboardPage() {
   const currentUser = await getAuthenticatedInfo();
-
-  if ('error' in currentUser || !currentUser.farmId) {
-    return (
-      <div className="mx-auto flex min-h-[calc(100vh-64px)] w-[90vw] max-w-[500px] flex-col items-center justify-center">
-        <h1>There was an error with authentication</h1>
-        <p>
-          {'error' in currentUser
-            ? currentUser.error
-            : 'An id for your farm was not provided'}
-        </p>
-      </div>
-    );
-  }
-
-  const currentTabs: NamedTab[] = await db
+  const currentTabs = await db
     .select({
       id: tab.id,
       managementZone: tab.managementZone,

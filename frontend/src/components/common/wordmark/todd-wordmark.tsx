@@ -14,7 +14,7 @@ export default function ToddHeader({ className = '' }: { className?: string }) {
   return (
     <Link
       href="/"
-      className={`wordmark leading-none  ${className}`}
+      className={`wordmark leading-none ${className}`}
       data-testid="wordmark-link"
       aria-label="Todd Agriscience home page"
     >
@@ -23,7 +23,7 @@ export default function ToddHeader({ className = '' }: { className?: string }) {
         alt=""
         className="object-contain"
         width={76}
-        height={25}
+        height={40}
       />
     </Link>
   );

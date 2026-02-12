@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { redirect } from 'next/navigation';
 import AcceptForm from './components/accept-form';
 
@@ -18,14 +18,5 @@ export default async function AcceptPage({
 
   const currentUser = await getAuthenticatedInfo();
 
-  if ('error' in currentUser) {
-    return (
-      <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
-        <h1>There was an error with authentication</h1>
-        <p>{currentUser.error}</p>
-      </div>
-    );
-  } else {
-    return <AcceptForm currentUser={currentUser} />;
-  }
+  return <AcceptForm currentUser={currentUser} />;
 }
