@@ -30,7 +30,7 @@ export default defineType({
       type: 'string',
       validation: (rule) => rule.required(),
       description:
-        'Full name of the person. Nothing extra. This is required.',
+        'Full name of the person. Do not include any titles or suffixes.',
     }),
     defineField({
       name: 'title',
@@ -44,7 +44,8 @@ export default defineType({
         title: 'Profile Image',
         type: 'image',
         description:
-          'A professional headshot for the person. This image appears on the governance profiles page. Suggested size: 400x400px.',
+          'A professional headshot for the person. This image appears on the governance profiles page. Suggested size: 725x775px.',
+        validation: (rule) => rule.required(),
         fields: [
           {
             name: 'alt',
@@ -59,18 +60,18 @@ export default defineType({
         name: 'quote',
         title: 'Quote',
         type: 'string',
-        description: 'A quote from the person. This is typically their official quote or words of wisdom for their profile page. Please use " " around the quote. If no quote is provided, only the bio will be displayed instead.',
+        description: 'A quote from the person. This is typically their official quote or words of wisdom for their profile page. Please use " " around the quote.',
       }),
     defineField({
-      name: 'bio',
-      title: 'Bio',
+      name: 'backstory',
+      title: 'Backstory',
       type: 'array',
-      description: 'A list of paragraphs for the bio. This is used to display the bio of the person.',
+      description: 'A list of paragraphs for the backstory. This is used to display the backstory of the person.',
       validation: (rule) =>
         rule.custom((value, context) => {
           return Array.isArray(value) && value.length > 0
             ? true
-            : 'Bio is required.'
+            : 'Backstory is required.'
         }),
       of: [
         {
@@ -79,38 +80,28 @@ export default defineType({
       ],
     }),
     defineField({
+        name: 'vision',
+        title: 'Vision',
+        type: 'array',
+        description: 'A list of paragraphs for the vision statement of the person. This is used to display the vision of the person.',
+        validation: (rule) =>
+          rule.custom((value, context) => {
+            return Array.isArray(value) && value.length > 0
+              ? true
+              : 'Vision is required.'
+          }),
+        of: [
+          {
+            type: 'block',
+          },
+        ],
+      }),
+    defineField({
       name: 'email',
       title: 'Email ',
       type: 'string',
-      description: 'The email address and social media links of the person. This is used for contact.',
+      description: 'The email address of the person. This is used for contact.',
       validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'socialMediaLinks',
-      title: 'X and LinkedIn Links',
-      type: 'array',
-      description: 'The X and LinkedIn links of the person. This is used for contact.',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'x',
-              title: 'X Profile Link',
-              type: 'url',
-              description: 'The URL of the person\'s X profile.',
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'linkedin',
-              title: 'LinkedIn Profile Link',
-              type: 'url',
-              description: 'The URL of the person\'s LinkedIn profile.',
-              validation: (rule) => rule.required(),
-            }),
-          ],
-        },
-      ],
     }),
   ],
 })
