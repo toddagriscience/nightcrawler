@@ -5,7 +5,7 @@
 import { widget, widgetEnum } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import { LayoutItem } from 'react-grid-layout';
 
@@ -25,15 +25,7 @@ export async function createWidget({
   widgetMetadata?: LayoutItem;
 }): Promise<{ data?: { widgetId: number }; error?: string | null }> {
   try {
-    const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-
-    if (!result.id) {
-      return { error: 'No user id present in database' };
-    }
+    await getAuthenticatedInfo();
 
     const [newWidget] = await db
       .insert(widget)
@@ -59,15 +51,7 @@ export async function createWidget({
  * */
 export async function deleteWidget(widgetId: number): Promise<ActionResponse> {
   try {
-    const currentUser = await getAuthenticatedInfo();
-
-    if ('error' in currentUser) {
-      return { error: currentUser.error };
-    }
-
-    if (!currentUser.id) {
-      return { error: 'No user id present in database' };
-    }
+    await getAuthenticatedInfo();
 
     await db.delete(widget).where(eq(widget.id, widgetId));
 
