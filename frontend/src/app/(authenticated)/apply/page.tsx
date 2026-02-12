@@ -13,6 +13,9 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq, ne } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import ApplicationTabs from './components/application-tabs';
+import { isVerified } from '@/lib/auth';
+import { createClient } from '@/lib/supabase/server';
+import logger from '@/lib/logger';
 
 /** The apply page
  *
@@ -40,6 +43,44 @@ export default async function Apply() {
     .from(user)
     .where(and(eq(user.farmId, farmId), ne(user.id, currentUser.id)));
 
+  /**
+    * get_email_verification_from_email is equivalent to the following function:
+    * 
+      begin
+        return (select email_verified_at from auth.users where email = email_address limit 1);
+      end;
+    * 
+    * email_verified_at is either null or a timestamp.
+    * */
+
+  const supabase = await createClient();
+
+  // Verification status of invited users. A user is verified if they've clicked on the invitation link in their email
+  const invitedUserVerificationStatus = await Promise.all(
+    allUsers.map(async (user) => {
+      const { data, error } = await supabase.rpc(
+        'get_email_verification_from_email',
+        {
+          email_address: user.email,
+        }
+      );
+
+      if (error) {
+        logger.error(error);
+
+        return {
+          email: user.email,
+          verified: false,
+        };
+      }
+
+      return {
+        email: user.email,
+        verified: Boolean(data),
+      };
+    })
+  );
+
   const [internalApplication] = await db
     .select()
     .from(farmInfoInternalApplication)
@@ -65,6 +106,7 @@ export default async function Apply() {
         currentUser={currentUser}
         allUsers={allUsers}
         internalApplication={internalApplication}
+        invitedUserVerificationStatus={invitedUserVerificationStatus}
       />
     </div>
   );

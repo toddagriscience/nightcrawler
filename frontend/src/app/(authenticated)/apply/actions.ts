@@ -252,6 +252,20 @@ export async function inviteUserToFarm(
       };
     }
 
+    // Multiple users aren't allowed (for now)
+    const [doesViewerExist] = await db
+      .select({ role: user.role })
+      .from(user)
+      .where(eq(user.role, 'Viewer'))
+      .limit(1);
+
+    if (doesViewerExist && formData.role === 'Viewer') {
+      return {
+        error:
+          'Multiple viewers are not allowed. Please contact support for more information.',
+      };
+    }
+
     // Don't require the user's new ID to be sent with formData
     const validated = userInsertSchema.omit({ id: true }).safeParse(formData);
     if (!validated.success) {

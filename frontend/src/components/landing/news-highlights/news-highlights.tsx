@@ -42,12 +42,12 @@ export default function NewsHighlights() {
   return (
     <>
       {isLoading ? (
-        <FadeIn className="min-h-[50vh] flex flex-col justify-center items-center">
+        <div className="flex min-h-[50vh] flex-col items-center justify-center">
           <Spinner className="size-8" />
-        </FadeIn>
+        </div>
       ) : (
         <FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-4 mb-8 mx-auto justify-items-center">
+          <div className="mx-auto mb-8 grid grid-cols-1 justify-items-center gap-8 md:grid-cols-2 lg:gap-4">
             {featuredNews.map((article) => (
               <NewsCard
                 className="basis-1 lg:basis-1/2"

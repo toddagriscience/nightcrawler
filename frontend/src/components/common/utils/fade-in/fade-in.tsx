@@ -2,7 +2,7 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import type FadeInProps from './types/fade-in';
@@ -16,7 +16,7 @@ import type FadeInProps from './types/fade-in';
  */
 const FadeIn: React.FC<FadeInProps> = ({
   children,
-  duration = 1.0,
+  duration = 0.73,
   className = '',
 }) => {
   const pathname = usePathname();
@@ -24,10 +24,10 @@ const FadeIn: React.FC<FadeInProps> = ({
   return (
     <motion.div
       key={pathname}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0.1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration }}
+      transition={{ duration, type: 'tween' }}
       className={className}
     >
       {children}

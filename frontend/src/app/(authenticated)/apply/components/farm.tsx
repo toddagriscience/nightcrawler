@@ -72,7 +72,7 @@ export default function Farm({
   }
 
   return (
-    <FadeIn className="mt-6">
+    <div className="mt-6">
       <div>
         <form
           className="mt-6 flex max-w-3xl flex-col gap-6"
@@ -100,7 +100,7 @@ export default function Farm({
                 />
               </div>
               <Input
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 type="number"
                 step="0.01"
                 placeholder="e.g., 150000.00"
@@ -120,7 +120,7 @@ export default function Farm({
                 />
               </div>
               <Input
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 type="number"
                 placeholder="e.g., 7"
                 {...register('totalAcreage', { valueAsNumber: true })}
@@ -446,6 +446,6 @@ export default function Farm({
           />
         </form>
       </div>
-    </FadeIn>
+    </div>
   );
 }
