@@ -28,6 +28,10 @@ export default async function updateTabName({
     const userId = result.id;
     const farmId = result.farmId;
 
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     if (oldName) {
       await db
         .update(managementZone)
@@ -78,6 +82,10 @@ export async function deleteTab({
     const result = await getAuthenticatedInfo();
     const userId = result.id;
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
 
     if (!name && !tabId) {
       return { error: 'Please provide either oldName or tabId' };

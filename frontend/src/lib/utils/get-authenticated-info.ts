@@ -15,10 +15,10 @@ import { logger } from '@/lib/logger';
  *
  * At the moment, this simply returns all of the user's information for sake of type simplicity. This should be optimized in the future.
  *
- * @returns {Promise<UserSelect>} - The authenticated user's information
+ * @returns The authenticated user's information with non-null farmId
  * @throws {Error} - If user is not authenticated, not found, or not associated with a farm
  */
-export async function getAuthenticatedInfo(): Promise<UserSelect> {
+export async function getAuthenticatedInfo() {
   const email = await getUserEmail();
 
   if (!email) {
@@ -43,5 +43,5 @@ export async function getAuthenticatedInfo(): Promise<UserSelect> {
     throw new Error('User is not associated with a farm');
   }
 
-  return currentUser;
+  return { ...currentUser, farmId: currentUser.farmId };
 }

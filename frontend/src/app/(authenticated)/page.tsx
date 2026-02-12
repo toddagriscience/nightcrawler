@@ -26,42 +26,28 @@ export const metadata: Metadata = {
  * @returns {React.ReactNode} - The dashboard page component
  */
 export default async function DashboardPage() {
-  try {
-    const currentUser = await getAuthenticatedInfo();
-    const currentTabs = await db
-      .select({
-        id: tab.id,
-        managementZone: tab.managementZone,
-        name: managementZone.name,
-        user: tab.user,
-      })
-      .from(tab)
-      .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
-      .orderBy(asc(managementZone.name))
-      .where(eq(tab.user, currentUser.id));
+  const currentUser = await getAuthenticatedInfo();
+  const currentTabs = await db
+    .select({
+      id: tab.id,
+      managementZone: tab.managementZone,
+      name: managementZone.name,
+      user: tab.user,
+    })
+    .from(tab)
+    .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
+    .orderBy(asc(managementZone.name))
+    .where(eq(tab.user, currentUser.id));
 
-    const managementZones = await getTablessManagementZones(
-      currentUser.farmId!
-    );
+  const managementZones = await getTablessManagementZones(currentUser.farmId);
 
-    return (
-      <PlatformTabs
-        managementZones={managementZones}
-        currentTabs={currentTabs}
-        currentUser={currentUser}
-      >
-        <PlatformTabContent
-          currentTabs={currentTabs}
-          currentUser={currentUser}
-        />
-      </PlatformTabs>
-    );
-  } catch (error) {
-    return (
-      <div className="mx-auto flex min-h-[calc(100vh-64px)] w-[90vw] max-w-[500px] flex-col items-center justify-center">
-        <h1>There was an error with authentication</h1>
-        <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
-      </div>
-    );
-  }
+  return (
+    <PlatformTabs
+      managementZones={managementZones}
+      currentTabs={currentTabs}
+      currentUser={currentUser}
+    >
+      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+    </PlatformTabs>
+  );
 }

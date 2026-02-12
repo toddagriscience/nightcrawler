@@ -45,6 +45,11 @@ export async function saveGeneralBusinessInformation(
   try {
     const result = await getAuthenticatedInfo();
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const validated = generalBusinessInformationInsertSchema.safeParse({
       ...formData,
       farmId,
@@ -129,6 +134,11 @@ export async function saveApplication(
   try {
     const result = await getAuthenticatedInfo();
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
         createdAt: true,
@@ -180,6 +190,11 @@ export async function submitApplication(): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const applicationData = await db
       .select()
       .from(farmInfoInternalApplication)
@@ -218,6 +233,10 @@ export async function inviteUserToFarm(
   try {
     const result = await getAuthenticatedInfo();
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
 
     // Multiple admins aren't allowed
     const [doesAdminExist] = await db
