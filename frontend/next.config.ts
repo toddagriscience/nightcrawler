@@ -121,7 +121,19 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
-      // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected. If they access https://go.toddagriscience.com though, they're allowed through.
+      // Handles requests to go.toddagriscience.com/invite
+      {
+        source: '/invite',
+        has: [
+          {
+            type: 'host',
+            value: `go.${process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN}`,
+          },
+        ],
+        permanent: true,
+        destination: '/contact',
+      },
+      // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected to /. If they access https://go.toddagriscience.com though, they're allowed through and are redirected to /contact.
       {
         source: '/:path(invite|creator|partner)',
         has: [
