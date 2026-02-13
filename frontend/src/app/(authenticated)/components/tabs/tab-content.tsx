@@ -1,11 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { UserSelect } from '@/lib/types/db';
-import { NamedTab } from './types';
 import { TabsContent } from '@/components/ui/tabs';
+import { UserSelect } from '@/lib/types/db';
 import Landing from '../landing';
-import { getTabHash } from './utils';
 import CurrentTab from './current-tab';
+import { NamedTab } from './types';
+import { getTabHash } from './utils';
 
 export default async function PlatformTabContent({
   currentTabs,

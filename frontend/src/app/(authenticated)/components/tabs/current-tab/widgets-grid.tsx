@@ -2,10 +2,10 @@
 
 'use client';
 
-import { NamedTab } from './types';
+import { WidgetSelect } from '@/lib/types/db';
 import ReactGridLayout, { useContainerWidth } from 'react-grid-layout';
 
-export default function CurrentTab({ currentTab }: { currentTab: NamedTab }) {
+export default function WidgetsGrid({ widgets }: { widgets: WidgetSelect[] }) {
   const { width, containerRef, mounted } = useContainerWidth();
 
   const layout = [
@@ -15,7 +15,7 @@ export default function CurrentTab({ currentTab }: { currentTab: NamedTab }) {
   ];
 
   return (
-    <div ref={containerRef} className="h-screen">
+    <div ref={containerRef} className="relative h-screen">
       {mounted && (
         <ReactGridLayout
           layout={layout}
