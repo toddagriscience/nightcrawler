@@ -85,4 +85,16 @@ describe('WhatWeDoPage', () => {
       screen.getByRole('link', { name: 'Build a better farm' })
     ).toBeInTheDocument();
   });
+
+  it('renders exactly one h1 element with the correct title for accessibility', () => {
+    renderWithNextIntl(<WhatWeDoPage />);
+
+    const h1Elements = screen.getAllByRole('heading', { level: 1 });
+
+    expect(h1Elements).toHaveLength(1);
+
+    expect(h1Elements[0]).toHaveTextContent(
+      "We support the world's most important farms"
+    );
+  });
 });

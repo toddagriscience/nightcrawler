@@ -86,9 +86,9 @@ export default function WhatWeDoPage() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <div className="flex mb-10 flex-col max-w-[800px]">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
                 {t('title')}
-              </h2>
+              </h1>
               <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light max-w-[770px]">
                 {t('subtitle')}
               </p>
