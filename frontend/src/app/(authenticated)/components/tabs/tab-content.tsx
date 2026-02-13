@@ -5,6 +5,7 @@ import { NamedTab } from './types';
 import { TabsContent } from '@/components/ui/tabs';
 import Landing from '../landing';
 import { getTabHash } from './utils';
+import CurrentTab from './current-tab';
 
 export default async function PlatformTabContent({
   currentTabs,
@@ -21,8 +22,12 @@ export default async function PlatformTabContent({
         </TabsContent>
       ) : (
         currentTabs.map((tab) => (
-          <TabsContent key={tab.id} value={getTabHash(tab)}>
-            <h1>{tab.name}</h1>
+          <TabsContent
+            key={tab.id}
+            value={getTabHash(tab)}
+            className="h-full w-full"
+          >
+            <CurrentTab currentTab={tab} />
           </TabsContent>
         ))
       )}
