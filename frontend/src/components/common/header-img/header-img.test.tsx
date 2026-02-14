@@ -43,4 +43,14 @@ describe('HeaderImg', () => {
     const wrapper = image.parentElement?.parentElement;
     expect(wrapper).toHaveClass('test-wrapper');
   });
+
+  test('does not render landmark roles to avoid duplicate banner landmarks', () => {
+    render(<HeaderImg src="/test-image.jpg" alt="Test image" />);
+
+    const image = screen.getByAltText('Test image');
+    const wrapper = image.parentElement?.parentElement;
+
+    expect(wrapper).not.toHaveAttribute('role');
+    expect(wrapper).not.toHaveAttribute('aria-label');
+  });
 });

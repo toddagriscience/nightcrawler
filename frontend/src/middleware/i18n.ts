@@ -13,6 +13,8 @@ const unauthUnintlRoutes = [
   'signup',
   'auth',
   'externship-terms',
+  // Only for go.toddagriscience.com
+  'invite',
 ];
 
 /**
