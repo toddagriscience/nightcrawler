@@ -28,7 +28,7 @@ export default async function CurrentTab({
 
   return (
     <>
-      <WidgetsGrid widgets={widgets} />
+      <WidgetsGrid widgets={widgets} currentTab={currentTab} />
       <div className="absolute top-4 right-4">
         <AddWidgetDropdown
           tabId={currentTab.id}

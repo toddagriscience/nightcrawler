@@ -23,7 +23,9 @@ export const widget = pgTable(
       .references(() => tab.id, { onDelete: 'cascade' })
       .notNull(),
     name: widgetEnum().notNull(),
-    widgetMetadata: jsonb().$type<LayoutItem>(),
+    widgetMetadata: jsonb()
+      .$type<Pick<LayoutItem, 'i' | 'x' | 'y'>>()
+      .notNull(),
   },
   (t) => [unique().on(t.tab, t.name)]
 );
