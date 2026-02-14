@@ -9,6 +9,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRef } from 'react';
+import Link from 'next/link';
 
 /** The careers page. Currently only provides information on the externship and allows applicants to submit their email..
  *
@@ -85,15 +86,31 @@ export default function Careers() {
                 style={{ y: rightImageY }}
                 className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
               >
-                <div className="flex flex-col gap-14 items-center md:items-start md:justify-between max-w-[1000px]">
-                  <h2 className="text-3xl md:text-3xl lg:text-4xl leading-normal font-thin md:max-w-[280px] lg:max-w-[350px]">
-                    {t('apply.title')}
+                {/* Apply Section 
+                - Closed: Show closed message and link to LinkedIn
+                - Open: Show open message and button to apply
+                */}
+                <div className="flex flex-col gap-14 items-center sm:items-start md:justify-between max-w-[1000px]">
+                  <h2 className="text-3xl md:text-3xl lg:text-4xl leading-normal font-thin max-w-[460px] lg:max-w-[350px]">
+                    {t('applyClosed.title')}
                   </h2>
-                  <Button
+                  <p className="text-normal md:text-base lg:text-lg font-light leading-relaxed max-w-[300px] sm:max-w-[420px] md:max-w-[460px] lg:max-w-[600px]">
+                    {t('applyClosed.description')}
+                  </p>
+                  <Link
+                    href="https://www.linkedin.com/company/toddagriscience/"
+                    target="_blank"
+                    className="text-sm md:text-normal lg:text-base font-normal underline leading-relaxed max-w-[300px] md:max-w-[460px] lg:max-w-[600px]"
+                  >
+                    {t('applyClosed.linkText')}
+                  </Link>
+
+                  {/* Add application button back in when application period is open- currently closed */}
+                  {/* <Button
                     className="max-w-[235px] w-[90vw] gap-6 font-thin"
                     text={t('apply.button')}
                     href={url}
-                  />
+                  /> */}
                 </div>
               </motion.div>
               <motion.div

@@ -8,7 +8,7 @@ import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import { UserInsert } from '@/lib/types/db';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -65,16 +65,10 @@ export async function acceptInvite(
     password,
   } = validated.data;
 
-  // Get current user to ensure we're updating the right one
-  const currentUser = await getAuthenticatedInfo();
-  if ('error' in currentUser) {
-    logger.warn(
-      `Failed to get authenticated info during invite acceptance: ${currentUser.error}`
-    );
-    return { error: currentUser.error };
-  }
-
   try {
+    // Get current user to ensure we're updating the right one
+    const currentUser = await getAuthenticatedInfo();
+
     if (password) {
       const { error: authError } = await setPassword(password);
       if (authError) {
@@ -109,9 +103,16 @@ export async function acceptInvite(
     logger.error(
       `Failed to update user info during invite acceptance: ${error}`
     );
+
+    if (error instanceof Error) {
+      logger.warn(
+        `Failed to get authenticated info during invite acceptance: ${error.message}`
+      );
+      return { error: error.message };
+    }
+
     return {
-      error:
-        error instanceof Error ? error.message : 'An unexpected error occurred',
+      error: 'An unexpected error occurred',
     };
   }
 

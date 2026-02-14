@@ -6,21 +6,13 @@ import { resendEmailInvite } from '@/lib/auth';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 
 /** Updates a client's role. Takes no arguments, simply flips the user's role (viewer -> admin, admin -> viewer) */
 export async function updateRole(): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const newRole = result.role === 'Admin' ? 'Viewer' : 'Admin';
 
     await db.update(user).set({ role: newRole }).where(eq(user.id, result.id));
@@ -42,11 +34,7 @@ export async function resendVerificationEmail(
   email: string
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
+    await getAuthenticatedInfo();
 
     await resendEmailInvite(email);
 
