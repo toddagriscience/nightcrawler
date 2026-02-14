@@ -4,6 +4,7 @@
 
 import { widget, widgetEnum } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import { WidgetUpdate } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
@@ -46,6 +47,7 @@ export async function createWidget({
 
     return { data: { widgetId: newWidget.id } };
   } catch (error) {
+    logger.error(error);
     if (error instanceof Error) {
       return { error: error.message };
     }

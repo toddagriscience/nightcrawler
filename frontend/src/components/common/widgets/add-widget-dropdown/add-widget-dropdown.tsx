@@ -45,13 +45,6 @@ export default function AddWidgetDropdown({
     }
   };
 
-  const formatWidgetName = (name: string) => {
-    return name
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, (str) => str.toUpperCase())
-      .trim();
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
@@ -64,7 +57,7 @@ export default function AddWidgetDropdown({
               className="hover:cursor-pointer"
               onClick={() => handleAddWidget(widgetType)}
             >
-              {formatWidgetName(widgetType)}
+              {widgetType}
             </DropdownMenuItem>
           ))
         ) : (

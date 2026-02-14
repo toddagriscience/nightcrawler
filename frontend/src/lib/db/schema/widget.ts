@@ -12,7 +12,7 @@ import { tab } from './tab';
 import { LayoutItem } from 'react-grid-layout';
 
 /** The type of the widget. For example, there could be PHWidget and MacroWidget */
-export const widgetEnum = pgEnum('widgets', ['macroRadar']);
+export const widgetEnum = pgEnum('widgets', ['Macro Radar', 'Calcium Widget']);
 
 /** Active widgets on a given tab. A widget will need to be deleted from this table if it is to be removed from the user's UI. */
 export const widget = pgTable(
