@@ -32,18 +32,20 @@ export default function Careers() {
   return (
     <>
       <div className="max-w-[520px] sm:max-w-[600px] md:max-w-[1200px] mx-auto text-center sm:text-left">
-        <HeaderImg
-          src="/marketing/todd-university-xs-header.png"
-          alt="Todd University"
-          wrapperClassName="block md:hidden"
-          imageClassName="transition-all duration-500 ease-in-out"
-        />
-        <HeaderImg
-          src="/marketing/todd-university-header.png"
-          alt="Todd University"
-          wrapperClassName="hidden md:block"
-          imageClassName="transition-all duration-500 ease-in-out"
-        />
+        <header>
+          <HeaderImg
+            src="/marketing/todd-university-xs-header.png"
+            alt="Todd University"
+            wrapperClassName="block md:hidden"
+            imageClassName="transition-all duration-500 ease-in-out"
+          />
+          <HeaderImg
+            src="/marketing/todd-university-header.png"
+            alt="Todd University"
+            wrapperClassName="hidden md:block"
+            imageClassName="transition-all duration-500 ease-in-out"
+          />
+        </header>
         <main className="flex flex-col mx-auto max-w-[1200px]">
           {/* Hero Text Section */}
           <motion.div
@@ -54,9 +56,9 @@ export default function Careers() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <div className="flex flex-col max-w-[800px]">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
                 {t('title')}
-              </h2>
+              </h1>
               <p className="text-sm md:text-normal lg:text-base font-light leading-relaxed font-light max-w-[600px]">
                 {t('subtitle')}
               </p>
