@@ -6,9 +6,9 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
 
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 import userEvent from '@testing-library/user-event';
 // @ts-ignore type error due to lack of types from this polyfill
-import { ThemeProvider } from '@/context/theme/ThemeContext';
 import IntersectionObserver from 'intersection-observer-polyfill';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
