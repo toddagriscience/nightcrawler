@@ -2,10 +2,7 @@
 
 'use client';
 
-import {
-  deleteWidget,
-  updateWidget,
-} from '@/components/common/widgets/actions';
+import { updateWidget } from '@/components/common/widgets/actions';
 import {
   widgetColumns,
   widgetRowHeight,
@@ -18,8 +15,7 @@ import ReactGridLayout, {
   useContainerWidth,
 } from 'react-grid-layout';
 import { NamedTab } from '../types';
-import { Button } from '@/components/ui';
-import { useRouter } from 'next/navigation';
+import WidgetWrapper from '@/components/common/widgets/widget-wrapper';
 
 export default function WidgetsGrid({
   widgets,
@@ -28,7 +24,6 @@ export default function WidgetsGrid({
   widgets: WidgetSelect[];
   currentTab: NamedTab;
 }) {
-  const router = useRouter();
   const { width, containerRef, mounted } = useContainerWidth();
 
   const layout = widgets.map((widget) => {
@@ -55,11 +50,6 @@ export default function WidgetsGrid({
     }
   }
 
-  async function handleDelete(widgetId: number) {
-    await deleteWidget(widgetId);
-    router.refresh();
-  }
-
   return (
     <div ref={containerRef} className="relative h-screen">
       {mounted && (
@@ -72,17 +62,8 @@ export default function WidgetsGrid({
         >
           {widgets.map((widget) => {
             return (
-              <div
-                key={widget.widgetMetadata.i}
-                className="border border-solid border-black"
-              >
-                {widget.name}
-                <Button
-                  onClick={() => handleDelete(widget.id)}
-                  className="hover:cursor-pointer"
-                >
-                  Delete
-                </Button>
+              <div key={widget.widgetMetadata.i}>
+                <WidgetWrapper widget={widget} />
               </div>
             );
           })}
