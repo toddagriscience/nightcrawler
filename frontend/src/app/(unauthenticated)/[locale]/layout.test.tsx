@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import LocaleLayout from './layout';
-import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 
 // Mock dependencies
 vi.mock('next/navigation', () => ({

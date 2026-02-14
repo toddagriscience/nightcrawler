@@ -122,6 +122,7 @@ vitest.mock('next/navigation', () => ({
     prefetch: vitest.fn(),
     refresh: vitest.fn(),
   })),
+  useSearchParams: vitest.fn(() => new URLSearchParams()),
 }));
 
 /**
