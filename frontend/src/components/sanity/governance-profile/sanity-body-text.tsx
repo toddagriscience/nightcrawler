@@ -22,7 +22,7 @@ export default function SanityBodyText({
 
   return (
     <p
-      className={`text-sm md:text-normal lg:text-base font-light leading-relaxed text-justify ${className ?? ''}`.trim()}
+      className={`text-sm md:text-normal lg:text-base font-light leading-relaxed ${className ?? ''}`.trim()}
     >
       {children}
     </p>

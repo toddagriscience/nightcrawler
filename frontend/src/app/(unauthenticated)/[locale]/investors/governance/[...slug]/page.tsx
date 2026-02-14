@@ -4,12 +4,10 @@ import { Button } from '@/components/common';
 import SanityBodyText from '@/components/sanity/governance-profile/sanity-body-text';
 import SanityImage from '@/components/sanity/governance-profile/sanity-image';
 import SanityQuote from '@/components/sanity/governance-profile/sanity-quote';
-import { Link } from '@/i18n/config';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound } from 'next/navigation';
-import { HiArrowLongLeft } from 'react-icons/hi2';
 
 /**
  * A governance profile page, rendered with Sanity CMS.
@@ -55,16 +53,6 @@ export default async function GovernancePage({
   return (
     <div className="max-w-[80%] mx-auto">
       <main className="mt-20 container mx-auto min-h-screen flex flex-col gap-10 md:gap-4">
-        {/* Navigation back to /investors page */}
-        <div className="flex flex-col gap-2 w-fit">
-          <Link
-            href="/investors"
-            className="hover:underline flex items-center gap-2 text-normal font-light hover:text-foreground/80"
-          >
-            <HiArrowLongLeft className="size-6" />
-            Back to Investors
-          </Link>
-        </div>
         {/* Article Header */}
         <div className="flex mb-10 md:mb-0 lg:mb-6 flex-col">
           <h2 className="text-4xl md:text-5xl lg:text-6xl w-full leading-tight text-center font-thin mb-6 lg:mb-8 mt-4 md:mt-8">
