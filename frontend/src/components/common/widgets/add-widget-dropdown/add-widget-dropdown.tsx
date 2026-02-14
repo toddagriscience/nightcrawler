@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { createWidget } from '../actions';
 import { widgetEnum } from '@/lib/db/schema';
+import { useRouter } from 'next/navigation';
 
 export default function AddWidgetDropdown({
   tabId,
@@ -25,6 +26,7 @@ export default function AddWidgetDropdown({
   onError?: (error: string) => void;
   availableWidgets?: (typeof widgetEnum.enumValues)[number][];
 }) {
+  const router = useRouter();
   const widgetTypes = availableWidgets ?? widgetEnum.enumValues;
 
   const handleAddWidget = async (
@@ -39,6 +41,7 @@ export default function AddWidgetDropdown({
       onError?.(result.error);
     } else if (result.data) {
       onWidgetAdded?.(result.data.widgetId, widgetType);
+      router.refresh();
     }
   };
 
