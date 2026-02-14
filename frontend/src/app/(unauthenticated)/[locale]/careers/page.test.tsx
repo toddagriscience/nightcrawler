@@ -49,7 +49,7 @@ describe('Careers page', () => {
       'img[alt="Todd University"]'
     );
     headerImages.forEach((img) => {
-      expect(headerLandmark).toContainElement(img);
+      expect(headerLandmark).toContainElement(img as HTMLElement);
     });
 
     // Verify that all h2+ headings are within the main landmark
