@@ -35,16 +35,12 @@ export default function PublicInquiryModal({
   ];
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={isOpen ? () => setIsOpen(false) : () => {}}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger ? (
           <Button
+            type="button"
             className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline"
-            onClick={() => setIsOpen(true)}
-            asChild
           >
             {trigger}
           </Button>
@@ -52,7 +48,6 @@ export default function PublicInquiryModal({
           <Button
             type="button"
             variant={'outline'}
-            onClick={() => setIsOpen(true)}
             className="hover:cursor-pointer"
           >
             Help
