@@ -35,24 +35,16 @@ export default function CookiePreferencesModal({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={isOpen ? () => setIsOpen(false) : () => {}}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger ? (
-          <Button
-            className="m-0 h-min w-auto !justify-start p-0 text-base font-light hover:cursor-pointer"
-            onClick={() => setIsOpen(true)}
-            asChild
-          >
+          <Button className="m-0 h-min w-auto !justify-start p-0 text-base font-light hover:cursor-pointer">
             {trigger}
           </Button>
         ) : (
           <Button
             type="button"
             variant={'outline'}
-            onClick={() => setIsOpen(true)}
             className="hover:cursor-pointer"
           >
             {t('buttonText')}
