@@ -38,7 +38,10 @@ export default function PublicInquiryModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger ? (
-          <Button className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline">
+          <Button
+            type="button"
+            className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline"
+          >
             {trigger}
           </Button>
         ) : (
