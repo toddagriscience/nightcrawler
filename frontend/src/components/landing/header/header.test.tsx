@@ -11,6 +11,12 @@ describe('Header', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 
+  it('renders exactly one banner landmark', () => {
+    renderWithNextIntl(<Header />);
+    const bannerLandmarks = screen.getAllByRole('banner');
+    expect(bannerLandmarks).toHaveLength(1);
+  });
+
   it('displays menu toggle button', () => {
     renderWithNextIntl(<Header />);
     expect(screen.getByTestId('menu-toggle')).toBeInTheDocument();
