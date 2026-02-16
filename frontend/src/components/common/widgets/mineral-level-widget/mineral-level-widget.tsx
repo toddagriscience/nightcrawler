@@ -1,112 +1,61 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Bar, ComposedChart, Scatter, Tooltip, XAxis, YAxis } from 'recharts';
+import { Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
+import { MineralChartType } from './types';
+import MetricRangeTooltip from './metric-range-tooltip';
 
-/** Mineral level widget. Displays levels for minerals */
-export default function MineralLevelWidget() {
-  const chartConfig = {
-    low: {
-      label: 'Low',
-      color: '#ef4444', // red
-    },
-    medium: {
-      label: 'Medium',
-      color: '#f59e0b', // orange/amber
-    },
-    high: {
-      label: 'High',
-      color: '#10b981', // green
-    },
-  } satisfies ChartConfig;
-
-  const max = 20;
+/** Mineral level widget. Displays levels for minerals.
+ *
+ * @param children - The scale behind the horizontal lines. Used for user experience. */
+export default function MineralLevelWidget({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
+  const chartConfig = {} satisfies ChartConfig;
+  const max = 10;
   const min = 0;
-
-  /**
-   * 0        low       mid      high
-   * |---------|---------|---------|
-   */
-  const low = 6.6;
-  const medium = 13.3 - 6.6;
-  const high = 20 - 13.3;
+  const unit = ' unit';
 
   // The actual data
-  const chartData = [
-    { y: 0.5, x: 10 },
-    { y: 0.5, x: 15 },
-  ];
-
-  // Used for formatting the horizontal bars
-  const barChartData = [
-    {
-      category: 'row1',
-      low,
-      medium,
-      high,
-    },
+  const chartData: MineralChartType[] = [
+    { y: 0, x: 5, date: new Date(), unit },
+    { y: 0, x: 8, date: new Date(), unit },
+    { y: 0, x: 3, date: new Date(), unit },
+    { y: 0, x: 4.33, date: new Date(), unit },
   ];
 
   // Ex. ph values, min = 0, max = 14
-  const xAxisDomain = [min, max];
+  const xAxisDomain = [min * 1.0, max * 1.0];
 
   // Intentionally constant, used for balancing
   const yAxisDomain = [0, 1];
 
   return (
-    <div className="">
-      <div className="mb-4">
-        <h4 className="text-sm font-medium">Mineral Distribution</h4>
-        <p className="text-xs text-muted-foreground">
-          Current levels across categories
-        </p>
-      </div>
-      <div className="grid grid-cols-1 max-h-8 grid-rows-1 place-items-center justify-items-center">
+    <div>
+      <div className="mt-4 grid h-16 grid-cols-1 grid-rows-1 place-items-center justify-items-center">
+        {children}
         <ChartContainer
           config={chartConfig}
-          className="w-full col-start-1 row-start-1 z-0"
+          className="col-start-1 row-start-1 h-full w-full"
         >
-          <ComposedChart
-            className="w-full"
-            layout="vertical"
-            data={barChartData}
-          >
-            <XAxis hide type="number" domain={[0, 20]} />
-            <YAxis hide type="category" dataKey="category" />
-            <Bar
-              dataKey="low"
-              stackId="a"
-              fill="var(--color-low)"
-              barSize={16}
+          <ScatterChart className="w-full" layout="horizontal" data={chartData}>
+            <XAxis
+              type="number"
+              interval={'preserveStartEnd'}
+              allowDecimals
+              domain={xAxisDomain}
+              unit={unit}
             />
-            <Bar
-              dataKey="medium"
-              stackId="a"
-              fill="var(--color-medium)"
-              barSize={16}
-            />
-            <Bar
-              dataKey="high"
-              stackId="a"
-              fill="var(--color-high)"
-              barSize={16}
-            />
-          </ComposedChart>
-        </ChartContainer>
-        <ChartContainer
-          config={chartConfig}
-          className="h-8 w-full col-start-1 row-start-1 z-10"
-        >
-          <ComposedChart
-            className="w-full"
-            layout="horizontal"
-            data={chartData}
-          >
-            <XAxis dataKey={'x'} hide type="number" domain={xAxisDomain} />
             <YAxis dataKey={'y'} hide type="number" domain={yAxisDomain} />
-            <Scatter data={chartData} dataKey={'x'} />
-            <Tooltip />
-          </ComposedChart>
+            <Scatter dataKey={'x'} fill="#0A0A0A" />
+            <Tooltip
+              content={MetricRangeTooltip}
+              cursor={false}
+              isAnimationActive={false}
+            />
+          </ScatterChart>
         </ChartContainer>
       </div>
     </div>

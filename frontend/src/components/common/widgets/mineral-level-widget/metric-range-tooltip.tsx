@@ -1,12 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import { TooltipProps } from 'recharts';
 import {
   ValueType,
   NameType,
 } from 'recharts/types/component/DefaultTooltipContent';
+import { MineralChartType } from './types';
 
-export default function CustomTooltip({
+export default function MetricRangeTooltip({
   active,
   payload,
   label,
@@ -15,14 +18,16 @@ export default function CustomTooltip({
     return null;
   }
 
-  const firstItem = payload[0];
+  const firstItem = payload[0].payload as MineralChartType;
 
   return (
-    <div className="rounded-lg border bg-white p-2 shadow-md">
+    <div className="mt-15 rounded-lg border bg-white p-2 shadow-md">
       <p className="text-sm font-medium">
-        {label ? `${label}` : firstItem.name || 'Value'}
+        {firstItem.date.toLocaleDateString()}
       </p>
-      <p className="text-sm text-muted-foreground">Value: {firstItem.value}%</p>
+      <p className="text-muted-foreground text-sm">
+        {firstItem.x} {firstItem.unit}
+      </p>
     </div>
   );
 }

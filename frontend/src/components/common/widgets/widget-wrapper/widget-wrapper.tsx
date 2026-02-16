@@ -17,14 +17,18 @@ export default function WidgetWrapper({ widget }: { widget: WidgetSelect }) {
   }
 
   return (
-    <div className="border bg-white p-4 shadow-sm h-full">
-      <WidgetContentPicker widgetName={widget.name} />
-      <Button
-        onClick={() => handleDelete(widget.id)}
-        className="hover:cursor-pointer"
-      >
-        Delete
-      </Button>
+    <div className="h-full border bg-white p-4 shadow-sm">
+      <WidgetContentPicker
+        widget={widget}
+        closeButton={
+          <Button
+            onClick={() => handleDelete(widget.id)}
+            className="hover:cursor-pointer"
+          >
+            X
+          </Button>
+        }
+      />
     </div>
   );
 }
