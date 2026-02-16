@@ -3,6 +3,7 @@
 import { Bar, ComposedChart, Scatter, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
 
+/** Mineral level widget. Displays levels for minerals */
 export default function MineralLevelWidget() {
   const chartConfig = {
     low: {
@@ -20,21 +21,37 @@ export default function MineralLevelWidget() {
   } satisfies ChartConfig;
 
   const max = 20;
-  const thirdsSizing = max / 3;
+  const min = 0;
+
+  /**
+   * 0        low       mid      high
+   * |---------|---------|---------|
+   */
+  const low = 6.6;
+  const medium = 13.3 - 6.6;
+  const high = 20 - 13.3;
+
+  // The actual data
   const chartData = [
     { y: 0.5, x: 10 },
     { y: 0.5, x: 15 },
   ];
+
+  // Used for formatting the horizontal bars
   const barChartData = [
     {
       category: 'row1',
-      low: thirdsSizing,
-      medium: thirdsSizing,
-      high: thirdsSizing,
+      low,
+      medium,
+      high,
     },
   ];
-  const xAxisDomain = [0, max];
-  const yAxisDomain = [0, max];
+
+  // Ex. ph values, min = 0, max = 14
+  const xAxisDomain = [min, max];
+
+  // Intentionally constant, used for balancing
+  const yAxisDomain = [0, 1];
 
   return (
     <div className="">
@@ -44,10 +61,10 @@ export default function MineralLevelWidget() {
           Current levels across categories
         </p>
       </div>
-      <div className="grid grid-cols-1 grid-rows-1">
+      <div className="grid grid-cols-1 max-h-8 grid-rows-1 place-items-center justify-items-center">
         <ChartContainer
           config={chartConfig}
-          className="h-8 w-full col-start-1 row-start-1 z-0"
+          className="w-full col-start-1 row-start-1 z-0"
         >
           <ComposedChart
             className="w-full"
@@ -60,19 +77,19 @@ export default function MineralLevelWidget() {
               dataKey="low"
               stackId="a"
               fill="var(--color-low)"
-              barSize={12}
+              barSize={16}
             />
             <Bar
               dataKey="medium"
               stackId="a"
               fill="var(--color-medium)"
-              barSize={12}
+              barSize={16}
             />
             <Bar
               dataKey="high"
               stackId="a"
               fill="var(--color-high)"
-              barSize={12}
+              barSize={16}
             />
           </ComposedChart>
         </ChartContainer>
@@ -86,7 +103,7 @@ export default function MineralLevelWidget() {
             data={chartData}
           >
             <XAxis dataKey={'x'} hide type="number" domain={xAxisDomain} />
-            <YAxis dataKey={'y'} hide type="number" range={[0, 1]} />
+            <YAxis dataKey={'y'} hide type="number" domain={yAxisDomain} />
             <Scatter data={chartData} dataKey={'x'} />
             <Tooltip />
           </ComposedChart>
