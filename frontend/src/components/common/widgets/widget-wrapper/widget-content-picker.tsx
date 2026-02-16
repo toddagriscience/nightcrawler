@@ -2,13 +2,12 @@
 
 import { WidgetSelect } from '@/lib/types/db';
 import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
+import WidgetDeleteButton from './widget-delete-button';
 
-export default function WidgetContentPicker({
+export default async function WidgetContentPicker({
   widget,
-  closeButton,
 }: {
   widget: WidgetSelect;
-  closeButton: React.ReactNode;
 }) {
   switch (widget.name) {
     case 'Macro Radar':
@@ -17,16 +16,30 @@ export default function WidgetContentPicker({
     case 'Calcium Widget':
       const title = 'Calcium';
       const lastUpdated = 'August 2025';
+      const unit = ' unit';
+
+      // The actual data
+      const chartData = [
+        { y: 0, x: 5, date: new Date(), unit },
+        { y: 0, x: 8, date: new Date(), unit },
+        { y: 0, x: 3, date: new Date(), unit },
+        { y: 0, x: 4.33, date: new Date(), unit },
+      ];
 
       return (
         <>
           <div className="flex flex-row justify-between">
             <h2>{title}</h2>
             <p>Last Updated {lastUpdated}</p>
-            {closeButton}
+            <WidgetDeleteButton widgetId={widget.id} />
           </div>
 
-          <MineralLevelWidget>
+          <MineralLevelWidget
+            max={10}
+            min={0}
+            unit={unit}
+            chartData={chartData}
+          >
             <div className="col-start-1 row-start-1 flex h-full w-full flex-row gap-1">
               <div
                 className={`flex h-5 basis-1/3 items-center justify-center rounded-xl bg-yellow-500/30`}

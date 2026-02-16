@@ -8,6 +8,7 @@ import { widget, widgetEnum } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { Plus } from 'lucide-react';
 import { eq } from 'drizzle-orm';
+import WidgetWrapper from '@/components/common/widgets/widget-wrapper';
 
 export default async function CurrentTab({
   currentTab,
@@ -28,7 +29,17 @@ export default async function CurrentTab({
 
   return (
     <>
-      <WidgetsGrid widgets={widgets} currentTab={currentTab} />
+      <WidgetsGrid
+        widgets={widgets}
+        currentTab={currentTab}
+        renderedWidgets={widgets.map((widget) => {
+          return (
+            <div key={widget.widgetMetadata.i}>
+              <WidgetWrapper widget={widget} />
+            </div>
+          );
+        })}
+      />
       <div className="absolute top-4 right-4">
         <AddWidgetDropdown
           tabId={currentTab.id}

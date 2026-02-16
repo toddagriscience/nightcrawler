@@ -1,33 +1,25 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import { Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
-import { MineralChartType } from './types';
+import { MineralLevelWidgetProps } from './types';
 import MetricRangeTooltip from './metric-range-tooltip';
 
 /** Mineral level widget. Displays levels for minerals.
  *
  * @param children - The scale behind the horizontal lines. Used for user experience. */
 export default function MineralLevelWidget({
+  max,
+  min,
+  unit,
+  chartData,
+  chartConfig = {},
   children,
-}: {
-  children?: React.ReactNode;
-}) {
-  const chartConfig = {} satisfies ChartConfig;
-  const max = 10;
-  const min = 0;
-  const unit = ' unit';
-
-  // The actual data
-  const chartData: MineralChartType[] = [
-    { y: 0, x: 5, date: new Date(), unit },
-    { y: 0, x: 8, date: new Date(), unit },
-    { y: 0, x: 3, date: new Date(), unit },
-    { y: 0, x: 4.33, date: new Date(), unit },
-  ];
-
+}: MineralLevelWidgetProps) {
   // Ex. ph values, min = 0, max = 14
-  const xAxisDomain = [min * 1.0, max * 1.0];
+  const xAxisDomain = [min, max];
 
   // Intentionally constant, used for balancing
   const yAxisDomain = [0, 1];

@@ -15,14 +15,15 @@ import ReactGridLayout, {
   useContainerWidth,
 } from 'react-grid-layout';
 import { NamedTab } from '../types';
-import WidgetWrapper from '@/components/common/widgets/widget-wrapper';
 
 export default function WidgetsGrid({
   widgets,
   currentTab,
+  renderedWidgets,
 }: {
   widgets: WidgetSelect[];
   currentTab: NamedTab;
+  renderedWidgets: React.ReactNode;
 }) {
   const { width, containerRef, mounted } = useContainerWidth();
 
@@ -60,13 +61,7 @@ export default function WidgetsGrid({
           gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
           className="h-screen!"
         >
-          {widgets.map((widget) => {
-            return (
-              <div key={widget.widgetMetadata.i}>
-                <WidgetWrapper widget={widget} />
-              </div>
-            );
-          })}
+          {renderedWidgets}
         </ReactGridLayout>
       )}
     </div>

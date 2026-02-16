@@ -2,15 +2,15 @@
 
 import { InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import {
-    farm,
-    farmCertificate,
-    farmInfoInternalApplication,
-    farmLocation,
-    managementZone,
-    tab,
-    user,
-    widget,
-    widgetEnum,
+  farm,
+  farmCertificate,
+  farmInfoInternalApplication,
+  farmLocation,
+  managementZone,
+  tab,
+  user,
+  widget,
+  widgetEnum,
 } from '../db/schema';
 
 export type UserSelect = InferSelectModel<typeof user>;
