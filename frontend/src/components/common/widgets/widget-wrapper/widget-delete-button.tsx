@@ -15,7 +15,7 @@ export default function WidgetDeleteButton({ widgetId }: { widgetId: number }) {
   }
 
   return (
-    <Button onClick={handleDelete} className="hover:cursor-pointer">
+    <Button onClick={handleDelete} className="p-0 hover:cursor-pointer">
       X
     </Button>
   );

@@ -79,9 +79,13 @@ export default async function WidgetWrapper({
 
       return (
         <>
-          <div className="flex flex-row justify-between">
-            <h2>Calcium</h2>
-            <p>Last Updated {lastUpdated.toLocaleDateString()}</p>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Calcium</h2>
+              <p className="text-sm font-light">
+                Last Updated {lastUpdated.toLocaleDateString()}
+              </p>
+            </div>
             <WidgetDeleteButton widgetId={widget.id} />
           </div>
 

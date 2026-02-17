@@ -15,7 +15,7 @@ import {
 import MetricRangeTooltip from './metric-range-tooltip';
 import { MineralLevelWidgetProps } from './types';
 
-/** Mineral level widget. Displays levels for minerals.
+/** Mineral level widget. Displays levels for minerals in a "low", "ideal", and "high" categories. These categories are decided by the `standards` parameter.
  *
  * @param children - The scale behind the horizontal lines. Used for user experience. */
 export default function MineralLevelWidget({
@@ -49,21 +49,53 @@ export default function MineralLevelWidget({
     },
   ];
 
-  console.log(bars);
+  function renderLowLabel(props: any, content: string) {
+    const { x, y, width, height } = props;
+    return (
+      <text
+        x={x + width / 2}
+        y={y + height / 2}
+        fill="#0A0A0A"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize="16"
+      >
+        {content}
+      </text>
+    );
+  }
 
   return (
     <div>
       <div className="mt-4 grid h-16 grid-cols-1 grid-rows-1 place-items-center justify-items-center">
         <ChartContainer
           config={chartConfig}
-          className="col-start-1 row-start-1 mb-8 h-full w-full"
+          className="col-start-1 row-start-1 mb-10 h-full w-full"
         >
           <BarChart className="w-full" layout="vertical" data={bars}>
             <XAxis hide type="number" domain={xAxisDomain} />
             <YAxis type="category" dataKey="name" hide />
-            <Bar dataKey="low" stackId="a" fill="#e6cd5590" barSize={12} />
-            <Bar dataKey="ideal" stackId="a" fill="#35ba2380" barSize={12} />
-            <Bar dataKey="high" stackId="a" fill="#e6cd5590" barSize={12} />
+            <Bar
+              dataKey="low"
+              stackId="a"
+              fill="#e6cd5590"
+              barSize={22}
+              label={(props) => renderLowLabel(props, 'Low')}
+            />
+            <Bar
+              dataKey="ideal"
+              stackId="a"
+              fill="#35ba2380"
+              barSize={22}
+              label={(props) => renderLowLabel(props, 'Ideal')}
+            />
+            <Bar
+              dataKey="high"
+              stackId="a"
+              fill="#e6cd5590"
+              barSize={22}
+              label={(props) => renderLowLabel(props, 'High')}
+            />
           </BarChart>
         </ChartContainer>
         <ChartContainer

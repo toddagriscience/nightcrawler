@@ -12,7 +12,6 @@ import { MineralChartType } from './types';
 export default function MetricRangeTooltip({
   active,
   payload,
-  label,
 }: TooltipProps<ValueType, NameType>) {
   if (!active || !payload || payload.length === 0) {
     return null;
@@ -31,13 +30,13 @@ export default function MetricRangeTooltip({
         {firstItem.realValue} {firstItem.unit}
       </p>
       {isAboveMax && (
-        <p className="mt-1 text-xs text-amber-600 font-medium">
-          ⚠️ Value exceeds maximum
+        <p className="mt-1 text-xs font-medium text-amber-600">
+          Value exceeds maximum
         </p>
       )}
       {isBelowMin && (
-        <p className="mt-1 text-xs text-amber-600 font-medium">
-          ⚠️ Value below minimum
+        <p className="mt-1 text-xs font-medium text-amber-600">
+          Value below minimum
         </p>
       )}
     </div>
