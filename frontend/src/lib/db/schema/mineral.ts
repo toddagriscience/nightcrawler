@@ -25,9 +25,9 @@ export const mineral = pgTable('mineral', {
   /** The name of the mineral in reference. */
   name: mineralTypes().notNull(),
   /** The real value of the mineral (see the unit field for units) */
-  realValue: numeric({ precision: 9, scale: 4 }).notNull(),
+  realValue: numeric({ precision: 9, scale: 4 }).notNull().$type<number>(),
   /** The ideal value of the mineral (see the unit field for units) */
-  idealValue: numeric({ precision: 9, scale: 4 }).notNull(),
+  idealValue: numeric({ precision: 9, scale: 4 }).notNull().$type<number>(),
   /** A general tag (is this value low, high, etc.) */
   tag: levelCategory(),
   /** This field set to true refers to a severe soil quality issue. Specifically, it refers to a state where the soil is "inactive" (refer to Vincent for more details). The trigger for this field being true is all 4 of the generic minerals (calcium, magnesium, sodium, and potassium) being low at the same time.*/

@@ -3,7 +3,7 @@
 'use client';
 
 import { Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer } from '@/components/ui/chart';
 import { MineralLevelWidgetProps } from './types';
 import MetricRangeTooltip from './metric-range-tooltip';
 
@@ -23,6 +23,9 @@ export default function MineralLevelWidget({
   // Intentionally constant, used for balancing
   const yAxisDomain = [0, 1];
 
+  // Strip non-numeric fields so Recharts/Decimal.js doesn't choke on them
+  const numericData = chartData.map(({ x, y }) => ({ x, y }));
+
   return (
     <div>
       <div className="mt-4 grid h-16 grid-cols-1 grid-rows-1 place-items-center justify-items-center">
@@ -31,13 +34,17 @@ export default function MineralLevelWidget({
           config={chartConfig}
           className="col-start-1 row-start-1 h-full w-full"
         >
-          <ScatterChart className="w-full" layout="horizontal" data={chartData}>
+          <ScatterChart
+            className="w-full"
+            layout="horizontal"
+            data={numericData}
+          >
             <XAxis
+              dataKey="x"
               type="number"
               interval={'preserveStartEnd'}
-              allowDecimals
               domain={xAxisDomain}
-              unit={chartData[0].unit}
+              unit={' ' + chartData[0].unit}
             />
             <YAxis dataKey={'y'} hide type="number" domain={yAxisDomain} />
             <Scatter dataKey={'x'} fill="#0A0A0A" />

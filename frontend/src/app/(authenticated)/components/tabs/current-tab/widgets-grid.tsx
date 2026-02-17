@@ -15,6 +15,7 @@ import ReactGridLayout, {
   useContainerWidth,
 } from 'react-grid-layout';
 import { NamedTab } from '../types';
+import { useRouter } from 'next/navigation';
 
 export default function WidgetsGrid({
   widgets,
@@ -26,6 +27,7 @@ export default function WidgetsGrid({
   renderedWidgets: React.ReactNode;
 }) {
   const { width, containerRef, mounted } = useContainerWidth();
+  const router = useRouter();
 
   const layout = widgets.map((widget) => {
     return { ...widget.widgetMetadata, ...widgetSizing[widget.name] };
@@ -48,6 +50,7 @@ export default function WidgetsGrid({
           y: newItem.y,
         },
       });
+      router.refresh();
     }
   }
 
