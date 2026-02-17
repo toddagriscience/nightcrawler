@@ -88,7 +88,7 @@ export default function WhoWeArePage() {
             >
               <Image
                 src="/marketing/who-we-are-people.png"
-                alt=""
+                alt="Team members standing together"
                 width={500}
                 height={500}
                 sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
@@ -101,7 +101,7 @@ export default function WhoWeArePage() {
             >
               <Image
                 src="/marketing/who-we-are-people-2.png"
-                alt=""
+                alt="Members speaking at a discussion"
                 width={500}
                 height={500}
                 sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
