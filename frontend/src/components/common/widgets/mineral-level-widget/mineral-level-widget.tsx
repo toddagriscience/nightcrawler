@@ -13,7 +13,6 @@ import MetricRangeTooltip from './metric-range-tooltip';
 export default function MineralLevelWidget({
   max,
   min,
-  unit,
   chartData,
   chartConfig = {},
   children,
@@ -38,7 +37,7 @@ export default function MineralLevelWidget({
               interval={'preserveStartEnd'}
               allowDecimals
               domain={xAxisDomain}
-              unit={unit}
+              unit={chartData[0].unit}
             />
             <YAxis dataKey={'y'} hide type="number" domain={yAxisDomain} />
             <Scatter dataKey={'x'} fill="#0A0A0A" />

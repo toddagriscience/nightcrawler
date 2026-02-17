@@ -12,7 +12,6 @@ export type MineralChartType = {
 export type MineralLevelWidgetProps = {
   max: number;
   min: number;
-  unit: string;
   chartData: MineralChartType[];
   chartConfig?: ChartConfig;
   children?: React.ReactNode;
