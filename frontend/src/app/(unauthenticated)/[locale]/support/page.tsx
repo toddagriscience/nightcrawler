@@ -13,7 +13,7 @@ import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { submitPublicInquiry } from './action';
 import { PublicInquiryData, publicInquirySchema } from './types';
@@ -41,6 +41,9 @@ export default function Support() {
     mode: 'onChange',
   });
   const t = useTranslations('supportPage');
+  const searchParams = useSearchParams();
+  const intent = searchParams.get('intent');
+  const emailType = intent === 'forgot-email' ? '.forgotEmail' : '.email';
 
   const onSubmit = async (data: PublicInquiryData) => {
     const formData = new FormData();
@@ -131,7 +134,7 @@ export default function Support() {
                       <Field>
                         <div className="flex flex-row justify-between">
                           <FieldLabel htmlFor="lastKnownEmail">
-                            {t('fields.email')}
+                            {t('fields' + emailType)}
                           </FieldLabel>
                           <ErrorMessage
                             errors={errors}
@@ -145,7 +148,7 @@ export default function Support() {
                           id="lastKnownEmail"
                           data-testid="lastKnownEmail"
                           type="email"
-                          placeholder={t('placeholders.email')}
+                          placeholder={t('placeholders' + emailType)}
                           className="focus:ring-0!"
                           {...register('lastKnownEmail')}
                           required
