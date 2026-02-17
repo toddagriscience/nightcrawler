@@ -19,6 +19,8 @@ export default function MetricRangeTooltip({
   }
 
   const firstItem = payload[0].payload as MineralChartType;
+  const isAboveMax = firstItem.realValue > firstItem.x;
+  const isBelowMin = firstItem.realValue < firstItem.x;
 
   return (
     <div className="mt-15 rounded-lg border bg-white p-2 shadow-md">
@@ -26,8 +28,18 @@ export default function MetricRangeTooltip({
         {firstItem.date.toLocaleDateString()}
       </p>
       <p className="text-muted-foreground text-sm">
-        {firstItem.x} {firstItem.unit}
+        {firstItem.realValue} {firstItem.unit}
       </p>
+      {isAboveMax && (
+        <p className="mt-1 text-xs text-amber-600 font-medium">
+          ⚠️ Value exceeds maximum
+        </p>
+      )}
+      {isBelowMin && (
+        <p className="mt-1 text-xs text-amber-600 font-medium">
+          ⚠️ Value below minimum
+        </p>
+      )}
     </div>
   );
 }

@@ -2,10 +2,18 @@
 
 'use client';
 
-import { Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer } from '@/components/ui/chart';
-import { MineralLevelWidgetProps } from './types';
+import {
+  Bar,
+  BarChart,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import MetricRangeTooltip from './metric-range-tooltip';
+import { MineralLevelWidgetProps } from './types';
 
 /** Mineral level widget. Displays levels for minerals.
  *
@@ -15,21 +23,49 @@ export default function MineralLevelWidget({
   min,
   chartData,
   chartConfig = {},
-  children,
+  standards,
 }: MineralLevelWidgetProps) {
   // Ex. ph values, min = 0, max = 14
-  const xAxisDomain = [min, max];
+  const xAxisDomain = [Number(min), Number(max)];
 
   // Intentionally constant, used for balancing
   const yAxisDomain = [0, 1];
 
   // Strip non-numeric fields so Recharts/Decimal.js doesn't choke on them
-  const numericData = chartData.map(({ x, y }) => ({ x, y }));
+  const numericData = chartData.map(({ x, y, date, realValue, unit }) => ({
+    x,
+    y,
+    date,
+    realValue,
+    unit,
+  }));
+
+  const bars = [
+    {
+      name: 'range',
+      low: Number(standards.low),
+      ideal: Number(standards.ideal) - Number(standards.low),
+      high: Number(standards.high) - Number(standards.ideal),
+    },
+  ];
+
+  console.log(bars);
 
   return (
     <div>
       <div className="mt-4 grid h-16 grid-cols-1 grid-rows-1 place-items-center justify-items-center">
-        {children}
+        <ChartContainer
+          config={chartConfig}
+          className="col-start-1 row-start-1 mb-8 h-full w-full"
+        >
+          <BarChart className="w-full" layout="vertical" data={bars}>
+            <XAxis hide type="number" domain={xAxisDomain} />
+            <YAxis type="category" dataKey="name" hide />
+            <Bar dataKey="low" stackId="a" fill="#e6cd5590" barSize={12} />
+            <Bar dataKey="ideal" stackId="a" fill="#35ba2380" barSize={12} />
+            <Bar dataKey="high" stackId="a" fill="#e6cd5590" barSize={12} />
+          </BarChart>
+        </ChartContainer>
         <ChartContainer
           config={chartConfig}
           className="col-start-1 row-start-1 h-full w-full"

@@ -1,13 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { WidgetSelect } from '@/lib/types/db';
-import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
-import WidgetDeleteButton from './widget-delete-button';
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
+import { analysis, mineral, standardValues } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
-import { analysis, mineral } from '@/lib/db/schema';
+import { WidgetSelect } from '@/lib/types/db';
 import { and, eq } from 'drizzle-orm';
+import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
 import { MineralChartType } from '../mineral-level-widget/types';
+import WidgetDeleteButton from './widget-delete-button';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 
 export default async function WidgetWrapper({
   widget,
@@ -21,6 +22,8 @@ export default async function WidgetWrapper({
       return <p>Macro Radar Widget - Coming Soon</p>;
 
     case 'Calcium Widget':
+      const user = await getAuthenticatedInfo();
+
       const calciumReadings = await db
         .select({
           unit: mineral.units,
@@ -35,19 +38,44 @@ export default async function WidgetWrapper({
         )
         .orderBy(mineral.createdAt);
 
-      if (calciumReadings.length === 0) {
+      const [standardCalciumValues] = await db
+        .select({
+          calciumMin: standardValues.calciumMin,
+          calciumLow: standardValues.calciumLow,
+          calciumIdeal: standardValues.calciumIdeal,
+          calciumHigh: standardValues.calciumHigh,
+          calicumMax: standardValues.calciumMax,
+        })
+        .from(standardValues)
+        .where(eq(standardValues.farmId, user.farmId))
+        .limit(1);
+
+      if (calciumReadings.length === 0 || !standardCalciumValues) {
         return <p>No calcium data currently available</p>;
       }
 
-      const lastUpdated = calciumReadings.at(-1)!.createdAt;
+      const min = standardCalciumValues.calciumMin;
+      const max = standardCalciumValues.calicumMax;
 
-      // The actual data
-      const chartData: MineralChartType[] = calciumReadings.map((reading) => ({
-        y: 0,
-        x: Number(reading.realValue),
-        date: reading.createdAt,
-        unit: reading.unit,
-      }));
+      const lastUpdated = calciumReadings.at(-1)!.createdAt;
+      const chartData: MineralChartType[] = calciumReadings.map((reading) => {
+        // If the real value is higher or lower than the min or the max that this chart has, respectively, just set it to the bottom but let the user know that this is the case.
+        const realValue = Number(reading.realValue);
+        let x = realValue;
+        if (realValue > max) {
+          x = max;
+        } else if (realValue < min) {
+          x = min;
+        }
+
+        return {
+          y: 0,
+          x,
+          realValue,
+          date: reading.createdAt,
+          unit: reading.unit,
+        };
+      });
 
       return (
         <>
@@ -57,27 +85,16 @@ export default async function WidgetWrapper({
             <WidgetDeleteButton widgetId={widget.id} />
           </div>
 
-          <MineralLevelWidget max={10} min={0} chartData={chartData}>
-            <div className="col-start-1 row-start-1 flex h-full w-full flex-row gap-1">
-              <div
-                className={`flex h-5 basis-1/3 items-center justify-center rounded-xl bg-yellow-500/30`}
-              >
-                <p className="mx-auto mb-[2px] max-h-full text-center text-sm font-light text-black/90">
-                  Low
-                </p>
-              </div>
-              <div className={`h-5 basis-1/3 rounded-xl bg-green-500/30`}>
-                <p className="mx-auto mb-[2px] max-h-full text-center text-sm font-light text-black/70">
-                  Ideal
-                </p>
-              </div>
-              <div className={`h-5 basis-1/3 rounded-xl bg-yellow-500/30`}>
-                <p className="mx-auto mb-[2px] max-h-full text-center text-sm font-light text-black/90">
-                  High
-                </p>
-              </div>
-            </div>
-          </MineralLevelWidget>
+          <MineralLevelWidget
+            max={max}
+            min={min}
+            chartData={chartData}
+            standards={{
+              low: standardCalciumValues.calciumLow,
+              ideal: standardCalciumValues.calciumIdeal,
+              high: standardCalciumValues.calciumHigh,
+            }}
+          />
         </>
       );
 

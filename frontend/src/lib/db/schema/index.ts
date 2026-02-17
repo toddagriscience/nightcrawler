@@ -12,3 +12,4 @@ export { user, accountAgreementAcceptance, userRoleEnum } from './user';
 export { farmInfoInternalApplication } from './internal-application';
 export { tab } from './tab';
 export { widget, widgetEnum } from './widget';
+export { standardValues } from './standard-values';
