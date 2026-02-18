@@ -10,6 +10,12 @@ import { MineralChartType } from '../mineral-level-widget/types';
 import WidgetDeleteButton from './widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 
+/** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
+ *
+ * When adding a widget, you need to:
+ * 1. Add an entry in the `widgets` enum.
+ * 2. Add an entry in `widgetSizing` in `widgets/sizing.ts`
+ * 3. Add your widget here */
 export default async function WidgetWrapper({
   widget,
   currentTab,

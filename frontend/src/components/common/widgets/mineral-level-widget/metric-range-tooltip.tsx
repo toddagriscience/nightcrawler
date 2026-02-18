@@ -9,6 +9,7 @@ import {
 } from 'recharts/types/component/DefaultTooltipContent';
 import { MineralChartType } from './types';
 
+/** Provides a tooltip for the `<MineralLevelWidget />` component */
 export default function MetricRangeTooltip({
   active,
   payload,

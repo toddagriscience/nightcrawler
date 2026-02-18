@@ -31,15 +31,6 @@ export default function MineralLevelWidget({
   // Intentionally constant, used for balancing
   const yAxisDomain = [0, 1];
 
-  // Strip non-numeric fields so Recharts/Decimal.js doesn't choke on them
-  const numericData = chartData.map(({ x, y, date, realValue, unit }) => ({
-    x,
-    y,
-    date,
-    realValue,
-    unit,
-  }));
-
   const bars = [
     {
       name: 'range',
@@ -102,11 +93,7 @@ export default function MineralLevelWidget({
           config={chartConfig}
           className="col-start-1 row-start-1 h-full w-full"
         >
-          <ScatterChart
-            className="w-full"
-            layout="horizontal"
-            data={numericData}
-          >
+          <ScatterChart className="w-full" layout="horizontal" data={chartData}>
             <XAxis
               dataKey="x"
               type="number"
