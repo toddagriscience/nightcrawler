@@ -1,7 +1,7 @@
 {
   "contactPage": {
     "title": "Contáctanos",
-    "description": "Ponte en contacto con Todd Agriscience para consultas o colaboraciones.",
+    "description": "Ponte en contacto con Todd",
     "fields": {
       "name": "Nombre",
       "firstName": "Nombre",
@@ -23,7 +23,7 @@
       "yes": "Sí",
       "no": "No",
       "back": "Atrás",
-      "next": "Siguiente →"
+      "next": "Continuar"
     },
     "errors": {
       "requiredFields": "Por favor, complete todos los campos."

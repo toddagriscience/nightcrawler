@@ -1,7 +1,7 @@
 {
   "contactPage": {
     "title": "Contact Us",
-    "description": "Get in touch with Todd Agriscience for inquiries or partnerships.",
+    "description": "Get Started with Todd",
     "fields": {
       "name": "Name",
       "firstName": "First Name",
@@ -23,7 +23,7 @@
       "yes": "Yes",
       "no": "No",
       "back": "Back",
-      "next": "Next →"
+      "next": "Continue"
     },
     "errors": {
       "requiredFields": "Please ensure all fields are filled out."
