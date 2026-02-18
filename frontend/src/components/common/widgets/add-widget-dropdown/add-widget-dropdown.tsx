@@ -14,13 +14,13 @@ import { widgetEnum } from '@/lib/db/schema';
 import { useRouter } from 'next/navigation';
 
 export default function AddWidgetDropdown({
-  tabId,
+  managementZoneId,
   children,
   onWidgetAdded,
   onError,
   availableWidgets,
 }: {
-  tabId: number;
+  managementZoneId: number;
   children: React.ReactNode;
   onWidgetAdded?: (widgetId: number, widgetType: string) => void;
   onError?: (error: string) => void;
@@ -33,7 +33,7 @@ export default function AddWidgetDropdown({
     widgetType: (typeof widgetEnum.enumValues)[number]
   ) => {
     const result = await createWidget({
-      tabId,
+      managementZoneId,
       name: widgetType,
     });
 

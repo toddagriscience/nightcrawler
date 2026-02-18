@@ -18,7 +18,7 @@ export default async function CurrentTab({
   const widgets = await db
     .select()
     .from(widget)
-    .where(eq(widget.tab, currentTab.id));
+    .where(eq(widget.managementZone, currentTab.managementZone));
 
   const allWidgetTypes = widgetEnum.enumValues;
 
@@ -32,7 +32,7 @@ export default async function CurrentTab({
       <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center gap-4">
         <h2 className="text-xl">Add a widget to get started</h2>
         <AddWidgetDropdown
-          tabId={currentTab.id}
+          managementZoneId={currentTab.managementZone}
           availableWidgets={unusedWidgets}
         >
           <Button size="sm" variant="outline" className="hover:cursor-pointer">
@@ -46,7 +46,10 @@ export default async function CurrentTab({
 
   return (
     <>
-      <AddWidgetDropdown tabId={currentTab.id} availableWidgets={unusedWidgets}>
+      <AddWidgetDropdown
+        managementZoneId={currentTab.managementZone}
+        availableWidgets={unusedWidgets}
+      >
         <Button
           size="sm"
           variant="outline"

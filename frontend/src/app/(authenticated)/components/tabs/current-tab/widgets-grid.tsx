@@ -43,7 +43,7 @@ export default function WidgetsGrid({
   ) {
     if (newItem) {
       const widgetName = newItem.i as WidgetEnum;
-      await updateWidget(currentTab.id, widgetName, {
+      await updateWidget(currentTab.managementZone, widgetName, {
         widgetMetadata: {
           i: widgetName,
           x: newItem.x,
