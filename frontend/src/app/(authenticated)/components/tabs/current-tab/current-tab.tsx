@@ -27,8 +27,35 @@ export default async function CurrentTab({
     (widgetType) => !existingWidgetNames.has(widgetType)
   );
 
+  if (widgets.length === 0) {
+    return (
+      <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center gap-4">
+        <h2 className="text-xl">Add a widget to get started</h2>
+        <AddWidgetDropdown
+          tabId={currentTab.id}
+          availableWidgets={unusedWidgets}
+        >
+          <Button size="sm" variant="outline" className="hover:cursor-pointer">
+            Customize
+            <Plus className="mr-2 h-4 w-4" />
+          </Button>
+        </AddWidgetDropdown>
+      </div>
+    );
+  }
+
   return (
     <>
+      <AddWidgetDropdown tabId={currentTab.id} availableWidgets={unusedWidgets}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="ml-2 hover:cursor-pointer"
+        >
+          Customize
+          <Plus className="mr-2 h-4 w-4" />
+        </Button>
+      </AddWidgetDropdown>
       <WidgetsGrid
         widgets={widgets}
         currentTab={currentTab}
@@ -43,17 +70,6 @@ export default async function CurrentTab({
           );
         })}
       />
-      <div className="absolute top-4 right-4">
-        <AddWidgetDropdown
-          tabId={currentTab.id}
-          availableWidgets={unusedWidgets}
-        >
-          <Button size="sm" variant="outline">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Widget
-          </Button>
-        </AddWidgetDropdown>
-      </div>
     </>
   );
 }
