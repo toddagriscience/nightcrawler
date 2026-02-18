@@ -2,13 +2,15 @@
 
 import { InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import {
-  farmInfoInternalApplication,
-  user,
   farm,
   farmCertificate,
+  farmInfoInternalApplication,
   farmLocation,
-  tab,
   managementZone,
+  tab,
+  user,
+  widget,
+  widgetEnum,
 } from '../db/schema';
 
 export type UserSelect = InferSelectModel<typeof user>;
@@ -20,6 +22,7 @@ export type FarmInfoInternalApplicationSelect = InferSelectModel<
 >;
 export type TabSelect = InferSelectModel<typeof tab>;
 export type ManagementZoneSelect = InferSelectModel<typeof managementZone>;
+export type WidgetSelect = InferSelectModel<typeof widget>;
 
 export type FarmInsert = InferInsertModel<typeof farm>;
 export type FarmLocationInsert = InferInsertModel<typeof farmLocation>;
@@ -28,3 +31,8 @@ export type UserInsert = InferInsertModel<typeof user>;
 export type FarmInfoInternalApplicationInsert = InferInsertModel<
   typeof farmInfoInternalApplication
 >;
+export type WidgetInsert = InferInsertModel<typeof widget>;
+
+export type WidgetUpdate = Partial<Omit<WidgetSelect, 'id'>>;
+
+export type WidgetEnum = (typeof widgetEnum.enumValues)[number];
