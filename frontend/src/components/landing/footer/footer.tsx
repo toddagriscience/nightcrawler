@@ -110,7 +110,6 @@ const Footer = () => {
       <div className="mt-8 flex flex-col gap-10">
         <div className="flex flex-row gap-4">
           <Image
-            role="img"
             src={'/united_states_flag.svg'}
             alt=""
             width={50}

@@ -2,36 +2,69 @@
 
 'use client';
 
-import { WidgetSelect } from '@/lib/types/db';
-import ReactGridLayout, { useContainerWidth } from 'react-grid-layout';
+import { updateWidget } from '@/components/common/widgets/actions';
+import {
+  widgetColumns,
+  widgetRowHeight,
+  widgetSizing,
+} from '@/components/common/widgets/sizing';
+import { WidgetEnum, WidgetSelect } from '@/lib/types/db';
+import ReactGridLayout, {
+  Layout,
+  LayoutItem,
+  useContainerWidth,
+} from 'react-grid-layout';
+import { NamedTab } from '../types';
+import { useRouter } from 'next/navigation';
 
-export default function WidgetsGrid({ widgets }: { widgets: WidgetSelect[] }) {
+export default function WidgetsGrid({
+  widgets,
+  currentTab,
+  renderedWidgets,
+}: {
+  widgets: WidgetSelect[];
+  currentTab: NamedTab;
+  renderedWidgets: React.ReactNode;
+}) {
   const { width, containerRef, mounted } = useContainerWidth();
+  const router = useRouter();
 
-  const layout = [
-    { i: 'a', x: 0, y: 0, w: 1, h: 4, static: true },
-    { i: 'b', x: 1, y: 0, w: 3, h: 4, minW: 2, maxW: 4 },
-    { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-  ];
+  const layout = widgets.map((widget) => {
+    return { ...widget.widgetMetadata, ...widgetSizing[widget.name] };
+  });
+
+  async function handleDrop(
+    layout: Layout,
+    oldItem: LayoutItem | null,
+    newItem: LayoutItem | null,
+    placeholder: LayoutItem | null,
+    event: Event,
+    element?: HTMLElement
+  ) {
+    if (newItem) {
+      const widgetName = newItem.i as WidgetEnum;
+      await updateWidget(currentTab.id, widgetName, {
+        widgetMetadata: {
+          i: widgetName,
+          x: newItem.x,
+          y: newItem.y,
+        },
+      });
+      router.refresh();
+    }
+  }
 
   return (
     <div ref={containerRef} className="relative h-screen">
       {mounted && (
         <ReactGridLayout
           layout={layout}
+          onDragStop={handleDrop}
           width={width}
-          gridConfig={{ cols: 12, rowHeight: 30 }}
+          gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
           className="h-screen!"
         >
-          <div key="a" className="border border-solid border-black">
-            a
-          </div>
-          <div key="b" className="border border-solid border-black">
-            b
-          </div>
-          <div key="c" className="border border-solid border-black">
-            c
-          </div>
+          {renderedWidgets}
         </ReactGridLayout>
       )}
     </div>
