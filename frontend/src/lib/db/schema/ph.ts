@@ -8,7 +8,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
-import { levelCategory } from './level-category';
 
 /** The ph data for a given analysis. */
 export const ph = pgTable('ph', {
@@ -28,8 +27,6 @@ export const ph = pgTable('ph', {
   low: numeric({ precision: 9, scale: 4 }).notNull(),
   /** The value that, if the real ph value is greater than, warrants a tag of "high" */
   high: numeric({ precision: 9, scale: 4 }).notNull(),
-  /** A general tag for the results of a ph analysis */
-  tag: levelCategory(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()
