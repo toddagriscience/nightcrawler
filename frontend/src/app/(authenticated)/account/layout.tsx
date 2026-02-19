@@ -3,8 +3,7 @@
 import type { Metadata } from 'next';
 
 /**
- * Generate metadata for account section
- * @returns {Metadata} - The metadata for the account section
+ * Metadata for the account section
  */
 export const metadata: Metadata = {
   title: {
@@ -14,7 +13,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Layout for account section
+ * Root layout for the account section — provides metadata only.
+ * The actual UI layout (header, sidebar) is in the (settings) route group.
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The account layout
  */
