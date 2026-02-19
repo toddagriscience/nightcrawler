@@ -29,22 +29,22 @@ export default function PublicInquiryModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const options: PublicInquiryOption[] = [
-    { label: 'Forgot Email', href: '/support' },
-    { label: 'Forgot Password', href: '/forgot-password' },
-    { label: 'Contact Support', href: '/support' },
+    { label: 'Forgot Email', href: '/support', intent: 'forgot-email' },
+    {
+      label: 'Forgot Password',
+      href: '/forgot-password',
+      intent: 'forgot-password',
+    },
+    { label: 'Contact Support', href: '/support', intent: 'contact-support' },
   ];
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={isOpen ? () => setIsOpen(false) : () => {}}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger ? (
           <Button
+            type="button"
             className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline"
-            onClick={() => setIsOpen(true)}
-            asChild
           >
             {trigger}
           </Button>
@@ -52,7 +52,6 @@ export default function PublicInquiryModal({
           <Button
             type="button"
             variant={'outline'}
-            onClick={() => setIsOpen(true)}
             className="hover:cursor-pointer"
           >
             Help
@@ -70,7 +69,10 @@ export default function PublicInquiryModal({
             {options.map((option) => (
               <Link
                 key={option.label}
-                href={option.href}
+                href={{
+                  pathname: option.href,
+                  query: { intent: option.intent },
+                }}
                 className="text-foreground focus-visible:outline-primary flex w-full items-center justify-between px-4 py-4 text-left text-base font-normal transition hover:bg-[var(--background-secondary)]/30 hover:transition-all hover:duration-300 hover:ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
               >
                 {option.label}

@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TermsAndConditions from './terms-and-conditions';
 
 // Mock dependencies

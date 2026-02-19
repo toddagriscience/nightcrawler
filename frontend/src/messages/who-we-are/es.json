@@ -2,11 +2,10 @@
   "whoWeAre": {
     "title": "Quiénes Somos",
     "intro": {
-      "paragraphs": [
-        "Todd es una firma de agricultura generativa con múltiples estrategias, enfocada en generar valor agrícola superior a largo plazo para nuestros clientes.",
-        "Reunimos a personas extraordinarias, las equipamos con recursos y tecnología incomparables y las empoderamos para explorar nuevas posibilidades en la agricultura sostenible.",
-        "Nuestra firma despliega recursos para apoyar a explotaciones agrícolas prometedoras cuyas innovaciones están cambiando el mundo, impulsando un círculo virtuoso de mejora en la calidad del suelo y alimentos más saludables. Nuestro equipo de agronomía respalda la misión crítica de los productores de alimentos del mundo, desde reconocidas fincas costeras hasta regiones montañosas remotas."
-      ]
+      "paragraphs": {
+        "0": "Todd está construyendo mentores hiperinteligentes y plataformas de investigación de IA para la agricultura sostenible. No modelos entrenados únicamente con información pública. No entornos simulados. Datos reales, físicos y propietarios que caracterizan el suelo, generan prácticas accionables y gigabytes de datos que no existen en ningún otro lugar.",
+        "1": "Nuestro enfoque comienza con una tesis de agricultura generativa y de múltiples estrategias, en la que los niveles minerales se monitorean de cerca para ayudar a predecir resultados futuros y construir un valor agrícola superior a largo plazo. Desplegamos recursos específicos por ubicación en granjas de todas partes, desde reconocidas zonas costeras hasta hondonadas montañosas, impulsando un impacto medible y promoviendo un ciclo virtuoso de mejor calidad del suelo y productos más saludables."
+      }
     },
     "culture": {
       "heading": {

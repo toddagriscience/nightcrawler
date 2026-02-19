@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import news from './news'
+import governanceProfiles from './governance-profiles'
 
-// Copyright Todd Agriscience, Inc. All rights reserved.
-export const schemaTypes = [news]
+export const schemaTypes = [news, governanceProfiles]

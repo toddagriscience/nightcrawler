@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import ShareArticleButtons from '@/components/common/share-article/share-article';
-import SanityHeaderImage from '@/components/sanity/sanity-header-image';
-import SanityNormal from '@/components/sanity/sanity-normal';
+import SanityHeaderImage from '@/components/sanity/news/sanity-header-image';
+import SanityNormal from '@/components/sanity/news/sanity-normal';
 import { Link } from '@/i18n/config';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
