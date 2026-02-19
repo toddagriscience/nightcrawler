@@ -6,6 +6,7 @@ import {
   farmCertificate,
   farmInfoInternalApplication,
   farmLocation,
+  integratedManagementPlan,
   managementZone,
   tab,
   user,
@@ -23,6 +24,9 @@ export type FarmInfoInternalApplicationSelect = InferSelectModel<
 export type TabSelect = InferSelectModel<typeof tab>;
 export type ManagementZoneSelect = InferSelectModel<typeof managementZone>;
 export type WidgetSelect = InferSelectModel<typeof widget>;
+export type IntegratedManagementPlanSelect = InferSelectModel<
+  typeof integratedManagementPlan
+>;
 
 export type FarmInsert = InferInsertModel<typeof farm>;
 export type FarmLocationInsert = InferInsertModel<typeof farmLocation>;
