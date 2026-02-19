@@ -1,113 +1,139 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { PageHero } from '@/components/common';
-import governanceTeam from '@/data/governance-team.json';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { TeamMemberCard } from '../components';
-import type { TeamMember } from '../components/team-member-card/types/team-member-card';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import GovernancePage from './page';
+import sanityQuery from '@/lib/sanity/query';
 
-describe('GovernancePage Components', () => {
-  it('renders PageHero with Vincent Todd information', () => {
-    const vincentTodd = (governanceTeam as Record<string, TeamMember>)[
-      'vincent-todd'
-    ];
+vi.mock('next/image', () => ({
+  default: ({
+    src,
+    alt,
+    ...props
+  }: {
+    src: string | { src: string };
+    alt: string;
+  }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={typeof src === 'string' ? src : src.src} alt={alt} {...props} />
+  ),
+}));
 
-    renderWithNextIntl(
-      <PageHero
-        title={vincentTodd.name}
-        subtitle={vincentTodd.title}
-        showArrow={false}
-      />
-    );
+vi.mock('@/lib/sanity/query', () => ({
+  default: vi.fn(),
+}));
 
-    expect(screen.getByTestId('page-hero')).toBeInTheDocument();
+vi.mock('@/lib/sanity/utils', () => ({
+  urlFor: vi.fn(() => ({
+    url: () => 'https://example.com/profile.jpg',
+  })),
+}));
+
+vi.mock('next/navigation', () => ({
+  notFound: vi.fn(),
+  usePathname: vi.fn(() => '/'),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    prefetch: vi.fn(),
+    refresh: vi.fn(),
+  })),
+}));
+
+const mockProfile = {
+  _id: 'profile-1',
+  _rev: 'rev-1',
+  _type: 'governance-profiles',
+  _createdAt: '2026-02-13T00:00:00.000Z',
+  _updatedAt: '2026-02-13T00:00:00.000Z',
+  name: 'Vincent Todd',
+  title: 'Chairman & Chief Executive Officer',
+  profileImage: {
+    asset: {
+      _ref: 'image-123',
+      _type: 'reference',
+    },
+    alt: 'Vincent Todd headshot',
+  },
+  quote: 'Accelerating agriculture.',
+  backstory: [
+    {
+      _type: 'block',
+      _key: 'b1',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'b1c1',
+          text: 'Backstory paragraph one.',
+          marks: [],
+        },
+      ],
+    },
+  ],
+  vision: [
+    {
+      _type: 'block',
+      _key: 'v1',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'v1c1',
+          text: 'Vision paragraph one.',
+          marks: [],
+        },
+      ],
+    },
+  ],
+  email: 'vincent@todd.com',
+};
+
+describe('GovernancePage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('renders governance profile content from Sanity', async () => {
+    vi.mocked(sanityQuery).mockResolvedValueOnce(mockProfile);
+
+    const page = await GovernancePage({
+      params: Promise.resolve({ slug: 'vincent-todd' }),
+    });
+    renderWithNextIntl(page);
+
     expect(screen.getByText('Vincent Todd')).toBeInTheDocument();
-    expect(screen.getByText('Chairman & CEO')).toBeInTheDocument();
-  });
-
-  it('renders TeamMemberCard with team member data', () => {
-    const vincentTodd = (governanceTeam as Record<string, TeamMember>)[
-      'vincent-todd'
-    ];
-
-    renderWithNextIntl(<TeamMemberCard teamMember={vincentTodd} />);
-
-    expect(screen.getByTestId('team-member-card')).toBeInTheDocument();
-    expect(screen.getByText(/Vincent Todd/)).toBeInTheDocument();
-    expect(screen.getByText(/Chairman and CEO/)).toBeInTheDocument();
-  });
-
-  it('renders TeamMemberCard with Vincent Todd bio paragraphs using regex', () => {
-    const vincentTodd = (governanceTeam as Record<string, TeamMember>)[
-      'vincent-todd'
-    ];
-
-    renderWithNextIntl(<TeamMemberCard teamMember={vincentTodd} />);
-
-    // Test for key phrases from Vincent Todd's bio using regex
-    expect(screen.getByText(/Chairman and CEO of Todd/)).toBeInTheDocument();
     expect(
-      screen.getByText(/Managing Partner of Todd Capital/)
+      screen.getByText('Chairman & Chief Executive Officer')
+    ).toBeInTheDocument();
+    expect(screen.getByText('"Accelerating agriculture."')).toBeInTheDocument();
+    expect(screen.getByText('Backstory')).toBeInTheDocument();
+    expect(screen.getByText('Backstory paragraph one.')).toBeInTheDocument();
+    expect(screen.getByText('Vision')).toBeInTheDocument();
+    expect(screen.getByText('Vision paragraph one.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Reach out to Vincent/i })
     ).toBeInTheDocument();
   });
 
-  it('renders TeamMemberCard with Lawrence Wilson bio paragraphs using regex', () => {
-    const lawrenceWilson = (governanceTeam as Record<string, TeamMember>)[
-      'lawrence-wilson'
-    ];
+  it('passes the resolved slug to sanityQuery', async () => {
+    vi.mocked(sanityQuery).mockResolvedValueOnce(mockProfile);
 
-    renderWithNextIntl(<TeamMemberCard teamMember={lawrenceWilson} />);
+    const page = await GovernancePage({
+      params: Promise.resolve({ slug: ['vincent-todd'] }),
+    });
+    renderWithNextIntl(page);
 
-    expect(screen.getByText(/Senior Advisor at Todd/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Center for Development Foundation in Prescott, AZ/)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/nutrition consultant/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Massachusetts Institute of Technology/)
-    ).toBeInTheDocument();
-  });
-
-  it('renders TeamMemberCard with Brandy Beem bio paragraphs using regex', () => {
-    const brandyBeem = (governanceTeam as Record<string, TeamMember>)[
-      'brandy-beem'
-    ];
-
-    renderWithNextIntl(<TeamMemberCard teamMember={brandyBeem} />);
-
-    expect(screen.getByText(/Senior Advisor at Todd/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Orthomolecular medicine practice/)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/launched in April of 2014/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Biodynamic Demeter Association.*Institute of Justice/)
-    ).toBeInTheDocument();
-  });
-
-  it('has correct governance team data structure', () => {
-    const vincentTodd = (governanceTeam as Record<string, TeamMember>)[
-      'vincent-todd'
-    ];
-    const lawrenceWilson = (governanceTeam as Record<string, TeamMember>)[
-      'lawrence-wilson'
-    ];
-    const brandyBeem = (governanceTeam as Record<string, TeamMember>)[
-      'brandy-beem'
-    ];
-
-    expect(vincentTodd).toBeDefined();
-    expect(vincentTodd.name).toBe('Vincent Todd');
-    expect(vincentTodd.title).toBe('Chairman & CEO');
-
-    expect(lawrenceWilson).toBeDefined();
-    expect(lawrenceWilson.name).toBe('Lawrence Wilson');
-    expect(lawrenceWilson.title).toBe('Senior Advisor');
-
-    expect(brandyBeem).toBeDefined();
-    expect(brandyBeem.name).toBe('Brandy Beem');
-    expect(brandyBeem.title).toBe('Senior Advisor');
+    expect(sanityQuery).toHaveBeenCalledWith(
+      'governance-profiles',
+      { slug: 'vincent-todd' },
+      { next: { revalidate: 0 } },
+      0
+    );
   });
 });
