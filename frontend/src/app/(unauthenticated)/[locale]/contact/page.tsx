@@ -12,12 +12,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import {
-  Field,
-  FieldDescription,
-  FieldLabel,
-  FieldSet,
-} from '@/components/ui/field';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
@@ -117,13 +112,13 @@ export default function Contact() {
     <main>
       <div className="max-w-[1400px] mx-auto px-15">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-20 md:mb-26 w-full max-w-[1200px] mx-auto">
-          <div className="flex md:w-auto lg:w-full max-w-[660px] lg:h-full lg:w-full lg:max-w-none justify-center items-start gap-4">
+          <div className="flex md:w-auto lg:w-full max-w-[660px] lg:h-full lg:w-full lg:max-w-none justify-center items-start">
             <Image
               src="/marketing/contact-img.svg"
               alt="Farmer"
               width={530}
               height={900}
-              className="w-full h-[760px] object-cover rounded-sm hidden md:block md:rotate-180"
+              className="w-full h-[680px] object-cover rounded-sm hidden md:block md:rotate-180"
             />
           </div>
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col">
@@ -138,15 +133,15 @@ export default function Contact() {
             >
               <Carousel
                 setApi={setApi}
-                className="mx-auto flex flex-col justify-start gap-5 w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]"
+                className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]"
                 plugins={[Fade()]}
                 opts={{ duration: 30, watchDrag: false }}
               >
                 <CarouselContent className="p-0 h-auto">
                   {/* Get Started with Todd*/}
                   <CarouselItem>
-                    <FieldSet className="flex flex-col gap-6">
-                      <h1 className="text-2xl mb-10 md:mb-2 mt-10 md:mt-5 text-center md:text-left">
+                    <FieldSet className="flex flex-col gap-2">
+                      <h1 className="text-2xl mb-8 md:mb-1 mt-10 md:mt-5 text-center md:text-left">
                         {t('description')}
                       </h1>
                       {/** Honeypot */}
@@ -162,7 +157,7 @@ export default function Contact() {
                         />
                       </Field>
 
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 md:gap-5">
                         <Field>
                           <div className="flex flex-row justify-between">
                             <FieldLabel className="text-normal leading-tight">
@@ -172,10 +167,7 @@ export default function Contact() {
                               errors={errors}
                               name="firstName"
                               render={({ message }) => (
-                                <FormErrorMessage
-                                  errorMessage={message}
-                                  className="text-[#dc2626] text-xs"
-                                />
+                                <FormErrorMessage errorMessage={message} />
                               )}
                             />
                           </div>
@@ -197,10 +189,7 @@ export default function Contact() {
                               errors={errors}
                               name="lastName"
                               render={({ message }) => (
-                                <FormErrorMessage
-                                  errorMessage={message}
-                                  className="text-[#dc2626] text-xs"
-                                />
+                                <FormErrorMessage errorMessage={message} />
                               )}
                             />
                           </div>
@@ -223,10 +212,7 @@ export default function Contact() {
                             errors={errors}
                             name="farmName"
                             render={({ message }) => (
-                              <FormErrorMessage
-                                errorMessage={message}
-                                className="text-[#dc2626] text-xs"
-                              />
+                              <FormErrorMessage errorMessage={message} />
                             )}
                           />
                         </div>
@@ -248,10 +234,7 @@ export default function Contact() {
                             errors={errors}
                             name="email"
                             render={({ message }) => (
-                              <FormErrorMessage
-                                errorMessage={message}
-                                className="text-[#dc2626] text-xs"
-                              />
+                              <FormErrorMessage errorMessage={message} />
                             )}
                           />
                         </div>
@@ -263,11 +246,6 @@ export default function Contact() {
                             required: 'This field is required.',
                           })}
                         />
-                        <FieldDescription>
-                          <span className="text-xs text-[#dc2626]">
-                            /!\ {t('fields.emailDescription')}
-                          </span>
-                        </FieldDescription>
                       </Field>
 
                       <Field>
@@ -279,10 +257,7 @@ export default function Contact() {
                             errors={errors}
                             name="phone"
                             render={({ message }) => (
-                              <FormErrorMessage
-                                errorMessage={message}
-                                className="text-[#dc2626] text-xs"
-                              />
+                              <FormErrorMessage errorMessage={message} />
                             )}
                           />
                         </div>
@@ -312,7 +287,7 @@ export default function Contact() {
                     <CarouselItem>
                       <FieldSet>
                         <Field>
-                          <div className="flex flex-row justify-start mt-23">
+                          <div className="flex flex-row justify-between mt-23">
                             <FieldLabel className="text-base leading-tight">
                               {t('questions.website', {
                                 farm: getValues().farmName,
@@ -322,10 +297,7 @@ export default function Contact() {
                               errors={errors}
                               name="website"
                               render={({ message }) => (
-                                <FormErrorMessage
-                                  errorMessage={message}
-                                  className="text-[#dc2626] text-xs"
-                                />
+                                <FormErrorMessage errorMessage={message} />
                               )}
                             />
                           </div>
