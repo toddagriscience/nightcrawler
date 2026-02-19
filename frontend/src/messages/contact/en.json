@@ -8,6 +8,7 @@
       "lastName": "Last Name",
       "farmName": "Farm Name",
       "email": "Work Email",
+      "emailDescription": "Please use a work email address if available.",
       "phone": "Phone Number"
     },
     "placeholders": {

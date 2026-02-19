@@ -8,13 +8,17 @@ import FadeIn from '../utils/fade-in/fade-in';
  * @returns {JSX.Element} - The rendered conditional error message.*/
 export default function FormErrorMessage({
   errorMessage,
+  className = '',
 }: {
   errorMessage: string;
+  className?: string;
 }) {
   return (
     <div>
       <FadeIn>
-        <p className="leading-snug text-red-500 text-sm font-medium">
+        <p
+          className={`leading-snug text-red-500 text-sm font-medium ${className}`.trim()}
+        >
           {errorMessage}
         </p>
       </FadeIn>

@@ -8,6 +8,7 @@
       "lastName": "Apellido",
       "farmName": "Nombre de la granja",
       "email": "Correo laboral",
+      "emailDescription": "Por favor, use un correo laboral si está disponible.",
       "phone": "Número de teléfono"
     },
     "placeholders": {

@@ -12,7 +12,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
@@ -110,18 +115,18 @@ export default function Contact() {
 
   return (
     <main>
-      <div className="max-w-[1400px] mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 place-items-center mx-auto mt-20 w-full max-w-[1200px] mx-auto">
-          <div className="flex w-full max-w-[530px] lg:w-[550px] lg:max-w-none justify-center items-start gap-4">
+      <div className="max-w-[1400px] mx-auto px-15">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-20 md:mb-26 w-full max-w-[1200px] mx-auto">
+          <div className="flex md:w-auto lg:w-full max-w-[660px] lg:h-full lg:w-full lg:max-w-none justify-center items-start gap-4">
             <Image
-              src="/farmer.webp"
+              src="/marketing/contact-img.svg"
               alt="Farmer"
               width={530}
               height={900}
-              className="w-full h-auto object-contain"
+              className="w-full h-[760px] object-cover rounded-sm hidden md:block md:rotate-180"
             />
           </div>
-          <div className="flex w-full max-w-[530px] lg:w-[530px] lg:max-w-none flex-col">
+          <div className="flex w-full max-w-[530px] lg:max-w-none flex-col">
             <form
               onSubmit={(e) => e.preventDefault()}
               onKeyDown={(e) => {
@@ -133,15 +138,15 @@ export default function Contact() {
             >
               <Carousel
                 setApi={setApi}
-                className="mx-auto flex flex-col justify-start p-0 w-full max-w-[300px] sm:max-w-[450px] lg:max-w-[500px]"
+                className="mx-auto flex flex-col justify-start gap-5 w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]"
                 plugins={[Fade()]}
                 opts={{ duration: 30, watchDrag: false }}
               >
-                <CarouselContent className="p-0">
+                <CarouselContent className="p-0 h-auto">
                   {/* Get Started with Todd*/}
                   <CarouselItem>
                     <FieldSet className="flex flex-col gap-6">
-                      <h1 className="text-2xl md:text-2xl mb-10 lg:mb-4 mt-10 lg:mt-5 text-center lg:text-left">
+                      <h1 className="text-2xl mb-10 md:mb-2 mt-10 md:mt-5 text-center md:text-left">
                         {t('description')}
                       </h1>
                       {/** Honeypot */}
@@ -150,7 +155,7 @@ export default function Contact() {
                           {t('fields.name')}
                         </FieldLabel>
                         <Input
-                          className="border-[#848484] border-1"
+                          className="border-[#848484]/80 border-1 "
                           placeholder={t('placeholders.name')}
                           type="text"
                           {...register('name')}
@@ -160,19 +165,22 @@ export default function Contact() {
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field>
                           <div className="flex flex-row justify-between">
-                            <FieldLabel className="text-normal">
+                            <FieldLabel className="text-normal leading-tight">
                               {t('fields.firstName')}
                             </FieldLabel>
                             <ErrorMessage
                               errors={errors}
                               name="firstName"
                               render={({ message }) => (
-                                <FormErrorMessage errorMessage={message} />
+                                <FormErrorMessage
+                                  errorMessage={message}
+                                  className="text-[#dc2626] text-xs"
+                                />
                               )}
                             />
                           </div>
                           <Input
-                            className="border-[#848484] border-1"
+                            className="border-[#848484]/80 border-1"
                             required
                             {...register('firstName', {
                               required: 'This field is required.',
@@ -182,19 +190,22 @@ export default function Contact() {
 
                         <Field>
                           <div className="flex flex-row justify-between">
-                            <FieldLabel className="text-normal">
+                            <FieldLabel className="text-normal leading-tight">
                               {t('fields.lastName')}
                             </FieldLabel>
                             <ErrorMessage
                               errors={errors}
                               name="lastName"
                               render={({ message }) => (
-                                <FormErrorMessage errorMessage={message} />
+                                <FormErrorMessage
+                                  errorMessage={message}
+                                  className="text-[#dc2626] text-xs"
+                                />
                               )}
                             />
                           </div>
                           <Input
-                            className="border-[#848484] border-1"
+                            className="border-[#848484]/80 border-1"
                             required
                             {...register('lastName', {
                               required: 'This field is required.',
@@ -205,17 +216,22 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel>{t('fields.farmName')}</FieldLabel>
+                          <FieldLabel className="leading-tight">
+                            {t('fields.farmName')}
+                          </FieldLabel>
                           <ErrorMessage
                             errors={errors}
                             name="farmName"
                             render={({ message }) => (
-                              <FormErrorMessage errorMessage={message} />
+                              <FormErrorMessage
+                                errorMessage={message}
+                                className="text-[#dc2626] text-xs"
+                              />
                             )}
                           />
                         </div>
                         <Input
-                          className="border-[#848484] border-1"
+                          className="border-[#848484]/80 border-1"
                           required
                           {...register('farmName', {
                             required: 'This field is required.',
@@ -225,38 +241,53 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel>{t('fields.email')}</FieldLabel>
+                          <FieldLabel className="leading-tight">
+                            {t('fields.email')}
+                          </FieldLabel>
                           <ErrorMessage
                             errors={errors}
                             name="email"
                             render={({ message }) => (
-                              <FormErrorMessage errorMessage={message} />
+                              <FormErrorMessage
+                                errorMessage={message}
+                                className="text-[#dc2626] text-xs"
+                              />
                             )}
                           />
                         </div>
                         <Input
-                          className="border-[#848484] border-1"
+                          className="border-[#848484]/80 border-1"
                           type="email"
                           required
                           {...register('email', {
                             required: 'This field is required.',
                           })}
                         />
+                        <FieldDescription>
+                          <span className="text-xs text-[#dc2626]">
+                            /!\ {t('fields.emailDescription')}
+                          </span>
+                        </FieldDescription>
                       </Field>
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel>{t('fields.phone')}</FieldLabel>
+                          <FieldLabel className="leading-tight">
+                            {t('fields.phone')}
+                          </FieldLabel>
                           <ErrorMessage
                             errors={errors}
                             name="phone"
                             render={({ message }) => (
-                              <FormErrorMessage errorMessage={message} />
+                              <FormErrorMessage
+                                errorMessage={message}
+                                className="text-[#dc2626] text-xs"
+                              />
                             )}
                           />
                         </div>
                         <Input
-                          className="border-[#848484] border-1"
+                          className="border-[#848484]/80 border-1"
                           type="tel"
                           required
                           defaultValue={'+1'}
@@ -267,29 +298,12 @@ export default function Contact() {
                         />
                       </Field>
                     </FieldSet>
-                    <div className="flex flex-col justify-center gap-1 mt-12 mb-12">
-                      <p className="text-xs mb-10">
+                    <div className="mt-10">
+                      <p className="text-xs mb-5 font-thin">
                         Already started?{' '}
-                        <Link href="/login" className="underline">
+                        <Link href="/login" className="underline font-normal">
                           Login to complete your application
                         </Link>
-                      </p>
-                      <p className="text-xs">
-                        By continuing, you agree to the{' '}
-                        <Link href="/account-agreement" className="underline">
-                          Todd Account Agreement
-                        </Link>{' '}
-                        and{' '}
-                        <Link href="/privacy-policy" className="underline">
-                          Privacy Policy
-                        </Link>
-                        .
-                      </p>
-                      <p className="text-xs">
-                        <Link href="/terms-of-service" className="underline">
-                          Terms of Service
-                        </Link>{' '}
-                        apply.
                       </p>
                     </div>
                   </CarouselItem>
@@ -298,8 +312,8 @@ export default function Contact() {
                     <CarouselItem>
                       <FieldSet>
                         <Field>
-                          <div className="flex flex-row justify-between lg:mt-23">
-                            <FieldLabel>
+                          <div className="flex flex-row justify-start mt-23">
+                            <FieldLabel className="text-base leading-tight">
                               {t('questions.website', {
                                 farm: getValues().farmName,
                               })}
@@ -308,12 +322,15 @@ export default function Contact() {
                               errors={errors}
                               name="website"
                               render={({ message }) => (
-                                <FormErrorMessage errorMessage={message} />
+                                <FormErrorMessage
+                                  errorMessage={message}
+                                  className="text-[#dc2626] text-xs"
+                                />
                               )}
                             />
                           </div>
                           <Input
-                            className="border-[#848484] border-1"
+                            className="border-[#848484]/80 border-1"
                             {...register('website')}
                           />
                         </Field>
@@ -324,7 +341,7 @@ export default function Contact() {
                   {/* Organic Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="lg:mt-23">
+                      <h2 className="mt-23">
                         {t('questions.organic', { farm: getValues().farmName })}
                       </h2>
 
@@ -357,7 +374,7 @@ export default function Contact() {
                   {/* Hydroponic Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="lg:mt-23">
+                      <h2 className="mt-23">
                         {t('questions.hydroponic', {
                           farm: getValues().farmName,
                         })}
@@ -392,7 +409,7 @@ export default function Contact() {
                   {/* Sprouts Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="lg:mt-23">
+                      <h2 className="mt-23">
                         {t('questions.sprouts', { farm: getValues().farmName })}
                       </h2>
 
@@ -424,38 +441,74 @@ export default function Contact() {
 
                   <CarouselItem>
                     {isMatch ? (
-                      <div className="flex h-1/2 lg:h-full flex-col justify-center gap-8 text-center">
-                        <h1 className="text-4xl md:text-5xl">
+                      <div className="flex h-full flex-col justify-center items-center md:items-start gap-6">
+                        <h1 className="text-4xl lg:text-5xl">
                           {t('results.matchTitle')}
                         </h1>
                         <p className="text-md md:text-lg">
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
-                          className="max-w-50 mx-auto rounded-full py-6"
-                          buttonText="JOIN US"
+                          className="max-w-50 ml-1 rounded-full py-6 mt-4"
+                          buttonText="Join Us"
                           onClickFunction={onSubmit}
                         />
                       </div>
                     ) : (
-                      <div className="flex h-1/2 lg:h-full flex-col justify-center gap-8 text-center">
-                        <h1 className="text-2xl md:text-3xl max-w-[280px] sm:max-w-[360px] lg:max-w-[420px] mx-auto">
+                      <div className="flex h-full flex-col justify-center gap-6 items-center md:items-start mx-auto">
+                        <h1 className="text-2xl md:text-3xl max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchTitle')}
                         </h1>
-                        <p className="text-sm md:text-base max-w-[280px] sm:max-w-[360px] lg:max-w-[420px] mx-auto">
+                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchBody')}
                         </p>
+                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                          Share your Instagram handle to get another look at
+                          your application:
+                        </p>
+                        <Input
+                          className="border-[#848484]/80 border-1 w-full max-w-[280px] sm:max-w-[355px]"
+                          type="text"
+                          // {...register('instagramHandle')}
+                        />
+                        <SubmitButton
+                          className="max-w-50 ml-1 rounded-full py-6 mt-2"
+                          buttonText="Submit"
+                          onClickFunction={() => {}}
+                        />
                       </div>
                     )}
                   </CarouselItem>
                 </CarouselContent>
+                <div className="flex flex-col gap-2 mb-5">
+                  <p className="text-xs font-thin">
+                    By continuing, you agree to the{' '}
+                    <Link
+                      href="/account-agreement"
+                      className="underline font-normal"
+                    >
+                      Todd Account Agreement
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy" className="underline font-normal">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </p>
+                  <p className="text-xs font-thin">
+                    <Link href="/terms" className="underline font-normal">
+                      Terms of Service
+                    </Link>{' '}
+                    apply.
+                  </p>
+                </div>
 
-                <div className="mt-1 flex min-h-10 justify-between">
+                <div className="flex min-h-10 justify-between flex-col lg:flex-row gap-4 lg:gap-0">
                   {slide !== 0 && slide !== totalSlides - 1 ? (
                     <FadeIn>
                       <Button
                         variant="outline"
-                        className="text-normal md:text-base hover:cursor-pointer rounded-full h-auto px-8 py-2 max-w-40"
+                        className="rounded-full h-auto px-16 py-3 max-w-45 text-sm hover:cursor-pointer hover:border-[#848484]/80 font-semibold"
                         type="button"
                         onClick={handleBack}
                       >
@@ -469,8 +522,8 @@ export default function Contact() {
                   {slide < totalSlides - 2 ? (
                     <FadeIn>
                       <Button
-                        variant="outline"
-                        className="text-normal md:text-base hover:cursor-pointer rounded-full h-auto px-8 py-2 max-w-40"
+                        variant="brand"
+                        className="rounded-full text-background h-auto px-13 py-3 max-w-45 text-sm hover:cursor-pointer font-semibold"
                         type="button"
                         onClick={handleNext}
                       >
