@@ -9,9 +9,7 @@ export default function AccountPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <header className="mb-8">
-        <h1 className="text-foreground text-3xl font-bold">
-          User Information
-        </h1>
+        <h1 className="text-foreground text-3xl font-bold">User Information</h1>
       </header>
     </div>
   );
