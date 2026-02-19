@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { updateImpSummary } from './actions';
 import { Check, Pencil, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
 /** A single editable summary entry for an integrated management plan.
  *
@@ -20,20 +21,25 @@ export default function EditableSummary({
   imp: IntegratedManagementPlanSelect;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [summary, setSummary] = useState(imp.summary ?? '');
-  const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
 
-  async function handleSave() {
-    setIsSaving(true);
-    await updateImpSummary(imp.id, summary);
-    setIsSaving(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: { summary: imp.summary ?? '' },
+  });
+
+  async function onSubmit(data: { summary: string }) {
+    await updateImpSummary(imp.id, data.summary);
     setIsEditing(false);
     router.refresh();
   }
 
   function handleCancel() {
-    setSummary(imp.summary ?? '');
+    reset();
     setIsEditing(false);
   }
 
@@ -41,52 +47,56 @@ export default function EditableSummary({
     <div className="border-b pb-3 last:border-b-0">
       <div className="mb-1 flex items-center justify-between">
         <p className="text-xs font-medium text-gray-500">
-          {imp.initialized.toLocaleDateString()}
+          {imp.createdAt.toLocaleDateString()}
         </p>
-        {!isEditing && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 p-0 hover:cursor-pointer"
-            onClick={() => setIsEditing(true)}
-          >
-            <Pencil className="h-3 w-3" />
-          </Button>
+        {imp.updatedAt.getSeconds() != imp.createdAt.getSeconds() && (
+          <p className="text-xs font-medium text-gray-500">
+            Updated at {imp.updatedAt.toLocaleDateString()}
+          </p>
         )}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-4 w-4 p-0 hover:cursor-pointer"
+          onClick={() => setIsEditing(true)}
+          disabled={isEditing}
+        >
+          <Pencil className="h-3 w-3" />
+        </Button>
       </div>
       {isEditing ? (
-        <div className="space-y-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <Textarea
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
+            {...register('summary')}
             className="min-h-[60px] text-sm"
             placeholder="Enter a summary..."
           />
           <div className="flex gap-1">
             <Button
+              type="submit"
               variant="ghost"
               size="sm"
               className="h-6 w-6 p-0 hover:cursor-pointer"
-              onClick={handleSave}
-              disabled={isSaving}
+              disabled={isSubmitting}
             >
               <Check className="h-3 w-3" />
             </Button>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               className="h-6 w-6 p-0 hover:cursor-pointer"
               onClick={handleCancel}
-              disabled={isSaving}
+              disabled={isSubmitting}
             >
               <X className="h-3 w-3" />
             </Button>
           </div>
-        </div>
+        </form>
       ) : (
         <p className="text-sm text-gray-700">
           {imp.summary || (
-            <span className="italic text-gray-400">No summary</span>
+            <span className="text-gray-400 italic">No summary</span>
           )}
         </p>
       )}
