@@ -33,6 +33,8 @@
     "undici": "^6.23.0",
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "minimatch": ">=10.2.1",
+    "markdown-it": ">=14.1.1"
   }
 }

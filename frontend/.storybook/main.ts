@@ -1,4 +1,8 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -20,14 +24,16 @@ const config: StorybookConfig = {
     '../public'
   ],
   viteFinal: async (config) => {
-    // Add support for local fonts
+    const rootDir = path.resolve(__dirname, '..');
+    // Add support for local fonts and path aliases matching tsconfig
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@/lib': '/src/lib',
-        '@/components': '/src/components',
-        '@/svgs': '/src/svgs',
-        '@/storybook': '/.storybook',
+        '@/lib': path.resolve(rootDir, 'src/lib'),
+        '@/components': path.resolve(rootDir, 'src/components'),
+        '@/svgs': path.resolve(rootDir, 'src/svgs'),
+        '@/storybook': path.resolve(rootDir, '.storybook'),
+        '@public': path.resolve(rootDir, 'public'),
       };
     }
     return config;
