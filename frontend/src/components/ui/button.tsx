@@ -21,6 +21,7 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-accent hover:text-accent-foreground hover:cursor-pointer',
         link: 'text-primary underline-offset-4 hover:underline',
+        // when using the brand variant and 'text-normal', manually set the text color to 'text-background'
         brand: 'bg-foreground text-background hover:bg-foreground/90',
       },
       size: {
