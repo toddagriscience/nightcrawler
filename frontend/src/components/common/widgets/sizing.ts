@@ -6,6 +6,7 @@ import { WidgetEnum } from '@/lib/types/db';
 export const widgetSizing: Record<WidgetEnum, { h: number; w: number }> = {
   'Macro Radar': { h: 8, w: 3 },
   'Calcium Widget': { h: 5, w: 6 },
+  'PH Widget': { h: 5, w: 6 },
 };
 
 /** The number of columns on a management zone tab. Fed to the `gridConfig` parameter of `ReactGridLayout` */

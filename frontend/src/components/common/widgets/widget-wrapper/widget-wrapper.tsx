@@ -195,6 +195,42 @@ export default async function WidgetWrapper({
         </>
       );
 
+    case 'PH Widget':
+      const phWidgetData = await getMineralLevelWidgetData(currentTab, 'PH');
+
+      if (!phWidgetData) {
+        return <p>No pH data currently available</p>;
+      }
+
+      const {
+        max: phMax,
+        min: phMin,
+        lastUpdated: phLastUpdated,
+        chartData: phChartData,
+        standards: phStandards,
+      } = phWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>pH</h2>
+              <p className="text-sm font-light">
+                Last Updated {phLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={phMax}
+            min={phMin}
+            chartData={phChartData}
+            standards={phStandards}
+          />
+        </>
+      );
+
     default:
       return (
         <>

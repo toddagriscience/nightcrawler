@@ -42,6 +42,7 @@ const mineralToStandardValueType: Record<
   Magnesium: 'magnesium',
   Sodium: 'exchangeableSodiumPercentage',
   Potassium: 'potassium',
+  PH: 'ph',
 };
 
 /**

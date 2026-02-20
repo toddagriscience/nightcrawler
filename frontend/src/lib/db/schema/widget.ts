@@ -12,7 +12,11 @@ import { managementZone } from './management-zone';
 import { LayoutItem } from 'react-grid-layout';
 
 /** The type of the widget. For example, there could be PHWidget and MacroWidget */
-export const widgetEnum = pgEnum('widgets', ['Macro Radar', 'Calcium Widget']);
+export const widgetEnum = pgEnum('widgets', [
+  'Macro Radar',
+  'Calcium Widget',
+  'PH Widget',
+]);
 
 /** Active widgets on a given management zone. A widget will need to be deleted from this table if it is to be removed from the user's UI. */
 export const widget = pgTable(

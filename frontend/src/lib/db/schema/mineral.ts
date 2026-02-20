@@ -16,6 +16,7 @@ export const mineralTypes = pgEnum('mineral_types', [
   'Magnesium',
   'Sodium',
   'Potassium',
+  'PH',
 ]);
 
 export const units = pgEnum('units', ['ppm']);

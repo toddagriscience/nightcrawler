@@ -72,7 +72,7 @@ export default async function getMineralLevelWidgetData(
       x,
       realValue,
       date: reading.createdAt,
-      unit: reading.unit,
+      unit: selectedMineral === 'PH' ? 'pH' : reading.unit,
     };
   });
 
