@@ -124,30 +124,30 @@ export const standardValues = pgTable('standard_values', {
     .$type<number>()
     .default(121.5)
     .notNull(),
-  /** Exchangeable Sodium Percentage minimum value (percentage — cannot be converted to PPM) */
+  /** Exchangeable Sodium Percentage min value in PPM. MADE UP VALUE, based off of no other information. */
   exchangeableSodiumPercentageMin: numeric({ precision: 10, scale: 2 })
     .$type<number>()
     .default(0)
     .notNull(),
-  /** Exchangeable Sodium Percentage low value (percentage — cannot be converted to PPM; source: 0.1%) */
+  /** Exchangeable Sodium Percentage low value in PPM. MADE UP VALUE, based off of no other information. */
   exchangeableSodiumPercentageLow: numeric({ precision: 10, scale: 2 })
     .$type<number>()
-    .default(0.1)
+    .default(200)
     .notNull(),
-  /** Exchangeable Sodium Percentage ideal value (percentage — cannot be converted to PPM; source: midpoint of 0.2–0.5%) */
+  /** Exchangeable Sodium Percentage ideal value in PPM. MADE UP VALUE, based off of no other information. */
   exchangeableSodiumPercentageIdeal: numeric({ precision: 10, scale: 2 })
     .$type<number>()
-    .default(0.35)
+    .default(500)
     .notNull(),
-  /** Exchangeable Sodium Percentage high value (percentage — cannot be converted to PPM; source: 1.0%) */
+  /** Exchangeable Sodium Percentage high value in PPM. MADE UP VALUE, based off of no other information. */
   exchangeableSodiumPercentageHigh: numeric({ precision: 10, scale: 2 })
     .$type<number>()
-    .default(1.0)
+    .default(700)
     .notNull(),
   /** Exchangeable Sodium Percentage maximum acceptable value (percentage — cannot be converted to PPM) */
   exchangeableSodiumPercentageMax: numeric({ precision: 10, scale: 2 })
     .$type<number>()
-    .default(1.0)
+    .default(700)
     .notNull(),
   /** Nitrate Nitrogen minimum value (PPM — source unit: mg/kg) */
   nitrateNitrogenMin: numeric({ precision: 10, scale: 2 })
