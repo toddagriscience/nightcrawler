@@ -4,13 +4,13 @@ import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
 import { analysis, mineral, standardValues } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { WidgetSelect } from '@/lib/types/db';
-import { and, desc, eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
-import { MineralChartType } from '../mineral-level-widget/types';
 import { MacroRadarWidget, normalizeMacroValue } from '../macro-radar-widget';
 import { MacroRadarDataPoint } from '../macro-radar-widget/types';
 import WidgetDeleteButton from './widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -162,60 +162,17 @@ export default async function WidgetWrapper({
       );
 
     case 'Calcium Widget':
-      const user = await getAuthenticatedInfo();
+      const mineralLevelWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Calcium'
+      );
 
-      const calciumReadings = await db
-        .select({
-          unit: mineral.units,
-          realValue: mineral.realValue,
-          createdAt: mineral.createdAt,
-        })
-        .from(analysis)
-        .where(eq(analysis.managementZone, currentTab.managementZone))
-        .innerJoin(
-          mineral,
-          and(eq(analysis.id, mineral.analysisId), eq(mineral.name, 'Calcium'))
-        )
-        .orderBy(mineral.createdAt);
-
-      const [standardCalciumValues] = await db
-        .select({
-          calciumMin: standardValues.calciumMin,
-          calciumLow: standardValues.calciumLow,
-          calciumIdeal: standardValues.calciumIdeal,
-          calciumHigh: standardValues.calciumHigh,
-          calicumMax: standardValues.calciumMax,
-        })
-        .from(standardValues)
-        .where(eq(standardValues.farmId, user.farmId))
-        .limit(1);
-
-      if (calciumReadings.length === 0 || !standardCalciumValues) {
+      if (!mineralLevelWidgetData) {
         return <p>No calcium data currently available</p>;
       }
 
-      const min = standardCalciumValues.calciumMin;
-      const max = standardCalciumValues.calicumMax;
-
-      const lastUpdated = calciumReadings.at(-1)!.createdAt;
-      const chartData: MineralChartType[] = calciumReadings.map((reading) => {
-        // If the real value is higher or lower than the min or the max that this chart has, respectively, just set it to the bottom but let the user know that this is the case.
-        const realValue = Number(reading.realValue);
-        let x = realValue;
-        if (realValue > max) {
-          x = max;
-        } else if (realValue < min) {
-          x = min;
-        }
-
-        return {
-          y: 0,
-          x,
-          realValue,
-          date: reading.createdAt,
-          unit: reading.unit,
-        };
-      });
+      const { max, min, lastUpdated, chartData, standards } =
+        mineralLevelWidgetData;
 
       return (
         <>
@@ -233,11 +190,7 @@ export default async function WidgetWrapper({
             max={max}
             min={min}
             chartData={chartData}
-            standards={{
-              low: standardCalciumValues.calciumLow,
-              ideal: standardCalciumValues.calciumIdeal,
-              high: standardCalciumValues.calciumHigh,
-            }}
+            standards={standards}
           />
         </>
       );
