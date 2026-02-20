@@ -16,9 +16,16 @@ export const mineralTypes = pgEnum('mineral_types', [
   'Magnesium',
   'Sodium',
   'Potassium',
+  'PH',
+  'Salinity',
+  'NitrateNitrogen',
+  'PhosphatePhosphorus',
+  'Zinc',
+  'Iron',
+  'OrganicMatter',
 ]);
 
-export const units = pgEnum('units', ['ppm']);
+export const units = pgEnum('units', ['ppm', '%']);
 
 /** A table that describes a single mineral and its values for a given analysis. */
 export const mineral = pgTable('mineral', {
