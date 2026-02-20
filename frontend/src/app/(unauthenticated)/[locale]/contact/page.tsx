@@ -489,7 +489,8 @@ export default function Contact() {
                   <p className="text-xs font-thin">
                     {t('legal.byContinuing')}{' '}
                     <Link
-                      href="/account-agreement"
+                      href="/account-agreement.pdf"
+                      target="_blank"
                       className="underline font-normal"
                     >
                       {t('legal.accountAgreement')}
