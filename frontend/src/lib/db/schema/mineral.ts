@@ -11,7 +11,12 @@ import {
 import { analysis } from './analysis';
 import { levelCategory } from './level-category';
 
-export const mineralTypes = pgEnum('mineral_types', ['Calcium']);
+export const mineralTypes = pgEnum('mineral_types', [
+  'Calcium',
+  'Magnesium',
+  'Sodium',
+  'Potassium',
+]);
 
 export const units = pgEnum('units', ['ppm']);
 
