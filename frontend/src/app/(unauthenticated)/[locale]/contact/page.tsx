@@ -142,7 +142,7 @@ export default function Contact() {
                 <CarouselContent className="p-0 h-auto">
                   {/* Get Started with Todd*/}
                   <CarouselItem>
-                    <FieldSet className="flex flex-col gap-2">
+                    <FieldSet className="flex flex-col gap-3">
                       <FieldLegend>
                         <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
                           {t('description')}
@@ -150,7 +150,7 @@ export default function Contact() {
                       </FieldLegend>
                       {/** Honeypot */}
                       <Field className="hidden">
-                        <FieldLabel htmlFor="name" className="text-base">
+                        <FieldLabel htmlFor="name" className="leading-tight">
                           {t('fields.name')}
                         </FieldLabel>
                         <Input
@@ -161,12 +161,12 @@ export default function Contact() {
                         />
                       </Field>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 md:gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                         <Field>
                           <div className="flex flex-row justify-between">
                             <FieldLabel
                               htmlFor="first-name"
-                              className="text-normal leading-tight"
+                              className="leading-tight mb-[-6px]"
                             >
                               {t('fields.firstName')}
                             </FieldLabel>
@@ -191,7 +191,7 @@ export default function Contact() {
                           <div className="flex flex-row justify-between">
                             <FieldLabel
                               htmlFor="last-name"
-                              className="text-normal leading-tight"
+                              className="leading-tight mb-[-6px]"
                             >
                               {t('fields.lastName')}
                             </FieldLabel>
@@ -217,7 +217,7 @@ export default function Contact() {
                         <div className="flex flex-row justify-between">
                           <FieldLabel
                             htmlFor="farm-name"
-                            className="leading-tight"
+                            className="leading-tight mb-[-6px]"
                           >
                             {t('fields.farmName')}
                           </FieldLabel>
@@ -240,7 +240,10 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel htmlFor="email" className="leading-tight">
+                          <FieldLabel
+                            htmlFor="email"
+                            className="leading-tight mb-[-6px]"
+                          >
                             {t('fields.email')}
                           </FieldLabel>
                           <ErrorMessage
@@ -263,7 +266,10 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel htmlFor="phone" className="leading-tight">
+                          <FieldLabel
+                            htmlFor="phone"
+                            className="leading-tight mb-[-6px]"
+                          >
                             {t('fields.phone')}
                           </FieldLabel>
                           <ErrorMessage
@@ -303,7 +309,7 @@ export default function Contact() {
                           <div className="flex flex-row justify-between mt-23 md:mt-16 lg:mt-12">
                             <FieldLabel
                               htmlFor="website"
-                              className="text-base leading-tight"
+                              className="text-lg leading-tight"
                             >
                               {t('questions.website', {
                                 farm: getValues().farmName,
@@ -460,7 +466,8 @@ export default function Contact() {
                         <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchBody')}
                         </p>
-                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                        {/* Commenting out for now until we have form and logic to submit the Instagram handle. */}
+                        {/* <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchInstagram')}
                         </p>
                         <Input
@@ -473,7 +480,7 @@ export default function Contact() {
                           className="max-w-50 ml-1 rounded-full py-6 mt-2"
                           buttonText={t('results.noMatchSubmit')}
                           onClickFunction={() => {}}
-                        />
+                        /> */}
                       </div>
                     )}
                   </CarouselItem>
