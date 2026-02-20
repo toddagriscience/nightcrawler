@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.15",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@portabletext/types": "^4.0.0",
