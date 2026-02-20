@@ -412,7 +412,7 @@ export default function Contact() {
                     <FieldSet>
                       <FieldLabel
                         htmlFor="produces-sprouts"
-                        className="text-lg leading-tight mt-23 md:mt-16 lg:mt-12"
+                        className="text-lg leading-tight mt-23 md:mt-10 lg:mt-12"
                       >
                         {t('questions.sprouts', { farm: getValues().farmName })}
                       </FieldLabel>
@@ -445,7 +445,7 @@ export default function Contact() {
 
                   <CarouselItem>
                     {isMatch ? (
-                      <div className="flex h-full flex-col justify-center items-center md:items-start gap-6">
+                      <div className="flex h-full flex-col mt-22 md:mt-4 lg:mt-8 gap-6 items-center md:items-start gap-6 mx-auto">
                         <h1 className="text-4xl lg:text-5xl">
                           {t('results.matchTitle')}
                         </h1>
@@ -459,11 +459,11 @@ export default function Contact() {
                         />
                       </div>
                     ) : (
-                      <div className="flex h-full flex-col justify-center gap-6 items-center md:items-start mx-auto">
-                        <h1 className="text-2xl md:text-3xl max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                      <div className="flex h-full flex-col mt-22 md:mt-6 lg:mt-10 gap-6 items-center md:items-start mx-auto">
+                        <h1 className="text-2xl md:text-3xl md:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchTitle')}
                         </h1>
-                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                        <p className="text-sm md:text-normal md:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchBody')}
                         </p>
                         {/* Commenting out for now until we have form and logic to submit the Instagram handle. */}
