@@ -12,14 +12,18 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import {
+  Field,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Fade from 'embla-carousel-fade';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -111,17 +115,15 @@ export default function Contact() {
   return (
     <main>
       <div className="max-w-[1400px] mx-auto px-15">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-20 md:mb-26 w-full max-w-[1200px] mx-auto">
-          <div className="flex md:w-auto lg:w-full max-w-[660px] lg:h-full lg:w-full lg:max-w-none justify-center items-start">
-            <Image
-              src="/marketing/contact-img.svg"
-              alt="Farmer"
-              width={530}
-              height={900}
-              className="w-full h-[680px] object-cover rounded-sm hidden md:block md:rotate-180"
-            />
-          </div>
-          <div className="flex w-full max-w-[530px] lg:max-w-none flex-col">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-15 md:mb-26 w-full max-w-[1200px] mx-auto">
+          <div
+            className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, hsl(35deg 39% 55%) 0%, hsl(34deg 38% 58%) 29%, hsl(34deg 37% 60%) 39%, hsl(34deg 36% 62%) 46%, hsl(34deg 36% 64%) 52%, hsl(34deg 35% 66%) 56%, hsl(34deg 34% 68%) 61%, hsl(34deg 34% 70%) 65%, hsl(34deg 34% 71%) 69%, hsl(35deg 33% 73%) 74%, hsl(35deg 33% 75%) 80%,hsl(35deg 32% 76%) 99%)',
+            }}
+          />
+          <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <form
               onSubmit={(e) => e.preventDefault()}
               onKeyDown={(e) => {
@@ -141,12 +143,14 @@ export default function Contact() {
                   {/* Get Started with Todd*/}
                   <CarouselItem>
                     <FieldSet className="flex flex-col gap-2">
-                      <h1 className="text-2xl mb-8 md:mb-1 mt-10 md:mt-5 text-center md:text-left">
-                        {t('description')}
-                      </h1>
+                      <FieldLegend>
+                        <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
+                          {t('description')}
+                        </h1>
+                      </FieldLegend>
                       {/** Honeypot */}
                       <Field className="hidden">
-                        <FieldLabel className="text-base">
+                        <FieldLabel htmlFor="name" className="text-base">
                           {t('fields.name')}
                         </FieldLabel>
                         <Input
@@ -160,7 +164,10 @@ export default function Contact() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 md:gap-5">
                         <Field>
                           <div className="flex flex-row justify-between">
-                            <FieldLabel className="text-normal leading-tight">
+                            <FieldLabel
+                              htmlFor="first-name"
+                              className="text-normal leading-tight"
+                            >
                               {t('fields.firstName')}
                             </FieldLabel>
                             <ErrorMessage
@@ -182,7 +189,10 @@ export default function Contact() {
 
                         <Field>
                           <div className="flex flex-row justify-between">
-                            <FieldLabel className="text-normal leading-tight">
+                            <FieldLabel
+                              htmlFor="last-name"
+                              className="text-normal leading-tight"
+                            >
                               {t('fields.lastName')}
                             </FieldLabel>
                             <ErrorMessage
@@ -205,7 +215,10 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel className="leading-tight">
+                          <FieldLabel
+                            htmlFor="farm-name"
+                            className="leading-tight"
+                          >
                             {t('fields.farmName')}
                           </FieldLabel>
                           <ErrorMessage
@@ -227,7 +240,7 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel className="leading-tight">
+                          <FieldLabel htmlFor="email" className="leading-tight">
                             {t('fields.email')}
                           </FieldLabel>
                           <ErrorMessage
@@ -250,7 +263,7 @@ export default function Contact() {
 
                       <Field>
                         <div className="flex flex-row justify-between">
-                          <FieldLabel className="leading-tight">
+                          <FieldLabel htmlFor="phone" className="leading-tight">
                             {t('fields.phone')}
                           </FieldLabel>
                           <ErrorMessage
@@ -287,8 +300,11 @@ export default function Contact() {
                     <CarouselItem>
                       <FieldSet>
                         <Field>
-                          <div className="flex flex-row justify-between mt-23">
-                            <FieldLabel className="text-base leading-tight">
+                          <div className="flex flex-row justify-between mt-23 md:mt-16 lg:mt-12">
+                            <FieldLabel
+                              htmlFor="website"
+                              className="text-base leading-tight"
+                            >
                               {t('questions.website', {
                                 farm: getValues().farmName,
                               })}
@@ -302,6 +318,7 @@ export default function Contact() {
                             />
                           </div>
                           <Input
+                            placeholder="https://"
                             className="border-[#848484]/80 border-1"
                             {...register('website')}
                           />
@@ -313,9 +330,12 @@ export default function Contact() {
                   {/* Organic Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="mt-23">
+                      <FieldLabel
+                        htmlFor="is-organic"
+                        className="text-lg leading-tight mt-23 md:mt-16 lg:mt-12"
+                      >
                         {t('questions.organic', { farm: getValues().farmName })}
-                      </h2>
+                      </FieldLabel>
 
                       <div className="flex gap-8">
                         <Button
@@ -346,11 +366,14 @@ export default function Contact() {
                   {/* Hydroponic Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="mt-23">
+                      <FieldLabel
+                        htmlFor="is-hydroponic"
+                        className="text-lg leading-tight mt-23 md:mt-16 lg:mt-12"
+                      >
                         {t('questions.hydroponic', {
                           farm: getValues().farmName,
                         })}
-                      </h2>
+                      </FieldLabel>
 
                       <div className="flex gap-8">
                         <Button
@@ -381,9 +404,12 @@ export default function Contact() {
                   {/* Sprouts Question */}
                   <CarouselItem>
                     <FieldSet>
-                      <h2 className="mt-23">
+                      <FieldLabel
+                        htmlFor="produces-sprouts"
+                        className="text-lg leading-tight mt-23 md:mt-16 lg:mt-12"
+                      >
                         {t('questions.sprouts', { farm: getValues().farmName })}
-                      </h2>
+                      </FieldLabel>
 
                       <div className="flex gap-8">
                         <Button
@@ -422,7 +448,7 @@ export default function Contact() {
                         </p>
                         <SubmitButton
                           className="max-w-50 ml-1 rounded-full py-6 mt-4"
-                          buttonText="Join Us"
+                          buttonText={t('results.matchJoinUs')}
                           onClickFunction={onSubmit}
                         />
                       </div>
@@ -435,17 +461,17 @@ export default function Contact() {
                           {t('results.noMatchBody')}
                         </p>
                         <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
-                          Share your Instagram handle to get another look at
-                          your application:
+                          {t('results.noMatchInstagram')}
                         </p>
                         <Input
                           className="border-[#848484]/80 border-1 w-full max-w-[280px] sm:max-w-[355px]"
                           type="text"
+                          placeholder="@handle"
                           // {...register('instagramHandle')}
                         />
                         <SubmitButton
                           className="max-w-50 ml-1 rounded-full py-6 mt-2"
-                          buttonText="Submit"
+                          buttonText={t('results.noMatchSubmit')}
                           onClickFunction={() => {}}
                         />
                       </div>
@@ -454,24 +480,24 @@ export default function Contact() {
                 </CarouselContent>
                 <div className="flex flex-col gap-2 mb-5">
                   <p className="text-xs font-thin">
-                    By continuing, you agree to the{' '}
+                    {t('legal.byContinuing')}{' '}
                     <Link
                       href="/account-agreement"
                       className="underline font-normal"
                     >
-                      Todd Account Agreement
+                      {t('legal.accountAgreement')}
                     </Link>{' '}
-                    and{' '}
+                    {t('legal.and')}{' '}
                     <Link href="/privacy" className="underline font-normal">
-                      Privacy Policy
+                      {t('legal.privacyPolicy')}
                     </Link>
                     .
                   </p>
                   <p className="text-xs font-thin">
                     <Link href="/terms" className="underline font-normal">
-                      Terms of Service
+                      {t('legal.termsOfService')}
                     </Link>{' '}
-                    apply.
+                    {t('legal.apply')}
                   </p>
                 </div>
 
