@@ -43,6 +43,12 @@ const mineralToStandardValueType: Record<
   Sodium: 'exchangeableSodiumPercentage',
   Potassium: 'potassium',
   PH: 'ph',
+  Salinity: 'salts',
+  NitrateNitrogen: 'nitrateNitrogen',
+  PhosphatePhosphorus: 'phosphatePhosphorus',
+  Zinc: 'zinc',
+  Iron: 'iron',
+  OrganicMatter: 'organicMatter',
 };
 
 /**

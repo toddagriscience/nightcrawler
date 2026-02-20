@@ -16,6 +16,15 @@ export const widgetEnum = pgEnum('widgets', [
   'Macro Radar',
   'Calcium Widget',
   'PH Widget',
+  'Salinity Widget',
+  'Magnesium Widget',
+  'Sodium Widget',
+  'Nitrate Nitrogen Widget',
+  'Phosphate Phosphorus Widget',
+  'Potassium Widget',
+  'Zinc Widget',
+  'Iron Widget',
+  'Organic Matter Widget',
 ]);
 
 /** Active widgets on a given management zone. A widget will need to be deleted from this table if it is to be removed from the user's UI. */

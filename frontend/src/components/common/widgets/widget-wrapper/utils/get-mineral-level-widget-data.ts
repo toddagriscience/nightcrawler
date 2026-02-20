@@ -13,6 +13,20 @@ import { and, eq } from 'drizzle-orm';
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
 import { getStandardValues } from '@/lib/db/queries/get-standard-values';
 
+/** Unit overrides for mineral types whose display unit differs from the DB `units` column. */
+const unitOverrides: Partial<
+  Record<(typeof mineralTypes.enumValues)[number], string>
+> = {
+  PH: 'pH',
+  Salinity: 'ppm',
+  Sodium: '%',
+  OrganicMatter: '%',
+  NitrateNitrogen: 'ppm',
+  PhosphatePhosphorus: 'ppm',
+  Zinc: 'ppm',
+  Iron: 'ppm',
+};
+
 /**
  * Fetches mineral level widget data for a given tab and mineral type.
  * Retrieves both the mineral readings and the farm's standard value thresholds.
@@ -72,7 +86,7 @@ export default async function getMineralLevelWidgetData(
       x,
       realValue,
       date: reading.createdAt,
-      unit: selectedMineral === 'PH' ? 'pH' : reading.unit,
+      unit: unitOverrides[selectedMineral] ?? reading.unit,
     };
   });
 

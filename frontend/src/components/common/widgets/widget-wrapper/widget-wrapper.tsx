@@ -8,9 +8,10 @@ import { desc, eq } from 'drizzle-orm';
 import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
 import { MacroRadarWidget, normalizeMacroValue } from '../macro-radar-widget';
 import { MacroRadarDataPoint } from '../macro-radar-widget/types';
-import WidgetDeleteButton from './widget-delete-button';
+import WidgetDeleteButton from './components/widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
+import MineralDataNotFound from './components/mineral-data-not-found';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -168,7 +169,7 @@ export default async function WidgetWrapper({
       );
 
       if (!mineralLevelWidgetData) {
-        return <p>No calcium data currently available</p>;
+        return <MineralDataNotFound name="calcium" widget={widget} />;
       }
 
       const { max, min, lastUpdated, chartData, standards } =
@@ -199,7 +200,7 @@ export default async function WidgetWrapper({
       const phWidgetData = await getMineralLevelWidgetData(currentTab, 'PH');
 
       if (!phWidgetData) {
-        return <p>No pH data currently available</p>;
+        return <MineralDataNotFound name="pH" widget={widget} />;
       }
 
       const {
@@ -227,6 +228,357 @@ export default async function WidgetWrapper({
             min={phMin}
             chartData={phChartData}
             standards={phStandards}
+          />
+        </>
+      );
+
+    case 'Salinity Widget':
+      const salinityWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Salinity'
+      );
+
+      if (!salinityWidgetData) {
+        return <MineralDataNotFound name="salinity" widget={widget} />;
+      }
+
+      const {
+        max: salinityMax,
+        min: salinityMin,
+        lastUpdated: salinityLastUpdated,
+        chartData: salinityChartData,
+        standards: salinityStandards,
+      } = salinityWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Salinity</h2>
+              <p className="text-sm font-light">
+                Last Updated {salinityLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={salinityMax}
+            min={salinityMin}
+            chartData={salinityChartData}
+            standards={salinityStandards}
+          />
+        </>
+      );
+
+    case 'Magnesium Widget':
+      const magnesiumWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Magnesium'
+      );
+
+      if (!magnesiumWidgetData) {
+        return <MineralDataNotFound name="magnesium" widget={widget} />;
+      }
+
+      const {
+        max: magnesiumMax,
+        min: magnesiumMin,
+        lastUpdated: magnesiumLastUpdated,
+        chartData: magnesiumChartData,
+        standards: magnesiumStandards,
+      } = magnesiumWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Magnesium</h2>
+              <p className="text-sm font-light">
+                Last Updated {magnesiumLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={magnesiumMax}
+            min={magnesiumMin}
+            chartData={magnesiumChartData}
+            standards={magnesiumStandards}
+          />
+        </>
+      );
+
+    case 'Sodium Widget':
+      const sodiumWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Sodium'
+      );
+
+      if (!sodiumWidgetData) {
+        return <MineralDataNotFound name="sodium" widget={widget} />;
+      }
+
+      const {
+        max: sodiumMax,
+        min: sodiumMin,
+        lastUpdated: sodiumLastUpdated,
+        chartData: sodiumChartData,
+        standards: sodiumStandards,
+      } = sodiumWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Sodium</h2>
+              <p className="text-sm font-light">
+                Last Updated {sodiumLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={sodiumMax}
+            min={sodiumMin}
+            chartData={sodiumChartData}
+            standards={sodiumStandards}
+          />
+        </>
+      );
+
+    case 'Nitrate Nitrogen Widget':
+      const nitrateWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'NitrateNitrogen'
+      );
+
+      if (!nitrateWidgetData) {
+        return <MineralDataNotFound name="NO3-N" widget={widget} />;
+      }
+
+      const {
+        max: nitrateMax,
+        min: nitrateMin,
+        lastUpdated: nitrateLastUpdated,
+        chartData: nitrateChartData,
+        standards: nitrateStandards,
+      } = nitrateWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>NO3-N</h2>
+              <p className="text-sm font-light">
+                Last Updated {nitrateLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={nitrateMax}
+            min={nitrateMin}
+            chartData={nitrateChartData}
+            standards={nitrateStandards}
+          />
+        </>
+      );
+
+    case 'Phosphate Phosphorus Widget':
+      const phosphateWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'PhosphatePhosphorus'
+      );
+
+      if (!phosphateWidgetData) {
+        return <MineralDataNotFound name="PO4-P" widget={widget} />;
+      }
+
+      const {
+        max: phosphateMax,
+        min: phosphateMin,
+        lastUpdated: phosphateLastUpdated,
+        chartData: phosphateChartData,
+        standards: phosphateStandards,
+      } = phosphateWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>PO4-P</h2>
+              <p className="text-sm font-light">
+                Last Updated {phosphateLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={phosphateMax}
+            min={phosphateMin}
+            chartData={phosphateChartData}
+            standards={phosphateStandards}
+          />
+        </>
+      );
+
+    case 'Potassium Widget':
+      const potassiumWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Potassium'
+      );
+
+      if (!potassiumWidgetData) {
+        return <MineralDataNotFound name="potassium" widget={widget} />;
+      }
+
+      const {
+        max: potassiumMax,
+        min: potassiumMin,
+        lastUpdated: potassiumLastUpdated,
+        chartData: potassiumChartData,
+        standards: potassiumStandards,
+      } = potassiumWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Potassium</h2>
+              <p className="text-sm font-light">
+                Last Updated {potassiumLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={potassiumMax}
+            min={potassiumMin}
+            chartData={potassiumChartData}
+            standards={potassiumStandards}
+          />
+        </>
+      );
+
+    case 'Zinc Widget':
+      const zincWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Zinc'
+      );
+
+      if (!zincWidgetData) {
+        return <MineralDataNotFound name="zinc" widget={widget} />;
+      }
+
+      const {
+        max: zincMax,
+        min: zincMin,
+        lastUpdated: zincLastUpdated,
+        chartData: zincChartData,
+        standards: zincStandards,
+      } = zincWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Zinc</h2>
+              <p className="text-sm font-light">
+                Last Updated {zincLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={zincMax}
+            min={zincMin}
+            chartData={zincChartData}
+            standards={zincStandards}
+          />
+        </>
+      );
+
+    case 'Iron Widget':
+      const ironWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'Iron'
+      );
+
+      if (!ironWidgetData) {
+        return <MineralDataNotFound name="iron" widget={widget} />;
+      }
+
+      const {
+        max: ironMax,
+        min: ironMin,
+        lastUpdated: ironLastUpdated,
+        chartData: ironChartData,
+        standards: ironStandards,
+      } = ironWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Iron</h2>
+              <p className="text-sm font-light">
+                Last Updated {ironLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={ironMax}
+            min={ironMin}
+            chartData={ironChartData}
+            standards={ironStandards}
+          />
+        </>
+      );
+
+    case 'Organic Matter Widget':
+      const organicMatterWidgetData = await getMineralLevelWidgetData(
+        currentTab,
+        'OrganicMatter'
+      );
+
+      if (!organicMatterWidgetData) {
+        return <MineralDataNotFound name="organic matter" widget={widget} />;
+      }
+
+      const {
+        max: organicMatterMax,
+        min: organicMatterMin,
+        lastUpdated: organicMatterLastUpdated,
+        chartData: organicMatterChartData,
+        standards: organicMatterStandards,
+      } = organicMatterWidgetData;
+
+      return (
+        <>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-5">
+              <h2>Organic Matter</h2>
+              <p className="text-sm font-light">
+                Last Updated {organicMatterLastUpdated.toLocaleDateString()}
+              </p>
+            </div>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+
+          <MineralLevelWidget
+            max={organicMatterMax}
+            min={organicMatterMin}
+            chartData={organicMatterChartData}
+            standards={organicMatterStandards}
           />
         </>
       );
