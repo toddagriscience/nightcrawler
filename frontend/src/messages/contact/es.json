@@ -38,8 +38,23 @@
     "results": {
       "matchTitle": "¡Es una coincidencia!",
       "matchBody": "Vamos a configurar tu cuenta.",
+      "matchJoinUs": "Únete a nosotros",
       "noMatchTitle": "Según tu información, Todd puede no ser la mejor opción.",
-      "noMatchBody": "Siempre estamos desarrollando servicios para granjas en crecimiento y nos pondremos en contacto cuando tengamos algo que se ajuste mejor a la tuya."
+      "noMatchBody": "Siempre estamos desarrollando servicios para granjas en crecimiento y nos conectaremos cuando tengamos algo que se ajuste mejor a la tuya.",
+      "noMatchInstagram": "Si te gustaría que revisáramos tu aplicación, por favor comparte tu handle de Instagram:",
+      "noMatchSubmit": "Enviar"
+    },
+    "legal": {
+      "byContinuing": "Al continuar, aceptas los",
+      "accountAgreement": "Acuerdo de cuenta de Todd",
+      "and": "y",
+      "privacyPolicy": "Política de privacidad",
+      "termsOfService": "Términos de servicio",
+      "apply": "aplicar."
+    },
+    "login": {
+      "alreadyStarted": "¿Ya has empezado?",
+      "loginToComplete": "Inicia sesión para completar tu aplicación"
     }
   }
 }
