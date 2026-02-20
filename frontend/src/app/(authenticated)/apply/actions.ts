@@ -281,10 +281,13 @@ export async function inviteUserToFarm(
       return { error: didInvite.message };
     }
 
-    // If inviteUser() succeeds, create a new user
-    await db.insert(user).values({ ...validated.data, farmId });
+    // Insert user and return row so client has id for uninvite
+    const [inserted] = await db
+      .insert(user)
+      .values({ ...validated.data, farmId })
+      .returning();
 
-    return { error: null };
+    return { error: null, data: inserted ?? undefined };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

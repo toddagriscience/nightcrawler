@@ -251,3 +251,47 @@ export async function resendEmailInvite(
 
   return data;
 }
+
+/** SERVER SIDE FUNCTION.
+ * Deletes an auth user by email.
+ * Paginates listUsers so 1000+ users is fine.
+ * Returns null if not in Auth.
+ *
+ * @param {string} email - The user's email
+ * @returns {Promise<Error | null>} - An error if the delete failed, null if successful or user not found in auth */
+export async function deleteAuthUserByEmail(
+  email: string
+): Promise<Error | null> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const normalizedEmail = email.toLowerCase();
+  const perPage = 1000;
+  let page = 1;
+
+  while (true) {
+    const { data, error: listError } = await supabase.auth.admin.listUsers({
+      page,
+      perPage,
+    });
+
+    if (listError) {
+      return listError;
+    }
+
+    const users = data?.users ?? [];
+    const authUser = users.find(
+      (u) => u.email?.toLowerCase() === normalizedEmail
+    );
+
+    if (authUser) {
+      const { error: deleteError } = await supabase.auth.admin.deleteUser(
+        authUser.id
+      );
+      return deleteError ?? null;
+    }
+
+    if (users.length === 0 || users.length < perPage) {
+      return null;
+    }
+    page++;
+  }
+}
