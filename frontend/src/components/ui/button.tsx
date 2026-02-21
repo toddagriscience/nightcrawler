@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -21,6 +21,8 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-accent hover:text-accent-foreground hover:cursor-pointer',
         link: 'text-primary underline-offset-4 hover:underline',
+        // when using the brand variant and 'text-normal', manually set the text color to 'text-background'
+        brand: 'bg-foreground text-background hover:bg-foreground/90',
       },
       size: {
         default: 'h-10 px-4 py-2',
