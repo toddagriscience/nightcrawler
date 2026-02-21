@@ -29,6 +29,10 @@ export default function WidgetsGrid({
   const { width, containerRef, mounted } = useContainerWidth();
   const router = useRouter();
 
+  const savedPositions = new Map(
+    widgets.map((w) => [w.widgetMetadata.i, { x: w.widgetMetadata.x, y: w.widgetMetadata.y }])
+  );
+
   const layout = widgets.map((widget) => {
     return { ...widget.widgetMetadata, ...widgetSizing[widget.name] };
   });
@@ -41,15 +45,25 @@ export default function WidgetsGrid({
     event: Event,
     element?: HTMLElement
   ) {
-    if (newItem) {
-      const widgetName = newItem.i as WidgetEnum;
-      await updateWidget(currentTab.managementZone, widgetName, {
-        widgetMetadata: {
-          i: widgetName,
-          x: newItem.x,
-          y: newItem.y,
-        },
-      });
+    // Only save widgets whose positions actually changed.
+    const changed = layout.filter((item) => {
+      const saved = savedPositions.get(item.i);
+      return !saved || saved.x !== item.x || saved.y !== item.y;
+    });
+
+    if (changed.length > 0) {
+      await Promise.all(
+        changed.map((item) => {
+          const widgetName = item.i as WidgetEnum;
+          return updateWidget(currentTab.managementZone, widgetName, {
+            widgetMetadata: {
+              i: widgetName,
+              x: item.x,
+              y: item.y,
+            },
+          });
+        })
+      );
       router.refresh();
     }
   }
