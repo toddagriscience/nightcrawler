@@ -6,13 +6,12 @@ import { useTranslations } from 'next-intl';
  * Terms component
  * @returns {JSX.Element} - The terms page
  */
-import React from 'react';
 
 export default function TermsOfUsePage() {
   const t = useTranslations('terms');
 
   return (
-    <div className="mx-auto mt-20 max-w-4xl bg-white p-6">
+    <div className="mx-auto max-w-3xl px-2 pt-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="mb-2 text-4xl font-light text-gray-900">{t('title')}</h1>
@@ -104,7 +103,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('disclaimer.title')}
           </h2>
-          <div className="mb-12 rounded-lg bg-red-50 p-4">
+          <div className="mb-12 rounded-lg p-4">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('disclaimer.content')}
             </p>
@@ -116,7 +115,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('limitation.title')}
           </h2>
-          <div className="space-y-4 rounded-lg bg-red-50 p-4">
+          <div className="space-y-4 rounded-lg p-4">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('limitation.noLiability')}
             </p>
@@ -144,7 +143,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('claimsLimitation.title')}
           </h2>
-          <div className="mb-12 rounded-lg bg-yellow-50 p-4">
+          <div className="mb-12 rounded-lg p-4">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('claimsLimitation.content')}
             </p>
