@@ -1,7 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
-import { analysis, mineral, standardValues } from '@/lib/db/schema';
+import {
+  analysis,
+  integratedManagementPlan,
+  mineral,
+  standardValues,
+} from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { WidgetSelect } from '@/lib/types/db';
 import { desc, eq } from 'drizzle-orm';
@@ -12,6 +17,7 @@ import WidgetDeleteButton from './components/widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
 import MineralDataNotFound from './components/mineral-data-not-found';
+import EditableSummary from '@/app/(authenticated)/components/tabs/current-tab/summary-sidebar/editable-summary';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -585,6 +591,34 @@ export default async function WidgetWrapper({
             standards={organicMatterStandards}
           />
         </>
+      );
+
+    case 'IMP Summaries':
+      const imps = await db
+        .select()
+        .from(integratedManagementPlan)
+        .where(
+          eq(integratedManagementPlan.managementZone, currentTab.managementZone)
+        )
+        .orderBy(desc(integratedManagementPlan.createdAt))
+        .limit(10);
+
+      return (
+        <div className="flex h-full flex-col overflow-hidden">
+          <div className="flex flex-row items-center justify-between">
+            <h2>IMP Summaries</h2>
+            <WidgetDeleteButton widgetId={widget.id} />
+          </div>
+          <div className="mt-2 min-h-0 flex-1 space-y-3 overflow-y-auto">
+            {imps.length > 0 ? (
+              imps.map((imp) => <EditableSummary key={imp.id} imp={imp} />)
+            ) : (
+              <p className="text-sm text-gray-400 italic">
+                No integrated management plans yet
+              </p>
+            )}
+          </div>
+        </div>
       );
 
     default:

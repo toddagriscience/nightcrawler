@@ -2,20 +2,20 @@
 
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NamedTab } from './types';
 import { Button } from '@/components/ui';
-import { getTabHash } from './utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import logger from '@/lib/logger';
 import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
+import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
 } from './actions';
-import logger from '@/lib/logger';
 import NewTabDropdown from './new-tab-dropdown';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { NamedTab } from './types';
+import { getTabHash } from './utils';
 
 const maxTabs = 8;
 

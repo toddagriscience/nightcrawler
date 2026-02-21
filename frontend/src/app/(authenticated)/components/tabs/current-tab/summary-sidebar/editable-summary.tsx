@@ -5,7 +5,7 @@
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui';
 import { IntegratedManagementPlanSelect } from '@/lib/types/db';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { updateImpSummary } from './actions';
 import { Check, Pencil, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -22,6 +22,7 @@ export default function EditableSummary({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const {
     register,
@@ -31,6 +32,22 @@ export default function EditableSummary({
   } = useForm({
     defaultValues: { summary: imp.summary ?? '' },
   });
+
+  const { ref: formRef, ...registerRest } = register('summary');
+
+  const autoResize = useCallback(() => {
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isEditing) {
+      autoResize();
+    }
+  }, [isEditing, autoResize]);
 
   async function onSubmit(data: { summary: string }) {
     await updateImpSummary(imp.id, data.summary);
@@ -68,8 +85,13 @@ export default function EditableSummary({
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <Textarea
-            {...register('summary')}
-            className="min-h-[60px] text-sm"
+            {...registerRest}
+            ref={(el) => {
+              formRef(el);
+              textareaRef.current = el;
+            }}
+            onInput={autoResize}
+            className="min-h-0 resize-none overflow-hidden text-sm"
             placeholder="Enter a summary..."
           />
           <div className="flex gap-1">
