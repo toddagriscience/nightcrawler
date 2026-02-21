@@ -30,7 +30,10 @@ export default function WidgetsGrid({
   const router = useRouter();
 
   const savedPositions = new Map(
-    widgets.map((w) => [w.widgetMetadata.i, { x: w.widgetMetadata.x, y: w.widgetMetadata.y }])
+    widgets.map((w) => [
+      w.widgetMetadata.i,
+      { x: w.widgetMetadata.x, y: w.widgetMetadata.y },
+    ])
   );
 
   const layout = widgets.map((widget) => {

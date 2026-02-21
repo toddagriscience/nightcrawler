@@ -35,11 +35,7 @@ export default async function CurrentTab({
           managementZoneId={currentTab.managementZone}
           availableWidgets={unusedWidgets}
         >
-          <Button
-            size="sm"
-            variant="outline"
-            className="hover:cursor-pointer"
-          >
+          <Button size="sm" variant="outline" className="hover:cursor-pointer">
             Customize
             <Plus className="mr-2 h-4 w-4" />
           </Button>
