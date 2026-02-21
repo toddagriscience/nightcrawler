@@ -155,11 +155,14 @@ When making changes, prioritize:
 
 ### Development Workflow
 
+All bun commands need to be run in the `./frontend` folder
+
 #### Essential Commands
 
 - `bun dev` - Development server with Turbopack
 - `bun ci` - Full validation (type-check → lint → test → build)
 - `bun validate` - Complete pipeline (format:check → ci)
+- `bun type-check` - Check for type errors
 
 #### Testing & Quality
 

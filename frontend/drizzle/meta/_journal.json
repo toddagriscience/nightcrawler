@@ -15,6 +15,13 @@
       "when": 1769655326442,
       "tag": "0001_needy_tenebrous",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771519225696,
+      "tag": "0002_nice_madelyne_pryor",
+      "breakpoints": true
     }
   ]
 }
