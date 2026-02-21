@@ -156,6 +156,10 @@ export default async function WidgetWrapper({
             </div>
             <WidgetDeleteButton widgetId={widget.id} />
           </div>
+          <p className="mt-1 mb-2 text-xs font-light text-muted-foreground">
+            Macro nutrient levels relative to your ideal ranges. 50% = low
+            boundary, 100% = ideal midpoint, 150% = upper limit.
+          </p>
           <div className="min-h-0 flex-1">
             <MacroRadarWidget data={radarData} />
           </div>

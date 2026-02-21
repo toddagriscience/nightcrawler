@@ -42,7 +42,7 @@ export default function MacroRadarWidget({
   return (
     <ChartContainer
       config={chartConfig}
-      className="mx-auto h-full w-full [&_.recharts-responsive-container]:!aspect-auto"
+      className="mx-auto h-full w-full [&_.recharts-responsive-container]:!aspect-auto mt-2.5"
     >
       <RadarChart data={data}>
         <ChartTooltip
@@ -62,11 +62,31 @@ export default function MacroRadarWidget({
             />
           }
         />
-        <PolarAngleAxis dataKey="macro" tick={{ fontSize: 12 }} />
+        <PolarAngleAxis
+          dataKey="macro"
+          tick={({ x, y, payload, textAnchor }) => {
+            // Push the top label (Calcium) up to add padding below it
+            const isTop = payload.value === 'Calcium';
+            return (
+              <text
+                x={x}
+                y={y}
+                dy={isTop ? -8 : 0}
+                textAnchor={textAnchor}
+                fontSize={12}
+                fill="currentColor"
+              >
+                {payload.value}
+              </text>
+            );
+          }}
+        />
         <PolarRadiusAxis
           angle={90}
           domain={[0, 150]}
-          tick={false}
+          tickCount={4}
+          tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+          tickFormatter={(value: number) => `${value}%`}
           axisLine={false}
         />
         <PolarGrid gridType="polygon" />

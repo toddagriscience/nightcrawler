@@ -42,6 +42,8 @@ export default function MineralLevelWidget({
 
   function renderLowLabel(props: any, content: string) {
     const { x, y, width, height } = props;
+    const estimatedTextWidth = content.length * 16 * 0.6;
+    if (width < estimatedTextWidth) return null;
     return (
       <text
         x={x + width / 2}

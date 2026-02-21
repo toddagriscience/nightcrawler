@@ -49,9 +49,10 @@ export default function EditableSummary({
         <p className="text-xs font-medium text-gray-500">
           {imp.createdAt.toLocaleDateString()}
         </p>
-        {imp.updatedAt.getSeconds() != imp.createdAt.getSeconds() && (
+        {imp.updatedAt.toLocaleDateString() !==
+          imp.createdAt.toLocaleDateString() && (
           <p className="text-xs font-medium text-gray-500">
-            Updated at {imp.updatedAt.toLocaleDateString()}
+            Updated {imp.updatedAt.toLocaleDateString()}
           </p>
         )}
         <Button
