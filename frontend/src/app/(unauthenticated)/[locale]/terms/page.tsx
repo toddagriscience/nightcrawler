@@ -11,9 +11,11 @@ export default function TermsOfUsePage() {
   const t = useTranslations('terms');
 
   return (
+    //removed bg-white
     <div className="mx-auto max-w-3xl px-2 pt-8">
       {/* Header */}
       <div className="mb-8">
+        //increased margin-bottom from 2 to 6
         <h1 className="mb-6 text-4xl font-light text-gray-900">{t('title')}</h1>
         <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
       </div>
@@ -103,6 +105,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('disclaimer.title')}
           </h2>
+          // removed bg-red and padding
           <div className="mb-12 rounded-lg">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('disclaimer.content')}
@@ -115,6 +118,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('limitation.title')}
           </h2>
+          // removed bg-red and padding
           <div className="space-y-4 rounded-lg">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('limitation.noLiability')}
@@ -143,6 +147,7 @@ export default function TermsOfUsePage() {
           <h2 className="mb-6 text-xl font-light text-gray-900">
             {t('claimsLimitation.title')}
           </h2>
+          // removed bg-yellow and padding
           <div className="mb-12 rounded-lg">
             <p className="text-sm leading-relaxed font-thin text-gray-700">
               {t('claimsLimitation.content')}
