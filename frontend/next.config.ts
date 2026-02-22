@@ -135,7 +135,7 @@ const nextConfig: NextConfig = {
       },
       // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected to /. If they access https://go.toddagriscience.com though, they're allowed through and are redirected to /contact.
       {
-        source: '/:path(invite|creator|partner)',
+        source: '/:path(invite|creators|partner)',
         has: [
           {
             type: 'host',
