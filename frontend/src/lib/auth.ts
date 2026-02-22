@@ -253,45 +253,24 @@ export async function resendEmailInvite(
 }
 
 /** SERVER SIDE FUNCTION.
- * Deletes an auth user by email.
- * Paginates listUsers so 1000+ users is fine.
- * Returns null if not in Auth.
+ * delete_auth_user_by_email is equivalent to the following function:
+ *
+ *   WITH deleted AS (
+ *     DELETE FROM auth.users WHERE email = lower(email_address)
+ *     RETURNING id
+ *   )
+ *   SELECT count(*)::integer FROM deleted;
+ *
+ * Returns null on success or if user not in Auth.
  *
  * @param {string} email - The user's email
- * @returns {Promise<Error | null>} - An error if the delete failed, null if successful or user not found in auth */
+ * @returns {Promise<Error | null>} - An error if the RPC failed, null if successful or user not found in auth */
 export async function deleteAuthUserByEmail(
   email: string
 ): Promise<Error | null> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
-  const normalizedEmail = email.toLowerCase();
-  const perPage = 1000;
-  let page = 1;
-
-  while (true) {
-    const { data, error: listError } = await supabase.auth.admin.listUsers({
-      page,
-      perPage,
-    });
-
-    if (listError) {
-      return listError;
-    }
-
-    const users = data?.users ?? [];
-    const authUser = users.find(
-      (u) => u.email?.toLowerCase() === normalizedEmail
-    );
-
-    if (authUser) {
-      const { error: deleteError } = await supabase.auth.admin.deleteUser(
-        authUser.id
-      );
-      return deleteError ?? null;
-    }
-
-    if (users.length === 0 || users.length < perPage) {
-      return null;
-    }
-    page++;
-  }
+  const { error } = await supabase.rpc('delete_auth_user_by_email', {
+    email_address: email,
+  });
+  return error ?? null;
 }
