@@ -240,6 +240,7 @@ All bun commands need to be run in the `./frontend` folder
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 - **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
+- **Always format files**: Run `bun format` at the end of every piece of work
 
 ### When Making Changes
 

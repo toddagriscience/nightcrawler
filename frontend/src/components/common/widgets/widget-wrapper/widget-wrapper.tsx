@@ -1,11 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
-import {
-  analysis,
-  mineral,
-  standardValues,
-} from '@/lib/db/schema';
+import { analysis, mineral, standardValues } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { WidgetSelect } from '@/lib/types/db';
 import { desc, eq } from 'drizzle-orm';
@@ -620,9 +616,7 @@ export default async function WidgetWrapper({
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-gray-400 italic">
-                No insights yet
-              </p>
+              <p className="text-sm text-gray-400 italic">No insights yet</p>
             )}
           </div>
         </div>

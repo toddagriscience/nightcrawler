@@ -1,6 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { date, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  date,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { managementZone } from './management-zone';
 
 /** A singular analysis for a singular management zone. There isn't much data in this table, the majority of it is stored in child tables. */
