@@ -251,3 +251,26 @@ export async function resendEmailInvite(
 
   return data;
 }
+
+/** SERVER SIDE FUNCTION.
+ * delete_auth_user_by_email is equivalent to the following function:
+ *
+ *   WITH deleted AS (
+ *     DELETE FROM auth.users WHERE email = lower(email_address)
+ *     RETURNING id
+ *   )
+ *   SELECT count(*)::integer FROM deleted;
+ *
+ * Returns null on success or if user not in Auth.
+ *
+ * @param {string} email - The user's email
+ * @returns {Promise<Error | null>} - An error if the RPC failed, null if successful or user not found in auth */
+export async function deleteAuthUserByEmail(
+  email: string
+): Promise<Error | null> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const { error } = await supabase.rpc('delete_auth_user_by_email', {
+    email_address: email,
+  });
+  return error ?? null;
+}
