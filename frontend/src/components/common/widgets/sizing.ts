@@ -16,7 +16,7 @@ export const widgetSizing: Record<WidgetEnum, { h: number; w: number }> = {
   'Zinc Widget': { h: 5, w: 5 },
   'Iron Widget': { h: 5, w: 5 },
   'Organic Matter Widget': { h: 5, w: 5 },
-  'IMP Summaries': { h: 19, w: 3 },
+  'Insights': { h: 19, w: 3 },
 };
 
 /** The number of columns on a management zone tab. Fed to the `gridConfig` parameter of `ReactGridLayout` */

@@ -3,7 +3,6 @@
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
 import {
   analysis,
-  integratedManagementPlan,
   mineral,
   standardValues,
 } from '@/lib/db/schema';
@@ -17,7 +16,6 @@ import WidgetDeleteButton from './components/widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
 import MineralDataNotFound from './components/mineral-data-not-found';
-import EditableSummary from '@/app/(authenticated)/components/tabs/current-tab/summary-sidebar/editable-summary';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -593,28 +591,37 @@ export default async function WidgetWrapper({
         </>
       );
 
-    case 'IMP Summaries':
-      const imps = await db
-        .select()
-        .from(integratedManagementPlan)
-        .where(
-          eq(integratedManagementPlan.managementZone, currentTab.managementZone)
-        )
-        .orderBy(desc(integratedManagementPlan.createdAt))
-        .limit(10);
+    case 'Insights':
+      const [latestAnalysis] = await db
+        .select({
+          id: analysis.id,
+          summary: analysis.summary,
+          analysisDate: analysis.analysisDate,
+        })
+        .from(analysis)
+        .where(eq(analysis.managementZone, currentTab.managementZone))
+        .orderBy(desc(analysis.analysisDate))
+        .limit(1);
 
       return (
         <div className="flex h-full flex-col overflow-hidden">
           <div className="flex flex-row items-center justify-between">
-            <h2>IMP Summaries</h2>
+            <h2>Insights</h2>
             <WidgetDeleteButton widgetId={widget.id} />
           </div>
           <div className="mt-2 min-h-0 flex-1 space-y-3 overflow-y-auto">
-            {imps.length > 0 ? (
-              imps.map((imp) => <EditableSummary key={imp.id} imp={imp} />)
+            {latestAnalysis?.summary ? (
+              <div className="border-b pb-3 last:border-b-0">
+                <p className="mb-1 text-xs font-medium text-gray-500">
+                  {latestAnalysis.analysisDate.toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-700">
+                  {latestAnalysis.summary}
+                </p>
+              </div>
             ) : (
               <p className="text-sm text-gray-400 italic">
-                No integrated management plans yet
+                No insights yet
               </p>
             )}
           </div>
