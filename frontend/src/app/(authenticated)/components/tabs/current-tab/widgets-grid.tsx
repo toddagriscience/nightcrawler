@@ -9,13 +9,13 @@ import {
   widgetSizing,
 } from '@/components/common/widgets/sizing';
 import { WidgetEnum, WidgetSelect } from '@/lib/types/db';
+import { useRouter } from 'next/navigation';
 import ReactGridLayout, {
   Layout,
   LayoutItem,
   useContainerWidth,
 } from 'react-grid-layout';
 import { NamedTab } from '../types';
-import { useRouter } from 'next/navigation';
 
 export default function WidgetsGrid({
   widgets,
@@ -72,14 +72,14 @@ export default function WidgetsGrid({
   }
 
   return (
-    <div ref={containerRef} className="relative h-screen">
+    <div ref={containerRef} className="relative h-[80vh]">
       {mounted && (
         <ReactGridLayout
           layout={layout}
           onDragStop={handleDrop}
           width={width}
           gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
-          className="h-screen!"
+          className="h-[80vh]!"
         >
           {renderedWidgets}
         </ReactGridLayout>
