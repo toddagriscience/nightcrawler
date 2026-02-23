@@ -96,40 +96,8 @@ body:has(.authenticated-root) {
   background: var(--background-platform);
 }
 
-/* Thin/minimized scrollbar by default (macOS overlay style) */
 * {
-  scrollbar-width: thin;
   font-family: var(--font-neue-haas), Arial, sans-serif;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-/* Hide scrollbars on the platform (authenticated routes) */
-.authenticated-root,
-.authenticated-root * {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.authenticated-root ::-webkit-scrollbar,
-.authenticated-root::-webkit-scrollbar {
-  display: none;
 }
 
 /* Respect user preferences for reduced motion */
