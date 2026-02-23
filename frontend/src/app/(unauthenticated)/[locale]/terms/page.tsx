@@ -11,12 +11,10 @@ export default function TermsOfUsePage() {
   const t = useTranslations('terms');
 
   return (
-    //removed bg-white
-    <div className="mx-auto max-w-3xl px-2 pt-8">
+    <div className="mx-auto max-w-3xl px-2 pt-24">
       {/* Header */}
-      <div className="mb-8">
-        //increased margin-bottom from 2 to 6
-        <h1 className="mb-6 text-4xl font-light text-gray-900">{t('title')}</h1>
+      <div className="mb-6">
+        <h1 className="mb-8 text-4xl font-light">{t('title')}</h1>
         <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
       </div>
 
@@ -24,17 +22,17 @@ export default function TermsOfUsePage() {
       <div className="space-y-12">
         {/* Terms and Conditions Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
+          <h2 className="mb-6 text-xl font-light">
             {t('termsAndConditions.title')}
           </h2>
           <div className="space-y-8">
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('termsAndConditions.intro')}
             </p>
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('termsAndConditions.amendments')}
             </p>
-            <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-12 text-sm leading-relaxed font-thin">
               {t('termsAndConditions.ageRequirement')}
             </p>
           </div>
@@ -42,14 +40,12 @@ export default function TermsOfUsePage() {
 
         {/* Purpose Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('purpose.title')}
-          </h2>
+          <h2 className="mb-6 text-xl font-light">{t('purpose.title')}</h2>
           <div className="space-y-8">
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('purpose.informational')}
             </p>
-            <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-12 text-sm leading-relaxed font-thin">
               {t('purpose.noAdvice')}
             </p>
           </div>
@@ -57,14 +53,12 @@ export default function TermsOfUsePage() {
 
         {/* Regulatory Disclosures Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('regulatory.title')}
-          </h2>
+          <h2 className="mb-6 text-xl font-light ">{t('regulatory.title')}</h2>
           <div className="space-y-8">
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('regulatory.noSolicitation')}
             </p>
-            <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-12 text-sm leading-relaxed font-thin">
               {t('regulatory.forwardLooking')}
             </p>
           </div>
@@ -72,42 +66,37 @@ export default function TermsOfUsePage() {
 
         {/* Privacy Policies Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
+          <h2 className="mb-6 text-xl font-light">
             {t('privacyPolicies.title')}
           </h2>
-          <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+          <p className="mb-12 text-sm leading-relaxed font-thin">
             {t('privacyPolicies.content')}
           </p>
         </section>
 
         {/* Ownership Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('ownership.title')}
-          </h2>
-          <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+          <h2 className="mb-6 text-xl font-light">{t('ownership.title')}</h2>
+          <p className="mb-12 text-sm leading-relaxed font-thin">
             {t('ownership.content')}
           </p>
         </section>
 
         {/* Third-Party Links Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
+          <h2 className="mb-6 text-xl font-light">
             {t('thirdPartyLinks.title')}
           </h2>
-          <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+          <p className="mb-12 text-sm leading-relaxed font-thin">
             {t('thirdPartyLinks.content')}
           </p>
         </section>
 
         {/* Disclaimer Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('disclaimer.title')}
-          </h2>
-          // removed bg-red and padding
+          <h2 className="mb-6 text-xl font-light">{t('disclaimer.title')}</h2>
           <div className="mb-12 rounded-lg">
-            <p className="text-sm leading-relaxed font-thin text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('disclaimer.content')}
             </p>
           </div>
@@ -115,18 +104,15 @@ export default function TermsOfUsePage() {
 
         {/* Limitation of Liability Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('limitation.title')}
-          </h2>
-          // removed bg-red and padding
+          <h2 className="mb-6 text-xl font-light">{t('limitation.title')}</h2>
           <div className="space-y-4 rounded-lg">
-            <p className="text-sm leading-relaxed font-thin text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('limitation.noLiability')}
             </p>
-            <p className="text-sm leading-relaxed font-thin text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('limitation.noDamages')}
             </p>
-            <p className="text-sm leading-relaxed font-thin text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('limitation.applicableLaw')}
             </p>
           </div>
@@ -134,22 +120,19 @@ export default function TermsOfUsePage() {
 
         {/* Indemnity Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
-            {t('indemnity.title')}
-          </h2>
-          <p className="mb-12 text-sm leading-relaxed font-thin text-gray-700">
+          <h2 className="mb-6 text-xl font-light">{t('indemnity.title')}</h2>
+          <p className="mb-12 text-sm leading-relaxed font-thin">
             {t('indemnity.content')}
           </p>
         </section>
 
         {/* Claims Limitation Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
+          <h2 className="mb-6 text-xl font-light">
             {t('claimsLimitation.title')}
           </h2>
-          // removed bg-yellow and padding
           <div className="mb-12 rounded-lg">
-            <p className="text-sm leading-relaxed font-thin text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('claimsLimitation.content')}
             </p>
           </div>
@@ -157,14 +140,14 @@ export default function TermsOfUsePage() {
 
         {/* Miscellaneous Section */}
         <section>
-          <h2 className="mb-6 text-xl font-light text-gray-900">
+          <h2 className="mb-6 text-xl font-light">
             {t('miscellaneous.title')}
           </h2>
           <div className="space-y-8">
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('miscellaneous.assignment')}
             </p>
-            <p className="mb-8 text-sm leading-relaxed font-thin text-gray-700">
+            <p className="mb-8 text-sm leading-relaxed font-thin">
               {t('miscellaneous.headings')}
             </p>
           </div>

@@ -4,7 +4,7 @@
 // The tests here contain a *lot* of text. Sorry :(
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import TermsOfUsePage from './page';
 
 describe('TermsOfUsePage', () => {
@@ -41,6 +41,6 @@ describe('TermsOfUsePage', () => {
   it('has correct margins', () => {
     const { container } = renderWithNextIntl(<TermsOfUsePage />);
 
-    expect(container.querySelector('.mt-20')).toBeInTheDocument();
+    expect(container.querySelector('.pt-24')).toBeInTheDocument();
   });
 });
