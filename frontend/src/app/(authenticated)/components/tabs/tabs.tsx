@@ -2,20 +2,20 @@
 
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NamedTab } from './types';
 import { Button } from '@/components/ui';
-import { getTabHash } from './utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import logger from '@/lib/logger';
 import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
+import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
 } from './actions';
-import logger from '@/lib/logger';
 import NewTabDropdown from './new-tab-dropdown';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { NamedTab } from './types';
+import { getTabHash } from './utils';
 
 const maxTabs = 8;
 
@@ -113,13 +113,13 @@ export default function PlatformTabs({
         <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
           {currentTabs.map((tab, index) => (
             <TabsTrigger
-              className="px-2 flex flex-row justify-between items-center group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
+              className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
               key={tab.id}
               value={getTabHash(tab)}
               onClick={() => setCurTabHelper({ newTab: tab })}
             >
               <input
-                className="max-w-25 truncate cursor-pointer group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
+                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
@@ -130,9 +130,9 @@ export default function PlatformTabs({
                   aria-roledescription="Close the current tab"
                   role="button"
                   onClick={() => deleteTab(tab)}
-                  className=" p-0 h-min"
+                  className="h-min p-0"
                 >
-                  <X className="w-4 h-min" />
+                  <X className="h-min w-4" />
                 </div>
               </div>
             </TabsTrigger>
