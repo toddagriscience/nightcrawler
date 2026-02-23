@@ -38,7 +38,9 @@ const unitOverrides: Partial<
 export default async function getMineralLevelWidgetData(
   currentTab: NamedTab,
   selectedMineral: (typeof mineralTypes.enumValues)[number]
-): Promise<(MineralLevelWidgetProps & { lastUpdated: Date }) | null> {
+): Promise<
+  (MineralLevelWidgetProps & { lastUpdated: Date; actionableInfo: string | null }) | null
+> {
   const user = await getAuthenticatedInfo();
 
   const readings = await db
@@ -46,6 +48,7 @@ export default async function getMineralLevelWidgetData(
       unit: mineral.units,
       realValue: mineral.realValue,
       createdAt: mineral.createdAt,
+      actionableInfo: mineral.actionableInfo,
     })
     .from(analysis)
     .where(eq(analysis.managementZone, currentTab.managementZone))
@@ -70,7 +73,9 @@ export default async function getMineralLevelWidgetData(
     ideal: thresholds.ideal,
     high: thresholds.high,
   };
-  const lastUpdated = readings.at(-1)!.createdAt;
+  const latestReading = readings.at(-1)!;
+  const lastUpdated = latestReading.createdAt;
+  const actionableInfo = latestReading.actionableInfo;
   const chartData: MineralChartType[] = readings.map((reading) => {
     // If the real value is higher or lower than the min or the max that this chart has, respectively, just set it to the bottom but let the user know that this is the case.
     const realValue = Number(reading.realValue);
@@ -90,5 +95,5 @@ export default async function getMineralLevelWidgetData(
     };
   });
 
-  return { lastUpdated, max, min, chartData, standards };
+  return { lastUpdated, max, min, chartData, standards, actionableInfo };
 }
