@@ -22,6 +22,8 @@ export const analysis = pgTable('analysis', {
   analysisDate: date({ mode: 'date' }).notNull(),
   /** A brief summary of the analysis insights */
   summary: text(),
+  /** Actionable information based on all macro mineral levels for this analysis. */
+  macroActionableInfo: text(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

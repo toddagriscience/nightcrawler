@@ -12,6 +12,7 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 - **TypeScript** with strict type checking
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
+- Drizzle for ORM with PostgreSQL
 
 ### UI Component System
 
@@ -202,6 +203,10 @@ All bun commands need to be run in the `./frontend` folder
 - Performance impact should be minimal
 
 ## Key Architecture Patterns
+
+### When modifying database tables
+
+Do not create migrations or migrate (i.e. no running `bunx drizzle-kit generate`).
 
 ### When Adding New Components
 

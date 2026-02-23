@@ -5,6 +5,7 @@ import {
   pgEnum,
   pgTable,
   serial,
+  text,
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -43,6 +44,8 @@ export const mineral = pgTable('mineral', {
   tag: levelCategory(),
   /** The unit which this mineral is being measured in. Almost always PPM */
   units: units().notNull(),
+  /** Actionable information or recommendation associated with this mineral reading. */
+  actionableInfo: text(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()
