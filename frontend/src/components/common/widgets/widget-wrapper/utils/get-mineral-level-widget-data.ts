@@ -39,7 +39,11 @@ export default async function getMineralLevelWidgetData(
   currentTab: NamedTab,
   selectedMineral: (typeof mineralTypes.enumValues)[number]
 ): Promise<
-  (MineralLevelWidgetProps & { lastUpdated: Date; actionableInfo: string | null }) | null
+  | (MineralLevelWidgetProps & {
+      lastUpdated: Date;
+      actionableInfo: string | null;
+    })
+  | null
 > {
   const user = await getAuthenticatedInfo();
 
