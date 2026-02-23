@@ -12,6 +12,7 @@ A modern, production-ready Next.js website for Todd Agriscience with comprehensi
 - **TypeScript** with strict type checking
 - **Tailwind CSS v4** with custom brand configuration
 - **React 19** with modern hooks and patterns
+- Drizzle for ORM with PostgreSQL
 
 ### UI Component System
 
@@ -203,6 +204,10 @@ All bun commands need to be run in the `./frontend` folder
 
 ## Key Architecture Patterns
 
+### When modifying database tables
+
+Do not create migrations or migrate (i.e. no running `bunx drizzle-kit generate`).
+
 ### When Adding New Components
 
 - **Follow slice architecture**: Page-specific components go in `app/[locale]/page-name/components/`
@@ -240,6 +245,7 @@ All bun commands need to be run in the `./frontend` folder
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
 - **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
 - **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
+- **Always format files**: Run `bun format` at the end of every piece of work
 
 ### When Making Changes
 

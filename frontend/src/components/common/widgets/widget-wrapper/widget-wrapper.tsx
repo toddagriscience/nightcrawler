@@ -1,12 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
-import {
-  analysis,
-  integratedManagementPlan,
-  mineral,
-  standardValues,
-} from '@/lib/db/schema';
+import { analysis, mineral, standardValues } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { WidgetSelect } from '@/lib/types/db';
 import { desc, eq } from 'drizzle-orm';
@@ -17,7 +12,6 @@ import WidgetDeleteButton from './components/widget-delete-button';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
 import MineralDataNotFound from './components/mineral-data-not-found';
-import EditableSummary from '@/app/(authenticated)/components/tabs/current-tab/summary-sidebar/editable-summary';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -67,6 +61,7 @@ export default async function WidgetWrapper({
           realValue: mineral.realValue,
           units: mineral.units,
           createdAt: mineral.createdAt,
+          macroActionableInfo: analysis.macroActionableInfo,
         })
         .from(analysis)
         .where(eq(analysis.managementZone, currentTab.managementZone))
@@ -79,6 +74,7 @@ export default async function WidgetWrapper({
         { value: number; unit: string }
       >();
       let radarLastUpdated: Date | null = null;
+      let macroActionableInfo: string | null = null;
       for (const reading of latestReadings) {
         if (!latestByMineral.has(reading.name)) {
           latestByMineral.set(reading.name, {
@@ -88,6 +84,7 @@ export default async function WidgetWrapper({
         }
         if (!radarLastUpdated || reading.createdAt > radarLastUpdated) {
           radarLastUpdated = reading.createdAt;
+          macroActionableInfo = reading.macroActionableInfo;
         }
       }
 
@@ -169,6 +166,9 @@ export default async function WidgetWrapper({
           <div className="min-h-0 flex-1">
             <MacroRadarWidget data={radarData} />
           </div>
+          <p className="text-sm text-muted-foreground">
+            {macroActionableInfo ?? 'No actionable information'}
+          </p>
         </div>
       );
 
@@ -182,12 +182,12 @@ export default async function WidgetWrapper({
         return <MineralDataNotFound name="calcium" widget={widget} />;
       }
 
-      const { max, min, lastUpdated, chartData, standards } =
+      const { max, min, lastUpdated, chartData, standards, actionableInfo } =
         mineralLevelWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Calcium</h2>
               <p className="text-sm font-light">
@@ -203,7 +203,10 @@ export default async function WidgetWrapper({
             chartData={chartData}
             standards={standards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {actionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'PH Widget':
@@ -219,11 +222,12 @@ export default async function WidgetWrapper({
         lastUpdated: phLastUpdated,
         chartData: phChartData,
         standards: phStandards,
+        actionableInfo: phActionableInfo,
       } = phWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>pH</h2>
               <p className="text-sm font-light">
@@ -239,7 +243,10 @@ export default async function WidgetWrapper({
             chartData={phChartData}
             standards={phStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {phActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Salinity Widget':
@@ -258,11 +265,12 @@ export default async function WidgetWrapper({
         lastUpdated: salinityLastUpdated,
         chartData: salinityChartData,
         standards: salinityStandards,
+        actionableInfo: salinityActionableInfo,
       } = salinityWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Salinity</h2>
               <p className="text-sm font-light">
@@ -278,7 +286,10 @@ export default async function WidgetWrapper({
             chartData={salinityChartData}
             standards={salinityStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {salinityActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Magnesium Widget':
@@ -297,11 +308,12 @@ export default async function WidgetWrapper({
         lastUpdated: magnesiumLastUpdated,
         chartData: magnesiumChartData,
         standards: magnesiumStandards,
+        actionableInfo: magnesiumActionableInfo,
       } = magnesiumWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Magnesium</h2>
               <p className="text-sm font-light">
@@ -317,7 +329,10 @@ export default async function WidgetWrapper({
             chartData={magnesiumChartData}
             standards={magnesiumStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {magnesiumActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Sodium Widget':
@@ -336,11 +351,12 @@ export default async function WidgetWrapper({
         lastUpdated: sodiumLastUpdated,
         chartData: sodiumChartData,
         standards: sodiumStandards,
+        actionableInfo: sodiumActionableInfo,
       } = sodiumWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Sodium</h2>
               <p className="text-sm font-light">
@@ -356,7 +372,10 @@ export default async function WidgetWrapper({
             chartData={sodiumChartData}
             standards={sodiumStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {sodiumActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Nitrate Nitrogen Widget':
@@ -375,11 +394,12 @@ export default async function WidgetWrapper({
         lastUpdated: nitrateLastUpdated,
         chartData: nitrateChartData,
         standards: nitrateStandards,
+        actionableInfo: nitrateActionableInfo,
       } = nitrateWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>NO3-N</h2>
               <p className="text-sm font-light">
@@ -395,7 +415,10 @@ export default async function WidgetWrapper({
             chartData={nitrateChartData}
             standards={nitrateStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {nitrateActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Phosphate Phosphorus Widget':
@@ -414,11 +437,12 @@ export default async function WidgetWrapper({
         lastUpdated: phosphateLastUpdated,
         chartData: phosphateChartData,
         standards: phosphateStandards,
+        actionableInfo: phosphateActionableInfo,
       } = phosphateWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>PO4-P</h2>
               <p className="text-sm font-light">
@@ -434,7 +458,10 @@ export default async function WidgetWrapper({
             chartData={phosphateChartData}
             standards={phosphateStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {phosphateActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Potassium Widget':
@@ -453,11 +480,12 @@ export default async function WidgetWrapper({
         lastUpdated: potassiumLastUpdated,
         chartData: potassiumChartData,
         standards: potassiumStandards,
+        actionableInfo: potassiumActionableInfo,
       } = potassiumWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Potassium</h2>
               <p className="text-sm font-light">
@@ -473,7 +501,10 @@ export default async function WidgetWrapper({
             chartData={potassiumChartData}
             standards={potassiumStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {potassiumActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Zinc Widget':
@@ -492,11 +523,12 @@ export default async function WidgetWrapper({
         lastUpdated: zincLastUpdated,
         chartData: zincChartData,
         standards: zincStandards,
+        actionableInfo: zincActionableInfo,
       } = zincWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Zinc</h2>
               <p className="text-sm font-light">
@@ -512,7 +544,10 @@ export default async function WidgetWrapper({
             chartData={zincChartData}
             standards={zincStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {zincActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Iron Widget':
@@ -531,11 +566,12 @@ export default async function WidgetWrapper({
         lastUpdated: ironLastUpdated,
         chartData: ironChartData,
         standards: ironStandards,
+        actionableInfo: ironActionableInfo,
       } = ironWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Iron</h2>
               <p className="text-sm font-light">
@@ -551,7 +587,10 @@ export default async function WidgetWrapper({
             chartData={ironChartData}
             standards={ironStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {ironActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
     case 'Organic Matter Widget':
@@ -570,11 +609,12 @@ export default async function WidgetWrapper({
         lastUpdated: organicMatterLastUpdated,
         chartData: organicMatterChartData,
         standards: organicMatterStandards,
+        actionableInfo: organicMatterActionableInfo,
       } = organicMatterWidgetData;
 
       return (
-        <>
-          <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col justify-around h-full">
+          <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-5">
               <h2>Organic Matter</h2>
               <p className="text-sm font-light">
@@ -590,32 +630,42 @@ export default async function WidgetWrapper({
             chartData={organicMatterChartData}
             standards={organicMatterStandards}
           />
-        </>
+          <p className="text-sm text-muted-foreground">
+            {organicMatterActionableInfo ?? 'No actionable information'}
+          </p>
+        </div>
       );
 
-    case 'IMP Summaries':
-      const imps = await db
-        .select()
-        .from(integratedManagementPlan)
-        .where(
-          eq(integratedManagementPlan.managementZone, currentTab.managementZone)
-        )
-        .orderBy(desc(integratedManagementPlan.createdAt))
-        .limit(10);
+    case 'Insights':
+      const [latestAnalysis] = await db
+        .select({
+          id: analysis.id,
+          summary: analysis.summary,
+          analysisDate: analysis.analysisDate,
+        })
+        .from(analysis)
+        .where(eq(analysis.managementZone, currentTab.managementZone))
+        .orderBy(desc(analysis.analysisDate))
+        .limit(1);
 
       return (
         <div className="flex h-full flex-col overflow-hidden">
           <div className="flex flex-row items-center justify-between">
-            <h2>IMP Summaries</h2>
+            <h2>Insights</h2>
             <WidgetDeleteButton widgetId={widget.id} />
           </div>
           <div className="mt-2 min-h-0 flex-1 space-y-3 overflow-y-auto">
-            {imps.length > 0 ? (
-              imps.map((imp) => <EditableSummary key={imp.id} imp={imp} />)
+            {latestAnalysis?.summary ? (
+              <div className="border-b pb-3 last:border-b-0">
+                <p className="mb-1 text-xs font-medium text-gray-500">
+                  {latestAnalysis.analysisDate.toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-700">
+                  {latestAnalysis.summary}
+                </p>
+              </div>
             ) : (
-              <p className="text-sm text-gray-400 italic">
-                No integrated management plans yet
-              </p>
+              <p className="text-sm text-gray-400 italic">No insights yet</p>
             )}
           </div>
         </div>
