@@ -26,6 +26,7 @@ export default async function AccountPage() {
           label="Farm profile"
           value=">"
           valueClassName="text-foreground"
+          href="/account"
         />
       </div>
 

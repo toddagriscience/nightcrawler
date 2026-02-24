@@ -1,6 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
 import AccountInfo, {
   AccountInfoRow,
 } from '../components/account-info/account-info';
@@ -12,36 +11,21 @@ export default function AccountPrivacyPage() {
         <AccountInfoRow label="Personal Information Sharing" value="Disabled" />
         <AccountInfoRow
           label="Request Personal Data"
-          rightContent={
-            <Link
-              href="/contact"
-              className="text-foreground font-[400] hover:opacity-70"
-            >
-              &gt;
-            </Link>
-          }
+          value=">"
+          valueClassName="text-foreground"
+          href="/contact"
         />
         <AccountInfoRow
           label="Request Data Deletion"
-          rightContent={
-            <Link
-              href="/contact"
-              className="text-foreground font-[400] hover:opacity-70"
-            >
-              &gt;
-            </Link>
-          }
+          value=">"
+          valueClassName="text-foreground"
+          href="/contact"
         />
         <AccountInfoRow
           label="Privacy Policy"
-          rightContent={
-            <Link
-              href="/privacy"
-              className="text-foreground font-[400] hover:opacity-70"
-            >
-              &gt;
-            </Link>
-          }
+          value=">"
+          valueClassName="text-foreground"
+          href="/privacy"
         />
       </div>
     </AccountInfo>

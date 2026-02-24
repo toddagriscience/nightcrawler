@@ -8,10 +8,14 @@ describe('AccountPrivacyPage', () => {
   it('renders the requested privacy links to the right routes', () => {
     render(<AccountPrivacyPage />);
 
-    const contactLinks = screen.getAllByRole('link', { name: '>' });
-    expect(contactLinks).toHaveLength(3);
-    expect(contactLinks[0]).toHaveAttribute('href', '/contact');
-    expect(contactLinks[1]).toHaveAttribute('href', '/contact');
-    expect(contactLinks[2]).toHaveAttribute('href', '/privacy');
+    expect(
+      screen.getByRole('link', { name: /Request Personal Data/i })
+    ).toHaveAttribute('href', '/contact');
+    expect(
+      screen.getByRole('link', { name: /Request Data Deletion/i })
+    ).toHaveAttribute('href', '/contact');
+    expect(
+      screen.getByRole('link', { name: /Privacy Policy/i })
+    ).toHaveAttribute('href', '/privacy');
   });
 });

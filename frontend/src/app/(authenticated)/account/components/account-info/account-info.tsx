@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 
 interface AccountInfoProps {
   title: string;
@@ -22,6 +23,7 @@ interface AccountInfoRowProps {
   statusTone?: AccountInfoStatusTone;
   rightContent?: ReactNode;
   valueClassName?: string;
+  href?: string;
 }
 
 const statusStyles: Record<AccountInfoStatusTone, string> = {
@@ -70,6 +72,7 @@ export function AccountInfoRow({
   statusTone,
   rightContent,
   valueClassName,
+  href,
 }: AccountInfoRowProps) {
   const renderedRightContent = rightContent ?? (
     <>
@@ -81,6 +84,22 @@ export function AccountInfoRow({
       ) : null}
     </>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1 hover:opacity-70"
+      >
+        <span className="text-foreground text-[16px] leading-tight font-[400]">
+          {label}
+        </span>
+        <div className="flex items-center gap-1.5 text-[16px] leading-tight font-[300]">
+          {renderedRightContent}
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <div className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1">

@@ -20,6 +20,7 @@ export default async function AccountManagementPage() {
           label="Management zone profile"
           value=">"
           valueClassName="text-foreground"
+          href="/account/management"
         />
       </AccountInfoSection>
 
