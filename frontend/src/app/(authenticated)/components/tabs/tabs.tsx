@@ -83,6 +83,11 @@ export default function PlatformTabs({
   }
 
   async function deleteTab(tab: NamedTab) {
+    // Approved users always have at least 1 tab open
+    if (currentTabs.length === 1 && currentUser.approved) {
+      return;
+    }
+
     const tabId = tab.id;
     const result = await deleteTabAction({ tabId });
 
@@ -124,17 +129,19 @@ export default function PlatformTabs({
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
               />
-              <div>
-                {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                <div
-                  aria-roledescription="Close the current tab"
-                  role="button"
-                  onClick={() => deleteTab(tab)}
-                  className="h-min p-0"
-                >
-                  <X className="h-min w-4" />
+              {currentTabs.length !== 1 && (
+                <div>
+                  {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
+                  <div
+                    aria-roledescription="Close the current tab"
+                    role="button"
+                    onClick={() => deleteTab(tab)}
+                    className="h-min p-0"
+                  >
+                    <X className="h-min w-4" />
+                  </div>
                 </div>
-              </div>
+              )}
             </TabsTrigger>
           ))}
           {currentTabs.length <= maxTabs && (
