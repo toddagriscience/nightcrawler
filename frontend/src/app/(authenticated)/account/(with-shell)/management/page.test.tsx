@@ -47,7 +47,13 @@ describe('AccountManagementPage', () => {
       name: 'Management zone profile >',
     });
     expect(profileLinks).toHaveLength(2);
-    expect(profileLinks[0]).toHaveAttribute('href', '/account/management-zones/1');
-    expect(profileLinks[1]).toHaveAttribute('href', '/account/management-zones/2');
+    expect(profileLinks[0]).toHaveAttribute(
+      'href',
+      '/account/management-zones/1'
+    );
+    expect(profileLinks[1]).toHaveAttribute(
+      'href',
+      '/account/management-zones/2'
+    );
   });
 });
