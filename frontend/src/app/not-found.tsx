@@ -20,11 +20,13 @@ export default async function NotFound() {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <SmoothScroll>
+
+      	<div className={`w-screen min-h-screen flex flex-col ${
+    user ? 'bg-background-platform' : 'bg-background'
+  }`}>
         {user ? <AuthenticatedHeader /> : <Header />}
         <FadeIn>
-          <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">
-            <h1 className="mb-8 text-4xl text-center">{t('notFound.title')}</h1>
-
+		<div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center max-w-[500px] w-[90vw] mx-auto">             <h1 className="mb-8 text-4xl text-center">{t('notFound.title')}</h1>
             <p className="text-center">
               {t.rich('notFound.message', {
                 home: (chunks) => (
@@ -48,6 +50,7 @@ export default async function NotFound() {
           </div>
         </FadeIn>
         <Footer />
+	</div>
       </SmoothScroll>
     </NextIntlClientProvider>
   );
