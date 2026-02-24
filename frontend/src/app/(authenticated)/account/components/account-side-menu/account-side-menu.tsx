@@ -28,7 +28,7 @@ export default function AccountSideMenu() {
 
   return (
     <aside className="w-[180px] shrink-0 pt-2">
-      <div className="border-black/20 border-t pt-4">
+      <div className="border-t border-black/20 pt-4">
         <nav className="space-y-3" aria-label="Account sections">
           {sideMenuItems.map((item) => {
             const isActive = pathname === item.href;
@@ -51,11 +51,11 @@ export default function AccountSideMenu() {
         </nav>
       </div>
 
-      <div className="border-black/20 mt-24 border-t pt-4">
+      <div className="mt-24 border-t border-black/20 pt-4">
         <button
           type="button"
           onClick={handleLogout}
-          className="text-foreground text-[16px] leading-none font-[400] hover:opacity-70"
+          className="text-foreground text-[16px] leading-none font-[400] hover:cursor-pointer hover:opacity-70"
         >
           Log out
         </button>

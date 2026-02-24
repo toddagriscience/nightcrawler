@@ -1,8 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-export interface AccountContact {
+import type { UserSelect } from '@/lib/types/db';
+
+type AccountContactDbFields = Pick<UserSelect, 'email' | 'phone'>;
+
+export interface AccountContact extends Omit<AccountContactDbFields, 'phone'> {
   name: string;
-  email: string;
   phone: string;
   emailVerified: boolean;
   phoneVerified: boolean;
@@ -23,9 +26,4 @@ export interface AccountFarmData {
   physicalLocation: string;
   mailingAddress: string;
   clientSince: string;
-}
-
-export interface AccountManagementData {
-  sectionTitle: string;
-  nickname: string;
 }

@@ -11,12 +11,12 @@ import {
   user,
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import type { ManagementZoneSelect } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import type {
   AccountContact,
   AccountFarmData,
-  AccountManagementData,
   AccountShellData,
   AccountUsersData,
 } from './types';
@@ -158,20 +158,33 @@ export async function getAccountFarmData(): Promise<AccountFarmData> {
   };
 }
 
-export async function getAccountManagementData(): Promise<AccountManagementData> {
+export async function getManagementZones(): Promise<ManagementZoneSelect[]> {
   const currentUser = await getAuthenticatedInfo();
 
-  const [firstZone] = await db
-    .select({
-      name: managementZone.name,
-    })
+  const zones = await db
+    .select()
     .from(managementZone)
     .where(eq(managementZone.farmId, currentUser.farmId))
-    .orderBy(asc(managementZone.name))
+    .orderBy(asc(managementZone.name));
+
+  return zones;
+}
+
+export async function getManagementZone(
+  zoneId: number
+): Promise<ManagementZoneSelect | null> {
+  const currentUser = await getAuthenticatedInfo();
+
+  const [zone] = await db
+    .select()
+    .from(managementZone)
+    .where(
+      and(
+        eq(managementZone.id, zoneId),
+        eq(managementZone.farmId, currentUser.farmId)
+      )
+    )
     .limit(1);
 
-  return {
-    sectionTitle: 'Management zone 1',
-    nickname: toDisplayValue(firstZone?.name),
-  };
+  return zone ?? null;
 }
