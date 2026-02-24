@@ -19,10 +19,10 @@ export default function PrivacyPage() {
       <div className="mb-8">
         <h1 className="mt-16 mb-8 text-4xl font-light">{t('title')}</h1>
         <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
-        <h2 className="mb-6 text-xl font-light">
-          {t('websitePrivacyPolicy')}
-        </h2>
-        <p className="mb-4 text-sm leading-relaxed font-thin">{t('effective')}</p>
+        <h2 className="mb-6 text-xl font-light">{t('websitePrivacyPolicy')}</h2>
+        <p className="mb-4 text-sm leading-relaxed font-thin">
+          {t('effective')}
+        </p>
         <div className="mt-8">
           <CookiePreferencesModal />
         </div>
@@ -41,11 +41,13 @@ export default function PrivacyPage() {
       <div className="space-y-8">
         {/* Commitment Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
-            {t('commitment.title')}
-          </h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">{t('commitment.content')}</p>
-          <p className="text-sm leading-relaxed font-thin">{t('commitment.description')}</p>
+          <h2 className="mb-4 text-2xl font-light">{t('commitment.title')}</h2>
+          <p className="mb-4 text-sm leading-relaxed font-thin">
+            {t('commitment.content')}
+          </p>
+          <p className="text-sm leading-relaxed font-thin">
+            {t('commitment.description')}
+          </p>
         </section>
 
         {/* Information Collection Section */}
@@ -65,15 +67,17 @@ export default function PrivacyPage() {
           <h2 className="mb-4 text-2xl font-light">
             {t('jobApplicants.title')}
           </h2>
-          <p className="text-sm leading-relaxed font-thin">{t('jobApplicants.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">
+            {t('jobApplicants.content')}
+          </p>
         </section>
 
         {/* Capacity Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
-            {t('capacity.title')}
-          </h2>
-          <p className="text-sm leading-relaxed font-thin">{t('capacity.content')}</p>
+          <h2 className="mb-4 text-2xl font-light">{t('capacity.title')}</h2>
+          <p className="text-sm leading-relaxed font-thin">
+            {t('capacity.content')}
+          </p>
         </section>
 
         {/* Notifications Section */}
@@ -81,7 +85,9 @@ export default function PrivacyPage() {
           <h2 className="mb-4 text-2xl font-light">
             {t('notifications.title')}
           </h2>
-          <p className="text-sm leading-relaxed font-thin">{t('notifications.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">
+            {t('notifications.content')}
+          </p>
         </section>
 
         {/* Miscellaneous Section */}
@@ -97,15 +103,15 @@ export default function PrivacyPage() {
 
         {/* California Supplement */}
         <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-4 text-2xl font-light">
-            {t('california.title')}
-          </h2>
+          <h2 className="mb-4 text-2xl font-light">{t('california.title')}</h2>
           <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('california.lastUpdated')}
           </p>
 
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">{t('california.intro')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('california.intro')}
+            </p>
 
             <div>
               <p className="mb-4 text-sm leading-relaxed font-thin">
@@ -136,7 +142,8 @@ export default function PrivacyPage() {
                       {t(`california.categories.${category}.description`)}
                     </p>
                     <p className="text-sm leading-relaxed font-thin">
-                      Collected: {t(`california.categories.${category}.collected`)}
+                      Collected:{' '}
+                      {t(`california.categories.${category}.collected`)}
                     </p>
                   </div>
                 ))}
@@ -157,7 +164,9 @@ export default function PrivacyPage() {
               </ul>
             </div>
 
-            <p className="text-sm leading-relaxed font-thin">{t('california.minorPolicy')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('california.minorPolicy')}
+            </p>
 
             {/* Purposes */}
             <div>
@@ -173,7 +182,9 @@ export default function PrivacyPage() {
               </ul>
             </div>
 
-            <p className="text-sm leading-relaxed font-thin">{t('california.retention')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('california.retention')}
+            </p>
 
             {/* Disclosure */}
             <div>
@@ -234,23 +245,35 @@ export default function PrivacyPage() {
 
         {/* Japan section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
-            {t('japan.title')}
-          </h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">{t('japan.lastUpdated')}</p>
+          <h2 className="mb-4 text-2xl font-light">{t('japan.title')}</h2>
+          <p className="mb-4 text-sm leading-relaxed font-thin">
+            {t('japan.lastUpdated')}
+          </p>
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">{t('japan.intro')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.intro')}
+            </p>
             <h3 className="mb-3 text-lg font-light">
               {t('japan.compliance.title')}
             </h3>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.compliance.content')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.compliance.content')}
+            </p>
             <h3 className="mb-3 text-lg font-light">
               {t('japan.purposeOfUse.title')}
             </h3>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.purposeOfUse.content')}</p>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.businessDetails')}</p>
-            <p className="ml-4 text-sm leading-relaxed font-thin">{t('japan.relatedBusiness')}</p>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.purposeOfUse.subtitle')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.purposeOfUse.content')}
+            </p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.businessDetails')}
+            </p>
+            <p className="ml-4 text-sm leading-relaxed font-thin">
+              {t('japan.relatedBusiness')}
+            </p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.purposeOfUse.subtitle')}
+            </p>
             <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
               {Array.from({ length: 12 }, (_, i) => (
                 <li key={i} className="text-sm">
@@ -261,11 +284,13 @@ export default function PrivacyPage() {
             <h3 className="mb-3 text-lg font-light">
               {t('japan.safety.title')}
             </h3>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.safety.content')}</p>
-            <h3 className="mb-3 text-lg font-light">
-              {t('japan.ci.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">{t('japan.ci.content')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.safety.content')}
+            </p>
+            <h3 className="mb-3 text-lg font-light">{t('japan.ci.title')}</h3>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('japan.ci.content')}
+            </p>
             <h3 className="mb-3 text-lg font-light">
               {t('japan.requestDisclosure.title')}
             </h3>
@@ -308,15 +333,21 @@ export default function PrivacyPage() {
 
         {/* EU-UK Section */}
         <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-4 text-2xl font-light">
-            {t('euUk.title')}
-          </h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">{t('euUk.lastUpdated')}</p>
+          <h2 className="mb-4 text-2xl font-light">{t('euUk.title')}</h2>
+          <p className="mb-4 text-sm leading-relaxed font-thin">
+            {t('euUk.lastUpdated')}
+          </p>
 
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">{t('euUk.intro')}</p>
-            <p className="text-sm leading-relaxed font-thin">{t('euUk.definitions')}</p>
-            <p className="text-sm leading-relaxed font-thin">{t('euUk.scope')}</p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('euUk.intro')}
+            </p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('euUk.definitions')}
+            </p>
+            <p className="text-sm leading-relaxed font-thin">
+              {t('euUk.scope')}
+            </p>
 
             {/* Additional Information */}
             <div>
@@ -350,7 +381,9 @@ export default function PrivacyPage() {
               <h3 className="mb-3 text-lg font-light">
                 {t('euUk.sharing.title')}
               </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">{t('euUk.sharing.content')}</p>
+              <p className="mb-2 text-sm leading-relaxed font-thin">
+                {t('euUk.sharing.content')}
+              </p>
             </div>
 
             {/* Retention and Security */}
@@ -361,7 +394,9 @@ export default function PrivacyPage() {
               <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('euUk.retention.security')}
               </p>
-              <p className="text-sm leading-relaxed font-thin">{t('euUk.retention.retention')}</p>
+              <p className="text-sm leading-relaxed font-thin">
+                {t('euUk.retention.retention')}
+              </p>
             </div>
 
             {/* Direct Communications */}
@@ -390,8 +425,12 @@ export default function PrivacyPage() {
                 {t('euUk.rights.title')}
               </h3>
               <div className="space-y-3">
-                <p className="text-sm leading-relaxed font-thin">{t('euUk.rights.list')}</p>
-                <p className="text-sm leading-relaxed font-thin">{t('euUk.rights.verification')}</p>
+                <p className="text-sm leading-relaxed font-thin">
+                  {t('euUk.rights.list')}
+                </p>
+                <p className="text-sm leading-relaxed font-thin">
+                  {t('euUk.rights.verification')}
+                </p>
               </div>
             </div>
 
@@ -400,7 +439,9 @@ export default function PrivacyPage() {
               <h3 className="mb-3 text-lg font-light">
                 {t('euUk.complaints.title')}
               </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">{t('euUk.complaints.intro')}</p>
+              <p className="mb-2 text-sm leading-relaxed font-thin">
+                {t('euUk.complaints.intro')}
+              </p>
               <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                 <li className="text-sm">{t('euUk.complaints.uk')}</li>
                 <li className="text-sm">{t('euUk.complaints.eu')}</li>
