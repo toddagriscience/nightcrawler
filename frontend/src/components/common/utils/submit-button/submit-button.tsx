@@ -59,7 +59,7 @@ export default function SubmitButton({
   return (
     <Button
       className={
-        'w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 ' +
+        'w-full h-11 text-sm font-semibold bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full hover:ease-in-out hover:duration-300 hover:transition-all' +
         className
       }
       type="submit"
