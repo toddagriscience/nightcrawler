@@ -18,7 +18,7 @@ import specialRedirect from './middleware/special-redirect';
  * @param {NextRequest} request - The request object
  * @returns {NextResponse} - The response object
  */
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const shouldSpecialRedirect = specialRedirect(request);
 
   if (shouldSpecialRedirect) {
