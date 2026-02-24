@@ -25,7 +25,7 @@ import {
   farmInfoInternalApplicationInsertSchema,
   userInsertSchema,
 } from '@/lib/zod-schemas/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import z from 'zod';
 import termsAndConditionsVersion from './terms-and-conditions-version';
@@ -242,7 +242,7 @@ export async function inviteUserToFarm(
     const [doesAdminExist] = await db
       .select({ role: user.role })
       .from(user)
-      .where(eq(user.role, 'Admin'))
+      .where(and(eq(user.role, 'Admin'), eq(user.farmId, farmId)))
       .limit(1);
 
     if (doesAdminExist && formData.role === 'Admin') {
@@ -252,11 +252,11 @@ export async function inviteUserToFarm(
       };
     }
 
-    // Multiple users aren't allowed (for now)
+    // Multiple users aren't allowed
     const [doesViewerExist] = await db
       .select({ role: user.role })
       .from(user)
-      .where(eq(user.role, 'Viewer'))
+      .where(and(eq(user.role, 'Viewer'), eq(user.farmId, farmId)))
       .limit(1);
 
     if (doesViewerExist && formData.role === 'Viewer') {
@@ -281,10 +281,13 @@ export async function inviteUserToFarm(
       return { error: didInvite.message };
     }
 
-    // If inviteUser() succeeds, create a new user
-    await db.insert(user).values({ ...validated.data, farmId });
+    // Insert user and return row so client has id for uninvite
+    const [inserted] = await db
+      .insert(user)
+      .values({ ...validated.data, farmId })
+      .returning();
 
-    return { error: null };
+    return { error: null, data: inserted ?? undefined };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
