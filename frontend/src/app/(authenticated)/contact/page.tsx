@@ -1,27 +1,54 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import Link from 'next/link';
+import { BiSolidComment } from 'react-icons/bi';
+import { Button } from '@/components/ui/button';
+import ContactLinksSection from './components/contact-links-section';
+
 export default function ContactPage() {
   return (
-    <div className="min-h-[calc(100vh-150px)] flex items-center justify-center px-6">
-      <div className="w-full max-w-xs text-left space-y-3">
-        <h1 className="text-2xl font-semibold">Contact Us</h1>
-
-        <p>Contact us at any time.</p>
-
-        <p>
-          Email:{' '}
-          <a href="mailto:service.us@toddagriscience.com" className="underline">
-            service.us@toddagriscience.com
-          </a>
-        </p>
-
-        <p>
-          Phone:{' '}
-          <a href="tel:+18882791283" className="underline">
-            +1 (888) 279-1283
-          </a>
-        </p>
+    <main className="mx-auto w-full max-w-[960px] px-4 pb-12">
+      <div className="mt-2">
+        <Link
+          href="/"
+          className="text-foreground inline-flex items-center gap-2 text-[36px] leading-none font-[400] hover:opacity-70"
+        >
+          <span aria-hidden="true">←</span>
+          <span className="text-[32px]">Back</span>
+        </Link>
       </div>
-    </div>
+
+      <section className="mx-auto mt-20 w-full max-w-[760px]">
+        <h1 className="text-foreground text-[48px] leading-none font-[400]">
+          Support tools
+        </h1>
+
+        <div className="mt-8 flex flex-wrap gap-4">
+          <Button
+            asChild
+            variant="brand"
+            className="h-14 min-w-[220px] rounded-full text-[22px] font-[400]"
+          >
+            <a href="mailto:service.us@toddagriscience.com">
+              <BiSolidComment className="h-5 w-5" />
+              Email
+            </a>
+          </Button>
+
+          <Button
+            asChild
+            variant="brand"
+            className="h-14 min-w-[220px] rounded-full text-[22px] font-[400]"
+          >
+            <a href="text:8882791283">
+              <BiSolidComment className="h-5 w-5" />
+              SMS Text
+            </a>
+          </Button>
+        </div>
+
+        <ContactLinksSection />
+      </section>
+    </main>
   );
 }
