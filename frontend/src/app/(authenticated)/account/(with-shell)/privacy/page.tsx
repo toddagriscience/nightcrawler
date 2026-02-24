@@ -2,7 +2,7 @@
 
 import AccountInfo, {
   AccountInfoRow,
-} from '../components/account-info/account-info';
+} from '../../components/account-info/account-info';
 
 export default function AccountPrivacyPage() {
   return (

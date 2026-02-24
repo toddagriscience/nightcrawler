@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import LogoutLink from '@/components/common/utils/logout-link/logout-link';
-import AccountInfo from '../components/account-info/account-info';
-import AccountPasswordResetInline from '../components/account-password-reset-inline/account-password-reset-inline';
+import Link from 'next/link';
+import AccountInfo from '../../components/account-info/account-info';
 
 export default function AccountSecurityPage() {
   return (
@@ -11,7 +11,17 @@ export default function AccountSecurityPage() {
       description="Keep your Todd account secure with additional layers of protection."
     >
       <div className="border-black/20 border-t">
-        <AccountPasswordResetInline />
+        <div className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1">
+          <span className="text-foreground text-[16px] leading-tight font-[400]">
+            Password
+          </span>
+          <Link
+            href="/account/reset-password"
+            className="text-foreground text-[16px] leading-tight font-[400] hover:opacity-70"
+          >
+            Update password
+          </Link>
+        </div>
         <div className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1">
           <span className="text-foreground text-[16px] leading-tight font-[400]">
             Devices

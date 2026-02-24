@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AccountUsersPage from './page';
 
-vi.mock('../data/account-data', () => ({
+vi.mock('../../db', () => ({
   getAccountUsersData: vi.fn(async () => ({
     principalOperator: {
       name: 'Alex Owner',

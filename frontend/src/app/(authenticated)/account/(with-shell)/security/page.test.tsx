@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import AccountSecurityPage from './page';
 
@@ -12,15 +11,14 @@ vi.mock('@/components/common/utils/logout-link/logout-link', () => ({
 }));
 
 describe('AccountSecurityPage', () => {
-  it('renders security actions and expands inline password reset', async () => {
-    const user = userEvent.setup();
+  it('renders security actions and links to reset password page', async () => {
     render(<AccountSecurityPage />);
 
     expect(screen.getByText('Devices')).toBeInTheDocument();
     expect(screen.getByText('Passkeys')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Log out' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /Password/i }));
-    expect(screen.getByLabelText('Current Password')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Update password' })
+    ).toHaveAttribute('href', '/account/reset-password');
   });
 });

@@ -13,108 +13,21 @@ import {
 import { db } from '@/lib/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, desc, eq } from 'drizzle-orm';
-
-interface AccountContact {
-  name: string;
-  email: string;
-  phone: string;
-  emailVerified: boolean;
-  phoneVerified: boolean;
-}
-
-interface AccountShellData {
-  farmName: string;
-}
-
-interface AccountUsersData {
-  principalOperator: AccountContact;
-  owner: AccountContact | null;
-}
-
-interface AccountFarmData {
-  nickname: string;
-  legalName: string;
-  physicalLocation: string;
-  mailingAddress: string;
-  clientSince: string;
-}
-
-interface AccountManagementData {
-  sectionTitle: string;
-  nickname: string;
-}
-
-const NOT_SET = 'Not set';
-
-function toDisplayValue(value?: string | null) {
-  return value?.trim() || NOT_SET;
-}
-
-function toDisplayName(firstName?: string | null, lastName?: string | null) {
-  const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
-  return fullName || NOT_SET;
-}
-
-function toDisplayDate(dateValue?: Date | string | null) {
-  if (!dateValue) {
-    return NOT_SET;
-  }
-
-  const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
-  if (Number.isNaN(date.getTime())) {
-    return NOT_SET;
-  }
-
-  return date.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
-}
-
-function formatPhysicalLocation(
-  pointValue: [number, number] | null,
-  countyState?: string | null
-) {
-  if (!pointValue && !countyState) {
-    return NOT_SET;
-  }
-
-  const [longitude, latitude] = pointValue ?? [null, null];
-  const coordinatePart =
-    latitude != null && longitude != null
-      ? `${latitude.toFixed(3)},${longitude.toFixed(3)}`
-      : '';
-
-  return (
-    [coordinatePart, countyState].filter(Boolean).join(' ').trim() || NOT_SET
-  );
-}
-
-function formatMailingAddress(location?: {
-  address1: string | null;
-  address2: string | null;
-  address3: string | null;
-  state: string | null;
-  postalCode: string | null;
-  country: string | null;
-}) {
-  if (!location) {
-    return NOT_SET;
-  }
-
-  const addressParts = [
-    location.address1,
-    location.address2,
-    location.address3,
-    location.state,
-    location.postalCode,
-    location.country,
-  ].filter(Boolean);
-
-  return addressParts.join(' ').trim() || NOT_SET;
-}
+import type {
+  AccountContact,
+  AccountFarmData,
+  AccountManagementData,
+  AccountShellData,
+  AccountUsersData,
+} from './types';
+import {
+  formatMailingAddress,
+  formatPhysicalLocation,
+  NOT_SET,
+  toDisplayDate,
+  toDisplayName,
+  toDisplayValue,
+} from './util';
 
 export async function getAccountShellData(): Promise<AccountShellData> {
   const currentUser = await getAuthenticatedInfo();

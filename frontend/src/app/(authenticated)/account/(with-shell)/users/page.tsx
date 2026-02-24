@@ -3,8 +3,8 @@
 import AccountInfo, {
   AccountInfoRow,
   AccountInfoSection,
-} from '../components/account-info/account-info';
-import { getAccountUsersData } from '../data/account-data';
+} from '../../components/account-info/account-info';
+import { getAccountUsersData } from '../../db';
 
 export default async function AccountUsersPage() {
   const accountUsersData = await getAccountUsersData();

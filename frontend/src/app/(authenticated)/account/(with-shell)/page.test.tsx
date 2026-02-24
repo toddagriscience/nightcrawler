@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AccountPage from './page';
 
-vi.mock('./data/account-data', () => ({
+vi.mock('../db', () => ({
   getAccountFarmData: vi.fn(async () => ({
     nickname: 'Mock Farm',
     legalName: 'Mock Farm LLC',
