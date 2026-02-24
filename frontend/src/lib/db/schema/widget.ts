@@ -25,7 +25,7 @@ export const widgetEnum = pgEnum('widgets', [
   'Zinc Widget',
   'Iron Widget',
   'Organic Matter Widget',
-  'IMP Summaries',
+  'Insights',
 ]);
 
 /** Active widgets on a given management zone. A widget will need to be deleted from this table if it is to be removed from the user's UI. */

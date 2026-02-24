@@ -25,8 +25,6 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   }),
   /** Written plan for management zone */
   plan: text(),
-  /** A brief summary of the integrated management plan */
-  summary: text(),
   /** The date this plan was written */
   createdAt: date({ mode: 'date' }).notNull().defaultNow(),
   updatedAt: timestamp()

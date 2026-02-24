@@ -4,7 +4,7 @@ import { WidgetEnum } from '@/lib/types/db';
 
 /** Default values for each type of widget. `h` and `w` are height and width in # of columns, respectively. */
 export const widgetSizing: Record<WidgetEnum, { h: number; w: number }> = {
-  'Macro Radar': { h: 8, w: 3 },
+  'Macro Radar': { h: 9, w: 3 },
   'Calcium Widget': { h: 5, w: 5 },
   'PH Widget': { h: 5, w: 5 },
   'Salinity Widget': { h: 5, w: 5 },
@@ -16,7 +16,7 @@ export const widgetSizing: Record<WidgetEnum, { h: number; w: number }> = {
   'Zinc Widget': { h: 5, w: 5 },
   'Iron Widget': { h: 5, w: 5 },
   'Organic Matter Widget': { h: 5, w: 5 },
-  'IMP Summaries': { h: 19, w: 3 },
+  Insights: { h: 19, w: 3 },
 };
 
 /** The number of columns on a management zone tab. Fed to the `gridConfig` parameter of `ReactGridLayout` */
