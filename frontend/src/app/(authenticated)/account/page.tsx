@@ -1,24 +1,51 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
+import AccountInfo, {
+  AccountInfoRow,
+  AccountInfoSection,
+} from './components/account-info/account-info';
+import { getAccountFarmData } from './data/account-data';
 
-import LogoutLink from '@/components/common/utils/logout-link/logout-link';
+export default async function AccountPage() {
+  const accountFarmData = await getAccountFarmData();
 
-/**
- * Account page - displays account information and logout option
- * @returns {React.ReactNode} - The account page component
- */
-export default function AccountPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-4xl">
-        <header className="mb-8">
-          <h1 className="text-foreground mb-2 text-3xl font-bold">Account</h1>
-        </header>
-        <div className="space-y-4">
-          <LogoutLink />
-        </div>
+    <AccountInfo title="Farm information">
+      <div className="border-black/20 border-t">
+        <AccountInfoRow label="Nickname" value={accountFarmData.nickname} />
+        <AccountInfoRow label="Legal Name" value={accountFarmData.legalName} />
+        <AccountInfoRow
+          label="Physical Location"
+          value={accountFarmData.physicalLocation}
+        />
+        <AccountInfoRow
+          label="Mailing Address"
+          value={accountFarmData.mailingAddress}
+        />
+        <AccountInfoRow
+          label="Farm profile"
+          value=">"
+          valueClassName="text-foreground"
+        />
       </div>
-    </div>
+
+      <AccountInfoSection title="Account terms">
+        <AccountInfoRow label="Renewal" value="Not set" />
+        <AccountInfoRow label="Billing cycle" value="Not set" />
+        <AccountInfoRow label="Next billing date" value="Not set" />
+        <AccountInfoRow label="Next payment" value="Not set" />
+        <AccountInfoRow label="Payment method" value="Not set" />
+        <AccountInfoRow
+          label="Client since"
+          value={accountFarmData.clientSince}
+        />
+      </AccountInfoSection>
+
+      <div className="mt-4 flex justify-end">
+        <button className="text-[16px] leading-none font-[400] text-[#ff4d00] hover:opacity-80">
+          Request deactivation
+        </button>
+      </div>
+    </AccountInfo>
   );
 }
