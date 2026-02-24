@@ -27,6 +27,7 @@ export default function ManagementZoneForm({
   } = useForm<ManagementZoneInsert>({
     defaultValues: {
       ...zone,
+      location: [0, 0],
     },
   });
 
@@ -83,7 +84,11 @@ export default function ManagementZoneForm({
           >
             Rotation year
           </label>
-          <Input id="rotationYear" type="date" {...register('rotationYear')} />
+          <Input
+            id="rotationYear"
+            type="date"
+            {...register('rotationYear', { valueAsDate: true })}
+          />
         </div>
         <div>
           <label
@@ -92,7 +97,11 @@ export default function ManagementZoneForm({
           >
             NPK last used
           </label>
-          <Input id="npkLastUsed" type="date" {...register('npkLastUsed')} />
+          <Input
+            id="npkLastUsed"
+            type="date"
+            {...register('npkLastUsed', { valueAsDate: true })}
+          />
         </div>
       </div>
 
@@ -138,14 +147,14 @@ export default function ManagementZoneForm({
         >
           {isSubmitting ? 'Saving...' : 'Save'}
         </button>
-        <div>
+        <div className="flex flex-row items-center gap-4">
           {errors.root && errors.root.message && (
             <div className="space-y-1">
               <p className="text-sm text-[#ff4d00]">{errors.root.message}</p>
             </div>
           )}
           <Link
-            href={'/account/management'}
+            href={'/account/management-zones'}
             className="flex flex-row items-center gap-2 text-sm font-light"
           >
             Back to zones <ExternalLinkIcon strokeWidth={1} />{' '}

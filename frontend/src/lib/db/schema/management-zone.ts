@@ -24,7 +24,7 @@ export const managementZone = pgTable('management_zone', {
     onDelete: 'set null',
   }),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
-  location: point({ mode: 'tuple' }).$type<[number, number]>(),
+  location: point({ mode: 'tuple' }).$type<[number, number] | null>(),
   /** The formal name of a given management zone */
   name: varchar({ length: 200 }),
   /** The date when a crops are intended to switch (ex. lettuce in the summer, carrots in the winter) */

@@ -169,22 +169,3 @@ export async function getManagementZones(): Promise<ManagementZoneSelect[]> {
 
   return zones;
 }
-
-export async function getManagementZone(
-  zoneId: number
-): Promise<ManagementZoneSelect | null> {
-  const currentUser = await getAuthenticatedInfo();
-
-  const [zone] = await db
-    .select()
-    .from(managementZone)
-    .where(
-      and(
-        eq(managementZone.id, zoneId),
-        eq(managementZone.farmId, currentUser.farmId)
-      )
-    )
-    .limit(1);
-
-  return zone ?? null;
-}

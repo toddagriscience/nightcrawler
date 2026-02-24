@@ -11,8 +11,6 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-const contaminationRiskLevels = ['Low', 'Med', 'High'] as const;
-
 export async function updateManagementZone(
   zoneId: number,
   input: ManagementZoneInsert
@@ -28,13 +26,6 @@ export async function updateManagementZone(
       return { error: 'User is not associated with a farm' };
     }
 
-    if (
-      input.contaminationRisk &&
-      !contaminationRiskLevels.includes(input.contaminationRisk)
-    ) {
-      return { error: 'Invalid contamination risk value' };
-    }
-
     await db
       .update(managementZone)
       .set({
@@ -48,7 +39,7 @@ export async function updateManagementZone(
       )
       .returning({ id: managementZone.id });
 
-    revalidatePath('/account/management');
+    revalidatePath('/account/management-zones');
     revalidatePath(`/account/management-zones/${zoneId}`);
 
     return { error: null };
