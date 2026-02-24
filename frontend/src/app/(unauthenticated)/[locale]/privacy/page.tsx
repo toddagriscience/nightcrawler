@@ -2,9 +2,9 @@
 
 'use client';
 
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 
 /**
  * Privacy page component
@@ -14,22 +14,23 @@ export default function PrivacyPage() {
   const t = useTranslations('privacy');
 
   return (
-    <div className="mx-auto mt-20 max-w-4xl bg-white p-6">
+    <div className="mx-auto max-w-3xl px-2 pt-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-gray-900">{t('title')}</h1>
-        <h2 className="mb-4 text-xl font-semibold text-gray-700">
+        <h1 className="mt-16 mb-8 text-4xl font-light">{t('title')}</h1>
+        <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
+        <h2 className="mb-6 text-xl font-light">
           {t('websitePrivacyPolicy')}
         </h2>
-        <p className="text-sm text-gray-600">{t('effective')}</p>
+        <p className="mb-4 text-sm leading-relaxed font-thin">{t('effective')}</p>
         <div className="mt-8">
           <CookiePreferencesModal />
         </div>
       </div>
 
       {/* Supplements Notice */}
-      <div className="mb-8 rounded-lg bg-blue-50 p-4">
-        <ul className="space-y-2 text-sm">
+      <div className="mb-8">
+        <ul className="space-y-2 text-sm leading-relaxed font-thin">
           <li>{t('supplements.california')}</li>
           <li>{t('supplements.euUk')}</li>
           <li>{t('supplements.japan')}</li>
@@ -40,19 +41,19 @@ export default function PrivacyPage() {
       <div className="space-y-8">
         {/* Commitment Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('commitment.title')}
           </h2>
-          <p className="mb-4 text-gray-700">{t('commitment.content')}</p>
-          <p className="text-gray-700">{t('commitment.description')}</p>
+          <p className="mb-4 text-sm leading-relaxed font-thin">{t('commitment.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">{t('commitment.description')}</p>
         </section>
 
         {/* Information Collection Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('informationCollection.title')}
           </h2>
-          <div className="space-y-4 text-gray-700">
+          <div className="space-y-4 text-sm leading-relaxed font-thin">
             <p>{t('informationCollection.general')}</p>
             <p>{t('informationCollection.usage')}</p>
             <p>{t('informationCollection.security')}</p>
@@ -61,58 +62,58 @@ export default function PrivacyPage() {
 
         {/* Job Applicants Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('jobApplicants.title')}
           </h2>
-          <p className="text-gray-700">{t('jobApplicants.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">{t('jobApplicants.content')}</p>
         </section>
 
         {/* Capacity Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('capacity.title')}
           </h2>
-          <p className="text-gray-700">{t('capacity.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">{t('capacity.content')}</p>
         </section>
 
         {/* Notifications Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('notifications.title')}
           </h2>
-          <p className="text-gray-700">{t('notifications.content')}</p>
+          <p className="text-sm leading-relaxed font-thin">{t('notifications.content')}</p>
         </section>
 
         {/* Miscellaneous Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('miscellaneous.title')}
           </h2>
-          <div className="space-y-4 text-gray-700">
+          <div className="space-y-4 text-sm leading-relaxed font-thin">
             <p>{t('miscellaneous.termsReference')}</p>
             <p>{t('miscellaneous.headings')}</p>
           </div>
         </section>
 
         {/* California Supplement */}
-        <section className="border-t border-gray-300 pt-8">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+        <section className="border-t border-[#2A2727]/20 pt-8">
+          <h2 className="mb-4 text-2xl font-light">
             {t('california.title')}
           </h2>
-          <p className="mb-4 text-sm text-gray-600">
+          <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('california.lastUpdated')}
           </p>
 
           <div className="space-y-6">
-            <p className="text-gray-700">{t('california.intro')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('california.intro')}</p>
 
             <div>
-              <p className="mb-4 text-gray-700">
+              <p className="mb-4 text-sm leading-relaxed font-thin">
                 {t('california.categoriesIntro')}
               </p>
 
               {/* Categories Grid */}
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4">
                 {[
                   'identifiers',
                   'personalRecords',
@@ -127,24 +128,15 @@ export default function PrivacyPage() {
                   'inferences',
                   'sensitiveInfo',
                 ].map((category) => (
-                  <div key={category} className="rounded-lg bg-gray-50 p-4">
-                    <div className="mb-2 flex items-start justify-between">
-                      <h4 className="font-semibold text-gray-900">
-                        {t(`california.categories.${category}.title`)}
-                      </h4>
-                      <span
-                        className={`rounded px-2 py-1 text-xs font-medium ${
-                          t(`california.categories.${category}.collected`) ===
-                          'YES'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {t(`california.categories.${category}.collected`)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600">
+                  <div key={category} className="py-4">
+                    <h4 className="mb-4 text-sm font-normal">
+                      {t(`california.categories.${category}.title`)}
+                    </h4>
+                    <p className="mb-4 text-sm leading-relaxed font-thin">
                       {t(`california.categories.${category}.description`)}
+                    </p>
+                    <p className="text-sm leading-relaxed font-thin">
+                      Collected: {t(`california.categories.${category}.collected`)}
                     </p>
                   </div>
                 ))}
@@ -153,10 +145,10 @@ export default function PrivacyPage() {
 
             {/* Sensitive Data Usage */}
             <div>
-              <p className="mb-2 font-medium text-gray-900">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('california.sensitiveDataUsage.intro')}
               </p>
-              <ul className="list-disc space-y-1 pl-6 text-gray-700">
+              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                 {Array.from({ length: 8 }, (_, i) => (
                   <li key={i} className="text-sm">
                     {t(`california.sensitiveDataUsage.purposes.${i}`)}
@@ -165,14 +157,14 @@ export default function PrivacyPage() {
               </ul>
             </div>
 
-            <p className="text-gray-700">{t('california.minorPolicy')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('california.minorPolicy')}</p>
 
             {/* Purposes */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('california.purposes.title')}
               </h3>
-              <ul className="list-disc space-y-1 pl-6 text-gray-700">
+              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                 {Array.from({ length: 8 }, (_, i) => (
                   <li key={i} className="text-sm">
                     {t(`california.purposes.list.${i}`)}
@@ -181,27 +173,27 @@ export default function PrivacyPage() {
               </ul>
             </div>
 
-            <p className="text-gray-700">{t('california.retention')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('california.retention')}</p>
 
             {/* Disclosure */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 Disclosure of Information
               </h3>
-              <p className="mb-2 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('california.disclosure.intro')}
               </p>
-              <p className="mb-2 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('california.disclosure.businessPurpose')}
               </p>
-              <p className="text-gray-700">
+              <p className="text-sm leading-relaxed font-thin">
                 {t('california.disclosure.thirdParties')}
               </p>
             </div>
 
             {/* Rights */}
             <div>
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">
+              <h3 className="mb-4 text-lg font-light">
                 {t('california.rights.title')}
               </h3>
               <div className="space-y-4">
@@ -212,24 +204,24 @@ export default function PrivacyPage() {
                   'noDiscrimination',
                   'exercise',
                 ].map((right) => (
-                  <div key={right} className="rounded-lg bg-blue-50 p-4">
-                    <h4 className="mb-2 font-medium text-gray-900">
+                  <div key={right} className="py-4">
+                    <h4 className="mb-2 text-sm leading-relaxed font-thin">
                       {t(`california.rights.${right}.title`)}
                     </h4>
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm leading-relaxed font-thin">
                       {t(`california.rights.${right}.content`)}
                     </p>
                     {right === 'disclosure' && (
-                      <ul className="mt-2 list-disc space-y-1 pl-6 text-gray-700">
+                      <ul className="mt-2 list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                         {Array.from({ length: 6 }, (_, i) => (
-                          <li key={i} className="text-xs">
+                          <li key={i} className="text-sm">
                             {t(`california.rights.disclosure.list.${i}`)}
                           </li>
                         ))}
                       </ul>
                     )}
                     {right === 'exercise' && (
-                      <p className="mt-2 text-xs text-gray-700">
+                      <p className="mt-2 text-sm leading-relaxed font-thin">
                         {t('california.rights.exercise.verification')}
                       </p>
                     )}
@@ -242,70 +234,70 @@ export default function PrivacyPage() {
 
         {/* Japan section */}
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl font-light">
             {t('japan.title')}
           </h2>
-          <p className="mb-4 text-sm text-gray-600">{t('japan.lastUpdated')}</p>
+          <p className="mb-4 text-sm leading-relaxed font-thin">{t('japan.lastUpdated')}</p>
           <div className="space-y-6">
-            <p className="text-gray-700">{t('japan.intro')}</p>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <p className="text-sm leading-relaxed font-thin">{t('japan.intro')}</p>
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.compliance.title')}
             </h3>
-            <p className="text-gray-700">{t('japan.compliance.content')}</p>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <p className="text-sm leading-relaxed font-thin">{t('japan.compliance.content')}</p>
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.purposeOfUse.title')}
             </h3>
-            <p className="text-gray-700">{t('japan.purposeOfUse.content')}</p>
-            <p className="text-gray-700">{t('japan.businessDetails')}</p>
-            <p className="ml-4 text-gray-700">{t('japan.relatedBusiness')}</p>
-            <p className="text-gray-700">{t('japan.purposeOfUse.subtitle')}</p>
-            <ul className="list-disc space-y-1 pl-6 text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">{t('japan.purposeOfUse.content')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('japan.businessDetails')}</p>
+            <p className="ml-4 text-sm leading-relaxed font-thin">{t('japan.relatedBusiness')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('japan.purposeOfUse.subtitle')}</p>
+            <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
               {Array.from({ length: 12 }, (_, i) => (
                 <li key={i} className="text-sm">
                   {t(`japan.purposeOfUse.purposes.${i}`)}
                 </li>
               ))}
             </ul>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.safety.title')}
             </h3>
-            <p className="text-gray-700">{t('japan.safety.content')}</p>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <p className="text-sm leading-relaxed font-thin">{t('japan.safety.content')}</p>
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.ci.title')}
             </h3>
-            <p className="text-gray-700">{t('japan.ci.content')}</p>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <p className="text-sm leading-relaxed font-thin">{t('japan.ci.content')}</p>
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.requestDisclosure.title')}
             </h3>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.requestDisclosure.content')}
             </p>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.requestDisclosure.addition')}
             </p>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.informationRequest.title')}
             </h3>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.informationRequest.content')}
             </p>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.informationRequest.requestInfo')}
             </p>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.informationRequest.addition')}
             </p>
-            <ol className="list-decimal space-y-1 pl-6 text-gray-700">
+            <ol className="list-decimal space-y-1 pl-6 text-sm leading-relaxed font-thin">
               {Array.from({ length: 7 }, (_, i) => (
                 <li key={i} className="text-sm">
                   {t(`japan.informationRequest.info.${i}`)}
                 </li>
               ))}
             </ol>
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            <h3 className="mb-3 text-lg font-light">
               {t('japan.questions.title')}
             </h3>
-            <p className="text-gray-700">
+            <p className="text-sm leading-relaxed font-thin">
               {t('japan.questions.content')}
               <Link href={'/contact'} className="inline-block">
                 : Contact us.
@@ -315,33 +307,33 @@ export default function PrivacyPage() {
         </section>
 
         {/* EU-UK Section */}
-        <section className="border-t border-gray-300 pt-8">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">
+        <section className="border-t border-[#2A2727]/20 pt-8">
+          <h2 className="mb-4 text-2xl font-light">
             {t('euUk.title')}
           </h2>
-          <p className="mb-4 text-sm text-gray-600">{t('euUk.lastUpdated')}</p>
+          <p className="mb-4 text-sm leading-relaxed font-thin">{t('euUk.lastUpdated')}</p>
 
           <div className="space-y-6">
-            <p className="text-gray-700">{t('euUk.intro')}</p>
-            <p className="text-gray-700">{t('euUk.definitions')}</p>
-            <p className="text-gray-700">{t('euUk.scope')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('euUk.intro')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('euUk.definitions')}</p>
+            <p className="text-sm leading-relaxed font-thin">{t('euUk.scope')}</p>
 
             {/* Additional Information */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.additionalInfo.title')}
               </h3>
-              <p className="text-gray-700">
+              <p className="text-sm leading-relaxed font-thin">
                 {t('euUk.additionalInfo.content')}
               </p>
             </div>
 
             {/* Purpose of Processing */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.processing.title')}
               </h3>
-              <div className="space-y-3 text-gray-700">
+              <div className="space-y-3 text-sm leading-relaxed font-thin">
                 <p>{t('euUk.processing.legal')}</p>
                 <p>{t('euUk.processing.requirements')}</p>
                 <p>{t('euUk.processing.multipleBases')}</p>
@@ -355,35 +347,35 @@ export default function PrivacyPage() {
 
             {/* Sharing and Transfers */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.sharing.title')}
               </h3>
-              <p className="mb-2 text-gray-700">{t('euUk.sharing.content')}</p>
+              <p className="mb-2 text-sm leading-relaxed font-thin">{t('euUk.sharing.content')}</p>
             </div>
 
             {/* Retention and Security */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.retention.title')}
               </h3>
-              <p className="mb-2 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('euUk.retention.security')}
               </p>
-              <p className="text-gray-700">{t('euUk.retention.retention')}</p>
+              <p className="text-sm leading-relaxed font-thin">{t('euUk.retention.retention')}</p>
             </div>
 
             {/* Direct Communications */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.marketing.title')}
               </h3>
-              <p className="mb-2 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('euUk.marketing.content')}
               </p>
-              <p className="mb-2 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">
                 {t('euUk.marketing.optOut.intro')}
               </p>
-              <ul className="list-disc space-y-1 pl-6 text-gray-700">
+              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                 {Array.from({ length: 2 }, (_, i) => (
                   <li key={i} className="text-sm">
                     {t(`euUk.marketing.optOut.methods.${i}`)}
@@ -394,22 +386,22 @@ export default function PrivacyPage() {
 
             {/* Rights */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.rights.title')}
               </h3>
-              <div className="space-y-3 rounded-lg bg-green-50 p-4">
-                <p className="text-gray-700">{t('euUk.rights.list')}</p>
-                <p className="text-gray-700">{t('euUk.rights.verification')}</p>
+              <div className="space-y-3">
+                <p className="text-sm leading-relaxed font-thin">{t('euUk.rights.list')}</p>
+                <p className="text-sm leading-relaxed font-thin">{t('euUk.rights.verification')}</p>
               </div>
             </div>
 
             {/* Complaints */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+              <h3 className="mb-3 text-lg font-light">
                 {t('euUk.complaints.title')}
               </h3>
-              <p className="mb-2 text-gray-700">{t('euUk.complaints.intro')}</p>
-              <ul className="list-disc space-y-1 pl-6 text-gray-700">
+              <p className="mb-2 text-sm leading-relaxed font-thin">{t('euUk.complaints.intro')}</p>
+              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
                 <li className="text-sm">{t('euUk.complaints.uk')}</li>
                 <li className="text-sm">{t('euUk.complaints.eu')}</li>
               </ul>
