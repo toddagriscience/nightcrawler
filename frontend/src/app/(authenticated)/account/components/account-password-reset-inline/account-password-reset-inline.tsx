@@ -27,13 +27,13 @@ function PasswordField({
   error?: string;
 }) {
   return (
-    <div className="grid grid-cols-[1fr_430px] items-start gap-10">
-      <label htmlFor={id} className="text-[40px] leading-tight font-[400]">
+    <div className="grid grid-cols-[1fr_430px] items-start gap-8">
+      <label htmlFor={id} className="text-[16px] leading-tight font-[400]">
         {label}
       </label>
       <div>
         <div
-          className={`flex h-20 items-center justify-between rounded-[10px] border px-5 ${
+          className={`flex h-12 items-center justify-between rounded-[10px] border px-4 ${
             error ? 'border-[#ff4d00]' : 'border-black/50'
           }`}
         >
@@ -43,23 +43,23 @@ function PasswordField({
             type={show ? 'text' : 'password'}
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            className="w-full bg-transparent text-[32px] leading-none font-[400] outline-none"
+            className="w-full bg-transparent text-[16px] leading-none font-[400] outline-none"
           />
           <button
             type="button"
             onClick={toggleShow}
             aria-label={show ? `Hide ${label}` : `Show ${label}`}
-            className="pl-4"
+            className="pl-3"
           >
             {show ? (
-              <EyeOff className="h-8 w-8" />
+              <EyeOff className="h-5 w-5" />
             ) : (
-              <Eye className="h-8 w-8" />
+              <Eye className="h-5 w-5" />
             )}
           </button>
         </div>
         {error ? (
-          <p className="mt-3 text-[22px] leading-tight font-[400] text-[#ff4d00]">
+          <p className="mt-2 text-[14px] leading-tight font-[400] text-[#ff4d00]">
             {error}
           </p>
         ) : null}
@@ -112,18 +112,22 @@ export default function AccountPasswordResetInline() {
       <button
         type="button"
         onClick={() => setIsExpanded((previous) => !previous)}
-        className="border-black/20 flex min-h-12 w-full items-center justify-between gap-4 border-b py-1 text-left hover:opacity-70"
+        className={`flex min-h-12 w-full items-center justify-between gap-4 py-1 text-left hover:opacity-70 ${
+          isExpanded ? '' : 'border-black/20 border-b'
+        }`}
       >
         <span className="text-foreground text-[16px] leading-tight font-[400]">
           Password
         </span>
-        <span className="text-foreground text-[16px] leading-tight font-[400]">
-          Update Password
-        </span>
+        {!isExpanded ? (
+          <span className="text-foreground text-[16px] leading-tight font-[400]">
+            Update Password
+          </span>
+        ) : null}
       </button>
 
       {isExpanded ? (
-        <form action={updateUserAction} className="space-y-7 py-6">
+        <form action={updateUserAction} className="space-y-6 py-5">
           <PasswordField
             id="current-password"
             label="Current Password"
@@ -163,7 +167,7 @@ export default function AccountPasswordResetInline() {
               {actionErrors.map((error) => (
                 <p
                   key={error}
-                  className="text-right text-[18px] leading-tight font-[400] text-[#ff4d00]"
+                  className="text-right text-[14px] leading-tight font-[400] text-[#ff4d00]"
                 >
                   {error}
                 </p>
@@ -175,7 +179,7 @@ export default function AccountPasswordResetInline() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="rounded-full bg-black px-14 py-4 text-[43px] leading-none font-[400] text-white disabled:cursor-not-allowed disabled:bg-black/30"
+              className="rounded-full bg-black px-8 py-3 text-[16px] leading-none font-[400] text-white disabled:cursor-not-allowed disabled:bg-black/30"
             >
               Save
             </button>

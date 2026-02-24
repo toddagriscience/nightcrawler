@@ -15,12 +15,14 @@ describe('AccountPasswordResetInline', () => {
     render(<AccountPasswordResetInline />);
 
     expect(screen.queryByLabelText('Current Password')).not.toBeInTheDocument();
+    expect(screen.getByText('Update Password')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Password/i }));
 
     expect(screen.getByLabelText('Current Password')).toBeInTheDocument();
     expect(screen.getByLabelText('New Password')).toBeInTheDocument();
     expect(screen.getByLabelText('Confirm New Password')).toBeInTheDocument();
+    expect(screen.queryByText('Update Password')).not.toBeInTheDocument();
   });
 
   it('shows min length validation and only enables save for valid matching values', async () => {
