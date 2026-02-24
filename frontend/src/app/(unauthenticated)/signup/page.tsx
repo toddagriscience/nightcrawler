@@ -10,9 +10,9 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { redirect, useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useActionState, useState } from 'react';
 import { signUp } from './actions';
-import posthog from 'posthog-js';
 
 /** Both outbound (/incoming) and inbound (/en/contact) onboarding will redirect here. We only ask for the password since we already have the user's email.
  *
@@ -45,110 +45,137 @@ export default function Join() {
   }
 
   return (
-    <div className="mx-auto flex h-screen w-[90vw] max-w-[550px] flex-col items-center justify-center">
-      <div className="w-[90vw] max-w-[inherit]">
-        <FadeIn>
-          {isSuccess ? (
-            <div className="flex h-full flex-col justify-center gap-8 text-center">
-              <h1 className="text-xl md:text-5xl">
-                ACCOUNT CREATED SUCCESSFULLY
-              </h1>
-              <p>Please check your email for a verification link.</p>
-            </div>
-          ) : (
-            <>
-              <h1 className="mb-6 text-center text-3xl">JOIN US</h1>
-
-              {errors && errors.length > 0 && (
-                <div className="mb-3">
-                  {errors.map((error, index) => (
-                    <p key={index} className="text-center text-sm text-red-500">
-                      {error}
-                    </p>
-                  ))}
+    <main>
+      <div className="max-w-[1400px] mx-auto px-15">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-15 md:mb-26 w-full max-w-[1200px] mx-auto">
+          <div
+            className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, hsl(35deg 39% 55%) 0%, hsl(34deg 38% 58%) 29%, hsl(34deg 37% 60%) 39%, hsl(34deg 36% 62%) 46%, hsl(34deg 36% 64%) 52%, hsl(34deg 35% 66%) 56%, hsl(34deg 34% 68%) 61%, hsl(34deg 34% 70%) 65%, hsl(34deg 34% 71%) 69%, hsl(35deg 33% 73%) 74%, hsl(35deg 33% 75%) 80%,hsl(35deg 32% 76%) 99%)',
+            }}
+          />
+          <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
+            <FadeIn>
+              {isSuccess ? (
+                <div className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]">
+                  <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
+                    Account Created Successfully
+                  </h1>
+                  <p>Please check your email for a verification link.</p>
                 </div>
-              )}
+              ) : (
+                <>
+                  <h1 className="text-2xl mb-8 md:mb-8 mt-10 md:mt-0 text-center md:text-left">
+                    You're Almost There!
+                  </h1>
+                  <p className="text-sm mb-8 text-center md:text-left">
+                    You'll use this to login and access your Todd account in the
+                    future.
+                  </p>
 
-              <form action={signUpAction}>
-                {/* Hidden fields for pre-filled values */}
-                <input type="hidden" name="firstName" value={firstName} />
-                <input type="hidden" name="lastName" value={lastName} />
-                <input type="hidden" name="farmName" value={farmName} />
-                <input type="hidden" name="email" value={email} />
-                <input type="hidden" name="phone" value={phone} />
+                  {errors && errors.length > 0 && (
+                    <div className="mb-3">
+                      {errors.map((error, index) => (
+                        <p
+                          key={index}
+                          className="text-center text-sm text-red-500"
+                        >
+                          {error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
 
-                <FieldSet className="mb-8">
-                  <FieldGroup>
-                    <Field>
-                      <FieldLabel htmlFor="password">Password</FieldLabel>
-                      <Input
-                        className="focus:ring-0!"
-                        placeholder="Password"
-                        id="password"
-                        data-testid="password"
-                        name="password"
-                        type={showPassword ? 'text' : 'password'}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                    </Field>
+                  <form action={signUpAction}>
+                    {/* Hidden fields for pre-filled values */}
+                    <input type="hidden" name="firstName" value={firstName} />
+                    <input type="hidden" name="lastName" value={lastName} />
+                    <input type="hidden" name="farmName" value={farmName} />
+                    <input type="hidden" name="email" value={email} />
+                    <input type="hidden" name="phone" value={phone} />
 
-                    <Field>
-                      <FieldLabel htmlFor="confirmPassword">
-                        Confirm Password
-                      </FieldLabel>
-                      <Input
-                        className="focus:ring-0!"
-                        placeholder="Confirm Password"
-                        id="confirmPassword"
-                        data-testid="confirm-password"
-                        name="confirmPassword"
-                        type={showPassword ? 'text' : 'password'}
-                        onChange={(e) =>
-                          setConfirmationPassword(e.target.value)
-                        }
-                        required
-                      />
-                    </Field>
+                    <FieldSet className="mb-8">
+                      <FieldGroup>
+                        <Field>
+                          <FieldLabel
+                            htmlFor="password"
+                            className="leading-tight mb-[-6px]"
+                          >
+                            Create a Password
+                          </FieldLabel>
+                          <Input
+                            className="border-[#848484]/80 border-1"
+                            placeholder="Use at least 10 characters"
+                            id="password"
+                            data-testid="password"
+                            name="password"
+                            type={showPassword ? 'text' : 'password'}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                          />
+                        </Field>
 
-                    <PasswordChecklist
-                      password={password}
-                      confirmationPassword={confirmationPassword}
-                      setIsPasswordValid={setIsPasswordValid}
-                    />
+                        <Field>
+                          <FieldLabel htmlFor="confirmPassword">
+                            Confirm Password
+                          </FieldLabel>
+                          <Input
+                            className="focus:ring-0!"
+                            placeholder="Confirm Password"
+                            id="confirmPassword"
+                            data-testid="confirm-password"
+                            name="confirmPassword"
+                            type={showPassword ? 'text' : 'password'}
+                            onChange={(e) =>
+                              setConfirmationPassword(e.target.value)
+                            }
+                            required
+                          />
+                        </Field>
 
-                    <Field className="flex flex-row items-center justify-between">
-                      <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
-                        <Checkbox
-                          data-testid="show-password-checkbox"
-                          id="show-password"
-                          className="max-h-4 max-w-4 focus:ring-0!"
-                          onCheckedChange={() => setShowPassword(!showPassword)}
+                        <PasswordChecklist
+                          password={password}
+                          confirmationPassword={confirmationPassword}
+                          setIsPasswordValid={setIsPasswordValid}
                         />
-                        <FieldLabel htmlFor="show-password">
-                          Show Password
-                        </FieldLabel>
-                      </div>
-                    </Field>
-                  </FieldGroup>
-                </FieldSet>
 
-                <SubmitButton
-                  buttonText={
-                    isPasswordValid ? 'CREATE ACCOUNT' : 'INVALID PASSWORD'
-                  }
-                  disabled={!isPasswordValid}
-                  className={
-                    !isPasswordValid
-                      ? 'border-1 border-solid border-black bg-transparent text-black/80 hover:bg-black/10'
-                      : ''
-                  }
-                />
-              </form>
-            </>
-          )}
-        </FadeIn>
+                        <Field className="flex flex-row items-center justify-between">
+                          <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
+                            <Checkbox
+                              data-testid="show-password-checkbox"
+                              id="show-password"
+                              className="max-h-4 max-w-4 focus:ring-0!"
+                              onCheckedChange={() =>
+                                setShowPassword(!showPassword)
+                              }
+                            />
+                            <FieldLabel htmlFor="show-password">
+                              Show Password
+                            </FieldLabel>
+                          </div>
+                        </Field>
+                      </FieldGroup>
+                    </FieldSet>
+
+                    <SubmitButton
+                      buttonText={
+                        isPasswordValid ? 'Create Account' : 'Invalid Password'
+                      }
+                      disabled={!isPasswordValid}
+                      className={
+                        !isPasswordValid
+                          ? 'border-1 border-solid border-black bg-transparent text-black/80 hover:bg-black/10 w-[244px]'
+                          : 'w-[244px]'
+                      }
+                    />
+                  </form>
+                </>
+              )}
+            </FadeIn>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
