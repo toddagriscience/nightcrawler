@@ -23,6 +23,7 @@ export type FarmInfoInternalApplicationSelect = InferSelectModel<
 >;
 export type TabSelect = InferSelectModel<typeof tab>;
 export type ManagementZoneSelect = InferSelectModel<typeof managementZone>;
+export type ManagementZoneInsert = InferInsertModel<typeof managementZone>;
 export type WidgetSelect = InferSelectModel<typeof widget>;
 export type IntegratedManagementPlanSelect = InferSelectModel<
   typeof integratedManagementPlan
