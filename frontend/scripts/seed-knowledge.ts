@@ -1,27 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Pool } from 'pg';
+import { getEmbedding } from '@/lib/ai/embeddings';
+import { db } from '@/lib/db/schema/connection';
+import { knowledgeArticle } from '@/lib/db/schema';
+import { count, type InferInsertModel } from 'drizzle-orm';
 
-async function getEmbedding(text: string): Promise<number[]> {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: { parts: [{ text }] },
-      }),
-    }
-  );
-  const data = await response.json();
-  if (!response.ok) {
-    console.error('Gemini error:', JSON.stringify(data));
-    throw new Error('Embedding failed: ' + response.status);
-  }
-  return data.embedding.values;
-}
+type SeedArticle = Pick<
+  InferInsertModel<typeof knowledgeArticle>,
+  'title' | 'content' | 'category' | 'source'
+>;
 
-const articles = [
+const articles: SeedArticle[] = [
   {
     title: 'Understanding Soil pH for Crop Production',
     content: `Soil pH is one of the most important factors in crop production. It affects nutrient availability, microbial activity, and root health. Most crops thrive in a pH range of 6.0 to 7.0. When pH drops below 6.0, key nutrients like calcium, magnesium, and phosphorus become less available. When pH rises above 7.5, micronutrients like iron, manganese, and zinc get locked out. To raise pH, apply agricultural lime (calcitic or dolomitic depending on magnesium needs). To lower pH, use elemental sulfur or sulfur-based amendments. Always test before amending. Changes take time — expect 3 to 6 months for full effect. Re-test annually at minimum.`,
@@ -85,44 +74,31 @@ const articles = [
 ];
 
 async function seed() {
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-  });
-
-  const client = await pool.connect();
-
   // Check if already seeded
-  const existing = await client.query('SELECT COUNT(*) FROM knowledge_article');
-  if (parseInt(existing.rows[0].count) > 0) {
+  const [{ articleCount }] = await db
+    .select({ articleCount: count() })
+    .from(knowledgeArticle);
+
+  if (articleCount > 0) {
     console.log('Articles already exist. Skipping seed.');
-    client.release();
-    await pool.end();
     process.exit(0);
   }
 
   for (const article of articles) {
     console.log('Embedding:', article.title);
     const embedding = await getEmbedding(article.title + ' ' + article.content);
-    const embeddingStr = '[' + embedding.join(',') + ']';
 
-    await client.query(
-      `INSERT INTO knowledge_article (title, content, category, source, embedding)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [
-        article.title,
-        article.content,
-        article.category,
-        article.source,
-        embeddingStr,
-      ]
-    );
+    await db.insert(knowledgeArticle).values({
+      title: article.title,
+      content: article.content,
+      category: article.category,
+      source: article.source,
+      embedding: embedding,
+    });
     console.log('Inserted:', article.title);
   }
 
   console.log('Done! Seeded ' + articles.length + ' articles.');
-  client.release();
-  await pool.end();
   process.exit(0);
 }
 

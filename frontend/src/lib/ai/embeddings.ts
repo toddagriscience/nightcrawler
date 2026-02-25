@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { logger } from '@/lib/logger';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 /**
  * Generates a vector embedding for a given text using Gemini's embedding model.
@@ -12,21 +12,16 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
  * @param text - The text to embed
  * @returns Array of 768 numbers
  */
-async function getEmbedding(text: string): Promise<number[]> {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: { parts: [{ text }] },
-      }),
-    }
-  );
-  const data = await response.json();
-  if (!response.ok) {
-    console.error('Gemini error:', JSON.stringify(data));
-    throw new Error('Embedding failed: ' + response.status);
+export async function getEmbedding(text: string): Promise<number[]> {
+  const response = await ai.models.embedContent({
+    model: 'gemini-embedding-001',
+    contents: { parts: [{ text }] },
+  });
+
+  const result = response.embeddings?.[0]?.values;
+  if (!result) {
+    throw new Error('Embedding failed: missing embedding values');
   }
-  return data.embedding.values;
+
+  return result;
 }

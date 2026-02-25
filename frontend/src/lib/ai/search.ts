@@ -12,34 +12,10 @@ import { logger } from '@/lib/logger';
 import { db } from '../db/schema/connection';
 import { knowledgeArticle } from '../db/schema';
 import { asc, gt, sql } from 'drizzle-orm';
+import { getEmbedding } from './embeddings';
 
 const SIMILARITY_THRESHOLD = 0.55;
 const MAX_RESULTS = 5;
-
-/**
- * Generates a vector embedding for a query using Gemini.
- *
- * @param text - The search query
- * @returns Array of 3072 numbers
- */
-async function getEmbedding(text: string): Promise<number[]> {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: { parts: [{ text }] },
-      }),
-    }
-  );
-  const data = await response.json();
-  if (!response.ok) {
-    logger.error('[Search] Embedding failed:', data);
-    throw new Error('Embedding failed');
-  }
-  return data.embedding.values;
-}
 
 /**
  * Searches the knowledge base for articles matching the query.
@@ -61,7 +37,6 @@ export async function searchKnowledge(query: string): Promise<
 > {
   try {
     const embedding = await getEmbedding(query);
-    const embeddingStr = '[' + embedding.join(',') + ']';
 
     const results = await db
       .select({
