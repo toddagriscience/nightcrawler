@@ -1,0 +1,29 @@
+{
+  "supportPage": {
+    "title": "Support",
+    "hero": {
+      "title": "Need Help?",
+      "subtitle": "We're here to help you get the most out of our platform."
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email Address",
+      "forgotEmail": "Last Known Email Address",
+      "message": "Message"
+    },
+    "placeholders": {
+      "name": "Name",
+      "email": "Email Address",
+      "forgotEmail": "Last Known Email Address",
+      "message": "What can we help you with?"
+    },
+    "buttons": {
+      "submit": "SUBMIT"
+    },
+    "success": {
+      "title": "MESSAGE SENT",
+      "subtitle": "Thanks for reaching out. We'll get back to you soon.",
+      "cta": "HOME"
+    }
+  }
+}

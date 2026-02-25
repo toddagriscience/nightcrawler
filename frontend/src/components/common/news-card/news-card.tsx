@@ -34,25 +34,30 @@ const NewsCard = ({
 }: NewsCardProps) => {
   return (
     <div
-      className={`text-foreground max-w-150 px-1 py-4 font-light transition-colors duration-300 ${className}`}
+      className={`text-foreground w-full px-2 py-2 font-light transition-colors duration-300 ${className}`}
     >
       <Link href={link} className="mb-16">
-        <div className="rounded-xl bg-transparent">
+        <div>
           <PlaceholderImage
             src={image.url}
             alt={image.alt}
             width={image.width || 600}
             height={image.height || 600}
-            className={`mx-auto w-[70vw]`}
+            className="mx-auto w-full"
             fallbackText="News Image"
             isDark={isDark}
           />
-          <div className={`p-4 ${isDark ? 'text-white' : ''}`}>
-            <h2>{title}</h2>
+          {/* <div className={`p-4 ${isDark ? 'text-white' : ''}`}> */}
+          <div className="p-4 gap-1 flex flex-col">
+            <h2 className="line-clamp-2 min-h-[2.5rem] md:min-h-[2.75rem] lg:min-h-[3rem] text-sm md:text-normal lg:text-base font-thin leading-tight">
+              {title}
+            </h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
-            <h3 className="text-xl">{excerpt}</h3>
+            <h3 className="line-clamp-2 text-lg md:text-xl italic font-light">
+              {excerpt}
+            </h3>
           </div>
         </div>
       </Link>

@@ -1,76 +1,75 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import WhoWeArePage from './page';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import WhoWeArePage from './page';
 
-// Mock the ScrollShrinkWrapper component
-vi.mock('@/components/landing', () => ({
-  ScrollShrinkWrapper: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="scroll-shrink-wrapper">{children}</div>
+vi.mock('next/image', () => ({
+  default: ({
+    src,
+    alt,
+    ...props
+  }: {
+    src: string | { src: string };
+    alt: string;
+  }) => (
+    <img src={typeof src === 'string' ? src : src.src} alt={alt} {...props} />
   ),
 }));
 
+vi.mock('./components/competencies-section/competencies-section', () => ({
+  default: () => <div data-testid="competencies-section">Competencies</div>,
+}));
+
 describe('WhoWeArePage', () => {
-  it('renders the page hero section', () => {
+  it('renders exactly one h1 element with the correct title for accessibility', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
-    expect(screen.getByText('Who We Are')).toBeInTheDocument();
+    const h1Elements = screen.getAllByRole('heading', { level: 1 });
+
+    expect(h1Elements).toHaveLength(1);
+
+    expect(h1Elements[0]).toHaveTextContent('Who We Are');
+  });
+
+  it('renders the hero content', () => {
+    renderWithNextIntl(<WhoWeArePage />);
+
     expect(
-      screen.getByText(
-        'Learn about our mission, vision, and values that drive our work in regenerative agriculture.'
-      )
+      screen.getByRole('heading', { name: 'Who We Are' })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Todd is building hyper-intelligent mentors/i)
     ).toBeInTheDocument();
   });
 
-  it('renders mission and vision cards', () => {
+  it('renders culture section', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
-    expect(screen.getByText('Mission')).toBeInTheDocument();
-    expect(screen.getByText('Vision')).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'Our mission is to deliver differentiated results to our clients by leveraging our complementary experience in regenerative agriculture to meet the needs of the modern farmer.'
-      )
+      screen.getByRole('heading', { name: 'Empowered by Our Culture' })
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'Partnering with high-growth, market-leading, branded organic and biodynamic farms focused on regenerative agriculture practices and forging deep emotional connections with their target consumers.'
-      )
-    ).toBeInTheDocument();
+
+    expect(screen.getByText(/distinctive culture/i)).toBeInTheDocument();
+
+    expect(screen.getByRole('link', { name: 'Careers' })).toBeInTheDocument();
   });
 
-  it('renders the values card', () => {
+  it('renders partners section', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
-    expect(screen.getByText('Values')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Our Partners' })
+    ).toBeInTheDocument();
   });
 
-  it('has proper layout structure', () => {
-    const { container } = renderWithNextIntl(<WhoWeArePage />);
+  it('renders navigation link to What We Do', () => {
+    renderWithNextIntl(<WhoWeArePage />);
 
-    // Check for background styling
-    expect(container.querySelector('.bg-secondary')).toBeInTheDocument();
-
-    // Check for grid layout
-    expect(container.querySelector('.grid-cols-1')).toBeInTheDocument();
-  });
-
-  it('uses shadcn/ui Card components', () => {
-    const { container } = renderWithNextIntl(<WhoWeArePage />);
-
-    // Check for shadcn card styling
-    expect(container.querySelector('.rounded-lg')).toBeInTheDocument();
-    expect(container.querySelector('.border')).toBeInTheDocument();
-    expect(container.querySelector('.shadow-sm')).toBeInTheDocument();
-  });
-
-  it('applies correct responsive padding', () => {
-    const { container } = renderWithNextIntl(<WhoWeArePage />);
-
-    // Check for responsive padding
-    expect(container.querySelector('.px-8')).toBeInTheDocument();
-    expect(container.querySelector('.lg\\:px-16')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /What we do/i })
+    ).toBeInTheDocument();
   });
 });

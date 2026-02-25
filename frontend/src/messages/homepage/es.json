@@ -2,7 +2,7 @@
   "homepage": {
     "welcome": "Bienvenido a Todd",
     "hero": {
-      "title": "Liderando el futuro de la agricultura sostenible",
+      "title": "Liderando el futuro de la agricultura sostenble",
       "subtitle": "Todd es una empresa agrícola generativa de primera generación que se asocia con granjas de alta calidad y marcas reconocidas para cultivar un futuro sostenible.",
       "tagline": "Avanzando la Agricultura a Través de la Ciencia"
     },
@@ -14,6 +14,6 @@
     "title": "Acerca de Todd Agriscience",
     "description": "Estamos siendo pioneros en el futuro de la agricultura sostenible a través de prácticas agrícolas innovadoras y tecnología de vanguardia.",
     "quote": "Creemos que la agricultura sostenible es la base de un planeta saludable y comunidades prósperas.",
-    "learnMore": "Saber Más"
+    "whoWeAre": "Quiénes Somos"
   }
 }

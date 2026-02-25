@@ -1,6 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
+import ConditionedAuthenticatedHeader from '@/components/common/authenticated-header/conditioned-header';
+import { fontVariables } from '../../lib/fonts';
+import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
+import '../globals.css';
 
 /**
  * Layout for authenticated/platform routes
@@ -14,9 +17,15 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background-platform authenticated-root">
-      <AuthenticatedHeader />
-      {children}
-    </div>
+    <html lang="en">
+      <body className={fontVariables}>
+        <DesktopGate>
+          <div className="bg-background-platform authenticated-root min-h-screen">
+            <ConditionedAuthenticatedHeader />
+            {children}
+          </div>
+        </DesktopGate>
+      </body>
+    </html>
   );
 }

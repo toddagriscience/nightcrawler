@@ -1,0 +1,27 @@
+{
+  "supportPage": {
+    "title": "Ayuda",
+    "hero": {
+      "title": "¿Necesitas Ayuda?",
+      "subtitle": "Estamos aquí para ayudarte a obtener el máximo provecho de nuestra plataforma."
+    },
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "message": "Mensaje"
+    },
+    "placeholders": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "message": "¿En qué podemos ayudarte?"
+    },
+    "buttons": {
+      "submit": "ENVIAR"
+    },
+    "success": {
+      "title": "MENSAJE ENVIADO",
+      "subtitle": "Gracias por contactarnos. Te responderemos pronto.",
+      "cta": "INICIO"
+    }
+  }
+}

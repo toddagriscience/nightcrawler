@@ -13,16 +13,6 @@ import {
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
-import { eq } from 'drizzle-orm';
-import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
-import { userInsertSchema } from '@/lib/zod-schemas/db';
-import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import z from 'zod';
-import {
-  GeneralBusinessInformationInsert,
-  generalBusinessInformationInsertSchema,
-} from './types';
 import {
   FarmCertificateInsert,
   FarmInfoInternalApplicationInsert,
@@ -30,8 +20,19 @@ import {
   FarmLocationInsert,
   UserInsert,
 } from '@/lib/types/db';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import {
+  farmInfoInternalApplicationInsertSchema,
+  userInsertSchema,
+} from '@/lib/zod-schemas/db';
+import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import z from 'zod';
 import termsAndConditionsVersion from './terms-and-conditions-version';
+import {
+  GeneralBusinessInformationInsert,
+  generalBusinessInformationInsertSchema,
+} from './types';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
  *
@@ -43,15 +44,12 @@ export async function saveGeneralBusinessInformation(
 ) {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const validated = generalBusinessInformationInsertSchema.safeParse({
       ...formData,
       farmId,
@@ -135,15 +133,12 @@ export async function saveApplication(
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
         createdAt: true,
@@ -194,15 +189,12 @@ export async function submitApplication(): Promise<ActionResponse> {
 
   try {
     const result = await getAuthenticatedInfo();
-
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
-    }
-
     const farmId = result.farmId;
+
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
+    }
+
     const applicationData = await db
       .select()
       .from(farmInfoInternalApplication)
@@ -240,19 +232,17 @@ export async function inviteUserToFarm(
 ): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
+    const farmId = result.farmId;
 
-    if ('error' in result) {
-      return result;
-    }
-    if (!result.farmId) {
-      return { error: 'No farmId given' };
+    if (!farmId) {
+      return { error: 'User is not associated with a farm' };
     }
 
     // Multiple admins aren't allowed
     const [doesAdminExist] = await db
       .select({ role: user.role })
       .from(user)
-      .where(eq(user.role, 'Admin'))
+      .where(and(eq(user.role, 'Admin'), eq(user.farmId, farmId)))
       .limit(1);
 
     if (doesAdminExist && formData.role === 'Admin') {
@@ -262,13 +252,26 @@ export async function inviteUserToFarm(
       };
     }
 
+    // Multiple users aren't allowed
+    const [doesViewerExist] = await db
+      .select({ role: user.role })
+      .from(user)
+      .where(and(eq(user.role, 'Viewer'), eq(user.farmId, farmId)))
+      .limit(1);
+
+    if (doesViewerExist && formData.role === 'Viewer') {
+      return {
+        error:
+          'Multiple viewers are not allowed. Please contact support for more information.',
+      };
+    }
+
     // Don't require the user's new ID to be sent with formData
     const validated = userInsertSchema.omit({ id: true }).safeParse(formData);
     if (!validated.success) {
       return { error: z.treeifyError(validated.error) };
     }
 
-    const farmId = result.farmId;
     const didInvite = await inviteUser(
       validated.data.email,
       validated.data.firstName
@@ -278,10 +281,13 @@ export async function inviteUserToFarm(
       return { error: didInvite.message };
     }
 
-    // If inviteUser() succeeds, create a new user
-    await db.insert(user).values({ ...validated.data, farmId });
+    // Insert user and return row so client has id for uninvite
+    const [inserted] = await db
+      .insert(user)
+      .values({ ...validated.data, farmId })
+      .returning();
 
-    return { error: null };
+    return { error: null, data: inserted ?? undefined };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

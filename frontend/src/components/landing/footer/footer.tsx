@@ -49,17 +49,24 @@ const Footer = () => {
 
   const socialMediaIcons = [
     {
-      icon: <FaInstagram role="img" />,
+      icon: <FaInstagram aria-hidden="true" />,
       href: 'https://www.instagram.com/toddagriscience/',
+      ariaLabel: 'Visit our Instagram page',
     },
     {
-      icon: <FaLinkedinIn role="img" />,
+      icon: <FaLinkedinIn aria-hidden="true" />,
       href: 'https://www.linkedin.com/company/toddagriscience/',
+      ariaLabel: 'Visit our LinkedIn page',
     },
-    { icon: <FaXTwitter role="img" />, href: 'https://x.com/toddagriscience' },
     {
-      icon: <FaYoutube role="img" />,
-      href: 'http://www.youtube.com/@toddagriscience',
+      icon: <FaXTwitter aria-hidden="true" />,
+      href: 'https://x.com/toddagriscience',
+      ariaLabel: 'Visit our X (Twitter) page',
+    },
+    {
+      icon: <FaYoutube aria-hidden="true" />,
+      href: 'https://www.youtube.com/@toddagriscience',
+      ariaLabel: 'Visit our YouTube channel',
     },
   ];
 
@@ -72,9 +79,9 @@ const Footer = () => {
           <ToddHeader className="md:text-4xl lg:text-5xl" />
           <div className="flex flex-row gap-32 max-md:mt-8 md:ml-auto">
             <div className="flex flex-col gap-4">
-              {siteLinks.slice(0, 4).map((val, index) => (
+              {siteLinks.slice(0, 4).map((val) => (
                 <Link
-                  key={index}
+                  key={val.href}
                   href={val.href}
                   className="text-base md:text-base"
                 >
@@ -85,9 +92,9 @@ const Footer = () => {
               ))}
             </div>
             <div className="flex flex-col gap-4">
-              {siteLinks.slice(4, 8).map((val, index) => (
+              {siteLinks.slice(4, 8).map((val) => (
                 <Link
-                  key={index}
+                  key={val.href}
                   href={val.href}
                   className="text-base md:text-base"
                 >
@@ -103,19 +110,18 @@ const Footer = () => {
       <div className="mt-8 flex flex-col gap-10">
         <div className="flex flex-row gap-4">
           <Image
-            role="img"
-            src={'/united_states_flag.png'}
+            src={'/united_states_flag.svg'}
             alt=""
             width={50}
             height={50}
-            className="h-6 w-6 rounded-[50%]"
+            className="h-6 w-6"
           />
           <span>{t('location')}</span>
         </div>
         <p>© Todd Agriscience {currentYear}</p>
         <div className="flex flex-col flex-wrap gap-6 items-start md:flex-row">
-          {legalLinks.map((val, index) => (
-            <Link key={index} href={val.href}>
+          {legalLinks.map((val) => (
+            <Link key={val.href} href={val.href}>
               {val.label}
             </Link>
           ))}
@@ -134,8 +140,8 @@ const Footer = () => {
           />
         </div>
         <div className="flex flex-row flex-wrap gap-6">
-          {socialMediaIcons.map((val, index) => (
-            <Link key={index} href={val.href}>
+          {socialMediaIcons.map((val) => (
+            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
               {val.icon}
             </Link>
           ))}

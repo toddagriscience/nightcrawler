@@ -1,13 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-user-farm-id';
-import { Button } from '@/components/ui';
-import ApplyButton from './components/apply-button';
+import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
-import { accountAgreementAcceptance } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { tab } from '@/lib/db/schema/tab';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { asc, eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import PlatformTabContent from './components/tabs/tab-content';
+import PlatformTabs from './components/tabs/tabs';
+import { getTablessManagementZones } from './components/tabs/utils';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -17,47 +18,55 @@ export const metadata: Metadata = {
 };
 
 /**
- * Dashboard page - served at "/" route for authenticated users
+ * Dashboard page - served at "/" route for authenticated users. Every page here inside a tab (usually only management zones).
+ *
+   Scaling is a little bit scuffed here. We're taking a div and shoving it into `AuthenticatedHeader` manually, then scaling it accordingly with variables #'s of tabs. This technically works with up to 25 tabs on the smallest screen size. This is fine because the user will be limited to a maximum of 8 tabs.
+ *
  * This page is protected by middleware and only accessible to authenticated users
  * @returns {React.ReactNode} - The dashboard page component
  */
 export default async function DashboardPage() {
   const currentUser = await getAuthenticatedInfo();
 
-  if ('error' in currentUser) {
-    return (
-      <div>
-        <p>{currentUser.error}</p>
-      </div>
-    );
+  const fetchCurrentTabs = async () =>
+    db
+      .select({
+        id: tab.id,
+        managementZone: tab.managementZone,
+        name: managementZone.name,
+        user: tab.user,
+      })
+      .from(tab)
+      .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
+      .orderBy(asc(managementZone.name))
+      .where(eq(tab.user, currentUser.id));
+
+  let currentTabs = await fetchCurrentTabs();
+
+  let managementZones = await getTablessManagementZones(currentUser.farmId);
+
+  // This seems redundant - realistically, this will be called once or twice per user.
+  if (
+    currentUser.approved &&
+    currentTabs.length === 0 &&
+    managementZones.length > 0
+  ) {
+    await db.insert(tab).values({
+      managementZone: managementZones[0].id,
+      user: currentUser.id,
+    });
+
+    currentTabs = await fetchCurrentTabs();
+    managementZones = await getTablessManagementZones(currentUser.farmId);
   }
 
-  const [hasApplied] = await db
-    .select({ userId: accountAgreementAcceptance.userId })
-    .from(accountAgreementAcceptance)
-    .where(eq(accountAgreementAcceptance.userId, currentUser.id))
-    .limit(1);
-
   return (
-    <div className="flex flex-col items-center justify-between min-h-[calc(100vh-8rem)] px-4">
-      <div></div>
-      <div className="text-center space-y-4">
-        <h1 className="text-foreground text-3xl font-bold">Welcome</h1>
-        <p className="text-foreground text-base font-normal">
-          Thank you for being a Todd client since 2025
-        </p>
-        {hasApplied ? (
-          <p>We&apos;ll take a look at your application as soon as possible.</p>
-        ) : (
-          <ApplyButton />
-        )}
-      </div>
-      <Link
-        href="/contact"
-        className="text-foreground text-base font-normal underline hover:opacity-70 transition-opacity inline-block mt-4"
-      >
-        Experiencing an Issue?
-      </Link>
-    </div>
+    <PlatformTabs
+      managementZones={managementZones}
+      currentTabs={currentTabs}
+      currentUser={currentUser}
+    >
+      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+    </PlatformTabs>
   );
 }

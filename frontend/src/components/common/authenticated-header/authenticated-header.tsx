@@ -11,19 +11,26 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 export default function AuthenticatedHeader() {
   return (
     <header className="w-full" role="banner">
-      <div className="max-w-[107rem] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="mx-auto max-w-[107rem] px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <ToddHeader />
+          <ToddHeader className="flex min-h-10 flex-row items-center" />
           <nav className="flex items-center gap-6">
             <Link
-              href="/notifications"
-              className="text-foreground text-sm hover:opacity-70 transition-opacity"
+              href={'/contact'}
+              className="text-foreground text-sm transition-opacity hover:opacity-70"
             >
-              Notifications
+              Contact
             </Link>
+            {/** Will be added back when we actually have notifications. */}
+            {/* <Link */}
+            {/*   href="/notifications" */}
+            {/*   className="text-foreground text-sm transition-opacity hover:opacity-70" */}
+            {/* > */}
+            {/*   Notifications */}
+            {/* </Link> */}
             <Link
               href="/account"
-              className="text-foreground text-sm hover:opacity-70 transition-opacity"
+              className="text-foreground text-sm transition-opacity hover:opacity-70"
             >
               Account
             </Link>

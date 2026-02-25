@@ -4,8 +4,8 @@ import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import logger from './logger';
 import { createClient as createBrowserClient } from './supabase/client';
-import { AuthResponse, AuthResponseTypes } from './types/auth';
 import { createClient as createServerClient } from './supabase/server';
+import { AuthResponse, AuthResponseTypes } from './types/auth';
 
 /**  Unless ABSOLUTELY necessary, prefer server-side auth over client-side authentication for sake of security and leaning into Next.js's standard patterns.
  *
@@ -119,6 +119,28 @@ export async function getUserEmail(): Promise<string | null> {
   return data.claims.email || null;
 }
 
+/** SERVER SIDE FUNCTION. Returns the email verification status of the user. If they're not logged in or something goes wrong with `getClaims()`, this function will simply return false. */
+export async function isVerified(): Promise<boolean> {
+  const supabase = await createServerClient();
+
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    return false;
+  }
+
+  if (!data.claims.user_metadata) {
+    return false;
+  }
+
+  if (!('email_verified' in data.claims.user_metadata)) {
+    return false;
+  }
+
+  // This is a boolean field
+  return data.claims.user_metadata.email_verified;
+}
+
 /** SERVER SIDE FUNCTION. Signs up (or creates) a user and sends a confirmation email.
  *
  * @param {string} email - The user's email
@@ -163,7 +185,7 @@ export async function inviteUser(
 ): Promise<object | Error> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: 'https://toddagriscience.com/login',
+    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
     data: {
       // This is for the email template
       first_name: name,
@@ -177,4 +199,78 @@ export async function inviteUser(
   }
 
   return data;
+}
+
+/** SERVER SIDE FUNCTION. Sets a user's password.
+ *
+ * @param {string} password - The user's new password
+ * @returns {Promise<AuthResponse>} - An interface describing the object described here: https://supabase.com/docs/reference/javascript/auth-updateuser
+ */
+export async function setPassword(password: string): Promise<AuthResponse> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.updateUser({
+    password,
+    data: {
+      email_verified: true,
+    },
+  });
+
+  return { data, error, responseType: AuthResponseTypes.UpdateUser };
+}
+
+/** SERVER SIDE FUNCTION. Logs in a user. */
+export async function signIn(
+  email: string,
+  password: string
+): Promise<AuthResponse> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    password,
+    email,
+  });
+
+  return { data, error, responseType: AuthResponseTypes.SignIn };
+}
+
+/** SERVER SIDE FUNCTION. Resend an invite. */
+export async function resendEmailInvite(
+  email: string
+): Promise<object | Error> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const { data, error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
+    },
+  });
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+}
+
+/** SERVER SIDE FUNCTION.
+ * delete_auth_user_by_email is equivalent to the following function:
+ *
+ *   WITH deleted AS (
+ *     DELETE FROM auth.users WHERE email = lower(email_address)
+ *     RETURNING id
+ *   )
+ *   SELECT count(*)::integer FROM deleted;
+ *
+ * Returns null on success or if user not in Auth.
+ *
+ * @param {string} email - The user's email
+ * @returns {Promise<Error | null>} - An error if the RPC failed, null if successful or user not found in auth */
+export async function deleteAuthUserByEmail(
+  email: string
+): Promise<Error | null> {
+  const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
+  const { error } = await supabase.rpc('delete_auth_user_by_email', {
+    email_address: email,
+  });
+  return error ?? null;
 }

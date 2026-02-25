@@ -21,23 +21,24 @@ export default async function News() {
     : [];
 
   return (
-    <div className="fadeInAnimation relative z-10 mx-auto mt-24 max-w-[80vw] md:max-w-[95vw] pt-[calc(var(--headerHeight)+15px)] pb-4 md:pt-[calc(var(--headerHeight)+26px)] xl:overflow-x-visible">
-      <div className="flex flex-col items-start">
-        <h1 className="text-center">Todd Newsroom</h1>
-        <h2 className="text-slate-secondary pb-4 text-center text-2xl md:mb-0 md:text-5xl xl:text-7xl">
-          Highlights
-        </h2>
+    <section id="newsroom" className="max-w-[1200px] mx-auto">
+      <div className="fadeInAnimation relative z-10 mx-auto mt-24 lg:max-w-[95%] pt-[calc(var(--headerHeight)+15px)] pb-4 md:pt-[calc(var(--headerHeight)+26px)] xl:overflow-x-visible ">
+        <div className="flex flex-col items-start">
+          <h2 className="md:px-6 px-4 mb-4 sm:mb-6 lg:mb-12 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
+            Newsroom
+          </h2>
+          <div className="w-full">
+            <FeaturedNewsCarousel items={featuredNews} />
+          </div>
+          <div className="mb-16 mt-16 px-4 md:px-6">
+            <h2 className="md:px-6 px-3 mb-6 md:mb-10 text-2xl md:text-3xl lg:text-4xl font-light leading-tight">
+              Latest News
+            </h2>
+
+            <LatestNewsTable items={allNews} />
+          </div>
+        </div>
       </div>
-
-      <FeaturedNewsCarousel items={featuredNews} />
-
-      <div className="mb-16 mt-16">
-        <h2 className="text-slate-secondary mb-10 text-2xl md:text-4xl xl:text-5xl">
-          Latest News
-        </h2>
-
-        <LatestNewsTable items={allNews} />
-      </div>
-    </div>
+    </section>
   );
 }

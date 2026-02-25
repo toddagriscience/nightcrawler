@@ -54,7 +54,7 @@ export default function GeneralBusinessInformation({
   }
 
   return (
-    <FadeIn className="mt-6">
+    <div className="mt-6">
       <form
         className="mt-6 flex max-w-3xl flex-col gap-6"
         onSubmit={() => {
@@ -159,6 +159,6 @@ export default function GeneralBusinessInformation({
           reactHookFormPending={isSubmitting}
         ></SubmitButton>
       </form>
-    </FadeIn>
+    </div>
   );
 }

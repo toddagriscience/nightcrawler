@@ -1,17 +1,18 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
 
+import { ThemeProvider } from '@/context/theme/ThemeContext';
 import userEvent from '@testing-library/user-event';
+import contactMessages from '@/messages/contact/en.json';
+import { NextIntlClientProvider } from 'next-intl';
+import React from 'react';
 // @ts-ignore type error due to lack of types from this polyfill
 import IntersectionObserver from 'intersection-observer-polyfill';
-import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from '@/context/theme/ThemeContext';
-import React from 'react';
 
 global.ResizeObserver = ResizeObserver;
 global.IntersectionObserver = IntersectionObserver;
@@ -72,37 +73,49 @@ Object.defineProperty(window, 'matchMedia', {
 // Helper to render with NextIntl provider
 const renderWithIntl = (ui: React.ReactElement) => {
   return render(
-    <NextIntlClientProvider locale="en" messages={{}}>
+    <NextIntlClientProvider locale="en" messages={contactMessages}>
       <ThemeProvider>{ui}</ThemeProvider>
     </NextIntlClientProvider>
   );
 };
 
 describe('Contact page', () => {
+  let container: HTMLElement;
+
+  const getRequiredInput = (name: string) => {
+    const input = container.querySelector(
+      `input[name="${name}"]`
+    ) as HTMLInputElement | null;
+    if (!input) {
+      throw new Error(`Expected input[name="${name}"] to exist`);
+    }
+    return input;
+  };
+
   beforeEach(async () => {
     mockPush.mockClear();
-    renderWithIntl(<Contact />);
+    container = renderWithIntl(<Contact />).container;
     const user = userEvent.setup();
 
     // First name
-    const firstName = screen.getByPlaceholderText(/first name/i);
+    const firstName = getRequiredInput('firstName');
     await user.type(firstName, 'Jane');
 
     // Last name
-    const lastName = screen.getByPlaceholderText(/last name/i);
+    const lastName = getRequiredInput('lastName');
     await user.type(lastName, 'Doe');
 
     // Farm name
-    const farmName = screen.getByPlaceholderText(/farm name/i);
+    const farmName = getRequiredInput('farmName');
     await user.type(farmName, 'Green Valley Farms');
 
     // Email
-    const email = screen.getByPlaceholderText(/email/i);
+    const email = getRequiredInput('email');
     await user.type(email, 'jane@greenvalley.com');
 
     // Phone
-    const phone = screen.getByPlaceholderText(/phone/i);
-    await user.type(phone, '555-123-4567');
+    const phone = getRequiredInput('phone');
+    await user.type(phone, '5551234567');
   });
   it('renders correctly', () => {
     expect(screen.getByText('First Name')).toBeInTheDocument();
@@ -112,27 +125,21 @@ describe('Contact page', () => {
     const user = userEvent.setup();
 
     // Email
-    const email = screen.getByPlaceholderText(/email/i);
+    const email = getRequiredInput('email');
     await user.clear(email);
     await user.type(email, 'jane@gmail.com');
 
-    const nextButton = screen.getByTestId('button-next');
+    const nextButton = screen.getByRole('button', { name: /continue/i });
 
     // Click next to move past the first slide
-    act(() => {
-      nextButton.click();
-    });
+    await user.click(nextButton);
 
     // Click next to skip the website slide (no website entered)
-    act(() => {
-      nextButton.click();
-    });
+    await user.click(nextButton);
 
     // Answer organic question
     const yesButtons = screen.getAllByText('Yes');
-    act(() => {
-      yesButtons[0].click();
-    });
+    await user.click(yesButtons[0]);
 
     // Answer hydroponic question (No)
     await waitFor(() => {
@@ -140,9 +147,7 @@ describe('Contact page', () => {
       expect(noButtons.length).toBeGreaterThan(0);
     });
     const noButtons1 = screen.getAllByText('No');
-    act(() => {
-      noButtons1[0].click();
-    });
+    await user.click(noButtons1[0]);
 
     // Answer sprouts question (No)
     await waitFor(() => {
@@ -150,9 +155,7 @@ describe('Contact page', () => {
       expect(noButtons.length).toBeGreaterThan(0);
     });
     const noButtons2 = screen.getAllByText('No');
-    act(() => {
-      noButtons2[0].click();
-    });
+    await user.click(noButtons2[0]);
 
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
@@ -162,37 +165,27 @@ describe('Contact page', () => {
     const user = userEvent.setup();
 
     // Email
-    const email = screen.getByPlaceholderText(/email/i);
+    const email = getRequiredInput('email');
     await user.clear(email);
     await user.type(email, 'jane@gmail.com');
 
-    const nextButton = screen.getByTestId('button-next');
+    const nextButton = screen.getByRole('button', { name: /continue/i });
 
     // Click next to move past the first slide
-    act(() => {
-      nextButton.click();
-    });
+    await user.click(nextButton);
 
     // Click next to skip the website slide (no website entered)
-    act(() => {
-      nextButton.click();
-    });
+    await user.click(nextButton);
 
     // Answer organic question
     const yesButtons = screen.getAllByText('Yes');
-    act(() => {
-      yesButtons[0].click();
-    });
+    await user.click(yesButtons[0]);
 
     // Answer hydroponic question (No)
-    act(() => {
-      yesButtons[1].click();
-    });
+    await user.click(yesButtons[1]);
 
     // Answer sprouts question
-    act(() => {
-      yesButtons[2].click();
-    });
+    await user.click(yesButtons[2]);
 
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
@@ -203,16 +196,14 @@ describe('Contact page', () => {
     const user = userEvent.setup();
 
     // Clear existing email and set a work email (to skip the website slide)
-    const email = screen.getByPlaceholderText(/email/i);
+    const email = getRequiredInput('email');
     await user.clear(email);
     await user.type(email, 'jane@greenvalley.com');
 
-    const nextButton = screen.getByTestId('button-next');
+    const nextButton = screen.getByRole('button', { name: /continue/i });
 
     // Click next to move past the first slide
-    act(() => {
-      nextButton.click();
-    });
+    await user.click(nextButton);
 
     // Answer organic question (Yes)
     await waitFor(() => {
@@ -220,9 +211,7 @@ describe('Contact page', () => {
       expect(yesButtons.length).toBeGreaterThan(0);
     });
     const yesButtons = screen.getAllByText('Yes');
-    act(() => {
-      yesButtons[0].click();
-    });
+    await user.click(yesButtons[0]);
 
     // Answer hydroponic question (No)
     await waitFor(() => {
@@ -230,9 +219,7 @@ describe('Contact page', () => {
       expect(noButtons.length).toBeGreaterThan(0);
     });
     const noButtons1 = screen.getAllByText('No');
-    act(() => {
-      noButtons1[0].click();
-    });
+    await user.click(noButtons1[0]);
 
     // Answer sprouts question (No)
     await waitFor(() => {
@@ -240,16 +227,14 @@ describe('Contact page', () => {
       expect(noButtons.length).toBeGreaterThan(0);
     });
     const noButtons2 = screen.getAllByText('No');
-    act(() => {
-      noButtons2[0].click();
-    });
+    await user.click(noButtons2[0]);
 
     // Wait for the success screen and click JOIN US
     await waitFor(() => {
-      expect(screen.getByText('JOIN US')).toBeInTheDocument();
+      expect(screen.getByText('Join Us')).toBeInTheDocument();
     });
 
-    const joinButton = screen.getByText('JOIN US');
+    const joinButton = screen.getByText('Join Us');
     await act(async () => {
       joinButton.click();
     });
@@ -263,7 +248,7 @@ describe('Contact page', () => {
       expect(calledUrl).toContain('last_name=Doe');
       expect(calledUrl).toContain('farm_name=Green+Valley+Farms');
       expect(calledUrl).toContain('email=jane%40greenvalley.com');
-      expect(calledUrl).toContain('phone=555-123-4567');
+      expect(calledUrl).toContain('phone=5551234567');
     });
   });
 });

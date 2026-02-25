@@ -90,9 +90,7 @@ export default function SearchPage() {
         </Button>
       </div>
 
-      {error && (
-        <p className="text-red-600 mb-4">{error}</p>
-      )}
+      {error && <p className="text-red-600 mb-4">{error}</p>}
 
       {results && !results.hasResults && (
         <Card className="p-6 text-center">

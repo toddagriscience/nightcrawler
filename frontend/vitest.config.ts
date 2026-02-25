@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { defineConfig } from 'vitest/config';
 import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 // Add any custom config to be passed to Vitest
 export default defineConfig({
@@ -20,6 +20,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // Alias '@' to the './src' directory
+      '@public': path.resolve(__dirname, './public'), // Alias '@' to the './src' directory
       '@assets': path.resolve(__dirname, './src/assets'), // Example of another alias
     },
   },

@@ -2,8 +2,8 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { motion } from 'framer-motion';
 import { useCallback, useEffect, useRef } from 'react';
 import { Hero, Quote, ScrollShrinkWrapper } from '../';
 import NewsHighlights from '../news-highlights/news-highlights';
@@ -74,15 +74,17 @@ export default function LandingPage() {
           <Hero />
         </div>
         <motion.div
-          className="flex h-fit pt-6 mx-auto flex-col justify-center rounded-2xl bg-[#CCC5B5]"
-          animate={{
-            backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
-            color: contextIsDark ? '#FDFDFB' : '#2A2727',
-          }}
+          className="flex h-fit pt-6 mx-auto flex-col justify-center rounded-2xl bg-transparent"
+          // animate={{
+          //   backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
+          //   color: contextIsDark ? '#FDFDFB' : '#2A2727',
+          // }}
           ref={newsCarouselRef}
         >
           <NewsHighlights />
-          <Quote isDark={contextIsDark} />
+          {/* Removed the quote component below for now to avoid the background color issue */}
+          {/* <Quote isDark={contextIsDark} /> */}
+          <Quote />
         </motion.div>
       </ScrollShrinkWrapper>
     </div>

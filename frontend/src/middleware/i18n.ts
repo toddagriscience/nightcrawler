@@ -6,7 +6,16 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
 /** Routes that are uninternationalized and only accessible to the public */
-const unauthUnintlRoutes = ['login', 'forgot-password', 'incoming', 'signup'];
+const unauthUnintlRoutes = [
+  'login',
+  'forgot-password',
+  'incoming',
+  'signup',
+  'auth',
+  'externship-terms',
+  // Only for go.toddagriscience.com
+  'invite',
+];
 
 /**
  * Next-intl middleware instance

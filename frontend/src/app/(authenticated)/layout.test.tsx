@@ -11,6 +11,17 @@ vi.mock(
   })
 );
 
+vi.mock('@/components/common/desktop-gate/desktop-gate', () => ({
+  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock('next/font/local', () => ({
+  default: () => ({
+    className: 'mock-font',
+    variable: 'mock-font-variable',
+  }),
+}));
+
 describe('AuthenticatedLayout', () => {
   it('should render "authenticated-root" class', () => {
     render(

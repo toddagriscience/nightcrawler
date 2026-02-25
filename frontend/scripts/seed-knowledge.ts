@@ -107,7 +107,13 @@ async function seed() {
     await client.query(
       `INSERT INTO knowledge_article (title, content, category, source, embedding)
        VALUES ($1, $2, $3, $4, $5)`,
-      [article.title, article.content, article.category, article.source, embeddingStr]
+      [
+        article.title,
+        article.content,
+        article.category,
+        article.source,
+        embeddingStr,
+      ]
     );
     console.log('Inserted:', article.title);
   }

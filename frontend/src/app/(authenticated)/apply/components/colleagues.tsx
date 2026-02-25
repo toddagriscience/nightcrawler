@@ -15,18 +15,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { UserSelect, UserInsert } from '@/lib/types/db';
 import { userInsertSchema } from '@/lib/zod-schemas/db';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { FadeIn } from '@/components/common';
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 import { Button } from '@/components/ui';
 import { TabTypes } from '../types';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
+import { ApplicationContext } from './application-tabs';
+import { resendVerificationEmail } from './colleagues/action';
+import { RefreshCw } from 'lucide-react';
+import InvitedUser from './colleagues/invited-user';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -44,14 +47,13 @@ const userRolesWithDescription: Record<string, any>[] = [
 
 /** The second tab for inviting colleagues to the Todd platform. */
 export default function Colleagues({
-  allUsers,
   setCurrentTab,
-  currentUser,
 }: {
-  allUsers: UserSelect[];
-  currentUser: UserSelect;
   setCurrentTab: (arg0: TabTypes) => void;
 }) {
+  const { currentUser, allUsers, invitedUserVerificationStatus } =
+    useContext(ApplicationContext);
+
   const [users, setUsers] = useState(allUsers);
   const {
     register,
@@ -68,41 +70,54 @@ export default function Colleagues({
   async function onSubmit(data: UserInsert) {
     const result = await inviteUserToFarm(data);
     if (result.error === null) {
-      // Add the new user to the list and reset the form
-      setUsers([...users, data as UserSelect]);
+      // Use returned row so the new list entry has a real id (needed for uninvite)
+      if (result.data) {
+        setUsers([...users, result.data as UserSelect]);
+      }
       reset();
+    } else {
+      setError('role', { message: formatActionResponseErrors(result)[0] });
     }
-    setError('role', { message: formatActionResponseErrors(result)[0] });
+  }
+
+  // Technically not the best code - refactor me
+  function isVerified(user: UserSelect) {
+    for (const invitedUser of invitedUserVerificationStatus) {
+      if (invitedUser.email === user.email && invitedUser.verified) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   return (
-    <FadeIn className="mt-6">
+    <div className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="mb-4 text-lg font-semibold">Current Team Members</h2>
+        <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
+        <p className="mb-5">
+          Only one viewer account is allowed per user. Please contact support
+          for more information.
+        </p>
         <div className="mb-8">
           {users.length > 0 ? (
             <div className="flex flex-col gap-2">
               {users.map((singleUser, index) => (
-                <div
+                <InvitedUser
+                  invitedUser={singleUser}
+                  isCurrentUser={singleUser.id === currentUser.id}
+                  isVerified={isVerified(singleUser)}
                   key={index}
-                  className="flex flex-row items-center justify-between rounded-md border p-3"
-                >
-                  <div className="flex w-full flex-col sm:flex-row">
-                    <p className="font-medium">
-                      {singleUser.firstName} {singleUser.lastName}
-                    </p>
-                    <p className="text-muted-foreground sm:ml-2">
-                      ({singleUser.email})
-                    </p>
-                  </div>
-                  <span className="text-muted-foreground text-sm">
-                    {singleUser.role}
-                  </span>
-                </div>
+                  onUninvited={(id) =>
+                    setUsers(users.filter((u) => u.id !== id))
+                  }
+                />
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No team members added yet.</p>
+            <p className="text-muted-foreground text-sm">
+              No team members added yet.
+            </p>
           )}
         </div>
         <SelfSelectAdmin role={currentUser.role} />
@@ -302,15 +317,13 @@ export default function Colleagues({
                 setCurrentTab('farm');
                 scrollTo(0, 0);
               }}
-              className="basis-1/3 
-        w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 
-            "
+              className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
             >
               NEXT
             </Button>
           </div>
         </form>
       </div>
-    </FadeIn>
+    </div>
   );
 }

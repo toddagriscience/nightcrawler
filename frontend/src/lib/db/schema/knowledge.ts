@@ -1,6 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { pgEnum, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+  vector,
+} from 'drizzle-orm/pg-core';
 
 /** Categories for Todd's knowledge base content */
 export const knowledgeCategoryEnum = pgEnum('knowledge_category', [
@@ -30,4 +38,5 @@ export const knowledgeArticle = pgTable('knowledge_article', {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  embedding: vector({ dimensions: 3072 }),
 });
