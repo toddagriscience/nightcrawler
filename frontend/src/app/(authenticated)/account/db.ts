@@ -11,15 +11,14 @@ import {
   user,
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
-import type { ManagementZoneSelect } from '@/lib/types/db';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { and, asc, desc, eq } from 'drizzle-orm';
 import type {
-  AccountContact,
-  AccountFarmData,
-  AccountShellData,
-  AccountUsersData,
-} from './types';
+  FarmLocationSelect,
+  FarmSelect,
+  ManagementZoneSelect,
+  UserSelect,
+} from '@/lib/types/db';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { asc, desc, eq } from 'drizzle-orm';
 import {
   formatMailingAddress,
   formatPhysicalLocation,
@@ -29,7 +28,7 @@ import {
   toDisplayValue,
 } from './util';
 
-export async function getAccountShellData(): Promise<AccountShellData> {
+export async function getAccountShellData(): Promise<{ farmName: string }> {
   const currentUser = await getAuthenticatedInfo();
 
   const [farmRecord] = await db
@@ -49,9 +48,11 @@ export async function getAccountShellData(): Promise<AccountShellData> {
   };
 }
 
-export async function getAccountUsersData(): Promise<AccountUsersData> {
+export async function getAccountUsersData(): Promise<{
+  principalOperator: Partial<UserSelect>;
+  owner: Partial<UserSelect> | null;
+}> {
   const currentUser = await getAuthenticatedInfo();
-  const currentUserVerified = await isVerified();
 
   const farmUsers = await db
     .select({
@@ -75,87 +76,41 @@ export async function getAccountUsersData(): Promise<AccountUsersData> {
       (farmUser) => farmUser.role === 'Admin' && farmUser.id !== currentUser.id
     ) ?? farmUsers.find((farmUser) => farmUser.id !== currentUser.id);
 
-  const principalContact: AccountContact = {
+  const principalContact = {
     name: toDisplayName(
       principalOperator?.firstName,
       principalOperator?.lastName
     ),
     email: toDisplayValue(principalOperator?.email),
     phone: toDisplayValue(principalOperator?.phone),
-    emailVerified: currentUserVerified,
-    phoneVerified: Boolean(principalOperator?.phone),
   };
 
   return {
     principalOperator: principalContact,
     owner: ownerUser
       ? {
-          name: toDisplayName(ownerUser.firstName, ownerUser.lastName),
+          firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
           email: toDisplayValue(ownerUser.email),
           phone: toDisplayValue(ownerUser.phone),
-          emailVerified: Boolean(ownerUser.approved),
-          phoneVerified: Boolean(ownerUser.phone),
         }
       : null,
   };
 }
 
-export async function getAccountFarmData(): Promise<AccountFarmData> {
+export async function getAccountFarmData(): Promise<{
+  farm: FarmSelect;
+  location: FarmLocationSelect | null;
+}> {
   const currentUser = await getAuthenticatedInfo();
 
   const [farmRecord] = await db
-    .select({
-      informalName: farm.informalName,
-      businessName: farm.businessName,
-      location: farmLocation.location,
-      countyState: farmLocation.countyState,
-      address1: farmLocation.address1,
-      address2: farmLocation.address2,
-      address3: farmLocation.address3,
-      state: farmLocation.state,
-      postalCode: farmLocation.postalCode,
-      country: farmLocation.country,
-      farmCreatedAt: farm.createdAt,
-    })
+    .select()
     .from(farm)
     .leftJoin(farmLocation, eq(farmLocation.farmId, farm.id))
     .where(eq(farm.id, currentUser.farmId))
     .limit(1);
 
-  const [latestAgreement] = await db
-    .select({
-      acceptedAt: accountAgreementAcceptance.timeAccepted,
-    })
-    .from(accountAgreementAcceptance)
-    .where(eq(accountAgreementAcceptance.userId, currentUser.id))
-    .orderBy(desc(accountAgreementAcceptance.timeAccepted))
-    .limit(1);
-
-  return {
-    nickname: toDisplayValue(farmRecord?.informalName),
-    legalName: toDisplayValue(farmRecord?.businessName),
-    physicalLocation: formatPhysicalLocation(
-      farmRecord?.location ?? null,
-      farmRecord?.countyState
-    ),
-    mailingAddress: formatMailingAddress(
-      farmRecord
-        ? {
-            address1: farmRecord.address1,
-            address2: farmRecord.address2,
-            address3: farmRecord.address3,
-            state: farmRecord.state,
-            postalCode: farmRecord.postalCode,
-            country: farmRecord.country,
-          }
-        : undefined
-    ),
-    clientSince: toDisplayDate(
-      latestAgreement?.acceptedAt ??
-        farmRecord?.farmCreatedAt ??
-        currentUser.createdAt
-    ),
-  };
+  return { farm: farmRecord.farm, location: farmRecord.farm_location };
 }
 
 export async function getManagementZones(): Promise<ManagementZoneSelect[]> {

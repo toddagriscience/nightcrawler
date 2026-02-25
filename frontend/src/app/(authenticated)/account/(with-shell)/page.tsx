@@ -8,25 +8,34 @@ import { getAccountFarmData } from '../db';
 
 export default async function AccountPage() {
   const accountFarmData = await getAccountFarmData();
+  const mailingAddress =
+    accountFarmData.location?.address1 + ', ' + accountFarmData.location?.state;
 
   return (
     <AccountInfo title="Farm information">
       <div className="border-black/20 border-t">
-        <AccountInfoRow label="Nickname" value={accountFarmData.nickname} />
-        <AccountInfoRow label="Legal Name" value={accountFarmData.legalName} />
         <AccountInfoRow
-          label="Physical Location"
-          value={accountFarmData.physicalLocation}
+          label="Nickname"
+          value={accountFarmData.farm.informalName ?? ''}
+        />
+        <AccountInfoRow
+          label="Legal Name"
+          value={accountFarmData.farm.businessName ?? ''}
         />
         <AccountInfoRow
           label="Mailing Address"
-          value={accountFarmData.mailingAddress}
+          value={
+            !accountFarmData.location?.address1 ||
+            !accountFarmData.location?.state
+              ? 'Not set'
+              : mailingAddress
+          }
         />
         <AccountInfoRow
           label="Farm profile"
           value=">"
           valueClassName="text-foreground"
-          href="/account"
+          href="/account/farm/profile"
         />
       </div>
 
@@ -38,7 +47,7 @@ export default async function AccountPage() {
         <AccountInfoRow label="Payment method" value="Not set" />
         <AccountInfoRow
           label="Client since"
-          value={accountFarmData.clientSince}
+          value={accountFarmData.farm.createdAt.toLocaleString().split(',')[0]}
         />
       </AccountInfoSection>
 

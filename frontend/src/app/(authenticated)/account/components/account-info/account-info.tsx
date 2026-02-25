@@ -3,28 +3,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-interface AccountInfoProps {
-  title: string;
-  description?: string;
-  children: ReactNode;
-}
-
-interface AccountInfoSectionProps {
-  title: string;
-  children: ReactNode;
-}
-
 type AccountInfoStatusTone = 'success' | 'warning';
-
-interface AccountInfoRowProps {
-  label: string;
-  value?: string;
-  status?: string;
-  statusTone?: AccountInfoStatusTone;
-  rightContent?: ReactNode;
-  valueClassName?: string;
-  href?: string;
-}
 
 const statusStyles: Record<AccountInfoStatusTone, string> = {
   success: 'text-[#00bc1d]',
@@ -35,10 +14,14 @@ export default function AccountInfo({
   title,
   description,
   children,
-}: AccountInfoProps) {
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
   return (
     <section className="w-full max-w-[760px]">
-      <h2 className="text-foreground text-[42px] leading-none font-[400]">
+      <h2 className="text-foreground text-4xl leading-none font-[400]">
         {title}
       </h2>
       {description ? (
@@ -54,7 +37,10 @@ export default function AccountInfo({
 export function AccountInfoSection({
   title,
   children,
-}: AccountInfoSectionProps) {
+}: {
+  title: string;
+  children: ReactNode;
+}) {
   return (
     <div className="mt-10 first:mt-0">
       <h3 className="text-foreground text-[18px] leading-none font-[400]">
@@ -73,7 +59,15 @@ export function AccountInfoRow({
   rightContent,
   valueClassName,
   href,
-}: AccountInfoRowProps) {
+}: {
+  label: string;
+  value?: string;
+  status?: string;
+  statusTone?: AccountInfoStatusTone;
+  rightContent?: ReactNode;
+  valueClassName?: string;
+  href?: string;
+}) {
   const renderedRightContent = rightContent ?? (
     <>
       {value ? (
