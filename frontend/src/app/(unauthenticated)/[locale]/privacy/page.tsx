@@ -41,7 +41,7 @@ export default function PrivacyPage() {
       <div className="space-y-8">
         {/* Commitment Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">{t('commitment.title')}</h2>
+          <h2 className="mb-6 text-xl font-light">{t('commitment.title')}</h2>
           <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('commitment.content')}
           </p>
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
 
         {/* Information Collection Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
+          <h2 className="mb-6 text-xl font-light">
             {t('informationCollection.title')}
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-thin">
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
 
         {/* Job Applicants Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
+          <h2 className="mb-6 text-xl font-light">
             {t('jobApplicants.title')}
           </h2>
           <p className="text-sm leading-relaxed font-thin">
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
 
         {/* Capacity Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">{t('capacity.title')}</h2>
+          <h2 className="mb-6 text-xl font-light">{t('capacity.title')}</h2>
           <p className="text-sm leading-relaxed font-thin">
             {t('capacity.content')}
           </p>
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
 
         {/* Notifications Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
+          <h2 className="mb-6 text-xl font-light">
             {t('notifications.title')}
           </h2>
           <p className="text-sm leading-relaxed font-thin">
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
 
         {/* Miscellaneous Section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">
+          <h2 className="mb-6 text-xl font-light">
             {t('miscellaneous.title')}
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-thin">
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
 
         {/* California Supplement */}
         <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-4 text-2xl font-light">{t('california.title')}</h2>
+          <h2 className="mb-6 text-xl font-light">{t('california.title')}</h2>
           <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('california.lastUpdated')}
           </p>
@@ -245,7 +245,7 @@ export default function PrivacyPage() {
 
         {/* Japan section */}
         <section>
-          <h2 className="mb-4 text-2xl font-light">{t('japan.title')}</h2>
+          <h2 className="mb-6 text-xl font-light">{t('japan.title')}</h2>
           <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('japan.lastUpdated')}
           </p>
@@ -333,7 +333,7 @@ export default function PrivacyPage() {
 
         {/* EU-UK Section */}
         <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-4 text-2xl font-light">{t('euUk.title')}</h2>
+          <h2 className="mb-6 text-xl font-light">{t('euUk.title')}</h2>
           <p className="mb-4 text-sm leading-relaxed font-thin">
             {t('euUk.lastUpdated')}
           </p>
