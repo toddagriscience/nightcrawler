@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 
   if (!query || query.trim().length === 0) {
     return NextResponse.json(
+      // eslint-disable-next-line no-secrets/no-secrets
       { error: 'Missing search query. Use ?q=your+search+term' },
       { status: 400 }
     );

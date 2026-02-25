@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import { Pool } from 'pg';
 
 async function getEmbedding(text: string): Promise<number[]> {

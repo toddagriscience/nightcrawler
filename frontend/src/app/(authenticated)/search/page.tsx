@@ -2,6 +2,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -99,9 +100,9 @@ export default function SearchPage() {
           </p>
           <p className="text-foreground font-medium">
             Please{' '}
-            <a href="/contact" className="underline hover:opacity-70">
+            <Link href="/contact" className="underline hover:opacity-70">
               contact a Todd advisor
-            </a>{' '}
+            </Link>{' '}
             for help with &quot;{results.query}&quot;.
           </p>
         </Card>
