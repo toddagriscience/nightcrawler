@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
-import { BiSolidComment } from 'react-icons/bi';
 import { Button } from '@/components/ui/button';
 import ContactLinksSection from './components/contact-links-section';
+import { Mail, MessageCircle } from 'lucide-react';
 
 export default function ContactPage() {
   return (
@@ -11,15 +11,17 @@ export default function ContactPage() {
       <div className="mt-2">
         <Link
           href="/"
-          className="text-foreground inline-flex items-center gap-2 text-[36px] leading-none font-[400] hover:opacity-70"
+          className="text-foreground inline-flex items-center gap-2 leading-none font-normal hover:opacity-70"
         >
-          <span aria-hidden="true">←</span>
-          <span className="text-[32px]">Back</span>
+          <p aria-hidden="true" className="flex flex-row items-center text-xl">
+            ←
+          </p>
+          <p className="text-xl">Back</p>
         </Link>
       </div>
 
       <section className="mx-auto mt-20 w-full max-w-[760px]">
-        <h1 className="text-foreground text-[48px] leading-none font-[400]">
+        <h1 className="text-foreground text-[48px] leading-none font-normal">
           Support tools
         </h1>
 
@@ -27,10 +29,10 @@ export default function ContactPage() {
           <Button
             asChild
             variant="brand"
-            className="h-14 min-w-[220px] rounded-full text-[22px] font-[400]"
+            className="min-w-45 rounded-full px-8 py-3 text-lg font-normal"
           >
             <a href="mailto:service.us@toddagriscience.com">
-              <BiSolidComment className="h-5 w-5" />
+              <Mail />
               Email
             </a>
           </Button>
@@ -38,10 +40,10 @@ export default function ContactPage() {
           <Button
             asChild
             variant="brand"
-            className="h-14 min-w-[220px] rounded-full text-[22px] font-[400]"
+            className="min-w-45 rounded-full px-8 py-3 text-lg font-normal"
           >
-            <a href="text:8882791283">
-              <BiSolidComment className="h-5 w-5" />
+            <a href="tel:+18882791283">
+              <MessageCircle />
               SMS Text
             </a>
           </Button>
