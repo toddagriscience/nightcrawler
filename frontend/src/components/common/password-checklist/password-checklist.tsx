@@ -60,10 +60,10 @@ export default function PasswordChecklist({
 
   return (
     <div className={`${className}`}>
-      <p className="mb-4">
+      <p className="text-sm text-left mb-4">
         Please make sure to use a secure password matching the rules.
       </p>
-      <ul>
+      <ul className="text-sm text-left">
         <li
           className={
             passwordRequirements.has8Characters
