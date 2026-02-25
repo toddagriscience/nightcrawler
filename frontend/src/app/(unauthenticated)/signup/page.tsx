@@ -3,6 +3,7 @@
 'use client';
 
 import { FadeIn } from '@/components/common';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,7 +47,7 @@ export default function Join() {
 
   return (
     <main>
-      <div className="max-w-[1400px] mx-auto px-15">
+      <div className="max-w-[1400px] mx-auto px-15 h-screen flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-15 md:mb-26 w-full max-w-[1200px] mx-auto">
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
@@ -66,10 +67,10 @@ export default function Join() {
                 </div>
               ) : (
                 <>
-                  <h1 className="text-2xl mb-8 md:mb-8 mt-10 md:mt-0 text-center md:text-left">
+                  <h1 className="text-2xl mb-5 md:mb-8 mt-10 md:mt-0 text-left">
                     You're Almost There!
                   </h1>
-                  <p className="text-sm mb-8 text-center md:text-left">
+                  <p className="text-sm mb-8 text-left">
                     You'll use this to login and access your Todd account in the
                     future.
                   </p>
@@ -117,11 +118,14 @@ export default function Join() {
                         </Field>
 
                         <Field>
-                          <FieldLabel htmlFor="confirmPassword">
+                          <FieldLabel
+                            htmlFor="confirmPassword"
+                            className="leading-tight mb-[-6px]"
+                          >
                             Confirm Password
                           </FieldLabel>
                           <Input
-                            className="focus:ring-0!"
+                            className="border-[#848484]/80 border-1"
                             placeholder="Confirm Password"
                             id="confirmPassword"
                             data-testid="confirm-password"
@@ -157,18 +161,18 @@ export default function Join() {
                         </Field>
                       </FieldGroup>
                     </FieldSet>
-
-                    <SubmitButton
-                      buttonText={
-                        isPasswordValid ? 'Create Account' : 'Invalid Password'
-                      }
-                      disabled={!isPasswordValid}
-                      className={
-                        !isPasswordValid
-                          ? 'border-1 border-solid border-black bg-transparent text-black/80 hover:bg-black/10 w-[244px]'
-                          : 'w-[244px]'
-                      }
-                    />
+                    <div className="flex flex-col gap-8">
+                      <SubmitButton
+                        buttonText="Continue"
+                        disabled={!isPasswordValid}
+                        className={
+                          !isPasswordValid
+                            ? 'border-1 border-solid bg-transparent text-black/90 w-[244px] border-[#848484]/80'
+                            : 'w-[244px]'
+                        }
+                      />
+                      <LegalSubtext />
+                    </div>
                   </form>
                 </>
               )}

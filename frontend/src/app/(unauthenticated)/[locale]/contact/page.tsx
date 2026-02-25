@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { LegalSubtext } from '../../../../components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -453,7 +454,7 @@ export default function Contact() {
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
-                          className="max-w-50 ml-1 rounded-full py-6 mt-4"
+                          className="w-[200px] h-11 ml-1 rounded-full mt-4"
                           buttonText={t('results.matchJoinUs')}
                           onClickFunction={onSubmit}
                         />
@@ -477,7 +478,7 @@ export default function Contact() {
                           // {...register('instagramHandle')}
                         />
                         <SubmitButton
-                          className="max-w-50 ml-1 rounded-full py-6 mt-2"
+                          className="w-[200px] h-11 ml-1 rounded-full mt-2"
                           buttonText={t('results.noMatchSubmit')}
                           onClickFunction={() => {}}
                         /> */}
@@ -485,29 +486,7 @@ export default function Contact() {
                     )}
                   </CarouselItem>
                 </CarouselContent>
-                <div className="flex flex-col gap-2 mb-5">
-                  <p className="text-xs font-thin">
-                    {t('legal.byContinuing')}{' '}
-                    <Link
-                      href="/account-agreement.pdf"
-                      target="_blank"
-                      className="underline font-normal"
-                    >
-                      {t('legal.accountAgreement')}
-                    </Link>{' '}
-                    {t('legal.and')}{' '}
-                    <Link href="/privacy" className="underline font-normal">
-                      {t('legal.privacyPolicy')}
-                    </Link>
-                    .
-                  </p>
-                  <p className="text-xs font-thin">
-                    <Link href="/terms" className="underline font-normal">
-                      {t('legal.termsOfService')}
-                    </Link>{' '}
-                    {t('legal.apply')}
-                  </p>
-                </div>
+                <LegalSubtext />
 
                 <div className="flex min-h-10 justify-between flex-col lg:flex-row gap-4 lg:gap-0">
                   {slide !== 0 && slide !== totalSlides - 1 ? (
