@@ -8,22 +8,17 @@ import { getAccountUsersData } from '../../db';
 
 export default async function AccountUsersPage() {
   const accountUsersData = await getAccountUsersData();
+  const principalOperator = accountUsersData.principalOperator;
   const ownerData = accountUsersData.owner;
 
   return (
     <AccountInfo title="User information">
       <AccountInfoSection title="Principal operator">
-        <AccountInfoRow
-          label="Name"
-          value={accountUsersData.principalOperator.firstName}
-        />
-        <AccountInfoRow
-          label="Email Address"
-          value={accountUsersData.principalOperator.email}
-        />
+        <AccountInfoRow label="Name" value={principalOperator.firstName} />
+        <AccountInfoRow label="Email Address" value={principalOperator.email} />
         <AccountInfoRow
           label="Phone Number"
-          value={accountUsersData.principalOperator.phone || 'None'}
+          value={principalOperator.phone || 'None'}
         />
       </AccountInfoSection>
 

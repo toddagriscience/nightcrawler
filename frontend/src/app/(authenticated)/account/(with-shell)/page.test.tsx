@@ -6,11 +6,12 @@ import AccountPage from './page';
 
 vi.mock('../db', () => ({
   getAccountFarmData: vi.fn(async () => ({
-    nickname: 'Mock Farm',
-    legalName: 'Mock Farm LLC',
-    physicalLocation: '10.111,-20.222 Mock County',
-    mailingAddress: '100 Main St CA 90210 USA',
-    clientSince: 'January 5, 2024',
+    farm: {
+      informalName: 'Mock Farm',
+      businessName: 'Mock Farm LLC',
+      createdAt: new Date('January 5, 2024'),
+    },
+    location: { address1: '100 Main St', state: 'VA' },
   })),
 }));
 
@@ -20,8 +21,7 @@ describe('AccountPage', () => {
 
     expect(screen.getByText('Mock Farm')).toBeInTheDocument();
     expect(screen.getByText('Mock Farm LLC')).toBeInTheDocument();
-    expect(screen.getByText('10.111,-20.222 Mock County')).toBeInTheDocument();
-    expect(screen.getByText('100 Main St CA 90210 USA')).toBeInTheDocument();
-    expect(screen.getByText('January 5, 2024')).toBeInTheDocument();
+    expect(screen.getByText('100 Main St, VA')).toBeInTheDocument();
+    expect(screen.getByText('1/5/2024')).toBeInTheDocument();
   });
 });

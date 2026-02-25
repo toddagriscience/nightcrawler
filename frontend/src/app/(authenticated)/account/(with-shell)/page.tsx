@@ -13,7 +13,7 @@ export default async function AccountPage() {
 
   return (
     <AccountInfo title="Farm information">
-      <div className="border-black/20 border-t">
+      <div className="border-t border-black/20">
         <AccountInfoRow
           label="Nickname"
           value={accountFarmData.farm.informalName ?? ''}
@@ -40,6 +40,7 @@ export default async function AccountPage() {
       </div>
 
       <AccountInfoSection title="Account terms">
+        {/** Get this integrated via stripe later :thumbsup: */}
         <AccountInfoRow label="Renewal" value="Not set" />
         <AccountInfoRow label="Billing cycle" value="Not set" />
         <AccountInfoRow label="Next billing date" value="Not set" />
