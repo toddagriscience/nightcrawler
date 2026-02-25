@@ -61,18 +61,20 @@ export default function Join() {
               {isSuccess ? (
                 <div className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]">
                   <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
-                    Account Created Successfully
+                    Your Todd Account Has Been Created!
                   </h1>
-                  <p>Please check your email for a verification link.</p>
+                  <p className="text-sm mb-8 text-left">
+                    Please check your email for a verification link.
+                  </p>
                 </div>
               ) : (
                 <>
                   <h1 className="text-2xl mb-5 md:mb-8 mt-10 md:mt-0 text-left">
-                    You're Almost There!
+                    You&apos;re Almost There!
                   </h1>
                   <p className="text-sm mb-8 text-left">
-                    You'll use this to login and access your Todd account in the
-                    future.
+                    You&apos;ll use this to login and access your Todd account
+                    in the future.
                   </p>
 
                   {errors && errors.length > 0 && (

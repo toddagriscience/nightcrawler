@@ -1,11 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import Join from './page';
+import { render, screen } from '@testing-library/react';
 import { useActionState } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import Join from './page';
 
 global.ResizeObserver = ResizeObserver;
 
@@ -76,12 +76,18 @@ describe('Join Page', () => {
 
       render(<Join />);
 
-      expect(screen.getByText('JOIN US')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
       expect(
-        screen.getByPlaceholderText('Confirm Password')
+        screen.getByText(
+          "You'll use this to login and access your Todd account in the future."
+        )
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText('Create a Password')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Use at least 10 characters')
       ).toBeInTheDocument();
       expect(screen.getByText('Show Password')).toBeInTheDocument();
+      expect(screen.getByText('Continue')).toBeInTheDocument();
     });
 
     it('includes hidden fields with pre-filled values from search params', () => {
@@ -201,14 +207,16 @@ describe('Join Page', () => {
       render(<Join />);
 
       expect(
-        screen.getByText('ACCOUNT CREATED SUCCESSFULLY')
+        screen.getByText('Your Todd Account Has Been Created!')
       ).toBeInTheDocument();
       expect(
         screen.getByText('Please check your email for a verification link.')
       ).toBeInTheDocument();
 
       // Form should not be visible
-      expect(screen.queryByText('JOIN US')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("You're Almost There!")
+      ).not.toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Password')).not.toBeInTheDocument();
     });
 
@@ -220,9 +228,9 @@ describe('Join Page', () => {
 
       render(<Join />);
 
-      expect(screen.getByText('JOIN US')).toBeInTheDocument();
+      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
       expect(
-        screen.queryByText('ACCOUNT CREATED SUCCESSFULLY')
+        screen.queryByText('Your Todd Account Has Been Created!')
       ).not.toBeInTheDocument();
     });
 
@@ -238,15 +246,17 @@ describe('Join Page', () => {
       render(<Join />);
 
       // Form should still be visible
-      expect(screen.getByText('JOIN US')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Use at least 10 characters')
+      ).toBeInTheDocument();
 
       // Error should be displayed
       expect(screen.getByText('User already exists')).toBeInTheDocument();
 
       // Success screen should not be visible
       expect(
-        screen.queryByText('ACCOUNT CREATED SUCCESSFULLY')
+        screen.queryByText('Your Todd Account Has Been Created!')
       ).not.toBeInTheDocument();
     });
   });
