@@ -16,8 +16,9 @@ export default async function PlatformTabContent({
 }) {
   return (
     <>
-      {!currentTabs.length ? (
-        <TabsContent value="home">
+      {/** Guaranteed to work, see the query/set of queries in (authenticated)/page.tsx */}
+      {!currentUser.approved ? (
+        <TabsContent value={'home'}>
           <Landing currentUser={currentUser} />
         </TabsContent>
       ) : (
