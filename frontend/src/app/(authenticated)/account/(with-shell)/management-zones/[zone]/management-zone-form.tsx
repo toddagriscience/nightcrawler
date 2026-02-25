@@ -28,6 +28,9 @@ export default function ManagementZoneForm({
     defaultValues: {
       ...zone,
       location: [0, 0],
+      // react-hook-form doesn't automatically handle Date, see each input for more context
+      npkLastUsed: undefined,
+      rotationYear: undefined,
     },
   });
 
@@ -88,6 +91,7 @@ export default function ManagementZoneForm({
             id="rotationYear"
             type="date"
             {...register('rotationYear', { valueAsDate: true })}
+            defaultValue={zone.rotationYear?.toISOString().split('T')[0]}
           />
         </div>
         <div>
@@ -100,7 +104,10 @@ export default function ManagementZoneForm({
           <Input
             id="npkLastUsed"
             type="date"
-            {...register('npkLastUsed', { valueAsDate: true })}
+            {...register('npkLastUsed', {
+              valueAsDate: true,
+            })}
+            defaultValue={zone.npkLastUsed?.toISOString().split('T')[0]}
           />
         </div>
       </div>

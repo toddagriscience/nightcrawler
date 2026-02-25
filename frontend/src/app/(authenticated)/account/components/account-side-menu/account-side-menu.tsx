@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const sideMenuItems = [
-  { href: '/account/users', label: 'User information' },
   { href: '/account', label: 'Farm information' },
+  { href: '/account/users', label: 'User information' },
   { href: '/account/management-zones', label: 'Management zones' },
   { href: '/account/security', label: 'Security' },
   { href: '/account/privacy', label: 'Privacy' },
