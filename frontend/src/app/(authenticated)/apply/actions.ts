@@ -33,6 +33,8 @@ import {
   GeneralBusinessInformationInsert,
   generalBusinessInformationInsertSchema,
 } from './types';
+import { isApplicationReadyForSubmission } from './db';
+import logger from '@/lib/logger';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
  *
@@ -195,14 +197,12 @@ export async function submitApplication(): Promise<ActionResponse> {
       return { error: 'User is not associated with a farm' };
     }
 
-    const applicationData = await db
-      .select()
-      .from(farmInfoInternalApplication)
-      .where(eq(farmInfoInternalApplication.farmId, farmId))
-      .limit(1);
-
-    if (!applicationData) {
-      return { error: 'Application not found' };
+    const canSubmit = await isApplicationReadyForSubmission(farmId);
+    if (!canSubmit) {
+      return {
+        error:
+          'Please complete General Business Information, Farm Information, and required application setup before submitting.',
+      };
     }
 
     await db.insert(accountAgreementAcceptance).values({
@@ -216,6 +216,7 @@ export async function submitApplication(): Promise<ActionResponse> {
 
     return { error: null };
   } catch (error) {
+    logger.error(error);
     if (error instanceof Error) {
       return { error: error.message };
     }
