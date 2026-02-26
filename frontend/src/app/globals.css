@@ -132,6 +132,16 @@ body {
   scrollbar-width: none;
 }
 
+.platform-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--foreground) 1.25px,
+    transparent 1.25px
+  );
+  background-size: 28px 28px;
+  background-position: center;
+}
+
 /* Animations */
 .fadeInAnimation {
   animation: fadeIn 0.8s ease-in-out;
