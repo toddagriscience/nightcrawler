@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+export const dynamic = 'force-dynamic';
+
 import { searchKnowledge } from '@/lib/ai/search';
 import { logger } from '@/lib/logger';
 import { SearchClient } from './search-client';

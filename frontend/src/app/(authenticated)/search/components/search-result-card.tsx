@@ -18,8 +18,12 @@ export function SearchResultCard({ result }: SearchResultCardProps) {
           <span className="text-xs text-foreground/50">{result.source}</span>
         )}
       </div>
-      <h2 className="text-lg font-semibold text-foreground mb-2">{result.title}</h2>
-      <p className="text-foreground/80 text-sm leading-relaxed">{result.content}</p>
+      <h2 className="text-lg font-semibold text-foreground mb-2">
+        {result.title}
+      </h2>
+      <p className="text-foreground/80 text-sm leading-relaxed">
+        {result.content}
+      </p>
     </Card>
   );
 }
