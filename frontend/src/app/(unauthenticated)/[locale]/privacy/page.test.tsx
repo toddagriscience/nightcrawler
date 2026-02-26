@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
-import PrivacyPage from './page';
+import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import PrivacyPage from './page';
 
 describe('PrivacyPage', () => {
   it('renders the page', () => {
@@ -37,6 +37,6 @@ describe('PrivacyPage', () => {
   it('has correct margins', () => {
     const { container } = renderWithNextIntl(<PrivacyPage />);
 
-    expect(container.querySelector('.mt-20')).toBeInTheDocument();
+    expect(container.querySelector('.mt-16')).toBeInTheDocument();
   });
 });

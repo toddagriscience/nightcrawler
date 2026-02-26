@@ -27,19 +27,38 @@ export const metadata: Metadata = {
  */
 export default async function DashboardPage() {
   const currentUser = await getAuthenticatedInfo();
-  const currentTabs = await db
-    .select({
-      id: tab.id,
-      managementZone: tab.managementZone,
-      name: managementZone.name,
-      user: tab.user,
-    })
-    .from(tab)
-    .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
-    .orderBy(asc(managementZone.name))
-    .where(eq(tab.user, currentUser.id));
 
-  const managementZones = await getTablessManagementZones(currentUser.farmId);
+  const fetchCurrentTabs = async () =>
+    db
+      .select({
+        id: tab.id,
+        managementZone: tab.managementZone,
+        name: managementZone.name,
+        user: tab.user,
+      })
+      .from(tab)
+      .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
+      .orderBy(asc(managementZone.name))
+      .where(eq(tab.user, currentUser.id));
+
+  let currentTabs = await fetchCurrentTabs();
+
+  let managementZones = await getTablessManagementZones(currentUser.farmId);
+
+  // This seems redundant - realistically, this will be called once or twice per user.
+  if (
+    currentUser.approved &&
+    currentTabs.length === 0 &&
+    managementZones.length > 0
+  ) {
+    await db.insert(tab).values({
+      managementZone: managementZones[0].id,
+      user: currentUser.id,
+    });
+
+    currentTabs = await fetchCurrentTabs();
+    managementZones = await getTablessManagementZones(currentUser.farmId);
+  }
 
   return (
     <PlatformTabs
