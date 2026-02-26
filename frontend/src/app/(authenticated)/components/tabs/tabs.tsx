@@ -5,7 +5,8 @@
 import { Button } from '@/components/ui';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import logger from '@/lib/logger';
-import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
+import { ManagementZoneSelect } from '@/lib/types/db';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -26,7 +27,7 @@ export default function PlatformTabs({
   children,
 }: {
   currentTabs: NamedTab[];
-  currentUser: UserSelect;
+  currentUser: AuthenticatedInfo;
   managementZones: ManagementZoneSelect[];
   children: React.ReactNode;
 }) {
