@@ -54,7 +54,7 @@ export default function Join() {
   return (
     <main>
       <div className="max-w-[1400px] mx-auto px-15 lg:px-16 h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 place-items-center mx-auto mt-10 md:mt-9 w-full max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto md:mt-0 w-full max-w-[1200px] mx-auto">
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
             style={{
@@ -99,7 +99,7 @@ export default function Join() {
 
                       <FieldSet className="">
                         <FieldLegend>
-                          <h1 className="text-2xl mb-5 md:mb-8 mt-10 md:mt-0 text-left">
+                          <h1 className="text-2xl mb-3 md:mb-5 mt-10 md:mt-0 text-left">
                             You&apos;re Almost There!
                           </h1>
                           <p className="text-sm mb-8 text-left font-normal">
@@ -145,7 +145,7 @@ export default function Join() {
                             </div>
                           </Field>
 
-                          <Field className="mb-4">
+                          <Field className="mb-2">
                             <FieldLabel
                               htmlFor="confirmPassword"
                               className="leading-tight mb-[-6px]"
@@ -174,7 +174,7 @@ export default function Join() {
                           />
                         </FieldGroup>
                       </FieldSet>
-                      <div className="flex flex-col gap-18 mt-10">
+                      <div className="flex flex-col gap-10 mt-10">
                         <SubmitButton
                           buttonText="Continue"
                           disabled={!isPasswordValid}
