@@ -3,18 +3,17 @@
 'use client';
 
 import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Button } from '@/components/ui';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { widgetEnum } from '@/lib/db/schema';
 import logger from '@/lib/logger';
 import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
-import { X } from 'lucide-react';
+import { Search } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import updateTabName, {
-  createTab as createTabAction,
-  deleteTab as deleteTabAction,
-} from './actions';
+import updateTabName, { createTab as createTabAction } from './actions';
 import { WidgetGridOverlayProvider } from './current-tab/widget-grid-overlay-context';
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
@@ -51,25 +50,9 @@ export default function PlatformTabs({
     (widgetType) => !existingWidgets.has(widgetType)
   );
 
-  async function setCurTabHelper({
-    newTab,
-    deletedTab,
-  }: {
-    newTab?: NamedTab;
-    deletedTab?: NamedTab;
-  }) {
+  async function setCurTabHelper({ newTab }: { newTab?: NamedTab }) {
     if (newTab) {
       setCurTab(getTabHash(newTab));
-    } else if (deletedTab) {
-      if (deletedTab && currentTabs.length === 1) {
-        setCurTab('home');
-      }
-      for (const tab of currentTabs) {
-        if (getTabHash(tab) !== getTabHash(deletedTab)) {
-          setCurTab(getTabHash(tab));
-          break;
-        }
-      }
     } else {
       setCurTab(getTabHash(currentTabs[0]));
     }
@@ -98,25 +81,6 @@ export default function PlatformTabs({
     });
   }
 
-  async function deleteTab(tab: NamedTab) {
-    // Approved users always have at least 1 tab open
-    if (currentTabs.length === 1 && currentUser.approved) {
-      return;
-    }
-
-    const tabId = tab.id;
-    const result = await deleteTabAction({ tabId });
-
-    if (result.error) {
-      logger.error(result.error);
-      return;
-    }
-
-    router.refresh();
-
-    setCurTabHelper({ deletedTab: tab });
-  }
-
   async function updateTab(newName: string, tabId: number) {
     const result = await updateTabName({ newName, tabId });
 
@@ -130,51 +94,45 @@ export default function PlatformTabs({
 
   return (
     <WidgetGridOverlayProvider value={{ showDotGrid, setShowDotGrid }}>
-      <Tabs
-        value={curTab}
-        className="flex h-[calc(100vh-4.5rem)] flex-col overflow-hidden"
-      >
-        <div className="border-b px-4 py-3">
-          <TabsList className="flex h-auto w-full flex-row flex-nowrap justify-start gap-2 bg-transparent p-0">
-            {currentTabs.map((tab, index) => (
-              <TabsTrigger
-                className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
-                key={tab.id}
-                value={getTabHash(tab)}
-                onClick={() => setCurTabHelper({ newTab: tab })}
-              >
-                <input
-                  className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
-                  defaultValue={tab.name || `Untitled Zone ${index}`}
-                  onChange={(e) => updateTab(e.target.value, tab.id)}
-                  onBlur={(e) => (e.target.scrollLeft = 0)}
-                />
-                {currentTabs.length !== 1 && (
-                  <div>
-                    {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                    <div
-                      aria-roledescription="Close the current tab"
-                      role="button"
-                      onClick={() => deleteTab(tab)}
-                      className="h-min p-0"
-                    >
-                      <X className="h-min w-4" />
-                    </div>
-                  </div>
-                )}
-              </TabsTrigger>
-            ))}
-            {currentTabs.length <= maxTabs && (
-              <NewTabDropdown
-                managementZones={managementZones}
-                addTab={createTab}
-              >
-                <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:ring-offset-0!">
-                  <span className="absolute top-[-3.5px]">+</span>
-                </Button>
-              </NewTabDropdown>
-            )}
-            <div className="grow" />
+      <Tabs value={curTab} className="flex h-screen flex-col overflow-hidden">
+        <div className="h-[4.5rem] border-b px-5">
+          <div className="flex h-full items-center gap-6">
+            <ToddHeader className="flex min-h-10 flex-row items-center" />
+            <TabsList className="flex h-auto max-w-[45vw] flex-1 flex-row flex-nowrap justify-start gap-2 overflow-hidden bg-transparent p-0">
+              {currentTabs.map((tab, index) => (
+                <TabsTrigger
+                  className="group flex max-w-36 min-w-28 flex-row items-center justify-between truncate border-none px-3 data-[state=active]:bg-gray-200 data-[state=active]:shadow-none"
+                  key={tab.id}
+                  value={getTabHash(tab)}
+                  onClick={() => setCurTabHelper({ newTab: tab })}
+                >
+                  <input
+                    className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
+                    defaultValue={tab.name || `Untitled Zone ${index}`}
+                    onChange={(e) => updateTab(e.target.value, tab.id)}
+                    onBlur={(e) => (e.target.scrollLeft = 0)}
+                  />
+                </TabsTrigger>
+              ))}
+              {currentTabs.length <= maxTabs && (
+                <NewTabDropdown
+                  managementZones={managementZones}
+                  addTab={createTab}
+                >
+                  <Button className="min-w-10 cursor-pointer border-none text-4xl font-light text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0!">
+                    <span className="absolute top-[-3.5px]">+</span>
+                  </Button>
+                </NewTabDropdown>
+              )}
+            </TabsList>
+            <div className="flex min-w-72 max-w-xl flex-1 items-center rounded-md border border-gray-300 px-3 py-2">
+              <Search className="mr-2 h-5 w-5 text-muted-foreground" />
+              <input
+                aria-label="Search"
+                placeholder="Search"
+                className="w-full border-none bg-transparent text-base focus:outline-none"
+              />
+            </div>
             {activeTab && (
               <AddWidgetDropdown
                 managementZoneId={activeTab.managementZone}
@@ -185,13 +143,24 @@ export default function PlatformTabs({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="hover:cursor-pointer"
+                  className="rounded-md border-none bg-gray-200 px-4 py-2 hover:cursor-pointer hover:bg-gray-200"
                 >
                   Add widget
                 </Button>
               </AddWidgetDropdown>
             )}
-          </TabsList>
+            <div className="ml-4 flex items-center gap-8">
+              <div className="flex items-center gap-2 text-sm">
+                Notifications
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
+                  2
+                </span>
+              </div>
+              <Link href="/account" className="text-sm">
+                Account
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
       </Tabs>

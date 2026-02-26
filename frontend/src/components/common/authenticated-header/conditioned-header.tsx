@@ -8,7 +8,7 @@ import AuthenticatedHeader from './authenticated-header';
 export default function ConditionedAuthenticatedHeader() {
   const pathname = usePathname();
 
-  if (pathname?.startsWith('/account')) {
+  if (pathname === '/' || pathname?.startsWith('/account')) {
     return null;
   }
 
