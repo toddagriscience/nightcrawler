@@ -158,7 +158,7 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="mb-10 flex items-center gap-4">
+                {/* <div className="mb-10 flex items-center gap-4">
                   <div className="h-px flex-1 bg-[#848484]" />
                   <span className="text-sm">or</span>
                   <div className="h-px flex-1 bg-[#848484]" />
@@ -177,7 +177,7 @@ export default function Login() {
                   <Link href="/contact" className="font-bold underline">
                     Learn how to become one
                   </Link>
-                </p>
+                </p> */}
               </form>
             </FadeIn>
           </div>
