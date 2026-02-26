@@ -11,6 +11,7 @@
 import { logger } from '@/lib/logger';
 import { db } from '../db/schema/connection';
 import { knowledgeArticle } from '../db/schema';
+import type { KnowledgeArticleSelect } from '../types/db';
 import { asc, gt, sql } from 'drizzle-orm';
 import { getEmbedding } from './embeddings';
 
@@ -25,29 +26,14 @@ const MAX_RESULTS = 5;
  * @param query - The farmer's search query
  * @returns Array of matching articles with similarity scores
  */
-export async function searchKnowledge(query: string): Promise<
-  {
-    id: number;
-    title: string;
-    content: string;
-    category: string;
-    source: string | null;
-    similarity: number;
-  }[]
-> {
+export async function searchKnowledge(
+  query: string
+): Promise<KnowledgeArticleSelect[]> {
   try {
     const embedding = await getEmbedding(query);
 
     const results = await db
-      .select({
-        id: knowledgeArticle.id,
-        title: knowledgeArticle.title,
-        content: knowledgeArticle.content,
-        category: knowledgeArticle.category,
-        source: knowledgeArticle.source,
-        // Calculate similarity: 1 - distance
-        similarity: sql<number>`1 - (${knowledgeArticle.embedding} <=> ${JSON.stringify(embedding)})`,
-      })
+      .select()
       .from(knowledgeArticle)
       .where(
         gt(
