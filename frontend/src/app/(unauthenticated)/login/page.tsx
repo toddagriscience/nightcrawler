@@ -170,14 +170,14 @@ export default function Login() {
                   className="mb-10 w-fit rounded-full px-12 py-4 font-semibold text-background hover:cursor-pointer"
                 >
                   Login with passkeys
-                </Button>
+                </Button> */}
 
                 <p className="text-left text-sm font-normal">
                   Not yet a Todd Client?{' '}
                   <Link href="/contact" className="font-bold underline">
                     Learn how to become one
                   </Link>
-                </p> */}
+                </p>
               </form>
             </FadeIn>
           </div>
