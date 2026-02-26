@@ -10,9 +10,15 @@ import { getTabHash } from './utils';
 export default async function PlatformTabContent({
   currentTabs,
   currentUser,
+  showDotGrid,
+  onShowDotGrid,
+  onHideDotGrid,
 }: {
   currentTabs: NamedTab[];
   currentUser: UserSelect;
+  showDotGrid: boolean;
+  onShowDotGrid: () => void;
+  onHideDotGrid: () => void;
 }) {
   return (
     <>
@@ -31,7 +37,12 @@ export default async function PlatformTabContent({
             value={getTabHash(tab)}
             className="!mt-0 h-full w-full overflow-hidden"
           >
-            <CurrentTab currentTab={tab} />
+            <CurrentTab
+              currentTab={tab}
+              showDotGrid={showDotGrid}
+              onShowDotGrid={onShowDotGrid}
+              onHideDotGrid={onHideDotGrid}
+            />
           </TabsContent>
         ))
       )}

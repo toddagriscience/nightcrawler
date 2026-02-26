@@ -1,11 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { managementZone, widgetEnum } from '@/lib/db/schema';
+import { managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
-import { widget } from '@/lib/db/schema/widget';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, eq, inArray } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import PlatformTabContent from './components/tabs/tab-content';
 import PlatformTabs from './components/tabs/tabs';
@@ -60,37 +59,21 @@ export default async function DashboardPage() {
     managementZones = await getTablessManagementZones(currentUser.farmId);
   }
 
-  const widgetsByManagementZone: Record<
-    number,
-    (typeof widgetEnum.enumValues)[number][]
-  > = {};
-  const tabManagementZoneIds = currentTabs.map(
-    (currentTab) => currentTab.managementZone
-  );
-
-  if (tabManagementZoneIds.length > 0) {
-    const tabWidgets = await db
-      .select({
-        managementZone: widget.managementZone,
-        name: widget.name,
-      })
-      .from(widget)
-      .where(inArray(widget.managementZone, tabManagementZoneIds));
-
-    for (const tabWidget of tabWidgets) {
-      widgetsByManagementZone[tabWidget.managementZone] ??= [];
-      widgetsByManagementZone[tabWidget.managementZone].push(tabWidget.name);
-    }
-  }
-
   return (
     <PlatformTabs
       managementZones={managementZones}
       currentTabs={currentTabs}
       currentUser={currentUser}
-      widgetsByManagementZone={widgetsByManagementZone}
     >
-      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+      {({ showDotGrid, onShowDotGrid, onHideDotGrid }) => (
+        <PlatformTabContent
+          currentTabs={currentTabs}
+          currentUser={currentUser}
+          showDotGrid={showDotGrid}
+          onShowDotGrid={onShowDotGrid}
+          onHideDotGrid={onHideDotGrid}
+        />
+      )}
     </PlatformTabs>
   );
 }

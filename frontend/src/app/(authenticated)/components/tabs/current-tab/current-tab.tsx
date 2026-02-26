@@ -9,8 +9,14 @@ import CurrentTabClient from './current-tab-client';
 
 export default async function CurrentTab({
   currentTab,
+  showDotGrid,
+  onShowDotGrid,
+  onHideDotGrid,
 }: {
   currentTab: NamedTab;
+  showDotGrid: boolean;
+  onShowDotGrid: () => void;
+  onHideDotGrid: () => void;
 }) {
   const widgets = await db
     .select()
@@ -21,6 +27,9 @@ export default async function CurrentTab({
     <CurrentTabClient
       currentTab={currentTab}
       widgets={widgets}
+      showDotGrid={showDotGrid}
+      onShowDotGrid={onShowDotGrid}
+      onHideDotGrid={onHideDotGrid}
       renderedWidgets={widgets.map((widget) => {
         return (
           <div

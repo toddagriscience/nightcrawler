@@ -4,16 +4,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import CurrentTabClient from './current-tab-client';
 
-const setShowDotGridMock = vi.fn();
-let showDotGridMock = false;
-
-vi.mock('./widget-grid-overlay-context', () => ({
-  useWidgetGridOverlay: () => ({
-    showDotGrid: showDotGridMock,
-    setShowDotGrid: setShowDotGridMock,
-  }),
-}));
-
 vi.mock('./widgets-grid', () => ({
   __esModule: true,
   default: ({
@@ -41,13 +31,16 @@ describe('CurrentTabClient', () => {
     user: 1,
   };
 
-  it('passes context visibility to grid and toggles visibility on drag start/stop', () => {
-    showDotGridMock = false;
-    setShowDotGridMock.mockClear();
+  it('passes visibility prop to grid and toggles visibility callbacks on drag start/stop', () => {
+    const onShowDotGrid = vi.fn();
+    const onHideDotGrid = vi.fn();
 
     render(
       <CurrentTabClient
         currentTab={currentTab}
+        showDotGrid={false}
+        onShowDotGrid={onShowDotGrid}
+        onHideDotGrid={onHideDotGrid}
         widgets={
           [
             {
@@ -64,18 +57,19 @@ describe('CurrentTabClient', () => {
     expect(screen.getByTestId('grid-visible')).toHaveTextContent('false');
 
     fireEvent.click(screen.getByText('drag-start'));
-    expect(setShowDotGridMock).toHaveBeenCalledWith(true);
+    expect(onShowDotGrid).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByText('drag-stop'));
-    expect(setShowDotGridMock).toHaveBeenCalledWith(false);
+    expect(onHideDotGrid).toHaveBeenCalledTimes(1);
   });
 
-  it('shows the overlay in empty-state tabs when context visibility is enabled', () => {
-    showDotGridMock = true;
-
+  it('shows the overlay in empty-state tabs when visibility prop is enabled', () => {
     render(
       <CurrentTabClient
         currentTab={currentTab}
+        showDotGrid={true}
+        onShowDotGrid={() => {}}
+        onHideDotGrid={() => {}}
         widgets={[]}
         renderedWidgets={null}
       />

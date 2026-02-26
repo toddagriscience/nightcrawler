@@ -4,20 +4,23 @@
 
 import { WidgetSelect } from '@/lib/types/db';
 import { NamedTab } from '../types';
-import { useWidgetGridOverlay } from './widget-grid-overlay-context';
 import WidgetsGrid from './widgets-grid';
 
 export default function CurrentTabClient({
   currentTab,
   widgets,
+  showDotGrid,
+  onShowDotGrid,
+  onHideDotGrid,
   renderedWidgets,
 }: {
   currentTab: NamedTab;
   widgets: WidgetSelect[];
+  showDotGrid: boolean;
+  onShowDotGrid: () => void;
+  onHideDotGrid: () => void;
   renderedWidgets: React.ReactNode;
 }) {
-  const { showDotGrid, setShowDotGrid } = useWidgetGridOverlay();
-
   if (widgets.length === 0) {
     return (
       <div className="relative flex h-full flex-1 flex-col items-center justify-center gap-4 overflow-hidden">
@@ -40,8 +43,8 @@ export default function CurrentTabClient({
         currentTab={currentTab}
         renderedWidgets={renderedWidgets}
         showDotGrid={showDotGrid}
-        onWidgetDragStart={() => setShowDotGrid(true)}
-        onWidgetDragStop={() => setShowDotGrid(false)}
+        onWidgetDragStart={onShowDotGrid}
+        onWidgetDragStop={onHideDotGrid}
       />
     </div>
   );
