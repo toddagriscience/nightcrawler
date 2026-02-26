@@ -25,7 +25,7 @@ const waitTime = 5000;
 
 /** Terms and conditions page */
 export default function TermsAndConditions({
-  canSubmitApplication = false,
+  canSubmitApplication = true,
 }: {
   canSubmitApplication?: boolean;
 }) {
