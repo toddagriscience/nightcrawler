@@ -3,7 +3,9 @@
 import { GoogleGenAI } from '@google/genai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+// Just for `bun build`. Hacky but works.
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY ?? 'NOTAKEY' });
 
 /**
  * Generates a vector embedding for a given text using Gemini's embedding model.
