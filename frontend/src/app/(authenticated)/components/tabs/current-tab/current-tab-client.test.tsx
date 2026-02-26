@@ -1,28 +1,17 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { fireEvent, render, screen } from '@testing-library/react';
-import type React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import CurrentTabClient from './current-tab-client';
 
-vi.mock('@/components/common/widgets/add-widget-dropdown', () => ({
-  __esModule: true,
-  default: ({
-    children,
-    onOpenChange,
-    onWidgetSelected,
-  }: {
-    children: React.ReactNode;
-    onOpenChange?: (isOpen: boolean) => void;
-    onWidgetSelected?: () => void;
-  }) => (
-    <div>
-      <button onClick={() => onOpenChange?.(true)}>open-dropdown</button>
-      <button onClick={() => onOpenChange?.(false)}>close-dropdown</button>
-      <button onClick={() => onWidgetSelected?.()}>select-widget</button>
-      {children}
-    </div>
-  ),
+const setShowDotGridMock = vi.fn();
+let showDotGridMock = false;
+
+vi.mock('./widget-grid-overlay-context', () => ({
+  useWidgetGridOverlay: () => ({
+    showDotGrid: showDotGridMock,
+    setShowDotGrid: setShowDotGridMock,
+  }),
 }));
 
 vi.mock('./widgets-grid', () => ({
@@ -52,7 +41,10 @@ describe('CurrentTabClient', () => {
     user: 1,
   };
 
-  it('toggles dot-grid visibility when dropdown opens/selects and when dragging starts/stops', () => {
+  it('passes context visibility to grid and toggles visibility on drag start/stop', () => {
+    showDotGridMock = false;
+    setShowDotGridMock.mockClear();
+
     render(
       <CurrentTabClient
         currentTab={currentTab}
@@ -65,46 +57,30 @@ describe('CurrentTabClient', () => {
             },
           ] as any
         }
-        unusedWidgets={['Macro Radar'] as any}
         renderedWidgets={<div>Widget</div>}
       />
     );
 
     expect(screen.getByTestId('grid-visible')).toHaveTextContent('false');
 
-    fireEvent.click(screen.getByText('open-dropdown'));
-    expect(screen.getByTestId('grid-visible')).toHaveTextContent('true');
-
-    fireEvent.click(screen.getByText('select-widget'));
-    expect(screen.getByTestId('grid-visible')).toHaveTextContent('false');
-
     fireEvent.click(screen.getByText('drag-start'));
-    expect(screen.getByTestId('grid-visible')).toHaveTextContent('true');
+    expect(setShowDotGridMock).toHaveBeenCalledWith(true);
 
     fireEvent.click(screen.getByText('drag-stop'));
-    expect(screen.getByTestId('grid-visible')).toHaveTextContent('false');
+    expect(setShowDotGridMock).toHaveBeenCalledWith(false);
   });
 
-  it('shows the overlay in empty-state tabs only while dropdown is open', () => {
+  it('shows the overlay in empty-state tabs when context visibility is enabled', () => {
+    showDotGridMock = true;
+
     render(
       <CurrentTabClient
         currentTab={currentTab}
         widgets={[]}
-        unusedWidgets={['Macro Radar'] as any}
         renderedWidgets={null}
       />
     );
 
-    expect(
-      screen.queryByTestId('tab-dot-grid-overlay')
-    ).not.toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('open-dropdown'));
     expect(screen.getByTestId('tab-dot-grid-overlay')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('select-widget'));
-    expect(
-      screen.queryByTestId('tab-dot-grid-overlay')
-    ).not.toBeInTheDocument();
   });
 });

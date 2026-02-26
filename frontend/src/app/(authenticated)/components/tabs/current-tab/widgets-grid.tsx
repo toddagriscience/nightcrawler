@@ -80,7 +80,7 @@ export default function WidgetsGrid({
   }
 
   return (
-    <div ref={containerRef} className="relative h-[80vh]">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       {showDotGrid && (
         <div
           aria-hidden="true"
@@ -91,11 +91,13 @@ export default function WidgetsGrid({
       {mounted && (
         <ReactGridLayout
           layout={layout}
+          autoSize={false}
+          isBounded
           onDragStart={onWidgetDragStart}
           onDragStop={handleDrop}
           width={width}
           gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
-          className="h-[80vh]!"
+          className="h-full!"
         >
           {renderedWidgets}
         </ReactGridLayout>
