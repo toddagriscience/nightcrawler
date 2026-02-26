@@ -172,7 +172,7 @@ export default function Login() {
                   <Button
                     type="button"
                     variant="brand"
-                    className="mb-10 w-fit rounded-full px-8 py-3 font-semibold text-background hover:cursor-pointer"
+                    className="mb-10 w-fit rounded-full px-12 py-4 font-semibold text-background hover:cursor-pointer"
                   >
                     Login with passkeys
                   </Button>
