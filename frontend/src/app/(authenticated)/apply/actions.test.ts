@@ -48,8 +48,13 @@ const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
     const { migrate } = await import('drizzle-orm/pglite/migrator');
     const { seed } = await import('drizzle-seed');
     const schema = await import('@/lib/db/schema');
-    const { user, farm, farmLocation, farmCertificate, farmInfoInternalApplication } =
-      await import('@/lib/db/schema');
+    const {
+      user,
+      farm,
+      farmLocation,
+      farmCertificate,
+      farmInfoInternalApplication,
+    } = await import('@/lib/db/schema');
 
     const db = drizzle({ schema, casing: 'snake_case' });
     await migrate(db, { migrationsFolder: 'drizzle' });
