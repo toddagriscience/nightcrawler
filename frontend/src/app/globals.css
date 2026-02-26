@@ -142,6 +142,16 @@ body {
   background-position: center;
 }
 
+.platform-dashboard-gradient {
+  background: radial-gradient(
+    140% 95% at 50% 0%,
+    #ffffff 0%,
+    #f0eeeb 40%,
+    #d8d4cf 70%,
+    #c7c3bf 100%
+  );
+}
+
 /* Animations */
 .fadeInAnimation {
   animation: fadeIn 0.8s ease-in-out;

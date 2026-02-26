@@ -94,20 +94,23 @@ export default function PlatformTabs({
 
   return (
     <WidgetGridOverlayProvider value={{ showDotGrid, setShowDotGrid }}>
-      <Tabs value={curTab} className="flex h-screen flex-col overflow-hidden">
-        <div className="h-[4.5rem] border-b px-5">
-          <div className="flex h-full items-center gap-6">
-            <ToddHeader className="flex min-h-10 flex-row items-center" />
-            <TabsList className="flex h-auto max-w-[45vw] flex-1 flex-row flex-nowrap justify-start gap-2 overflow-hidden bg-transparent p-0">
+      <Tabs
+        value={curTab}
+        className="platform-dashboard-gradient flex h-screen flex-col overflow-hidden"
+      >
+        <div className="h-14 px-5">
+          <div className="flex h-full items-center gap-4">
+            <ToddHeader className="flex min-h-8 flex-row items-center [&>img]:h-auto [&>img]:w-[68px]" />
+            <TabsList className="flex h-auto max-w-[42vw] flex-1 flex-row flex-nowrap justify-start gap-2 overflow-hidden bg-transparent p-0">
               {currentTabs.map((tab, index) => (
                 <TabsTrigger
-                  className="group flex max-w-36 min-w-28 flex-row items-center justify-between truncate border-none px-3 data-[state=active]:bg-gray-200 data-[state=active]:shadow-none"
+                  className="group flex h-9 max-w-40 min-w-28 flex-row items-center justify-between truncate border-none px-3 text-[14px] leading-none data-[state=active]:bg-gray-200 data-[state=active]:shadow-none"
                   key={tab.id}
                   value={getTabHash(tab)}
                   onClick={() => setCurTabHelper({ newTab: tab })}
                 >
                   <input
-                    className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
+                    className="pointer-events-none max-w-25 cursor-pointer truncate text-[14px] leading-none group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
                     defaultValue={tab.name || `Untitled Zone ${index}`}
                     onChange={(e) => updateTab(e.target.value, tab.id)}
                     onBlur={(e) => (e.target.scrollLeft = 0)}
@@ -119,18 +122,18 @@ export default function PlatformTabs({
                   managementZones={managementZones}
                   addTab={createTab}
                 >
-                  <Button className="min-w-10 cursor-pointer border-none text-4xl font-light text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0!">
-                    <span className="absolute top-[-3.5px]">+</span>
+                  <Button className="h-9 min-w-8 cursor-pointer border-none px-2 text-[18px] leading-none font-light text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0!">
+                    <span>+</span>
                   </Button>
                 </NewTabDropdown>
               )}
             </TabsList>
-            <div className="flex min-w-72 max-w-xl flex-1 items-center rounded-md border border-gray-300 px-3 py-2">
-              <Search className="mr-2 h-5 w-5 text-muted-foreground" />
+            <div className="flex h-9 min-w-64 max-w-lg flex-1 items-center rounded-md border border-gray-300 bg-white/40 px-3">
+              <Search className="mr-2 h-4 w-4 text-muted-foreground" />
               <input
                 aria-label="Search"
                 placeholder="Search"
-                className="w-full border-none bg-transparent text-base focus:outline-none"
+                className="w-full border-none bg-transparent text-[14px] leading-none focus:outline-none"
               />
             </div>
             {activeTab && (
@@ -143,20 +146,15 @@ export default function PlatformTabs({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="rounded-md border-none bg-gray-200 px-4 py-2 hover:cursor-pointer hover:bg-gray-200"
+                  className="h-9 rounded-md border-none bg-gray-200 px-4 text-[14px] leading-none hover:cursor-pointer hover:bg-gray-200"
                 >
                   Add widget
                 </Button>
               </AddWidgetDropdown>
             )}
-            <div className="ml-4 flex items-center gap-8">
-              <div className="flex items-center gap-2 text-sm">
-                Notifications
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">
-                  2
-                </span>
-              </div>
-              <Link href="/account" className="text-sm">
+            <div className="ml-2 flex items-center gap-8 text-[14px] leading-none">
+              <div className="text-[14px] leading-none">Notifications</div>
+              <Link href="/account" className="text-[14px] leading-none">
                 Account
               </Link>
             </div>
