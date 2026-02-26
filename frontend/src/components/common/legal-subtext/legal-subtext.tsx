@@ -20,7 +20,7 @@ export function LegalSubtext() {
           Todd Account Agreement
         </NextLink>{' '}
         and{' '}
-        <NextLink href="/privacy" className="underline font-normal">
+        <NextLink href="/en/privacy" className="underline font-normal">
           Privacy Policy
         </NextLink>
         .

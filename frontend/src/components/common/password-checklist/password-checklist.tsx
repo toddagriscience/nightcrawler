@@ -60,15 +60,17 @@ export default function PasswordChecklist({
 
   return (
     <div className={`${className}`}>
-      <p className="text-sm text-left mb-4">
+      <p
+        className={`${passwordRequirements.has8Characters && passwordRequirements.hasSpecialCharacter && passwordRequirements.hasNumber && passwordRequirements.hasUpperCase && passwordRequirements.isConfirmationSame ? 'hidden' : 'block'} text-sm text-left mb-2`}
+      >
         Please make sure to use a secure password matching the rules.
       </p>
       <ul className="text-sm text-left">
         <li
           className={
             passwordRequirements.has8Characters
-              ? 'text-green-500'
-              : 'text-red-500'
+              ? 'hidden'
+              : 'block text-red-500'
           }
         >
           {passwordRequirements.has8Characters ? '✓' : '✗'} at least 8
@@ -78,8 +80,8 @@ export default function PasswordChecklist({
         <li
           className={
             passwordRequirements.hasSpecialCharacter
-              ? 'text-green-500'
-              : 'text-red-500'
+              ? 'hidden'
+              : 'block text-red-500'
           }
         >
           {passwordRequirements.hasSpecialCharacter ? '✓' : '✗'} contains a
@@ -88,7 +90,7 @@ export default function PasswordChecklist({
 
         <li
           className={
-            passwordRequirements.hasNumber ? 'text-green-500' : 'text-red-500'
+            passwordRequirements.hasNumber ? 'hidden' : 'block text-red-500'
           }
         >
           {passwordRequirements.hasNumber ? '✓' : '✗'} contains a number
@@ -96,9 +98,7 @@ export default function PasswordChecklist({
 
         <li
           className={
-            passwordRequirements.hasUpperCase
-              ? 'text-green-500'
-              : 'text-red-500'
+            passwordRequirements.hasUpperCase ? 'hidden' : 'block text-red-500'
           }
         >
           {passwordRequirements.hasUpperCase ? '✓' : '✗'} contains an uppercase
@@ -107,12 +107,12 @@ export default function PasswordChecklist({
         <li
           className={
             passwordRequirements.isConfirmationSame
-              ? 'text-green-500'
-              : 'text-red-500'
+              ? 'hidden'
+              : 'block text-red-500'
           }
         >
-          {passwordRequirements.isConfirmationSame ? '✓' : '✗'} both passwords
-          are the same
+          {passwordRequirements.isConfirmationSame ? 'hidden' : '✗'} passwords
+          match
         </li>
       </ul>
     </div>

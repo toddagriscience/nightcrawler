@@ -6,13 +6,19 @@ import { FadeIn } from '@/components/common';
 import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { redirect, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
 import { useActionState, useState } from 'react';
+import { BiShow, BiSolidHide } from 'react-icons/bi';
 import { signUp } from './actions';
 
 /** Both outbound (/incoming) and inbound (/en/contact) onboarding will redirect here. We only ask for the password since we already have the user's email.
@@ -47,8 +53,8 @@ export default function Join() {
 
   return (
     <main>
-      <div className="max-w-[1400px] mx-auto px-15 h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-15 md:mb-26 w-full max-w-[1200px] mx-auto">
+      <div className="max-w-[1400px] mx-auto px-15 lg:px-16 h-screen flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 place-items-center mx-auto mt-10 md:mt-9 w-full max-w-[1200px] mx-auto">
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
             style={{
@@ -58,126 +64,132 @@ export default function Join() {
           />
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <FadeIn>
-              {isSuccess ? (
-                <div className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]">
-                  <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
-                    Your Todd Account Has Been Created!
-                  </h1>
-                  <p className="text-sm mb-8 text-left">
-                    Please check your email for a verification link.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <h1 className="text-2xl mb-5 md:mb-8 mt-10 md:mt-0 text-left">
-                    You&apos;re Almost There!
-                  </h1>
-                  <p className="text-sm mb-8 text-left">
-                    You&apos;ll use this to login and access your Todd account
-                    in the future.
-                  </p>
-
-                  {errors && errors.length > 0 && (
-                    <div className="mb-3">
-                      {errors.map((error, index) => (
-                        <p
-                          key={index}
-                          className="text-center text-sm text-red-500"
-                        >
-                          {error}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-
-                  <form action={signUpAction}>
-                    {/* Hidden fields for pre-filled values */}
-                    <input type="hidden" name="firstName" value={firstName} />
-                    <input type="hidden" name="lastName" value={lastName} />
-                    <input type="hidden" name="farmName" value={farmName} />
-                    <input type="hidden" name="email" value={email} />
-                    <input type="hidden" name="phone" value={phone} />
-
-                    <FieldSet className="mb-8">
-                      <FieldGroup>
-                        <Field>
-                          <FieldLabel
-                            htmlFor="password"
-                            className="leading-tight mb-[-6px]"
+              <div className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]">
+                {isSuccess ? (
+                  <div className="flex h-full flex-col mt-22 md:mt-6 lg:mt-10 gap-6 items-center md:items-start mx-auto">
+                    <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
+                      Your Todd Account Has Been Created!
+                    </h1>
+                    <p className="text-sm mb-8 text-left">
+                      Please check your email for a verification link.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {errors && errors.length > 0 && (
+                      <div className="mb-3">
+                        {errors.map((error, index) => (
+                          <p
+                            key={index}
+                            className="text-center text-sm text-red-500"
                           >
-                            Create a Password
-                          </FieldLabel>
-                          <Input
-                            className="border-[#848484]/80 border-1"
-                            placeholder="Use at least 10 characters"
-                            id="password"
-                            data-testid="password"
-                            name="password"
-                            type={showPassword ? 'text' : 'password'}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                          />
-                        </Field>
+                            {error}
+                          </p>
+                        ))}
+                      </div>
+                    )}
 
-                        <Field>
-                          <FieldLabel
-                            htmlFor="confirmPassword"
-                            className="leading-tight mb-[-6px]"
-                          >
-                            Confirm Password
-                          </FieldLabel>
-                          <Input
-                            className="border-[#848484]/80 border-1"
-                            placeholder="Confirm Password"
-                            id="confirmPassword"
-                            data-testid="confirm-password"
-                            name="confirmPassword"
-                            type={showPassword ? 'text' : 'password'}
-                            onChange={(e) =>
-                              setConfirmationPassword(e.target.value)
-                            }
-                            required
-                          />
-                        </Field>
+                    <form action={signUpAction}>
+                      {/* Hidden fields for pre-filled values */}
+                      <input type="hidden" name="firstName" value={firstName} />
+                      <input type="hidden" name="lastName" value={lastName} />
+                      <input type="hidden" name="farmName" value={farmName} />
+                      <input type="hidden" name="email" value={email} />
+                      <input type="hidden" name="phone" value={phone} />
 
-                        <PasswordChecklist
-                          password={password}
-                          confirmationPassword={confirmationPassword}
-                          setIsPasswordValid={setIsPasswordValid}
-                        />
-
-                        <Field className="flex flex-row items-center justify-between">
-                          <div className="flex basis-[min-content] flex-row items-center justify-center gap-2 text-nowrap">
-                            <Checkbox
-                              data-testid="show-password-checkbox"
-                              id="show-password"
-                              className="max-h-4 max-w-4 focus:ring-0!"
-                              onCheckedChange={() =>
-                                setShowPassword(!showPassword)
-                              }
-                            />
-                            <FieldLabel htmlFor="show-password">
-                              Show Password
+                      <FieldSet className="">
+                        <FieldLegend>
+                          <h1 className="text-2xl mb-5 md:mb-8 mt-10 md:mt-0 text-left">
+                            You&apos;re Almost There!
+                          </h1>
+                          <p className="text-sm mb-8 text-left font-normal">
+                            You&apos;ll use this to login and access your Todd
+                            account in the future.
+                          </p>
+                        </FieldLegend>
+                        <FieldGroup className="flex flex-col gap-4">
+                          <Field>
+                            <FieldLabel
+                              htmlFor="password"
+                              className="leading-tight mb-[-6px]"
+                            >
+                              Create a Password
                             </FieldLabel>
-                          </div>
-                        </Field>
-                      </FieldGroup>
-                    </FieldSet>
-                    <div className="flex flex-col gap-8">
-                      <SubmitButton
-                        buttonText="Continue"
-                        disabled={!isPasswordValid}
-                        className={
-                          !isPasswordValid
-                            ? 'border-1 border-solid bg-transparent text-black/90 w-[244px] border-[#848484]/80'
-                            : 'w-[244px]'
-                        }
-                      />
-                      <LegalSubtext />
-                    </div>
-                  </form>
-                </>
-              )}
+                            <div className="relative">
+                              <Input
+                                className="border-[#848484]/80 border-1"
+                                placeholder="Use at least 10 characters"
+                                id="password"
+                                data-testid="password"
+                                name="password"
+                                type={showPassword ? 'text' : 'password'}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/70 hover:text-foreground hover:cursor-pointer"
+                                aria-label={
+                                  showPassword
+                                    ? 'Hide password'
+                                    : 'Show password'
+                                }
+                              >
+                                {showPassword ? (
+                                  <BiSolidHide className="size-5" aria-hidden />
+                                ) : (
+                                  <BiShow className="size-5" aria-hidden />
+                                )}
+                              </button>
+                            </div>
+                          </Field>
+
+                          <Field className="mb-4">
+                            <FieldLabel
+                              htmlFor="confirmPassword"
+                              className="leading-tight mb-[-6px]"
+                            >
+                              Confirm Password
+                            </FieldLabel>
+
+                            <Input
+                              className="border-[#848484]/80 border-1 pr-10"
+                              placeholder="Confirm Password"
+                              id="confirmPassword"
+                              data-testid="confirm-password"
+                              name="confirmPassword"
+                              type={showPassword ? 'text' : 'password'}
+                              onChange={(e) =>
+                                setConfirmationPassword(e.target.value)
+                              }
+                              required
+                            />
+                          </Field>
+
+                          <PasswordChecklist
+                            password={password}
+                            confirmationPassword={confirmationPassword}
+                            setIsPasswordValid={setIsPasswordValid}
+                          />
+                        </FieldGroup>
+                      </FieldSet>
+                      <div className="flex flex-col gap-18 mt-10">
+                        <SubmitButton
+                          buttonText="Continue"
+                          disabled={!isPasswordValid}
+                          className={
+                            !isPasswordValid
+                              ? 'border-1 border-solid bg-transparent text-black/90 w-[144px] border-[#848484]/80'
+                              : 'w-[144px]'
+                          }
+                        />
+                        <LegalSubtext />
+                      </div>
+                    </form>
+                  </>
+                )}
+              </div>
             </FadeIn>
           </div>
         </div>
