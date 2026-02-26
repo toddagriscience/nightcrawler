@@ -2,7 +2,6 @@
 
 import {
   date,
-  pgEnum,
   pgTable,
   point,
   serial,
