@@ -92,7 +92,6 @@ export default function WidgetsGrid({
         <ReactGridLayout
           layout={layout}
           autoSize={false}
-          isBounded
           onDragStart={onWidgetDragStart}
           onDragStop={handleDrop}
           width={width}
