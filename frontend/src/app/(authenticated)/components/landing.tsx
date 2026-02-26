@@ -6,6 +6,7 @@ import { db } from '@/lib/db/schema/connection';
 import { accountAgreementAcceptance } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { UserSelect } from '@/lib/types/db';
+import { Button } from '@/components/ui';
 
 export default async function Landing({
   currentUser,
@@ -21,15 +22,25 @@ export default async function Landing({
   return (
     <div className="flex flex-col items-center justify-between min-h-[calc(100vh-8rem)] px-4">
       <div></div>
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-5">
         <h1 className="text-foreground text-3xl font-bold">Welcome</h1>
         <p className="text-foreground text-base font-normal">
           Thank you for being a Todd client since 2025
         </p>
         {hasApplied ? (
-          <p>We&apos;ll take a look at your application as soon as possible.</p>
+          <>
+            <p>
+              We&apos;ll take a look at your application as soon as possible.
+            </p>
+            <Button variant={'brand'}>Schedule a meeting</Button>
+          </>
         ) : (
-          <ApplyButton />
+          <div className="flex flex-row items-center gap-6 justify-center">
+            <ApplyButton />
+            <Button variant={'brand'} className="min-w-45">
+              Schedule a meeting
+            </Button>
+          </div>
         )}
       </div>
       <Link
