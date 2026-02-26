@@ -9,11 +9,14 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { widgetEnum } from '@/lib/db/schema';
 import logger from '@/lib/logger';
 import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
-import { Search } from 'lucide-react';
+import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import updateTabName, { createTab as createTabAction } from './actions';
+import updateTabName, {
+  createTab as createTabAction,
+  deleteTab as deleteTabAction,
+} from './actions';
 import { WidgetGridOverlayProvider } from './current-tab/widget-grid-overlay-context';
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
@@ -55,6 +58,28 @@ export default function PlatformTabs({
       setCurTab(getTabHash(newTab));
     } else {
       setCurTab(getTabHash(currentTabs[0]));
+    }
+  }
+
+  async function deleteTab(tab: NamedTab) {
+    if (currentTabs.length === 1 && currentUser.approved) {
+      return;
+    }
+
+    const result = await deleteTabAction({ tabId: tab.id });
+
+    if (result.error) {
+      logger.error(result.error);
+      return;
+    }
+
+    router.refresh();
+
+    const fallbackTab = currentTabs.find((t) => t.id !== tab.id);
+    if (fallbackTab) {
+      setCurTab(getTabHash(fallbackTab));
+    } else {
+      setCurTab('home');
     }
   }
 
@@ -115,6 +140,20 @@ export default function PlatformTabs({
                     onChange={(e) => updateTab(e.target.value, tab.id)}
                     onBlur={(e) => (e.target.scrollLeft = 0)}
                   />
+                  {currentTabs.length > 1 && (
+                    <button
+                      type="button"
+                      aria-label="Delete tab"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        deleteTab(tab);
+                      }}
+                      className="ml-2 cursor-pointer p-0 text-foreground/80 hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </TabsTrigger>
               ))}
               {currentTabs.length <= maxTabs && (
@@ -122,20 +161,12 @@ export default function PlatformTabs({
                   managementZones={managementZones}
                   addTab={createTab}
                 >
-                  <Button className="h-9 min-w-8 cursor-pointer border-none px-2 text-[18px] leading-none font-light text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0!">
+                  <Button className="h-9 min-w-8 cursor-pointer border-none px-2 text-[22px] leading-none font-light text-muted-foreground focus-visible:ring-0! focus-visible:ring-offset-0!">
                     <span>+</span>
                   </Button>
                 </NewTabDropdown>
               )}
             </TabsList>
-            <div className="flex h-9 min-w-64 max-w-lg flex-1 items-center rounded-md border border-gray-300 bg-white/40 px-3">
-              <Search className="mr-2 h-4 w-4 text-muted-foreground" />
-              <input
-                aria-label="Search"
-                placeholder="Search"
-                className="w-full border-none bg-transparent text-[14px] leading-none focus:outline-none"
-              />
-            </div>
             {activeTab && (
               <AddWidgetDropdown
                 managementZoneId={activeTab.managementZone}
