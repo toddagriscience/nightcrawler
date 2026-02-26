@@ -4,13 +4,6 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AuthenticatedLayout from './layout';
 
-vi.mock(
-  '@/components/common/authenticated-header/authenticated-header',
-  () => ({
-    default: () => <div data-testid="authenticated-header" />,
-  })
-);
-
 vi.mock('@/components/common/desktop-gate/desktop-gate', () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
@@ -38,14 +31,13 @@ describe('AuthenticatedLayout', () => {
     expect(wrapper).toHaveClass('bg-background-platform');
   });
 
-  it('should render children and header', () => {
+  it('should render children', () => {
     render(
       <AuthenticatedLayout>
         <div data-testid="child-content">Child Content</div>
       </AuthenticatedLayout>
     );
 
-    expect(screen.getByTestId('authenticated-header')).toBeInTheDocument();
     expect(screen.getByTestId('child-content')).toBeInTheDocument();
   });
 });

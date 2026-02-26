@@ -10,32 +10,32 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
  */
 export default function AuthenticatedHeader() {
   return (
-    <header className="w-full" role="banner">
-      <div className="mx-auto max-w-[107rem] px-4 py-4 sm:px-6 lg:px-8">
+    <header className="h-[4.5rem] w-full border-b" role="banner">
+      <div className="mx-auto flex h-full max-w-[107rem] items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <ToddHeader className="flex min-h-10 flex-row items-center" />
-          <nav className="flex items-center gap-6">
-            <Link
-              href={'/contact'}
-              className="text-foreground text-sm transition-opacity hover:opacity-70"
-            >
-              Contact
-            </Link>
-            {/** Will be added back when we actually have notifications. */}
-            {/* <Link */}
-            {/*   href="/notifications" */}
-            {/*   className="text-foreground text-sm transition-opacity hover:opacity-70" */}
-            {/* > */}
-            {/*   Notifications */}
-            {/* </Link> */}
-            <Link
-              href="/account"
-              className="text-foreground text-sm transition-opacity hover:opacity-70"
-            >
-              Account
-            </Link>
-          </nav>
         </div>
+        <nav className="flex items-center gap-6">
+          <Link
+            href={'/contact'}
+            className="text-foreground text-sm transition-opacity hover:opacity-70"
+          >
+            Contact
+          </Link>
+          {/** Will be added back when we actually have notifications. */}
+          {/* <Link */}
+          {/*   href="/notifications" */}
+          {/*   className="text-foreground text-sm transition-opacity hover:opacity-70" */}
+          {/* > */}
+          {/*   Notifications */}
+          {/* </Link> */}
+          <Link
+            href="/account"
+            className="text-foreground text-sm transition-opacity hover:opacity-70"
+          >
+            Account
+          </Link>
+        </nav>
       </div>
     </header>
   );

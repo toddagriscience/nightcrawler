@@ -10,15 +10,24 @@ import { getTabHash } from './utils';
 export default async function PlatformTabContent({
   currentTabs,
   currentUser,
+  showDotGrid,
+  onShowDotGrid,
+  onHideDotGrid,
 }: {
   currentTabs: NamedTab[];
   currentUser: UserSelect;
+  showDotGrid: boolean;
+  onShowDotGrid: () => void;
+  onHideDotGrid: () => void;
 }) {
   return (
     <>
       {/** Guaranteed to work, see the query/set of queries in (authenticated)/page.tsx */}
       {!currentUser.approved ? (
-        <TabsContent value={'home'}>
+        <TabsContent
+          value={'home'}
+          className="!mt-0 h-full w-full overflow-hidden"
+        >
           <Landing currentUser={currentUser} />
         </TabsContent>
       ) : (
@@ -26,9 +35,14 @@ export default async function PlatformTabContent({
           <TabsContent
             key={tab.id}
             value={getTabHash(tab)}
-            className="h-full w-full"
+            className="!mt-0 h-full w-full overflow-hidden"
           >
-            <CurrentTab currentTab={tab} />
+            <CurrentTab
+              currentTab={tab}
+              showDotGrid={showDotGrid}
+              onShowDotGrid={onShowDotGrid}
+              onHideDotGrid={onHideDotGrid}
+            />
           </TabsContent>
         ))
       )}

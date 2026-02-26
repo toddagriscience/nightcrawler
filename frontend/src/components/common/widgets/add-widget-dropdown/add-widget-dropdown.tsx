@@ -17,12 +17,16 @@ export default function AddWidgetDropdown({
   managementZoneId,
   children,
   onWidgetAdded,
+  onWidgetSelected,
+  onOpenChange,
   onError,
   availableWidgets,
 }: {
   managementZoneId: number;
   children: React.ReactNode;
   onWidgetAdded?: (widgetId: number, widgetType: string) => void;
+  onWidgetSelected?: () => void;
+  onOpenChange?: (isOpen: boolean) => void;
   onError?: (error: string) => void;
   availableWidgets?: (typeof widgetEnum.enumValues)[number][];
 }) {
@@ -32,6 +36,7 @@ export default function AddWidgetDropdown({
   const handleAddWidget = async (
     widgetType: (typeof widgetEnum.enumValues)[number]
   ) => {
+    onWidgetSelected?.();
     const result = await createWidget({
       managementZoneId,
       name: widgetType,
@@ -46,7 +51,7 @@ export default function AddWidgetDropdown({
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
         <DropdownMenuLabel>Add Widget</DropdownMenuLabel>

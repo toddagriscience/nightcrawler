@@ -44,7 +44,6 @@ export default async function DashboardPage() {
   let currentTabs = await fetchCurrentTabs();
 
   let managementZones = await getTablessManagementZones(currentUser.farmId);
-
   // This seems redundant - realistically, this will be called once or twice per user.
   if (
     currentUser.approved &&
@@ -66,7 +65,15 @@ export default async function DashboardPage() {
       currentTabs={currentTabs}
       currentUser={currentUser}
     >
-      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+      {({ showDotGrid, onShowDotGrid, onHideDotGrid }) => (
+        <PlatformTabContent
+          currentTabs={currentTabs}
+          currentUser={currentUser}
+          showDotGrid={showDotGrid}
+          onShowDotGrid={onShowDotGrid}
+          onHideDotGrid={onHideDotGrid}
+        />
+      )}
     </PlatformTabs>
   );
 }

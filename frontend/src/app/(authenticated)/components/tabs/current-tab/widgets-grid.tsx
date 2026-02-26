@@ -21,10 +21,16 @@ export default function WidgetsGrid({
   widgets,
   currentTab,
   renderedWidgets,
+  showDotGrid,
+  onWidgetDragStart,
+  onWidgetDragStop,
 }: {
   widgets: WidgetSelect[];
   currentTab: NamedTab;
   renderedWidgets: React.ReactNode;
+  showDotGrid: boolean;
+  onWidgetDragStart?: () => void;
+  onWidgetDragStop?: () => void;
 }) {
   const { width, containerRef, mounted } = useContainerWidth();
   const router = useRouter();
@@ -48,6 +54,8 @@ export default function WidgetsGrid({
     event: Event,
     element?: HTMLElement
   ) {
+    onWidgetDragStop?.();
+
     // Only save widgets whose positions actually changed.
     const changed = layout.filter((item) => {
       const saved = savedPositions.get(item.i);
@@ -72,14 +80,23 @@ export default function WidgetsGrid({
   }
 
   return (
-    <div ref={containerRef} className="relative h-[80vh]">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
+      {showDotGrid && (
+        <div
+          aria-hidden="true"
+          data-testid="tab-dot-grid-overlay"
+          className="platform-dot-grid pointer-events-none absolute inset-0 z-20 opacity-45"
+        />
+      )}
       {mounted && (
         <ReactGridLayout
           layout={layout}
+          autoSize={false}
+          onDragStart={onWidgetDragStart}
           onDragStop={handleDrop}
           width={width}
           gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
-          className="h-[80vh]!"
+          className="h-full!"
         >
           {renderedWidgets}
         </ReactGridLayout>

@@ -132,6 +132,26 @@ body {
   scrollbar-width: none;
 }
 
+.platform-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--foreground) 1.25px,
+    transparent 1.25px
+  );
+  background-size: 28px 28px;
+  background-position: center;
+}
+
+.platform-dashboard-gradient {
+  background: radial-gradient(
+    140% 95% at 50% 0%,
+    #ffffff 0%,
+    #f7f7f7 40%,
+    #efefef 70%,
+    #ececec 100%
+  );
+}
+
 /* Animations */
 .fadeInAnimation {
   animation: fadeIn 0.8s ease-in-out;
