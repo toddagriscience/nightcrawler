@@ -14,7 +14,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { useForm } from 'react-hook-form';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { FadeIn } from '@/components/common';
 import { saveApplication } from '../actions';
 import {
   ActiveWildAreas,
