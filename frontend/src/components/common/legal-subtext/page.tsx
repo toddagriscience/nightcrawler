@@ -12,24 +12,24 @@ export function LegalSubtext() {
   const t = useTranslations('contactPage');
 
   return (
-    <div className="flex flex-col gap-2 mb-5">
+    <div className="mb-5 flex flex-col gap-2">
       <p className="text-xs font-thin">
         {t('legal.byContinuing')}{' '}
         <Link
           href="/account-agreement.pdf"
           target="_blank"
-          className="underline font-normal"
+          className="font-normal underline"
         >
           {t('legal.accountAgreement')}
         </Link>{' '}
         {t('legal.and')}{' '}
-        <Link href="/privacy" className="underline font-normal">
+        <Link href="/en/privacy" className="font-normal underline">
           {t('legal.privacyPolicy')}
         </Link>
         .
       </p>
       <p className="text-xs font-thin">
-        <Link href="/terms" className="underline font-normal">
+        <Link href="/terms" className="font-normal underline">
           {t('legal.termsOfService')}
         </Link>{' '}
         {t('legal.apply')}
