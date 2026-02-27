@@ -81,7 +81,7 @@ export default function PasswordChecklist({
         <li
           className={
             passwordRequirements.hasSpecialCharacter
-              ? 'text-green-500'
+              ? 'text-green-500 italic'
               : 'italic'
           }
         >
@@ -91,7 +91,7 @@ export default function PasswordChecklist({
 
         <li
           className={
-            passwordRequirements.hasNumber ? 'text-green-500' : 'italic'
+            passwordRequirements.hasNumber ? 'text-green-500 italic' : 'italic'
           }
         >
           {passwordRequirements.hasNumber ? '✓' : '•'} contains a number
@@ -99,7 +99,9 @@ export default function PasswordChecklist({
 
         <li
           className={
-            passwordRequirements.hasUpperCase ? 'text-green-500' : 'italic'
+            passwordRequirements.hasUpperCase
+              ? 'text-green-500 italic'
+              : 'italic'
           }
         >
           {passwordRequirements.hasUpperCase ? '✓' : '•'} contains an uppercase
