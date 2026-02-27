@@ -28,6 +28,7 @@
     "eslint-plugin-no-secrets": "^2.2.1",
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
+    "minimatch": "^10.2.4",
     "rollup": "^4.59.0",
     "storybook": "^10.2.3",
     "undici": "^6.23.0"
@@ -37,7 +38,7 @@
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
     "esbuild": "^0.25.0",
-    "minimatch": ">=10.2.1",
+    "minimatch": ">=10.2.3",
     "markdown-it": ">=14.1.1",
     "ajv": "^6.14.0",
     "rollup": "^4.59.0",
