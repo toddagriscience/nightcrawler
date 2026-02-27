@@ -207,7 +207,7 @@ describe('Join Page', () => {
         screen.getByText('Your Todd Account Has Been Created!')
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Please check your email for a verification link.')
+        screen.getByText('Please check your email to activate your account:')
       ).toBeInTheDocument();
 
       // Form should not be visible

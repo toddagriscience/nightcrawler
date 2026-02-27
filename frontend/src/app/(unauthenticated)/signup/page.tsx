@@ -66,13 +66,22 @@ export default function Join() {
             <FadeIn>
               <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
                 {isSuccess ? (
-                  <div className="flex h-full flex-col md:mt-10 gap-6 items-start">
-                    <h1 className="text-2xl mb-2 md:mt-8 text-left font-normal">
+                  <div className="flex h-full flex-col md:mt-10 gap-6 items-start lg:max-w-[420px]">
+                    <h1 className="text-2xl text-left font-normal">
                       Your Todd Account Has Been Created!
                     </h1>
+                    <h2 className="text-lg text-left font-normal mb-4">
+                      Verify your email address.
+                    </h2>
                     <p className="text-normal font-thin text-center md:text-left">
-                      Please check your email for a verification link.
+                      Please check your email to activate your account: <br />
+                      <span className="font-normal">{email}</span>
                     </p>
+                    <p className="text-sm font-thin text-left mb-4">
+                      It may take a few minutes to receive the email. If you
+                      don&apos;t see it, check your spam folder.
+                    </p>
+                    <LegalSubtext />
                   </div>
                 ) : (
                   <>
