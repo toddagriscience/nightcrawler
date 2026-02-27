@@ -83,10 +83,7 @@ describe('Join Page', () => {
         )
       ).toBeInTheDocument();
       expect(screen.getByLabelText('Create a Password')).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText('Use at least 10 characters')
-      ).toBeInTheDocument();
-      expect(screen.getByText('Show Password')).toBeInTheDocument();
+
       expect(screen.getByText('Continue')).toBeInTheDocument();
     });
 
@@ -119,7 +116,9 @@ describe('Join Page', () => {
       render(<Join />);
 
       expect(
-        screen.getByText(/Please make sure to use a secure password/)
+        screen.getByText(
+          /Please make sure to use a secure password matching the rules./
+        )
       ).toBeInTheDocument();
       expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
       expect(
@@ -129,9 +128,7 @@ describe('Join Page', () => {
       expect(
         screen.getByText(/contains an uppercase letter/)
       ).toBeInTheDocument();
-      expect(
-        screen.getByText(/both passwords are the same/)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/passwords match/)).toBeInTheDocument();
     });
   });
 
@@ -247,9 +244,6 @@ describe('Join Page', () => {
 
       // Form should still be visible
       expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText('Use at least 10 characters')
-      ).toBeInTheDocument();
 
       // Error should be displayed
       expect(screen.getByText('User already exists')).toBeInTheDocument();

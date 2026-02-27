@@ -54,7 +54,7 @@ export default function Join() {
   return (
     <main>
       <div className="max-w-[1400px] mx-auto px-15 lg:px-16 h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto md:mt-0 w-full max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto md:mt-0 w-full max-w-[1200px] mx-auto">
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
             style={{
@@ -64,13 +64,13 @@ export default function Join() {
           />
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <FadeIn>
-              <div className="mx-auto flex flex-col justify-start w-full max-w-[300px] sm:max-w-[450px] md:max-w-[500px]">
+              <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
                 {isSuccess ? (
-                  <div className="flex h-full flex-col mt-22 md:mt-6 lg:mt-10 gap-6 items-center md:items-start mx-auto">
-                    <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
+                  <div className="flex h-full flex-col md:mt-10 gap-6 items-start">
+                    <h1 className="text-2xl mb-2 md:mt-8 text-left font-normal">
                       Your Todd Account Has Been Created!
                     </h1>
-                    <p className="text-sm mb-8 text-left">
+                    <p className="text-normal font-thin text-center md:text-left">
                       Please check your email for a verification link.
                     </p>
                   </div>
@@ -99,7 +99,7 @@ export default function Join() {
 
                       <FieldSet className="">
                         <FieldLegend>
-                          <h1 className="text-2xl mb-3 md:mb-5 mt-10 md:mt-0 text-left">
+                          <h1 className="text-2xl mb-3 md:mb-5 md:mt-10 text-left">
                             You&apos;re Almost There!
                           </h1>
                           <p className="text-sm mb-8 text-left font-normal">
