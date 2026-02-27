@@ -13,7 +13,6 @@ const pool =
     connectionString: process.env.DATABASE_URL,
     ssl: {
       ca: process.env.DATABASE_PEM_CERT!,
-      rejectUnauthorized: false,
     },
     max: 25,
     idleTimeoutMillis: 30_000,
