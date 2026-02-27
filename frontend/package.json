@@ -10,8 +10,7 @@
   "overrides": {
     "@isaacs/brace-expansion": "^5.0.1",
     "glob": "^11.1.0",
-    "esbuild": "^0.24.2",
-    "minimatch": ">=10.2.3"
+    "minimatch": ">=10.2.1"
   },
   "scripts": {
     "dev": "next dev --turbopack",
@@ -109,8 +108,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "4.0.18",
-    "baseline-browser-mapping": "^2.10.0",
-    "drizzle-kit": "^0.31.9",
+    "baseline-browser-mapping": "^2.9.19",
+    "drizzle-kit": "^0.31.8",
+    "esbuild": "^0.25.12",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
