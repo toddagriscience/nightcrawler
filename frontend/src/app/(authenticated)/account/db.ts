@@ -61,7 +61,6 @@ export async function getAccountUsersData(): Promise<{
       lastName: user.lastName,
       email: user.email,
       phone: user.phone,
-      approved: user.approved,
       role: user.role,
     })
     .from(user)

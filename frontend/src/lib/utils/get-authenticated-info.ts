@@ -3,10 +3,10 @@
 'use server';
 
 import { getUserEmail } from '../auth';
-import { user } from '../db/schema';
+import { farm, user } from '../db/schema';
 import { db } from '../db/schema/connection';
 import { eq } from 'drizzle-orm';
-import { UserSelect } from '@/lib/types/db';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { logger } from '@/lib/logger';
 
 /**
@@ -18,16 +18,17 @@ import { logger } from '@/lib/logger';
  * @returns The authenticated user's information with non-null farmId
  * @throws {Error} - If user is not authenticated, not found, or not associated with a farm
  */
-export async function getAuthenticatedInfo() {
+export async function getAuthenticatedInfo(): Promise<AuthenticatedInfo> {
   const email = await getUserEmail();
 
   if (!email) {
     throw new Error("No email registered with this user's account");
   }
 
-  const [currentUser] = await db
-    .select()
+  const [row] = await db
+    .select({ user, farmApproved: farm.approved })
     .from(user)
+    .leftJoin(farm, eq(farm.id, user.farmId))
     .where(eq(user.email, email))
     .limit(1)
     .catch((error) => {
@@ -35,13 +36,19 @@ export async function getAuthenticatedInfo() {
       throw error;
     });
 
-  if (!currentUser) {
+  if (!row) {
     throw new Error('User not found');
   }
+
+  const currentUser = row.user;
 
   if (!currentUser.farmId) {
     throw new Error('User is not associated with a farm');
   }
 
-  return { ...currentUser, farmId: currentUser.farmId };
+  return {
+    ...currentUser,
+    farmId: currentUser.farmId,
+    approved: row.farmApproved ?? false,
+  };
 }
