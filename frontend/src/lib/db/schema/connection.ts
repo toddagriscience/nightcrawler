@@ -12,7 +12,7 @@ const pool =
   new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-      ca: process.env.PROD_DATABASE_PEM_CERT!,
+      ca: process.env.DATABASE_PEM_CERT!,
       rejectUnauthorized: false,
     },
     max: 25,
