@@ -1,26 +1,30 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { GoogleGenAI } from '@google/genai';
+import OpenAI from 'openai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_EMBEDDINGS_KEY;
 
-// Just for `bun build`. Hacky but works.
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY ?? 'NOTAKEY' });
+// Initialize the OpenAI client
+const openai = new OpenAI({
+  apiKey: OPENAI_API_KEY ?? 'NOTAKEY',
+});
 
 /**
- * Generates a vector embedding for a given text using Gemini's embedding model.
- * Returns an array of 768 numbers representing the semantic meaning of the text.
+ * Generates a vector embedding for a given text using OpenAI's embedding model.
+ * Returns an array of 1536 numbers (default for text-embedding-3-small).
  *
  * @param text - The text to embed
- * @returns Array of 768 numbers
+ * @returns Array of numbers
  */
 export async function getEmbedding(text: string): Promise<number[]> {
-  const response = await ai.models.embedContent({
-    model: 'gemini-embedding-001',
-    contents: { parts: [{ text }] },
+  const response = await openai.embeddings.create({
+    model: 'text-embedding-3-large',
+    input: text,
+    encoding_format: 'float',
   });
 
-  const result = response.embeddings?.[0]?.values;
+  const result = response.data[0]?.embedding;
+
   if (!result) {
     throw new Error('Embedding failed: missing embedding values');
   }

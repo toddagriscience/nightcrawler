@@ -15,7 +15,7 @@ import type { KnowledgeArticleSelect } from '../types/db';
 import { asc, gt, sql } from 'drizzle-orm';
 import { getEmbedding } from './embeddings';
 
-const SIMILARITY_THRESHOLD = 0.55;
+const SIMILARITY_THRESHOLD = 0.22;
 const MAX_RESULTS = 5;
 
 /**
