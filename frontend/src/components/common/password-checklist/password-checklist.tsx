@@ -47,7 +47,8 @@ export default function PasswordChecklist({
           innerPasswordRequirements.hasSpecialCharacter &&
           innerPasswordRequirements.hasNumber &&
           innerPasswordRequirements.hasUpperCase &&
-          innerPasswordRequirements.isConfirmationSame
+          innerPasswordRequirements.isConfirmationSame &&
+          password !== ''
         ) {
           setIsPasswordValid(true);
         } else {
@@ -69,50 +70,56 @@ export default function PasswordChecklist({
         <li
           className={
             passwordRequirements.has8Characters
-              ? 'hidden'
-              : 'block text-red-500'
+              ? 'text-green-500 italic'
+              : 'italic'
           }
         >
-          {passwordRequirements.has8Characters ? '✓' : '✗'} at least 8
+          {passwordRequirements.has8Characters ? '✓' : '•'} at least 8
           characters
         </li>
 
         <li
           className={
             passwordRequirements.hasSpecialCharacter
-              ? 'hidden'
-              : 'block text-red-500'
+              ? 'text-green-500'
+              : 'italic'
           }
         >
-          {passwordRequirements.hasSpecialCharacter ? '✓' : '✗'} contains a
+          {passwordRequirements.hasSpecialCharacter ? '✓' : '•'} contains a
           special character (~!@#$%^&amp;*-_;:)
         </li>
 
         <li
           className={
-            passwordRequirements.hasNumber ? 'hidden' : 'block text-red-500'
+            passwordRequirements.hasNumber ? 'text-green-500' : 'italic'
           }
         >
-          {passwordRequirements.hasNumber ? '✓' : '✗'} contains a number
+          {passwordRequirements.hasNumber ? '✓' : '•'} contains a number
         </li>
 
         <li
           className={
-            passwordRequirements.hasUpperCase ? 'hidden' : 'block text-red-500'
+            passwordRequirements.hasUpperCase ? 'text-green-500' : 'italic'
           }
         >
-          {passwordRequirements.hasUpperCase ? '✓' : '✗'} contains an uppercase
+          {passwordRequirements.hasUpperCase ? '✓' : '•'} contains an uppercase
           letter
         </li>
         <li
           className={
-            passwordRequirements.isConfirmationSame
-              ? 'hidden'
-              : 'block text-red-500'
+            passwordRequirements.isConfirmationSame &&
+            password !== '' &&
+            confirmationPassword !== ''
+              ? 'text-green-500 italic'
+              : 'italic'
           }
         >
-          {passwordRequirements.isConfirmationSame ? 'hidden' : '✗'} passwords
-          match
+          {passwordRequirements.isConfirmationSame &&
+          password !== '' &&
+          confirmationPassword !== ''
+            ? '✓'
+            : '•'}{' '}
+          passwords match
         </li>
       </ul>
     </div>

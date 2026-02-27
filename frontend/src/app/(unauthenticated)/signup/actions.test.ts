@@ -19,11 +19,31 @@ vi.mock('@/lib/supabase/server', async (importActual) => {
 });
 
 const { db } = await vi.hoisted(async () => {
+  // Polyfill for PGlite
+  Blob.prototype.arrayBuffer = function () {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.readAsArrayBuffer(this);
+    });
+  };
+
+  const { PGlite } = await import('@electric-sql/pglite');
+  const { vector } = await import('@electric-sql/pglite/vector');
+
+  const pglite = new PGlite({
+    extensions: { vector },
+  });
+
+  await pglite.waitReady;
+
+  await pglite.exec('CREATE EXTENSION IF NOT EXISTS vector;');
+
   const { drizzle } = await import('drizzle-orm/pglite');
   const schema = await import('@/lib/db/schema');
   const { migrate } = await import('drizzle-orm/pglite/migrator');
 
-  const db = drizzle({ schema, casing: 'snake_case' });
+  const db = drizzle(pglite, { schema, casing: 'snake_case' });
   await migrate(db, { migrationsFolder: 'drizzle' });
 
   return { db };

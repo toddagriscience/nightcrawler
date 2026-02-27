@@ -33,12 +33,14 @@ export default function ApplicationTabs({
   internalApplication,
   currentUser,
   invitedUserVerificationStatus,
+  canSubmitApplication,
 }: {
   farmInfo: GeneralBusinessInformationUpdate;
   allUsers: UserSelect[];
   currentUser: UserSelect;
   internalApplication: FarmInfoInternalApplicationSelect;
   invitedUserVerificationStatus: VerificationStatus[];
+  canSubmitApplication: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>('general');
 
@@ -92,7 +94,7 @@ export default function ApplicationTabs({
         </TabsContent>
 
         <TabsContent value="terms">
-          <TermsAndConditions />
+          <TermsAndConditions canSubmitApplication={canSubmitApplication} />
         </TabsContent>
       </Tabs>
     </ApplicationContext.Provider>
