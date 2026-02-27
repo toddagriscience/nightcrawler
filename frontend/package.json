@@ -1,5 +1,5 @@
 {
-  "name": "toddagriscience frontend",
+  "name": "toddagriscience-frontend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,6 @@
   "overrides": {
     "@isaacs/brace-expansion": "^5.0.1",
     "glob": "^11.1.0",
-    "esbuild": "^0.24.2",
     "minimatch": ">=10.2.1"
   },
   "scripts": {
@@ -28,7 +27,6 @@
     "test:coverage": "vitest --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepare": "husky",
     "ci": "bun run type-check && bun run lint && bun run test && bun run build",
     "validate": "bun run format:check && bun run ci",
     "generate-icons": "tsx scripts/generate-icons.ts"
@@ -107,6 +105,7 @@
     "@vitest/coverage-v8": "4.0.18",
     "baseline-browser-mapping": "^2.9.19",
     "drizzle-kit": "^0.31.8",
+    "esbuild": "^0.25.12",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
