@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { TabsContent } from '@/components/ui/tabs';
-import { UserSelect } from '@/lib/types/db';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import Landing from '../landing';
 import CurrentTab from './current-tab';
 import { NamedTab } from './types';
@@ -12,7 +12,7 @@ export default async function PlatformTabContent({
   currentUser,
 }: {
   currentTabs: NamedTab[];
-  currentUser: UserSelect;
+  currentUser: AuthenticatedInfo;
 }) {
   return (
     <>

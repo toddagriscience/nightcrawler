@@ -1,11 +1,17 @@
+CREATE TYPE "public"."mineral_types" AS ENUM('Calcium', 'Magnesium', 'Sodium', 'Potassium', 'PH', 'Salinity', 'NitrateNitrogen', 'PhosphatePhosphorus', 'Zinc', 'Iron', 'OrganicMatter');--> statement-breakpoint
 CREATE TYPE "public"."user_role" AS ENUM('Admin', 'Viewer');--> statement-breakpoint
+CREATE TYPE "public"."widgets" AS ENUM('Macro Radar', 'Calcium Widget', 'PH Widget', 'Salinity Widget', 'Magnesium Widget', 'Sodium Widget', 'Nitrate Nitrogen Widget', 'Phosphate Phosphorus Widget', 'Potassium Widget', 'Zinc Widget', 'Iron Widget', 'Organic Matter Widget', 'Insights');--> statement-breakpoint
+CREATE TYPE "public"."knowledge_category" AS ENUM('soil', 'planting', 'water', 'insects_disease', 'harvest_storage', 'go_to_market', 'seed_products');--> statement-breakpoint
 CREATE TYPE "public"."level_category" AS ENUM('Low', 'Med', 'High');--> statement-breakpoint
 CREATE TYPE "public"."pest_type" AS ENUM('Insect', 'Disease');--> statement-breakpoint
+CREATE TYPE "public"."units" AS ENUM('ppm', '%');--> statement-breakpoint
 CREATE TYPE "public"."oxidation_rate_tag" AS ENUM('Slow', 'Mixed', 'Ideal', 'High');--> statement-breakpoint
 CREATE TABLE "analysis" (
 	"id" varchar(13) PRIMARY KEY NOT NULL,
 	"management_zone" serial NOT NULL,
 	"analysis_date" date NOT NULL,
+	"summary" text,
+	"macro_actionable_info" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -16,6 +22,7 @@ CREATE TABLE "farm" (
 	"business_name" varchar(200),
 	"business_website" varchar(200),
 	"management_start_date" date,
+	"approved" boolean DEFAULT false,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -106,9 +113,7 @@ CREATE TABLE "integrated_management_plan" (
 	"management_zone" serial NOT NULL,
 	"analysis" varchar(13),
 	"plan" text,
-	"initialized" date NOT NULL,
-	"updated" date,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" date DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -121,7 +126,7 @@ CREATE TABLE "management_zone" (
 	"npk" boolean,
 	"npk_last_used" date,
 	"irrigation" boolean,
-	"water_convservation" boolean,
+	"water_conservation" boolean,
 	"contamination_risk" "level_category",
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -130,12 +135,11 @@ CREATE TABLE "management_zone" (
 CREATE TABLE "mineral" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"analysis_id" varchar(13),
-	"name" varchar(200) NOT NULL,
+	"name" "mineral_types" NOT NULL,
 	"real_value" numeric(9, 4) NOT NULL,
-	"ideal_value" numeric(9, 4) NOT NULL,
 	"tag" "level_category",
-	"four_lows" boolean NOT NULL,
-	"units" varchar(100) NOT NULL,
+	"units" "units" NOT NULL,
+	"actionable_info" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -153,19 +157,6 @@ CREATE TABLE "oxidation_rate" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "ph" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"analysis_id" varchar(13),
-	"real_value" numeric(9, 4) NOT NULL,
-	"ideal_value_lower" numeric(9, 4) NOT NULL,
-	"ideal_value_upper" numeric(9, 4) NOT NULL,
-	"low" numeric(9, 4) NOT NULL,
-	"high" numeric(9, 4) NOT NULL,
-	"tag" "level_category",
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "solubility" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"analysis_id" varchar(13),
@@ -177,6 +168,76 @@ CREATE TABLE "solubility" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "standard_values" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"farm_id" integer NOT NULL,
+	"calcium_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"calcium_low" numeric(10, 2) DEFAULT 100.2 NOT NULL,
+	"calcium_ideal" numeric(10, 2) DEFAULT 150.3 NOT NULL,
+	"calcium_high" numeric(10, 2) DEFAULT 200.4 NOT NULL,
+	"calcium_max" numeric(10, 2) DEFAULT 200.4 NOT NULL,
+	"ph_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"ph_low" numeric(10, 2) DEFAULT 7.3 NOT NULL,
+	"ph_ideal" numeric(10, 2) DEFAULT 7.55 NOT NULL,
+	"ph_high" numeric(10, 2) DEFAULT 7.8 NOT NULL,
+	"ph_max" numeric(10, 2) DEFAULT 7.8 NOT NULL,
+	"salts_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"salts_low" numeric(10, 2) DEFAULT 640 NOT NULL,
+	"salts_ideal" numeric(10, 2) DEFAULT 960 NOT NULL,
+	"salts_high" numeric(10, 2) DEFAULT 1280 NOT NULL,
+	"salts_max" numeric(10, 2) DEFAULT 1280 NOT NULL,
+	"magnesium_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"magnesium_low" numeric(10, 2) DEFAULT 36.45 NOT NULL,
+	"magnesium_ideal" numeric(10, 2) DEFAULT 45.56 NOT NULL,
+	"magnesium_high" numeric(10, 2) DEFAULT 121.5 NOT NULL,
+	"magnesium_max" numeric(10, 2) DEFAULT 121.5 NOT NULL,
+	"exchangeable_sodium_percentage_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"exchangeable_sodium_percentage_low" numeric(10, 2) DEFAULT 200 NOT NULL,
+	"exchangeable_sodium_percentage_ideal" numeric(10, 2) DEFAULT 500 NOT NULL,
+	"exchangeable_sodium_percentage_high" numeric(10, 2) DEFAULT 700 NOT NULL,
+	"exchangeable_sodium_percentage_max" numeric(10, 2) DEFAULT 700 NOT NULL,
+	"nitrate_nitrogen_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"nitrate_nitrogen_low" numeric(10, 2) DEFAULT 20 NOT NULL,
+	"nitrate_nitrogen_ideal" numeric(10, 2) DEFAULT 25 NOT NULL,
+	"nitrate_nitrogen_high" numeric(10, 2) DEFAULT 30 NOT NULL,
+	"nitrate_nitrogen_max" numeric(10, 2) DEFAULT 30 NOT NULL,
+	"phosphate_phosphorus_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"phosphate_phosphorus_low" numeric(10, 2) DEFAULT 50 NOT NULL,
+	"phosphate_phosphorus_ideal" numeric(10, 2) DEFAULT 55 NOT NULL,
+	"phosphate_phosphorus_high" numeric(10, 2) DEFAULT 60 NOT NULL,
+	"phosphate_phosphorus_max" numeric(10, 2) DEFAULT 60 NOT NULL,
+	"potassium_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"potassium_low" numeric(10, 2) DEFAULT 250 NOT NULL,
+	"potassium_ideal" numeric(10, 2) DEFAULT 300 NOT NULL,
+	"potassium_high" numeric(10, 2) DEFAULT 350 NOT NULL,
+	"potassium_max" numeric(10, 2) DEFAULT 350 NOT NULL,
+	"zinc_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"zinc_low" numeric(10, 2) DEFAULT 2.5 NOT NULL,
+	"zinc_ideal" numeric(10, 2) DEFAULT 3.5 NOT NULL,
+	"zinc_high" numeric(10, 2) DEFAULT 4.5 NOT NULL,
+	"zinc_max" numeric(10, 2) DEFAULT 4.5 NOT NULL,
+	"iron_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"iron_low" numeric(10, 2) DEFAULT 5 NOT NULL,
+	"iron_ideal" numeric(10, 2) DEFAULT 7.5 NOT NULL,
+	"iron_high" numeric(10, 2) DEFAULT 10 NOT NULL,
+	"iron_max" numeric(10, 2) DEFAULT 10 NOT NULL,
+	"organic_matter_min" numeric(10, 2) DEFAULT 0 NOT NULL,
+	"organic_matter_low" numeric(10, 2) DEFAULT 1 NOT NULL,
+	"organic_matter_ideal" numeric(10, 2) DEFAULT 2 NOT NULL,
+	"organic_matter_high" numeric(10, 2) DEFAULT 3 NOT NULL,
+	"organic_matter_max" numeric(10, 2) DEFAULT 3 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "standard_values_farmId_unique" UNIQUE("farm_id")
+);
+--> statement-breakpoint
+CREATE TABLE "tab" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user" integer NOT NULL,
+	"management_zone" integer NOT NULL,
+	CONSTRAINT "tab_managementZone_user_unique" UNIQUE("management_zone","user")
+);
+--> statement-breakpoint
 CREATE TABLE "user" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"farm_id" integer,
@@ -184,7 +245,6 @@ CREATE TABLE "user" (
 	"last_name" varchar(200) NOT NULL,
 	"email" varchar NOT NULL,
 	"phone" varchar(15),
-	"approved" boolean DEFAULT false,
 	"job" varchar(200),
 	"role" "user_role" NOT NULL,
 	"did_own_and_control_parcel" boolean,
@@ -192,6 +252,25 @@ CREATE TABLE "user" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+CREATE TABLE "widget" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"management_zone" integer NOT NULL,
+	"name" "widgets" NOT NULL,
+	"widget_metadata" jsonb NOT NULL,
+	CONSTRAINT "widget_managementZone_name_unique" UNIQUE("management_zone","name")
+);
+--> statement-breakpoint
+CREATE TABLE "knowledge_article" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title" varchar(500) NOT NULL,
+	"content" text NOT NULL,
+	"category" "knowledge_category" NOT NULL,
+	"source" varchar(200),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"embedding" vector(3072)
 );
 --> statement-breakpoint
 CREATE TABLE "crop" (
@@ -251,9 +330,12 @@ ALTER TABLE "integrated_management_plan" ADD CONSTRAINT "integrated_management_p
 ALTER TABLE "management_zone" ADD CONSTRAINT "management_zone_farm_id_farm_id_fk" FOREIGN KEY ("farm_id") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "mineral" ADD CONSTRAINT "mineral_analysis_id_analysis_id_fk" FOREIGN KEY ("analysis_id") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "oxidation_rate" ADD CONSTRAINT "oxidation_rate_analysis_id_analysis_id_fk" FOREIGN KEY ("analysis_id") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "ph" ADD CONSTRAINT "ph_analysis_id_analysis_id_fk" FOREIGN KEY ("analysis_id") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "solubility" ADD CONSTRAINT "solubility_analysis_id_analysis_id_fk" FOREIGN KEY ("analysis_id") REFERENCES "public"."analysis"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "standard_values" ADD CONSTRAINT "standard_values_farm_id_farm_id_fk" FOREIGN KEY ("farm_id") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "tab" ADD CONSTRAINT "tab_user_user_id_fk" FOREIGN KEY ("user") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "tab" ADD CONSTRAINT "tab_management_zone_management_zone_id_fk" FOREIGN KEY ("management_zone") REFERENCES "public"."management_zone"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user" ADD CONSTRAINT "user_farm_id_farm_id_fk" FOREIGN KEY ("farm_id") REFERENCES "public"."farm"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "widget" ADD CONSTRAINT "widget_management_zone_management_zone_id_fk" FOREIGN KEY ("management_zone") REFERENCES "public"."management_zone"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "crop" ADD CONSTRAINT "crop_management_zone_management_zone_id_fk" FOREIGN KEY ("management_zone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "fertilizer" ADD CONSTRAINT "fertilizer_management_zone_management_zone_id_fk" FOREIGN KEY ("management_zone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "livestock" ADD CONSTRAINT "livestock_management_zone_management_zone_id_fk" FOREIGN KEY ("management_zone") REFERENCES "public"."management_zone"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
