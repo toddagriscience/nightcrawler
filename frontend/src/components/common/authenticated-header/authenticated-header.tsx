@@ -15,12 +15,6 @@ export default function AuthenticatedHeader() {
         <div className="flex items-center justify-between">
           <ToddHeader className="flex min-h-10 flex-row items-center" />
           <nav className="flex items-center gap-6">
-            <Link
-              href={'/contact'}
-              className="text-foreground text-sm transition-opacity hover:opacity-70"
-            >
-              Contact
-            </Link>
             {/** Will be added back when we actually have notifications. */}
             {/* <Link */}
             {/*   href="/notifications" */}
@@ -28,6 +22,18 @@ export default function AuthenticatedHeader() {
             {/* > */}
             {/*   Notifications */}
             {/* </Link> */}
+            <Link
+              href="/search"
+              className="text-foreground text-sm transition-opacity hover:opacity-70"
+            >
+              Knowledge
+            </Link>
+            <Link
+              href={'/contact'}
+              className="text-foreground text-sm transition-opacity hover:opacity-70"
+            >
+              Contact
+            </Link>
             <Link
               href="/account"
               className="text-foreground text-sm transition-opacity hover:opacity-70"
