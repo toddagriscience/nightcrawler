@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 
 export const metadata: Metadata = {
   title: 'Accessibility',

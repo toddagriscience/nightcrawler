@@ -29,6 +29,6 @@ describe('PublicInquiryModal', () => {
     expect(
       screen.getByRole('link', { name: 'Contact Support' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'CANCEL' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 });

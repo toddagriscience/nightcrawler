@@ -3,13 +3,13 @@
 import {
   date,
   pgTable,
-  text,
   serial,
+  text,
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { managementZone } from './management-zone';
 import { analysis } from './analysis';
+import { managementZone } from './management-zone';
 
 /** Informally referred to as an IMP, an integrated management plan specifies how Todd recommends a field be handled based off of a given analysis. There are no specific fields for recommendations -- just a "plan" field. */
 export const integratedManagementPlan = pgTable('integrated_management_plan', {

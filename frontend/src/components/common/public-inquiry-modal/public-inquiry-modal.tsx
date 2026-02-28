@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { PublicInquiryOption } from './types';
 
 /**
- * Public Inquiry modal. Allows users to navigate to the support page or password reset page.
+ * Public Inquiry modal. Help modal that allows users to navigate to the support page or password reset page.
  *
  * @param {React.ReactNode} trigger - The element that opens the modal. Optional, defaults to a button.
  * @returns {JSX.Element} - The Public Inquiry modal with related logic.
@@ -51,8 +51,9 @@ export default function PublicInquiryModal({
         ) : (
           <Button
             type="button"
-            variant={'outline'}
-            className="hover:cursor-pointer"
+            size="lg"
+            variant="outline"
+            className="hover:cursor-pointer rounded-full hover:bg-[#2A2727] hover:text-[#FDFDFB]"
           >
             Help
           </Button>
@@ -82,10 +83,10 @@ export default function PublicInquiryModal({
           <DialogFooter className="sm:justify-center">
             <Button
               variant="outline"
-              className="w-full hover:cursor-pointer hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:transition-all hover:duration-300 hover:ease-in-out focus:outline-none"
+              className="rounded-full py-5.5 sm:w-[85%] w-full text-sm font-semibold hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:transition-all hover:duration-300 hover:ease-in-out focus:outline-none hover:cursor-pointer"
               onClick={() => setIsOpen(false)}
             >
-              CANCEL
+              Cancel
             </Button>
           </DialogFooter>
         </DialogContent>

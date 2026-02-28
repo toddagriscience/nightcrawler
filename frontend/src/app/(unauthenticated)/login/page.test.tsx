@@ -50,8 +50,11 @@ describe('login page', () => {
   test('renders login form', () => {
     render(<Login />);
 
-    expect(screen.getAllByText('LOGIN')).toHaveLength(2);
-    expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Login to Todd' })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
 
@@ -67,7 +70,7 @@ describe('login page', () => {
     await userEvent.type(emailField, 'test@example.com');
     await userEvent.type(passwordField, 'test@example.com');
 
-    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
+    userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
       expect(screen.getByRole('status')).toBeInTheDocument();
@@ -90,7 +93,7 @@ describe('login page', () => {
     await userEvent.type(emailField, 'test@example.com');
     await userEvent.type(passwordField, 'test@example.com');
 
-    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
+    userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
       expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
@@ -112,7 +115,7 @@ describe('login page', () => {
     await userEvent.type(emailField, 'test@example.com');
     await userEvent.type(passwordField, 'test@example.com');
 
-    userEvent.click(screen.getByRole('button', { name: 'LOGIN' }));
+    userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
       expect(login).toHaveBeenCalled();
@@ -129,9 +132,8 @@ describe('login page', () => {
 
     expect(passwordField).toHaveValue('password');
 
-    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
 
-    // type is textbox and not text? whatever
     expect(passwordField).toHaveRole('textbox');
   });
 
@@ -141,7 +143,7 @@ describe('login page', () => {
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');
-    const submitButton = screen.getByRole('button', { name: 'LOGIN' });
+    const submitButton = screen.getByRole('button', { name: 'Login' });
 
     // type in email field but not password
     await userEvent.type(emailField, 'test@example.com');
