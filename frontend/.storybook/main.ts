@@ -10,7 +10,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-onboarding',
     '@storybook/addon-a11y',
-    '@storybook/addon-docs'
+    '@storybook/addon-docs',
   ],
   framework: {
     name: '@storybook/nextjs-vite',
@@ -19,10 +19,7 @@ const config: StorybookConfig = {
   docs: {
     defaultName: 'Documentation',
   },
-  staticDirs: [
-    { from: '../public/fonts', to: '/fonts' },
-    '../public'
-  ],
+  staticDirs: [{ from: '../public/fonts', to: '/fonts' }, '../public'],
   viteFinal: async (config) => {
     const rootDir = path.resolve(__dirname, '..');
     // Add support for local fonts and path aliases matching tsconfig

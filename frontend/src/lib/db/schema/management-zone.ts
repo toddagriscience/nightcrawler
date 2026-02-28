@@ -24,15 +24,15 @@ export const managementZone = pgTable('management_zone', {
     onDelete: 'set null',
   }),
   /** The location of the management zone (longitude, latitude). The exact location where this was measured from *does not matter*. It is only used for audits, since most management zones don't have an address. */
-  location: point({ mode: 'tuple' }),
+  location: point({ mode: 'tuple' }).$type<[number, number] | null>(),
   /** The formal name of a given management zone */
   name: varchar({ length: 200 }),
   /** The date when a crops are intended to switch (ex. lettuce in the summer, carrots in the winter) */
-  rotationYear: date({ mode: 'date' }),
+  rotationYear: date({ mode: 'date' }).$type<Date>(),
   /** NPK is a synthetic fertilizer made from inorganic Nitrogen, Phosphorus and K potassium. It's very damaging to soil and environmental health. This field represents if NPK has been used within a certain period of time (see npk_last_used). */
   npk: boolean(),
   /** The last date that NPK had been used on a field. See the npk field for more information. */
-  npkLastUsed: date({ mode: 'date' }),
+  npkLastUsed: date({ mode: 'date' }).$type<Date>(),
   /** Does this management zone have access to water? */
   irrigation: boolean(),
   /** Some areas have aqueducts that feed to fields -- if this is false, the farm is either receiving plenty of water or has enough runoff to feed back into the aqueduct. If this field is true, the aqueduct is currently being restricted.  */

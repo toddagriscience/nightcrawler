@@ -18,12 +18,17 @@ import { submitApplication } from '../actions';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { RefreshCw } from 'lucide-react';
 
 /** The time required to wait to press the submit application button in the modal. */
 const waitTime = 5000;
 
 /** Terms and conditions page */
-export default function TermsAndConditions() {
+export default function TermsAndConditions({
+  canSubmitApplication = true,
+}: {
+  canSubmitApplication?: boolean;
+}) {
   const { handleSubmit } = useForm();
   const [finalSubmitDisabled, setFinalSubmitDisabled] = useState(true);
   const [submitError, setSubmitError] = useState(false);
@@ -132,15 +137,37 @@ export default function TermsAndConditions() {
           which may arise between you and Todd in accordance with such Section
           39.
         </p>
+        <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm">
+          Important: once you accept and submit, you will not be able to edit
+          your application or resubmit it.
+        </p>
+        {!canSubmitApplication && (
+          <div className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700 flex flex-row justify-between items-center">
+            <p>
+              Please complete General Business Information and Farm Information
+              before submitting your application.
+            </p>
+            <Button
+              className="p-0 h-min hover:cursor-pointer"
+              onClick={() => router.refresh()}
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
       <Dialog>
         <DialogTrigger asChild>
           <Button
             type="button"
             className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
-            onClick={() =>
-              setTimeout(() => setFinalSubmitDisabled(false), waitTime)
-            }
+            disabled={!canSubmitApplication}
+            onClick={() => {
+              if (!canSubmitApplication) {
+                return;
+              }
+              setTimeout(() => setFinalSubmitDisabled(false), waitTime);
+            }}
           >
             AGREE
           </Button>
@@ -158,8 +185,8 @@ export default function TermsAndConditions() {
             the terms of service.
           </p>
           <p>
-            You will not be able to access your application after you&apos;ve
-            submitted it.
+            You will not be able to edit your application or resubmit it after
+            you&apos;ve submitted it.
           </p>
           <DialogClose asChild>
             <form onSubmit={handleSubmit(onSubmit)}>
