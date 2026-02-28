@@ -53,8 +53,9 @@ export default function Join() {
 
   return (
     <main>
-      <div className="max-w-[1400px] mx-auto px-15 lg:px-16 h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto md:mt-0 w-full max-w-[1200px] mx-auto">
+      <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-5 md:mt-15 w-full max-w-[1200px] mx-auto">
+          {/* Gradient image */}
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
             style={{
@@ -127,7 +128,6 @@ export default function Join() {
                             <div className="relative">
                               <Input
                                 className="border-[#848484]/80 border-1"
-                                placeholder="Use at least 10 characters"
                                 id="password"
                                 data-testid="password"
                                 name="password"
@@ -164,7 +164,6 @@ export default function Join() {
 
                             <Input
                               className="border-[#848484]/80 border-1 pr-10"
-                              placeholder="Confirm Password"
                               id="confirmPassword"
                               data-testid="confirm-password"
                               name="confirmPassword"
