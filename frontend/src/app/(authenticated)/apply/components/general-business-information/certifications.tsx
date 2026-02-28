@@ -6,27 +6,17 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Input } from '@/components/ui/input';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Control,
-  FieldErrors,
-  UseFormRegister,
-  UseFormWatch,
-} from 'react-hook-form';
 import { GeneralBusinessInformationInsert } from '../../types';
 
-export default function Certifications({
-  control,
-  errors,
-  watch,
-  register,
-}: {
-  control: Control<GeneralBusinessInformationInsert>;
-  errors: FieldErrors<GeneralBusinessInformationInsert>;
-  watch: UseFormWatch<GeneralBusinessInformationInsert>;
-  register: UseFormRegister<GeneralBusinessInformationInsert>;
-}) {
+export default function Certifications() {
+  const {
+    control,
+    formState: { errors },
+    watch,
+    register,
+  } = useFormContext<GeneralBusinessInformationInsert>();
   return (
     <>
       <h2 className="text-lg font-semibold">Certification Information</h2>

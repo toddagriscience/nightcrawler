@@ -6,13 +6,14 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller } from 'react-hook-form';
-import { FarmFormControlProps } from '../../types';
+import { Controller, useFormContext } from 'react-hook-form';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 
-export default function AlternateFarming({
-  control,
-  errors,
-}: FarmFormControlProps) {
+export default function AlternateFarming() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <div className="flex flex-col justify-between">
       <FieldLabel className="mb-4">

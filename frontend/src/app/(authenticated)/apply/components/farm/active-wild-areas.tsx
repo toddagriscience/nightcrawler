@@ -7,14 +7,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller } from 'react-hook-form';
-import { FarmFormControlProps } from '../../types';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 
-export default function ActiveWildAreas({
-  control,
-  errors,
-}: FarmFormControlProps) {
+export default function ActiveWildAreas() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <Field>
       <div className="flex flex-row justify-between">

@@ -8,18 +8,18 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { Input } from '@/components/ui/input';
-import { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
 import { GeneralBusinessInformationInsert } from '../../types';
+import { useFormContext } from 'react-hook-form';
 
 export default function Address({
   defaultAddressState,
-  errors,
-  register,
 }: {
-  errors: FieldErrors<GeneralBusinessInformationInsert>;
-  register: UseFormRegister<GeneralBusinessInformationInsert>;
   defaultAddressState: 'yes' | 'no' | 'unanswered';
 }) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<GeneralBusinessInformationInsert>();
   const [hasAddress, setHasAddress] = useState<'yes' | 'no' | 'unanswered'>(
     defaultAddressState
   );
