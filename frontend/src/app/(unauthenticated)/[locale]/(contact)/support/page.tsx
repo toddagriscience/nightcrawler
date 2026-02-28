@@ -86,125 +86,125 @@ export default function Support() {
           />
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <FadeIn>
-            <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
+              <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
                 <div className="flex h-full flex-col md:mt-10 gap-6 items-start lg:max-w-[430px]">
-                    <h1 className="text-2xl lg:text-3xl md:mb-5 text-left">
-                      {isSubmitted ? t('success.title') : t('hero.title')}
-                    </h1>
-                    <p className="text-sm md:text-normal mb-8 text-left font-normal">
-                      {isSubmitted ? t('success.subtitle') : t('hero.subtitle')}
-                    </p>
-                  </div>
-                  {isSubmitted ? (
-                    <>
-                      <div className="flex justify-start mt-6">
-                        <Button
-                          onClick={() => router.push('/')}
-                          className="w-[144px] rounded-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
-                          type="button"
-                        >
-                          {t('success.cta')}
-                        </Button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {errors.root?.message && (
-                        <FormErrorMessage errorMessage={errors.root.message} />
-                      )}
-                      <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="flex flex-col gap-4 mb-24"
-                      >
-                        <FieldSet className="mb-8">
-                          <FieldGroup>
-                            <Field>
-                              <div className="flex flex-row justify-between">
-                                <FieldLabel
-                                  htmlFor="name"
-                                  className="leading-tight mb-[-6px]"
-                                >
-                                  {t('fields.name')}
-                                </FieldLabel>
-                                <ErrorMessage
-                                  errors={errors}
-                                  name="name"
-                                  render={({ message }) => (
-                                    <FormErrorMessage errorMessage={message} />
-                                  )}
-                                />
-                              </div>
-                              <Input
-                                className="border-[#848484]/80 border-1"
-                                id="name"
-                                data-testid="name"
-                                {...register('name')}
-                                type="text"
-                                required
-                              />
-                            </Field>
-                            <Field>
-                              <div className="flex flex-row justify-between">
-                                <FieldLabel
-                                  htmlFor="lastKnownEmail"
-                                  className="leading-tight mb-[-6px]"
-                                >
-                                  {t('fields' + emailType)}
-                                </FieldLabel>
-                                <ErrorMessage
-                                  errors={errors}
-                                  name="lastKnownEmail"
-                                  render={({ message }) => (
-                                    <FormErrorMessage errorMessage={message} />
-                                  )}
-                                />
-                              </div>
-                              <Input
-                                id="lastKnownEmail"
-                                data-testid="lastKnownEmail"
-                                type="email"
-                                className="border-[#848484]/80 border-1"
-                                {...register('lastKnownEmail')}
-                                required
-                              />
-                            </Field>
-                            <Field>
-                              <div className="flex flex-row justify-between">
-                                <FieldLabel
-                                  htmlFor="response"
-                                  className="leading-tight mb-[-6px]"
-                                >
-                                  {t('fields.message')}
-                                </FieldLabel>
-                                <ErrorMessage
-                                  errors={errors}
-                                  name="response"
-                                  render={({ message }) => (
-                                    <FormErrorMessage errorMessage={message} />
-                                  )}
-                                />
-                              </div>
-                              <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
-                                <Textarea
-                                  id="response"
-                                  className="border-[#848484]/80 border-1 ring-0! focus-visible:ring-0! focus-visible:ring-offset-0!"
-                                  {...register('response')}
-                                  rows={4}
-                                  required
-                                />
-                              </div>
-                            </Field>
-                          </FieldGroup>
-                        </FieldSet>
-                        <SubmitButton
-                          buttonText={t('buttons.submit')}
-                          className="w-[144px]"
-                          disabled={isSubmitting || !isValid}
-                        />
-                      </form>
-                    </>
-                  )}
+                  <h1 className="text-2xl lg:text-3xl md:mb-5 text-left">
+                    {isSubmitted ? t('success.title') : t('hero.title')}
+                  </h1>
+                  <p className="text-sm md:text-normal mb-8 text-left font-normal">
+                    {isSubmitted ? t('success.subtitle') : t('hero.subtitle')}
+                  </p>
                 </div>
+                {isSubmitted ? (
+                  <>
+                    <div className="flex justify-start mt-6">
+                      <Button
+                        onClick={() => router.push('/')}
+                        className="w-[144px] rounded-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                        type="button"
+                      >
+                        {t('success.cta')}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {errors.root?.message && (
+                      <FormErrorMessage errorMessage={errors.root.message} />
+                    )}
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="flex flex-col gap-4 mb-24"
+                    >
+                      <FieldSet className="mb-8">
+                        <FieldGroup>
+                          <Field>
+                            <div className="flex flex-row justify-between">
+                              <FieldLabel
+                                htmlFor="name"
+                                className="leading-tight mb-[-6px]"
+                              >
+                                {t('fields.name')}
+                              </FieldLabel>
+                              <ErrorMessage
+                                errors={errors}
+                                name="name"
+                                render={({ message }) => (
+                                  <FormErrorMessage errorMessage={message} />
+                                )}
+                              />
+                            </div>
+                            <Input
+                              className="border-[#848484]/80 border-1"
+                              id="name"
+                              data-testid="name"
+                              {...register('name')}
+                              type="text"
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <div className="flex flex-row justify-between">
+                              <FieldLabel
+                                htmlFor="lastKnownEmail"
+                                className="leading-tight mb-[-6px]"
+                              >
+                                {t('fields' + emailType)}
+                              </FieldLabel>
+                              <ErrorMessage
+                                errors={errors}
+                                name="lastKnownEmail"
+                                render={({ message }) => (
+                                  <FormErrorMessage errorMessage={message} />
+                                )}
+                              />
+                            </div>
+                            <Input
+                              id="lastKnownEmail"
+                              data-testid="lastKnownEmail"
+                              type="email"
+                              className="border-[#848484]/80 border-1"
+                              {...register('lastKnownEmail')}
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <div className="flex flex-row justify-between">
+                              <FieldLabel
+                                htmlFor="response"
+                                className="leading-tight mb-[-6px]"
+                              >
+                                {t('fields.message')}
+                              </FieldLabel>
+                              <ErrorMessage
+                                errors={errors}
+                                name="response"
+                                render={({ message }) => (
+                                  <FormErrorMessage errorMessage={message} />
+                                )}
+                              />
+                            </div>
+                            <div className="flex flex-row items-center justify-center gap-2 text-nowrap">
+                              <Textarea
+                                id="response"
+                                className="border-[#848484]/80 border-1 ring-0! focus-visible:ring-0! focus-visible:ring-offset-0!"
+                                {...register('response')}
+                                rows={4}
+                                required
+                              />
+                            </div>
+                          </Field>
+                        </FieldGroup>
+                      </FieldSet>
+                      <SubmitButton
+                        buttonText={t('buttons.submit')}
+                        className="w-[144px]"
+                        disabled={isSubmitting || !isValid}
+                      />
+                    </form>
+                  </>
+                )}
+              </div>
             </FadeIn>
           </div>
         </div>
