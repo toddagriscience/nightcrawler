@@ -2,13 +2,11 @@
 
 'use server';
 
-import { isVerified } from '@/lib/auth';
 import {
-  accountAgreementAcceptance,
   farm,
   farmLocation,
   managementZone,
-  user,
+  user
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import type {
@@ -18,14 +16,11 @@ import type {
   UserSelect,
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, desc, eq } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import {
-  formatMailingAddress,
-  formatPhysicalLocation,
   NOT_SET,
-  toDisplayDate,
   toDisplayName,
-  toDisplayValue,
+  toDisplayValue
 } from './util';
 
 export async function getAccountShellData(): Promise<{ farmName: string }> {
@@ -88,10 +83,10 @@ export async function getAccountUsersData(): Promise<{
     principalOperator: principalContact,
     owner: ownerUser
       ? {
-          firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
-          email: toDisplayValue(ownerUser.email),
-          phone: toDisplayValue(ownerUser.phone),
-        }
+        firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
+        email: toDisplayValue(ownerUser.email),
+        phone: toDisplayValue(ownerUser.phone),
+      }
       : null,
   };
 }

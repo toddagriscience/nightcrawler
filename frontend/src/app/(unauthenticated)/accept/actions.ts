@@ -2,7 +2,7 @@
 
 'use server';
 
-import { isVerified, setPassword, signIn } from '@/lib/auth';
+import { isVerified, setPassword, signIn } from '@/lib/auth-server';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';

@@ -2,7 +2,7 @@
 
 'use client';
 
-import { logout } from '@/lib/auth';
+import { logout } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 interface LogoutLinkProps {

@@ -2,7 +2,7 @@
 
 'use client';
 
-import { logout } from '@/lib/auth';
+import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -38,11 +38,10 @@ export default function AccountSideMenu() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
-                className={`block text-[16px] leading-tight ${
-                  isActive
+                className={`block text-[16px] leading-tight ${isActive
                     ? 'text-foreground font-[400]'
                     : 'text-foreground font-[300] hover:opacity-70'
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>

@@ -2,7 +2,7 @@
 
 'use server';
 
-import { deleteAuthUserByEmail, resendEmailInvite } from '@/lib/auth';
+import { deleteAuthUserByEmail, resendEmailInvite } from '@/lib/auth-server';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
