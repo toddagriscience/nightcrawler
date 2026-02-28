@@ -74,7 +74,7 @@ export default function Join() {
                     <h2 className="text-lg text-left font-normal mb-4">
                       Verify your email address.
                     </h2>
-                    <p className="text-normal font-thin text-center md:text-left">
+                    <p className="text-normal font-thin text-left">
                       Please check your email to activate your account: <br />
                       <span className="font-normal">{email}</span>
                     </p>
