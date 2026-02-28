@@ -2,12 +2,7 @@
 
 'use server';
 
-import {
-  farm,
-  farmLocation,
-  managementZone,
-  user
-} from '@/lib/db/schema';
+import { farm, farmLocation, managementZone, user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import type {
   FarmLocationSelect,
@@ -17,11 +12,7 @@ import type {
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
-import {
-  NOT_SET,
-  toDisplayName,
-  toDisplayValue
-} from './util';
+import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{ farmName: string }> {
   const currentUser = await getAuthenticatedInfo();
@@ -83,10 +74,10 @@ export async function getAccountUsersData(): Promise<{
     principalOperator: principalContact,
     owner: ownerUser
       ? {
-        firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
-        email: toDisplayValue(ownerUser.email),
-        phone: toDisplayValue(ownerUser.phone),
-      }
+          firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
+          email: toDisplayValue(ownerUser.email),
+          phone: toDisplayValue(ownerUser.phone),
+        }
       : null,
   };
 }

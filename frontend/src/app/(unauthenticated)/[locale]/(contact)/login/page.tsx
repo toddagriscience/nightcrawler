@@ -122,7 +122,7 @@ export default function Login() {
                     <Checkbox
                       id="keep-logged-in"
                       className="max-h-4 max-w-4 focus:ring-0!"
-                      onCheckedChange={() => { }}
+                      onCheckedChange={() => {}}
                     />
                     <FieldLabel
                       htmlFor="keep-logged-in"
@@ -146,7 +146,7 @@ export default function Login() {
                           () => setCooldownError(''),
                           (cooldownTime
                             ? (new Date().getTime() - cooldownTime.getTime()) /
-                            1000
+                              1000
                             : defaultCooldownTime) * 1000
                         );
                       }}
