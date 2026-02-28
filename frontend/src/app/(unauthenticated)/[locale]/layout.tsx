@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { FadeIn, SmoothScroll } from '@/components/common';
-import { Footer, Header } from '@/components/landing';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import type { Metadata, Viewport } from 'next';
@@ -123,11 +122,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <SmoothScroll>
-        <FadeIn>
-          <Header />
-          {children}
-          <Footer />
-        </FadeIn>
+        <FadeIn>{children}</FadeIn>
       </SmoothScroll>
     </NextIntlClientProvider>
   );

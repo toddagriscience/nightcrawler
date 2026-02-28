@@ -36,8 +36,8 @@ export default function Login() {
 
   return (
     <main>
-      <div className="mx-auto flex min-h-screen max-w-[1400px] items-center justify-center px-15">
-        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 place-items-center gap-8 px-0 pb-20 pt-10 md:grid-cols-2 md:gap-16 md:pb-26 md:pt-15 lg:gap-24">
+      <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-5 md:mt-15 w-full max-w-[1200px] mx-auto">
           {/* Login image*/}
           <div className="relative hidden md:block md:h-[650px] md:min-w-[330px] md:w-auto lg:max-w-none lg:w-full">
             <Image
@@ -52,7 +52,7 @@ export default function Login() {
           {/* Login form */}
           <div className="flex w-full max-w-[530px] flex-col md:mr-0 lg:max-w-none lg:mr-10">
             <FadeIn>
-              <h1 className="mb-10 text-center text-2xl md:text-left">
+              <h1 className="mb-10 mt-10 text-center text-2xl md:text-left">
                 Login to Todd
               </h1>
               {errors && errors.length > 0 && (
@@ -171,9 +171,9 @@ export default function Login() {
                   Login with passkeys
                 </Button> */}
 
-                <p className="text-left text-sm font-normal">
+                <p className="text-left text-sm font-thin">
                   Not yet a Todd Client?{' '}
-                  <Link href="/contact" className="font-bold underline">
+                  <Link href="/contact" className="font-normal underline">
                     Learn how to become one
                   </Link>
                 </p>
