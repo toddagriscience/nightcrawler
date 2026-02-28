@@ -24,6 +24,8 @@ export const ApplicationContext = createContext({
   currentUser: {} as UserSelect,
   internalApplication: {} as FarmInfoInternalApplicationSelect,
   invitedUserVerificationStatus: [{} as VerificationStatus],
+  setCurrentTab: (_tab: TabTypes) => {},
+  canSubmitApplication: false,
 });
 
 /** The tabs for the application */
@@ -52,6 +54,8 @@ export default function ApplicationTabs({
         internalApplication,
         currentUser,
         invitedUserVerificationStatus,
+        setCurrentTab,
+        canSubmitApplication,
       }}
     >
       <Tabs defaultValue="general" value={currentTab}>
@@ -74,27 +78,19 @@ export default function ApplicationTabs({
         </TabsList>
 
         <TabsContent value="general">
-          <GeneralBusinessInformation
-            defaultValues={{
-              ...farmInfo,
-            }}
-            setCurrentTab={setCurrentTab}
-          />
+          <GeneralBusinessInformation />
         </TabsContent>
 
         <TabsContent value="colleagues">
-          <Colleagues setCurrentTab={setCurrentTab} />
+          <Colleagues />
         </TabsContent>
 
         <TabsContent value="farm">
-          <Farm
-            defaultValues={{ ...internalApplication, farmId: farmInfo.farmId! }}
-            setCurrentTab={setCurrentTab}
-          />
+          <Farm />
         </TabsContent>
 
         <TabsContent value="terms">
-          <TermsAndConditions canSubmitApplication={canSubmitApplication} />
+          <TermsAndConditions />
         </TabsContent>
       </Tabs>
     </ApplicationContext.Provider>

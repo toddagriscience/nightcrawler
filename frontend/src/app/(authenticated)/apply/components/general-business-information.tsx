@@ -6,9 +6,7 @@ import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
   type GeneralBusinessInformationInsert,
-  type GeneralBusinessInformationUpdate,
   generalBusinessInformationInsertSchema,
-  TabTypes,
 } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
@@ -18,16 +16,13 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { FadeIn } from '@/components/common';
 import { saveGeneralBusinessInformation } from '../actions';
 import { Address, Certifications } from './general-business-information/index';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ApplicationContext } from './application-tabs';
 
 /** The 1st tab in the application page for general business information */
-export default function GeneralBusinessInformation({
-  defaultValues,
-  setCurrentTab,
-}: {
-  defaultValues?: GeneralBusinessInformationUpdate;
-  setCurrentTab: (arg0: TabTypes) => void;
-}) {
+export default function GeneralBusinessInformation() {
+  const { farmInfo, setCurrentTab } = useContext(ApplicationContext);
+  const defaultValues = farmInfo;
   const {
     register,
     handleSubmit,

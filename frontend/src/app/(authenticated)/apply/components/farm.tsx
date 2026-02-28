@@ -35,17 +35,17 @@ import {
   WaterUsedPostHarvest,
 } from './farm/index';
 import { Textarea } from '@/components/ui/textarea';
-import { useState } from 'react';
-import { TabTypes } from '../types';
+import { useState, useContext } from 'react';
+import { ApplicationContext } from './application-tabs';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
-export default function Farm({
-  defaultValues,
-  setCurrentTab,
-}: {
-  defaultValues?: FarmInfoInternalApplicationSelect;
-  setCurrentTab: (arg0: TabTypes) => void;
-}) {
+export default function Farm() {
+  const { internalApplication, farmInfo, setCurrentTab } =
+    useContext(ApplicationContext);
+  const defaultValues = {
+    ...internalApplication,
+    farmId: farmInfo.farmId!,
+  } as FarmInfoInternalApplicationSelect;
   const {
     register,
     handleSubmit,
