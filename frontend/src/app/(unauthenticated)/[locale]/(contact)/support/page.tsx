@@ -200,6 +200,7 @@ export default function Support() {
                         buttonText={t('buttons.submit')}
                         className="w-[144px]"
                         disabled={isSubmitting || !isValid}
+                        reactHookFormPending={isSubmitting}
                       />
                     </form>
                   </>
