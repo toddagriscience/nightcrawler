@@ -28,7 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { LegalSubtext } from '../../../../components/common/legal-subtext/legal-subtext';
+import { LegalSubtext } from '../../../../../components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -115,8 +115,8 @@ export default function Contact() {
 
   return (
     <main>
-      <div className="max-w-[1400px] mx-auto px-15">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-center mx-auto mt-10 mb-20 md:mt-15 md:mb-26 w-full max-w-[1200px] mx-auto">
+      <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-5 md:mt-15 w-full max-w-[1200px] mx-auto">
           <div
             className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
             style={{
@@ -145,7 +145,7 @@ export default function Contact() {
                   <CarouselItem>
                     <FieldSet className="flex flex-col gap-3">
                       <FieldLegend>
-                        <h1 className="text-2xl mb-8 md:mb-2 mt-10 md:mt-0 text-center md:text-left">
+                        <h1 className="text-2xl mb-8 md:mb-2 mt-10 text-left">
                           {t('description')}
                         </h1>
                       </FieldLegend>
@@ -493,7 +493,7 @@ export default function Contact() {
                     <FadeIn>
                       <Button
                         variant="outline"
-                        className="rounded-full h-auto px-16 py-3 max-w-45 text-sm hover:cursor-pointer hover:border-[#848484]/80 font-semibold"
+                        className="rounded-full h-auto px-16 h-11 max-w-45 text-sm hover:cursor-pointer hover:border-[#848484]/80 font-semibold"
                         type="button"
                         onClick={handleBack}
                       >
@@ -508,7 +508,7 @@ export default function Contact() {
                     <FadeIn>
                       <Button
                         variant="brand"
-                        className="rounded-full text-background h-auto px-13 py-3 max-w-45 text-sm hover:cursor-pointer font-semibold"
+                        className="rounded-full text-background h-auto px-13 h-11 max-w-45 text-sm hover:cursor-pointer font-semibold"
                         type="button"
                         onClick={handleNext}
                       >
