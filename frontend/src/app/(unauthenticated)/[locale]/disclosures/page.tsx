@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
