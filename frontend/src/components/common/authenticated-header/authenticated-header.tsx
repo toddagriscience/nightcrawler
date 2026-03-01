@@ -1,14 +1,18 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import Link from 'next/link';
 
 /**
  * Header component for authenticated/platform pages
  * Displays the TODD brand and navigation links (Notifications, Account)
  * @returns {JSX.Element} - The authenticated header component
  */
-export default function AuthenticatedHeader() {
+export default function AuthenticatedHeader({
+  approved,
+}: {
+  approved: boolean;
+}) {
   return (
     <header className="w-full" role="banner">
       <div className="mx-auto max-w-[107rem] px-4 py-4 sm:px-6 lg:px-8">
@@ -22,12 +26,14 @@ export default function AuthenticatedHeader() {
             {/* > */}
             {/*   Notifications */}
             {/* </Link> */}
-            <Link
-              href="/search"
-              className="text-foreground text-sm transition-opacity hover:opacity-70"
-            >
-              Knowledge
-            </Link>
+            {approved && (
+              <Link
+                href="/search"
+                className="text-foreground text-sm transition-opacity hover:opacity-70"
+              >
+                Knowledge
+              </Link>
+            )}
             <Link
               href={'/contact'}
               className="text-foreground text-sm transition-opacity hover:opacity-70"

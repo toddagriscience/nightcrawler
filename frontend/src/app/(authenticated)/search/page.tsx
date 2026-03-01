@@ -2,6 +2,8 @@
 
 import { searchKnowledge } from '@/lib/ai/search';
 import { logger } from '@/lib/logger';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { notFound } from 'next/navigation';
 import { SearchClient } from './search-client';
 
 /**
@@ -14,6 +16,12 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string | string[] }>;
 }) {
+  const currentUser = await getAuthenticatedInfo();
+
+  if (!currentUser.approved) {
+    notFound();
+  }
+
   const params = await searchParams;
   const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q;
   const query = rawQuery?.trim() ?? '';
