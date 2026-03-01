@@ -38,7 +38,7 @@ export default function Login() {
   return (
     <main>
       <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-5 md:mt-15 w-full max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-25 md:mt-15 w-full max-w-[1200px] mx-auto">
           {/* Login image*/}
           <div className="relative hidden md:block md:h-[650px] md:min-w-[330px] md:w-auto lg:max-w-none lg:w-full">
             <Image
