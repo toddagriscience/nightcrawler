@@ -1,11 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
-import ForgotPassword from './page';
 import { useActionState } from 'react';
-import { describe, test, expect, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
+import ForgotPassword from './page';
 
 vi.mock('react', { spy: true });
+vi.mock('@/lib/utils/actions', () => ({
+  formatActionResponseErrors: vi.fn(),
+}));
 
 describe('ForgotPassword', () => {
   test('should render the form and initial prompt without errors', () => {
@@ -18,7 +22,7 @@ describe('ForgotPassword', () => {
     render(<ForgotPassword />);
 
     expect(
-      screen.getByRole('heading', { name: /reset password/i })
+      screen.getByRole('heading', { name: /reset your password/i })
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Please provide your account email/i)
@@ -31,27 +35,22 @@ describe('ForgotPassword', () => {
   });
 
   test('should display success message after successful submission', async () => {
-    const { rerender } = render(<ForgotPassword />);
-
-    expect(
-      screen.getByRole('heading', { name: /reset password/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Please provide your account email/i)
-    ).toBeInTheDocument();
-
-    // Rerender the component with the successful state returned by the mock
+    vi.mocked(formatActionResponseErrors).mockReturnValue([]);
     vi.mocked(useActionState).mockImplementation(() => [
-      [[]],
+      { success: true },
       vi.fn(() => {}),
       false,
     ]);
-    rerender(<ForgotPassword />);
+
+    render(<ForgotPassword />);
 
     expect(
       screen.getByText(
         /We've sent an email with the information needed to reset your password/i
       )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /reset password/i })
     ).toBeInTheDocument();
 
     // Ensure the form is gone
@@ -63,6 +62,7 @@ describe('ForgotPassword', () => {
 
   test('should display error message after failed submission', async () => {
     const errorMessage = 'Invalid email or server error.';
+    vi.mocked(formatActionResponseErrors).mockReturnValue([errorMessage]);
     vi.mocked(useActionState).mockImplementation(() => [
       { error: errorMessage },
       vi.fn(() => {}),
