@@ -5,7 +5,7 @@ import AuthenticatedHeader from '@/components/common/authenticated-header/authen
 import Button from '@/components/common/button/button';
 import UnauthenticatedHeader from '@/components/common/unauthenticated-header/unauthenticated-header';
 import { Link } from '@/i18n/config';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { createClient } from '@/lib/supabase/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import {
@@ -19,7 +19,10 @@ export default async function NotFound() {
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: 'common' });
   const messages = await getMessages({ locale });
-  const user = await getAuthenticatedInfo();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const socialMediaIcons = [
     {
@@ -47,11 +50,7 @@ export default async function NotFound() {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <SmoothScroll>
-        {user ? (
-          <AuthenticatedHeader approved={user.approved} />
-        ) : (
-          <UnauthenticatedHeader />
-        )}
+        {user ? <AuthenticatedHeader /> : <UnauthenticatedHeader />}
         <FadeIn>
           <div className="flex flex-col items-center justify-end max-w-[1200px] mx-auto lg:mt-20">
             <div className="flex lg:flex-row flex-col justify-center lg:items-end items-center gap-20 lg:gap-12 lg:mb-42 mb-20">
