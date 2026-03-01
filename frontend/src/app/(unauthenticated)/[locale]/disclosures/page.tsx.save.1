@@ -1,0 +1,60 @@
+import Link from 'next/link';
+type LinkItem = { label: string; href: string };
+
+const generalLinks = {
+    primaryLinks: [
+      {label:"Todd Privacy Policy, English (PDF)", href: "#"},
+      {label:"Todd Privacy Policy, EU (PDF)", href: "#"},
+      {label:"Todd Privacy Policy, Japan (PDF)", href: "#"}
+    ],
+    
+    subLinks: [
+      {label: "Misuse of Todd Name and Brand (PDF)", href: "#"}
+    ]
+};
+
+const ukLinks = [
+    {label:"Modern Slavery Act Statement (PDF)", href: "#"}
+];
+
+function LinkList({ linkItem }: { linkItem: LinkItem[] }) {
+    return(
+        <ul className="mt-1 space-y-2">
+           {Object.entries(generalLinks).map(([section, refLinks]) => (
+              <section key={section}>
+                 <div className="link-group">
+                    {refLinks.map((link) => (
+                       <a key={link.href} href={link.href}>
+                          {link.label}
+                       </a>
+                     ))}
+                 </div>
+              </section>
+             ))}
+            {ukLinks.map((link) => (
+              <section key={link.label}>
+                 <div className="">
+                    <a key={link.href} href={link.href}>
+                          {link.label}
+                       </a>
+                  <div>
+              </section>
+             ))}
+        </ul>
+    );
+}
+
+export default function DisclosuresPage() {
+  return(
+    <main className="h-[90vh] mx-auto my-3 max-w-5xl px-6 py-14">
+      <div className="mb-8">
+        <h1 className="mb-8 text-4xl font-medium">General Disclosures</h1>
+        <LinkList linkItem={generalLinks} />
+      </div>
+      <div>
+        <h1 className="mb-8 text-4xl font-medium">UK Disclosures</h1>
+        <LinkList linkItem={ukLinks} />
+      </div>
+    </main>
+  );
+}
