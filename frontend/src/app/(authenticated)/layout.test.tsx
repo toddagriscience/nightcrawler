@@ -34,7 +34,7 @@ vi.mock('@/lib/utils/get-authenticated-info', () => ({
 describe('AuthenticatedLayout', () => {
   it('should render "authenticated-root" class', async () => {
     const jsx = await AuthenticatedLayout({
-      children: <div data-testid="child-content">Child Content</div>
+      children: <div data-testid="child-content">Child Content</div>,
     });
     render(jsx);
 
@@ -48,7 +48,7 @@ describe('AuthenticatedLayout', () => {
 
   it('should render children and header', async () => {
     const jsx = await AuthenticatedLayout({
-      children: <div data-testid="child-content">Child Content</div>
+      children: <div data-testid="child-content">Child Content</div>,
     });
     render(jsx);
 

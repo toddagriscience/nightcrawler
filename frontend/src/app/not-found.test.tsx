@@ -100,7 +100,9 @@ describe('NotFound Page', () => {
   it('should render AuthenticatedHeader when user is logged in', async () => {
     // Mock authenticated user
     mockGetAuthenticatedInfo.mockResolvedValue({
-      id: '123', email: 'test@example.com', approved: true
+      id: '123',
+      email: 'test@example.com',
+      approved: true,
     });
 
     const jsx = await NotFound();
