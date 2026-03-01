@@ -7,6 +7,7 @@
     "loading": "Cargando...",
     "error": "Algo salió mal",
     "notFound": {
+        "title": "404",
       "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
       "homeButton": "Inicio"
     }
