@@ -23,7 +23,7 @@
     "@vitest/eslint-plugin": "^1.6.6",
     "ajv": "^6.14.0",
     "basic-ftp": "^5.2.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.3",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-no-secrets": "^2.2.1",
     "lodash": "^4.17.23",
