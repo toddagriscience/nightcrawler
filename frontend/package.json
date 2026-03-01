@@ -65,7 +65,7 @@
     "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.34.3",
-    "glob": "13.0.0",
+    "glob": "13.0.6",
     "intersection-observer-polyfill": "^0.1.0",
     "jsdom": "^27.4.0",
     "lucide-react": "^0.564.0",
