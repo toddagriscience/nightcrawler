@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import Link from 'next/link';
 
 /**
  * Header component for authenticated/platform pages
@@ -27,12 +27,6 @@ export default function AuthenticatedHeader() {
               className="text-foreground text-sm transition-opacity hover:opacity-70"
             >
               Knowledge
-            </Link>
-            <Link
-              href={'/contact'}
-              className="text-foreground text-sm transition-opacity hover:opacity-70"
-            >
-              Contact
             </Link>
             <Link
               href="/account"
