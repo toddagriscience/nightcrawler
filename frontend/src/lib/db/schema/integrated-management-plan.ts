@@ -26,7 +26,10 @@ export const integratedManagementPlan = pgTable('integrated_management_plan', {
   /** Written plan for management zone */
   plan: text(),
   /** The date this plan was written */
-  createdAt: date({ mode: 'date' }).notNull().defaultNow(),
+  initialized: date({ mode: 'date' }).notNull(),
+  /** The date this plan was updated, if it ever was */
+  updated: date({ mode: 'date' }),
+  createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()
     .defaultNow()

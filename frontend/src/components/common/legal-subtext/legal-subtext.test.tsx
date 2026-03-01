@@ -2,7 +2,7 @@
 
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import { describe, expect, it } from 'vitest';
-import { LegalSubtext } from './page';
+import { LegalSubtext } from './legal-subtext';
 
 describe('LegalSubtext', () => {
   it('renders without crashing', () => {

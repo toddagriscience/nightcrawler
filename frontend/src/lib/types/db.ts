@@ -7,6 +7,7 @@ import {
   farmInfoInternalApplication,
   farmLocation,
   integratedManagementPlan,
+  knowledgeArticle,
   managementZone,
   tab,
   user,
@@ -28,6 +29,7 @@ export type WidgetSelect = InferSelectModel<typeof widget>;
 export type IntegratedManagementPlanSelect = InferSelectModel<
   typeof integratedManagementPlan
 >;
+export type KnowledgeArticleSelect = InferSelectModel<typeof knowledgeArticle>;
 
 export type FarmInsert = InferInsertModel<typeof farm>;
 export type FarmLocationInsert = InferInsertModel<typeof farmLocation>;
