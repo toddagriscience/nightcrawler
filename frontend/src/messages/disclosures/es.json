@@ -1,0 +1,19 @@
+{
+  "disclosures": {
+    "title": {
+      "general": "General Disclosures",
+      "uk": "UK Disclosures"
+    },
+    "links": {
+      "general": {
+        "privacyEnglish": "Todd Privacy Policy, English (PDF)",
+        "privacyEU": "Todd Privacy Policy, EU (PDF)",
+        "privacyJapan": "Todd Privacy Policy, Japan (PDF)",
+        "misuseNameBrand": "Misuse of Todd Name and Brand (PDF)"
+      },
+      "uk": {
+        "modernSlavery": "Modern Slavery Act Statement (PDF)"
+      }
+    }
+  }
+}
