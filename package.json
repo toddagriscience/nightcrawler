@@ -31,7 +31,7 @@
     "minimatch": "^10.2.4",
     "rollup": "^4.59.0",
     "storybook": "^10.2.3",
-    "undici": "^6.23.0"
+    "undici": "^7.22.0"
   },
   "overrides": {
     "undici": "^6.23.0",
