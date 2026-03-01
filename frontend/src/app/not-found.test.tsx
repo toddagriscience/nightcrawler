@@ -15,11 +15,14 @@ vi.mock(
   })
 );
 
-vi.mock('@/components/common/unauthenticated-header/unauthenticated-header', () => ({
-  default: () => (
-    <div data-testid="unauthenticated-header">Unauthenticated Header</div>
-  ),
-}));
+vi.mock(
+  '@/components/common/unauthenticated-header/unauthenticated-header',
+  () => ({
+    default: () => (
+      <div data-testid="unauthenticated-header">Unauthenticated Header</div>
+    ),
+  })
+);
 
 vi.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => (
