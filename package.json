@@ -11,7 +11,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-license-header": "^0.8.0",
+    "eslint-plugin-license-header": "^0.9.0",
     "prettier": "^3.8.1"
   },
   "scripts": {
@@ -23,7 +23,7 @@
     "@vitest/eslint-plugin": "^1.6.6",
     "ajv": "^6.14.0",
     "basic-ftp": "^5.2.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.3",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-no-secrets": "^2.2.1",
     "lodash": "^4.17.23",
@@ -31,7 +31,7 @@
     "minimatch": "^10.2.4",
     "rollup": "^4.59.0",
     "storybook": "^10.2.3",
-    "undici": "^6.23.0"
+    "undici": "^7.22.0"
   },
   "overrides": {
     "undici": "^6.23.0",

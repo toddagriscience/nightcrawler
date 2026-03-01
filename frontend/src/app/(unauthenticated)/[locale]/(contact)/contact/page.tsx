@@ -450,7 +450,7 @@ export default function Contact() {
                         <h1 className="text-4xl lg:text-5xl">
                           {t('results.matchTitle')}
                         </h1>
-                        <p className="text-md md:text-lg">
+                        <p className="text-normal md:text-lg">
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
