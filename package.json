@@ -34,7 +34,6 @@
     "undici": "^7.22.0"
   },
   "overrides": {
-    "undici": "^6.23.0",
     "lodash": "^4.17.23",
     "lodash-es": "^4.17.23",
     "esbuild": "^0.25.0",
