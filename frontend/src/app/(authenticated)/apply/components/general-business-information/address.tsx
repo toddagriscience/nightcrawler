@@ -191,10 +191,7 @@ export default function Address({
                   )}
                 />
               </div>
-              <Input
-                type="text"
-                {...register('apn')}
-              />
+              <Input type="text" {...register('apn')} />
             </Field>
           </>
         ) : null}
