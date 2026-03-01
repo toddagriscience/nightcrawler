@@ -18,7 +18,7 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const currentUser = await getAuthenticatedInfo();
-  
+
   return (
     <html lang="en">
       <body className={fontVariables}>
