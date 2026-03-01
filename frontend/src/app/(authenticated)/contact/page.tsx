@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import ContactLinksSection from './components/contact-links-section';
 import { Mail, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import ContactLinksSection from './components/contact-links-section';
 
 export default function ContactPage() {
   return (
@@ -22,7 +22,7 @@ export default function ContactPage() {
 
       <section className="mx-auto mt-20 w-full max-w-[760px]">
         <h1 className="text-foreground text-[48px] leading-none font-normal">
-          Support tools
+          Talk to us
         </h1>
 
         <div className="mt-8 flex flex-wrap gap-4">
