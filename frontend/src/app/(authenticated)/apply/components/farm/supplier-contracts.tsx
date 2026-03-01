@@ -6,12 +6,14 @@ import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { FarmFormRegisterProps } from '../../types';
+import { useFormContext } from 'react-hook-form';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 
-export default function SupplierContracts({
-  register,
-  errors,
-}: FarmFormRegisterProps) {
+export default function SupplierContracts() {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <Field>
       <div className="flex flex-row justify-between">
