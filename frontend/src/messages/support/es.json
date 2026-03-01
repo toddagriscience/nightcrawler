@@ -16,12 +16,12 @@
       "message": "¿En qué podemos ayudarte?"
     },
     "buttons": {
-      "submit": "ENVIAR"
+      "submit": "Enviar"
     },
     "success": {
-      "title": "MENSAJE ENVIADO",
+      "title": "Mensaje Enviado",
       "subtitle": "Gracias por contactarnos. Te responderemos pronto.",
-      "cta": "INICIO"
+      "cta": "Inicio"
     }
   }
 }
