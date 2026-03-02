@@ -2,6 +2,7 @@
 
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import NavLinks from './navigation';
+import Link from 'next/link';
 
 /**
  * Header component for authenticated/platform pages
