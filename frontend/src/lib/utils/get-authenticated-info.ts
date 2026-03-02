@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use server';
+
 import { getUserEmail } from '../auth';
 import { farm, user } from '../db/schema';
 import { db } from '../db/schema/connection';

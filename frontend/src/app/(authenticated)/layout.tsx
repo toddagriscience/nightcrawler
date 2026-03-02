@@ -2,7 +2,6 @@
 
 import ConditionedAuthenticatedHeader from '@/components/common/authenticated-header/conditioned-header';
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
 
@@ -12,7 +11,7 @@ import '../globals.css';
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The authenticated layout
  */
-export default async function AuthenticatedLayout({
+export default function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
