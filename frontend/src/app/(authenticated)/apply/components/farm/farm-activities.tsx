@@ -33,27 +33,28 @@ export default function FarmActivities() {
           <FieldSet className="flex flex-col gap-2">
             <Field orientation="horizontal">
               <Checkbox
-                checked={field.value?.fallow.isFallow}
+                id="farmActivitiesFallow"
+                checked={field.value?.fallow?.isFallow ?? false}
                 onCheckedChange={(e) =>
                   field.onChange({
                     ...field.value,
-                    fallow: { ...field.value?.fallow, isFallow: e },
+                    fallow: { ...field.value?.fallow, isFallow: e === true },
                   })
                 }
               />
               <FieldLabel
-                htmlFor="alternateFarmingPast"
+                htmlFor="farmActivitiesFallow"
                 className="whitespace-nowrap"
               >
                 Fallow
               </FieldLabel>
             </Field>
-            {field.value?.fallow.isFallow && (
+            {field.value?.fallow?.isFallow && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
                   className="basis-1/4"
                   type="date"
-                  value={field.value?.fallow.from || ''}
+                  value={field.value?.fallow?.from || ''}
                   onChange={(e) =>
                     field.onChange({
                       ...field.value,
@@ -83,18 +84,22 @@ export default function FarmActivities() {
             )}
             <Field orientation="horizontal">
               <Checkbox
-                checked={field.value?.coverCropping?.isCoverCropping}
+                id="farmActivitiesCoverCropping"
+                checked={field.value?.coverCropping?.isCoverCropping ?? false}
                 onCheckedChange={(e) =>
                   field.onChange({
                     ...field.value,
                     coverCropping: {
                       ...field.value?.coverCropping,
-                      isCoverCropping: e,
+                      isCoverCropping: e === true,
                     },
                   })
                 }
               />
-              <FieldLabel htmlFor="coverCropping" className="whitespace-nowrap">
+              <FieldLabel
+                htmlFor="farmActivitiesCoverCropping"
+                className="whitespace-nowrap"
+              >
                 Cover Cropping
               </FieldLabel>
             </Field>
@@ -146,15 +151,19 @@ export default function FarmActivities() {
             )}
             <Field orientation="horizontal">
               <Checkbox
-                checked={field.value?.pasture?.isPasture}
+                id="farmActivitiesPasture"
+                checked={field.value?.pasture?.isPasture ?? false}
                 onCheckedChange={(e) =>
                   field.onChange({
                     ...field.value,
-                    pasture: { ...field.value?.pasture, isPasture: e },
+                    pasture: { ...field.value?.pasture, isPasture: e === true },
                   })
                 }
               />
-              <FieldLabel htmlFor="pasture" className="whitespace-nowrap">
+              <FieldLabel
+                htmlFor="farmActivitiesPasture"
+                className="whitespace-nowrap"
+              >
                 Pasture
               </FieldLabel>
             </Field>
@@ -206,19 +215,22 @@ export default function FarmActivities() {
             )}
             <Field orientation="horizontal">
               <Checkbox
-                checked={field.value?.productionOfCrops?.isProductionOfCrops}
+                id="production-of-crops"
+                checked={
+                  field.value?.productionOfCrops?.isProductionOfCrops ?? false
+                }
                 onCheckedChange={(e) =>
                   field.onChange({
                     ...field.value,
                     productionOfCrops: {
                       ...field.value?.productionOfCrops,
-                      isProductionOfCrops: e,
+                      isProductionOfCrops: e === true,
                     },
                   })
                 }
               />
               <FieldLabel
-                htmlFor="productionOfCrops"
+                htmlFor="production-of-crops"
                 className="whitespace-nowrap"
               >
                 Production of Crops
@@ -272,15 +284,16 @@ export default function FarmActivities() {
             )}
             <Field orientation="horizontal">
               <Checkbox
-                checked={field.value?.other?.isOther}
+                id="farmActivitiesOther"
+                checked={field.value?.other?.isOther ?? false}
                 onCheckedChange={(e) =>
                   field.onChange({
                     ...field.value,
-                    other: { ...field.value?.other, isOther: e },
+                    other: { ...field.value?.other, isOther: e === true },
                   })
                 }
               />
-              <FieldLabel htmlFor="other" className="whitespace-nowrap">
+              <FieldLabel htmlFor="farmActivitiesOther" className="whitespace-nowrap">
                 Other
               </FieldLabel>
             </Field>
