@@ -1,11 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { getUserEmail } from '../auth';
+'use server';
+
+import { logger } from '@/lib/logger';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
+import { eq } from 'drizzle-orm';
+import { getUserEmail } from '../auth-server';
 import { farm, user } from '../db/schema';
 import { db } from '../db/schema/connection';
-import { eq } from 'drizzle-orm';
-import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
-import { logger } from '@/lib/logger';
 
 /**
  * Gets the authenticated user's information. Throws an error if the user

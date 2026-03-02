@@ -15,20 +15,18 @@ import {
 } from '@/components/ui';
 import { useForm } from 'react-hook-form';
 import { submitApplication } from '../actions';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { RefreshCw } from 'lucide-react';
+import { ApplicationContext } from './application-tabs';
 
 /** The time required to wait to press the submit application button in the modal. */
 const waitTime = 5000;
 
 /** Terms and conditions page */
-export default function TermsAndConditions({
-  canSubmitApplication = true,
-}: {
-  canSubmitApplication?: boolean;
-}) {
+export default function TermsAndConditions() {
+  const { canSubmitApplication } = useContext(ApplicationContext);
   const { handleSubmit } = useForm();
   const [finalSubmitDisabled, setFinalSubmitDisabled] = useState(true);
   const [submitError, setSubmitError] = useState(false);

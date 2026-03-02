@@ -2,7 +2,7 @@
 
 'use client';
 
-import { logout } from '@/lib/auth';
+import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 

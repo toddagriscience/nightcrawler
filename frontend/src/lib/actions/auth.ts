@@ -2,7 +2,7 @@
 
 'use server';
 
-import { setPassword } from '@/lib/auth';
+import { setPassword } from '@/lib/auth-server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -10,7 +10,7 @@ import logger from '../logger';
 import { AuthResponse, AuthResponseTypes } from '../types/auth';
 import { emailSchema, loginSchema } from '../zod-schemas/auth';
 
-/** This file is STRICTLY for SERVER SIDE authentication. Server-side authentication should be generally preferred over client-side authentication. You can read more about this in `./src/lib/auth.ts` */
+/** This file is STRICTLY for SERVER SIDE authentication. Server-side authentication should be generally preferred over client-side authentication. You can read more about this in `./src/lib/auth-server.ts` and `./src/lib/auth-client.ts`. */
 
 /**
  * ONLY USE ON SERVER SIDE! Logs a user in using Supabase on the server, and handles errors accordingly.

@@ -23,7 +23,6 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 import { Button } from '@/components/ui';
-import { TabTypes } from '../types';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ApplicationContext } from './application-tabs';
@@ -46,13 +45,13 @@ const userRolesWithDescription: Record<string, any>[] = [
 ];
 
 /** The second tab for inviting colleagues to the Todd platform. */
-export default function Colleagues({
-  setCurrentTab,
-}: {
-  setCurrentTab: (arg0: TabTypes) => void;
-}) {
-  const { currentUser, allUsers, invitedUserVerificationStatus } =
-    useContext(ApplicationContext);
+export default function Colleagues() {
+  const {
+    currentUser,
+    allUsers,
+    invitedUserVerificationStatus,
+    setCurrentTab,
+  } = useContext(ApplicationContext);
 
   const [users, setUsers] = useState(allUsers);
   const {

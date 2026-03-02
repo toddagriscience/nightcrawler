@@ -1,14 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { user } from '@/lib/db/schema/user';
-import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  inviteUserToFarm,
   saveApplication,
   submitApplication,
-  inviteUserToFarm,
 } from './actions';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
-import * as nextHeaders from 'next/headers';
 
 const mockGetClaims = vi.fn();
 
@@ -29,7 +27,7 @@ vi.mock('@/lib/actions/googleSheets', () => ({
 }));
 
 const mockInviteUser = vi.fn();
-vi.mock('@/lib/auth', async () => {
+vi.mock('@/lib/auth-server', async () => {
   return {
     getUserEmail: async () => {
       const result = mockGetClaims();

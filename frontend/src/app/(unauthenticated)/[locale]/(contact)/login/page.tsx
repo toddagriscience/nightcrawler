@@ -5,7 +5,6 @@
 import { FadeIn } from '@/components/common';
 import PublicInquiryModal from '@/components/common/public-inquiry-modal/public-inquiry-modal';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -16,7 +15,7 @@ import Link from 'next/link';
 import { useActionState, useState } from 'react';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
 /**
- * Login page. See `.src/lib/auth.ts` for more information regarding authentication and authorization.
+ * Login page. See `src/lib/auth-client.ts` and `src/lib/auth-server.ts` for more information regarding authentication and authorization.
  *
  * @returns {JSX.Element} - The login page
  * */

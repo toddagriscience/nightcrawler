@@ -7,14 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller } from 'react-hook-form';
-import { FarmFormControlProps } from '../../types';
+import { Controller, useFormContext } from 'react-hook-form';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 import { Textarea } from '@/components/ui/textarea';
 
-export default function FarmActivities({
-  control,
-  errors,
-}: FarmFormControlProps) {
+export default function FarmActivities() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <div className="flex flex-col justify-between">
       <FieldLabel className="mb-4">

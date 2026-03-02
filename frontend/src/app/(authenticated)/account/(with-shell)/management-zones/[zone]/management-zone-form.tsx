@@ -112,25 +112,6 @@ export default function ManagementZoneForm({
         </div>
       </div>
 
-      <div>
-        <label
-          htmlFor="contaminationRisk"
-          className="mb-1 block text-sm font-medium"
-        >
-          Contamination risk
-        </label>
-        <select
-          id="contaminationRisk"
-          {...register('contaminationRisk')}
-          className="border-input bg-background flex h-10 w-full rounded-md border px-3 py-2 text-sm"
-        >
-          <option value="">Not set</option>
-          <option value="Low">Low</option>
-          <option value="Med">Med</option>
-          <option value="High">High</option>
-        </select>
-      </div>
-
       <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" {...register('npk')} />

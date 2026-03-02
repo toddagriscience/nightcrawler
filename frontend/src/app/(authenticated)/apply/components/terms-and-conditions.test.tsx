@@ -5,6 +5,35 @@ import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TermsAndConditions from './terms-and-conditions';
+import { ApplicationContext } from './application-tabs';
+import type {
+  GeneralBusinessInformationUpdate,
+  VerificationStatus,
+} from '../types';
+import type {
+  FarmInfoInternalApplicationSelect,
+  UserSelect,
+} from '@/lib/types/db';
+
+/** Mock context with canSubmitApplication true so the AGREE button is enabled. */
+const mockContextValue = {
+  farmInfo: {} as GeneralBusinessInformationUpdate,
+  allUsers: [] as UserSelect[],
+  currentUser: {} as UserSelect,
+  internalApplication: {} as FarmInfoInternalApplicationSelect,
+  invitedUserVerificationStatus: [] as VerificationStatus[],
+  setCurrentTab: () => {},
+  canSubmitApplication: true,
+};
+
+/** Renders the component inside ApplicationContext. Provider for tests. */
+function renderWithContext() {
+  return render(
+    <ApplicationContext.Provider value={mockContextValue}>
+      <TermsAndConditions />
+    </ApplicationContext.Provider>
+  );
+}
 
 // Mock dependencies
 vi.mock('next/navigation', () => ({
@@ -30,7 +59,7 @@ describe('TermsAndConditions', () => {
   });
 
   it('renders the terms and conditions page', () => {
-    render(<TermsAndConditions />);
+    renderWithContext();
 
     expect(
       screen.getByText('Electronic Delivery of Documents')
@@ -43,7 +72,7 @@ describe('TermsAndConditions', () => {
 
   it('opens dialog when AGREE AND SUBMIT button is clicked', async () => {
     const user = userEvent.setup();
-    render(<TermsAndConditions />);
+    renderWithContext();
 
     const triggerButton = screen.getByRole('button', {
       name: /AGREE/i,
@@ -64,7 +93,7 @@ describe('TermsAndConditions', () => {
   });
 
   it('does not display error message initially', () => {
-    render(<TermsAndConditions />);
+    renderWithContext();
 
     expect(
       screen.queryByText('There was an error submitting your application.')
