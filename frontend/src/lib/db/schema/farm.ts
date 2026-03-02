@@ -2,7 +2,6 @@
 
 import {
   date,
-  pgEnum,
   pgTable,
   point,
   serial,
@@ -24,6 +23,8 @@ export const farm = pgTable('farm', {
   businessWebsite: varchar({ length: 200 }),
   /** The date the farm started. Collected during Internal Onboarding */
   managementStartDate: date(),
+  /** Is this farm approved? If it is, assume that billing is active. This is handled manually at the moment. */
+  approved: boolean('approved').default(false),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

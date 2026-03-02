@@ -1,13 +1,14 @@
 {
   "contactPage": {
     "title": "Contact Us",
-    "description": "Get in touch with Todd Agriscience for inquiries or partnerships.",
+    "description": "Get Started with Todd",
     "fields": {
       "name": "Name",
       "firstName": "First Name",
       "lastName": "Last Name",
       "farmName": "Farm Name",
       "email": "Work Email",
+      "emailDescription": "Please use a work email address if available.",
       "phone": "Phone Number"
     },
     "placeholders": {
@@ -23,7 +24,7 @@
       "yes": "Yes",
       "no": "No",
       "back": "Back",
-      "next": "Next →"
+      "next": "Continue"
     },
     "errors": {
       "requiredFields": "Please ensure all fields are filled out."
@@ -37,8 +38,23 @@
     "results": {
       "matchTitle": "It's a match!",
       "matchBody": "Let’s get your account set up.",
+      "matchJoinUs": "Join Us",
       "noMatchTitle": "Based on your information, Todd might not be the right fit.",
-      "noMatchBody": "We’re always working on services to serve growing farms of all kinds—and we’ll reach out as soon as we have something that better fits yours."
+      "noMatchBody": "We’re always working on services to serve growing farms of all kinds— and we’ll connect when we have something that better fits yours.",
+      "noMatchInstagram": "If you'd like us to take a second look at your application, please feel free to share your Instagram handle:",
+      "noMatchSubmit": "Submit"
+    },
+    "legal": {
+      "byContinuing": "By continuing, you agree to the",
+      "accountAgreement": "Todd Account Agreement",
+      "and": "and",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "apply": "apply."
+    },
+    "login": {
+      "alreadyStarted": "Already started?",
+      "loginToComplete": "Login to complete your application"
     }
   }
 }

@@ -3,6 +3,7 @@
 'use client';
 import { Button } from '@/components/ui';
 import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
@@ -58,10 +59,10 @@ export default function SubmitButton({
 
   return (
     <Button
-      className={
-        'w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 ' +
+      className={cn(
+        'h-11 text-sm font-semibold bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full hover:ease-in-out hover:duration-300 hover:transition-all',
         className
-      }
+      )}
       type="submit"
       disabled={disabled || pending}
       onClick={handleClick}

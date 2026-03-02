@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
+import ConditionedAuthenticatedHeader from '@/components/common/authenticated-header/conditioned-header';
 import { fontVariables } from '../../lib/fonts';
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import '../globals.css';
@@ -21,7 +21,7 @@ export default function AuthenticatedLayout({
       <body className={fontVariables}>
         <DesktopGate>
           <div className="bg-background-platform authenticated-root min-h-screen">
-            <AuthenticatedHeader />
+            <ConditionedAuthenticatedHeader />
             {children}
           </div>
         </DesktopGate>

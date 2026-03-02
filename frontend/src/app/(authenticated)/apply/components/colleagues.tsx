@@ -23,7 +23,6 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { inviteUserToFarm } from '../actions';
 import { userRoleEnum } from '@/lib/db/schema';
 import { Button } from '@/components/ui';
-import { TabTypes } from '../types';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ApplicationContext } from './application-tabs';
@@ -46,13 +45,13 @@ const userRolesWithDescription: Record<string, any>[] = [
 ];
 
 /** The second tab for inviting colleagues to the Todd platform. */
-export default function Colleagues({
-  setCurrentTab,
-}: {
-  setCurrentTab: (arg0: TabTypes) => void;
-}) {
-  const { currentUser, allUsers, invitedUserVerificationStatus } =
-    useContext(ApplicationContext);
+export default function Colleagues() {
+  const {
+    currentUser,
+    allUsers,
+    invitedUserVerificationStatus,
+    setCurrentTab,
+  } = useContext(ApplicationContext);
 
   const [users, setUsers] = useState(allUsers);
   const {
@@ -70,11 +69,14 @@ export default function Colleagues({
   async function onSubmit(data: UserInsert) {
     const result = await inviteUserToFarm(data);
     if (result.error === null) {
-      // Add the new user to the list and reset the form
-      setUsers([...users, data as UserSelect]);
+      // Use returned row so the new list entry has a real id (needed for uninvite)
+      if (result.data) {
+        setUsers([...users, result.data as UserSelect]);
+      }
       reset();
+    } else {
+      setError('role', { message: formatActionResponseErrors(result)[0] });
     }
-    setError('role', { message: formatActionResponseErrors(result)[0] });
   }
 
   // Technically not the best code - refactor me
@@ -102,8 +104,12 @@ export default function Colleagues({
               {users.map((singleUser, index) => (
                 <InvitedUser
                   invitedUser={singleUser}
-                  key={index}
+                  isCurrentUser={singleUser.id === currentUser.id}
                   isVerified={isVerified(singleUser)}
+                  key={index}
+                  onUninvited={(id) =>
+                    setUsers(users.filter((u) => u.id !== id))
+                  }
                 />
               ))}
             </div>
