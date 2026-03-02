@@ -17,9 +17,14 @@ export default async function PlatformTabContent({
   return (
     <>
       {/** Guaranteed to work, see the query/set of queries in (authenticated)/page.tsx */}
-      {!currentUser.approved ? (
+      {!currentUser.approved || currentTabs.length === 0 ? (
         <TabsContent value={'home'}>
-          <Landing currentUser={currentUser} />
+          <Landing
+            currentUser={currentUser}
+            hasNoManagementZones={
+              currentUser.approved && currentTabs.length === 0
+            }
+          />
         </TabsContent>
       ) : (
         currentTabs.map((tab) => (
