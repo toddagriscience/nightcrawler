@@ -6,9 +6,9 @@ import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
-import PlatformTabContent from './components/tabs/tab-content';
-import PlatformTabs from './components/tabs/tabs';
-import { getTablessManagementZones } from './components/tabs/utils';
+import PlatformTabContent from '../components/tabs/tab-content';
+import PlatformTabs from '../components/tabs/tabs';
+import { getTablessManagementZones } from '../components/tabs/utils';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
