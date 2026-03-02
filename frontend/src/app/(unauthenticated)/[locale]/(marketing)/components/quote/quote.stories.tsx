@@ -6,7 +6,7 @@ import Quote from './quote';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../.storybook/utils/storybookControls';
+} from '../../../../../../../.storybook/utils/storybookControls';
 
 const meta = {
   title: 'Landing/Quote',

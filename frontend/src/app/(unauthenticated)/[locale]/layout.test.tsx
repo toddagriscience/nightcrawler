@@ -43,11 +43,6 @@ vi.mock('@/components/common', () => ({
   ThemeReset: () => null,
 }));
 
-vi.mock('@/components/landing', () => ({
-  Footer: () => null,
-  Header: () => null,
-}));
-
 vi.mock('@/context/theme/ThemeContext', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
