@@ -1,9 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { UserSelect } from '@/lib/types/db';
-import { NamedTab } from './types';
 import { TabsContent } from '@/components/ui/tabs';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import Landing from '../landing';
+import CurrentTab from './current-tab';
+import { NamedTab } from './types';
 import { getTabHash } from './utils';
 
 export default async function PlatformTabContent({
@@ -11,18 +12,23 @@ export default async function PlatformTabContent({
   currentUser,
 }: {
   currentTabs: NamedTab[];
-  currentUser: UserSelect;
+  currentUser: AuthenticatedInfo;
 }) {
   return (
     <>
-      {!currentTabs.length ? (
-        <TabsContent value="home">
+      {/** Guaranteed to work, see the query/set of queries in (authenticated)/page.tsx */}
+      {!currentUser.approved ? (
+        <TabsContent value={'home'}>
           <Landing currentUser={currentUser} />
         </TabsContent>
       ) : (
         currentTabs.map((tab) => (
-          <TabsContent key={tab.id} value={getTabHash(tab)}>
-            <h1>{tab.name}</h1>
+          <TabsContent
+            key={tab.id}
+            value={getTabHash(tab)}
+            className="h-full w-full"
+          >
+            <CurrentTab currentTab={tab} />
           </TabsContent>
         ))
       )}

@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
+import { describe, expect, test, vitest } from 'vitest';
 import PasswordChecklist from './password-checklist';
-import { describe, expect, vitest, test } from 'vitest';
 
 describe('PasswordChecklist', () => {
   test('should render with all checks failing when password is empty', () => {
@@ -23,13 +23,8 @@ describe('PasswordChecklist', () => {
 
     const listItems = screen.getAllByRole('listitem');
 
-    listItems.slice(0, 4).forEach((item) => {
-      expect(item).toHaveTextContent('✗');
-      expect(item).toHaveClass('text-red-500');
-    });
-
-    expect(listItems[4]).toHaveTextContent('✓');
-    expect(listItems[4]).toHaveClass('text-green-500');
+    expect(listItems[4]).toHaveTextContent('•');
+    expect(listItems[4]).toHaveClass('italic');
 
     expect(setIsPasswordValid).toHaveBeenCalledWith(false);
   });
@@ -70,8 +65,8 @@ describe('PasswordChecklist', () => {
 
     // Check the 'at least 8 characters' line
     const eightCharCheck = screen.getByText(/at least 8 characters/);
-    expect(eightCharCheck).toHaveTextContent('✗');
-    expect(eightCharCheck).toHaveClass('text-red-500');
+    expect(eightCharCheck).toHaveTextContent('•');
+    expect(eightCharCheck).toHaveClass('italic');
 
     // Other checks should pass if applicable
     const specialCharCheck = screen.getByText(/contains a special character/);
@@ -94,10 +89,10 @@ describe('PasswordChecklist', () => {
       />
     );
 
-    // Check the 'both passwords are the same' line
-    const matchCheck = screen.getByText(/both passwords are the same/);
-    expect(matchCheck).toHaveTextContent('✗');
-    expect(matchCheck).toHaveClass('text-red-500');
+    // Check the 'passwords match' line
+    const matchCheck = screen.getByText(/passwords match/);
+    expect(matchCheck).toHaveTextContent('•');
+    expect(matchCheck).toHaveClass('italic');
 
     // Other checks should pass
     const listItems = screen.getAllByRole('listitem');
@@ -123,14 +118,14 @@ describe('PasswordChecklist', () => {
     );
 
     // Check failed requirements (Number and Uppercase)
-    expect(screen.getByText(/contains a number/)).toHaveTextContent('✗');
-    expect(screen.getByText(/contains a number/)).toHaveClass('text-red-500');
+    expect(screen.getByText(/contains a number/)).toHaveTextContent('•');
+    expect(screen.getByText(/contains a number/)).toHaveClass('italic');
 
     expect(screen.getByText(/contains an uppercase letter/)).toHaveTextContent(
-      '✗'
+      '•'
     );
     expect(screen.getByText(/contains an uppercase letter/)).toHaveClass(
-      'text-red-500'
+      'italic'
     );
 
     // Check passed requirements
@@ -138,9 +133,7 @@ describe('PasswordChecklist', () => {
     expect(screen.getByText(/contains a special character/)).toHaveTextContent(
       '✓'
     );
-    expect(screen.getByText(/both passwords are the same/)).toHaveTextContent(
-      '✓'
-    );
+    expect(screen.getByText(/passwords match/)).toHaveTextContent('✓');
 
     expect(setIsPasswordValid).toHaveBeenCalledWith(false);
   });

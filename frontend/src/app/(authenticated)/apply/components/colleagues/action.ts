@@ -2,12 +2,12 @@
 
 'use server';
 
-import { resendEmailInvite } from '@/lib/auth';
+import { deleteAuthUserByEmail, resendEmailInvite } from '@/lib/auth';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 /** Updates a client's role. Takes no arguments, simply flips the user's role (viewer -> admin, admin -> viewer) */
 export async function updateRole(): Promise<ActionResponse> {
@@ -37,6 +37,46 @@ export async function resendVerificationEmail(
     await getAuthenticatedInfo();
 
     await resendEmailInvite(email);
+
+    return { error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Unknown error' };
+  }
+}
+
+/** Removes an invited user from the farm: deletes them from Supabase Auth and from the database.
+ * Only allows uninviting a user on the same farm; cannot uninvite yourself.
+ *
+ * @param userId - The database id of the user to uninvite
+ * @returns ActionResponse with error message or null on success
+ */
+export async function uninviteUser(userId: number): Promise<ActionResponse> {
+  try {
+    const currentUser = await getAuthenticatedInfo();
+
+    const [targetUser] = await db
+      .select()
+      .from(user)
+      .where(and(eq(user.id, userId), eq(user.farmId, currentUser.farmId)))
+      .limit(1);
+
+    if (!targetUser) {
+      return { error: 'User not found or you cannot uninvite this user' };
+    }
+
+    if (targetUser.id === currentUser.id) {
+      return { error: 'You cannot uninvite yourself' };
+    }
+
+    const authError = await deleteAuthUserByEmail(targetUser.email);
+    if (authError) {
+      return { error: authError.message };
+    }
+
+    await db.delete(user).where(eq(user.id, userId));
 
     return { error: null };
   } catch (error) {

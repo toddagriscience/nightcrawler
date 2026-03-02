@@ -11,9 +11,10 @@ export default function ApplyButton() {
   return (
     <Button
       onClick={() => router.push('/apply')}
-      className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full max-w-50"
+      variant={'brand'}
+      className="min-w-45"
     >
-      APPLY
+      Apply to Todd
     </Button>
   );
 }

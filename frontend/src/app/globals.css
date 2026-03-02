@@ -96,14 +96,7 @@ body:has(.authenticated-root) {
   background: var(--background-platform);
 }
 
-/* Hide scrollbars globally */
-::-webkit-scrollbar {
-  display: none;
-}
-
 * {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   font-family: var(--font-neue-haas), Arial, sans-serif;
 }
 

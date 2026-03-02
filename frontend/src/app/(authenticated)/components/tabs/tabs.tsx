@@ -2,20 +2,21 @@
 
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NamedTab } from './types';
 import { Button } from '@/components/ui';
-import { getTabHash } from './utils';
-import { ManagementZoneSelect, UserSelect } from '@/lib/types/db';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import logger from '@/lib/logger';
+import { ManagementZoneSelect } from '@/lib/types/db';
+import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
+import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
 } from './actions';
-import logger from '@/lib/logger';
 import NewTabDropdown from './new-tab-dropdown';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { NamedTab } from './types';
+import { getTabHash } from './utils';
 
 const maxTabs = 8;
 
@@ -26,7 +27,7 @@ export default function PlatformTabs({
   children,
 }: {
   currentTabs: NamedTab[];
-  currentUser: UserSelect;
+  currentUser: AuthenticatedInfo;
   managementZones: ManagementZoneSelect[];
   children: React.ReactNode;
 }) {
@@ -83,6 +84,11 @@ export default function PlatformTabs({
   }
 
   async function deleteTab(tab: NamedTab) {
+    // Approved users always have at least 1 tab open
+    if (currentTabs.length === 1 && currentUser.approved) {
+      return;
+    }
+
     const tabId = tab.id;
     const result = await deleteTabAction({ tabId });
 
@@ -109,32 +115,34 @@ export default function PlatformTabs({
 
   return (
     <Tabs value={curTab}>
-      <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-350">
+      <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-300">
         <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
           {currentTabs.map((tab, index) => (
             <TabsTrigger
-              className="px-2 flex flex-row justify-between items-center group max-w-36 min-w-36 truncate border-none data-[state=active]:bg-gray-200 group"
+              className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
               key={tab.id}
               value={getTabHash(tab)}
               onClick={() => setCurTabHelper({ newTab: tab })}
             >
               <input
-                className="max-w-25 truncate cursor-pointer group-data-[state=active]:pointer-events-auto pointer-events-none focus:ring-0 focus:outline-none"
+                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
               />
-              <div>
-                {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                <div
-                  aria-roledescription="Close the current tab"
-                  role="button"
-                  onClick={() => deleteTab(tab)}
-                  className=" p-0 h-min"
-                >
-                  <X className="w-4 h-min" />
+              {currentTabs.length !== 1 && (
+                <div>
+                  {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
+                  <div
+                    aria-roledescription="Close the current tab"
+                    role="button"
+                    onClick={() => deleteTab(tab)}
+                    className="h-min p-0"
+                  >
+                    <X className="h-min w-4" />
+                  </div>
                 </div>
-              </div>
+              )}
             </TabsTrigger>
           ))}
           {currentTabs.length <= maxTabs && (

@@ -57,7 +57,9 @@ describe('TermsAndConditions', () => {
       screen.getAllByText(/By submitting, you are finalizing your application/)
     ).toHaveLength(2);
     expect(
-      screen.getByText(/You will not be able to access your application/)
+      screen.getByText(
+        /You will not be able to edit your application or resubmit it/
+      )
     ).toBeInTheDocument();
   });
 

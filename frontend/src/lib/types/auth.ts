@@ -31,7 +31,7 @@ export interface AuthResponse extends ActionResponse {
   responseType: AuthResponseTypes;
 }
 
-/** Password requirements for `/account/reset-password`. Supabase will also enforce everything except `isConfirmationSame` in case validation somehow fails.
+/** Password requirements for account password reset UIs. Supabase will also enforce everything except `isConfirmationSame` in case validation somehow fails.
  *
  * This is not handled by Zod for the sake of UX -- we want the user to be able to see exactly what they're missing, and Zod doesn't allow us to easily do that.
  *

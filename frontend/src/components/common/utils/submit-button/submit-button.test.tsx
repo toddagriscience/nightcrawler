@@ -1,11 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen } from '@/test/test-utils';
-import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import SubmitButton from './submit-button';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { it, describe, expect, vitest } from 'vitest';
+import { describe, expect, it, vitest } from 'vitest';
+import SubmitButton from './submit-button';
 
 describe('submit button', () => {
   it('renders without exploding and taking the whole world with it', () => {
@@ -14,9 +14,9 @@ describe('submit button', () => {
     expect(screen.getByText('TEST')).toBeInTheDocument();
   });
   it('applies custom class names', () => {
-    render(<SubmitButton buttonText="TEST" className="bg-amber-50" />);
+    render(<SubmitButton buttonText="TEST" className="bg-black" />);
 
-    expect(screen.getByText('TEST')).toHaveClass('bg-amber-50');
+    expect(screen.getByText('TEST')).toHaveClass('bg-black');
   });
   it('calls given function correctly', async () => {
     const testFn = vitest.fn();

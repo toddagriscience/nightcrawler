@@ -139,9 +139,9 @@ describe('I18n Middleware', () => {
     it('should not redirect unauth uninternationalized routes', async () => {
       const mockRequest = {
         nextUrl: {
-          pathname: '/login',
+          pathname: '/incoming',
           clone: vi.fn().mockReturnValue({
-            pathname: '/login',
+            pathname: '/incoming',
           }),
         },
       } as unknown as NextRequest;
@@ -152,16 +152,16 @@ describe('I18n Middleware', () => {
       expect(vi.mocked(MockNextResponse.next)).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
-      expect(result.headers.get('testing-location')).toBe('/login');
+      expect(result.headers.get('testing-location')).toBe('/incoming');
     });
 
     it('should redirect unauth internationalized routes', async () => {
       const mockRequest = {
-        url: 'http://localhost:3000/es/login',
+        url: 'http://localhost:3000/es/incoming',
         nextUrl: {
-          pathname: '/es/login',
+          pathname: '/es/incoming',
           clone: vi.fn().mockReturnValue({
-            pathname: '/es/login',
+            pathname: '/es/incoming',
           }),
         },
       } as unknown as NextRequest;
@@ -173,7 +173,7 @@ describe('I18n Middleware', () => {
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
       // @ts-expect-error Caused for some reason, probably due to the mock
-      expect(result.headers.get('location').pathname).toBe('/login');
+      expect(result.headers.get('location').pathname).toBe('/incoming');
     });
 
     it('should return next() for locale routes when unauthenticated', () => {

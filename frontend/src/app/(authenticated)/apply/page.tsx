@@ -13,9 +13,9 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq, ne } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import ApplicationTabs from './components/application-tabs';
-import { isVerified } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import logger from '@/lib/logger';
+import { isApplicationReadyForSubmission } from './db';
 
 /** The apply page
  *
@@ -87,6 +87,8 @@ export default async function Apply() {
     .where(eq(farmInfoInternalApplication.farmId, farmId))
     .limit(1);
 
+  const canSubmitApplication = await isApplicationReadyForSubmission(farmId);
+
   if (currentUser.approved) {
     redirect('/');
   }
@@ -107,6 +109,7 @@ export default async function Apply() {
         allUsers={allUsers}
         internalApplication={internalApplication}
         invitedUserVerificationStatus={invitedUserVerificationStatus}
+        canSubmitApplication={canSubmitApplication}
       />
     </div>
   );

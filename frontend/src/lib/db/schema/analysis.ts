@@ -1,6 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { date, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  date,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { managementZone } from './management-zone';
 
 /** A singular analysis for a singular management zone. There isn't much data in this table, the majority of it is stored in child tables. */
@@ -13,6 +20,10 @@ export const analysis = pgTable('analysis', {
   }),
   /** Date of the analysis */
   analysisDate: date({ mode: 'date' }).notNull(),
+  /** A brief summary of the analysis insights */
+  summary: text(),
+  /** Actionable information based on all macro mineral levels for this analysis. */
+  macroActionableInfo: text(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

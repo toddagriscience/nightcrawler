@@ -25,8 +25,6 @@ export const user = pgTable('user', {
   email: varchar().notNull().unique(),
   /** Phone number in E164 format */
   phone: varchar({ length: 15 }),
-  /** Is this user approved? If they are, assume that the user is currently being billed. This is handled manually at the moment. */
-  approved: boolean('approved').default(false),
   /** The role of this user on the farm. Collected during the Internal Application */
   job: varchar({ length: 200 }),
   /** The internal role of the user. */
