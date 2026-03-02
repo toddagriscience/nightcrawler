@@ -1,0 +1,2172 @@
+{
+  "id": "aeccc16a-34eb-4025-a915-ada5aceb0529",
+  "prevId": "b5d65f18-d48b-4654-947d-70d790646c45",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.analysis": {
+      "name": "analysis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(13)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "analysis_date": {
+          "name": "analysis_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "macro_actionable_info": {
+          "name": "macro_actionable_info",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "analysis_management_zone_management_zone_id_fk": {
+          "name": "analysis_management_zone_management_zone_id_fk",
+          "tableFrom": "analysis",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.farm": {
+      "name": "farm",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "informal_name": {
+          "name": "informal_name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "business_name": {
+          "name": "business_name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "business_website": {
+          "name": "business_website",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "management_start_date": {
+          "name": "management_start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approved": {
+          "name": "approved",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.farm_certificate": {
+      "name": "farm_certificate",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2147483647
+        },
+        "has_gap": {
+          "name": "has_gap",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "gap_date": {
+          "name": "gap_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_local_inspection": {
+          "name": "has_local_inspection",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "local_inspection_date": {
+          "name": "local_inspection_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_organic": {
+          "name": "has_organic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "organic_date": {
+          "name": "organic_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_biodynamic": {
+          "name": "has_biodynamic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "biodynamic_date": {
+          "name": "biodynamic_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "has_regenerative_organic": {
+          "name": "has_regenerative_organic",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "regenerative_organic": {
+          "name": "regenerative_organic",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "farm_certificate_farm_id_farm_id_fk": {
+          "name": "farm_certificate_farm_id_farm_id_fk",
+          "tableFrom": "farm_certificate",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set default",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.farm_location": {
+      "name": "farm_location",
+      "schema": "",
+      "columns": {
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": 2147483647
+        },
+        "location": {
+          "name": "location",
+          "type": "point",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apn": {
+          "name": "apn",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "county_state": {
+          "name": "county_state",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address1": {
+          "name": "address1",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address2": {
+          "name": "address2",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address3": {
+          "name": "address3",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "country": {
+          "name": "country",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "farm_location_farm_id_farm_id_fk": {
+          "name": "farm_location_farm_id_farm_id_fk",
+          "tableFrom": "farm_location",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set default",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.account_agreement_acceptance": {
+      "name": "account_agreement_acceptance",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_accepted": {
+          "name": "time_accepted",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accepted": {
+          "name": "accepted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "cidr",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "account_agreement_acceptance_user_id_user_id_fk": {
+          "name": "account_agreement_acceptance_user_id_user_id_fk",
+          "tableFrom": "account_agreement_acceptance",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.farm_info_internal_application": {
+      "name": "farm_info_internal_application",
+      "schema": "",
+      "columns": {
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "split_operation": {
+          "name": "split_operation",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alternate_farming": {
+          "name": "alternate_farming",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total_gross_income": {
+          "name": "total_gross_income",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conservation_plan": {
+          "name": "conservation_plan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "main_crops": {
+          "name": "main_crops",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total_acreage": {
+          "name": "total_acreage",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "management_zone_structure": {
+          "name": "management_zone_structure",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "farm_activites": {
+          "name": "farm_activites",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "production_location": {
+          "name": "production_location",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cultivation_practices": {
+          "name": "cultivation_practices",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "livestock_incorporation": {
+          "name": "livestock_incorporation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weed_insect_diseases_control": {
+          "name": "weed_insect_diseases_control",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pest_control": {
+          "name": "pest_control",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "off_farm_products": {
+          "name": "off_farm_products",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_materials": {
+          "name": "other_materials",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mechanical_equipment": {
+          "name": "mechanical_equipment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "supplier_contracts": {
+          "name": "supplier_contracts",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "irrigation_water_source": {
+          "name": "irrigation_water_source",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "irrigation_scheduling": {
+          "name": "irrigation_scheduling",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "soil_moisture_monitoring": {
+          "name": "soil_moisture_monitoring",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "irrigation_materials": {
+          "name": "irrigation_materials",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "water_conservation": {
+          "name": "water_conservation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "water_quality_protection": {
+          "name": "water_quality_protection",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "erosion_prevention": {
+          "name": "erosion_prevention",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "near_contamination_source": {
+          "name": "near_contamination_source",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active_wild_areas": {
+          "name": "active_wild_areas",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "natural_resources": {
+          "name": "natural_resources",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "manage_harvests": {
+          "name": "manage_harvests",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "water_used_post_harvest": {
+          "name": "water_used_post_harvest",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primary_market_venues": {
+          "name": "primary_market_venues",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "branding": {
+          "name": "branding",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_differentiation": {
+          "name": "product_differentiation",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "farm_info_internal_application_farm_id_farm_id_fk": {
+          "name": "farm_info_internal_application_farm_id_farm_id_fk",
+          "tableFrom": "farm_info_internal_application",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.integrated_management_plan": {
+      "name": "integrated_management_plan",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "analysis": {
+          "name": "analysis",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plan": {
+          "name": "plan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initialized": {
+          "name": "initialized",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated": {
+          "name": "updated",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integrated_management_plan_management_zone_management_zone_id_fk": {
+          "name": "integrated_management_plan_management_zone_management_zone_id_fk",
+          "tableFrom": "integrated_management_plan",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "integrated_management_plan_analysis_analysis_id_fk": {
+          "name": "integrated_management_plan_analysis_analysis_id_fk",
+          "tableFrom": "integrated_management_plan",
+          "tableTo": "analysis",
+          "columnsFrom": ["analysis"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.knowledge_article": {
+      "name": "knowledge_article",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "knowledge_category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(3072)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.management_zone": {
+      "name": "management_zone",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+          "type": "point",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rotation_year": {
+          "name": "rotation_year",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "npk": {
+          "name": "npk",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "npk_last_used": {
+          "name": "npk_last_used",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "irrigation": {
+          "name": "irrigation",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "water_conservation": {
+          "name": "water_conservation",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "management_zone_farm_id_farm_id_fk": {
+          "name": "management_zone_farm_id_farm_id_fk",
+          "tableFrom": "management_zone",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.mineral": {
+      "name": "mineral",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "analysis_id": {
+          "name": "analysis_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "mineral_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "real_value": {
+          "name": "real_value",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "units": {
+          "name": "units",
+          "type": "units",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actionable_info": {
+          "name": "actionable_info",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "mineral_analysis_id_analysis_id_fk": {
+          "name": "mineral_analysis_id_analysis_id_fk",
+          "tableFrom": "mineral",
+          "tableTo": "analysis",
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.oxidation_rate": {
+      "name": "oxidation_rate",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "analysis_id": {
+          "name": "analysis_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "real_ca_k": {
+          "name": "real_ca_k",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ideal_ca_k": {
+          "name": "ideal_ca_k",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "real_na_mg": {
+          "name": "real_na_mg",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ideal_na_mg": {
+          "name": "ideal_na_mg",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag": {
+          "name": "tag",
+          "type": "oxidation_rate_tag",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "units": {
+          "name": "units",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "oxidation_rate_analysis_id_analysis_id_fk": {
+          "name": "oxidation_rate_analysis_id_analysis_id_fk",
+          "tableFrom": "oxidation_rate",
+          "tableTo": "analysis",
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.solubility": {
+      "name": "solubility",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "analysis_id": {
+          "name": "analysis_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "real_value": {
+          "name": "real_value",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ideal_value": {
+          "name": "ideal_value",
+          "type": "numeric(9, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "units": {
+          "name": "units",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "solubility_analysis_id_analysis_id_fk": {
+          "name": "solubility_analysis_id_analysis_id_fk",
+          "tableFrom": "solubility",
+          "tableTo": "analysis",
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.standard_values": {
+      "name": "standard_values",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "calcium_min": {
+          "name": "calcium_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "calcium_low": {
+          "name": "calcium_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 100.2
+        },
+        "calcium_ideal": {
+          "name": "calcium_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 150.3
+        },
+        "calcium_high": {
+          "name": "calcium_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 200.4
+        },
+        "calcium_max": {
+          "name": "calcium_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 200.4
+        },
+        "ph_min": {
+          "name": "ph_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "ph_low": {
+          "name": "ph_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7.3
+        },
+        "ph_ideal": {
+          "name": "ph_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7.55
+        },
+        "ph_high": {
+          "name": "ph_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7.8
+        },
+        "ph_max": {
+          "name": "ph_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7.8
+        },
+        "salts_min": {
+          "name": "salts_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "salts_low": {
+          "name": "salts_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 640
+        },
+        "salts_ideal": {
+          "name": "salts_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 960
+        },
+        "salts_high": {
+          "name": "salts_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1280
+        },
+        "salts_max": {
+          "name": "salts_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1280
+        },
+        "magnesium_min": {
+          "name": "magnesium_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "magnesium_low": {
+          "name": "magnesium_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 36.45
+        },
+        "magnesium_ideal": {
+          "name": "magnesium_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 45.56
+        },
+        "magnesium_high": {
+          "name": "magnesium_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 121.5
+        },
+        "magnesium_max": {
+          "name": "magnesium_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 121.5
+        },
+        "exchangeable_sodium_percentage_min": {
+          "name": "exchangeable_sodium_percentage_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "exchangeable_sodium_percentage_low": {
+          "name": "exchangeable_sodium_percentage_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 200
+        },
+        "exchangeable_sodium_percentage_ideal": {
+          "name": "exchangeable_sodium_percentage_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 500
+        },
+        "exchangeable_sodium_percentage_high": {
+          "name": "exchangeable_sodium_percentage_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 700
+        },
+        "exchangeable_sodium_percentage_max": {
+          "name": "exchangeable_sodium_percentage_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 700
+        },
+        "nitrate_nitrogen_min": {
+          "name": "nitrate_nitrogen_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "nitrate_nitrogen_low": {
+          "name": "nitrate_nitrogen_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 20
+        },
+        "nitrate_nitrogen_ideal": {
+          "name": "nitrate_nitrogen_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 25
+        },
+        "nitrate_nitrogen_high": {
+          "name": "nitrate_nitrogen_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 30
+        },
+        "nitrate_nitrogen_max": {
+          "name": "nitrate_nitrogen_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 30
+        },
+        "phosphate_phosphorus_min": {
+          "name": "phosphate_phosphorus_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "phosphate_phosphorus_low": {
+          "name": "phosphate_phosphorus_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 50
+        },
+        "phosphate_phosphorus_ideal": {
+          "name": "phosphate_phosphorus_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 55
+        },
+        "phosphate_phosphorus_high": {
+          "name": "phosphate_phosphorus_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 60
+        },
+        "phosphate_phosphorus_max": {
+          "name": "phosphate_phosphorus_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 60
+        },
+        "potassium_min": {
+          "name": "potassium_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "potassium_low": {
+          "name": "potassium_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 250
+        },
+        "potassium_ideal": {
+          "name": "potassium_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 300
+        },
+        "potassium_high": {
+          "name": "potassium_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 350
+        },
+        "potassium_max": {
+          "name": "potassium_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 350
+        },
+        "zinc_min": {
+          "name": "zinc_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "zinc_low": {
+          "name": "zinc_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2.5
+        },
+        "zinc_ideal": {
+          "name": "zinc_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 3.5
+        },
+        "zinc_high": {
+          "name": "zinc_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 4.5
+        },
+        "zinc_max": {
+          "name": "zinc_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 4.5
+        },
+        "iron_min": {
+          "name": "iron_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "iron_low": {
+          "name": "iron_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 5
+        },
+        "iron_ideal": {
+          "name": "iron_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7.5
+        },
+        "iron_high": {
+          "name": "iron_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 10
+        },
+        "iron_max": {
+          "name": "iron_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 10
+        },
+        "organic_matter_min": {
+          "name": "organic_matter_min",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "organic_matter_low": {
+          "name": "organic_matter_low",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "organic_matter_ideal": {
+          "name": "organic_matter_ideal",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2
+        },
+        "organic_matter_high": {
+          "name": "organic_matter_high",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 3
+        },
+        "organic_matter_max": {
+          "name": "organic_matter_max",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 3
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "standard_values_farm_id_farm_id_fk": {
+          "name": "standard_values_farm_id_farm_id_fk",
+          "tableFrom": "standard_values",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "standard_values_farmId_unique": {
+          "name": "standard_values_farmId_unique",
+          "nullsNotDistinct": false,
+          "columns": ["farm_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tab": {
+      "name": "tab",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user": {
+          "name": "user",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tab_user_user_id_fk": {
+          "name": "tab_user_user_id_fk",
+          "tableFrom": "tab",
+          "tableTo": "user",
+          "columnsFrom": ["user"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tab_management_zone_management_zone_id_fk": {
+          "name": "tab_management_zone_management_zone_id_fk",
+          "tableFrom": "tab",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tab_managementZone_user_unique": {
+          "name": "tab_managementZone_user_unique",
+          "nullsNotDistinct": false,
+          "columns": ["management_zone", "user"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "farm_id": {
+          "name": "farm_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job": {
+          "name": "job",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "did_own_and_control_parcel": {
+          "name": "did_own_and_control_parcel",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "did_manage_and_control": {
+          "name": "did_manage_and_control",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_farm_id_farm_id_fk": {
+          "name": "user_farm_id_farm_id_fk",
+          "tableFrom": "user",
+          "tableTo": "farm",
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": ["email"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.widget": {
+      "name": "widget",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "widgets",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "widget_metadata": {
+          "name": "widget_metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "widget_management_zone_management_zone_id_fk": {
+          "name": "widget_management_zone_management_zone_id_fk",
+          "tableFrom": "widget",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "widget_managementZone_name_unique": {
+          "name": "widget_managementZone_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["management_zone", "name"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.crop": {
+      "name": "crop",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planted": {
+          "name": "planted",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "picked": {
+          "name": "picked",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_covercrop": {
+          "name": "is_covercrop",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "crop_management_zone_management_zone_id_fk": {
+          "name": "crop_management_zone_management_zone_id_fk",
+          "tableFrom": "crop",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.fertilizer": {
+      "name": "fertilizer",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initial_use": {
+          "name": "initial_use",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_used": {
+          "name": "last_used",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fertilizer_management_zone_management_zone_id_fk": {
+          "name": "fertilizer_management_zone_management_zone_id_fk",
+          "tableFrom": "fertilizer",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.livestock": {
+      "name": "livestock",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "animal": {
+          "name": "animal",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initial_deployment": {
+          "name": "initial_deployment",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "undeployment": {
+          "name": "undeployment",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currently_deployed": {
+          "name": "currently_deployed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "livestock_management_zone_management_zone_id_fk": {
+          "name": "livestock_management_zone_management_zone_id_fk",
+          "tableFrom": "livestock",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pest": {
+      "name": "pest",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "management_zone": {
+          "name": "management_zone",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "initial_encounter": {
+          "name": "initial_encounter",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "most_recent_encounter": {
+          "name": "most_recent_encounter",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "pest_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pest_management_zone_management_zone_id_fk": {
+          "name": "pest_management_zone_management_zone_id_fk",
+          "tableFrom": "pest",
+          "tableTo": "management_zone",
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.knowledge_category": {
+      "name": "knowledge_category",
+      "schema": "public",
+      "values": [
+        "soil",
+        "planting",
+        "water",
+        "insects_disease",
+        "harvest_storage",
+        "go_to_market",
+        "seed_products"
+      ]
+    },
+    "public.mineral_types": {
+      "name": "mineral_types",
+      "schema": "public",
+      "values": [
+        "Calcium",
+        "Magnesium",
+        "Sodium",
+        "Potassium",
+        "PH",
+        "Salinity",
+        "NitrateNitrogen",
+        "PhosphatePhosphorus",
+        "Zinc",
+        "Iron",
+        "OrganicMatter"
+      ]
+    },
+    "public.user_role": {
+      "name": "user_role",
+      "schema": "public",
+      "values": ["Admin", "Viewer"]
+    },
+    "public.widgets": {
+      "name": "widgets",
+      "schema": "public",
+      "values": [
+        "Macro Radar",
+        "Calcium Widget",
+        "PH Widget",
+        "Salinity Widget",
+        "Magnesium Widget",
+        "Sodium Widget",
+        "Nitrate Nitrogen Widget",
+        "Phosphate Phosphorus Widget",
+        "Potassium Widget",
+        "Zinc Widget",
+        "Iron Widget",
+        "Organic Matter Widget",
+        "Insights"
+      ]
+    },
+    "public.pest_type": {
+      "name": "pest_type",
+      "schema": "public",
+      "values": ["Insect", "Disease"]
+    },
+    "public.units": {
+      "name": "units",
+      "schema": "public",
+      "values": ["ppm", "%"]
+    },
+    "public.oxidation_rate_tag": {
+      "name": "oxidation_rate_tag",
+      "schema": "public",
+      "values": ["Slow", "Mixed", "Ideal", "High"]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

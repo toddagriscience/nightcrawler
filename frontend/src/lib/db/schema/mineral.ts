@@ -10,7 +10,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { analysis } from './analysis';
-import { levelCategory } from './level-category';
 
 export const mineralTypes = pgEnum('mineral_types', [
   'Calcium',
@@ -40,8 +39,6 @@ export const mineral = pgTable('mineral', {
   name: mineralTypes().notNull(),
   /** The real value of the mineral (see the unit field for units) */
   realValue: numeric({ precision: 9, scale: 4 }).notNull().$type<number>(),
-  /** A general tag (is this value low, high, etc.) */
-  tag: levelCategory(),
   /** The unit which this mineral is being measured in. Almost always PPM */
   units: units().notNull(),
   /** Actionable information or recommendation associated with this mineral reading. */
