@@ -38,14 +38,24 @@ export default function PlatformTabs({
   const searchParams = useSearchParams();
   const [curTab, setCurTab] = useState(selectedTabHash);
 
-  useEffect(() => {
-    setCurTab(selectedTabHash);
-  }, [selectedTabHash]);
-
-  function setTabInUrl(nextTabHash: string) {
+  /** Sets the current tab */
+  function setTab(nextTabHash: string) {
+    setCurTab(nextTabHash);
     const params = new URLSearchParams(searchParams.toString());
     params.set('tab', nextTabHash);
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+
+  /** Updates information about the tab */
+  async function updateTab(newName: string, tabId: number) {
+    const result = await updateTabName({ newName, tabId });
+
+    if (result.error) {
+      logger.error(result.error);
+      return;
+    }
+
+    router.refresh();
   }
 
   async function createTab(managementZoneId: number) {
@@ -57,8 +67,7 @@ export default function PlatformTabs({
     }
 
     const nextTabHash = String(maybeNewTab.data!.tabId);
-    setCurTab(nextTabHash);
-    setTabInUrl(nextTabHash);
+    setTab(nextTabHash);
   }
 
   async function deleteTab(tab: NamedTab) {
@@ -82,19 +91,7 @@ export default function PlatformTabs({
       ? getTabHash(remainingTabs[0])
       : 'home';
 
-    setCurTab(fallbackTabHash);
-    setTabInUrl(fallbackTabHash);
-  }
-
-  async function updateTab(newName: string, tabId: number) {
-    const result = await updateTabName({ newName, tabId });
-
-    if (result.error) {
-      logger.error(result.error);
-      return;
-    }
-
-    router.refresh();
+    setTab(fallbackTabHash);
   }
 
   return (
@@ -108,8 +105,7 @@ export default function PlatformTabs({
               value={getTabHash(tab)}
               onClick={() => {
                 const nextTabHash = getTabHash(tab);
-                setCurTab(nextTabHash);
-                setTabInUrl(nextTabHash);
+                setTab(nextTabHash);
               }}
             >
               <input

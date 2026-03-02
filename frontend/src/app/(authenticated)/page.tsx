@@ -65,15 +65,15 @@ export default async function DashboardPage({
   }
 
   const tabParam = (await searchParams).tab;
-  const requestedTabHash =
-    typeof tabParam === 'string'
-      ? tabParam
-      : Array.isArray(tabParam)
-        ? tabParam[0]
-        : undefined;
+
+  const requestedTabHash = typeof tabParam === 'string' ? tabParam : undefined;
+
+  // If the user doesn't have a tab open or selected, set the tab.
+  const hasTabInDb = currentTabs.some(
+    (tab) => String(tab.id) === requestedTabHash
+  );
   const selectedTabHash =
-    requestedTabHash &&
-    currentTabs.some((tab) => String(tab.id) === requestedTabHash)
+    requestedTabHash && hasTabInDb
       ? requestedTabHash
       : currentTabs[0]
         ? String(currentTabs[0].id)
