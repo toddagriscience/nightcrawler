@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use server';
-
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import Link from 'next/link';
 
