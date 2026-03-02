@@ -18,6 +18,7 @@
   --background: #fcfbf8; /* Your cream background */
   --background-platform: #ffffff; /* Platform background for authenticated routes */
   --background-secondary: #ccc5b5; /* Your light card background */
+  --background-accent: #eaeaeaea; /* Your gradient bottom */
   --foreground: #2a2727; /* Your primary text */
   --card: #ccc5b5; /* Your light card background */
   --card-foreground: #2a2727; /* Your primary text */
@@ -274,4 +275,12 @@ header {
 .text-underline-left:hover {
   background-size: 100% 1px;
   background-position: 0 100%;
+}
+
+.background-gradient {
+  background: linear-gradient(
+    to bottom,
+    var(--background-platform),
+    var(--background-accent)
+  );
 }
