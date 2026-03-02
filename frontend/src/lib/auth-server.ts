@@ -59,11 +59,15 @@ export async function signUpUser(
   name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient();
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, '') ??
+    'https://toddagriscience.com';
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: 'https://toddagriscience.com/login',
+      emailRedirectTo: `${baseUrl}/auth/confirm?next=/`,
       data: {
         // This is for the email template
         first_name: name,
