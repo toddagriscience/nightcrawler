@@ -2,8 +2,8 @@
 
 import { FadeIn, SmoothScroll } from '@/components/common';
 import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
-import UnauthenticatedHeader from '@/components/common/unauthenticated-header/unauthenticated-header';
 import Button from '@/components/common/button/button';
+import UnauthenticatedHeader from '@/components/common/unauthenticated-header/unauthenticated-header';
 import { Link } from '@/i18n/config';
 import { createClient } from '@/lib/supabase/server';
 import { NextIntlClientProvider } from 'next-intl';

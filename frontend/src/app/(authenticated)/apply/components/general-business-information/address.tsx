@@ -2,12 +2,12 @@
 
 'use client';
 
-import { Button } from '@/components/ui';
-import { useState } from 'react';
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Button } from '@/components/ui';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { ErrorMessage } from '@hookform/error-message';
+import { useState } from 'react';
 import { GeneralBusinessInformationInsert } from '../../types';
 import { useFormContext } from 'react-hook-form';
 
@@ -162,7 +162,7 @@ export default function Address({
           <>
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>County, State (if no physical address)</FieldLabel>
+                <FieldLabel>County, State</FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="countyState"
@@ -191,11 +191,7 @@ export default function Address({
                   )}
                 />
               </div>
-              <Input
-                type="text"
-                placeholder="Parcel number (if no physical address)"
-                {...register('apn')}
-              />
+              <Input type="text" {...register('apn')} />
             </Field>
           </>
         ) : null}

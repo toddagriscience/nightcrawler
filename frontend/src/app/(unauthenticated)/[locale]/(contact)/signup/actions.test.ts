@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { farm, user } from '@/lib/db/schema';
+import { farm, standardValues, user } from '@/lib/db/schema';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signUp } from './actions';
 
@@ -62,6 +62,8 @@ describe('signUp', () => {
     // Clean up any existing data
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(user);
+    // eslint-disable-next-line drizzle/enforce-delete-with-where
+    await db.delete(standardValues);
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(farm);
   });
@@ -226,6 +228,11 @@ describe('signUp', () => {
       expect(users[0].email).toBe('john@example.com');
       expect(users[0].role).toBe('Admin');
       expect(users[0].farmId).toBe(farms[0].id);
+
+      // Verify default farm settings were initialized
+      const settingsRows = await db.select().from(standardValues);
+      expect(settingsRows).toHaveLength(1);
+      expect(settingsRows[0].farmId).toBe(farms[0].id);
     });
 
     it('returns the created user and farm data', async () => {

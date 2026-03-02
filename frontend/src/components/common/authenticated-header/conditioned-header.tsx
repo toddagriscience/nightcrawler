@@ -3,14 +3,17 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import AuthenticatedHeader from './authenticated-header';
 
-export default function ConditionedAuthenticatedHeader() {
+export default function ConditionedAuthenticatedHeader({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   if (pathname?.startsWith('/account')) {
     return null;
   }
 
-  return <AuthenticatedHeader />;
+  return <>{children}</>;
 }
