@@ -6,7 +6,7 @@ import InvestorsPage from './page';
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock ScrollShrinkWrapper to avoid framer-motion issues
-vi.mock('@/components/landing', () => ({
+vi.mock('../components', () => ({
   ScrollShrinkWrapper: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="scroll-shrink-wrapper">{children}</div>
   ),

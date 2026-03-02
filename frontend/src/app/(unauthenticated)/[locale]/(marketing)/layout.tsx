@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Footer, Header } from '@/components/landing';
+import { Footer, Header } from './components';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
