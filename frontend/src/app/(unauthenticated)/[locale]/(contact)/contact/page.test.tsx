@@ -55,6 +55,64 @@ vi.mock('framer-motion', () => {
   };
 });
 
+const createEmblaApi = () => {
+  let selectedIndex = 0;
+  const listenersByEvent = new Map<string, Set<() => void>>();
+
+  const emit = (event: string) => {
+    const callbacks = listenersByEvent.get(event);
+    if (!callbacks) return;
+    callbacks.forEach((callback) => callback());
+  };
+
+  return {
+    scrollSnapList: vi.fn(() => [0, 1, 2, 3, 4, 5]),
+    selectedScrollSnap: vi.fn(() => selectedIndex),
+    scrollPrev: vi.fn(() => {
+      if (selectedIndex > 0) {
+        selectedIndex -= 1;
+        emit('select');
+      }
+    }),
+    scrollNext: vi.fn(() => {
+      if (selectedIndex < 5) {
+        selectedIndex += 1;
+        emit('select');
+      }
+    }),
+    scrollTo: vi.fn((index: number) => {
+      selectedIndex = index;
+      emit('select');
+    }),
+    slideNodes: vi.fn(() => new Array(6).fill(null)),
+    canScrollPrev: vi.fn(() => selectedIndex > 0),
+    canScrollNext: vi.fn(() => selectedIndex < 5),
+    on: vi.fn((event: string, callback: () => void) => {
+      const callbacks = listenersByEvent.get(event) ?? new Set<() => void>();
+      callbacks.add(callback);
+      listenersByEvent.set(event, callbacks);
+    }),
+    off: vi.fn((event: string, callback: () => void) => {
+      const callbacks = listenersByEvent.get(event);
+      if (!callbacks) return;
+      const remaining = new Set(
+        Array.from(callbacks).filter((entry) => entry !== callback)
+      );
+      listenersByEvent.set(event, remaining);
+    }),
+  };
+};
+
+let mockEmblaApi = createEmblaApi();
+
+// Mock embla-carousel-react to allow slide navigation in tests
+vi.mock('embla-carousel-react', () => {
+  return {
+    __esModule: true,
+    default: vi.fn(() => [vi.fn(), mockEmblaApi]),
+  };
+});
+
 // Mocks for Embla Carousel, taken from https://github.com/davidjerleke/embla-carousel/blob/master/packages/embla-carousel/src/__tests__/mocks/index.ts
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -94,6 +152,7 @@ describe('Contact page', () => {
 
   beforeEach(async () => {
     mockPush.mockClear();
+    mockEmblaApi = createEmblaApi();
     container = renderWithIntl(<Contact />).container;
     const user = userEvent.setup();
 
@@ -115,13 +174,14 @@ describe('Contact page', () => {
 
     // Phone
     const phone = getRequiredInput('phone');
+    await user.clear(phone);
     await user.type(phone, '5551234567');
   });
   it('renders correctly', () => {
     expect(screen.getByText('First Name')).toBeInTheDocument();
     expect(screen.getByText('Farm Name')).toBeInTheDocument();
   });
-  it('shows a failure screen when not entering either a business email or website', async () => {
+  it('disables continue when no work email or website', async () => {
     const user = userEvent.setup();
 
     // Email
@@ -132,34 +192,15 @@ describe('Contact page', () => {
     const nextButton = screen.getByRole('button', { name: /continue/i });
 
     // Click next to move past the first slide
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
     await user.click(nextButton);
 
-    // Click next to skip the website slide (no website entered)
-    await user.click(nextButton);
+    await screen.findByPlaceholderText('https://');
 
-    // Answer organic question
-    const yesButtons = screen.getAllByText('Yes');
-    await user.click(yesButtons[0]);
-
-    // Answer hydroponic question (No)
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons1 = screen.getAllByText('No');
-    await user.click(noButtons1[0]);
-
-    // Answer sprouts question (No)
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons2 = screen.getAllByText('No');
-    await user.click(noButtons2[0]);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
-    });
+    // Website is required when no work email is provided
+    await waitFor(() => expect(nextButton).toBeDisabled());
   });
   it('shows failure screen when organic is false and hydroponic is true and produces sprouts is true', async () => {
     const user = userEvent.setup();
@@ -172,20 +213,42 @@ describe('Contact page', () => {
     const nextButton = screen.getByRole('button', { name: /continue/i });
 
     // Click next to move past the first slide
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
     await user.click(nextButton);
 
-    // Click next to skip the website slide (no website entered)
+    // Website (required for non-work email)
+    const website = getRequiredInput('website');
+    await user.type(website, 'https://example.com');
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
     await user.click(nextButton);
 
-    // Answer organic question
+    // Answer organic question (No)
+    const noButtons = screen.getAllByText('No');
+    await user.click(noButtons[0]);
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
+    await user.click(nextButton);
+
+    // Answer hydroponic question (Yes)
     const yesButtons = screen.getAllByText('Yes');
-    await user.click(yesButtons[0]);
-
-    // Answer hydroponic question (No)
     await user.click(yesButtons[1]);
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
+    await user.click(nextButton);
 
-    // Answer sprouts question
-    await user.click(yesButtons[2]);
+    // Answer sprouts question (Yes)
+    const yesButtons2 = screen.getAllByText('Yes');
+    await user.click(yesButtons2[2]);
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
+    await user.click(nextButton);
 
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
@@ -195,46 +258,29 @@ describe('Contact page', () => {
   it('calls router.push with correct URL parameters on successful form submission', async () => {
     const user = userEvent.setup();
 
-    // Clear existing email and set a work email (to skip the website slide)
+    // Use a non-work email and provide a website
     const email = getRequiredInput('email');
     await user.clear(email);
-    await user.type(email, 'jane@greenvalley.com');
+    await user.type(email, 'jane@gmail.com');
 
-    const nextButton = screen.getByRole('button', { name: /continue/i });
+    const website = await screen.findByPlaceholderText('https://');
+    await user.type(website, 'https://example.com');
 
-    // Click next to move past the first slide
-    await user.click(nextButton);
-
-    // Answer organic question (Yes)
+    // Answer questions to qualify for match
     await waitFor(() => {
-      const yesButtons = screen.getAllByText('Yes');
-      expect(yesButtons.length).toBeGreaterThan(0);
+      const yesButtons = screen.getAllByRole('button', { name: 'Yes' });
+      const noButtons = screen.getAllByRole('button', { name: 'No' });
+      expect(yesButtons.length).toBeGreaterThanOrEqual(3);
+      expect(noButtons.length).toBeGreaterThanOrEqual(3);
     });
-    const yesButtons = screen.getAllByText('Yes');
+    const yesButtons = screen.getAllByRole('button', { name: 'Yes' });
+    const noButtons = screen.getAllByRole('button', { name: 'No' });
     await user.click(yesButtons[0]);
+    await user.click(noButtons[1]);
+    await user.click(noButtons[2]);
 
-    // Answer hydroponic question (No)
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons1 = screen.getAllByText('No');
-    await user.click(noButtons1[0]);
+    const joinButton = await screen.findByText('Join Us');
 
-    // Answer sprouts question (No)
-    await waitFor(() => {
-      const noButtons = screen.getAllByText('No');
-      expect(noButtons.length).toBeGreaterThan(0);
-    });
-    const noButtons2 = screen.getAllByText('No');
-    await user.click(noButtons2[0]);
-
-    // Wait for the success screen and click JOIN US
-    await waitFor(() => {
-      expect(screen.getByText('Join Us')).toBeInTheDocument();
-    });
-
-    const joinButton = screen.getByText('Join Us');
     await act(async () => {
       joinButton.click();
     });
@@ -247,7 +293,7 @@ describe('Contact page', () => {
       expect(calledUrl).toContain('first_name=Jane');
       expect(calledUrl).toContain('last_name=Doe');
       expect(calledUrl).toContain('farm_name=Green+Valley+Farms');
-      expect(calledUrl).toContain('email=jane%40greenvalley.com');
+      expect(calledUrl).toContain('email=jane%40gmail.com');
       expect(calledUrl).toContain('phone=5551234567');
     });
   });

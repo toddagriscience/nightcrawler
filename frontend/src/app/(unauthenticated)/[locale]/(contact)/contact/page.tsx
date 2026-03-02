@@ -28,7 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { LegalSubtext } from '../../../../../components/common/legal-subtext/legal-subtext';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
