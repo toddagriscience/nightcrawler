@@ -104,7 +104,7 @@ src/
   test/                  # Testing utilities
     test-utils.tsx       # React Testing Library setup
   types/                 # Global TypeScript types
-  middleware.ts          # next-intl middleware
+  proxy.ts               # next-intl proxy
 public/                  # Static assets
   fonts/                 # Custom fonts (Neue Haas, Utah WGL)
   publications/          # PDF documents

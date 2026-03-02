@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
-import { handleAuthRouting, isRouteProtected } from '@/middleware/auth';
+import { handleAuthRouting, isRouteProtected } from '@/proxy/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import type { Mock } from 'vitest';
