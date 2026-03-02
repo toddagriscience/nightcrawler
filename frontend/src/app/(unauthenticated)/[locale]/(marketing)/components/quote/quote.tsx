@@ -5,7 +5,7 @@
 import { useTheme } from '@/context/theme/ThemeContext';
 import { useTranslations } from 'next-intl';
 import React from 'react';
-import { Button } from '../../common';
+import { Button } from '@/components/common';
 import { QuoteProps } from './types/quote';
 
 /**

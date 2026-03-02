@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import LandingPage from '@/components/landing/page/landing-page';
+import LandingPage from './components/page/landing-page';
 import type { Metadata } from 'next';
 
 /**

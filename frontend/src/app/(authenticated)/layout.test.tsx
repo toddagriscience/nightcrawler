@@ -22,13 +22,21 @@ vi.mock('next/font/local', () => ({
   }),
 }));
 
+vi.mock('@/lib/utils/get-authenticated-info', () => ({
+  getAuthenticatedInfo: vi.fn().mockResolvedValue({
+    id: '1',
+    email: 'test@example.com',
+    farmId: 'farm-1',
+    approved: true,
+  }),
+}));
+
 describe('AuthenticatedLayout', () => {
-  it('should render "authenticated-root" class', () => {
-    render(
-      <AuthenticatedLayout>
-        <div data-testid="child-content">Child Content</div>
-      </AuthenticatedLayout>
-    );
+  it('should render "authenticated-root" class', async () => {
+    const jsx = await AuthenticatedLayout({
+      children: <div data-testid="child-content">Child Content</div>,
+    });
+    render(jsx);
 
     const childContent = screen.getByTestId('child-content');
     const wrapper = childContent.parentElement;
@@ -38,12 +46,11 @@ describe('AuthenticatedLayout', () => {
     expect(wrapper).toHaveClass('bg-background-platform');
   });
 
-  it('should render children and header', () => {
-    render(
-      <AuthenticatedLayout>
-        <div data-testid="child-content">Child Content</div>
-      </AuthenticatedLayout>
-    );
+  it('should render children and header', async () => {
+    const jsx = await AuthenticatedLayout({
+      children: <div data-testid="child-content">Child Content</div>,
+    });
+    render(jsx);
 
     expect(screen.getByTestId('authenticated-header')).toBeInTheDocument();
     expect(screen.getByTestId('child-content')).toBeInTheDocument();

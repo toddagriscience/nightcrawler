@@ -61,10 +61,9 @@ vi.mock('@/i18n/config', () => ({
   ),
 }));
 
-// Mock Supabase
 const mockGetUser = vi.fn();
 vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(() => ({
+  createClient: vi.fn(async () => ({
     auth: {
       getUser: mockGetUser,
     },
@@ -76,6 +75,7 @@ describe('NotFound Page', () => {
     vi.clearAllMocks();
 
     (getLocale as Mock).mockResolvedValue('en');
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     // Default translation mock
     (getTranslations as unknown as Mock).mockResolvedValue(
@@ -102,9 +102,13 @@ describe('NotFound Page', () => {
   });
 
   it('should render AuthenticatedHeader when user is logged in', async () => {
-    // Mock authenticated user
     mockGetUser.mockResolvedValue({
-      data: { user: { id: '123', email: 'test@example.com' } },
+      data: {
+        user: {
+          id: '123',
+          email: 'test@example.com',
+        },
+      },
     });
 
     const jsx = await NotFound();
@@ -117,10 +121,7 @@ describe('NotFound Page', () => {
   });
 
   it('should render Public Header when user is not logged in', async () => {
-    // Mock unauthenticated user
-    mockGetUser.mockResolvedValue({
-      data: { user: null },
-    });
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     const jsx = await NotFound();
     render(jsx);

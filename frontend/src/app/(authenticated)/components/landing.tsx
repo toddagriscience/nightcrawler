@@ -5,13 +5,16 @@ import ApplyButton from './apply-button';
 import { db } from '@/lib/db/schema/connection';
 import { accountAgreementAcceptance } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { UserSelect } from '@/lib/types/db';
 import { Button } from '@/components/ui';
+import { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 
+/** The landing used by people that are either: not approved, applied & not applied, or approved with no management zones. */
 export default async function Landing({
   currentUser,
+  hasNoManagementZones,
 }: {
-  currentUser: UserSelect;
+  currentUser: AuthenticatedInfo;
+  hasNoManagementZones: boolean;
 }) {
   const [hasApplied] = await db
     .select({ userId: accountAgreementAcceptance.userId })
@@ -26,9 +29,9 @@ export default async function Landing({
         <h1 className="text-foreground text-3xl font-bold">Welcome</h1>
         <p className="text-foreground text-base font-normal">
           Thank you for being a Todd client since{' '}
-          {currentUser.createdAt.getFullYear()}
+          {currentUser.createdAt.getFullYear()}.
         </p>
-        {hasApplied ? (
+        {!currentUser.approved && hasApplied ? (
           <>
             <p>
               We&apos;ll take a look at your application as soon as possible.
@@ -37,14 +40,24 @@ export default async function Landing({
               <Link href={'/contact'}>Schedule a meeting</Link>
             </Button>
           </>
-        ) : (
+        ) : !currentUser.approved && !hasApplied ? (
           <div className="flex flex-row items-center justify-center gap-6">
             <ApplyButton />
             <Button variant={'outline'} className="min-w-45">
               <Link href={'/contact'}>Schedule a meeting</Link>
             </Button>
           </div>
-        )}
+        ) : hasNoManagementZones ? (
+          <>
+            <p>
+              You&apos;ve been approved. We&apos;ll reach out with more
+              information as soon as possible.
+            </p>
+            <Button variant={'outline'} className="min-w-45">
+              <Link href={'/contact'}>Schedule a meeting</Link>
+            </Button>
+          </>
+        ) : null}
       </div>
       <Link
         href="/contact"

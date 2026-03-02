@@ -95,7 +95,7 @@ export default function PlatformTabs({
   }
 
   return (
-    <Tabs value={curTab}>
+    <Tabs value={curTab} className="h-[calc(100vh-5rem)]">
       <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-300">
         <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
           {currentTabs.map((tab, index) => (

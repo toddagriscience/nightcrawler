@@ -5,7 +5,7 @@ import Header from './header';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../.storybook/utils/storybookControls';
+} from '../../../../../../../.storybook/utils/storybookControls';
 
 const meta: Meta<typeof Header> = {
   title: 'UI/Header',
