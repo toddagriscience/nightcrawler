@@ -1,17 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { NavLinks } from '@/components/common/authenticated-header/nav-links';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { NavLinks } from './nav-links';
 
 /**
  * Header component for authenticated/platform pages
  * Displays the TODD brand and navigation links (Notifications, Account)
  * @returns {JSX.Element} - The authenticated header component
  */
-export default async function AuthenticatedHeader() {
-  const user = await getAuthenticatedInfo();
-
+export default async function PlatformAuthenticatedHeader() {
   return (
     <header className="w-full" role="banner">
       <div className="mx-auto max-w-[107rem] px-4 py-4 sm:px-6 lg:px-8">

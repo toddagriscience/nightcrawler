@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
+import PlatformAuthenticatedHeader from './components/platform-landing-header';
 
 export default function AuthenticatedHeaderLayout({
   children,
@@ -9,7 +9,7 @@ export default function AuthenticatedHeaderLayout({
 }) {
   return (
     <>
-      <AuthenticatedHeader />
+      <PlatformAuthenticatedHeader />
       {children}
     </>
   );
