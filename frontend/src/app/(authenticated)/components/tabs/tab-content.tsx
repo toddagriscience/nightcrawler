@@ -10,10 +10,16 @@ import { getTabHash } from './utils';
 export default async function PlatformTabContent({
   currentTabs,
   currentUser,
+  selectedTabHash,
 }: {
   currentTabs: NamedTab[];
   currentUser: AuthenticatedInfo;
+  selectedTabHash: string;
 }) {
+  const selectedTab =
+    currentTabs.find((tab) => getTabHash(tab) === selectedTabHash) ||
+    currentTabs[0];
+
   return (
     <>
       {/** Guaranteed to work, see the query/set of queries in (authenticated)/page.tsx */}
@@ -22,15 +28,15 @@ export default async function PlatformTabContent({
           <Landing currentUser={currentUser} />
         </TabsContent>
       ) : (
-        currentTabs.map((tab) => (
+        selectedTab && (
           <TabsContent
-            key={tab.id}
-            value={getTabHash(tab)}
+            key={selectedTab.id}
+            value={getTabHash(selectedTab)}
             className="h-full w-full"
           >
-            <CurrentTab currentTab={tab} />
+            <CurrentTab currentTab={selectedTab} />
           </TabsContent>
-        ))
+        )
       )}
     </>
   );

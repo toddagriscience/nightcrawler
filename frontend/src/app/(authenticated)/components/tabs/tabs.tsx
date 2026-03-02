@@ -8,8 +8,8 @@ import logger from '@/lib/logger';
 import { ManagementZoneSelect } from '@/lib/types/db';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
@@ -24,46 +24,31 @@ export default function PlatformTabs({
   currentTabs,
   currentUser,
   managementZones,
+  selectedTabHash,
   children,
 }: {
   currentTabs: NamedTab[];
   currentUser: AuthenticatedInfo;
   managementZones: ManagementZoneSelect[];
+  selectedTabHash: string;
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const [curTab, setCurTab] = useState(
-    currentTabs.length !== 0 ? getTabHash(currentTabs[0]) : 'home'
-  );
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [curTab, setCurTab] = useState(selectedTabHash);
 
-  async function setCurTabHelper({
-    newTab,
-    deletedTab,
-  }: {
-    newTab?: NamedTab;
-    deletedTab?: NamedTab;
-  }) {
-    if (newTab) {
-      setCurTab(getTabHash(newTab));
-    } else if (deletedTab) {
-      if (deletedTab && currentTabs.length === 1) {
-        setCurTab('home');
-      }
-      for (const tab of currentTabs) {
-        if (getTabHash(tab) !== getTabHash(deletedTab)) {
-          setCurTab(getTabHash(tab));
-          break;
-        }
-      }
-    } else {
-      setCurTab(getTabHash(currentTabs[0]));
-    }
+  useEffect(() => {
+    setCurTab(selectedTabHash);
+  }, [selectedTabHash]);
+
+  function setTabInUrl(nextTabHash: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', nextTabHash);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
-  async function createTab(
-    managementZoneId: number,
-    managementZoneName: string | null
-  ) {
+  async function createTab(managementZoneId: number) {
     const maybeNewTab = await createTabAction(managementZoneId);
 
     if (maybeNewTab.error) {
@@ -71,16 +56,9 @@ export default function PlatformTabs({
       return;
     }
 
-    router.refresh();
-
-    setCurTabHelper({
-      newTab: {
-        name: managementZoneName || 'Untitled Zone',
-        managementZone: managementZoneId,
-        id: maybeNewTab.data!.tabId,
-        user: currentUser.id,
-      },
-    });
+    const nextTabHash = String(maybeNewTab.data!.tabId);
+    setCurTab(nextTabHash);
+    setTabInUrl(nextTabHash);
   }
 
   async function deleteTab(tab: NamedTab) {
@@ -97,9 +75,15 @@ export default function PlatformTabs({
       return;
     }
 
-    router.refresh();
+    const remainingTabs = currentTabs.filter(
+      (existingTab) => existingTab.id !== tab.id
+    );
+    const fallbackTabHash = remainingTabs[0]
+      ? getTabHash(remainingTabs[0])
+      : 'home';
 
-    setCurTabHelper({ deletedTab: tab });
+    setCurTab(fallbackTabHash);
+    setTabInUrl(fallbackTabHash);
   }
 
   async function updateTab(newName: string, tabId: number) {
@@ -122,7 +106,11 @@ export default function PlatformTabs({
               className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
               key={tab.id}
               value={getTabHash(tab)}
-              onClick={() => setCurTabHelper({ newTab: tab })}
+              onClick={() => {
+                const nextTabHash = getTabHash(tab);
+                setCurTab(nextTabHash);
+                setTabInUrl(nextTabHash);
+              }}
             >
               <input
                 className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"

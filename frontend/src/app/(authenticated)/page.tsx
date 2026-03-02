@@ -25,7 +25,11 @@ export const metadata: Metadata = {
  * This page is protected by middleware and only accessible to authenticated users
  * @returns {React.ReactNode} - The dashboard page component
  */
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const currentUser = await getAuthenticatedInfo();
 
   const fetchCurrentTabs = async () =>
@@ -60,13 +64,33 @@ export default async function DashboardPage() {
     managementZones = await getTablessManagementZones(currentUser.farmId);
   }
 
+  const tabParam = (await searchParams).tab;
+  const requestedTabHash =
+    typeof tabParam === 'string'
+      ? tabParam
+      : Array.isArray(tabParam)
+        ? tabParam[0]
+        : undefined;
+  const selectedTabHash =
+    requestedTabHash &&
+    currentTabs.some((tab) => String(tab.id) === requestedTabHash)
+      ? requestedTabHash
+      : currentTabs[0]
+        ? String(currentTabs[0].id)
+        : 'home';
+
   return (
     <PlatformTabs
       managementZones={managementZones}
       currentTabs={currentTabs}
       currentUser={currentUser}
+      selectedTabHash={selectedTabHash}
     >
-      <PlatformTabContent currentTabs={currentTabs} currentUser={currentUser} />
+      <PlatformTabContent
+        currentTabs={currentTabs}
+        currentUser={currentUser}
+        selectedTabHash={selectedTabHash}
+      />
     </PlatformTabs>
   );
 }

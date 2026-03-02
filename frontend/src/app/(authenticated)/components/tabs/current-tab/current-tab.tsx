@@ -9,6 +9,7 @@ import { eq } from 'drizzle-orm';
 import { Plus } from 'lucide-react';
 import { NamedTab } from '../types';
 import WidgetsGrid from './widgets-grid';
+import { FadeIn } from '@/components/common';
 
 export default async function CurrentTab({
   currentTab,
@@ -45,7 +46,7 @@ export default async function CurrentTab({
   }
 
   return (
-    <div>
+    <FadeIn>
       <AddWidgetDropdown
         managementZoneId={currentTab.managementZone}
         availableWidgets={unusedWidgets}
@@ -73,6 +74,6 @@ export default async function CurrentTab({
           );
         })}
       />
-    </div>
+    </FadeIn>
   );
 }
