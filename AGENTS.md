@@ -1,3 +1,8 @@
+# AGENTS.md
+
+## Making a change
+- Run `bun format` after every change you make
+
 ## Creating an issue via GitHub's MCP
 
 - If you see "make an issue" or something similar, it's time to make an issue. The following is the workflow:

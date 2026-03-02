@@ -45,7 +45,7 @@ export default async function CurrentTab({
   }
 
   return (
-    <div>
+    <div className="flex h-full flex-col overflow-hidden">
       <AddWidgetDropdown
         managementZoneId={currentTab.managementZone}
         availableWidgets={unusedWidgets}
@@ -53,26 +53,28 @@ export default async function CurrentTab({
         <Button
           size="sm"
           variant="outline"
-          className="ml-2 hover:cursor-pointer"
+          className="ml-2 shrink-0 hover:cursor-pointer"
         >
           Customize
           <Plus className="mr-2 h-4 w-4" />
         </Button>
       </AddWidgetDropdown>
-      <WidgetsGrid
-        widgets={widgets}
-        currentTab={currentTab}
-        renderedWidgets={widgets.map((widget) => {
-          return (
-            <div
-              key={widget.widgetMetadata.i}
-              className="h-full border bg-white p-4 shadow-sm"
-            >
-              <WidgetWrapper widget={widget} currentTab={currentTab} />
-            </div>
-          );
-        })}
-      />
+      <div className="min-h-0 flex-1">
+        <WidgetsGrid
+          widgets={widgets}
+          currentTab={currentTab}
+          renderedWidgets={widgets.map((widget) => {
+            return (
+              <div
+                key={widget.widgetMetadata.i}
+                className="h-full border bg-white p-4 shadow-sm"
+              >
+                <WidgetWrapper widget={widget} currentTab={currentTab} />
+              </div>
+            );
+          })}
+        />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import Link from 'next/link';
 import AccountInfo, {
   AccountInfoRow,
   AccountInfoSection,
@@ -53,9 +54,12 @@ export default async function AccountPage() {
       </AccountInfoSection>
 
       <div className="mt-4 flex justify-end">
-        <button className="text-[16px] leading-none font-[400] text-[#ff4d00] hover:opacity-80">
+        <Link
+          href={'/contact'}
+          className="text-[16px] leading-none font-[400] text-[#ff4d00] hover:opacity-80"
+        >
           Request deactivation
-        </button>
+        </Link>
       </div>
     </AccountInfo>
   );
