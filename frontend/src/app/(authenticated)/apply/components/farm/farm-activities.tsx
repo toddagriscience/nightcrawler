@@ -293,7 +293,10 @@ export default function FarmActivities() {
                   })
                 }
               />
-              <FieldLabel htmlFor="farmActivitiesOther" className="whitespace-nowrap">
+              <FieldLabel
+                htmlFor="farmActivitiesOther"
+                className="whitespace-nowrap"
+              >
                 Other
               </FieldLabel>
             </Field>
