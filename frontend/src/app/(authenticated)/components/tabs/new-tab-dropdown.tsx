@@ -17,7 +17,7 @@ export default function NewTabDropdown({
   children,
   managementZones,
 }: {
-  addTab: (arg0: number, arg1: string | null) => void;
+  addTab: (managementZoneId: number) => void;
   children: React.ReactNode;
   managementZones: ManagementZoneSelect[];
 }) {
@@ -30,7 +30,7 @@ export default function NewTabDropdown({
             <div key={zone.id}>
               <DropdownMenuItem
                 className="hover:cursor-pointer"
-                onClick={() => addTab(zone.id, zone.name)}
+                onClick={() => addTab(zone.id)}
               >
                 {zone.name || 'Untitled Zone'}
               </DropdownMenuItem>
