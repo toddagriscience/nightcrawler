@@ -59,12 +59,8 @@
           "name": "analysis_management_zone_management_zone_id_fk",
           "tableFrom": "analysis",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -242,12 +238,8 @@
           "name": "farm_certificate_farm_id_farm_id_fk",
           "tableFrom": "farm_certificate",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set default",
           "onUpdate": "no action"
         }
@@ -344,12 +336,8 @@
           "name": "farm_location_farm_id_farm_id_fk",
           "tableFrom": "farm_location",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set default",
           "onUpdate": "no action"
         }
@@ -422,12 +410,8 @@
           "name": "account_agreement_acceptance_user_id_user_id_fk",
           "tableFrom": "account_agreement_acceptance",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -661,12 +645,8 @@
           "name": "farm_info_internal_application_farm_id_farm_id_fk",
           "tableFrom": "farm_info_internal_application",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -738,12 +718,8 @@
           "name": "integrated_management_plan_management_zone_management_zone_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -751,12 +727,8 @@
           "name": "integrated_management_plan_analysis_analysis_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -910,12 +882,8 @@
           "name": "management_zone_farm_id_farm_id_fk",
           "tableFrom": "management_zone",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -989,12 +957,8 @@
           "name": "mineral_analysis_id_analysis_id_fk",
           "tableFrom": "mineral",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1079,12 +1043,8 @@
           "name": "oxidation_rate_analysis_id_analysis_id_fk",
           "tableFrom": "oxidation_rate",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1150,12 +1110,8 @@
           "name": "solubility_analysis_id_analysis_id_fk",
           "tableFrom": "solubility",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1588,12 +1544,8 @@
           "name": "standard_values_farm_id_farm_id_fk",
           "tableFrom": "standard_values",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1603,9 +1555,7 @@
         "standard_values_farmId_unique": {
           "name": "standard_values_farmId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "farm_id"
-          ]
+          "columns": ["farm_id"]
         }
       },
       "policies": {},
@@ -1641,12 +1591,8 @@
           "name": "tab_user_user_id_fk",
           "tableFrom": "tab",
           "tableTo": "user",
-          "columnsFrom": [
-            "user"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1654,12 +1600,8 @@
           "name": "tab_management_zone_management_zone_id_fk",
           "tableFrom": "tab",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1669,10 +1611,7 @@
         "tab_managementZone_user_unique": {
           "name": "tab_managementZone_user_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "management_zone",
-            "user"
-          ]
+          "columns": ["management_zone", "user"]
         }
       },
       "policies": {},
@@ -1765,12 +1704,8 @@
           "name": "user_farm_id_farm_id_fk",
           "tableFrom": "user",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1780,9 +1715,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1825,12 +1758,8 @@
           "name": "widget_management_zone_management_zone_id_fk",
           "tableFrom": "widget",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1840,10 +1769,7 @@
         "widget_managementZone_name_unique": {
           "name": "widget_managementZone_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "management_zone",
-            "name"
-          ]
+          "columns": ["management_zone", "name"]
         }
       },
       "policies": {},
@@ -1917,12 +1843,8 @@
           "name": "crop_management_zone_management_zone_id_fk",
           "tableFrom": "crop",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1994,12 +1916,8 @@
           "name": "fertilizer_management_zone_management_zone_id_fk",
           "tableFrom": "fertilizer",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2077,12 +1995,8 @@
           "name": "livestock_management_zone_management_zone_id_fk",
           "tableFrom": "livestock",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2161,12 +2075,8 @@
           "name": "pest_management_zone_management_zone_id_fk",
           "tableFrom": "pest",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2212,10 +2122,7 @@
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "Admin",
-        "Viewer"
-      ]
+      "values": ["Admin", "Viewer"]
     },
     "public.widgets": {
       "name": "widgets",
@@ -2239,28 +2146,17 @@
     "public.pest_type": {
       "name": "pest_type",
       "schema": "public",
-      "values": [
-        "Insect",
-        "Disease"
-      ]
+      "values": ["Insect", "Disease"]
     },
     "public.units": {
       "name": "units",
       "schema": "public",
-      "values": [
-        "ppm",
-        "%"
-      ]
+      "values": ["ppm", "%"]
     },
     "public.oxidation_rate_tag": {
       "name": "oxidation_rate_tag",
       "schema": "public",
-      "values": [
-        "Slow",
-        "Mixed",
-        "Ideal",
-        "High"
-      ]
+      "values": ["Slow", "Mixed", "Ideal", "High"]
     }
   },
   "schemas": {},
