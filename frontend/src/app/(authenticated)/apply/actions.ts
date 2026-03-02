@@ -2,7 +2,7 @@
 
 'use server';
 
-import { inviteUser } from '@/lib/auth';
+import { inviteUser } from '@/lib/auth-server';
 import {
   accountAgreementAcceptance,
   farm,
@@ -12,6 +12,7 @@ import {
   user,
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   FarmCertificateInsert,
@@ -28,13 +29,12 @@ import {
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import z from 'zod';
+import { isApplicationReadyForSubmission } from './db';
 import termsAndConditionsVersion from './terms-and-conditions-version';
 import {
   GeneralBusinessInformationInsert,
   generalBusinessInformationInsertSchema,
 } from './types';
-import { isApplicationReadyForSubmission } from './db';
-import logger from '@/lib/logger';
 
 /** Saves general business information to the farm, farmLocation, and farmCertificate tables.
  *

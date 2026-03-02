@@ -2,14 +2,7 @@
 
 'use server';
 
-import { isVerified } from '@/lib/auth';
-import {
-  accountAgreementAcceptance,
-  farm,
-  farmLocation,
-  managementZone,
-  user,
-} from '@/lib/db/schema';
+import { farm, farmLocation, managementZone, user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import type {
   FarmLocationSelect,
@@ -18,15 +11,8 @@ import type {
   UserSelect,
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, desc, eq } from 'drizzle-orm';
-import {
-  formatMailingAddress,
-  formatPhysicalLocation,
-  NOT_SET,
-  toDisplayDate,
-  toDisplayName,
-  toDisplayValue,
-} from './util';
+import { asc, eq } from 'drizzle-orm';
+import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{ farmName: string }> {
   const currentUser = await getAuthenticatedInfo();

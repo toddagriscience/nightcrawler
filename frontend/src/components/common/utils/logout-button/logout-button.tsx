@@ -2,7 +2,7 @@
 
 'use client';
 
-import { logout } from '@/lib/auth';
+import { logout } from '@/lib/auth-client';
 import SubmitButton from '../submit-button/submit-button';
 
 /** A temporary function for the dashboard. Will be improved/changed in the future.

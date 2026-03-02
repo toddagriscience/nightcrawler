@@ -1,16 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Login from './page';
 import { login } from '@/lib/actions/auth';
-import { useRouter } from 'next/navigation';
-import userEvent from '@testing-library/user-event';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import { beforeEach, describe, expect, test, vitest } from 'vitest';
-import type { Mock } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useRouter } from 'next/navigation';
 import ResizeObserver from 'resize-observer-polyfill';
+import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, test, vitest } from 'vitest';
+import Login from './page';
 
-vitest.mock('@/lib/auth', () => ({
+vitest.mock('@/lib/auth-client', () => ({
   login: vitest.fn(),
 }));
 
