@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import ConditionedAuthenticatedHeader from '@/components/common/authenticated-header/conditioned-header';
 import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
+import ConditionedAuthenticatedHeader from '@/components/common/authenticated-header/conditioned-header';
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';

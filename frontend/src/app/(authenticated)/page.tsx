@@ -80,17 +80,19 @@ export default async function DashboardPage({
         : 'home';
 
   return (
-    <PlatformTabs
-      managementZones={managementZones}
-      currentTabs={currentTabs}
-      currentUser={currentUser}
-      selectedTabHash={selectedTabHash}
-    >
-      <PlatformTabContent
+    <div className="min-h-screen background-gradient">
+      <PlatformTabs
+        managementZones={managementZones}
         currentTabs={currentTabs}
         currentUser={currentUser}
         selectedTabHash={selectedTabHash}
-      />
-    </PlatformTabs>
+      >
+        <PlatformTabContent
+          currentTabs={currentTabs}
+          currentUser={currentUser}
+          selectedTabHash={selectedTabHash}
+        />
+      </PlatformTabs>
+    </div>
   );
 }
