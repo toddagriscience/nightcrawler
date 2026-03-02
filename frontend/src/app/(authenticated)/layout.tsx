@@ -17,14 +17,12 @@ export default async function AuthenticatedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser = await getAuthenticatedInfo();
-
   return (
     <html lang="en">
       <body className={fontVariables}>
         <DesktopGate>
           <div className="bg-background-platform authenticated-root min-h-screen">
-            <ConditionedAuthenticatedHeader approved={currentUser.approved} />
+            <ConditionedAuthenticatedHeader />
             {children}
           </div>
         </DesktopGate>

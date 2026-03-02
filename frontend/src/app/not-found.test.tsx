@@ -61,10 +61,13 @@ vi.mock('@/i18n/config', () => ({
   ),
 }));
 
-// Mock getAuthenticatedInfo
-const mockGetAuthenticatedInfo = vi.fn();
-vi.mock('@/lib/utils/get-authenticated-info', () => ({
-  getAuthenticatedInfo: () => mockGetAuthenticatedInfo(),
+const mockGetUser = vi.fn();
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(async () => ({
+    auth: {
+      getUser: mockGetUser,
+    },
+  })),
 }));
 
 describe('NotFound Page', () => {
@@ -72,6 +75,7 @@ describe('NotFound Page', () => {
     vi.clearAllMocks();
 
     (getLocale as Mock).mockResolvedValue('en');
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     // Default translation mock
     (getTranslations as unknown as Mock).mockResolvedValue(
@@ -98,11 +102,13 @@ describe('NotFound Page', () => {
   });
 
   it('should render AuthenticatedHeader when user is logged in', async () => {
-    // Mock authenticated user
-    mockGetAuthenticatedInfo.mockResolvedValue({
-      id: '123',
-      email: 'test@example.com',
-      approved: true,
+    mockGetUser.mockResolvedValue({
+      data: {
+        user: {
+          id: '123',
+          email: 'test@example.com',
+        },
+      },
     });
 
     const jsx = await NotFound();
@@ -115,8 +121,7 @@ describe('NotFound Page', () => {
   });
 
   it('should render Public Header when user is not logged in', async () => {
-    // Mock unauthenticated user
-    mockGetAuthenticatedInfo.mockRejectedValue(new Error('User not found'));
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     const jsx = await NotFound();
     render(jsx);
@@ -128,7 +133,7 @@ describe('NotFound Page', () => {
   });
 
   it('should render the correct translation for title', async () => {
-    mockGetAuthenticatedInfo.mockRejectedValue(new Error('User not found'));
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     const jsx = await NotFound();
     render(jsx);
@@ -143,7 +148,7 @@ describe('NotFound Page', () => {
 
   it('should use the correct locale', async () => {
     (getLocale as Mock).mockResolvedValue('es');
-    mockGetAuthenticatedInfo.mockRejectedValue(new Error('User not found'));
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     const jsx = await NotFound();
     render(jsx);

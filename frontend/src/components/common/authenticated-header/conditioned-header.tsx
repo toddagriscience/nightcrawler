@@ -5,16 +5,12 @@
 import { usePathname } from 'next/navigation';
 import AuthenticatedHeader from './authenticated-header';
 
-export default function ConditionedAuthenticatedHeader({
-  approved,
-}: {
-  approved: boolean;
-}) {
+export default function ConditionedAuthenticatedHeader() {
   const pathname = usePathname();
 
   if (pathname?.startsWith('/account')) {
     return null;
   }
 
-  return <AuthenticatedHeader approved={approved} />;
+  return <AuthenticatedHeader />;
 }
