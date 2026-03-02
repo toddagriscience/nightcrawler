@@ -12,7 +12,7 @@ export default function ApplyButton() {
     <Button
       onClick={() => router.push('/apply')}
       variant={'brand'}
-      className="min-w-45"
+      className="min-w-45 hover:cursor-pointer"
     >
       Apply to Todd
     </Button>
