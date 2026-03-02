@@ -26,7 +26,7 @@
       },
     },
     "frontend": {
-      "name": "toddagriscience frontend",
+      "name": "toddagriscience-frontend",
       "version": "0.1.0",
       "dependencies": {
         "@electric-sql/pglite": "^0.3.15",
@@ -102,6 +102,7 @@
         "@vitest/coverage-v8": "4.0.18",
         "baseline-browser-mapping": "^2.9.19",
         "drizzle-kit": "^0.31.8",
+        "esbuild": "^0.25.12",
         "husky": "^9.1.7",
         "lint-staged": "^16.2.7",
         "prettier": "^3.8.1",
@@ -2946,7 +2947,7 @@
 
     "to-regex-range": ["to-regex-range@5.0.1", "", { "dependencies": { "is-number": "^7.0.0" } }, "sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ=="],
 
-    "toddagriscience frontend": ["toddagriscience frontend@workspace:frontend"],
+    "toddagriscience-frontend": ["toddagriscience-frontend@workspace:frontend"],
 
     "tough-cookie": ["tough-cookie@6.0.0", "", { "dependencies": { "tldts": "^7.0.5" } }, "sha512-kXuRi1mtaKMrsLUxz3sQYvVl37B0Ns6MzfrtV5DvJceE9bPyspOqk9xxv7XbZWcfLWbFmm997vl83qUWVJA64w=="],
 
