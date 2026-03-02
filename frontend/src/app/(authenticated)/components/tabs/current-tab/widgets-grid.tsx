@@ -72,14 +72,16 @@ export default function WidgetsGrid({
   }
 
   return (
-    <div ref={containerRef} className="relative h-[80vh]">
+    <div ref={containerRef} className="relative h-full overflow-hidden">
       {mounted && (
         <ReactGridLayout
           layout={layout}
           onDragStop={handleDrop}
           width={width}
+          autoSize={false}
+          dragConfig={{ bounded: true }}
           gridConfig={{ cols: widgetColumns, rowHeight: widgetRowHeight }}
-          className="h-[80vh]!"
+          className="h-full!"
         >
           {renderedWidgets}
         </ReactGridLayout>
