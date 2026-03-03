@@ -19,7 +19,7 @@ export default function AccountSecurityPage() {
             className="text-foreground flex flex-row items-center justify-center gap-2 text-sm leading-tight font-normal hover:text-foreground/70"
           >
             Update password
-            <BiLock className="size-5" />
+            <BiLock className="size-4" />
           </Link>
         </div>
         <div className="flex min-h-12 items-center justify-between gap-4 border-b border-black/20 py-1">
@@ -37,7 +37,7 @@ export default function AccountSecurityPage() {
       <div className="mt-4 flex justify-end">
         <LogoutLink
           label="Log out"
-          className="text-foreground text-sm leading-none font-light hover:cursor-pointer hover:opacity-70"
+          className="text-foreground flex flex-row items-center justify-center gap-1.5 text-sm hover:cursor-pointer hover:opacity-70"
         />
       </div>
     </AccountInfo>
