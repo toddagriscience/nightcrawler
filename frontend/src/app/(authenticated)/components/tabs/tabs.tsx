@@ -9,7 +9,7 @@ import { ManagementZoneSelect } from '@/lib/types/db';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { X } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
@@ -17,6 +17,8 @@ import updateTabName, {
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
 import { getTabHash } from './utils';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import { BiPlus } from 'react-icons/bi';
 
 const maxTabs = 8;
 
@@ -25,12 +27,16 @@ export default function PlatformTabs({
   currentUser,
   managementZones,
   selectedTabHash,
+  header,
+  addWidgetDropdown,
   children,
 }: {
   currentTabs: NamedTab[];
   currentUser: AuthenticatedInfo;
   managementZones: ManagementZoneSelect[];
   selectedTabHash: string;
+  header: React.ReactNode;
+  addWidgetDropdown: React.ReactNode;
   children: React.ReactNode;
 }) {
   const router = useRouter();
@@ -96,8 +102,12 @@ export default function PlatformTabs({
 
   return (
     <Tabs value={curTab} className="h-[calc(100vh-5rem)]">
-      <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-300">
-        <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
+      <header
+        className="w-full flex flex-row justify-between px-8 max-w-440 pt-3 items-center mx-auto"
+        role="banner"
+      >
+        <ToddHeader className="flex min-h-10 flex-row items-center" />
+        <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent mr-auto ml-8">
           {currentTabs.map((tab, index) => (
             <TabsTrigger
               className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
@@ -134,14 +144,17 @@ export default function PlatformTabs({
               managementZones={managementZones}
               addTab={createTab}
             >
-              <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:ring-offset-0!">
-                <span className="absolute top-[-3.5px]">+</span>
+              <Button className="ml-2 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0 h-fit w-fit leading-none [&_svg]:size-[28px]">
+                <BiPlus size={28} />
               </Button>
             </NewTabDropdown>
           )}
-          <div className="grow"></div>
         </TabsList>
-      </div>
+        <div className="flex-row flex gap-6">
+          {addWidgetDropdown}
+          {header}
+        </div>
+      </header>
       {children}
     </Tabs>
   );
