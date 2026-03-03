@@ -76,7 +76,7 @@ export default function WhoWeArePage() {
               alt="Team members"
               width={900}
               height={600}
-              sizes="(min-width: 1024px) 900px, (min-width: 768px) 100vw, 100vw"
+              sizes="(min-width: 1024px) 900px, 100vw"
               className="h-auto w-full max-w-[900px] bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
             />
           </div>
