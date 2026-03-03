@@ -12,25 +12,21 @@ export default function AccountSecurityPage() {
       description="Keep your Todd account secure with additional layers of protection."
     >
       <div className="border-t border-black/20">
-        <div className="flex min-h-12 items-center justify-between gap-4 border-b border-black/20 py-1">
-          <span className="text-sm leading-tight font-thin">Password</span>
+        <div className="flex min-h-11 items-center justify-between gap-4 border-b border-black/20 py-1">
+          <span className="text-sm leading-tight">Password</span>
           <Link
             href="/account/reset-password"
-            className="text-foreground flex flex-row items-center justify-center gap-2 text-sm leading-tight font-normal hover:text-foreground/70"
+            className="text-foreground flex flex-row items-center justify-center gap-1.5 text-sm leading-tight font-normal hover:text-foreground/70"
           >
             Update password
             <BiLock className="size-4" />
           </Link>
         </div>
-        <div className="flex min-h-12 items-center justify-between gap-4 border-b border-black/20 py-1">
-          <span className="text-sm leading-tight font-light italic">
-            Devices
-          </span>
+        <div className="flex min-h-11 items-center justify-between gap-4 border-b border-black/20 py-1">
+          <span className="text-sm leading-tight">Devices</span>
         </div>
-        <div className="flex min-h-12 items-center justify-between gap-4 border-b border-black/20 py-1">
-          <span className="text-sm leading-tight font-light italic">
-            Passkeys
-          </span>
+        <div className="flex min-h-11 items-center justify-between gap-4 border-b border-black/20 py-1">
+          <span className="text-sm leading-tight">Passkeys</span>
         </div>
       </div>
 

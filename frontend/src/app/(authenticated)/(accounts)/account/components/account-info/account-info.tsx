@@ -21,9 +21,7 @@ export default function AccountInfo({
 }) {
   return (
     <section className="w-full max-w-[568px]">
-      <h2 className="text-foreground text-3xl leading-none font-light">
-        {title}
-      </h2>
+      <h2 className="text-foreground text-3xl leading-none">{title}</h2>
       {description ? (
         <p className="text-foreground mt-6 text-sm font-light italic">
           {description}
@@ -42,9 +40,9 @@ export function AccountInfoSection({
   children: ReactNode;
 }) {
   return (
-    <div className="mt-12 first:mt-0">
+    <div className="mt-10 first:mt-0">
       <h3 className="text-foreground text-xl font-normal">{title}</h3>
-      <div className="border-[#D9D9D9] mt-4 border-t px-0.5">{children}</div>
+      <div className="border-[#D9D9D9] mt-3 border-t px-0.5">{children}</div>
     </div>
   );
 }
@@ -91,13 +89,11 @@ export function AccountInfoRow({
     return (
       <Link
         href={href}
-        className="border-[#D9D9D9] flex min-h-12 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
+        className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
       >
-        <span className="text-muted-foreground text-sm font-light mx-0.5">
-          {label}
-        </span>
+        <span className="text-muted-foreground text-sm mx-0.5">{label}</span>
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-light text-muted-foreground/70 mx-0.5">
+          <span className="text-sm text-muted-foreground/70 mx-0.5">
             {renderedRightContent}
           </span>
         </div>
@@ -106,10 +102,10 @@ export function AccountInfoRow({
   }
 
   return (
-    <div className="border-[#D9D9D9] flex min-h-12 items-center justify-between gap-4 border-b py-2">
-      <span className="text-foreground text-sm font-light mx-0.5">{label}</span>
+    <div className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2">
+      <span className="text-foreground text-sm mx-0.5">{label}</span>
       <div className="flex items-center gap-1.5">
-        <span className="text-sm font-light text-foreground/70 mx-0.5">
+        <span className="text-sm text-foreground/70 mx-0.5">
           {renderedRightContent}
         </span>
       </div>

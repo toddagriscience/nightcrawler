@@ -3,6 +3,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type {
@@ -136,21 +137,21 @@ export default function ManagementZoneForm({
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="npk"
         >
-          <input type="checkbox" {...register('npk')} />
+          <Checkbox id="npk" {...register('npk')} />
           NPK in use
         </Label>
         <Label
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="irrigation"
         >
-          <input type="checkbox" {...register('irrigation')} />
+          <Checkbox id="irrigation" {...register('irrigation')} />
           Irrigation
         </Label>
         <Label
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="waterConservation"
         >
-          <input type="checkbox" {...register('waterConservation')} />
+          <Checkbox id="waterConservation" {...register('waterConservation')} />
           Water conservation
         </Label>
       </div>

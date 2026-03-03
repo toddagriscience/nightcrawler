@@ -29,9 +29,9 @@ export default function AccountSideMenu() {
   };
 
   return (
-    <aside className="w-[190px] shrink-0 mt-7">
+    <aside className="w-[190px] shrink-0 mt-1">
       <div className="border-t border-[#D9D9D9] pt-4">
-        <nav className="space-y-3" aria-label="Account sections">
+        <nav className="space-y-2.5" aria-label="Account sections">
           {sideMenuItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -42,8 +42,8 @@ export default function AccountSideMenu() {
                 aria-current={isActive ? 'page' : undefined}
                 className={`block text-sm ${
                   isActive
-                    ? 'text-foreground font-normal'
-                    : 'text-foreground font-light hover:opacity-70'
+                    ? 'text-foreground font-bold underline'
+                    : 'text-foreground/70 font-normal hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -53,7 +53,7 @@ export default function AccountSideMenu() {
         </nav>
       </div>
 
-      <div className="mt-20 border-t border-[#D9D9D9] pt-4">
+      <div className="mt-17.5 border-t border-[#D9D9D9] pt-4">
         <Button
           type="button"
           onClick={handleLogout}
