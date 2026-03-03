@@ -51,7 +51,7 @@ export default function AccountSideMenu() {
         </nav>
       </div>
 
-      <div className="mt-24 border-t border-[#D9D9D9] pt-4">
+      <div className="mt-20 border-t border-[#D9D9D9] pt-4">
         <button
           type="button"
           onClick={handleLogout}

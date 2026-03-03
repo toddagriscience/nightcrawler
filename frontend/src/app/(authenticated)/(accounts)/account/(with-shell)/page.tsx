@@ -35,7 +35,7 @@ export default async function AccountPage() {
         />
         <AccountInfoRow
           label="Farm profile"
-          value={<BiChevronRight className="size-4" />}
+          value={<BiChevronRight className="size-5" />}
           valueClassName="text-foreground"
           href="/account/farm/profile"
         />
