@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import GoHeader from '@/components/go/header/header'; // 👈 ADD THIS
 import GoFooter from '@/components/go/footer/footer';
 import { FadeIn, SmoothScroll } from '../../components/common';
 import { fontVariables } from '../../lib/fonts';
@@ -18,9 +19,12 @@ export default function GoLayout({ children }: { children: React.ReactNode }) {
         <SmoothScroll>
           <FadeIn className="min-h-screen flex flex-col">
             {/* Go Header */}
+            <GoHeader />
+
             <div className="flex-grow flex flex-col justify-end">
               {children}
             </div>
+
             <GoFooter />
           </FadeIn>
         </SmoothScroll>
