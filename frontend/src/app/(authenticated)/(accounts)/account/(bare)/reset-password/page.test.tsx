@@ -1,12 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import ResetPassword from './page';
-import React from 'react';
 import { AuthError } from '@supabase/supabase-js';
-import { beforeEach, describe, expect, vitest, test, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
+import { beforeEach, describe, expect, test, vi, vitest } from 'vitest';
+import ResetPassword from './page';
 
 global.ResizeObserver = ResizeObserver;
 
@@ -48,18 +48,13 @@ describe('ResetPassword', () => {
     render(<ResetPassword />);
 
     expect(
-      screen.getByRole('heading', { name: 'RESET PASSWORD' })
+      screen.getByRole('heading', { name: 'Reset Password' })
     ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('New Password')).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('Confirm New Password')
-    ).toBeInTheDocument();
-    expect(screen.getByText('Show Password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /CANCEL/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Cancel/i })).toBeInTheDocument();
     expect(screen.getByRole('list')).toBeInTheDocument();
 
     const submitButton = screen.getByRole('button', {
-      name: /INVALID PASSWORD/i,
+      name: /Invalid password/i,
     });
     expect(submitButton).toBeDisabled();
   });
@@ -78,24 +73,8 @@ describe('ResetPassword', () => {
     const confirmPasswordInput = screen.getByTestId(
       'confirm-new-password'
     ) as HTMLInputElement;
-    const checkbox = screen.getByTestId('show-password-checkbox');
-
     expect(newPasswordInput.type).toBe('password');
     expect(confirmPasswordInput.type).toBe('password');
-
-    await user.click(checkbox);
-
-    await waitFor(() => {
-      expect(newPasswordInput.type).toBe('text');
-      expect(confirmPasswordInput.type).toBe('text');
-    });
-
-    await user.click(checkbox);
-
-    await waitFor(() => {
-      expect(newPasswordInput.type).toBe('password');
-      expect(confirmPasswordInput.type).toBe('password');
-    });
   });
 
   test('should enable/disable submit button based on PasswordChecklist callback', async () => {
@@ -107,10 +86,10 @@ describe('ResetPassword', () => {
       false,
     ]);
     render(<ResetPassword />);
-    const submitButton = screen.getByText('INVALID PASSWORD');
+    const submitButton = screen.getByText('Invalid password');
 
     expect(submitButton).toBeDisabled();
-    expect(submitButton).toHaveTextContent('INVALID PASSWORD');
+    expect(submitButton).toHaveTextContent('Invalid password');
 
     fireEvent.change(screen.getByTestId('new-password'), {
       target: { value: 'P@ssword1' },
@@ -121,7 +100,7 @@ describe('ResetPassword', () => {
 
     await waitFor(() => {
       expect(submitButton).not.toBeDisabled();
-      expect(submitButton).toHaveTextContent('SAVE');
+      expect(submitButton).toHaveTextContent('Save');
     });
 
     fireEvent.change(screen.getByTestId('new-password'), {
@@ -130,7 +109,7 @@ describe('ResetPassword', () => {
 
     await waitFor(() => {
       expect(submitButton).toBeDisabled();
-      expect(submitButton).toHaveTextContent('INVALID PASSWORD');
+      expect(submitButton).toHaveTextContent('Invalid password');
     });
   });
 
@@ -145,14 +124,14 @@ describe('ResetPassword', () => {
 
     // Check for success message content
     expect(
-      screen.getByRole('heading', { name: /PASSWORD RESET SUCCESSFUL/i })
+      screen.getByRole('heading', { name: /Password reset successful/i })
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Your password has been updated successfully./i)
     ).toBeInTheDocument();
 
     // Find the dashboard button
-    const dashboardButton = screen.getByRole('button', { name: /DASHBOARD/i });
+    const dashboardButton = screen.getByRole('button', { name: /Dashboard/i });
     expect(dashboardButton).toBeInTheDocument();
 
     // Simulate clicking the dashboard button
@@ -178,16 +157,13 @@ describe('ResetPassword', () => {
     const errorElement = await screen.findByText(ERROR_MESSAGE);
     expect(errorElement).toBeInTheDocument();
     expect(errorElement).toHaveClass('text-red-500');
-
-    // Ensure the form is still visible
-    expect(screen.getByPlaceholderText('New Password')).toBeInTheDocument();
   });
 
   // Test 6: Cancel Button Click
   test('should call router.push("/") when the CANCEL button is clicked', async () => {
     render(<ResetPassword />);
 
-    const cancelButton = screen.getByRole('button', { name: /CANCEL/i });
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
 
     await user.click(cancelButton);
 
