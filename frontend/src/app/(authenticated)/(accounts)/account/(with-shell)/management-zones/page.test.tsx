@@ -44,7 +44,7 @@ describe('AccountManagementPage', () => {
     expect(screen.getAllByText('North Field').length).toBeGreaterThan(0);
     expect(screen.getAllByText('South Field').length).toBeGreaterThan(0);
     const profileLinks = screen.getAllByRole('link', {
-      name: 'Management zone profile >',
+      name: 'Management zone profile',
     });
     expect(profileLinks).toHaveLength(2);
     expect(profileLinks[0]).toHaveAttribute(
