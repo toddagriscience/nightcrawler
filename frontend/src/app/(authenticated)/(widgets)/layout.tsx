@@ -8,9 +8,9 @@ export default function AuthenticatedHeaderLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="min-h-screen background-gradient">
       <PlatformAuthenticatedHeader />
       {children}
-    </>
+    </div>
   );
 }
