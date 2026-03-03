@@ -5,10 +5,9 @@
 import { Button } from '@/components/common';
 import HeaderImg from '@/components/common/header-img/header-img';
 import { Link } from '@/i18n/config';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
 import CompetenciesSection from './components/competencies-section/competencies-section';
 import Partners from './components/partners';
@@ -19,13 +18,6 @@ import Partners from './components/partners';
  */
 export default function WhoWeArePage() {
   const t = useTranslations('whoWeAre');
-  const imageSectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: imageSectionRef,
-    offset: ['start end', 'end start'],
-  });
-  const leftImageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
-  const rightImageY = useTransform(scrollYProgress, [0, 2], [0, 200]);
 
   return (
     <main>
@@ -77,37 +69,16 @@ export default function WhoWeArePage() {
             </div>
           </div>
         </div>
-        <div
-          ref={imageSectionRef}
-          className="w-full mb-40 flex flex-col items-center h-fit py-8 md:py-10"
-        >
-          <div className="mx-auto flex w-full max-w-[900px] flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-20">
-            <motion.div
-              style={{ y: leftImageY }}
-              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
-            >
-              <Image
-                src="/marketing/who-we-are-people.png"
-                alt="Team members standing together"
-                width={500}
-                height={500}
-                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
-                className="h-auto w-full bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
-              />
-            </motion.div>
-            <motion.div
-              style={{ y: rightImageY }}
-              className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
-            >
-              <Image
-                src="/marketing/who-we-are-people-2.png"
-                alt="Members speaking at a discussion"
-                width={500}
-                height={500}
-                sizes="(min-width: 1024px) 500px, (min-width: 768px) 460px, 100vw"
-                className="h-auto w-full bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
-              />
-            </motion.div>
+        <div className="w-full mb-40 flex flex-col items-center justify-center h-fit pt-24 md:pt-36 pb-8 md:pb-10 px-6 sm:px-8 md:px-12">
+          <div className="flex justify-center w-full max-w-[900px]">
+            <Image
+              src="/marketing/who-we-are-img.jpg"
+              alt="Team members"
+              width={900}
+              height={600}
+              sizes="(min-width: 1024px) 900px, (min-width: 768px) 100vw, 100vw"
+              className="h-auto w-full max-w-[900px] bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
+            />
           </div>
         </div>
       </div>
