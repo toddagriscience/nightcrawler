@@ -12,7 +12,7 @@ interface AccountHeaderProps {
 export default function AccountHeader({ farmName }: AccountHeaderProps) {
   return (
     <div className="border-b border-[#D9D9D9]">
-      <div className="mx-auto flex w-full max-w-[1300px] items-center gap-22 px-5 mt-16 mb-10">
+      <div className="mx-auto flex w-full max-w-[1300px] items-end gap-22 px-5 mt-16 mb-10">
         <Link
           href="/"
           className="text-foreground inline-flex items-center gap-2 text-[18px] leading-none font-[400]"

@@ -2,9 +2,11 @@
 
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { BiLogOut } from 'react-icons/bi';
 
 const sideMenuItems = [
   { href: '/account', label: 'Farm information' },
@@ -38,7 +40,7 @@ export default function AccountSideMenu() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
-                className={`block text-normal leading-tight ${
+                className={`block text-sm ${
                   isActive
                     ? 'text-foreground font-normal'
                     : 'text-foreground font-light hover:opacity-70'
@@ -52,13 +54,14 @@ export default function AccountSideMenu() {
       </div>
 
       <div className="mt-20 border-t border-[#D9D9D9] pt-4">
-        <button
+        <Button
           type="button"
           onClick={handleLogout}
-          className="text-foreground text-normal leading-none font-normal hover:cursor-pointer hover:opacity-70"
+          className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
         >
-          Log out
-        </button>
+          <span className="text-sm font-normal">Log out</span>
+          <BiLogOut className="size-5" />
+        </Button>
       </div>
     </aside>
   );
