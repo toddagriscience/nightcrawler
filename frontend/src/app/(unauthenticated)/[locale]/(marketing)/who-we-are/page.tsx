@@ -30,11 +30,17 @@ export default function WhoWeArePage() {
   return (
     <main>
       <div className="max-w-[1400px] mx-auto">
-        <HeaderImg
-          src="/marketing/who-we-are-header.webp"
-          alt="Meadow"
-          overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
-        />
+        <motion.div
+          initial={{ opacity: 0, filter: 'blur(16px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        >
+          <HeaderImg
+            src="/marketing/who-we-are-header.webp"
+            alt="Meadow"
+            overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+          />
+        </motion.div>
       </div>
       <div className="flex flex-col mx-auto max-w-[1200px]">
         {/* Hero Text Section */}
