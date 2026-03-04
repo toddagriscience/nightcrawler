@@ -130,9 +130,9 @@ export default function PlatformTabs({
                     aria-roledescription="Close the current tab"
                     role="button"
                     onClick={() => deleteTab(tab)}
-                    className="h-min p-0 hover:bg-foreground/5 rounded-md mr-[-5px] translate-y-[-3px] hidden group-hover:block"
+                    className="h-min p-0 hover:bg-foreground/5 rounded-sm mr-[-5.5px] translate-y-[-5.5px] hidden group-hover:block"
                   >
-                    <BiX className="size-5 text-foreground/40" />
+                    <BiX className="size-5 text-foreground/40 hover:text-foreground/60" />
                   </div>
                 </div>
               )}
@@ -143,8 +143,11 @@ export default function PlatformTabs({
               managementZones={managementZones}
               addTab={createTab}
             >
-              <Button className="ml-1 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0 h-fit w-fit leading-none [&_svg]:size-[28px] hover:bg-foreground/5 rounded-md ">
-                <BiPlus size={25} className="text-foreground/50" />
+              <Button className="ml-1 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0 h-fit w-fit leading-none [&_svg]:size-[28px] hover:bg-foreground/5 rounded-sm ">
+                <BiPlus
+                  size={25}
+                  className="text-foreground/50 hover:text-foreground/70"
+                />
               </Button>
             </NewTabDropdown>
           )}
