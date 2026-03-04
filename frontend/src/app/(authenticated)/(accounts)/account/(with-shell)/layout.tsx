@@ -20,9 +20,9 @@ export default async function AccountLayout({
   const accountShellData = await getAccountShellData();
 
   return (
-    <div className="pb-16">
+    <div className="pb-14">
       <AccountHeader farmName={accountShellData.farmName} />
-      <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-14">
+      <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
         <AccountSideMenu />
         <main className="min-w-0 flex-1">{children}</main>
       </div>

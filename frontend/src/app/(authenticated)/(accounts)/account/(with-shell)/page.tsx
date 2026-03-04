@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
+import { BiChevronRight } from 'react-icons/bi';
 import AccountInfo, {
   AccountInfoRow,
   AccountInfoSection,
@@ -34,7 +35,7 @@ export default async function AccountPage() {
         />
         <AccountInfoRow
           label="Farm profile"
-          value=">"
+          value={<BiChevronRight className="size-6" />}
           valueClassName="text-foreground"
           href="/account/farm/profile"
         />
@@ -53,10 +54,10 @@ export default async function AccountPage() {
         />
       </AccountInfoSection>
 
-      <div className="mt-4 flex justify-end">
+      <div className="mt-5 flex justify-end px-0.5">
         <Link
           href={'/contact'}
-          className="text-[16px] leading-none font-[400] text-[#ff4d00] hover:opacity-80"
+          className="text-normal text-sm leading-none font-normal text-[#ff4d00] hover:opacity-80"
         >
           Request deactivation
         </Link>

@@ -3,7 +3,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { BiArrowBack } from 'react-icons/bi';
 
 interface AccountHeaderProps {
   farmName: string;
@@ -11,16 +11,18 @@ interface AccountHeaderProps {
 
 export default function AccountHeader({ farmName }: AccountHeaderProps) {
   return (
-    <div className="border-b border-black/10">
-      <div className="mx-auto flex w-full max-w-[960px] items-center gap-16 px-4 py-12">
+    <div className="border-b border-[#D9D9D9]">
+      <div className="mx-auto flex w-full max-w-[1300px] items-center gap-22 px-5 mt-16 mb-10">
         <Link
           href="/"
-          className="text-foreground inline-flex items-center gap-2 text-[18px] leading-none font-[400]"
+          className="text-foreground inline-flex items-center gap-2 mt-[-4px]"
         >
-          <ArrowLeft className="h-4 w-4" strokeWidth={2} />
-          <span>Home</span>
+          <BiArrowBack className="size-4" />
+          <span className="text-lg leading-none font-normal text-foreground text-lg tracking-tight">
+            Home
+          </span>
         </Link>
-        <h1 className="text-foreground text-[44px] leading-none font-[400]">
+        <h1 className="text-foreground text-4xl leading-none font-light">
           {farmName}
         </h1>
       </div>
