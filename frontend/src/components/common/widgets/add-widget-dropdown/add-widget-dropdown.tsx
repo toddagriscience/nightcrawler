@@ -49,11 +49,11 @@ export default function AddWidgetDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-gradient-to-b from-[#ffffff] to-[#eaeaea]/90 border-1 border-foreground/30">
+      <DropdownMenuContent className="bg-[#D9D9D9]/50 border-1 border-[#D9D9D9]">
         <DropdownMenuLabel className="text-foreground/80 font-normal">
           Available Widgets
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="mx-auto w-[90%] bg-foreground/30" />
+        <DropdownMenuSeparator className="mx-auto w-[90%] bg-[#A09C9D]" />
         {widgetTypes.length > 0 ? (
           widgetTypes.map((widgetType) => (
             <DropdownMenuItem

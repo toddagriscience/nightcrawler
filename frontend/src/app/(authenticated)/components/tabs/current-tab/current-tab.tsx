@@ -5,7 +5,7 @@ import WidgetWrapper from '@/components/common/widgets/widget-wrapper';
 import { widget } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { eq } from 'drizzle-orm';
-import { BiShare } from 'react-icons/bi';
+import { PiArrowBendUpLeft } from 'react-icons/pi';
 import { NamedTab } from '../types';
 import WidgetsGrid from './widgets-grid';
 
@@ -25,14 +25,14 @@ export default async function CurrentTab({
         <h2 className="text-3xl text-foreground/80 font-thin">
           Add a widget to get started
         </h2>
-        <BiShare className="size-10 text-foreground/75 rotate-120 translate-y-[-10px]" />
+        <PiArrowBendUpLeft className="size-12 text-foreground/75 rotate-122 translate-y-[-10px]" />
       </div>
     );
   }
 
   return (
     <FadeIn className="flex h-full flex-col overflow-hidden">
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 mt-[-5px]">
         <WidgetsGrid
           widgets={widgets}
           currentTab={currentTab}
@@ -40,7 +40,7 @@ export default async function CurrentTab({
             return (
               <div
                 key={widget.widgetMetadata.i}
-                className="h-full border bg-white p-4 rounded-sm border-1 border-foreground/60"
+                className="h-full border bg-white p-4 border-1 border-[#D9D9D9]"
               >
                 <WidgetWrapper widget={widget} currentTab={currentTab} />
               </div>

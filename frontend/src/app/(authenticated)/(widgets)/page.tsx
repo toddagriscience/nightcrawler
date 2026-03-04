@@ -9,7 +9,6 @@ import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
-import { BiPlus } from 'react-icons/bi';
 import PlatformTabContent from '../components/tabs/tab-content';
 import PlatformTabs from '../components/tabs/tabs';
 import { getTablessManagementZones } from '../components/tabs/utils';
@@ -101,10 +100,9 @@ export default async function DashboardPage({
           <Button
             size="sm"
             variant="default"
-            className="hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+            className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
           >
-            Add Widget
-            <BiPlus className="size-4 text-foreground/80" />
+            Add widget
           </Button>
         </AddWidgetDropdown>
       }

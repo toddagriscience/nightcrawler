@@ -24,11 +24,11 @@ export default function NewTabDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-gradient-to-b from-[#ffffff] to-[#eaeaea]/90 border-1 border-foreground/30">
+      <DropdownMenuContent className="bg-[#D9D9D9]/50 border-1 border-[#D9D9D9]">
         <DropdownMenuLabel className="text-foreground/80 font-normal">
           Add a new tab
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="mx-auto w-[90%] bg-foreground/30" />
+        <DropdownMenuSeparator className="mx-auto w-[90%] bg-[#A09C9D]" />
         {managementZones.length > 0 ? (
           managementZones.map((zone, index) => (
             <div key={zone.id}>
@@ -39,7 +39,7 @@ export default function NewTabDropdown({
                 {zone.name || 'Untitled Zone'}
               </DropdownMenuItem>
               {index < managementZones.length - 1 && (
-                <DropdownMenuSeparator className="mx-auto w-[90%] bg-foreground/30" />
+                <DropdownMenuSeparator className="mx-auto w-[90%] bg-[#D9D9D9]" />
               )}
             </div>
           ))

@@ -102,14 +102,14 @@ export default function PlatformTabs({
   return (
     <Tabs value={curTab} className="h-[calc(100vh-5rem)]">
       <header
-        className="w-full flex flex-row justify-between px-8 max-w-440 pt-3 items-center mx-auto"
+        className="w-full flex flex-row justify-between px-3 max-w-540 pt-3 items-center"
         role="banner"
       >
-        <ToddHeader className="flex flex-row items-center scale-70" />
-        <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-gradient-to-r from-[#D9D9D9]/15 to-[#D9D9D9]/0 mr-auto ml-4">
+        <ToddHeader className="flex flex-row items-center scale-90" />
+        <TabsList className="flex flex-row flex-nowrap justify-start gap-0 bg-gradient-to-r from-[#D9D9D9]/10 to-[#D9D9D9]/0 mr-auto ml-2 h-9">
           {currentTabs.map((tab, index) => (
             <TabsTrigger
-              className="group group flex max-w-38 min-w-38 flex-row items-center justify-between truncate border-none px-2 py-2 data-[state=active]:bg-[#D9D9D9]/32 data-[state=active]:shadow-sm"
+              className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-3 py-1.5 data-[state=active]:bg-[#D9D9D9]/32"
               key={tab.id}
               value={getTabHash(tab)}
               onClick={() => {
@@ -118,7 +118,7 @@ export default function PlatformTabs({
               }}
             >
               <input
-                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none "
+                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none text-center"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
@@ -130,7 +130,7 @@ export default function PlatformTabs({
                     aria-roledescription="Close the current tab"
                     role="button"
                     onClick={() => deleteTab(tab)}
-                    className="h-min p-0 hover:bg-foreground/5 rounded-sm mr-[-5.5px] translate-y-[-5.5px] hidden group-hover:block"
+                    className="h-min p-0 hover:bg-foreground/10 rounded-sm mr-[-10px] hidden group-hover:block"
                   >
                     <BiX className="size-5 text-foreground/40 hover:text-foreground/60" />
                   </div>
@@ -143,16 +143,13 @@ export default function PlatformTabs({
               managementZones={managementZones}
               addTab={createTab}
             >
-              <Button className="ml-1 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0 h-fit w-fit leading-none [&_svg]:size-[28px] hover:bg-foreground/5 rounded-sm ">
-                <BiPlus
-                  size={25}
-                  className="text-foreground/50 hover:text-foreground/70"
-                />
+              <Button className="ml-3 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0.5 h-fit w-fit leading-none [&_svg]:size-[22px] hover:bg-[#D9D9D9]/32 hover:shadow-sm rounded-sm ">
+                <BiPlus className="text-[#A09C9D]" />
               </Button>
             </NewTabDropdown>
           )}
         </TabsList>
-        <div className="flex-row flex gap-6 border-none pl-6">
+        <div className="flex-row flex gap-6 border-none">
           {addWidgetDropdown}
           {header}
         </div>
