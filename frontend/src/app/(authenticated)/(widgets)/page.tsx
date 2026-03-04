@@ -1,19 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { NavLinks } from '@/components/common/authenticated-header/nav-links';
+import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
+import { Button } from '@/components/ui';
 import { managementZone, widget, widgetEnum } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
+import { BiPlus } from 'react-icons/bi';
 import PlatformTabContent from '../components/tabs/tab-content';
 import PlatformTabs from '../components/tabs/tabs';
 import { getTablessManagementZones } from '../components/tabs/utils';
-import { getSelectedTabHash, getSelectedTab } from './utils';
-import { NavLinks } from '@/components/common/authenticated-header/nav-links';
-import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
-import { Button } from '@/components/ui';
-import { Plus } from 'lucide-react';
+import { getSelectedTab, getSelectedTabHash } from './utils';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -98,9 +98,13 @@ export default async function DashboardPage({
           managementZoneId={selectedTab.managementZone}
           availableWidgets={availableWidgets}
         >
-          <Button size="sm" variant="outline" className="hover:cursor-pointer">
-            Customize
-            <Plus className="mr-2 h-4 w-4" />
+          <Button
+            size="sm"
+            variant="default"
+            className="hover:cursor-pointer bg-[#D9D9D9]/32 text-foreground hover:shadow-sm border-none focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+          >
+            Add Widget
+            <BiPlus className="size-4 text-foreground/80" />
           </Button>
         </AddWidgetDropdown>
       }

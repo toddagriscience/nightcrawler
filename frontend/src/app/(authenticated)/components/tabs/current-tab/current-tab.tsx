@@ -1,12 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { FadeIn } from '@/components/common';
 import WidgetWrapper from '@/components/common/widgets/widget-wrapper';
 import { widget } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { eq } from 'drizzle-orm';
+import { BiShare } from 'react-icons/bi';
 import { NamedTab } from '../types';
 import WidgetsGrid from './widgets-grid';
-import { FadeIn } from '@/components/common';
 
 export default async function CurrentTab({
   currentTab,
@@ -20,8 +21,11 @@ export default async function CurrentTab({
 
   if (widgets.length === 0) {
     return (
-      <div className="flex h-[calc(100vh-100px)] flex-1 flex-col items-center justify-center gap-4">
-        <h2 className="text-xl">Add a widget to get started</h2>
+      <div className="flex h-[calc(100vh-350px)] flex-1 flex-row items-center justify-center gap-2">
+        <h2 className="text-3xl text-foreground/80 font-thin">
+          Add a widget to get started
+        </h2>
+        <BiShare className="size-10 text-foreground/75 rotate-120 translate-y-[-10px]" />
       </div>
     );
   }
@@ -36,7 +40,7 @@ export default async function CurrentTab({
             return (
               <div
                 key={widget.widgetMetadata.i}
-                className="h-full border bg-white p-4 shadow-sm"
+                className="h-full border bg-white p-4 shadow-sm rounded-sm"
               >
                 <WidgetWrapper widget={widget} currentTab={currentTab} />
               </div>
