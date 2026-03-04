@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { widgetEnum } from '@/lib/db/schema';
@@ -49,11 +48,7 @@ export default function AddWidgetDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-[#D9D9D9]/50 border-1 border-[#D9D9D9]">
-        <DropdownMenuLabel className="text-foreground/80 font-normal">
-          Available Widgets
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator className="mx-auto w-[90%] bg-[#A09C9D]" />
+      <DropdownMenuContent className="bg-white border-1 border-[#D9D9D9] w-55 translate-x-[63px]">
         {widgetTypes.length > 0 ? (
           widgetTypes.map((widgetType) => (
             <DropdownMenuItem
@@ -65,8 +60,8 @@ export default function AddWidgetDropdown({
             </DropdownMenuItem>
           ))
         ) : (
-          <DropdownMenuLabel className="font-normal">
-            No widgets available
+          <DropdownMenuLabel className="font-normal text-center text-foreground/90">
+            No more widgets available
           </DropdownMenuLabel>
         )}
       </DropdownMenuContent>
