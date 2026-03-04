@@ -101,7 +101,7 @@ export default async function DashboardPage({
           <Button
             size="sm"
             variant="default"
-            className="hover:cursor-pointer bg-[#D9D9D9]/32 text-foreground hover:shadow-sm border-none focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+            className="hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
           >
             Add Widget
             <BiPlus className="size-4 text-foreground/80" />

@@ -18,9 +18,9 @@ export default function WidgetDeleteButton({ widgetId }: { widgetId: number }) {
   return (
     <Button
       onClick={handleDelete}
-      className="p-0.5 hover:cursor-pointer hover:bg-[#D9D9D9]/32 h-auto rounded-md mr-[-5px] translate-y-[-8px] [&_svg]:size-5.5"
+      className="p-0.5 hover:cursor-pointer h-auto rounded-md mr-[-5px] translate-y-[-8px] [&_svg]:size-5.5"
     >
-      <BiX className="text-foreground/50 hover:text-foreground" />
+      <BiX className="text-foreground/50" />
     </Button>
   );
 }

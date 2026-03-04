@@ -40,7 +40,7 @@ export default async function CurrentTab({
             return (
               <div
                 key={widget.widgetMetadata.i}
-                className="h-full border bg-white p-4 shadow-sm rounded-sm"
+                className="h-full border bg-white p-4 rounded-sm border-1 border-foreground/60"
               >
                 <WidgetWrapper widget={widget} currentTab={currentTab} />
               </div>
