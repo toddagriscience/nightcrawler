@@ -13,6 +13,7 @@ import PlatformTabContent from '../components/tabs/tab-content';
 import PlatformTabs from '../components/tabs/tabs';
 import { getTablessManagementZones } from '../components/tabs/utils';
 import { getSelectedTab, getSelectedTabHash } from './utils';
+import { redirect } from 'next/navigation';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -52,6 +53,13 @@ export default async function DashboardPage({
   let currentTabs = await fetchCurrentTabs();
 
   let managementZones = await getTablessManagementZones(currentUser.farmId);
+
+  if (
+    !currentUser.approved ||
+    (currentTabs.length === 0 && managementZones.length === 0)
+  ) {
+    redirect('/welcome');
+  }
 
   // This seems redundant - realistically, this will be called once or twice per user.
   if (
@@ -109,7 +117,6 @@ export default async function DashboardPage({
     >
       <PlatformTabContent
         currentTabs={currentTabs}
-        currentUser={currentUser}
         selectedTabHash={selectedTabHash}
       />
     </PlatformTabs>
