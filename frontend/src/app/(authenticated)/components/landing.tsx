@@ -1,12 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { Button } from '@/components/ui';
+import { accountAgreementAcceptance } from '@/lib/db/schema';
+import { db } from '@/lib/db/schema/connection';
+import { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
+import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import ApplyButton from './apply-button';
-import { db } from '@/lib/db/schema/connection';
-import { accountAgreementAcceptance } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
-import { Button } from '@/components/ui';
-import { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 
 /** The landing used by people that are either: not approved, applied & not applied, or approved with no management zones. */
 export default async function Landing({
