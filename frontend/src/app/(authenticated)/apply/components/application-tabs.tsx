@@ -11,9 +11,14 @@ import {
   TabTypes,
   VerificationStatus,
 } from '../types';
-import { FarmInfoInternalApplicationSelect, UserSelect } from '@/lib/types/db';
+import {
+  FarmInfoInternalApplicationSelect,
+  FarmSubscriptionSelect,
+  UserSelect,
+} from '@/lib/types/db';
 import { createContext, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Subscription from './subscription';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
   ssr: false,
 });
@@ -23,6 +28,7 @@ export const ApplicationContext = createContext({
   allUsers: [{} as UserSelect],
   currentUser: {} as UserSelect,
   internalApplication: {} as FarmInfoInternalApplicationSelect,
+  farmSubscription: null as FarmSubscriptionSelect | null,
   invitedUserVerificationStatus: [{} as VerificationStatus],
   setCurrentTab: (_tab: TabTypes) => {},
   canSubmitApplication: false,
@@ -33,6 +39,7 @@ export default function ApplicationTabs({
   farmInfo,
   allUsers,
   internalApplication,
+  farmSubscription,
   currentUser,
   invitedUserVerificationStatus,
   canSubmitApplication,
@@ -41,10 +48,14 @@ export default function ApplicationTabs({
   allUsers: UserSelect[];
   currentUser: UserSelect;
   internalApplication: FarmInfoInternalApplicationSelect;
+  farmSubscription: FarmSubscriptionSelect | null;
   invitedUserVerificationStatus: VerificationStatus[];
   canSubmitApplication: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>('general');
+  const hasActiveSubscription = ['active', 'trialing'].includes(
+    farmSubscription?.status ?? ''
+  );
 
   return (
     <ApplicationContext.Provider
@@ -52,6 +63,7 @@ export default function ApplicationTabs({
         farmInfo,
         allUsers,
         internalApplication,
+        farmSubscription,
         currentUser,
         invitedUserVerificationStatus,
         setCurrentTab,
@@ -72,7 +84,13 @@ export default function ApplicationTabs({
           <TabsTrigger onClick={() => setCurrentTab('farm')} value="farm">
             Farm Information
           </TabsTrigger>
-          <TabsTrigger onClick={() => setCurrentTab('terms')} value="terms">
+          <TabsTrigger
+            onClick={() => setCurrentTab('subscription')}
+            value="subscription"
+          >
+            Subscription
+          </TabsTrigger>
+          <TabsTrigger value="terms" onClick={() => setCurrentTab('terms')}>
             Terms
           </TabsTrigger>
         </TabsList>
@@ -87,6 +105,10 @@ export default function ApplicationTabs({
 
         <TabsContent value="farm">
           <Farm />
+        </TabsContent>
+
+        <TabsContent value="subscription">
+          <Subscription />
         </TabsContent>
 
         <TabsContent value="terms">

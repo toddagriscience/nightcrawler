@@ -26,11 +26,35 @@ const waitTime = 5000;
 
 /** Terms and conditions page */
 export default function TermsAndConditions() {
-  const { canSubmitApplication } = useContext(ApplicationContext);
+  const { canSubmitApplication, farmSubscription, setCurrentTab } =
+    useContext(ApplicationContext);
   const { handleSubmit } = useForm();
   const [finalSubmitDisabled, setFinalSubmitDisabled] = useState(true);
   const [submitError, setSubmitError] = useState(false);
   const router = useRouter();
+  const hasActiveSubscription = ['active', 'trialing'].includes(
+    farmSubscription?.status ?? ''
+  );
+
+  if (!hasActiveSubscription) {
+    return (
+      <div className="mt-12 rounded-md border border-amber-400/60 bg-amber-50 p-4 text-amber-800">
+        <p className="text-sm">
+          You must complete the subscription step before accessing Terms.
+        </p>
+        <Button
+          type="button"
+          className="mt-4"
+          onClick={() => {
+            setCurrentTab('subscription');
+            scrollTo(0, 0);
+          }}
+        >
+          GO TO SUBSCRIPTION
+        </Button>
+      </div>
+    );
+  }
 
   async function onSubmit() {
     try {
@@ -142,8 +166,8 @@ export default function TermsAndConditions() {
         {!canSubmitApplication && (
           <div className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700 flex flex-row justify-between items-center">
             <p>
-              Please complete General Business Information and Farm Information
-              before submitting your application.
+              Please complete General Business Information, Farm Information,
+              and Subscription Setup before submitting your application.
             </p>
             <Button
               className="p-0 h-min hover:cursor-pointer"

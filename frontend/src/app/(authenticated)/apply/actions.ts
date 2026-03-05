@@ -9,10 +9,13 @@ import {
   farmCertificate,
   farmInfoInternalApplication,
   farmLocation,
+  farmSubscription,
   user,
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import { env } from '@/lib/env';
 import logger from '@/lib/logger';
+import { stripe } from '@/lib/stripe/client';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   FarmCertificateInsert,
@@ -201,7 +204,7 @@ export async function submitApplication(): Promise<ActionResponse> {
     if (!canSubmit) {
       return {
         error:
-          'Please complete General Business Information, Farm Information, and required application setup before submitting.',
+          'Please complete General Business Information, Farm Information, and an active subscription before submitting.',
       };
     }
 
@@ -217,6 +220,110 @@ export async function submitApplication(): Promise<ActionResponse> {
     return { error: null };
   } catch (error) {
     logger.error(error);
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Unknown error' };
+  }
+}
+
+/** Creates a Stripe-hosted checkout session for the $2,000/month subscription. */
+export async function createStripeSubscriptionCheckoutSession(): Promise<ActionResponse> {
+  const MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS = 200_000;
+
+  try {
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
+
+    const [currentFarm] = await db
+      .select({
+        id: farm.id,
+        stripeCustomerId: farm.stripeCustomerId,
+        businessName: farm.businessName,
+      })
+      .from(farm)
+      .where(eq(farm.id, farmId))
+      .limit(1);
+
+    if (!currentFarm) {
+      return { error: 'Farm not found' };
+    }
+
+    const [existingSubscription] = await db
+      .select({ status: farmSubscription.status })
+      .from(farmSubscription)
+      .where(eq(farmSubscription.farmId, farmId))
+      .limit(1);
+
+    if (
+      existingSubscription?.status &&
+      ['active', 'trialing'].includes(existingSubscription.status)
+    ) {
+      return { error: 'An active subscription already exists for this farm.' };
+    }
+
+    let stripeCustomerId = currentFarm.stripeCustomerId;
+
+    if (!stripeCustomerId) {
+      const createdCustomer = await stripe.customers.create({
+        email: currentUser.email,
+        name: currentFarm.businessName ?? currentUser.firstName,
+        metadata: {
+          farmId: String(farmId),
+          userId: String(currentUser.id),
+        },
+      });
+
+      stripeCustomerId = createdCustomer.id;
+
+      await db
+        .update(farm)
+        .set({
+          stripeCustomerId,
+        })
+        .where(eq(farm.id, farmId));
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer: stripeCustomerId,
+      metadata: {
+        farmId: String(farmId),
+        userId: String(currentUser.id),
+      },
+      subscription_data: {
+        metadata: {
+          farmId: String(farmId),
+          userId: String(currentUser.id),
+        },
+      },
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: 'usd',
+            unit_amount: MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS,
+            recurring: {
+              interval: 'month',
+            },
+            product_data: {
+              name: 'Todd Platform Subscription',
+              description: 'Monthly subscription for Todd internal application',
+            },
+          },
+        },
+      ],
+      success_url: `${env.baseUrl}/apply?subscription=success`,
+      cancel_url: `${env.baseUrl}/apply?subscription=cancelled`,
+    });
+
+    if (!session.url) {
+      return { error: 'Unable to start Stripe checkout.' };
+    }
+
+    return { error: null, data: { url: session.url } };
+  } catch (error) {
+    logger.error('Failed to create Stripe checkout session', { error });
     if (error instanceof Error) {
       return { error: error.message };
     }
