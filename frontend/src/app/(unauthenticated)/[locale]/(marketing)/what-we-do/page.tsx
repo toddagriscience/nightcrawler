@@ -74,7 +74,7 @@ export default function WhatWeDoPage() {
         <motion.div
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
           <HeaderImg
             src="/meadow-4.webp"

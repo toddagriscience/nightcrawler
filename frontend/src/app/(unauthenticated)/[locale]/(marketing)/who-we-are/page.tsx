@@ -33,7 +33,7 @@ export default function WhoWeArePage() {
         <motion.div
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
         >
           <HeaderImg
             src="/marketing/who-we-are-header.webp"
