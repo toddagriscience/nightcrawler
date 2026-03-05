@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/button';
 import { accountAgreementAcceptance, managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
@@ -23,45 +23,62 @@ export default async function Landing() {
     .limit(1);
 
   return (
-    <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-between px-4">
+    <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-between">
       <div></div>
-      <div className="space-y-5 text-center">
-        <h1 className="text-foreground text-3xl font-bold">Welcome</h1>
-        <p className="text-foreground text-base font-normal">
-          Thank you for being a Todd client since{' '}
-          {currentUser.createdAt.getFullYear()}.
-        </p>
+      <div className="space-y-10 text-center">
+        <div className="space-y-6">
+          <h1 className="text-foreground text-5xl font-thin">Welcome</h1>
+          <p className="text-foreground text-lg font-thin">
+            Thank you for being a Todd client since{' '}
+            {currentUser.createdAt.getFullYear()}.
+          </p>
+        </div>
         {!currentUser.approved && hasApplied ? (
           <>
-            <p>
+            <p className="text-foreground text-xl font-normal border-b border-[0#D9D9D9] pb-10">
               We&apos;ll take a look at your application as soon as possible.
             </p>
-            <Button variant={'outline'} className="min-w-45">
-              <Link href={'/contact'}>Schedule a meeting</Link>
-            </Button>
+            <Link href={'/contact'}>
+              <Button
+                variant="outline"
+                className="h-11 w-45 bg-transparent rounded-full text-foreground hover:text-white hover:bg-foreground"
+              >
+                Schedule a meeting
+              </Button>
+            </Link>
           </>
         ) : !currentUser.approved && !hasApplied ? (
-          <div className="flex flex-row items-center justify-center gap-6">
+          <div className="flex flex-row items-center justify-center gap-6 border-t border-[#D9D9D9] pt-10">
             <ApplyButton />
-            <Button variant={'outline'} className="min-w-45">
-              <Link href={'/contact'}>Schedule a meeting</Link>
-            </Button>
+            <Link href={'/contact'}>
+              <Button
+                variant="outline"
+                className="h-11 w-45 bg-transparent rounded-full text-foreground hover:text-white hover:bg-foreground"
+              >
+                Schedule a meeting
+              </Button>
+            </Link>
           </div>
         ) : hasNoManagementZones ? (
           <>
-            <p>
-              You&apos;ve been approved. We&apos;ll reach out with more
+            <p className="text-foreground text-lg font-normal mx-auto border-b border-[#D9D9D9] pb-10">
+              You&apos;ve been approved! <br /> We&apos;ll reach out with more
               information as soon as possible.
             </p>
-            <Button variant={'outline'} className="min-w-45">
-              <Link href={'/contact'}>Schedule a meeting</Link>
-            </Button>
+            <Link href={'/contact'}>
+              <Button
+                variant="outline"
+                className="h-11 w-45 bg-transparent rounded-full text-foreground hover:text-white hover:bg-foreground"
+              >
+                Schedule a meeting
+              </Button>
+            </Link>
           </>
         ) : null}
       </div>
       <Link
         href="/contact"
-        className="text-foreground mt-4 inline-block text-base font-normal underline transition-opacity hover:opacity-70"
+        className="text-foreground mt-4 inline-block text-sm font-normal underline transition-opacity hover:opacity-70"
       >
         Experiencing an Issue?
       </Link>
