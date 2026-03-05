@@ -1,21 +1,21 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Button } from '@/components/ui';
-import { accountAgreementAcceptance } from '@/lib/db/schema';
+import { accountAgreementAcceptance, managementZone } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
-import { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import Link from 'next/link';
-import ApplyButton from './apply-button';
+import ApplyButton from '../../components/apply-button';
 
-/** The landing used by people that are either: not approved, applied & not applied, or approved with no management zones. */
-export default async function Landing({
-  currentUser,
-  hasNoManagementZones,
-}: {
-  currentUser: AuthenticatedInfo;
-  hasNoManagementZones: boolean;
-}) {
+/** The page that is shown when a user is either not approved or is approved but has no tabs or management zones */
+export default async function Landing() {
+  const currentUser = await getAuthenticatedInfo();
+  const managementZones = await db
+    .select({ id: managementZone.id })
+    .from(managementZone)
+    .where(eq(managementZone.farmId, currentUser.farmId));
+  const hasNoManagementZones = managementZones.length === 0;
   const [hasApplied] = await db
     .select({ userId: accountAgreementAcceptance.userId })
     .from(accountAgreementAcceptance)
