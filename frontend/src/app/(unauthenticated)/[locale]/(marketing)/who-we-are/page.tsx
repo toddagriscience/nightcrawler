@@ -69,15 +69,15 @@ export default function WhoWeArePage() {
             </div>
           </div>
         </div>
-        <div className="w-full mb-40 flex flex-col items-center justify-center h-fit pt-24 md:pt-36 pb-8 md:pb-10 px-6 sm:px-8 md:px-12">
-          <div className="flex justify-center w-full max-w-[900px]">
+        <div className="w-full mb-16 flex flex-col items-center justify-center h-fit pt-24 md:pt-36 pb-8 md:pb-10 px-6 sm:px-8 md:px-12">
+          <div className="flex justify-center w-full max-w-[700px]">
             <Image
               src="/marketing/who-we-are-img.jpg"
               alt="Team members"
-              width={900}
-              height={600}
-              sizes="(min-width: 1024px) 900px, 100vw"
-              className="h-auto w-full max-w-[900px] bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
+              width={700}
+              height={467}
+              sizes="(min-width: 1024px) 700px, 100vw"
+              className="h-auto w-full max-w-[700px] bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
             />
           </div>
         </div>
