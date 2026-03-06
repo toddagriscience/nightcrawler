@@ -1,13 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
+import type { LinkSections } from './types';
 import { getTranslations } from 'next-intl/server';
 
-type LinkItem = { label: string; href: string };
-type LinkSections = {
-  primaryLinks: LinkItem[];
-  subLinks: LinkItem[];
-};
 
 function LinkList({ linkItem }: { linkItem: LinkSections }) {
   return (
@@ -18,7 +14,7 @@ function LinkList({ linkItem }: { linkItem: LinkSections }) {
             <Link
               key={link.label}
               href={link.href}
-              className="hover:opacity-70 transition duration-200"
+              className="hover:opacity-60 transition duration-300"
             >
               {link.label}
             </Link>
@@ -34,9 +30,7 @@ export default async function DisclosuresPage() {
 
   const generalLinks: LinkSections = {
     primaryLinks: [
-      { label: t('links.general.privacyEnglish'), href: '#' },
-      { label: t('links.general.privacyEU'), href: '#' },
-      { label: t('links.general.privacyJapan'), href: '#' },
+      { label: t('links.general.privacy'), href: '/privacy' },
     ],
 
     subLinks: [{ label: t('links.general.misuseNameBrand'), href: '#' }],
@@ -45,13 +39,13 @@ export default async function DisclosuresPage() {
   const ukLinks = [{ label: t('links.uk.modernSlavery'), href: '#' }];
 
   return (
-    <main className="h-[90vh] mx-auto my-3 max-w-5xl px-6 py-14">
-      <div className="mb-8">
-        <h1 className="mb-4 text-4xl font-medium">{t('title.general')}</h1>
+    <main className="font-thin h-[90vh] mx-auto my-3 max-w-5xl px-8 py-14">
+      <div className="mb-12">
+        <h1 className="mb-10 text-4xl">{t('title.general')}</h1>
         <LinkList linkItem={generalLinks} />
       </div>
       <div>
-        <h1 className="mb-8 text-4xl font-medium">{t('title.uk')}</h1>
+        <h1 className="mb-10 text-4xl">{t('title.uk')}</h1>
         <ul className="space-y-2">
           {ukLinks.map((link) => (
             <li
