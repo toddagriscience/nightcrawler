@@ -13,6 +13,8 @@ function LinkList({ linkItem }: { linkItem: LinkSections }) {
             <Link
               key={link.label}
               href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:opacity-60 transition duration-300"
             >
               {link.label}
@@ -30,10 +32,20 @@ export default async function DisclosuresPage() {
   const generalLinks: LinkSections = {
     primaryLinks: [{ label: t('links.general.privacy'), href: '/privacy' }],
 
-    subLinks: [{ label: t('links.general.misuseNameBrand'), href: '#' }],
+    subLinks: [
+      {
+        label: t('links.general.misuseNameBrand'),
+        href: '/name_brand_identity_misues.pdf',
+      },
+    ],
   };
 
-  const ukLinks = [{ label: t('links.uk.modernSlavery'), href: '#' }];
+  const ukLinks = [
+    {
+      label: t('links.uk.modernSlavery'),
+      href: '/modern_slavery_act_statement.pdf',
+    },
+  ];
 
   return (
     <main className="font-thin h-[90vh] mx-auto my-3 max-w-5xl px-8 py-14">
@@ -49,7 +61,7 @@ export default async function DisclosuresPage() {
               key={link.label}
               className="underline hover:opacity-70 transition duration-200"
             >
-              <Link href={link.href} className="">
+              <Link href={link.href} target="_blank" rel="noopener noreferrer">
                 {link.label}
               </Link>
             </li>
