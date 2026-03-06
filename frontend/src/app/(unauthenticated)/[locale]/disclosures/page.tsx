@@ -4,7 +4,6 @@ import Link from 'next/link';
 import type { LinkSections } from './types';
 import { getTranslations } from 'next-intl/server';
 
-
 function LinkList({ linkItem }: { linkItem: LinkSections }) {
   return (
     <ul className="mt-1 space-y-2">
@@ -29,9 +28,7 @@ export default async function DisclosuresPage() {
   const t = await getTranslations('disclosures');
 
   const generalLinks: LinkSections = {
-    primaryLinks: [
-      { label: t('links.general.privacy'), href: '/privacy' },
-    ],
+    primaryLinks: [{ label: t('links.general.privacy'), href: '/privacy' }],
 
     subLinks: [{ label: t('links.general.misuseNameBrand'), href: '#' }],
   };
