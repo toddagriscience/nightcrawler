@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import Faq from './components/faq/faq';
 
 /**
  * This is the Creators page for the Todd go domain UGC Program.
@@ -10,6 +11,8 @@ import { HiArrowLongRight } from 'react-icons/hi2';
 export default function CreatorsPage() {
   return (
     <div>
+      {/* FAQ Section */}
+      <Faq />
       {/* Apply Section */}
       <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
         <Link
