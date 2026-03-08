@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { AuthError } from '@supabase/supabase-js';
+import { updateUser } from '@/lib/actions/auth';
+import { AuthResponseTypes } from '@/lib/types/auth';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -23,11 +24,12 @@ vi.mock('next/navigation', async () => {
   };
 });
 
-vi.mock('react', { spy: true });
-
-// i have no clue why we have to do this. usePathname is mocked right above this??? i hate tests so much
 vitest.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+vi.mock('@/lib/actions/auth', () => ({
+  updateUser: vi.fn(),
 }));
 
 describe('ResetPassword', () => {
@@ -40,11 +42,6 @@ describe('ResetPassword', () => {
   });
 
   test('should render the password reset form initially', () => {
-    vi.mocked(React.useActionState).mockImplementation(() => [
-      null,
-      vi.fn(() => {}),
-      false,
-    ]);
     render(<ResetPassword />);
 
     expect(
@@ -59,32 +56,24 @@ describe('ResetPassword', () => {
     expect(submitButton).toBeDisabled();
   });
 
-  test('should toggle password visibility when "Show Password" checkbox is clicked', async () => {
-    vi.mocked(React.useActionState).mockImplementation(() => [
-      null,
-      vi.fn(() => {}),
-      false,
-    ]);
+  test('should toggle password visibility when "Show Password" button is clicked', async () => {
     render(<ResetPassword />);
 
     const newPasswordInput = screen.getByTestId(
       'new-password'
     ) as HTMLInputElement;
-    const confirmPasswordInput = screen.getByTestId(
-      'confirm-new-password'
-    ) as HTMLInputElement;
     expect(newPasswordInput.type).toBe('password');
-    expect(confirmPasswordInput.type).toBe('password');
+
+    const toggleButton = screen.getAllByLabelText(/show password/i)[0];
+    await user.click(toggleButton);
+
+    expect(newPasswordInput.type).toBe('text');
+
+    await user.click(toggleButton);
+    expect(newPasswordInput.type).toBe('password');
   });
 
   test('should enable/disable submit button based on PasswordChecklist callback', async () => {
-    const ERROR_MESSAGE = 'The session token has expired.';
-    const ERROR_STATE = { error: new AuthError(ERROR_MESSAGE) };
-    vi.mocked(React.useActionState).mockImplementation(() => [
-      ERROR_STATE,
-      vi.fn(() => {}),
-      false,
-    ]);
     render(<ResetPassword />);
     const submitButton = screen.getByText('Invalid password');
 
@@ -113,53 +102,63 @@ describe('ResetPassword', () => {
     });
   });
 
-  // Test 4: Successful Submission (Redirect to Dashboard)
   test('should show success screen and redirect to dashboard on successful action', async () => {
-    vi.mocked(React.useActionState).mockImplementation(() => [
-      [[]],
-      vi.fn(() => {}),
-      false,
-    ]);
+    vi.mocked(updateUser).mockResolvedValue({
+      error: null,
+      responseType: AuthResponseTypes.UpdateUser,
+    });
+
     render(<ResetPassword />);
 
-    // Check for success message content
-    expect(
-      screen.getByRole('heading', { name: /Password reset successful/i })
-    ).toBeInTheDocument();
+    fireEvent.change(screen.getByTestId('new-password'), {
+      target: { value: 'P@ssword1' },
+    });
+    fireEvent.change(screen.getByTestId('confirm-new-password'), {
+      target: { value: 'P@ssword1' },
+    });
+
+    const submitButton = await screen.findByRole('button', { name: /Save/i });
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /Password reset successful/i })
+      ).toBeInTheDocument();
+    });
     expect(
       screen.getByText(/Your password has been updated successfully./i)
     ).toBeInTheDocument();
 
-    // Find the dashboard button
     const dashboardButton = screen.getByRole('button', { name: /Dashboard/i });
-    expect(dashboardButton).toBeInTheDocument();
-
-    // Simulate clicking the dashboard button
     await user.click(dashboardButton);
 
-    // Check if redirect was called
     expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  // Test 5: Failed Submission (Error Screen)
-  test('should show error message when action state contains an error', async () => {
+  test('should show error message when action returns an error', async () => {
     const ERROR_MESSAGE = 'The session token has expired.';
-    const ERROR_STATE = { error: new AuthError(ERROR_MESSAGE) };
+    vi.mocked(updateUser).mockResolvedValue({
+      error: ERROR_MESSAGE,
+      responseType: AuthResponseTypes.UpdateUser,
+    });
 
-    vi.mocked(React.useActionState).mockImplementation(() => [
-      ERROR_STATE,
-      vi.fn(() => {}),
-      false,
-    ]);
     render(<ResetPassword />);
 
-    // Check for the error message
+    fireEvent.change(screen.getByTestId('new-password'), {
+      target: { value: 'P@ssword1' },
+    });
+    fireEvent.change(screen.getByTestId('confirm-new-password'), {
+      target: { value: 'P@ssword1' },
+    });
+
+    const submitButton = await screen.findByRole('button', { name: /Save/i });
+    await user.click(submitButton);
+
     const errorElement = await screen.findByText(ERROR_MESSAGE);
     expect(errorElement).toBeInTheDocument();
     expect(errorElement).toHaveClass('text-red-500');
   });
 
-  // Test 6: Cancel Button Click
   test('should call router.push("/") when the CANCEL button is clicked', async () => {
     render(<ResetPassword />);
 
@@ -167,7 +166,6 @@ describe('ResetPassword', () => {
 
     await user.click(cancelButton);
 
-    // Check that router.push was called with the correct path
     expect(mockPush).toHaveBeenCalledTimes(1);
     expect(mockPush).toHaveBeenCalledWith('/');
   });
