@@ -41,21 +41,21 @@ const faqItems = [
 export default function Faq() {
   return (
     <section className="w-full bg-neutral-50 px-6 md:px-12 lg:px-24 py-16 md:py-24">
-      <div className="px-10 md:px-12 lg:px-12 xl:px-24">
-        <h2 className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin mb-16">
+      <div className="md:px-12 lg:px-12 xl:px-24">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin mb-16">
           FAQ
         </h2>
       </div>
-      <div className="mx-auto max-w-[1150px]">
+      <div className="mx-auto w-full md:w-[70%] md:max-w-[70%]">
         <Accordion type="single" collapsible className="border-t">
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="group text-left text-2xl lg:text-3xl font-thin tracking-normal hover:no-underline py-6 [&>svg:last-child]:hidden">
+              <AccordionTrigger className="group text-left text-2xl md:text-2xl lg:text-3xl font-thin mb-2 tracking-normal hover:no-underline py-6 md:py-8 [&>svg:last-child]:hidden">
                 <span className="flex-1 text-left">{item.question}</span>
                 <LuPlus className="shrink-0 size-7 stroke-[1.5] group-data-[state=open]:hidden" />
                 <LuMinus className="shrink-0 size-7 stroke-[1.5] group-data-[state=closed]:hidden" />
               </AccordionTrigger>
-              <AccordionContent className="text-base lg:text-lg font-thin leading-relaxed">
+              <AccordionContent className="text-sm md:text-normal lg:text-base leading-relaxed font-light pb-6 md:pb-8">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
