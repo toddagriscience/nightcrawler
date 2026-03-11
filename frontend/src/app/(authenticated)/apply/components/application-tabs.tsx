@@ -16,7 +16,7 @@ import {
   FarmSubscriptionSelect,
   UserSelect,
 } from '@/lib/types/db';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Subscription from './subscription';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
@@ -56,6 +56,15 @@ export default function ApplicationTabs({
   const hasActiveSubscription = ['active', 'trialing'].includes(
     farmSubscription?.status ?? ''
   );
+
+  useEffect(() => {
+    async function helper() {
+      if (hasActiveSubscription) {
+        setCurrentTab('terms');
+      }
+    }
+    helper();
+  }, [setCurrentTab, hasActiveSubscription]);
 
   return (
     <ApplicationContext.Provider

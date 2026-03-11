@@ -3,7 +3,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useContext, useMemo, useState } from 'react';
 import { ApplicationContext } from './application-tabs';
 import { createStripeSubscriptionCheckoutSession } from '../actions';
@@ -13,15 +13,12 @@ export default function Subscription() {
   const { farmSubscription, setCurrentTab } = useContext(ApplicationContext);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const hasActiveSubscription = useMemo(
     () => ['active', 'trialing'].includes(farmSubscription?.status ?? ''),
     [farmSubscription?.status]
   );
-
-  const paymentResult = searchParams.get('subscription');
 
   async function beginStripeCheckout() {
     setError(null);
@@ -45,36 +42,22 @@ export default function Subscription() {
     <div className="mt-6 flex max-w-3xl flex-col gap-6">
       <div>
         <h2 className="text-lg font-semibold">Subscription Setup</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-sm">
           A monthly subscription is required before final application
           submission. Use Stripe to securely start your subscription.
         </p>
       </div>
 
       <div className="rounded-md border p-5">
-        <p className="text-sm text-muted-foreground">Plan</p>
-        <p className="text-xl font-semibold">Todd Internal Application</p>
+        <p className="text-xl font-semibold">Todd Agriscience</p>
         <p className="mt-1 text-sm">{'$2000/month'}</p>
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-4 text-sm">
           Status:{' '}
-          <span className="font-medium text-foreground">
-            {farmSubscription?.status ?? 'Not started'}
+          <span className="text-foreground font-medium">
+            {farmSubscription?.status ? 'Active' : 'Not started'}
           </span>
         </p>
       </div>
-
-      {paymentResult === 'success' && (
-        <p className="rounded-md border border-emerald-400/60 bg-emerald-50 p-3 text-sm text-emerald-700">
-          Payment flow completed in Stripe. Click refresh below to pull the
-          latest subscription status.
-        </p>
-      )}
-
-      {paymentResult === 'cancelled' && (
-        <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
-          Subscription checkout was cancelled before completion.
-        </p>
-      )}
 
       {hasActiveSubscription ? (
         <p className="rounded-md border border-emerald-400/60 bg-emerald-50 p-3 text-sm text-emerald-700">

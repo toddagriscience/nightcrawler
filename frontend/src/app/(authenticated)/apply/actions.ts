@@ -313,8 +313,8 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
           },
         },
       ],
-      success_url: `${env.baseUrl}/apply?subscription=success`,
-      cancel_url: `${env.baseUrl}/apply?subscription=cancelled`,
+      success_url: `${env.baseUrl}`,
+      cancel_url: `${env.baseUrl}`,
     });
 
     if (!session.url) {
