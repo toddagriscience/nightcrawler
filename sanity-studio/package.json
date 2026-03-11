@@ -16,19 +16,23 @@
   ],
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/vision": "^5.1.0",
+    "@sanity/vision": "^5.14.1",
     "date-fns": "^4.1.0",
-    "react": "^19.1",
-    "react-dom": "^19.1",
-    "sanity": "^5.1.0",
-    "styled-components": "^6.1.18"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sanity": "^5.14.1",
+    "styled-components": "^6.3.11"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@types/react": "^19.1",
-    "eslint": "^10.0",
-    "prettier": "^3.5",
-    "typescript": "^5.8"
+    "@types/react": "^19.2.14",
+    "eslint": "^10.0.3",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "tar": ">=7.5.11",
+    "dompurify": ">=3.3.3"
   },
   "prettier": {
     "semi": false,
