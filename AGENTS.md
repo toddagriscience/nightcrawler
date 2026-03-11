@@ -1,6 +1,21 @@
 # AGENTS.md
 
+## Modifying the frontend
+
+- Prioritize accessibility and performance
+- Prioritize server side rendering when possible, but don't neglect code quality in order to render more on the server
+- Prioritize simple, understandable, file architecture with lots of small files rather than confusing file architecture with a few large files (see feature sliced design)
+
+## Modifying the backend
+
+- Log using `logger.ts`
+
 ## Making a change
+
+- Follow feature sliced design as much as possible - components should be kept local unless they may need to be used across the entire application.
+- Keep types in `types.ts`, generic utility functions in `utils.ts`, server actions in `actions.ts`, components in a components folder (names can be unique), and any unique files in a file with a unique name.
+- Avoid helper functions if they aren't used 5 or more times across the file or 10 or more times across the entire repository.
+- All files should be in kebab-case, unless otherwise specified.
 - Run `bun format` after every change you make
 
 ## Creating an issue via GitHub's MCP

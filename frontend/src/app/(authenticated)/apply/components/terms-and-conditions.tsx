@@ -40,7 +40,7 @@ export default function TermsAndConditions() {
     return (
       <div className="mt-12 rounded-md border border-amber-400/60 bg-amber-50 p-4 text-amber-800">
         <p className="text-sm">
-          Your payment information hasn't been added yet.
+          Your payment information has not been added yet.
         </p>
         <Button
           type="button"
