@@ -4,14 +4,14 @@ import { NamedTab } from '@/app/(authenticated)/components/tabs/types';
 import { analysis, mineral, standardValues } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { WidgetSelect } from '@/lib/types/db';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { desc, eq } from 'drizzle-orm';
-import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
 import { MacroRadarWidget, normalizeMacroValue } from '../macro-radar-widget';
 import { MacroRadarDataPoint } from '../macro-radar-widget/types';
-import WidgetDeleteButton from './components/widget-delete-button';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
+import MineralLevelWidget from '../mineral-level-widget/mineral-level-widget';
 import MineralDataNotFound from './components/mineral-data-not-found';
+import WidgetDeleteButton from './components/widget-delete-button';
+import getMineralLevelWidgetData from './utils/get-mineral-level-widget-data';
 
 /** This is a somewhat clunky component that renders a given widget. Will be refactored when we're done building this godforsaken MVP.
  *
@@ -51,7 +51,11 @@ export default async function WidgetWrapper({
         .limit(1);
 
       if (!macroStandards) {
-        return <p>No standard values configured</p>;
+        return (
+          <p className="text-sm text-muted-foreground">
+            No standard values configured
+          </p>
+        );
       }
 
       // Fetch the most recent reading for each mineral in this management zone

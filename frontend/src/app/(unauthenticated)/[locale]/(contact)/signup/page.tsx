@@ -17,19 +17,44 @@ import { Input } from '@/components/ui/input';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { redirect, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
 import { signUp } from './actions';
+
+type SignUpFormData = {
+  firstName: string;
+  lastName: string;
+  farmName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
 
 /** Both outbound (/incoming) and inbound (/en/contact) onboarding will redirect here. We only ask for the password since we already have the user's email.
  *
  * @returns {JSX.Element} - The signup page.*/
 export default function Join() {
   const searchParams = useSearchParams();
-  const [state, signUpAction] = useActionState(signUp, null);
+  const [actionErrors, setActionErrors] = useState<string[]>([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { register, handleSubmit, formState } = useForm<SignUpFormData>({
+    defaultValues: {
+      firstName: searchParams.get('first_name') ?? '',
+      lastName: searchParams.get('last_name') ?? '',
+      farmName: searchParams.get('farm_name') ?? '',
+      email: searchParams.get('email') ?? '',
+      phone: searchParams.get('phone') ?? '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+  const { isSubmitting } = formState;
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
+  // These two states only exist for the sake of UX (see PasswordChecklist). It should not be utilized in form validation.
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
 
@@ -43,12 +68,24 @@ export default function Join() {
     redirect('/contact');
   }
 
-  const errors = state ? formatActionResponseErrors(state) : null;
-  const isSuccess = state && !state.error;
+  const errors = actionErrors.length > 0 ? actionErrors : null;
 
-  // When the user creates their account, we can opt them in without asking
-  if (isSuccess) {
+  async function onSubmit(data: SignUpFormData) {
+    setActionErrors([]);
+    const formData = new FormData();
+    formData.set('firstName', data.firstName);
+    formData.set('lastName', data.lastName);
+    formData.set('farmName', data.farmName);
+    formData.set('email', data.email);
+    formData.set('phone', data.phone);
+    formData.set('password', data.password);
+    const result = await signUp(null, formData);
+    if (result?.error) {
+      setActionErrors(formatActionResponseErrors(result));
+      return;
+    }
     posthog.opt_in_capturing();
+    setIsSuccess(true);
   }
 
   return (
@@ -99,13 +136,13 @@ export default function Join() {
                       </div>
                     )}
 
-                    <form action={signUpAction}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                       {/* Hidden fields for pre-filled values */}
-                      <input type="hidden" name="firstName" value={firstName} />
-                      <input type="hidden" name="lastName" value={lastName} />
-                      <input type="hidden" name="farmName" value={farmName} />
-                      <input type="hidden" name="email" value={email} />
-                      <input type="hidden" name="phone" value={phone} />
+                      <input type="hidden" {...register('firstName')} />
+                      <input type="hidden" {...register('lastName')} />
+                      <input type="hidden" {...register('farmName')} />
+                      <input type="hidden" {...register('email')} />
+                      <input type="hidden" {...register('phone')} />
 
                       <FieldSet className="">
                         <FieldLegend>
@@ -130,10 +167,11 @@ export default function Join() {
                                 className="border-[#848484]/80 border-1"
                                 id="password"
                                 data-testid="password"
-                                name="password"
                                 type={showPassword ? 'text' : 'password'}
-                                onChange={(e) => setPassword(e.target.value)}
                                 required
+                                {...register('password', {
+                                  onChange: (e) => setPassword(e.target.value),
+                                })}
                               />
                               <button
                                 type="button"
@@ -166,12 +204,12 @@ export default function Join() {
                               className="border-[#848484]/80 border-1 pr-10"
                               id="confirmPassword"
                               data-testid="confirm-password"
-                              name="confirmPassword"
                               type={showPassword ? 'text' : 'password'}
-                              onChange={(e) =>
-                                setConfirmationPassword(e.target.value)
-                              }
                               required
+                              {...register('confirmPassword', {
+                                onChange: (e) =>
+                                  setConfirmationPassword(e.target.value),
+                              })}
                             />
                           </Field>
 
@@ -185,7 +223,8 @@ export default function Join() {
                       <div className="flex flex-col gap-10 mt-10">
                         <SubmitButton
                           buttonText="Continue"
-                          disabled={!isPasswordValid}
+                          disabled={!isPasswordValid || isSubmitting}
+                          reactHookFormPending={isSubmitting}
                           className={
                             !isPasswordValid
                               ? 'border-1 border-solid bg-transparent text-black/90 w-[144px] border-[#848484]/80'

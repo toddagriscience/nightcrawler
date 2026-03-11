@@ -4,14 +4,14 @@
 
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { createWidget } from '../actions';
 import { widgetEnum } from '@/lib/db/schema';
 import { useRouter } from 'next/navigation';
+import { createWidget } from '../actions';
 
 export default function AddWidgetDropdown({
   managementZoneId,
@@ -48,8 +48,7 @@ export default function AddWidgetDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white">
-        <DropdownMenuLabel>Add Widget</DropdownMenuLabel>
+      <DropdownMenuContent className="bg-white border-1 border-[#D9D9D9] w-55 translate-x-[63px]">
         {widgetTypes.length > 0 ? (
           widgetTypes.map((widgetType) => (
             <DropdownMenuItem
@@ -61,8 +60,8 @@ export default function AddWidgetDropdown({
             </DropdownMenuItem>
           ))
         ) : (
-          <DropdownMenuLabel className="font-normal">
-            No widgets available
+          <DropdownMenuLabel className="font-normal text-center text-foreground/90">
+            No more widgets available
           </DropdownMenuLabel>
         )}
       </DropdownMenuContent>
