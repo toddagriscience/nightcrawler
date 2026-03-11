@@ -448,7 +448,7 @@ export default function Farm() {
 
             <SubmitButton
               reactHookFormPending={isSubmitting}
-              buttonText="SAVE AND NEXT"
+              buttonText="Save and next"
             />
           </form>
         </FormProvider>

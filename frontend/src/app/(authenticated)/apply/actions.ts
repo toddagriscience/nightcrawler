@@ -204,7 +204,7 @@ export async function submitApplication(): Promise<ActionResponse> {
     if (!canSubmit) {
       return {
         error:
-          'Please complete General Business Information, Farm Information, and an active subscription before submitting.',
+          'Please complete General Business Information, Farm Information, and an active Platform License before submitting.',
       };
     }
 
@@ -227,9 +227,9 @@ export async function submitApplication(): Promise<ActionResponse> {
   }
 }
 
-/** Creates a Stripe-hosted checkout session for the $2,000/month subscription. */
+/** Creates a Stripe-hosted checkout session for the $2,000/month Platform License. */
 export async function createStripeSubscriptionCheckoutSession(): Promise<ActionResponse> {
-  const MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS = 200_000;
+  const MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS = 169_500;
 
   try {
     const currentUser = await getAuthenticatedInfo();
@@ -259,7 +259,9 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
       existingSubscription?.status &&
       ['active', 'trialing'].includes(existingSubscription.status)
     ) {
-      return { error: 'An active subscription already exists for this farm.' };
+      return {
+        error: 'An active Platform License already exists for this farm.',
+      };
     }
 
     let stripeCustomerId = currentFarm.stripeCustomerId;
@@ -296,6 +298,7 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
           farmId: String(farmId),
           userId: String(currentUser.id),
         },
+        trial_period_days: 7,
       },
       line_items: [
         {
@@ -307,8 +310,9 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
               interval: 'month',
             },
             product_data: {
-              name: 'Todd Platform Subscription',
-              description: 'Monthly subscription for Todd internal application',
+              name: 'Todd Platform License',
+              description:
+                'Monthly Platform License for Todd internal application',
             },
           },
         },

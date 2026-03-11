@@ -97,7 +97,7 @@ export default function ApplicationTabs({
             onClick={() => setCurrentTab('subscription')}
             value="subscription"
           >
-            Subscription
+            Platform License
           </TabsTrigger>
           <TabsTrigger value="terms" onClick={() => setCurrentTab('terms')}>
             Terms

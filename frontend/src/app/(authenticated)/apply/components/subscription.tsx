@@ -8,7 +8,7 @@ import { useContext, useMemo, useState } from 'react';
 import { ApplicationContext } from './application-tabs';
 import { createStripeSubscriptionCheckoutSession } from '../actions';
 
-/** The 4th tab in the application page for starting the Stripe subscription. */
+/** The 4th tab in the application page for starting the Stripe Platform License. */
 export default function Subscription() {
   const { farmSubscription, setCurrentTab } = useContext(ApplicationContext);
   const [error, setError] = useState<string | null>(null);
@@ -41,34 +41,30 @@ export default function Subscription() {
   return (
     <div className="mt-6 flex max-w-3xl flex-col gap-6">
       <div>
-        <h2 className="text-lg font-semibold">Subscription Setup</h2>
+        <h2 className="text-lg font-semibold">
+          Activate Your Todd Partnership
+        </h2>
         <p className="text-muted-foreground mt-2 text-sm">
-          A monthly subscription is required before final application
-          submission. Use Stripe to securely start your subscription.
+          To complete your application, please provide payment information for
+          your Platform License. Checkout is provided securely through Stripe.{' '}
+          <i>Billing will start after the 7 day grace period.</i>
         </p>
       </div>
 
-      <div className="rounded-md border p-5">
+      <div className="space-y-3 rounded-md border p-5">
         <p className="text-xl font-semibold">Todd Agriscience</p>
-        <p className="mt-1 text-sm">{'$2000/month'}</p>
-        <p className="text-muted-foreground mt-4 text-sm">
-          Status:{' '}
-          <span className="text-foreground font-medium">
-            {farmSubscription?.status ? 'Active' : 'Not started'}
-          </span>
-        </p>
+        <p className="text-sm">{'$1,695.00 per month'}</p>
+        {hasActiveSubscription ? (
+          <p className="rounded-md border border-emerald-400/60 bg-emerald-50 p-3 text-sm text-emerald-700">
+            Platform License active. You can continue to Terms and submit your
+            application.
+          </p>
+        ) : (
+          <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+            Platform License not active yet. Complete checkout to continue.
+          </p>
+        )}
       </div>
-
-      {hasActiveSubscription ? (
-        <p className="rounded-md border border-emerald-400/60 bg-emerald-50 p-3 text-sm text-emerald-700">
-          Subscription active. You can continue to terms and submit your
-          application.
-        </p>
-      ) : (
-        <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
-          Subscription is not active yet. Complete checkout before continuing.
-        </p>
-      )}
 
       {error && (
         <p className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700">
@@ -84,10 +80,10 @@ export default function Subscription() {
           disabled={isLoading || hasActiveSubscription}
         >
           {hasActiveSubscription
-            ? 'SUBSCRIPTION ACTIVE'
+            ? 'Platform License Active'
             : isLoading
-              ? 'Start checkout'
-              : `Start subscription`}
+              ? 'Opening Checkout'
+              : 'Start Secure Checkout'}
         </Button>
 
         <Button
@@ -96,7 +92,7 @@ export default function Subscription() {
           variant="outline"
           onClick={() => router.refresh()}
         >
-          REFRESH STATUS
+          Refresh Platform License Status
         </Button>
 
         <Button
@@ -108,7 +104,7 @@ export default function Subscription() {
           }}
           disabled={!hasActiveSubscription}
         >
-          NEXT
+          Continue to Terms
         </Button>
       </div>
     </div>

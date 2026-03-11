@@ -59,16 +59,14 @@ export default function SubmitButton({
 
   return (
     <Button
-      className={cn(
-        'h-11 text-sm font-semibold bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full hover:ease-in-out hover:duration-300 hover:transition-all',
-        className
-      )}
+      className={className}
       type="submit"
+      variant={'brand'}
       disabled={disabled || pending}
       onClick={handleClick}
     >
       {pending || reactHookFormPending ? (
-        <Spinner className="mx-auto w-5 h-5" />
+        <Spinner className="mx-auto h-5 w-5" />
       ) : (
         buttonText
       )}

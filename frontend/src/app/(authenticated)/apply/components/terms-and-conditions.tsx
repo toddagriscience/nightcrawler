@@ -40,7 +40,7 @@ export default function TermsAndConditions() {
     return (
       <div className="mt-12 rounded-md border border-amber-400/60 bg-amber-50 p-4 text-amber-800">
         <p className="text-sm">
-          You must complete the subscription step before accessing Terms.
+          Your payment information hasn't been added yet.
         </p>
         <Button
           type="button"
@@ -50,7 +50,7 @@ export default function TermsAndConditions() {
             scrollTo(0, 0);
           }}
         >
-          GO TO SUBSCRIPTION
+          Add your payment information
         </Button>
       </div>
     );
@@ -73,12 +73,12 @@ export default function TermsAndConditions() {
   return (
     <div>
       {submitError && (
-        <p className="text-red-500 text-center mt-12">
+        <p className="mt-12 text-center text-red-500">
           There was an error submitting your application.
         </p>
       )}
-      <div className="w-full max-w-300 mb-6 gap-4 flex flex-col font-light mt-12">
-        <h2 className="font-medium text-xl">
+      <div className="mt-12 mb-6 flex w-full max-w-300 flex-col gap-4 font-light">
+        <h2 className="text-xl font-medium">
           Electronic Delivery of Documents
         </h2>
         <p>
@@ -107,7 +107,7 @@ export default function TermsAndConditions() {
           undefined terms in this Application Agreement have the meaning given
           in the
         </p>
-        <h2 className="font-medium text-xl">Account Terms and Conditions.</h2>
+        <h2 className="text-xl font-medium">Account Terms and Conditions.</h2>
 
         <h3 className="font-medium">You represent and warrant that:</h3>
         <p>
@@ -119,7 +119,7 @@ export default function TermsAndConditions() {
         </p>
 
         <h3 className="font-medium">You agree that:</h3>
-        <ul className="gap-4 flex flex-col">
+        <ul className="flex flex-col gap-4">
           <li>
             You consent to electronic delivery of all future account information
             as described in the Client Agreement.
@@ -151,7 +151,7 @@ export default function TermsAndConditions() {
           written signature, and you understand that you are entering into legal
           agreements.
         </p>
-        <p className="text-sm font-light mb-6">
+        <p className="mb-6 text-sm font-light">
           You are about to finalize your Account Application. By clicking or
           tapping the “Agree” button below, you agree that you have read the
           Account Agreement which contains a predispute arbitration clause
@@ -164,13 +164,13 @@ export default function TermsAndConditions() {
           your application or resubmit it.
         </p>
         {!canSubmitApplication && (
-          <div className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700 flex flex-row justify-between items-center">
+          <div className="flex flex-row items-center justify-between rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700">
             <p>
               Please complete General Business Information, Farm Information,
-              and Subscription Setup before submitting your application.
+              and Platform License Setup before submitting your application.
             </p>
             <Button
-              className="p-0 h-min hover:cursor-pointer"
+              className="h-min p-0 hover:cursor-pointer"
               onClick={() => router.refresh()}
             >
               <RefreshCw className="h-4 w-4" />
@@ -191,7 +191,7 @@ export default function TermsAndConditions() {
               setTimeout(() => setFinalSubmitDisabled(false), waitTime);
             }}
           >
-            AGREE
+            Agree
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -213,7 +213,7 @@ export default function TermsAndConditions() {
           <DialogClose asChild>
             <form onSubmit={handleSubmit(onSubmit)}>
               <SubmitButton
-                buttonText="AGREE AND SUBMIT"
+                buttonText="Agree and submit"
                 disabled={finalSubmitDisabled}
               />
             </form>
