@@ -14,18 +14,42 @@ import {
 import { Input } from '@/components/ui/input';
 import { sendResetPasswordEmail } from '@/lib/actions/auth';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import { useActionState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+type ForgotPasswordFormData = { email: string };
 
 /** The forgot password page. Sends an email via Supabase that links to `/accounts/reset-password` after verifying with an OTP code (again, all handled by Supabase).
  *
  * @returns {JSX.Element} - The ForgotPassword page*/
 export default function ForgotPassword() {
-  const [state, resetPasswordAction] = useActionState(
-    sendResetPasswordEmail,
-    null
+  const [actionResult, setActionResult] = useState<{
+    error: string[] | null;
+    success: boolean;
+  } | null>(null);
+  const { register, handleSubmit, formState } = useForm<ForgotPasswordFormData>(
+    {
+      defaultValues: { email: '' },
+    }
   );
+  const { isSubmitting } = formState;
 
-  const errors = state ? formatActionResponseErrors(state) : null;
+  const errors = actionResult?.error ?? null;
+  const isSuccess = actionResult?.success === true;
+
+  async function onSubmit(data: ForgotPasswordFormData) {
+    const formData = new FormData();
+    formData.set('email', data.email);
+    const result = await sendResetPasswordEmail(null, formData);
+    if (result?.error) {
+      setActionResult({
+        error: formatActionResponseErrors(result),
+        success: false,
+      });
+      return;
+    }
+    setActionResult({ error: [], success: true });
+  }
 
   return (
     <main>
@@ -42,7 +66,7 @@ export default function ForgotPassword() {
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <FadeIn>
               <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
-                {Array.isArray(errors) && errors.length === 0 && (
+                {isSuccess && (
                   <div className="flex h-full flex-col md:mt-10 gap-6 items-start lg:max-w-[420px]">
                     <h1 className="text-2xl mb-3 md:mb-5 md:mt-10 text-left">
                       Reset Password
@@ -56,7 +80,7 @@ export default function ForgotPassword() {
                   </div>
                 )}
 
-                {(!errors || errors.length > 0) && (
+                {!isSuccess && (
                   <>
                     {errors && errors.length > 0 && (
                       <div className="mb-3">
@@ -70,7 +94,7 @@ export default function ForgotPassword() {
                         ))}
                       </div>
                     )}
-                    <form action={resetPasswordAction}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                       <FieldSet>
                         <FieldLegend>
                           <h1 className="text-2xl mb-3 md:mb-5 md:mt-10 text-left">
@@ -93,16 +117,16 @@ export default function ForgotPassword() {
                               className="border-[#848484]/80 border-1"
                               id="email"
                               data-testid="email"
-                              name="email"
                               type="email"
                               required
+                              {...register('email')}
                             />
                           </Field>
                           <div className="mt-5 md:mt-10">
                             <SubmitButton
                               buttonText="Submit"
                               className="w-[144px]"
-                              onClickFunction={() => {}}
+                              reactHookFormPending={isSubmitting}
                             />
                           </div>
                         </FieldGroup>

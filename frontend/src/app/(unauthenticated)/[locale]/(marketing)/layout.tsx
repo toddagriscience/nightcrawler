@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Footer, Header } from './components';
 import { Metadata } from 'next';
+import { Footer, Header } from './components';
 
 export const metadata: Metadata = {
   title: { default: 'Marketing', template: '%s | Todd United States' },

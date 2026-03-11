@@ -26,8 +26,8 @@
 ## Making a pull request via GitHub's MCP
 
 - If you see "make a PR" or something similar, it's time to make a PR. The following is the workflow
-- Add files with `git add .`
 - Ask for user review/QA testing
+- Add files with `git add .`
 - If an only if the user approves, run `bun run validate` inside of the `./frontend` folder
 - Commit the files in conventional commit format with `git commit -m`
 - Push the files with `git push`
