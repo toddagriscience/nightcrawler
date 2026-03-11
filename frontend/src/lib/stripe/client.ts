@@ -7,7 +7,9 @@ const globalForStripe = globalThis as unknown as {
 };
 
 function createStripeClient(): Stripe {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const secretKey =
+    process.env.STRIPE_SECRET_KEY ??
+    (process.env.NODE_ENV === 'production' ? undefined : 'sk_test_default');
 
   if (!secretKey) {
     throw new Error(
