@@ -11,14 +11,25 @@ import { Input } from '@/components/ui/input';
 import { updateUser } from '@/lib/actions/auth';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useRouter } from 'next/navigation';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
+
+type ResetPasswordFormData = {
+  newPassword: string;
+  confirmNewPassword: string;
+};
 
 /** Reset password page, protected by middleware.
  *
  * @returns {JSX.Element} - The password reset page*/
 export default function ResetPassword() {
-  const [state, resetPasswordAction] = useActionState(updateUser, null);
+  const [actionErrors, setActionErrors] = useState<string[]>([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { register, handleSubmit, formState } = useForm<ResetPasswordFormData>({
+    defaultValues: { newPassword: '', confirmNewPassword: '' },
+  });
+  const { isSubmitting } = formState;
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const router = useRouter();
@@ -27,13 +38,26 @@ export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
 
-  const errors = state ? formatActionResponseErrors(state) : null;
+  const errors = actionErrors.length > 0 ? actionErrors : null;
+
+  async function onSubmit(data: ResetPasswordFormData) {
+    setActionErrors([]);
+    const formData = new FormData();
+    formData.set('newPassword', data.newPassword);
+    formData.set('confirmNewPassword', data.confirmNewPassword);
+    const result = await updateUser(null, formData);
+    if (result?.error) {
+      setActionErrors(formatActionResponseErrors(result));
+      return;
+    }
+    setIsSuccess(true);
+  }
 
   return (
     <div className="mx-auto flex h-screen w-[90vw] max-w-[450px] flex-col items-center justify-center">
       <div className="w-[90vw] max-w-[inherit]">
         <FadeIn>
-          {Array.isArray(errors) && errors.length === 0 && (
+          {isSuccess && (
             <>
               <h1 className="mb-6 text-center text-3xl">
                 PASSWORD RESET SUCCESSFUL
@@ -48,7 +72,7 @@ export default function ResetPassword() {
             </>
           )}
 
-          {(!errors || errors.length > 0) && (
+          {!isSuccess && (
             <>
               <h1 className="mb-10 text-center text-3xl">Reset Password</h1>
 
@@ -62,7 +86,7 @@ export default function ResetPassword() {
                 </div>
               )}
 
-              <form action={resetPasswordAction}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <FieldSet className="mb-8">
                   <FieldGroup>
                     <Field>
@@ -74,10 +98,11 @@ export default function ResetPassword() {
                           className="focus:ring-0! bg-transparent mt-[-6px]"
                           id="newPassword"
                           data-testid="new-password"
-                          name="newPassword"
                           type={showPassword ? 'text' : 'password'}
-                          onChange={(e) => setPassword(e.target.value)}
                           required
+                          {...register('newPassword', {
+                            onChange: (e) => setPassword(e.target.value),
+                          })}
                         />
                         <button
                           type="button"
@@ -105,12 +130,12 @@ export default function ResetPassword() {
                           className="focus:ring-0! bg-transparent mt-[-6px]"
                           id="confirmNewPassword"
                           data-testid="confirm-new-password"
-                          name="confirmNewPassword"
                           type={showPassword ? 'text' : 'password'}
-                          onChange={(e) =>
-                            setConfirmationPassword(e.target.value)
-                          }
                           required
+                          {...register('confirmNewPassword', {
+                            onChange: (e) =>
+                              setConfirmationPassword(e.target.value),
+                          })}
                         />
                         <button
                           type="button"
@@ -139,7 +164,8 @@ export default function ResetPassword() {
                 <div className="flex flex-col gap-4">
                   <SubmitButton
                     buttonText={isPasswordValid ? 'Save' : 'Invalid password'}
-                    disabled={!isPasswordValid}
+                    disabled={!isPasswordValid || isSubmitting}
+                    reactHookFormPending={isSubmitting}
                     className={
                       !isPasswordValid
                         ? 'bg-transparent text-black/80 border-black border-1 border-solid w-[144px] h-11'

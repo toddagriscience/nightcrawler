@@ -1,10 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import { useActionState } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ResizeObserver from 'resize-observer-polyfill';
-import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { signUp } from './actions';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import Join from './page';
 
 global.ResizeObserver = ResizeObserver;
@@ -25,14 +26,13 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
-// Mock useActionState from React
-vi.mock('react', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react')>();
-  return {
-    ...actual,
-    useActionState: vi.fn(),
-  };
-});
+vi.mock('@/lib/utils/actions', () => ({
+  formatActionResponseErrors: vi.fn(),
+}));
+
+vi.mock('./actions', () => ({
+  signUp: vi.fn(),
+}));
 
 // Mock framer-motion
 vi.mock('framer-motion', () => {
@@ -66,8 +66,6 @@ describe('Join Page', () => {
   beforeEach(() => {
     mockGet.mockClear();
     mockRedirect.mockClear();
-    // Default mock for useActionState - no state yet
-    (useActionState as Mock).mockReturnValue([null, vi.fn()]);
   });
 
   describe('form loading with search params', () => {
@@ -192,20 +190,29 @@ describe('Join Page', () => {
   });
 
   describe('success screen', () => {
-    it('shows success screen when action returns without an error', () => {
+    it('shows success screen when action returns without an error', async () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
+      vi.mocked(signUp).mockResolvedValue({
+        data: { user: {}, farm: {} },
+        error: null,
+      });
 
-      // Mock useActionState to return successful state
-      (useActionState as Mock).mockReturnValue([
-        { data: { user: {}, farm: {} }, error: null },
-        vi.fn(),
-      ]);
-
+      const user = userEvent.setup();
       render(<Join />);
 
-      expect(
-        screen.getByText('Your Todd Account Has Been Created!')
-      ).toBeInTheDocument();
+      const validPassword = 'P@ssword1';
+      await user.type(
+        screen.getByLabelText('Create a Password'),
+        validPassword
+      );
+      await user.type(screen.getByLabelText('Confirm Password'), validPassword);
+      await user.click(screen.getByRole('button', { name: 'Continue' }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('Your Todd Account Has Been Created!')
+        ).toBeInTheDocument();
+      });
       expect(
         screen.getByText('Please check your email to activate your account:')
       ).toBeInTheDocument();
@@ -214,14 +221,10 @@ describe('Join Page', () => {
       expect(
         screen.queryByText("You're Almost There!")
       ).not.toBeInTheDocument();
-      expect(screen.queryByPlaceholderText('Password')).not.toBeInTheDocument();
     });
 
     it('shows form when action has not been submitted yet', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      // Mock useActionState to return null state (initial)
-      (useActionState as Mock).mockReturnValue([null, vi.fn()]);
 
       render(<Join />);
 
@@ -231,22 +234,32 @@ describe('Join Page', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('shows form with errors when action returns with an error', () => {
+    it('shows form with errors when action returns with an error', async () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      // Mock useActionState to return error state
-      (useActionState as Mock).mockReturnValue([
-        { error: 'User already exists' },
-        vi.fn(),
+      vi.mocked(signUp).mockResolvedValue({
+        error: 'User already exists',
+      });
+      vi.mocked(formatActionResponseErrors).mockReturnValue([
+        'User already exists',
       ]);
 
+      const user = userEvent.setup();
       render(<Join />);
+
+      const validPassword = 'P@ssword1';
+      await user.type(
+        screen.getByLabelText('Create a Password'),
+        validPassword
+      );
+      await user.type(screen.getByLabelText('Confirm Password'), validPassword);
+      await user.click(screen.getByRole('button', { name: 'Continue' }));
+
+      await waitFor(() => {
+        expect(screen.getByText('User already exists')).toBeInTheDocument();
+      });
 
       // Form should still be visible
       expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
-
-      // Error should be displayed
-      expect(screen.getByText('User already exists')).toBeInTheDocument();
 
       // Success screen should not be visible
       expect(
