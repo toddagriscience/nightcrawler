@@ -5,6 +5,7 @@ import {
   farm,
   farmCertificate,
   farmInfoInternalApplication,
+  farmSubscription,
   farmLocation,
   user,
 } from '@/lib/db/schema';
@@ -87,6 +88,12 @@ export default async function Apply() {
     .where(eq(farmInfoInternalApplication.farmId, farmId))
     .limit(1);
 
+  const [subscription] = await db
+    .select()
+    .from(farmSubscription)
+    .where(eq(farmSubscription.farmId, farmId))
+    .limit(1);
+
   const canSubmitApplication = await isApplicationReadyForSubmission(farmId);
 
   if (currentUser.approved) {
@@ -108,6 +115,7 @@ export default async function Apply() {
         currentUser={currentUser}
         allUsers={allUsers}
         internalApplication={internalApplication}
+        farmSubscription={subscription ?? null}
         invitedUserVerificationStatus={invitedUserVerificationStatus}
         canSubmitApplication={canSubmitApplication}
       />

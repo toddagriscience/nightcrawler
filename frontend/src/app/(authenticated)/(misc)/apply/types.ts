@@ -40,6 +40,11 @@ export type GeneralBusinessInformationUpdate = z.infer<
   typeof generalBusinessInformationUpdateSchema
 >;
 
-export type TabTypes = 'general' | 'colleagues' | 'farm' | 'terms';
+export type TabTypes =
+  | 'general'
+  | 'colleagues'
+  | 'farm'
+  | 'subscription'
+  | 'terms';
 
 export type VerificationStatus = { email: string; verified: boolean };

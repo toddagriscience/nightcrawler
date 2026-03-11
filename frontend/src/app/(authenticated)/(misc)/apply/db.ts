@@ -2,9 +2,13 @@
 
 'use server';
 
-import { farmInfoInternalApplication, farmLocation } from '@/lib/db/schema';
+import {
+  farmInfoInternalApplication,
+  farmLocation,
+  farmSubscription,
+} from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 export async function isApplicationReadyForSubmission(
   farmId: number
@@ -21,5 +25,16 @@ export async function isApplicationReadyForSubmission(
     .where(eq(farmInfoInternalApplication.farmId, farmId))
     .limit(1);
 
-  return Boolean(location && internalApplication);
+  const [subscription] = await db
+    .select({ farmId: farmSubscription.farmId })
+    .from(farmSubscription)
+    .where(
+      and(
+        eq(farmSubscription.farmId, farmId),
+        inArray(farmSubscription.status, ['active', 'trialing'])
+      )
+    )
+    .limit(1);
+
+  return Boolean(location && internalApplication && subscription);
 }

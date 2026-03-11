@@ -9,6 +9,8 @@ import AccountInfo, {
 } from '../components/account-info/account-info';
 import { getAccountFarmData } from '../db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AccountPage() {
   const [accountFarmData, stripeData] = await Promise.all([
     getAccountFarmData(),

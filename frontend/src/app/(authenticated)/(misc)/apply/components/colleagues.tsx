@@ -307,7 +307,7 @@ export default function Colleagues() {
 
           <div className="mt-10 flex flex-row gap-6">
             <SubmitButton
-              buttonText="INVITE TEAM MEMBER"
+              buttonText="Invite team member"
               className="basis-2/3"
               reactHookFormPending={isSubmitting}
             />
@@ -318,7 +318,7 @@ export default function Colleagues() {
               }}
               className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
             >
-              NEXT
+              Next
             </Button>
           </div>
         </form>

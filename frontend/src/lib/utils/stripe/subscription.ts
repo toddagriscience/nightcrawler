@@ -5,7 +5,7 @@
 import { farm } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { logger } from '@/lib/logger';
-import { stripe } from '@/lib/stripe/client';
+import { getStripeClient } from '@/lib/stripe/client';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import { NOT_SET } from './constants';
@@ -44,6 +44,8 @@ export async function getStripeSubscriptionData(): Promise<StripeSubscriptionDat
     if (!farmRecord?.stripeCustomerId) {
       return defaults;
     }
+
+    const stripe = getStripeClient();
 
     const subscriptions = await stripe.subscriptions.list({
       customer: farmRecord.stripeCustomerId,

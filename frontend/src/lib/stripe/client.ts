@@ -6,8 +6,17 @@ const globalForStripe = globalThis as unknown as {
   stripe: Stripe | undefined;
 };
 
-function createStripeClient(): Stripe {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
+function createStripeClient(secretKey: string): Stripe {
+  return new Stripe(secretKey, {
+    apiVersion: '2026-02-25.clover',
+    typescript: true,
+  });
+}
+
+function getStripeSecretKey(): string {
+  const secretKey =
+    process.env.STRIPE_SECRET_KEY ??
+    (process.env.NODE_ENV === 'production' ? undefined : 'sk_test_default');
 
   if (!secretKey) {
     throw new Error(
@@ -15,16 +24,17 @@ function createStripeClient(): Stripe {
     );
   }
 
-  return new Stripe(secretKey, {
-    apiVersion: '2026-02-25.clover',
-    typescript: true,
-  });
+  return secretKey;
 }
 
-const stripe = globalForStripe.stripe ?? createStripeClient();
+export function getStripeClient(): Stripe {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!globalForStripe.stripe) {
+      globalForStripe.stripe = createStripeClient(getStripeSecretKey());
+    }
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForStripe.stripe = stripe;
+    return globalForStripe.stripe;
+  }
+
+  return createStripeClient(getStripeSecretKey());
 }
-
-export { stripe };
