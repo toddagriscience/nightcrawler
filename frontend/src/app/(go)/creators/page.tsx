@@ -10,7 +10,6 @@ import HeaderImg from '@/components/common/header-img/header-img';
  */
 export default function CreatorsPage() {
   return (
-<<<<<<< HEAD
     <main>
       {/* Header Image */}
       <div className="max-w-[1400px] mx-auto">
@@ -36,29 +35,5 @@ export default function CreatorsPage() {
         </div>
       </div>
     </main>
-=======
-    <>
-      <HeaderImg
-        src="/marketing/m4a.jpg"
-        alt="Garden"
-        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent"
-      />
-
-      <div className="max-w-[1400px] mx-auto">
-        {/* Apply Section */}
-        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
-          <Link
-            href="#"
-            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
-          >
-            Apply
-            <span className="mt-1">
-              <HiArrowLongRight className="size-12" />
-            </span>
-          </Link>
-        </div>
-      </div>
-    </>
->>>>>>> 24f14ed (style: update and formatting image)
   );
 }
