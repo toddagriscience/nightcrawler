@@ -5,7 +5,7 @@
 import { farm, farmSubscription } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
-import { stripe } from '@/lib/stripe/client';
+import { getStripeClient } from '@/lib/stripe/client';
 import { eq } from 'drizzle-orm';
 import Stripe from 'stripe';
 
@@ -77,6 +77,7 @@ export async function syncFarmSubscriptionFromStripe({
   farmId: number;
   subscriptionId: string;
 }) {
+  const stripe = getStripeClient();
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   await upsertFarmSubscriptionFromStripe({ farmId, subscription });

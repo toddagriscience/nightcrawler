@@ -6,12 +6,14 @@ import {
   upsertFarmSubscriptionFromStripe,
 } from '@/lib/utils/stripe/subscription-db';
 import logger from '@/lib/logger';
-import { stripe } from '@/lib/stripe/client';
+import { getStripeClient } from '@/lib/stripe/client';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 function getWebhookSecret() {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const secret =
+    process.env.STRIPE_WEBHOOK_SECRET ??
+    (process.env.NODE_ENV === 'production' ? undefined : 'wh_test_default');
 
   if (!secret) {
     throw new Error('STRIPE_WEBHOOK_SECRET is not configured.');
@@ -21,6 +23,7 @@ function getWebhookSecret() {
 }
 
 export async function POST(request: Request) {
+  const stripe = getStripeClient();
   const signature = request.headers.get('stripe-signature');
 
   if (!signature) {

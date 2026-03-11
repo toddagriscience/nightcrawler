@@ -15,7 +15,7 @@ import {
 import { db } from '@/lib/db/schema/connection';
 import { env } from '@/lib/env';
 import logger from '@/lib/logger';
-import { stripe } from '@/lib/stripe/client';
+import { getStripeClient } from '@/lib/stripe/client';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   FarmCertificateInsert,
@@ -232,6 +232,7 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
   const MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS = 169_500;
 
   try {
+    const stripe = getStripeClient();
     const currentUser = await getAuthenticatedInfo();
     const farmId = currentUser.farmId;
 
