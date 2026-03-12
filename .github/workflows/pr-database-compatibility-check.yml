@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: pgvector/pgvector:pg16
+        image: pgvector/pgvector:pg18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -47,8 +47,16 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+            | sudo gpg --dearmor -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+          /usr/lib/postgresql/18/bin/pg_dump --version
 
       - name: Install dependencies
         run: bun i
@@ -60,7 +68,7 @@ jobs:
             > /tmp/staging-db-ca.pem
           openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
 
-          PGPASSWORD="$STAGING_DATABASE_PASSWORD" pg_dump \
+          PGPASSWORD="$STAGING_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
             "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
             --clean \
             --if-exists \
@@ -68,7 +76,7 @@ jobs:
             --no-privileges \
             --format=plain \
             --file=/tmp/staging-db.sql
-          PGPASSWORD="$LOCAL_DATABASE_PASSWORD" psql \
+          PGPASSWORD="$LOCAL_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/psql \
             "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
             --file=/tmp/staging-db.sql
 
