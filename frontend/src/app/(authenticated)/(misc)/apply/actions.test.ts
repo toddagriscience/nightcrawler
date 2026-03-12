@@ -72,6 +72,7 @@ const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
       farmLocation,
       farmCertificate,
       farmInfoInternalApplication,
+      farmSubscription,
     } = await import('@/lib/db/schema');
 
     const db = drizzle(pglite, { schema, casing: 'snake_case' });
@@ -91,6 +92,14 @@ const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
     await db.insert(farmLocation).values({ farmId });
     await db.insert(farmCertificate).values({ farmId });
     await db.insert(farmInfoInternalApplication).values({ farmId });
+    await db.insert(farmSubscription).values({
+      farmId,
+      status: 'active',
+      amount: 200000,
+      currency: 'usd',
+      billingInterval: 'month',
+      billingIntervalCount: 1,
+    });
 
     const testUserEmail = 'testtest@example.com';
     const mockSubmitToGoogleSheets = vi.fn();

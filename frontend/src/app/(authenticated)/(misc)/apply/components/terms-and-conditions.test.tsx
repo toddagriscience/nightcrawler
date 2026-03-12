@@ -21,6 +21,7 @@ const mockContextValue = {
   allUsers: [] as UserSelect[],
   currentUser: {} as UserSelect,
   internalApplication: {} as FarmInfoInternalApplicationSelect,
+  farmSubscription: { status: 'active' } as any,
   invitedUserVerificationStatus: [] as VerificationStatus[],
   setCurrentTab: () => {},
   canSubmitApplication: true,

@@ -145,7 +145,7 @@ export default function GeneralBusinessInformation() {
           <Certifications />
 
           <SubmitButton
-            buttonText="SAVE AND NEXT"
+            buttonText="Save & next"
             reactHookFormPending={isSubmitting}
           ></SubmitButton>
         </form>

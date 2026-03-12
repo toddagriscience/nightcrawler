@@ -78,7 +78,7 @@ export default function Farm() {
             className="mt-6 flex max-w-3xl flex-col gap-6"
             onSubmit={() => {
               handleSubmit(save)();
-              setCurrentTab('terms');
+              setCurrentTab('subscription');
               scrollTo(0, 0);
             }}
             onChange={onChangeHelper}
@@ -448,7 +448,7 @@ export default function Farm() {
 
             <SubmitButton
               reactHookFormPending={isSubmitting}
-              buttonText="SAVE AND NEXT"
+              buttonText="Save and next"
             />
           </form>
         </FormProvider>

@@ -1,14 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
+  boolean,
   date,
+  integer,
   pgTable,
   point,
   serial,
   timestamp,
   varchar,
-  integer,
-  boolean,
 } from 'drizzle-orm/pg-core';
 
 /** The "top" table. A given client's core information. "Client" may refer to the owner of a given business involved with Todd Agriscience or a representative. */
@@ -25,6 +25,8 @@ export const farm = pgTable('farm', {
   managementStartDate: date(),
   /** Is this farm approved? If it is, assume that billing is active. This is handled manually at the moment. */
   approved: boolean('approved').default(false),
+  /** The Stripe customer ID associated with this farm's billing account */
+  stripeCustomerId: varchar({ length: 255 }),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

@@ -1,0 +1,1 @@
+ALTER TABLE "farm" ADD COLUMN "stripe_customer_id" varchar(255);
