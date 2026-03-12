@@ -8,7 +8,7 @@ import { Link } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -76,16 +76,22 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const pathname = usePathname() || '/en';
+  const [langOpen, setLangOpen] = useState(false);
+  const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 
   const handleLocaleChange = (newLocale: string) => {
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    const newPath = segments.join('/') || `/${newLocale}`;
     setLangOpen(false);
-    window.location.href = newPath;
+    setPendingLocale(newLocale);
   };
-  const [langOpen, setLangOpen] = useState(false);
+
+  useEffect(() => {
+    if (!pendingLocale) return;
+    document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
+    const segments = pathname.split('/');
+    segments[1] = pendingLocale;
+    const newPath = segments.join('/') || `/${pendingLocale}`;
+    window.location.assign(newPath);
+  }, [pendingLocale, pathname]);
 
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
