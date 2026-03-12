@@ -77,3 +77,6 @@ jobs:
           echo "Drizzle push failed against cloned staging data."
           echo "Manual review is required before merging this pull request."
           exit 1
+
+      - name: Push to staging if successful
+        run: bunx drizzle-kit migrate --config=drizzle-staging.config.ts
