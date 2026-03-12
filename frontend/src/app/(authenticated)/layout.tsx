@@ -1,6 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthErrorTrigger from '@/app/(authenticated)/components/auth-error-trigger';
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
@@ -22,7 +21,7 @@ export default function AuthenticatedLayout({
       <body className={fontVariables}>
         <DesktopGate>
           <div className="bg-background-platform authenticated-root min-h-screen">
-            <AuthErrorTrigger>{children}</AuthErrorTrigger>
+            {children}
           </div>
         </DesktopGate>
       </body>
