@@ -5,6 +5,7 @@
 import { Link } from '@/i18n/config';
 import { MenuItem } from '@/lib/types/components';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
 /** Helper component for rendering header items.
@@ -21,6 +22,7 @@ export default function HeaderItems({
   onClickCallback: (arg0: boolean) => void;
   className?: string;
 }) {
+  const locale = useLocale();
   const pathname = usePathname();
   return (
     <div className={`flex gap-0.5 md:gap-8 ${className}`}>
@@ -40,6 +42,7 @@ export default function HeaderItems({
             >
               <Link
                 href={item.href}
+                locale={locale}
                 onClick={() => onClickCallback(false)}
                 className={`rounded-md p-1 text-underline decoration-[0.5px] transition-all duration-300 ease-in-out flex items-center justify-center cursor-pointer ${
                   isActive ? 'text-underline-active' : ''
