@@ -6,6 +6,7 @@ import { FadeIn } from '@/components/common';
 import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import {
   Field,
   FieldGroup,
@@ -93,13 +94,7 @@ export default function Join() {
       <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 mx-auto mt-25 md:mt-15 w-full max-w-[1200px] mx-auto">
           {/* Gradient image */}
-          <div
-            className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
-            style={{
-              backgroundImage:
-                'linear-gradient(90deg, hsl(35deg 39% 55%) 0%, hsl(34deg 38% 58%) 29%, hsl(34deg 37% 60%) 39%, hsl(34deg 36% 62%) 46%, hsl(34deg 36% 64%) 52%, hsl(34deg 35% 66%) 56%, hsl(34deg 34% 68%) 61%, hsl(34deg 34% 70%) 65%, hsl(34deg 34% 71%) 69%, hsl(35deg 33% 73%) 74%, hsl(35deg 33% 75%) 80%,hsl(35deg 32% 76%) 99%)',
-            }}
-          />
+          <MarketingGradientBox />
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <FadeIn>
               <div className="mx-auto flex flex-col justify-start w-full max-w-[280px] sm:max-w-[450px] md:max-w-[500px]">
