@@ -7,6 +7,8 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -72,6 +74,28 @@ const Footer = () => {
 
   const currentYear = new Date().getFullYear();
 
+  const pathname = usePathname() || '/en';
+  const router = useRouter();
+  const parts = pathname.split('/');
+  const currentLocale = parts[1] || 'en';
+
+  const handleLocaleChange = (newLocale: string) => {
+    const segments = pathname.split('/');
+    segments[1] = newLocale; // Replace locale segment
+    const newPath = segments.join('/') || `/${newLocale}`;
+    router.push(newPath);
+    setLangOpen(false);
+  };
+  const [langOpen, setLangOpen] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLangOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
       <div className="flex flex-col md:flex-row">
@@ -91,6 +115,7 @@ const Footer = () => {
                 </Link>
               ))}
             </div>
+
             <div className="flex flex-col gap-4">
               {siteLinks.slice(4, 8).map((val) => (
                 <Link
@@ -109,14 +134,47 @@ const Footer = () => {
       </div>
       <div className="mt-8 flex flex-col gap-10">
         <div className="flex flex-row gap-4">
-          <Image
-            src={'/united_states_flag.svg'}
-            alt=""
-            width={50}
-            height={50}
-            className="h-6 w-6"
-          />
-          <span>{t('location')}</span>
+          <div className="relative inline-flex">
+            <button
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={langOpen}
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex flex-row items-center gap-4 focus:outline-none focus:ring-0"
+              aria-label="Change language"
+            >
+              <Image
+                src="/united_states_flag.svg"
+                alt=""
+                width={50}
+                height={50}
+                className="h-6 w-6"
+              />
+              <span>{t('location')}</span>
+            </button>
+
+            {langOpen && (
+              <div
+                role="menu"
+                className="absolute left-0 bottom-full mb-2 w-full rounded bg-white p-1 text-black shadow-lg"
+              >
+                <button
+                  onClick={() => handleLocaleChange('en')}
+                  className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => handleLocaleChange('es')}
+                  className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Español
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <p>© Todd Agriscience {currentYear}</p>
         <div className="flex flex-col flex-wrap gap-6 items-start md:flex-row">
