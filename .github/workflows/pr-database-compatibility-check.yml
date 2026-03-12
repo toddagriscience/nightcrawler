@@ -1,10 +1,9 @@
 name: PR Database Compatibility Check
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   staging-db-push-dry-run:
