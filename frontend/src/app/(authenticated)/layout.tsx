@@ -7,6 +7,7 @@ import '../globals.css';
 /**
  * Layout for authenticated/platform routes
  * Applies platform background color and includes the authenticated header
+ * Wraps the children in an AuthErrorTrigger to handle testing UI for authentication errors
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The authenticated layout
  */

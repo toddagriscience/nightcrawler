@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { getStripeSubscriptionData } from '@/lib/utils/stripe';
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
 import AccountInfo, {
@@ -8,8 +9,13 @@ import AccountInfo, {
 } from '../components/account-info/account-info';
 import { getAccountFarmData } from '../db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AccountPage() {
-  const accountFarmData = await getAccountFarmData();
+  const [accountFarmData, stripeData] = await Promise.all([
+    getAccountFarmData(),
+    getStripeSubscriptionData(),
+  ]);
   const mailingAddress =
     accountFarmData.location?.address1 + ', ' + accountFarmData.location?.state;
 
@@ -42,12 +48,17 @@ export default async function AccountPage() {
       </div>
 
       <AccountInfoSection title="Account terms">
-        {/** Get this integrated via stripe later :thumbsup: */}
-        <AccountInfoRow label="Renewal" value="Not set" />
-        <AccountInfoRow label="Billing cycle" value="Not set" />
-        <AccountInfoRow label="Next billing date" value="Not set" />
-        <AccountInfoRow label="Next payment" value="Not set" />
-        <AccountInfoRow label="Payment method" value="Not set" />
+        <AccountInfoRow label="Renewal" value={stripeData.renewal} />
+        <AccountInfoRow label="Billing cycle" value={stripeData.billingCycle} />
+        <AccountInfoRow
+          label="Next billing date"
+          value={stripeData.nextBillingDate}
+        />
+        <AccountInfoRow label="Next payment" value={stripeData.nextPayment} />
+        <AccountInfoRow
+          label="Payment method"
+          value={stripeData.paymentMethod}
+        />
         <AccountInfoRow
           label="Client since"
           value={accountFarmData.farm.createdAt.toLocaleString().split(',')[0]}

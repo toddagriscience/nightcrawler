@@ -15,6 +15,20 @@
       "when": 1772419343026,
       "tag": "0001_tricky_satana",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772647120414,
+      "tag": "0002_polite_meggan",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772652027714,
+      "tag": "0003_common_maximus",
+      "breakpoints": true
     }
   ]
 }
