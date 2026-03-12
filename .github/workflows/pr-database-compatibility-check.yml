@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - chore/update-workflow-for-migration-to-staging-database
   workflow_dispatch:
 
 jobs:
