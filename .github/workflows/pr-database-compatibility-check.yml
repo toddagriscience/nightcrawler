@@ -83,12 +83,7 @@ jobs:
 
       - name: Validate PR schema against cloned staging DB
         id: push-check
-        continue-on-error: true
         run: bunx drizzle-kit push --config=drizzle-local.config.ts
 
-      - name: Require manual review on breaking DB changes
-        if: steps.push-check.outcome == 'failure'
-        run: |
-          echo "Drizzle push failed against cloned staging data."
-          echo "Manual review is required before merging this pull request."
-          exit 1
+      - name: Push to staging if successful
+        run: bunx drizzle-kit push --config=drizzle-staging.config.ts
