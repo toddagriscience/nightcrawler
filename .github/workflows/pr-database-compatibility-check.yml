@@ -1,0 +1,80 @@
+name: PR Database Compatibility Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  staging-db-push-dry-run:
+    name: Staging Clone + Drizzle Push Check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nightcrawler_validation
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d nightcrawler_validation"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: ./frontend
+    env:
+      STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
+      STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
+      STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
+      STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+      STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
+      STAGING_DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      LOCAL_DATABASE_HOST: 127.0.0.1
+      LOCAL_DATABASE_PORT: 5432
+      LOCAL_DATABASE_USER: postgres
+      LOCAL_DATABASE_PASSWORD: postgres
+      LOCAL_DATABASE_DATABASE: nightcrawler_validation
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Clone staging DB into local validation DB
+        run: |
+          printf "%s" "$DATABASE_PEM_CERT" > /tmp/staging-db-ca.pem
+          PGPASSWORD="$STAGING_DATABASE_PASSWORD" pg_dump \
+            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            --format=plain \
+            --file=/tmp/staging-db.sql
+          PGPASSWORD="$LOCAL_DATABASE_PASSWORD" psql \
+            "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
+            --file=/tmp/staging-db.sql
+
+      - name: Validate PR schema against cloned staging DB
+        id: push-check
+        continue-on-error: true
+        run: bunx drizzle-kit push --config=drizzle-local.config.ts
+
+      - name: Require manual review on breaking DB changes
+        if: steps.push-check.outcome == 'failure'
+        run: |
+          echo "Drizzle push failed against cloned staging data."
+          echo "Manual review is required before merging this pull request."
+          exit 1
