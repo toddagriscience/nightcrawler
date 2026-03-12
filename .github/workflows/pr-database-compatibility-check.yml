@@ -53,9 +53,8 @@ jobs:
 
       - name: Clone staging DB into local validation DB
         run: |
-          printf "%s" "$DATABASE_PEM_CERT" > /tmp/staging-db-ca.pem
           PGPASSWORD="$STAGING_DATABASE_PASSWORD" pg_dump \
-            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=$DATABASE_PEM_CERT" \
             --clean \
             --if-exists \
             --no-owner \
