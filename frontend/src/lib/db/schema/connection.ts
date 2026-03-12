@@ -15,7 +15,7 @@ const pool =
       ? {
           ca: process.env.DATABASE_PEM_CERT!,
         }
-      : null,
+      : false,
     max: 25,
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 10_000,
