@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - chore/update-workflow-for-migration-to-staging-database
-  workflow_dispatch:
 
 jobs:
   staging-db-push-dry-run:
@@ -85,5 +83,6 @@ jobs:
         id: push-check
         run: bunx drizzle-kit push --config=drizzle-local.config.ts
 
+        # we are using push instead of generate -> migrate because drizzle-kit is scuffed at the moment when it comes to making enums for some reason
       - name: Push to staging if successful
         run: bunx drizzle-kit push --config=drizzle-staging.config.ts
