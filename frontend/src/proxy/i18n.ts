@@ -65,8 +65,8 @@ export function handleI18nMiddleware(
     // For paths without locale (like /who-we-are, /no-page-here),
     // redirect using NEXT_LOCALE cookie if set, else default to en
     const preferredLocale =
-      request.cookies.get('NEXT_LOCALE')?.value ||
-      request.headers.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
+      request.cookies?.get('NEXT_LOCALE')?.value ||
+      request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
       'en';
     const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
       ? preferredLocale
