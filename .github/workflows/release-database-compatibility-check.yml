@@ -1,4 +1,4 @@
-name: Release Database Compatibility Check
+name: Release Database Compatibility Check And Push
 
 on:
   release:

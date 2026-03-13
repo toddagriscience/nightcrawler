@@ -1,4 +1,4 @@
-name: PR Database Compatibility Check
+name: Database Compatibility Check
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
       STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
       STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
       STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
-      STAGING_DATABASE_PEM_CERT: ${{ secrets.STAGING_DATABASE_PEM_CERT }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
       LOCAL_DATABASE_HOST: 127.0.0.1
       LOCAL_DATABASE_PORT: 5432
       LOCAL_DATABASE_USER: postgres
@@ -62,7 +62,7 @@ jobs:
 
       - name: Clone staging DB into local validation DB
         run: |
-          printf '%s' "$STAGING_DATABASE_PEM_CERT" \
+          printf '%s' "$DATABASE_PEM_CERT" \
             | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
             > /tmp/staging-db-ca.pem
           openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
