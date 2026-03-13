@@ -61,24 +61,24 @@ jobs:
       - name: Install dependencies
         run: bun i
 
-      - name: Clone staging DB into local validation DB
+      - name: Clone prod DB into local validation DB
         run: |
           printf '%s' "$DATABASE_PEM_CERT" \
             | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
-            > /tmp/staging-db-ca.pem
-          openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
+            > /tmp/prod-db-ca.pem
+          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
 
           PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
-            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem" \
             --clean \
             --if-exists \
             --no-owner \
             --no-privileges \
             --format=plain \
-            --file=/tmp/staging-db.sql
+            --file=/tmp/prod-db.sql
           PGPASSWORD="$LOCAL_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/psql \
             "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
-            --file=/tmp/staging-db.sql
+            --file=/tmp/prod-db.sql
 
       - name: Validate release schema against cloned production DB
         id: push-check
