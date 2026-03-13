@@ -63,9 +63,7 @@ jobs:
 
       - name: Clone prod DB into local validation DB
         run: |
-          printf '%s' "$DATABASE_PEM_CERT" \
-            | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
-            > /tmp/prod-db-ca.pem
+          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
           openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
 
           PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
