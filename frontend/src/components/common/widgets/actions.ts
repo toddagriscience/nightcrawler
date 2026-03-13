@@ -9,7 +9,10 @@ import { ActionResponse } from '@/lib/types/action-response';
 import { WidgetUpdate } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { LayoutItem } from 'react-grid-layout';
+
+const dashboardPath = '/';
 
 /** Create a new widget for a given management zone.
  *
@@ -45,6 +48,8 @@ export async function createWidget({
       })
       .returning();
 
+    revalidatePath(dashboardPath);
+
     return { data: { widgetId: newWidget.id } };
   } catch (error) {
     logger.error(error);
@@ -64,6 +69,8 @@ export async function deleteWidget(widgetId: number): Promise<ActionResponse> {
     await getAuthenticatedInfo();
 
     await db.delete(widget).where(eq(widget.id, widgetId));
+
+    revalidatePath(dashboardPath);
 
     return { error: null };
   } catch (error) {
@@ -94,6 +101,8 @@ export async function updateWidget(
       .where(
         and(eq(widget.managementZone, managementZoneId), eq(widget.name, name))
       );
+
+    revalidatePath(dashboardPath);
 
     return { error: null };
   } catch (error) {
