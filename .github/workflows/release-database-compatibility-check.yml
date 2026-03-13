@@ -40,6 +40,8 @@ jobs:
       LOCAL_DATABASE_PASSWORD: postgres
       LOCAL_DATABASE_DATABASE: nightcrawler_validation
     steps:
+      - name: Check PEM cert
+        run: echo "${#DATABASE_PEM_CERT}"
       - name: Checkout code
         uses: actions/checkout@v6
 
