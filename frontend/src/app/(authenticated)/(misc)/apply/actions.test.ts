@@ -1,10 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   inviteUserToFarm,
   saveApplication,
+  saveGeneralBusinessInformation,
   submitApplication,
 } from './actions';
 
@@ -40,8 +42,8 @@ vi.mock('@/lib/auth-server', async () => {
   };
 });
 
-const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
-  async () => {
+const { db, mockSubmitToGoogleSheets, testUserEmail, userTable } =
+  await vi.hoisted(async () => {
     // Polyfill for PGlite
     Blob.prototype.arrayBuffer = function () {
       return new Promise((resolve) => {
@@ -108,9 +110,9 @@ const { db, mockSubmitToGoogleSheets, testUserEmail } = await vi.hoisted(
       db,
       mockSubmitToGoogleSheets,
       testUserEmail,
+      userTable: user,
     };
-  }
-);
+  });
 
 vi.mock('@/lib/db/schema/connection', async (importOriginal) => {
   return {
@@ -128,6 +130,13 @@ vi.mock('next/headers', () => {
         ['host', 'localhost:3000'],
       ]),
   };
+});
+
+beforeEach(async () => {
+  await db
+    .update(userTable)
+    .set({ role: 'Admin' })
+    .where(eq(userTable.email, testUserEmail));
 });
 
 describe('saveApplication', () => {
@@ -166,6 +175,47 @@ describe('saveApplication', () => {
     const result = await saveApplication({ farmId: 1 });
     expect(result.error).not.toBeNull();
   });
+
+  it('returns an authorization error for viewers', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    await db
+      .update(userTable)
+      .set({ role: 'Viewer' })
+      .where(eq(userTable.email, testUserEmail));
+
+    const result = await saveApplication({ farmId: 1 });
+
+    expect(result.error).toBe(
+      'You do not have permission to edit farm information'
+    );
+  });
+});
+
+describe('saveGeneralBusinessInformation', () => {
+  it('returns an authorization error for viewers', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    await db
+      .update(userTable)
+      .set({ role: 'Viewer' })
+      .where(eq(userTable.email, testUserEmail));
+
+    const result = await saveGeneralBusinessInformation({
+      farmId: 1,
+      businessName: 'Viewer Farm',
+    });
+
+    expect(result.error).toBe(
+      'You do not have permission to edit farm information'
+    );
+  });
 });
 
 describe('sendApplicationToGoogleSheets', () => {
@@ -189,6 +239,10 @@ describe('sendApplicationToGoogleSheets', () => {
 describe('inviteUserToFarm', () => {
   afterEach(async () => {
     mockInviteUser.mockReset();
+    await db
+      .update(userTable)
+      .set({ role: 'Admin' })
+      .where(eq(userTable.email, testUserEmail));
   });
 
   /** Creates valid UserInsert data that matches the user schema from Drizzle */
@@ -305,5 +359,24 @@ describe('inviteUserToFarm', () => {
     const result = await inviteUserToFarm(userData);
 
     expect(result.error).not.toBeNull();
+  });
+
+  it('returns an authorization error for viewers', async () => {
+    mockGetClaims.mockReturnValue({
+      data: { claims: { email: testUserEmail } },
+      error: null,
+    });
+
+    await db
+      .update(userTable)
+      .set({ role: 'Viewer' })
+      .where(eq(userTable.email, testUserEmail));
+
+    const result = await inviteUserToFarm(createValidUserData());
+
+    expect(result.error).toBe(
+      'You do not have permission to edit farm information'
+    );
+    expect(mockInviteUser).not.toHaveBeenCalled();
   });
 });

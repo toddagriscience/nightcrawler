@@ -101,18 +101,20 @@ export default async function DashboardPage({
         </div>
       }
       addWidgetDropdown={
-        <AddWidgetDropdown
-          managementZoneId={selectedTab.managementZone}
-          availableWidgets={availableWidgets}
-        >
-          <Button
-            size="sm"
-            variant="default"
-            className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+        currentUser.role === 'Admin' ? (
+          <AddWidgetDropdown
+            managementZoneId={selectedTab.managementZone}
+            availableWidgets={availableWidgets}
           >
-            Add widget
-          </Button>
-        </AddWidgetDropdown>
+            <Button
+              size="sm"
+              variant="default"
+              className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+            >
+              Add widget
+            </Button>
+          </AddWidgetDropdown>
+        ) : null
       }
     >
       <PlatformTabContent

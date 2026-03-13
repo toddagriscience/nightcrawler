@@ -8,6 +8,7 @@ import {
   FarmInfoInternalApplicationSelect,
   FarmInfoInternalApplicationInsert,
 } from '@/lib/types/db';
+import { cn } from '@/lib/utils';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
@@ -40,7 +41,7 @@ import { ApplicationContext } from './application-tabs';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm() {
-  const { internalApplication, farmInfo, setCurrentTab } =
+  const { internalApplication, farmInfo, setCurrentTab, canEditFarm } =
     useContext(ApplicationContext);
   const defaultValues = {
     ...internalApplication,
@@ -59,10 +60,18 @@ export default function Farm() {
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
 
   async function save(formData: FarmInfoInternalApplicationInsert) {
+    if (!canEditFarm) {
+      return;
+    }
+
     await saveApplication(formData);
   }
 
   async function onChangeHelper() {
+    if (!canEditFarm) {
+      return;
+    }
+
     const delay = 5 * 1000;
     if (new Date().getTime() - lastSaved.getTime() > delay) {
       handleSubmit(save)();
@@ -75,7 +84,10 @@ export default function Farm() {
       <div>
         <FormProvider {...methods}>
           <form
-            className="mt-6 flex max-w-3xl flex-col gap-6"
+            className={cn(
+              'mt-6 flex max-w-3xl flex-col gap-6',
+              !canEditFarm && 'pointer-events-none opacity-70'
+            )}
             onSubmit={() => {
               handleSubmit(save)();
               setCurrentTab('subscription');
@@ -83,6 +95,11 @@ export default function Farm() {
             }}
             onChange={onChangeHelper}
           >
+            {!canEditFarm && (
+              <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+                Viewers can review this section but cannot edit it.
+              </p>
+            )}
             <h2 className="text-lg font-semibold">General Farm Information</h2>
             <FieldSet className="mx-auto mb-8 flex flex-col gap-6">
               <Field>
@@ -446,10 +463,12 @@ export default function Farm() {
               <ProductDifferentiation />
             </FieldSet>
 
-            <SubmitButton
-              reactHookFormPending={isSubmitting}
-              buttonText="Save and next"
-            />
+            {canEditFarm && (
+              <SubmitButton
+                reactHookFormPending={isSubmitting}
+                buttonText="Save and next"
+              />
+            )}
           </form>
         </FormProvider>
       </div>

@@ -10,7 +10,8 @@ import { createStripeSubscriptionCheckoutSession } from '../actions';
 
 /** The 4th tab in the application page for starting the Stripe Platform License. */
 export default function Subscription() {
-  const { farmSubscription, setCurrentTab } = useContext(ApplicationContext);
+  const { farmSubscription, setCurrentTab, canEditFarm } =
+    useContext(ApplicationContext);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -40,6 +41,12 @@ export default function Subscription() {
 
   return (
     <div className="mt-6 flex max-w-3xl flex-col gap-6">
+      {!canEditFarm && (
+        <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+          Your account is read only. Only administrators can manage the Platform
+          License.
+        </p>
+      )}
       <div>
         <h2 className="text-lg font-semibold">
           Activate Your Todd Partnership
@@ -77,7 +84,7 @@ export default function Subscription() {
           type="button"
           className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
           onClick={beginStripeCheckout}
-          disabled={isLoading || hasActiveSubscription}
+          disabled={!canEditFarm || isLoading || hasActiveSubscription}
         >
           {hasActiveSubscription
             ? 'Platform License Active'

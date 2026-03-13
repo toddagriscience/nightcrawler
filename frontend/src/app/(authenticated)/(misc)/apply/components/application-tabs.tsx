@@ -32,6 +32,7 @@ export const ApplicationContext = createContext({
   invitedUserVerificationStatus: [{} as VerificationStatus],
   setCurrentTab: (_tab: TabTypes) => {},
   canSubmitApplication: false,
+  canEditFarm: false,
 });
 
 /** The tabs for the application */
@@ -56,6 +57,7 @@ export default function ApplicationTabs({
   const hasActiveSubscription = ['active', 'trialing'].includes(
     farmSubscription?.status ?? ''
   );
+  const canEditFarm = currentUser.role === 'Admin';
 
   useEffect(() => {
     async function helper() {
@@ -77,9 +79,16 @@ export default function ApplicationTabs({
         invitedUserVerificationStatus,
         setCurrentTab,
         canSubmitApplication,
+        canEditFarm,
       }}
     >
       <Tabs defaultValue="general" value={currentTab}>
+        {!canEditFarm && (
+          <p className="mt-6 rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+            Your account is read only. Only administrators can edit farm
+            information or submit the application.
+          </p>
+        )}
         <TabsList className="flex h-auto flex-wrap items-center justify-start gap-3 bg-transparent max-md:mt-6">
           <TabsTrigger onClick={() => setCurrentTab('general')} value="general">
             General Business Information
