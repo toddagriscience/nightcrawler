@@ -61,13 +61,28 @@ jobs:
       - name: Install dependencies
         run: bun i
 
-      - name: Clone production DB into local validation DB
+      - name: Normalize production DB certificate
         run: |
-          printf '%s' "$DATABASE_PEM_CERT" \
-            | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
-            > /tmp/prod-db-ca.pem
+          RAW_CERT="$DATABASE_PEM_CERT"
+
+          if printf '%s' "$RAW_CERT" | grep -q "BEGIN CERTIFICATE"; then
+            CERT_PEM="$(printf '%s' "$RAW_CERT" \
+              | sed -e "1s/^['\"]//" -e "\$s/['\"]$//" -e 's/\\n/\n/g' -e 's/\r$//')"
+          else
+            CERT_PEM="$(printf '%s' "$RAW_CERT" | tr -d '\r\n' | base64 --decode)"
+          fi
+
+          if ! printf '%s' "$CERT_PEM" | grep -q "BEGIN CERTIFICATE"; then
+            echo "DATABASE_PEM_CERT is not a valid PEM certificate value."
+            exit 1
+          fi
+
+          printf '%s\n' "$CERT_PEM" > /tmp/prod-db-ca.pem
+          printf 'DATABASE_PEM_CERT<<EOF\n%s\nEOF\n' "$CERT_PEM" >> "$GITHUB_ENV"
           openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
 
+      - name: Clone production DB into local validation DB
+        run: |
           PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
             "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem" \
             --clean \
