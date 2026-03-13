@@ -1,14 +1,14 @@
-name: Database Compatibility Check
+name: Release Database Compatibility Check And Push
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - created
   workflow_dispatch: 
 
 jobs:
-  staging-db-push-dry-run:
-    name: Staging Clone + Drizzle Push Check
+  production-db-release-push:
+    name: Production Drizzle Push Check
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -28,11 +28,11 @@ jobs:
       run:
         working-directory: ./frontend
     env:
-      STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
-      STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
-      STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
-      STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
-      STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
+      PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
+      PROD_DATABASE_PORT: ${{ secrets.PROD_DATABASE_PORT }}
+      PROD_DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
+      PROD_DATABASE_PASSWORD: ${{ secrets.PROD_DATABASE_PASSWORD }}
+      PROD_DATABASE_DATABASE: ${{ secrets.PROD_DATABASE_DATABASE }}
       DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
       LOCAL_DATABASE_HOST: 127.0.0.1
       LOCAL_DATABASE_PORT: 5432
@@ -61,29 +61,26 @@ jobs:
       - name: Install dependencies
         run: bun i
 
-      - name: Clone staging DB into local validation DB
+      - name: Clone prod DB into local validation DB
         run: |
-          printf '%s' "$DATABASE_PEM_CERT" \
-            | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
-            > /tmp/staging-db-ca.pem
-          openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
+          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
+          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
 
-          PGPASSWORD="$STAGING_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
-            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
+            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem" \
             --clean \
             --if-exists \
             --no-owner \
             --no-privileges \
             --format=plain \
-            --file=/tmp/staging-db.sql
+            --file=/tmp/prod-db.sql
           PGPASSWORD="$LOCAL_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/psql \
             "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
-            --file=/tmp/staging-db.sql
+            --file=/tmp/prod-db.sql
 
-      - name: Validate PR schema against cloned staging DB
+      - name: Validate release schema against cloned production DB
         id: push-check
         run: bunx drizzle-kit push --config=drizzle-local.config.ts
 
-        # we are using push instead of generate -> migrate because drizzle-kit is scuffed at the moment when it comes to making enums for some reason
-      - name: Push to staging if successful
-        run: bunx drizzle-kit push --config=drizzle-staging.config.ts
+      - name: Push to production
+        run: bunx drizzle-kit push --config=drizzle-prod.config.ts
