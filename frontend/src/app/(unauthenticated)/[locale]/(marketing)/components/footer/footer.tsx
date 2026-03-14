@@ -139,7 +139,7 @@ const Footer = () => {
               aria-haspopup="menu"
               aria-expanded={langOpen}
               onClick={() => setLangOpen(!langOpen)}
-              className="flex flex-row items-center gap-4 focus:outline-none focus:ring-0"
+              className="flex flex-row items-center gap-4 cursor-pointer focus:outline-none focus:ring-0"
               aria-label="Change language"
             >
               <Image
@@ -166,14 +166,14 @@ const Footer = () => {
                 >
                   <button
                     onClick={() => handleLocaleChange('en')}
-                    className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                    className="block w-full px-3 py-2 text-left text-sm cursor-pointer hover:bg-gray-100"
                     role="menuitem"
                   >
                     English
                   </button>
                   <button
                     onClick={() => handleLocaleChange('es')}
-                    className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                    className="block w-full px-3 py-2 text-left text-sm cursor-pointer hover:bg-gray-100"
                     role="menuitem"
                   >
                     Español
