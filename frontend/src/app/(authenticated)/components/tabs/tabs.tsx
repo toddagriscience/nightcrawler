@@ -18,6 +18,7 @@ import updateTabName, {
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
 import { getTabHash } from './utils';
+import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 
 const maxTabs = 8;
 
@@ -42,6 +43,7 @@ export default function PlatformTabs({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [curTab, setCurTab] = useState(selectedTabHash);
+  const canEditFarm = currentUser.role === 'Admin';
 
   /** Sets the current tab */
   function setTab(nextTabHash: string) {
@@ -102,11 +104,11 @@ export default function PlatformTabs({
   return (
     <Tabs value={curTab} className="h-[calc(100vh-5rem)]">
       <header
-        className="w-full flex flex-row justify-between px-3 max-w-540 pt-3 items-center"
+        className="flex w-full max-w-540 flex-row items-center justify-between px-3 pt-3"
         role="banner"
       >
-        <ToddHeader className="flex flex-row items-center scale-90" />
-        <TabsList className="flex flex-row flex-nowrap justify-start gap-0 bg-gradient-to-r from-[#D9D9D9]/10 to-[#D9D9D9]/0 mr-auto ml-2 h-9">
+        <ToddHeader className="flex scale-90 flex-row items-center" />
+        <TabsList className="mr-auto ml-2 flex h-9 flex-row flex-nowrap justify-start gap-0 bg-gradient-to-r from-[#D9D9D9]/10 to-[#D9D9D9]/0">
           {currentTabs.map((tab, index) => (
             <TabsTrigger
               className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-3 py-1.5 data-[state=active]:bg-[#D9D9D9]/32"
@@ -118,38 +120,41 @@ export default function PlatformTabs({
               }}
             >
               <input
-                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none text-center"
+                className="pointer-events-none max-w-25 cursor-pointer truncate text-center group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
+                data-readonly={!canEditFarm}
+                readOnly={!canEditFarm}
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
               />
-              {currentTabs.length !== 1 && (
+              {canEditFarm && currentTabs.length !== 1 && (
                 <div>
                   {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
                   <div
                     aria-roledescription="Close the current tab"
                     role="button"
                     onClick={() => deleteTab(tab)}
-                    className="h-min p-0 hover:bg-foreground/10 rounded-sm mr-[-10px] hidden group-hover:block"
+                    className="hover:bg-foreground/10 mr-[-10px] hidden h-min rounded-sm p-0 group-hover:block"
                   >
-                    <BiX className="size-5 text-foreground/40 hover:text-foreground/60" />
+                    <BiX className="text-foreground/40 hover:text-foreground/60 size-5" />
                   </div>
                 </div>
               )}
             </TabsTrigger>
           ))}
-          {currentTabs.length <= maxTabs && (
+          {canEditFarm && currentTabs.length <= maxTabs && (
             <NewTabDropdown
               managementZones={managementZones}
               addTab={createTab}
             >
-              <Button className="ml-3 cursor-pointer border-none focus-visible:ring-0! focus-visible:ring-offset-0! p-0.5 h-fit w-fit leading-none [&_svg]:size-[22px] hover:bg-[#D9D9D9]/32 hover:shadow-sm rounded-sm ">
+              <Button className="ml-3 h-fit w-fit cursor-pointer rounded-sm border-none p-0.5 leading-none hover:bg-[#D9D9D9]/32 hover:shadow-sm focus-visible:ring-0! focus-visible:ring-offset-0! [&_svg]:size-[22px]">
                 <BiPlus className="text-[#A09C9D]" />
               </Button>
             </NewTabDropdown>
           )}
         </TabsList>
-        <div className="flex-row flex gap-6 border-none">
+        <div className="flex flex-row items-center gap-6 border-none">
+          {currentUser.approved ? <SearchNavForm /> : null}
           {addWidgetDropdown}
           {header}
         </div>

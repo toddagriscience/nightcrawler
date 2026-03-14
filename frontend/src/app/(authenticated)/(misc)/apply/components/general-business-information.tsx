@@ -13,15 +13,16 @@ import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import { useForm, FormProvider } from 'react-hook-form';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { FadeIn } from '@/components/common';
 import { saveGeneralBusinessInformation } from '../actions';
 import { Address, Certifications } from './general-business-information/index';
 import { useState, useContext } from 'react';
 import { ApplicationContext } from './application-tabs';
+import { cn } from '@/lib/utils';
 
 /** The 1st tab in the application page for general business information */
 export default function GeneralBusinessInformation() {
-  const { farmInfo, setCurrentTab } = useContext(ApplicationContext);
+  const { farmInfo, setCurrentTab, canEditFarm } =
+    useContext(ApplicationContext);
   const defaultValues = farmInfo;
   const methods = useForm<GeneralBusinessInformationInsert>({
     defaultValues: defaultValues ?? {},
@@ -36,10 +37,18 @@ export default function GeneralBusinessInformation() {
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
 
   async function save(formData: GeneralBusinessInformationInsert) {
+    if (!canEditFarm) {
+      return;
+    }
+
     await saveGeneralBusinessInformation(formData);
   }
 
   async function onChangeHelper() {
+    if (!canEditFarm) {
+      return;
+    }
+
     const delay = 5 * 1000;
     if (new Date().getTime() - lastSaved.getTime() > delay) {
       handleSubmit(save)();
@@ -51,7 +60,10 @@ export default function GeneralBusinessInformation() {
     <div className="mt-6">
       <FormProvider {...methods}>
         <form
-          className="mt-6 flex max-w-3xl flex-col gap-6"
+          className={cn(
+            'mt-6 flex max-w-3xl flex-col gap-6',
+            !canEditFarm && 'pointer-events-none opacity-70'
+          )}
           onSubmit={() => {
             handleSubmit(save)();
             setCurrentTab('colleagues');
@@ -59,6 +71,11 @@ export default function GeneralBusinessInformation() {
           }}
           onChange={onChangeHelper}
         >
+          {!canEditFarm && (
+            <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+              Viewers can review this section but cannot edit it.
+            </p>
+          )}
           <h2 className="text-lg font-semibold">Business Information</h2>
           <FieldSet className="flex flex-col gap-6">
             <Field>
@@ -144,10 +161,12 @@ export default function GeneralBusinessInformation() {
 
           <Certifications />
 
-          <SubmitButton
-            buttonText="Save & next"
-            reactHookFormPending={isSubmitting}
-          ></SubmitButton>
+          {canEditFarm && (
+            <SubmitButton
+              buttonText="Save & next"
+              reactHookFormPending={isSubmitting}
+            ></SubmitButton>
+          )}
         </form>
       </FormProvider>
     </div>

@@ -40,9 +40,16 @@ export default async function ManagementZonePage({
   return (
     <AccountInfo
       title={curManagementZone.name ?? 'Unnamed zone'}
-      description="Edit management zone details."
+      description={
+        currentUser.role === 'Admin'
+          ? 'Edit management zone details.'
+          : 'View management zone details.'
+      }
     >
-      <ManagementZoneForm zone={curManagementZone} />
+      <ManagementZoneForm
+        zone={curManagementZone}
+        canEdit={currentUser.role === 'Admin'}
+      />
     </AccountInfo>
   );
 }

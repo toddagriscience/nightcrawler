@@ -18,8 +18,10 @@ import { updateManagementZone } from './actions';
 
 export default function ManagementZoneForm({
   zone,
+  canEdit,
 }: {
   zone: ManagementZoneSelect;
+  canEdit: boolean;
 }) {
   const {
     register,
@@ -50,6 +52,12 @@ export default function ManagementZoneForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {!canEdit && (
+        <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+          Your account is read only. Only administrators can edit management
+          zone details.
+        </p>
+      )}
       <div>
         <Label
           htmlFor="name"
@@ -60,6 +68,7 @@ export default function ManagementZoneForm({
         <Input
           className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
           id="name"
+          disabled={!canEdit}
           {...register('name')}
         />
       </div>
@@ -77,6 +86,7 @@ export default function ManagementZoneForm({
             id="latitude"
             type="number"
             step="any"
+            disabled={!canEdit}
             {...register('location.0')}
           />
         </div>
@@ -92,6 +102,7 @@ export default function ManagementZoneForm({
             id="longitude"
             type="number"
             step="any"
+            disabled={!canEdit}
             {...register('location.1')}
           />
         </div>
@@ -109,6 +120,7 @@ export default function ManagementZoneForm({
             className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
             id="rotationYear"
             type="date"
+            disabled={!canEdit}
             {...register('rotationYear', { valueAsDate: true })}
             defaultValue={zone.rotationYear?.toISOString().split('T')[0]}
           />
@@ -124,6 +136,7 @@ export default function ManagementZoneForm({
             className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
             id="npkLastUsed"
             type="date"
+            disabled={!canEdit}
             {...register('npkLastUsed', {
               valueAsDate: true,
             })}
@@ -137,34 +150,46 @@ export default function ManagementZoneForm({
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="npk"
         >
-          <Checkbox id="npk" {...register('npk')} />
+          <Checkbox id="npk" disabled={!canEdit} {...register('npk')} />
           NPK in use
         </Label>
         <Label
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="irrigation"
         >
-          <Checkbox id="irrigation" {...register('irrigation')} />
+          <Checkbox
+            id="irrigation"
+            disabled={!canEdit}
+            {...register('irrigation')}
+          />
           Irrigation
         </Label>
         <Label
           className="flex items-center gap-2 text-sm leading-tight"
           htmlFor="waterConservation"
         >
-          <Checkbox id="waterConservation" {...register('waterConservation')} />
+          <Checkbox
+            id="waterConservation"
+            disabled={!canEdit}
+            {...register('waterConservation')}
+          />
           Water conservation
         </Label>
       </div>
 
       <div className="flex w-full flex-row items-center justify-between mt-12">
-        <Button
-          variant="brand"
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-full h-11 w-[144px] disabled:opacity-50"
-        >
-          {isSubmitting ? 'Saving...' : 'Save'}
-        </Button>
+        {canEdit ? (
+          <Button
+            variant="brand"
+            type="submit"
+            disabled={isSubmitting}
+            className="rounded-full h-11 w-[144px] disabled:opacity-50"
+          >
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        ) : (
+          <div />
+        )}
         <div className="flex flex-row items-center gap-4">
           {errors.root && errors.root.message && (
             <div className="space-y-1">

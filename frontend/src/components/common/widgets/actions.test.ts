@@ -15,6 +15,7 @@ const {
   mockInsertReturning,
   mockInsertValues,
   mockLoggerError,
+  mockLoggerWarn,
   mockRevalidatePath,
   mockUpdate,
   mockUpdateSet,
@@ -49,6 +50,7 @@ const {
     mockInsertReturning,
     mockInsertValues,
     mockLoggerError: vi.fn(),
+    mockLoggerWarn: vi.fn(),
     mockRevalidatePath: vi.fn(),
     mockUpdate,
     mockUpdateSet,
@@ -75,6 +77,7 @@ vi.mock('next/cache', () => ({
 vi.mock('@/lib/logger', () => ({
   default: {
     error: mockLoggerError,
+    warn: mockLoggerWarn,
   },
 }));
 
@@ -84,6 +87,7 @@ describe('widgets actions', () => {
     mockGetAuthenticatedInfo.mockResolvedValue({
       id: 1,
       farmId: 1,
+      role: 'Admin',
     });
     mockInsertReturning.mockResolvedValue([{ id: 123 }]);
     mockDeleteWhere.mockResolvedValue(undefined);

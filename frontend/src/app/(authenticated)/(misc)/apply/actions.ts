@@ -24,6 +24,7 @@ import {
   FarmLocationInsert,
   UserInsert,
 } from '@/lib/types/db';
+import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import {
   farmInfoInternalApplicationInsertSchema,
@@ -48,12 +49,14 @@ export async function saveGeneralBusinessInformation(
   formData: GeneralBusinessInformationInsert
 ) {
   try {
-    const result = await getAuthenticatedInfo();
-    const farmId = result.farmId;
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
 
     if (!farmId) {
       return { error: 'User is not associated with a farm' };
     }
+
+    assertCanEditFarm(currentUser, 'save-general-business-information');
 
     const validated = generalBusinessInformationInsertSchema.safeParse({
       ...formData,
@@ -137,12 +140,14 @@ export async function saveApplication(
   formData: FarmInfoInternalApplicationInsert
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo();
-    const farmId = result.farmId;
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
 
     if (!farmId) {
       return { error: 'User is not associated with a farm' };
     }
+
+    assertCanEditFarm(currentUser, 'save-application');
 
     const validated = farmInfoInternalApplicationInsertSchema
       .omit({
@@ -200,6 +205,8 @@ export async function submitApplication(): Promise<ActionResponse> {
       return { error: 'User is not associated with a farm' };
     }
 
+    assertCanEditFarm(result, 'submit-application');
+
     const canSubmit = await isApplicationReadyForSubmission(farmId);
     if (!canSubmit) {
       return {
@@ -235,6 +242,11 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
     const stripe = getStripeClient();
     const currentUser = await getAuthenticatedInfo();
     const farmId = currentUser.farmId;
+
+    assertCanEditFarm(
+      currentUser,
+      'create-stripe-subscription-checkout-session'
+    );
 
     const [currentFarm] = await db
       .select({
@@ -344,12 +356,14 @@ export async function inviteUserToFarm(
   formData: UserInsert
 ): Promise<ActionResponse> {
   try {
-    const result = await getAuthenticatedInfo();
-    const farmId = result.farmId;
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
 
     if (!farmId) {
       return { error: 'User is not associated with a farm' };
     }
+
+    assertCanEditFarm(currentUser, 'invite-user-to-farm');
 
     // Multiple admins aren't allowed
     const [doesAdminExist] = await db
