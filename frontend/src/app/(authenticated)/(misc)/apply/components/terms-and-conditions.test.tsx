@@ -25,12 +25,13 @@ const mockContextValue = {
   invitedUserVerificationStatus: [] as VerificationStatus[],
   setCurrentTab: () => {},
   canSubmitApplication: true,
+  canEditFarm: true,
 };
 
 /** Renders the component inside ApplicationContext. Provider for tests. */
-function renderWithContext() {
+function renderWithContext(overrides: Partial<typeof mockContextValue> = {}) {
   return render(
-    <ApplicationContext.Provider value={mockContextValue}>
+    <ApplicationContext.Provider value={{ ...mockContextValue, ...overrides }}>
       <TermsAndConditions />
     </ApplicationContext.Provider>
   );
@@ -99,5 +100,16 @@ describe('TermsAndConditions', () => {
     expect(
       screen.queryByText('There was an error submitting your application.')
     ).not.toBeInTheDocument();
+  });
+
+  it('disables submission for read-only users', () => {
+    renderWithContext({ canEditFarm: false });
+
+    expect(
+      screen.getByText(
+        'Your account is read only. Only administrators can submit the application.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /AGREE/i })).toBeDisabled();
   });
 });

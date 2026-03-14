@@ -13,11 +13,13 @@ export default function InvitedUser({
   isVerified,
   invitedUser,
   isCurrentUser = false,
+  canEditFarm,
   onUninvited,
 }: {
   isVerified: boolean;
   invitedUser: UserSelect;
   isCurrentUser?: boolean;
+  canEditFarm: boolean;
   onUninvited?: (userId: number) => void;
 }) {
   const [isResendActive, setIsResendActive] = useState(true);
@@ -60,7 +62,7 @@ export default function InvitedUser({
           >
             {isVerified ? 'Verified' : 'Not verified'}
           </span>
-          {!isVerified && (
+          {canEditFarm && !isVerified && (
             <Button
               onClick={handleResend}
               className="hover:cursor-pointer"
@@ -71,7 +73,7 @@ export default function InvitedUser({
               />
             </Button>
           )}
-          {!isCurrentUser && (
+          {canEditFarm && !isCurrentUser && (
             <Button
               onClick={handleUninvite}
               className="hover:cursor-pointer"

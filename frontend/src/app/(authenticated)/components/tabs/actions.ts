@@ -5,6 +5,7 @@
 import { managementZone, tab } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
+import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
 
@@ -31,6 +32,8 @@ export default async function updateTabName({
     if (!farmId) {
       return { error: 'User is not associated with a farm' };
     }
+
+    assertCanEditFarm(result, 'update-tab-name');
 
     if (oldName) {
       await db
@@ -87,6 +90,8 @@ export async function deleteTab({
       return { error: 'User is not associated with a farm' };
     }
 
+    assertCanEditFarm(result, 'delete-tab');
+
     if (!name && !tabId) {
       return { error: 'Please provide either oldName or tabId' };
     }
@@ -125,6 +130,8 @@ export async function createTab(
   try {
     const result = await getAuthenticatedInfo();
     const userId = result.id;
+
+    assertCanEditFarm(result, 'create-tab');
 
     // Check to see if user has the max tabs saved
     const currentTabs = await db

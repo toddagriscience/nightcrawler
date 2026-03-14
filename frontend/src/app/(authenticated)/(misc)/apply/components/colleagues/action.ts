@@ -6,6 +6,7 @@ import { deleteAuthUserByEmail, resendEmailInvite } from '@/lib/auth-server';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
+import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
 
@@ -13,6 +14,7 @@ import { and, eq } from 'drizzle-orm';
 export async function updateRole(): Promise<ActionResponse> {
   try {
     const result = await getAuthenticatedInfo();
+    assertCanEditFarm(result, 'update-role');
     const newRole = result.role === 'Admin' ? 'Viewer' : 'Admin';
 
     await db.update(user).set({ role: newRole }).where(eq(user.id, result.id));
@@ -34,7 +36,8 @@ export async function resendVerificationEmail(
   email: string
 ): Promise<ActionResponse> {
   try {
-    await getAuthenticatedInfo();
+    const currentUser = await getAuthenticatedInfo();
+    assertCanEditFarm(currentUser, 'resend-verification-email');
 
     await resendEmailInvite(email);
 
@@ -56,6 +59,7 @@ export async function resendVerificationEmail(
 export async function uninviteUser(userId: number): Promise<ActionResponse> {
   try {
     const currentUser = await getAuthenticatedInfo();
+    assertCanEditFarm(currentUser, 'uninvite-user');
 
     const [targetUser] = await db
       .select()

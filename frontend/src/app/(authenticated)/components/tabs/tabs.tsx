@@ -42,6 +42,7 @@ export default function PlatformTabs({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [curTab, setCurTab] = useState(selectedTabHash);
+  const canEditFarm = currentUser.role === 'Admin';
 
   /** Sets the current tab */
   function setTab(nextTabHash: string) {
@@ -118,12 +119,14 @@ export default function PlatformTabs({
               }}
             >
               <input
-                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none text-center"
+                className="max-w-25 truncate text-center focus:ring-0 focus:outline-none data-[readonly=true]:cursor-default"
                 defaultValue={tab.name || `Untitled Zone ${index}`}
+                data-readonly={!canEditFarm}
+                readOnly={!canEditFarm}
                 onChange={(e) => updateTab(e.target.value, tab.id)}
                 onBlur={(e) => (e.target.scrollLeft = 0)}
               />
-              {currentTabs.length !== 1 && (
+              {canEditFarm && currentTabs.length !== 1 && (
                 <div>
                   {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
                   <div
@@ -138,7 +141,7 @@ export default function PlatformTabs({
               )}
             </TabsTrigger>
           ))}
-          {currentTabs.length <= maxTabs && (
+          {canEditFarm && currentTabs.length <= maxTabs && (
             <NewTabDropdown
               managementZones={managementZones}
               addTab={createTab}
@@ -150,6 +153,9 @@ export default function PlatformTabs({
           )}
         </TabsList>
         <div className="flex-row flex gap-6 border-none">
+          {!canEditFarm && (
+            <p className="text-sm text-muted-foreground">Read only</p>
+          )}
           {addWidgetDropdown}
           {header}
         </div>
