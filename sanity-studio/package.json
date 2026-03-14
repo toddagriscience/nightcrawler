@@ -14,6 +14,10 @@
   "keywords": [
     "sanity"
   ],
+  "overrides": {
+    "flatted": "^3.4.0",
+    "undici": "^7.24.0"
+  },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/vision": "^5.1.0",

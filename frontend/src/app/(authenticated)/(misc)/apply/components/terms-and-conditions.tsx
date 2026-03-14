@@ -26,7 +26,7 @@ const waitTime = 5000;
 
 /** Terms and conditions page */
 export default function TermsAndConditions() {
-  const { canSubmitApplication, farmSubscription, setCurrentTab } =
+  const { canSubmitApplication, farmSubscription, setCurrentTab, canEditFarm } =
     useContext(ApplicationContext);
   const { handleSubmit } = useForm();
   const [finalSubmitDisabled, setFinalSubmitDisabled] = useState(true);
@@ -78,6 +78,12 @@ export default function TermsAndConditions() {
         </p>
       )}
       <div className="mt-12 mb-6 flex w-full max-w-300 flex-col gap-4 font-light">
+        {!canEditFarm && (
+          <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+            Your account is read only. Only administrators can submit the
+            application.
+          </p>
+        )}
         <h2 className="text-xl font-medium">
           Electronic Delivery of Documents
         </h2>
@@ -183,9 +189,9 @@ export default function TermsAndConditions() {
           <Button
             type="button"
             className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
-            disabled={!canSubmitApplication}
+            disabled={!canEditFarm || !canSubmitApplication}
             onClick={() => {
-              if (!canSubmitApplication) {
+              if (!canEditFarm || !canSubmitApplication) {
                 return;
               }
               setTimeout(() => setFinalSubmitDisabled(false), waitTime);

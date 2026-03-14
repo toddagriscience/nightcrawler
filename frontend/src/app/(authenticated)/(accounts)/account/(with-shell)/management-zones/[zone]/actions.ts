@@ -7,6 +7,7 @@ import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import type { ManagementZoneInsert } from '@/lib/types/db';
+import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -25,6 +26,8 @@ export async function updateManagementZone(
     if (!currentUser.farmId) {
       return { error: 'User is not associated with a farm' };
     }
+
+    assertCanEditFarm(currentUser, 'update-management-zone');
 
     await db
       .update(managementZone)
