@@ -53,6 +53,19 @@ We use a plugin that helps catch/find strings that might be secrets or credentia
 ### Miscellaneous
 
 - `bun run generate-icons` - Runs a script to generate PWA icons
+- `bun run db:local:up` - Start local Postgres 18 via Docker Compose
+- `bun run db:local:migrate` - Apply Drizzle migrations to local Postgres
+- `bun run db:local:seed` - Seed local Postgres with starter data
+- `bun run db:local:init` - Start local Postgres, migrate, then seed
+- `bun run db:local:down` - Stop and remove local Docker Compose services
+
+### Local Database (Postgres 18)
+
+This project includes a local database in [`docker-compose.yml`](./docker-compose.yml) using Postgres 18 (`pgvector/pgvector:pg18`).
+
+1. Copy env vars from `env.example` and ensure `LOCAL_DATABASE_*` values match your desired local DB.
+2. Run `bun run db:local:init` to start Postgres, apply migrations, and seed starter rows.
+3. Run `bun run db:local:down` when done.
 
 ## Tech Stack & Dependencies
 

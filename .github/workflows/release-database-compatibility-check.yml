@@ -1,0 +1,86 @@
+name: Release Database Compatibility Check And Push
+
+on:
+  release:
+    types:
+      - created
+  workflow_dispatch: 
+
+jobs:
+  production-db-release-push:
+    name: Production Drizzle Push Check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nightcrawler_validation
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d nightcrawler_validation"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: ./frontend
+    env:
+      PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
+      PROD_DATABASE_PORT: ${{ secrets.PROD_DATABASE_PORT }}
+      PROD_DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
+      PROD_DATABASE_PASSWORD: ${{ secrets.PROD_DATABASE_PASSWORD }}
+      PROD_DATABASE_DATABASE: ${{ secrets.PROD_DATABASE_DATABASE }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      LOCAL_DATABASE_HOST: 127.0.0.1
+      LOCAL_DATABASE_PORT: 5432
+      LOCAL_DATABASE_USER: postgres
+      LOCAL_DATABASE_PASSWORD: postgres
+      LOCAL_DATABASE_DATABASE: nightcrawler_validation
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /tmp/pgdg.asc
+          gpg --dearmor --batch --yes -o /tmp/apt.postgresql.org.gpg /tmp/pgdg.asc
+          sudo mv /tmp/apt.postgresql.org.gpg /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+          /usr/lib/postgresql/18/bin/pg_dump --version
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Clone prod DB into local validation DB
+        run: |
+          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
+          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
+
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
+            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem" \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            --format=plain \
+            --file=/tmp/prod-db.sql
+          PGPASSWORD="$LOCAL_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/psql \
+            "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
+            --file=/tmp/prod-db.sql
+
+      - name: Validate release schema against cloned production DB
+        id: push-check
+        run: bunx drizzle-kit push --config=drizzle-local.config.ts
+
+      - name: Push to production
+        run: bunx drizzle-kit push --config=drizzle-prod.config.ts

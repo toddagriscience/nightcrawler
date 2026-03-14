@@ -11,9 +11,11 @@ const pool =
   globalForDb.pool ??
   new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      ca: process.env.DATABASE_PEM_CERT!,
-    },
+    ssl: !process.env.NODE_TLS_REJECT_UNAUTHORIZED
+      ? {
+          ca: process.env.DATABASE_PEM_CERT!,
+        }
+      : false,
     max: 25,
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 10_000,
