@@ -24,4 +24,5 @@ export const userInfo = z.object({
   }, z.e164('Invalid phone number')),
   // Yes, this is stupid. See: https://github.com/colinhacks/zod/discussions/2801
   website: z.string().url().or(z.literal('')).optional(),
+  instagramHandle: z.string().max(100).optional(),
 });

@@ -56,6 +56,7 @@ export default function Contact() {
       isOrganic: undefined,
       isHydroponic: false,
       producesSprouts: false,
+      instagramHandle: '',
     },
     resolver: zodResolver(contactFormSchema),
   });
