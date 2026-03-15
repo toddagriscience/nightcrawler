@@ -121,7 +121,9 @@ export default function Farm() {
                   type="number"
                   step="0.01"
                   placeholder="e.g., 150000.00"
-                  {...register('totalGrossIncome')}
+                  {...register('totalGrossIncome', {
+                    setValueAs: (value) => (value === '' ? undefined : value),
+                  })}
                 />
               </Field>
 
@@ -140,7 +142,10 @@ export default function Farm() {
                   className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   type="number"
                   placeholder="e.g., 7"
-                  {...register('totalAcreage', { valueAsNumber: true })}
+                  {...register('totalAcreage', {
+                    setValueAs: (value) =>
+                      value === '' ? undefined : Number(value),
+                  })}
                 />
               </Field>
 
