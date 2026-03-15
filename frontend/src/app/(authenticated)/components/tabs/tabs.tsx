@@ -9,7 +9,7 @@ import logger from '@/lib/logger';
 import { ManagementZoneSelect } from '@/lib/types/db';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiPlus, BiX } from 'react-icons/bi';
 import updateTabName, {
   createTab as createTabAction,
@@ -44,6 +44,17 @@ export default function PlatformTabs({
   const searchParams = useSearchParams();
   const [curTab, setCurTab] = useState(selectedTabHash);
   const canEditFarm = currentUser.role === 'Admin';
+  const selectedTabIndex = currentTabs.findIndex(
+    (tab) => getTabHash(tab) === curTab
+  );
+  const selectedTab = currentTabs[selectedTabIndex] ?? currentTabs[0];
+
+  // Set the title of the page based on the current tab.
+  useEffect(() => {
+    const fallbackTabName =
+      selectedTabIndex >= 0 ? `Untitled Zone ${selectedTabIndex}` : 'Home';
+    document.title = `${selectedTab?.name || fallbackTabName} | Todd`;
+  }, [selectedTab, selectedTabIndex]);
 
   /** Sets the current tab */
   function setTab(nextTabHash: string) {
