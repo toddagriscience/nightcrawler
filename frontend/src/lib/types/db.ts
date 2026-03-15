@@ -8,6 +8,7 @@ import {
   farmLocation,
   farmSubscription,
   integratedManagementPlan,
+  integratedManagementPlanNote,
   knowledgeArticle,
   managementZone,
   tab,
@@ -30,6 +31,9 @@ export type ManagementZoneInsert = InferInsertModel<typeof managementZone>;
 export type WidgetSelect = InferSelectModel<typeof widget>;
 export type IntegratedManagementPlanSelect = InferSelectModel<
   typeof integratedManagementPlan
+>;
+export type IntegratedManagementPlanNoteSelect = InferSelectModel<
+  typeof integratedManagementPlanNote
 >;
 export type KnowledgeArticleSelect = InferSelectModel<typeof knowledgeArticle>;
 

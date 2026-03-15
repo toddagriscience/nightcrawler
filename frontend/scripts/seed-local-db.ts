@@ -23,35 +23,43 @@ import {
 
 type SeedArticle = Pick<
   InferInsertModel<typeof knowledgeArticle>,
-  'title' | 'content' | 'category' | 'source'
+  'title' | 'slug' | 'content' | 'category' | 'source' | 'articleType'
 >;
 
 const knowledgeArticles: SeedArticle[] = [
   {
     title: 'Understanding Soil pH for Crop Production',
+    slug: 'understanding-soil-ph-for-crop-production',
     content:
       'Soil pH strongly affects nutrient availability, microbial activity, and root health. Most crops perform best between pH 6.0 and 7.0.',
+    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
   {
     title: 'The Four Lows Condition in Soil',
+    slug: 'the-four-lows-condition-in-soil',
     content:
       'When calcium, magnesium, potassium, and sodium are all low, the soil is biologically depleted. Restore biology first, then rebalance minerals.',
+    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
   {
     title: 'Carrot Production and Soil Requirements',
+    slug: 'carrot-production-and-soil-requirements',
     content:
       'Carrots prefer loose, well-drained sandy loam with pH 6.0 to 6.8. Avoid excess nitrogen and keep moisture consistent during germination.',
+    articleType: 'imp',
     category: 'planting',
     source: 'Todd Field Guide',
   },
   {
     title: 'Irrigation Scheduling and Water Management',
+    slug: 'irrigation-scheduling-and-water-management',
     content:
       'Effective irrigation maintains root-zone moisture without waterlogging. Sandy soils need lighter, frequent watering and clay soils need slower cycles.',
+    articleType: 'imp',
     category: 'water',
     source: 'Todd Field Guide',
   },

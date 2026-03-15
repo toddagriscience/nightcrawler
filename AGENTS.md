@@ -5,6 +5,7 @@
 - Prioritize accessibility and performance
 - Prioritize server side rendering when possible, but don't neglect code quality in order to render more on the server
 - Prioritize simple, understandable, file architecture with lots of small files rather than confusing file architecture with a few large files (see feature sliced design)
+- Use `useForm()` as much as possible instead of `useState()`, `useTransition()`, etc.
 
 ## Modifying the backend
 

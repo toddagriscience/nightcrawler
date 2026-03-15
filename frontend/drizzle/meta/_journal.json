@@ -29,6 +29,13 @@
       "when": 1772652027714,
       "tag": "0003_common_maximus",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773609705183,
+      "tag": "0004_tough_hedge_knight",
+      "breakpoints": true
     }
   ]
 }
