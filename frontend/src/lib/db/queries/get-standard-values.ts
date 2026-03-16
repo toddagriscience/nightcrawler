@@ -33,10 +33,11 @@ export interface StandardValueThresholds {
   max: number;
 }
 
-/** Maps mineral type enum values to their corresponding standard_values column prefix */
+/** Maps mineral type enum values to their corresponding standard_values column prefix.
+ *  Minerals without standard_values columns (Manganese, Copper, Boron) map to null. */
 const mineralToStandardValueType: Record<
   (typeof mineralTypes.enumValues)[number],
-  StandardValueType
+  StandardValueType | null
 > = {
   Calcium: 'calcium',
   Magnesium: 'magnesium',
@@ -49,6 +50,9 @@ const mineralToStandardValueType: Record<
   Zinc: 'zinc',
   Iron: 'iron',
   OrganicMatter: 'organicMatter',
+  Manganese: null,
+  Copper: null,
+  Boron: null,
 };
 
 /**
@@ -64,6 +68,7 @@ export async function getStandardValues(
   type: (typeof mineralTypes.enumValues)[number]
 ): Promise<StandardValueThresholds | null> {
   const mappedType = mineralToStandardValueType[type];
+  if (mappedType === null) return null;
 
   // Dynamic column lookup — AnyPgColumn erases the per-column name brand
   // so Drizzle's .select() accepts columns from different mineral types uniformly.
