@@ -32,6 +32,7 @@
     "db:local:wipe": "tsx scripts/wipe-local-db.ts",
     "db:local:migrate": "tsx scripts/migrate-local-db.ts",
     "db:local:seed": "tsx scripts/seed-local-db.ts",
+    "db:create-admin-farm-user": "tsx scripts/create-admin-farm-user.ts",
     "db:local:init": "bun run db:local:migrate && bun run db:local:seed",
     "db:local:reset": "bun run db:local:wipe && bun run db:local:init",
     "storybook": "storybook dev -p 6006",
