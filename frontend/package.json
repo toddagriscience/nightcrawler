@@ -81,6 +81,7 @@
     "next-intl": "^4.8.3",
     "next-sanity": "^12.1.0",
     "openai": "^6.25.0",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.19.0",
     "posthog-js": "^1.354.3",
     "preact": "10.28.4",
