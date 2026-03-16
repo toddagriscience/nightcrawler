@@ -12,8 +12,12 @@ import { login } from '@/lib/actions/auth';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
+
+type LoginFormData = { email: string; password: string };
+
 /**
  * Login page. See `src/lib/auth-client.ts` and `src/lib/auth-server.ts` for more information regarding authentication and authorization.
  *
@@ -21,7 +25,11 @@ import { BiShow, BiSolidHide } from 'react-icons/bi';
  * */
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [state, loginAction] = useActionState(login, null);
+  const [actionErrors, setActionErrors] = useState<string[]>([]);
+  const { register, handleSubmit, formState } = useForm<LoginFormData>({
+    defaultValues: { email: '', password: '' },
+  });
+  const { isSubmitting } = formState;
 
   const defaultCooldownTime = 3;
   const [cooldownError, setCooldownError] = useState('');
@@ -30,9 +38,20 @@ export default function Login() {
   const errors =
     cooldownError != ''
       ? [cooldownError]
-      : state
-        ? formatActionResponseErrors(state)
+      : actionErrors.length > 0
+        ? actionErrors
         : null;
+
+  async function onSubmit(data: LoginFormData) {
+    setActionErrors([]);
+    const formData = new FormData();
+    formData.set('email', data.email);
+    formData.set('password', data.password);
+    const result = await login(null, formData);
+    if (result?.error) {
+      setActionErrors(formatActionResponseErrors(result));
+    }
+  }
 
   return (
     <main>
@@ -67,7 +86,7 @@ export default function Login() {
                   ))}
                 </div>
               )}
-              <form action={loginAction}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <FieldSet className="mb-10 flex flex-col gap-6">
                   <Field>
                     <FieldLabel
@@ -80,9 +99,9 @@ export default function Login() {
                       className="border-1 border-[#848484]/80 focus:ring-0!"
                       id="email"
                       data-testid="email"
-                      name="email"
                       type="email"
                       required
+                      {...register('email')}
                     />
                   </Field>
                   <Field>
@@ -98,8 +117,8 @@ export default function Login() {
                         data-testid="password"
                         type={showPassword ? 'text' : 'password'}
                         className="border-1 border-[#848484]/80 pr-10 focus:ring-0!"
-                        name="password"
                         required
+                        {...register('password')}
                       />
                       <button
                         type="button"
@@ -150,6 +169,8 @@ export default function Login() {
                             : defaultCooldownTime) * 1000
                         );
                       }}
+                      disabled={isSubmitting}
+                      reactHookFormPending={isSubmitting}
                     />
                   </div>
                   <div className="flex-1 [&_button]:w-full [&_button]:rounded-full [&_button]:px-8 [&_button]:py-3 [&_button]:font-semibold [&_button]:hover:border-[#848484]/80">

@@ -11,9 +11,14 @@ import {
   TabTypes,
   VerificationStatus,
 } from '../types';
-import { FarmInfoInternalApplicationSelect, UserSelect } from '@/lib/types/db';
-import { createContext, useState } from 'react';
+import {
+  FarmInfoInternalApplicationSelect,
+  FarmSubscriptionSelect,
+  UserSelect,
+} from '@/lib/types/db';
+import { createContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Subscription from './subscription';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
   ssr: false,
 });
@@ -23,9 +28,11 @@ export const ApplicationContext = createContext({
   allUsers: [{} as UserSelect],
   currentUser: {} as UserSelect,
   internalApplication: {} as FarmInfoInternalApplicationSelect,
+  farmSubscription: null as FarmSubscriptionSelect | null,
   invitedUserVerificationStatus: [{} as VerificationStatus],
   setCurrentTab: (_tab: TabTypes) => {},
   canSubmitApplication: false,
+  canEditFarm: false,
 });
 
 /** The tabs for the application */
@@ -33,6 +40,7 @@ export default function ApplicationTabs({
   farmInfo,
   allUsers,
   internalApplication,
+  farmSubscription,
   currentUser,
   invitedUserVerificationStatus,
   canSubmitApplication,
@@ -41,10 +49,24 @@ export default function ApplicationTabs({
   allUsers: UserSelect[];
   currentUser: UserSelect;
   internalApplication: FarmInfoInternalApplicationSelect;
+  farmSubscription: FarmSubscriptionSelect | null;
   invitedUserVerificationStatus: VerificationStatus[];
   canSubmitApplication: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>('general');
+  const hasActiveSubscription = ['active', 'trialing'].includes(
+    farmSubscription?.status ?? ''
+  );
+  const canEditFarm = currentUser.role === 'Admin';
+
+  useEffect(() => {
+    async function helper() {
+      if (hasActiveSubscription) {
+        setCurrentTab('terms');
+      }
+    }
+    helper();
+  }, [setCurrentTab, hasActiveSubscription]);
 
   return (
     <ApplicationContext.Provider
@@ -52,13 +74,21 @@ export default function ApplicationTabs({
         farmInfo,
         allUsers,
         internalApplication,
+        farmSubscription,
         currentUser,
         invitedUserVerificationStatus,
         setCurrentTab,
         canSubmitApplication,
+        canEditFarm,
       }}
     >
       <Tabs defaultValue="general" value={currentTab}>
+        {!canEditFarm && (
+          <p className="mt-6 rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+            Your account is read only. Only administrators can edit farm
+            information or submit the application.
+          </p>
+        )}
         <TabsList className="flex h-auto flex-wrap items-center justify-start gap-3 bg-transparent max-md:mt-6">
           <TabsTrigger onClick={() => setCurrentTab('general')} value="general">
             General Business Information
@@ -72,7 +102,13 @@ export default function ApplicationTabs({
           <TabsTrigger onClick={() => setCurrentTab('farm')} value="farm">
             Farm Information
           </TabsTrigger>
-          <TabsTrigger onClick={() => setCurrentTab('terms')} value="terms">
+          <TabsTrigger
+            onClick={() => setCurrentTab('subscription')}
+            value="subscription"
+          >
+            Platform License
+          </TabsTrigger>
+          <TabsTrigger value="terms" onClick={() => setCurrentTab('terms')}>
             Terms
           </TabsTrigger>
         </TabsList>
@@ -87,6 +123,10 @@ export default function ApplicationTabs({
 
         <TabsContent value="farm">
           <Farm />
+        </TabsContent>
+
+        <TabsContent value="subscription">
+          <Subscription />
         </TabsContent>
 
         <TabsContent value="terms">

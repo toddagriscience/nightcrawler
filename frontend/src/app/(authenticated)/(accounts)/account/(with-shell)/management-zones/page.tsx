@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { BiChevronRight } from 'react-icons/bi';
 import AccountInfo, {
   AccountInfoRow,
   AccountInfoSection,
@@ -17,7 +18,7 @@ export default async function AccountManagementPage() {
           <AccountInfoRow label="Nickname" value={toDisplayValue()} />
           <AccountInfoRow
             label="Management zone profile"
-            value=">"
+            value={<BiChevronRight className="size-6" />}
             valueClassName="text-foreground"
             href="/account/management-zones"
           />
@@ -31,7 +32,7 @@ export default async function AccountManagementPage() {
             />
             <AccountInfoRow
               label="Management zone profile"
-              value=">"
+              value={<BiChevronRight className="size-6" />}
               valueClassName="text-foreground"
               href={`/account/management-zones/${zone.id}`}
             />

@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { ReactNode } from 'react';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 type AccountInfoStatusTone = 'success' | 'warning';
 
@@ -20,12 +20,10 @@ export default function AccountInfo({
   children: ReactNode;
 }) {
   return (
-    <section className="w-full max-w-[760px]">
-      <h2 className="text-foreground text-4xl leading-none font-[400]">
-        {title}
-      </h2>
+    <section className="w-full max-w-[568px]">
+      <h2 className="text-foreground text-3xl leading-none">{title}</h2>
       {description ? (
-        <p className="text-foreground mt-4 text-[16px] leading-tight font-[300]">
+        <p className="text-foreground mt-6 text-sm font-light italic">
           {description}
         </p>
       ) : null}
@@ -43,10 +41,8 @@ export function AccountInfoSection({
 }) {
   return (
     <div className="mt-10 first:mt-0">
-      <h3 className="text-foreground text-[18px] leading-none font-[400]">
-        {title}
-      </h3>
-      <div className="border-black/20 mt-4 border-t">{children}</div>
+      <h3 className="text-foreground text-xl font-normal">{title}</h3>
+      <div className="border-[#D9D9D9] mt-3 border-t px-0.5">{children}</div>
     </div>
   );
 }
@@ -61,7 +57,7 @@ export function AccountInfoRow({
   href,
 }: {
   label: string;
-  value?: string;
+  value?: string | ReactNode;
   status?: string;
   statusTone?: AccountInfoStatusTone;
   rightContent?: ReactNode;
@@ -71,10 +67,20 @@ export function AccountInfoRow({
   const renderedRightContent = rightContent ?? (
     <>
       {value ? (
-        <span className={valueClassName ?? 'text-[#808080]'}>{value}</span>
+        <span
+          className={
+            valueClassName ?? 'text-sm font-normal text-muted-foreground mx-0.5'
+          }
+        >
+          {value}
+        </span>
       ) : null}
       {status && statusTone ? (
-        <span className={statusStyles[statusTone]}>{status}</span>
+        <span
+          className={`text-sm font-normal ${statusStyles[statusTone]} mx-0.5`}
+        >
+          {status}
+        </span>
       ) : null}
     </>
   );
@@ -83,25 +89,25 @@ export function AccountInfoRow({
     return (
       <Link
         href={href}
-        className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1 hover:opacity-70"
+        className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
       >
-        <span className="text-foreground text-[16px] leading-tight font-[400]">
-          {label}
-        </span>
-        <div className="flex items-center gap-1.5 text-[16px] leading-tight font-[300]">
-          {renderedRightContent}
+        <span className="text-muted-foreground text-sm mx-0.5">{label}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm text-muted-foreground/70 mx-0.5">
+            {renderedRightContent}
+          </span>
         </div>
       </Link>
     );
   }
 
   return (
-    <div className="border-black/20 flex min-h-12 items-center justify-between gap-4 border-b py-1">
-      <span className="text-foreground text-[16px] leading-tight font-[400]">
-        {label}
-      </span>
-      <div className="flex items-center gap-1.5 text-[16px] leading-tight font-[300]">
-        {renderedRightContent}
+    <div className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2">
+      <span className="text-foreground text-sm mx-0.5">{label}</span>
+      <div className="flex items-center gap-1.5">
+        <span className="text-sm text-foreground/70 mx-0.5">
+          {renderedRightContent}
+        </span>
       </div>
     </div>
   );

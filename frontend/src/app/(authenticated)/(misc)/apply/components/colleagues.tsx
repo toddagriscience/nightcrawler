@@ -26,8 +26,6 @@ import { Button } from '@/components/ui';
 import SelfSelectAdmin from './colleagues/self-select-admin';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { ApplicationContext } from './application-tabs';
-import { resendVerificationEmail } from './colleagues/action';
-import { RefreshCw } from 'lucide-react';
 import InvitedUser from './colleagues/invited-user';
 
 const userRoles = userRoleEnum.enumValues;
@@ -51,6 +49,7 @@ export default function Colleagues() {
     allUsers,
     invitedUserVerificationStatus,
     setCurrentTab,
+    canEditFarm,
   } = useContext(ApplicationContext);
 
   const [users, setUsers] = useState(allUsers);
@@ -106,6 +105,7 @@ export default function Colleagues() {
                   invitedUser={singleUser}
                   isCurrentUser={singleUser.id === currentUser.id}
                   isVerified={isVerified(singleUser)}
+                  canEditFarm={canEditFarm}
                   key={index}
                   onUninvited={(id) =>
                     setUsers(users.filter((u) => u.id !== id))
@@ -119,209 +119,220 @@ export default function Colleagues() {
             </p>
           )}
         </div>
-        <SelfSelectAdmin role={currentUser.role} />
+        <SelfSelectAdmin role={currentUser.role} canEditFarm={canEditFarm} />
 
-        <h2 className="mb-4 text-lg font-semibold">Invite a New Team Member</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FieldSet className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field>
-                <div className="flex flex-row justify-between">
-                  <FieldLabel>First Name</FieldLabel>
-                  <ErrorMessage
-                    errors={errors}
-                    name="firstName"
-                    render={({ message }) => (
-                      <FormErrorMessage errorMessage={message} />
+        {canEditFarm ? (
+          <>
+            <h2 className="mb-4 text-lg font-semibold">
+              Invite a New Team Member
+            </h2>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FieldSet className="flex flex-col gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Field>
+                    <div className="flex flex-row justify-between">
+                      <FieldLabel>First Name</FieldLabel>
+                      <ErrorMessage
+                        errors={errors}
+                        name="firstName"
+                        render={({ message }) => (
+                          <FormErrorMessage errorMessage={message} />
+                        )}
+                      />
+                    </div>
+                    <Input
+                      type="text"
+                      placeholder="First name"
+                      {...register('firstName')}
+                    />
+                  </Field>
+
+                  <Field>
+                    <div className="flex flex-row justify-between">
+                      <FieldLabel>Last Name</FieldLabel>
+                      <ErrorMessage
+                        errors={errors}
+                        name="lastName"
+                        render={({ message }) => (
+                          <FormErrorMessage errorMessage={message} />
+                        )}
+                      />
+                    </div>
+                    <Input
+                      type="text"
+                      placeholder="Last name"
+                      {...register('lastName')}
+                    />
+                  </Field>
+                </div>
+
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>Email</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="email"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Input
+                    type="email"
+                    placeholder="colleague@example.com"
+                    {...register('email')}
+                  />
+                </Field>
+
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>Phone (optional)</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="phone"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Input
+                    type="tel"
+                    placeholder="+1234567890"
+                    {...register('phone')}
+                  />
+                </Field>
+
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>Job Title (optional)</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="job"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="e.g., Farm Manager"
+                    {...register('job')}
+                  />
+                </Field>
+
+                <Field>
+                  <div className="flex flex-row justify-between">
+                    <FieldLabel>Role</FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="role"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                  <Controller
+                    name="role"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ''}
+                      >
+                        <SelectTrigger className="rounded-md border px-3">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          {userRolesWithDescription.map((role) => (
+                            <SelectItem key={role.role} value={role.role}>
+                              {role.role} - {role.description}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
-                </div>
-                <Input
-                  type="text"
-                  placeholder="First name"
-                  {...register('firstName')}
-                />
-              </Field>
+                </Field>
 
-              <Field>
-                <div className="flex flex-row justify-between">
-                  <FieldLabel>Last Name</FieldLabel>
-                  <ErrorMessage
-                    errors={errors}
-                    name="lastName"
-                    render={({ message }) => (
-                      <FormErrorMessage errorMessage={message} />
-                    )}
-                  />
-                </div>
-                <Input
-                  type="text"
-                  placeholder="Last name"
-                  {...register('lastName')}
-                />
-              </Field>
-            </div>
-
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Email</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="email"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input
-                type="email"
-                placeholder="colleague@example.com"
-                {...register('email')}
-              />
-            </Field>
-
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Phone (optional)</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="phone"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input
-                type="tel"
-                placeholder="+1234567890"
-                {...register('phone')}
-              />
-            </Field>
-
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Job Title (optional)</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="job"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Input
-                type="text"
-                placeholder="e.g., Farm Manager"
-                {...register('job')}
-              />
-            </Field>
-
-            <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Role</FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="role"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-              <Controller
-                name="role"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value || ''}
-                  >
-                    <SelectTrigger className="rounded-md border px-3">
-                      <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      {userRolesWithDescription.map((role) => (
-                        <SelectItem key={role.role} value={role.role}>
-                          {role.role} - {role.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </Field>
-
-            <Field>
-              <div className="flex flex-row items-center gap-3">
-                <Controller
-                  name="didOwnAndControlParcel"
-                  control={control}
-                  render={({ field }) => (
-                    <Checkbox
-                      id="didOwnAndControlParcel"
-                      checked={field.value ?? false}
-                      onCheckedChange={field.onChange}
+                <Field>
+                  <div className="flex flex-row items-center gap-3">
+                    <Controller
+                      name="didOwnAndControlParcel"
+                      control={control}
+                      render={({ field }) => (
+                        <Checkbox
+                          id="didOwnAndControlParcel"
+                          checked={field.value ?? false}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
                     />
-                  )}
-                />
-                <FieldLabel htmlFor="didOwnAndControlParcel">
-                  This person owned and controlled the parcel for the past 3
-                  years
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="didOwnAndControlParcel"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-            </Field>
-
-            <Field>
-              <div className="flex flex-row items-center gap-3">
-                <Controller
-                  name="didManageAndControl"
-                  control={control}
-                  render={({ field }) => (
-                    <Checkbox
-                      id="didManageAndControl"
-                      checked={field.value ?? false}
-                      onCheckedChange={field.onChange}
+                    <FieldLabel htmlFor="didOwnAndControlParcel">
+                      This person owned and controlled the parcel for the past 3
+                      years
+                    </FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="didOwnAndControlParcel"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
                     />
-                  )}
-                />
-                <FieldLabel htmlFor="didManageAndControl">
-                  This person managed and controlled (but did not own) the
-                  parcel for the past 3 years
-                </FieldLabel>
-                <ErrorMessage
-                  errors={errors}
-                  name="didManageAndControl"
-                  render={({ message }) => (
-                    <FormErrorMessage errorMessage={message} />
-                  )}
-                />
-              </div>
-            </Field>
-          </FieldSet>
+                  </div>
+                </Field>
 
-          <div className="mt-10 flex flex-row gap-6">
-            <SubmitButton
-              buttonText="INVITE TEAM MEMBER"
-              className="basis-2/3"
-              reactHookFormPending={isSubmitting}
-            />
-            <Button
-              onClick={() => {
-                setCurrentTab('farm');
-                scrollTo(0, 0);
-              }}
-              className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
-            >
-              NEXT
-            </Button>
-          </div>
-        </form>
+                <Field>
+                  <div className="flex flex-row items-center gap-3">
+                    <Controller
+                      name="didManageAndControl"
+                      control={control}
+                      render={({ field }) => (
+                        <Checkbox
+                          id="didManageAndControl"
+                          checked={field.value ?? false}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <FieldLabel htmlFor="didManageAndControl">
+                      This person managed and controlled (but did not own) the
+                      parcel for the past 3 years
+                    </FieldLabel>
+                    <ErrorMessage
+                      errors={errors}
+                      name="didManageAndControl"
+                      render={({ message }) => (
+                        <FormErrorMessage errorMessage={message} />
+                      )}
+                    />
+                  </div>
+                </Field>
+              </FieldSet>
+
+              <div className="mt-10 flex flex-row gap-6">
+                <SubmitButton
+                  buttonText="Invite team member"
+                  className="basis-2/3"
+                  reactHookFormPending={isSubmitting}
+                />
+                <Button
+                  onClick={() => {
+                    setCurrentTab('farm');
+                    scrollTo(0, 0);
+                  }}
+                  className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                >
+                  Next
+                </Button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <p className="rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
+            Your account is read only. Only administrators can invite or manage
+            team members.
+          </p>
+        )}
       </div>
     </div>
   );

@@ -63,9 +63,16 @@ export function handleI18nMiddleware(
     }
 
     // For paths without locale (like /who-we-are, /no-page-here),
-    // manually redirect to /en/{path} to preserve the exact path
+    // redirect using NEXT_LOCALE cookie if set, else default to en
+    const preferredLocale =
+      request.cookies?.get('NEXT_LOCALE')?.value ||
+      request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
+      'en';
+    const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
+      ? preferredLocale
+      : 'en';
     const url = request.nextUrl.clone();
-    url.pathname = `/en${pathname}`;
+    url.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(url);
   }
 

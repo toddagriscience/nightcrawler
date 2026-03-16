@@ -2,9 +2,11 @@
 
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { BiLogOut } from 'react-icons/bi';
 
 const sideMenuItems = [
   { href: '/account', label: 'Farm information' },
@@ -27,9 +29,9 @@ export default function AccountSideMenu() {
   };
 
   return (
-    <aside className="w-[180px] shrink-0 pt-2">
-      <div className="border-t border-black/20 pt-4">
-        <nav className="space-y-3" aria-label="Account sections">
+    <aside className="w-[190px] shrink-0 mt-1">
+      <div className="border-t border-[#D9D9D9] pt-4">
+        <nav className="space-y-2.5" aria-label="Account sections">
           {sideMenuItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -38,10 +40,10 @@ export default function AccountSideMenu() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
-                className={`block text-[16px] leading-tight ${
+                className={`block text-sm ${
                   isActive
-                    ? 'text-foreground font-[400]'
-                    : 'text-foreground font-[300] hover:opacity-70'
+                    ? 'text-foreground font-bold underline'
+                    : 'text-foreground/70 font-normal hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -51,14 +53,15 @@ export default function AccountSideMenu() {
         </nav>
       </div>
 
-      <div className="mt-24 border-t border-black/20 pt-4">
-        <button
+      <div className="mt-17.5 border-t border-[#D9D9D9] pt-4">
+        <Button
           type="button"
           onClick={handleLogout}
-          className="text-foreground text-[16px] leading-none font-[400] hover:cursor-pointer hover:opacity-70"
+          className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
         >
-          Log out
-        </button>
+          <span className="text-sm font-normal">Log out</span>
+          <BiLogOut className="size-5" />
+        </Button>
       </div>
     </aside>
   );

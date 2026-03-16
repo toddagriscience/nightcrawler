@@ -1,6 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { managementZone } from '@/lib/db/schema';
+import { NavLinks } from '@/components/common/authenticated-header/nav-links';
+import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
+import { Button } from '@/components/ui';
+import { managementZone, widget, widgetEnum } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { tab } from '@/lib/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
@@ -9,6 +12,8 @@ import type { Metadata } from 'next';
 import PlatformTabContent from '../components/tabs/tab-content';
 import PlatformTabs from '../components/tabs/tabs';
 import { getTablessManagementZones } from '../components/tabs/utils';
+import { getSelectedTab, getSelectedTabHash } from './utils';
+import { redirect } from 'next/navigation';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -49,6 +54,13 @@ export default async function DashboardPage({
 
   let managementZones = await getTablessManagementZones(currentUser.farmId);
 
+  if (
+    !currentUser.approved ||
+    (currentTabs.length === 0 && managementZones.length === 0)
+  ) {
+    redirect('/welcome');
+  }
+
   // This seems redundant - realistically, this will be called once or twice per user.
   if (
     currentUser.approved &&
@@ -64,20 +76,18 @@ export default async function DashboardPage({
     managementZones = await getTablessManagementZones(currentUser.farmId);
   }
 
-  const tabParam = (await searchParams).tab;
+  const selectedTabHash = await getSelectedTabHash(searchParams, currentTabs);
+  const selectedTab = await getSelectedTab(selectedTabHash, currentTabs);
 
-  const requestedTabHash = typeof tabParam === 'string' ? tabParam : undefined;
-
-  // If the user doesn't have a tab open or selected, set the tab.
-  const hasTabInDb = currentTabs.some(
-    (tab) => String(tab.id) === requestedTabHash
+  const widgets = await db
+    .select()
+    .from(widget)
+    .where(eq(widget.managementZone, selectedTab.managementZone));
+  const allWidgetTypes = widgetEnum.enumValues;
+  const existingWidgetNames = new Set(widgets.map((w) => w.name));
+  const availableWidgets = allWidgetTypes.filter(
+    (widgetType) => !existingWidgetNames.has(widgetType)
   );
-  const selectedTabHash =
-    requestedTabHash && hasTabInDb
-      ? requestedTabHash
-      : currentTabs[0]
-        ? String(currentTabs[0].id)
-        : 'home';
 
   return (
     <PlatformTabs
@@ -85,10 +95,30 @@ export default async function DashboardPage({
       currentTabs={currentTabs}
       currentUser={currentUser}
       selectedTabHash={selectedTabHash}
+      header={
+        <div className="flex items-center gap-4">
+          <NavLinks />
+        </div>
+      }
+      addWidgetDropdown={
+        currentUser.role === 'Admin' ? (
+          <AddWidgetDropdown
+            managementZoneId={selectedTab.managementZone}
+            availableWidgets={availableWidgets}
+          >
+            <Button
+              size="sm"
+              variant="default"
+              className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+            >
+              Add widget
+            </Button>
+          </AddWidgetDropdown>
+        ) : null
+      }
     >
       <PlatformTabContent
         currentTabs={currentTabs}
-        currentUser={currentUser}
         selectedTabHash={selectedTabHash}
       />
     </PlatformTabs>
