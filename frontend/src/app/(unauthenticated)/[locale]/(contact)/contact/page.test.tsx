@@ -204,7 +204,7 @@ describe('Contact page', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/What We Do/)).toBeInTheDocument();
-    }
+    });
   });
 
   it('calls router.push with correct URL parameters on successful form submission', async () => {
