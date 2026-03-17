@@ -19,7 +19,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
+import { submitContactToSheets } from '@/lib/actions/googleSheets';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -124,7 +124,7 @@ export default function Contact() {
       });
       // Push to Google Sheets
       try {
-        await submitToGoogleSheets(Object.fromEntries(params.entries()));
+        await submitContactToSheets(Object.fromEntries(params.entries()));
       } catch (error) {
         console.error('Failed to submit to Google Sheets:', error);
       }

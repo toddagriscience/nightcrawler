@@ -10,7 +10,7 @@
  * */
 export async function submitToGoogleSheets(
   formData: FormData | Object,
-  googleScriptUrl: string = process.env.CONTACT_GOOGLE_SCRIPT_URL || ''
+  googleScriptUrl: string
 ) {
   try {
     const url = new URL(googleScriptUrl);
@@ -62,4 +62,11 @@ export async function submitToGoogleSheets(
       error instanceof Error ? error.message : 'An unknown error occurred'
     );
   }
+}
+
+export async function submitContactToSheets(formData: FormData | Object) {
+  return submitToGoogleSheets(
+    formData,
+    process.env.CONTACT_GOOGLE_SCRIPT_URL || ''
+  );
 }
