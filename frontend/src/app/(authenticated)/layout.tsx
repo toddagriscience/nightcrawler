@@ -17,13 +17,12 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={fontVariables}>
-        <DesktopGate>
-          <div className="bg-background-platform authenticated-root min-h-screen">
-            {children}
-          </div>
-        </DesktopGate>
+    <html lang="en" className="authenticated-root bg-background-platform">
+      <body
+        className={`${fontVariables} authenticated-root bg-background-platform min-h-screen`}
+      >
+        {children}
+        <DesktopGate />
       </body>
     </html>
   );
