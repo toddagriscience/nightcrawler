@@ -92,6 +92,8 @@ body {
 /*
  * Enforce the platform background on authenticated routes
  */
+html.authenticated-root,
+body.authenticated-root,
 html:has(.authenticated-root),
 body:has(.authenticated-root) {
   background: var(--background-platform);
