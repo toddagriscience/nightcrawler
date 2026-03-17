@@ -238,17 +238,17 @@ async function seedLocalDb() {
     {
       managementZone: seededZone.id,
       name: 'Macro Radar',
-      widgetMetadata: { i: 'macro-radar-widget', x: 0, y: 0 },
+      widgetMetadata: { i: 'Macro Radar', x: 0, y: 0 },
     },
     {
       managementZone: seededZone.id,
       name: 'Calcium Widget',
-      widgetMetadata: { i: 'calcium-widget', x: 6, y: 0 },
+      widgetMetadata: { i: 'Calcium Widget', x: 6, y: 0 },
     },
     {
       managementZone: seededZone.id,
       name: 'Insights',
-      widgetMetadata: { i: 'insights-widget', x: 0, y: 4 },
+      widgetMetadata: { i: 'Insights', x: 0, y: 4 },
     },
   ]);
 
