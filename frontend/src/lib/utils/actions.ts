@@ -1,25 +1,66 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { ActionResponse } from '../types/action-response';
+import logger from '../logger';
+
+type ActionErrorShape = {
+  error?: unknown;
+  errors?: string[];
+  message?: string;
+  properties?: Record<string, { errors?: string[] }>;
+};
+
+function collectActionErrorMessages(error: ActionErrorShape): string[] {
+  const rootErrors = Array.isArray(error.errors) ? error.errors : [];
+  const propertyErrors = Object.values(error.properties ?? {}).flatMap(
+    ({ errors }) => errors ?? []
+  );
+
+  return [...rootErrors, ...propertyErrors];
+}
 
 /**
- * Standardizes all the different error types produced by the login action into a list. Contrary to the majority of other functions in this file, this function can be used in any location in the codebase. It's just a helper function for formatting.
+ * Standardizes action failures into a list of displayable messages.
  *
- * @param state The current form action state
- * @returns A list of all the errors
+ * Accepts either a thrown error from a server action or a legacy action response
+ * object that still exposes an `error` property.
  */
-export function formatActionResponseErrors(
-  state: ActionResponse | null
-): string[] {
-  if (!state) return [];
+export function formatActionResponseErrors(error: unknown): string[] {
+  if (!error) {
+    return [];
+  }
 
-  const { error } = state;
-  if (!error) return [];
-  if (typeof error === 'string') return [error];
-  if (error instanceof Error) return [error.message];
+  if (typeof error === 'string') {
+    return [error];
+  }
 
-  const { errors } = error;
-  if (errors) return errors;
+  if (error instanceof Error) {
+    return [error.message];
+  }
+
+  if (typeof error !== 'object') {
+    return [];
+  }
+
+  const maybeActionError = error as ActionErrorShape;
+
+  if ('error' in maybeActionError) {
+    return formatActionResponseErrors(maybeActionError.error);
+  }
+
+  const messages = collectActionErrorMessages(maybeActionError);
+  if (messages.length > 0) {
+    return messages;
+  }
+
+  if (typeof maybeActionError.message === 'string') {
+    return [maybeActionError.message];
+  }
 
   return [];
+}
+
+export function throwActionError(error: unknown): never {
+  const [message] = formatActionResponseErrors(error);
+  logger.error(error ?? 'An unknown error occurred.');
+  throw new Error(message ?? 'An unknown error occurred.');
 }

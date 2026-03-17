@@ -6,6 +6,7 @@ import { deleteAuthUserByEmail, resendEmailInvite } from '@/lib/auth-server';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
@@ -19,12 +20,12 @@ export async function updateRole(): Promise<ActionResponse> {
 
     await db.update(user).set({ role: newRole }).where(eq(user.id, result.id));
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -41,12 +42,12 @@ export async function resendVerificationEmail(
 
     await resendEmailInvite(email);
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -68,25 +69,25 @@ export async function uninviteUser(userId: number): Promise<ActionResponse> {
       .limit(1);
 
     if (!targetUser) {
-      return { error: 'User not found or you cannot uninvite this user' };
+      throwActionError('User not found or you cannot uninvite this user');
     }
 
     if (targetUser.id === currentUser.id) {
-      return { error: 'You cannot uninvite yourself' };
+      throwActionError('You cannot uninvite yourself');
     }
 
     const authError = await deleteAuthUserByEmail(targetUser.email);
     if (authError) {
-      return { error: authError.message };
+      throwActionError(authError.message);
     }
 
     await db.delete(user).where(eq(user.id, userId));
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }

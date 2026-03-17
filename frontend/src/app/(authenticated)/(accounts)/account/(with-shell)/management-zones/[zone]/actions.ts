@@ -7,6 +7,7 @@ import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import type { ManagementZoneInsert } from '@/lib/types/db';
+import { throwActionError } from '@/lib/utils/actions';
 import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
@@ -18,13 +19,13 @@ export async function updateManagementZone(
 ): Promise<ActionResponse> {
   try {
     if (!Number.isInteger(zoneId)) {
-      return { error: 'Invalid management zone id' };
+      throwActionError('Invalid management zone id');
     }
 
     const currentUser = await getAuthenticatedInfo();
 
     if (!currentUser.farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(currentUser, 'update-management-zone');
@@ -45,13 +46,13 @@ export async function updateManagementZone(
     revalidatePath('/account/management-zones');
     revalidatePath(`/account/management-zones/${zoneId}`);
 
-    return { error: null };
+    return {};
   } catch (error) {
     logger.error(error);
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
 
-    return { error: 'Failed to update management zone' };
+    throwActionError('Failed to update management zone');
   }
 }

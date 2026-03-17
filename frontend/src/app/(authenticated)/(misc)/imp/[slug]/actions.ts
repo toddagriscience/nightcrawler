@@ -9,6 +9,7 @@ import {
   knowledgeArticle,
 } from '@/lib/db/schema';
 import type { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -19,13 +20,13 @@ export async function saveImpNotes(
 ): Promise<ActionResponse> {
   try {
     if (!Number.isInteger(articleId)) {
-      return { error: 'Invalid IMP id' };
+      throwActionError('Invalid IMP id');
     }
 
     const currentUser = await getAuthenticatedInfo();
 
     if (!currentUser.approved) {
-      return { error: 'Your farm is not approved to access IMPs.' };
+      throwActionError('Your farm is not approved to access IMPs.');
     }
 
     const [article] = await db
@@ -43,7 +44,7 @@ export async function saveImpNotes(
       .limit(1);
 
     if (!article) {
-      return { error: 'IMP not found' };
+      throwActionError('IMP not found');
     }
 
     const normalizedNotes = notes.trim();
@@ -65,7 +66,6 @@ export async function saveImpNotes(
           notes: '',
           updatedAt: null,
         },
-        error: null,
       };
     }
 
@@ -98,15 +98,14 @@ export async function saveImpNotes(
         notes: savedNote.notes,
         updatedAt: savedNote.updatedAt.toISOString(),
       },
-      error: null,
     };
   } catch (error) {
     logger.error('[saveImpNotes] Failed to save notes:', error);
 
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
 
-    return { error: 'Failed to save IMP notes' };
+    throwActionError('Failed to save IMP notes');
   }
 }

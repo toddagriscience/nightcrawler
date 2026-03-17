@@ -194,7 +194,6 @@ describe('Join Page', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
       vi.mocked(signUp).mockResolvedValue({
         data: { user: {}, farm: {} },
-        error: null,
       });
 
       const user = userEvent.setup();
@@ -236,9 +235,7 @@ describe('Join Page', () => {
 
     it('shows form with errors when action returns with an error', async () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
-      vi.mocked(signUp).mockResolvedValue({
-        error: 'User already exists',
-      });
+      vi.mocked(signUp).mockRejectedValue(new Error('User already exists'));
       vi.mocked(formatActionResponseErrors).mockReturnValue([
         'User already exists',
       ]);

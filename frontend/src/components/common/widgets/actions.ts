@@ -7,6 +7,7 @@ import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import { WidgetUpdate } from '@/lib/types/db';
+import { throwActionError } from '@/lib/utils/actions';
 import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
@@ -75,12 +76,12 @@ export async function deleteWidget(widgetId: number): Promise<ActionResponse> {
 
     revalidatePath(dashboardPath);
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Failed to delete widget' };
+    throwActionError('Failed to delete widget');
   }
 }
 
@@ -108,11 +109,11 @@ export async function updateWidget(
 
     revalidatePath(dashboardPath);
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error);
     }
-    return { error: 'Failed to update widget' };
+    throwActionError('Failed to update widget');
   }
 }

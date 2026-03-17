@@ -36,14 +36,17 @@ export default function InvitedUser({
   async function handleUninvite() {
     setUninviteError(null);
     setIsUninviting(true);
-    const result = await uninviteUser(invitedUser.id);
-    setIsUninviting(false);
-    if (result.error) {
+    try {
+      await uninviteUser(invitedUser.id);
+    } catch (error) {
+      setIsUninviting(false);
       setUninviteError(
-        formatActionResponseErrors(result)[0] ?? 'Something went wrong'
+        formatActionResponseErrors(error)[0] ?? 'Something went wrong'
       );
       return;
     }
+
+    setIsUninviting(false);
     onUninvited?.(invitedUser.id);
   }
 

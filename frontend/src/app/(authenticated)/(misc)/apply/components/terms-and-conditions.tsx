@@ -58,13 +58,8 @@ export default function TermsAndConditions() {
 
   async function onSubmit() {
     try {
-      const result = await submitApplication();
-
-      if (result.error) {
-        setSubmitError(true);
-      } else {
-        router.push('/application-success');
-      }
+      await submitApplication();
+      router.push('/application-success');
     } catch (error) {
       setSubmitError(true);
     }

@@ -29,7 +29,7 @@ describe('Support page', () => {
 
   test('submits and shows success state', async () => {
     const user = userEvent.setup();
-    (submitPublicInquiry as Mock).mockResolvedValue({ error: null });
+    (submitPublicInquiry as Mock).mockResolvedValue({ data: null });
 
     // Fill out the form and submit to trigger the success UI.
     renderWithNextIntl(<Support />);

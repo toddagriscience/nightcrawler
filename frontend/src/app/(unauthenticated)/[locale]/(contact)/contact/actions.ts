@@ -7,6 +7,7 @@ import logger from '@/lib/logger';
 import z from 'zod';
 import { emailSchema } from '@/lib/zod-schemas/auth';
 import { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 
 /** USE ONLY ON THE SERVER SIDE!!! Submits contact information to the Google Sheet for keeping track of potential leads.
  *
@@ -60,37 +61,28 @@ export async function submitEmail(
   // We are not collecting names. If a name was entered, it was likely entered by a robot. Just act like the request succeeded if this form was filled out.
   const honeypot = formData.get('name');
   if (honeypot) {
-    return { data: {}, error: null };
+    return { data: {} };
   }
 
   const validated = emailSchema.safeParse(email);
 
   if (!validated.success) {
     logger.info('Login credentials were not valid');
-    return {
-      data: {},
-      error: z.treeifyError(validated.error),
-    };
+    throwActionError(z.treeifyError(validated.error));
   }
 
   const externshipGoogleScriptUrl = process.env.EXTERNSHIP_GOOGLE_SCRIPT_URL;
 
   if (!externshipGoogleScriptUrl) {
     logger.warn('Could not find EXTERNSHIP_GOOGLE_SCRIPT_URL');
-    return {
-      data: {},
-      error: 'Error submitting form.',
-    };
+    throwActionError('Error submitting form.');
   }
 
   try {
     await submitToGoogleSheets(formData, externshipGoogleScriptUrl);
-    return { data: {}, error: null };
+    return { data: {} };
   } catch (error) {
     logger.error('Error when submitting email to Google Sheets: ' + error);
-    return {
-      data: {},
-      error: 'Error saving email',
-    };
+    throwActionError('Error saving email');
   }
 }

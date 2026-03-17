@@ -35,13 +35,14 @@ export function ImpNotesForm({
 
   async function onSubmit(values: ImpNotesFormValues) {
     clearErrors();
-
-    const result = await saveImpNotes(articleId, values.notes);
-    const actionErrors = formatActionResponseErrors(result);
-
-    if (actionErrors.length > 0) {
-      setError('root', { message: actionErrors[0] });
-      return;
+    try {
+      await saveImpNotes(articleId, values.notes);
+    } catch (error) {
+      const actionErrors = formatActionResponseErrors(error);
+      if (actionErrors.length > 0) {
+        setError('root', { message: actionErrors[0] });
+        return;
+      }
     }
 
     router.refresh();

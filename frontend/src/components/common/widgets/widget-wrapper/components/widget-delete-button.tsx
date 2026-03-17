@@ -11,8 +11,10 @@ export default function WidgetDeleteButton({ widgetId }: { widgetId: number }) {
   const router = useRouter();
 
   async function handleDelete() {
-    await deleteWidget(widgetId);
-    router.refresh();
+    try {
+      await deleteWidget(widgetId);
+      router.refresh();
+    } catch {}
   }
 
   return (

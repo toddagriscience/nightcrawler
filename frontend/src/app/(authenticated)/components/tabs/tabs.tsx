@@ -66,14 +66,12 @@ export default function PlatformTabs({
 
   /** Updates information about the tab */
   async function updateTab(newName: string, tabId: number) {
-    const result = await updateTabName({ newName, tabId });
-
-    if (result.error) {
-      logger.error(result.error);
-      return;
+    try {
+      await updateTabName({ newName, tabId });
+      router.refresh();
+    } catch (error) {
+      logger.error(error);
     }
-
-    router.refresh();
   }
 
   async function createTab(managementZoneId: number) {
@@ -95,10 +93,10 @@ export default function PlatformTabs({
     }
 
     const tabId = tab.id;
-    const result = await deleteTabAction({ tabId });
-
-    if (result.error) {
-      logger.error(result.error);
+    try {
+      await deleteTabAction({ tabId });
+    } catch (error) {
+      logger.error(error);
       return;
     }
 

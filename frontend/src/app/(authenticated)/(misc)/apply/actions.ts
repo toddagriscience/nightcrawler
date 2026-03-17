@@ -30,6 +30,7 @@ import {
   farmInfoInternalApplicationInsertSchema,
   userInsertSchema,
 } from '@/lib/zod-schemas/db';
+import { throwActionError } from '@/lib/utils/actions';
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import z from 'zod';
@@ -53,7 +54,7 @@ export async function saveGeneralBusinessInformation(
     const farmId = currentUser.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(currentUser, 'save-general-business-information');
@@ -64,7 +65,7 @@ export async function saveGeneralBusinessInformation(
     });
 
     if (!validated.success) {
-      return { error: z.treeifyError(validated.error) };
+      throwActionError(z.treeifyError(validated.error));
     }
 
     // As far as I'm aware, manually picking these fields out is the best way to go about this.
@@ -122,12 +123,12 @@ export async function saveGeneralBusinessInformation(
       await db.insert(farmCertificate).values(farmCertificates);
     }
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -144,7 +145,7 @@ export async function saveApplication(
     const farmId = currentUser.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(currentUser, 'save-application');
@@ -157,7 +158,7 @@ export async function saveApplication(
       .safeParse({ ...formData, farmId });
 
     if (!validated.success) {
-      return { error: z.treeifyError(validated.error) };
+      throwActionError(z.treeifyError(validated.error));
     }
 
     // Does farmInfoInternalApplication exist yet for this farm?
@@ -178,12 +179,12 @@ export async function saveApplication(
       });
     }
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -202,17 +203,16 @@ export async function submitApplication(): Promise<ActionResponse> {
     const farmId = result.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(result, 'submit-application');
 
     const canSubmit = await isApplicationReadyForSubmission(farmId);
     if (!canSubmit) {
-      return {
-        error:
-          'Please complete General Business Information, Farm Information, and an active Platform License before submitting.',
-      };
+      throwActionError(
+        'Please complete General Business Information, Farm Information, and an active Platform License before submitting.'
+      );
     }
 
     await db.insert(accountAgreementAcceptance).values({
@@ -224,13 +224,13 @@ export async function submitApplication(): Promise<ActionResponse> {
       version: termsAndConditionsVersion,
     });
 
-    return { error: null };
+    return {};
   } catch (error) {
     logger.error(error);
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -259,7 +259,7 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
       .limit(1);
 
     if (!currentFarm) {
-      return { error: 'Farm not found' };
+      throwActionError('Farm not found');
     }
 
     const [existingSubscription] = await db
@@ -272,9 +272,9 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
       existingSubscription?.status &&
       ['active', 'trialing'].includes(existingSubscription.status)
     ) {
-      return {
-        error: 'An active Platform License already exists for this farm.',
-      };
+      throwActionError(
+        'An active Platform License already exists for this farm.'
+      );
     }
 
     let stripeCustomerId = currentFarm.stripeCustomerId;
@@ -335,16 +335,16 @@ export async function createStripeSubscriptionCheckoutSession(): Promise<ActionR
     });
 
     if (!session.url) {
-      return { error: 'Unable to start Stripe checkout.' };
+      throwActionError('Unable to start Stripe checkout.');
     }
 
-    return { error: null, data: { url: session.url } };
+    return { data: { url: session.url } };
   } catch (error) {
     logger.error('Failed to create Stripe checkout session', { error });
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
 
@@ -360,7 +360,7 @@ export async function inviteUserToFarm(
     const farmId = currentUser.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(currentUser, 'invite-user-to-farm');
@@ -373,10 +373,9 @@ export async function inviteUserToFarm(
       .limit(1);
 
     if (doesAdminExist && formData.role === 'Admin') {
-      return {
-        error:
-          'Multiple administrators are not allowed. Please contact support for more information.',
-      };
+      throwActionError(
+        'Multiple administrators are not allowed. Please contact support for more information.'
+      );
     }
 
     // Multiple users aren't allowed
@@ -387,16 +386,15 @@ export async function inviteUserToFarm(
       .limit(1);
 
     if (doesViewerExist && formData.role === 'Viewer') {
-      return {
-        error:
-          'Multiple viewers are not allowed. Please contact support for more information.',
-      };
+      throwActionError(
+        'Multiple viewers are not allowed. Please contact support for more information.'
+      );
     }
 
     // Don't require the user's new ID to be sent with formData
     const validated = userInsertSchema.omit({ id: true }).safeParse(formData);
     if (!validated.success) {
-      return { error: z.treeifyError(validated.error) };
+      throwActionError(z.treeifyError(validated.error));
     }
 
     const didInvite = await inviteUser(
@@ -405,7 +403,7 @@ export async function inviteUserToFarm(
     );
 
     if (didInvite instanceof Error) {
-      return { error: didInvite.message };
+      throwActionError(didInvite.message);
     }
 
     // Insert user and return row so client has id for uninvite
@@ -414,11 +412,11 @@ export async function inviteUserToFarm(
       .values({ ...validated.data, farmId })
       .returning();
 
-    return { error: null, data: inserted ?? undefined };
+    return { data: inserted ?? undefined };
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Unknown error' };
+    throwActionError('Unknown error');
   }
 }
