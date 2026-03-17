@@ -10,7 +10,7 @@
  * */
 export async function submitToGoogleSheets(
   formData: FormData | Object,
-  googleScriptUrl: string
+  googleScriptUrl: string = process.env.CONTACT_GOOGLE_SCRIPT_URL || ''
 ) {
   try {
     const url = new URL(googleScriptUrl);

@@ -19,6 +19,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -103,8 +104,32 @@ export default function Contact() {
         farm_name: getValues().farmName,
         email: getValues().email,
         phone: getValues().phone,
+        instagram_handle: getValues().instagramHandle || '',
       });
       router.push(`/signup?${params.toString()}`);
+    }
+  }
+
+  async function onInstagramSubmit() {
+    await trigger();
+
+    if (isValid) {
+      const params = new URLSearchParams({
+        first_name: getValues().firstName,
+        last_name: getValues().lastName,
+        farm_name: getValues().farmName,
+        email: getValues().email,
+        phone: getValues().phone,
+        instagram_handle: getValues().instagramHandle || '',
+      });
+      // Push to Google Sheets
+      try {
+        await submitToGoogleSheets(Object.fromEntries(params.entries()));
+      } catch (error) {
+        console.error('Failed to submit to Google Sheets:', error);
+      }
+      // Redirect to What We Do
+      router.push(`/what-we-do`);
     }
   }
 
@@ -455,7 +480,7 @@ export default function Contact() {
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
-                          className="w-[200px] h-11 ml-1 rounded-full mt-4"
+                          className="w-[200px] h-1s1 ml-1 rounded-full mt-4"
                           buttonText={t('results.matchJoinUs')}
                           onClickFunction={onSubmit}
                         />
@@ -468,21 +493,21 @@ export default function Contact() {
                         <p className="text-sm md:text-normal md:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchBody')}
                         </p>
-                        {/* Commenting out for now until we have form and logic to submit the Instagram handle. */}
-                        {/* <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                        {/* WIP: Need form and logic** to submit the Instagram handle. */}
+                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchInstagram')}
                         </p>
                         <Input
                           className="border-[#848484]/80 border-1 w-full max-w-[280px] sm:max-w-[355px]"
                           type="text"
                           placeholder="@handle"
-                          // {...register('instagramHandle')}
+                          {...register('instagramHandle')}
                         />
                         <SubmitButton
                           className="w-[200px] h-11 ml-1 rounded-full mt-2"
                           buttonText={t('results.noMatchSubmit')}
-                          onClickFunction={() => {}}
-                        /> */}
+                          onClickFunction={onInstagramSubmit}
+                        />
                       </div>
                     )}
                   </CarouselItem>
