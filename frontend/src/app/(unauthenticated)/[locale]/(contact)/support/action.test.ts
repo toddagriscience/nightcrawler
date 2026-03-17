@@ -123,6 +123,6 @@ describe('submitPublicInquiry', () => {
     });
 
     await expect(submitPublicInquiry(fd)).rejects.toThrow('Sheets is down');
-    expect(mocks.loggerError).toHaveBeenCalledTimes(1);
+    expect(mocks.loggerError).toHaveBeenCalledTimes(2);
   });
 });

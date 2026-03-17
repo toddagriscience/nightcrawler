@@ -107,7 +107,7 @@ describe('widgets actions', () => {
   it('revalidates the dashboard after deleting a widget', async () => {
     const result = await deleteWidget(42);
 
-    expect(result).toEqual({ error: null });
+    expect(result).toEqual({});
     expect(mockRevalidatePath).toHaveBeenCalledWith('/');
   });
 
@@ -120,7 +120,7 @@ describe('widgets actions', () => {
       },
     });
 
-    expect(result).toEqual({ error: null });
+    expect(result).toEqual({});
     expect(mockRevalidatePath).toHaveBeenCalledWith('/');
   });
 });
