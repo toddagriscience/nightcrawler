@@ -4,9 +4,10 @@
 
 import { FadeIn } from '@/components/common';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
+import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Button } from '@/components/ui';
-import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import {
   Carousel,
   CarouselApi,
@@ -30,7 +31,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -57,14 +57,9 @@ export default function Contact() {
       phone: '',
       website: undefined,
       isOrganic: undefined,
-<<<<<<< HEAD
-      isHydroponic: false,
-      producesSprouts: false,
-      instagramHandle: '',
-=======
       isHydroponic: undefined,
       producesSprouts: undefined,
->>>>>>> 3b54617ab4ca5e5456685af8a92440fe76c70e1e
+      instagramHandle: '',
     },
     resolver: zodResolver(contactFormSchema),
   });
@@ -79,18 +74,21 @@ export default function Contact() {
     isOrganic,
     isHydroponic,
     producesSprouts,
+    instagramHandle
   } = watch();
   const requiresWebsite = !isWorkEmail(email ?? '');
   const organicSlideIndex = requiresWebsite ? 2 : 1;
   const hydroponicSlideIndex = organicSlideIndex + 1;
   const sproutsSlideIndex = organicSlideIndex + 2;
+  const instagramSlideIndex = organicSlideIndex + 3;
   const canAdvance =
     (slide === 0 &&
       Boolean(firstName && lastName && farmName && email && phone)) ||
     (requiresWebsite && slide === 1 && Boolean(website)) ||
     (slide === organicSlideIndex && isOrganic !== undefined) ||
     (slide === hydroponicSlideIndex && isHydroponic !== undefined) ||
-    (slide === sproutsSlideIndex && producesSprouts !== undefined);
+    (slide === sproutsSlideIndex && producesSprouts !== undefined) ||
+    (slide === instagramSlideIndex && Boolean(instagramHandle));
 
   useEffect(() => {
     if (!api) return;
@@ -126,7 +124,9 @@ export default function Contact() {
               ? (['isHydroponic'] as (keyof ContactFormData)[])
               : slide === sproutsSlideIndex
                 ? (['producesSprouts'] as (keyof ContactFormData)[])
-                : [];
+                : slide === instagramSlideIndex
+                  ? (['instagramHandle'] as (keyof ContactFormData)[])
+                  : [];
 
     const isStepValid = fieldsToValidate.length
       ? await trigger(fieldsToValidate)
