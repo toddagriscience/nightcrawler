@@ -203,7 +203,9 @@ describe('Contact page', () => {
     await user.click(nextButton2);
 
     await waitFor(() => {
-      expect(screen.getByText(/What We Do/)).toBeInTheDocument();
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
+      expect(calledUrl).toContain('what-we-do');
     });
   });
 
