@@ -2,13 +2,14 @@
 
 'use server';
 
-import { signUpUser } from '@/lib/auth';
+import { signUpUser } from '@/lib/auth-server';
 import { farm, user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import { createFarmDefaultSettings } from '@/lib/db/queries/create-farm-default-settings';
+import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import { z } from 'zod';
-import logger from '@/lib/logger';
 
 /** Schema for sign up validation - extends userInfo with password */
 const signUpSchema = userInfo.extend({
@@ -64,6 +65,9 @@ export async function signUp(
         informalName: farmName,
       })
       .returning({ id: farm.id });
+
+    // Initialize default per-farm settings immediately after farm creation.
+    await createFarmDefaultSettings(newFarm.id);
 
     // Create the user record linked to the farm
     const [newUser] = await db

@@ -1,24 +1,27 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vi } from 'vitest';
+import { sendResetPasswordEmail } from '@/lib/actions/auth';
+import { AuthResponseTypes } from '@/lib/types/auth';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import ForgotPassword from './page';
-import { useActionState } from 'react';
-import { describe, test, expect, vi } from 'vitest';
 
-vi.mock('react', { spy: true });
+vi.mock('@/lib/utils/actions', () => ({
+  formatActionResponseErrors: vi.fn(),
+}));
+
+vi.mock('@/lib/actions/auth', () => ({
+  sendResetPasswordEmail: vi.fn(),
+}));
 
 describe('ForgotPassword', () => {
   test('should render the form and initial prompt without errors', () => {
-    vi.mocked(useActionState).mockImplementation(() => [
-      null,
-      vi.fn(() => {}),
-      false,
-    ]);
-
     render(<ForgotPassword />);
 
     expect(
-      screen.getByRole('heading', { name: /reset password/i })
+      screen.getByRole('heading', { name: /reset your password/i })
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Please provide your account email/i)
@@ -31,27 +34,29 @@ describe('ForgotPassword', () => {
   });
 
   test('should display success message after successful submission', async () => {
-    const { rerender } = render(<ForgotPassword />);
+    vi.mocked(sendResetPasswordEmail).mockResolvedValue({
+      error: null,
+      responseType: AuthResponseTypes.SendResetPasswordEmail,
+    });
 
+    const user = userEvent.setup();
+    render(<ForgotPassword />);
+
+    await user.type(
+      screen.getByLabelText(/Email Address/i),
+      'test@example.com'
+    );
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          /We've sent an email with the information needed to reset your password/i
+        )
+      ).toBeInTheDocument();
+    });
     expect(
       screen.getByRole('heading', { name: /reset password/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Please provide your account email/i)
-    ).toBeInTheDocument();
-
-    // Rerender the component with the successful state returned by the mock
-    vi.mocked(useActionState).mockImplementation(() => [
-      [[]],
-      vi.fn(() => {}),
-      false,
-    ]);
-    rerender(<ForgotPassword />);
-
-    expect(
-      screen.getByText(
-        /We've sent an email with the information needed to reset your password/i
-      )
     ).toBeInTheDocument();
 
     // Ensure the form is gone
@@ -63,15 +68,22 @@ describe('ForgotPassword', () => {
 
   test('should display error message after failed submission', async () => {
     const errorMessage = 'Invalid email or server error.';
-    vi.mocked(useActionState).mockImplementation(() => [
-      { error: errorMessage },
-      vi.fn(() => {}),
-      false,
-    ]);
+    vi.mocked(sendResetPasswordEmail).mockResolvedValue({
+      error: errorMessage,
+      responseType: AuthResponseTypes.SendResetPasswordEmail,
+    });
+    vi.mocked(formatActionResponseErrors).mockReturnValue([errorMessage]);
 
+    const user = userEvent.setup();
     render(<ForgotPassword />);
 
-    const errorElement = screen.getByText(errorMessage);
+    await user.type(
+      screen.getByLabelText(/Email Address/i),
+      'test@example.com'
+    );
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+
+    const errorElement = await screen.findByText(errorMessage);
     expect(errorElement).toBeInTheDocument();
     expect(errorElement).toHaveClass('text-red-500');
 

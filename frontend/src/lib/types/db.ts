@@ -6,6 +6,7 @@ import {
   farmCertificate,
   farmInfoInternalApplication,
   farmLocation,
+  farmSubscription,
   integratedManagementPlan,
   knowledgeArticle,
   managementZone,
@@ -19,6 +20,7 @@ export type UserSelect = InferSelectModel<typeof user>;
 export type FarmLocationSelect = InferSelectModel<typeof farmLocation>;
 export type FarmSelect = InferSelectModel<typeof farm>;
 export type FarmCertificateSelect = InferSelectModel<typeof farmCertificate>;
+export type FarmSubscriptionSelect = InferSelectModel<typeof farmSubscription>;
 export type FarmInfoInternalApplicationSelect = InferSelectModel<
   typeof farmInfoInternalApplication
 >;

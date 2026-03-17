@@ -17,7 +17,9 @@ export default function MineralDataNotFound({
 }) {
   return (
     <div className="flex flex-row justify-between items-center">
-      <p>No {name} data currently available</p>
+      <p className="text-foreground/85 text-sm">
+        No {name} data currently available
+      </p>
 
       <WidgetDeleteButton widgetId={widget.id} />
     </div>

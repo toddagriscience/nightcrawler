@@ -6,12 +6,33 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import noSecrets from "eslint-plugin-no-secrets";
 import vitest from "@vitest/eslint-plugin";
+import * as espree from "espree";
 
 // Normalize plugin exports
 const licenseHeaderPlugin = licenseHeader?.default ?? licenseHeader;
 
 const eslintConfig = defineConfig([
   ...nextVitals,
+  {
+    files: ["**/*.{js,jsx,mjs}"],
+    languageOptions: {
+      parser: espree,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+  },
+  {
+    files: ["**/*.cjs"],
+    languageOptions: {
+      parser: espree,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "script",
+      },
+    },
+  },
   globalIgnores([
     "**/node_modules/**",
     "**/.next/**",
@@ -33,6 +54,11 @@ const eslintConfig = defineConfig([
       "no-secrets": noSecrets,
       vitest,
       drizzle,
+    },
+    settings: {
+      react: {
+        version: "19.2",
+      },
     },
     rules: {
       ...vitest.configs.recommended.rules,

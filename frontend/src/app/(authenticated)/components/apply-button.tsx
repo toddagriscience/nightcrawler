@@ -2,8 +2,8 @@
 
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui';
+import { useRouter } from 'next/navigation';
 
 export default function ApplyButton() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function ApplyButton() {
     <Button
       onClick={() => router.push('/apply')}
       variant={'brand'}
-      className="min-w-45"
+      className="h-11 w-45 hover:cursor-pointer rounded-full text-foreground text-white"
     >
       Apply to Todd
     </Button>

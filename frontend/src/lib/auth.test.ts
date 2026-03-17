@@ -2,14 +2,8 @@
 
 import { AuthError } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
-import {
-  checkAuthenticated,
-  getUserEmail,
-  inviteUser,
-  login,
-  logout,
-  signUpUser,
-} from './auth';
+import { checkAuthenticated, login, logout } from './auth-client';
+import { getUserEmail, inviteUser, signUpUser } from './auth-server';
 
 vitest.mock(import('./logger'), async (importActual) => {
   const actual = await importActual();
@@ -247,7 +241,7 @@ describe('signUpUser', () => {
       email: 'test@example.com',
       password: 'securePassword123',
       options: {
-        emailRedirectTo: 'https://toddagriscience.com/login',
+        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/',
         data: {
           first_name: 'Oscar',
           name: 'Oscar',
@@ -292,7 +286,7 @@ describe('signUpUser', () => {
       email: 'john@example.com',
       password: 'password123',
       options: {
-        emailRedirectTo: 'https://toddagriscience.com/login',
+        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/',
         data: {
           name: 'John Doe',
           first_name: 'John Doe',

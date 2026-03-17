@@ -1,0 +1,30 @@
+services:
+  postgres-local:
+    image: pgvector/pgvector:pg18
+    container_name: nightcrawler-postgres-local
+    restart: unless-stopped
+    # Add shm_size if you plan on doing heavy vector indexing
+    shm_size: '128mb'
+    environment:
+      POSTGRES_USER: ${LOCAL_DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${LOCAL_DATABASE_PASSWORD:-Test123!}
+      POSTGRES_DB: ${LOCAL_DATABASE_DATABASE:-postgres}
+      # Ensures consistent character encoding
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    ports:
+      - '${LOCAL_DATABASE_PORT:-5432}:5432'
+    volumes:
+      - postgres-local-data:/var/lib/postgresql
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${LOCAL_DATABASE_USER:-postgres} -d ${LOCAL_DATABASE_DATABASE:-postgres}',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres-local-data:

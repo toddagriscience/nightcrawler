@@ -3,7 +3,7 @@
 'use client';
 
 import { PageHero } from '@/components/common';
-import { ScrollShrinkWrapper } from '@/components/landing';
+import { ScrollShrinkWrapper } from '../../components';
 import { useTranslations } from 'next-intl';
 
 /**

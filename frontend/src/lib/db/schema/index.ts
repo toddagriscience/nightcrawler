@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 export { analysis } from './analysis';
+export { farmSubscription } from './farm-subscription';
 export { farm, farmCertificate, farmLocation } from './farm';
 export { integratedManagementPlan } from './integrated-management-plan';
 export { farmInfoInternalApplication } from './internal-application';

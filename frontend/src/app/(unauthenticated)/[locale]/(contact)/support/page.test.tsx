@@ -38,7 +38,7 @@ describe('Support page', () => {
     await user.type(screen.getByLabelText('Email Address'), 'jane@example.com');
     await user.type(screen.getByLabelText('Message'), 'Need help!');
 
-    await user.click(screen.getByRole('button', { name: 'SUBMIT' }));
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
 
     await waitFor(() => {
       expect(submitPublicInquiry).toHaveBeenCalled();
@@ -46,10 +46,10 @@ describe('Support page', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: 'MESSAGE SENT' })
+        screen.getByRole('heading', { name: 'Message Sent' })
       ).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: 'HOME' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Home' })).toBeInTheDocument();
   });
 });
