@@ -210,7 +210,7 @@ export default function WhatWeDoPage() {
           {/* Build a Better Farm Section */}
           <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
             <Link
-              href="/contact"
+              href="/contact?utm_source=what_we_do&utm_medium=internal&utm_campaign=build_a_better_farm_click"
               className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
             >
               {t('buildABetterFarm.title')}
