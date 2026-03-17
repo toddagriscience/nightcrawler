@@ -5,17 +5,17 @@ import {
   farm,
   farmCertificate,
   farmInfoInternalApplication,
-  farmSubscription,
   farmLocation,
+  farmSubscription,
   user,
 } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import logger from '@/lib/logger';
+import { createClient } from '@/lib/supabase/server';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq, ne } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import ApplicationTabs from './components/application-tabs';
-import { createClient } from '@/lib/supabase/server';
-import logger from '@/lib/logger';
 import { isApplicationReadyForSubmission } from './db';
 
 /** The apply page
@@ -105,7 +105,7 @@ export default async function Apply() {
   }
 
   return (
-    <div className="mx-auto mb-8 w-[90vw] max-w-[800px]">
+    <div className="mx-auto mb-8 w-[90vw] max-w-[550px]">
       <ApplicationTabs
         farmInfo={{
           ...farmInfo.farm,

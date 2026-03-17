@@ -2,14 +2,14 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function OtherMaterials() {
   const {
@@ -57,10 +57,14 @@ export default function OtherMaterials() {
             {!field.value?.noMaterials?.isNoMaterials && (
               <div className="ml-6 mb-4 flex flex-col gap-4">
                 <div>
-                  <FieldLabel htmlFor="productName" className="mb-2">
+                  <FieldLabel
+                    htmlFor="productName"
+                    className="leading-tight mb-[4px]"
+                  >
                     Product name, including formulation:
                   </FieldLabel>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter product name..."
                     value={field.value?.noMaterials?.productName ?? ''}
                     onChange={(e) =>
@@ -75,10 +79,14 @@ export default function OtherMaterials() {
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="manufacturerName" className="mb-2">
+                  <FieldLabel
+                    htmlFor="manufacturerName"
+                    className="leading-tight mb-[4px]"
+                  >
                     Manufacturer name:
                   </FieldLabel>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter manufacturer name..."
                     value={field.value?.noMaterials?.manufacturerName ?? ''}
                     onChange={(e) =>
@@ -93,10 +101,14 @@ export default function OtherMaterials() {
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="reasonForUse" className="mb-2">
+                  <FieldLabel
+                    htmlFor="reasonForUse"
+                    className="leading-tight mb-[4px]"
+                  >
                     Reason for use:
                   </FieldLabel>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter reason for use..."
                     value={field.value?.noMaterials?.reasonForUse ?? ''}
                     onChange={(e) =>
@@ -111,11 +123,15 @@ export default function OtherMaterials() {
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="lastApplication" className="mb-2">
+                  <FieldLabel
+                    htmlFor="lastApplication"
+                    className="leading-tight mb-[4px]"
+                  >
                     Last application:
                   </FieldLabel>
                   <Input
                     type="date"
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     value={field.value?.noMaterials?.lastApplication ?? ''}
                     onChange={(e) =>
                       field.onChange({
@@ -129,10 +145,14 @@ export default function OtherMaterials() {
                   />
                 </div>
                 <div>
-                  <FieldLabel htmlFor="otherInformation" className="mb-2">
+                  <FieldLabel
+                    htmlFor="otherInformation"
+                    className="leading-tight mb-[4px]"
+                  >
                     Other information:
                   </FieldLabel>
                   <Textarea
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     value={field.value?.noMaterials?.otherInformation ?? ''}
                     onChange={(e) =>
                       field.onChange({

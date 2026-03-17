@@ -22,7 +22,7 @@ export default function SelfSelectAdmin({
   return (
     <>
       <h2 className="mb-1 text-lg font-semibold">You</h2>
-      <p className="mb-5">
+      <p className="mb-5 text-sm text-muted-foreground/70">
         Only one administrator account is permitted per farm. Please contact
         support for more information.
       </p>
@@ -34,11 +34,13 @@ export default function SelfSelectAdmin({
               {...register('isAdmin')}
               defaultChecked={getValues().isAdmin}
             />
-            <Label>I am an administrator</Label>
+            <Label className="text-sm text-muted-foreground/70 leading-tight">
+              I am an administrator
+            </Label>
           </Field>
         </form>
       ) : (
-        <p className="mb-8 text-sm text-muted-foreground">
+        <p className="mb-8 text-sm text-muted-foreground/70">
           Your role is {role}. Only administrators can change farm permissions.
         </p>
       )}

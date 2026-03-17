@@ -5,8 +5,8 @@
 import { Button } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import { useContext, useMemo, useState } from 'react';
-import { ApplicationContext } from './application-tabs';
 import { createStripeSubscriptionCheckoutSession } from '../actions';
+import { ApplicationContext } from './application-tabs';
 
 /** The 4th tab in the application page for starting the Stripe Platform License. */
 export default function Subscription() {
@@ -79,10 +79,10 @@ export default function Subscription() {
         </p>
       )}
 
-      <div className="flex flex-row gap-4 max-sm:flex-col">
+      <div className="flex flex-row gap-4 justify-center">
         <Button
           type="button"
-          className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
+          className="h-11 w-[180px] rounded-full text-sm hover:cursor-pointer hover:bg-foreground/80 bg-foreground text-background font-semibold"
           onClick={beginStripeCheckout}
           disabled={!canEditFarm || isLoading || hasActiveSubscription}
         >
@@ -95,7 +95,7 @@ export default function Subscription() {
 
         <Button
           type="button"
-          className="w-full"
+          className="h-11 w-[225px] rounded-full text-sm hover:cursor-pointer hover:border-[#848484]/80 font-semibold"
           variant="outline"
           onClick={() => router.refresh()}
         >
@@ -104,7 +104,7 @@ export default function Subscription() {
 
         <Button
           type="button"
-          className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
+          className="h-11 w-[150px] rounded-full text-sm hover:cursor-pointer bg-foreground text-background font-semibold"
           onClick={() => {
             setCurrentTab('terms');
             scrollTo(0, 0);

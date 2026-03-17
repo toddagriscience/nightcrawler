@@ -2,22 +2,22 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { saveGeneralBusinessInformation } from '../actions';
 import {
   type GeneralBusinessInformationInsert,
   generalBusinessInformationInsertSchema,
 } from '../types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { useForm, FormProvider } from 'react-hook-form';
-import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { saveGeneralBusinessInformation } from '../actions';
-import { Address, Certifications } from './general-business-information/index';
-import { useState, useContext } from 'react';
 import { ApplicationContext } from './application-tabs';
-import { cn } from '@/lib/utils';
+import { Address, Certifications } from './general-business-information/index';
 
 /** The 1st tab in the application page for general business information */
 export default function GeneralBusinessInformation() {
@@ -79,7 +79,7 @@ export default function GeneralBusinessInformation() {
           <h2 className="text-lg font-semibold">Business Information</h2>
           <FieldSet className="flex flex-col gap-6">
             <Field>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between mb-[-6px]">
                 <FieldLabel>Registered Legal Business Name</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -90,6 +90,7 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Enter your legal business name"
                 {...register('businessName')}
@@ -97,7 +98,7 @@ export default function GeneralBusinessInformation() {
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between mb-[-6px]">
                 <FieldLabel>Informal / DBA Name</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -108,6 +109,7 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Enter your informal or DBA name"
                 {...register('informalName')}
@@ -115,7 +117,7 @@ export default function GeneralBusinessInformation() {
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between mb-[-6px]">
                 <FieldLabel>Business Website</FieldLabel>
                 <ErrorMessage
                   errors={errors}
@@ -126,6 +128,7 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="url"
                 placeholder="https://example.com"
                 {...register('businessWebsite')}
@@ -133,7 +136,7 @@ export default function GeneralBusinessInformation() {
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between mb-[-6px]">
                 <FieldLabel>
                   When did you begin managing this parcel?
                 </FieldLabel>
@@ -145,7 +148,11 @@ export default function GeneralBusinessInformation() {
                   )}
                 />
               </div>
-              <Input type="date" {...register('managementStartDate')} />
+              <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
+                type="date"
+                {...register('managementStartDate')}
+              />
             </Field>
           </FieldSet>
 
@@ -163,7 +170,8 @@ export default function GeneralBusinessInformation() {
 
           {canEditFarm && (
             <SubmitButton
-              buttonText="Save & next"
+              className="bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full h-11 w-[200px]"
+              buttonText="Save & Next"
               reactHookFormPending={isSubmitting}
             ></SubmitButton>
           )}
