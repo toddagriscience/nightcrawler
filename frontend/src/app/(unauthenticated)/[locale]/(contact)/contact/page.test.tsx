@@ -190,6 +190,21 @@ describe('Contact page', () => {
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
     });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Instagram/)).toBeInTheDocument();
+    });
+
+    // Answer instagram question
+    const instagramInput = getRequiredInput('instagramHandle');
+    await user.type(instagramInput, 'magicalfarms');
+
+    const nextButton2 = screen.getByText('Submit');
+    await user.click(nextButton2);
+
+    await waitFor(() => {
+      expect(screen.getByText(/What We Do/)).toBeInTheDocument();
+    }
   });
 
   it('calls router.push with correct URL parameters on successful form submission', async () => {
