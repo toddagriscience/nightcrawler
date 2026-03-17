@@ -41,12 +41,13 @@ export default function ManagementZoneForm({
 
   async function onSubmit(values: ManagementZoneInsert) {
     await trigger();
-
-    const result = await updateManagementZone(zone.id, values);
-    const errors = formatActionResponseErrors(result);
-
-    if (errors.length !== 0) {
-      setError('root', { message: errors[0] });
+    try {
+      await updateManagementZone(zone.id, values);
+    } catch (error) {
+      const errors = formatActionResponseErrors(error);
+      if (errors.length !== 0) {
+        setError('root', { message: errors[0] });
+      }
     }
   }
 

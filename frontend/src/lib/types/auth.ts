@@ -25,9 +25,11 @@ export enum AuthResponseTypes {
 
 /** Generic interface for a response from a server action/API route involving authentication.
  *
+ * @property {unknown | null} error - Optional auth-specific error payload
  * @property {AuthResponseTypes} responseType - The type of the response
  * */
 export interface AuthResponse extends ActionResponse {
+  error?: unknown | null;
   responseType: AuthResponseTypes;
 }
 

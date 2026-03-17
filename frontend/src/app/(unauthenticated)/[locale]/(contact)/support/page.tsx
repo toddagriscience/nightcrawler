@@ -53,22 +53,12 @@ export default function Support() {
     formData.set('response', data.response);
 
     try {
-      const result = await submitPublicInquiry(formData);
-      if (result?.error) {
-        const formatted = formatActionResponseErrors(result);
-        setError('root', {
-          message: formatted[0] ?? 'Something went wrong. Please try again.',
-        });
-        return;
-      }
-
+      await submitPublicInquiry(formData);
       reset();
     } catch (error) {
+      const formatted = formatActionResponseErrors(error);
       setError('root', {
-        message:
-          error instanceof Error
-            ? error.message
-            : 'Something went wrong. Please try again.',
+        message: formatted[0] ?? 'Something went wrong. Please try again.',
       });
     }
   };

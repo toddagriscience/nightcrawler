@@ -44,7 +44,7 @@ describe('submitPublicInquiry', () => {
 
     const result = await submitPublicInquiry(fd);
 
-    expect(result).toEqual({ error: null, data: null });
+    expect(result).toEqual({ data: null });
     expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
 
     const [submittedFormData, url] = mocks.submitToGoogleSheets.mock.calls[0];
@@ -56,24 +56,16 @@ describe('submitPublicInquiry', () => {
     expect(submittedFormData.get('response')).toBe('Hello!');
   });
 
-  it('returns an error when required fields are missing', async () => {
+  it('throws an error when required fields are missing', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
     const fd = makeFormData({});
-    const result = await submitPublicInquiry(fd);
-
-    expect(result.data).toBeNull();
-    expect(result.error).toBeTruthy();
-
-    // error is a ZodErrorTree
-    expect((result.error as any).properties?.name?.errors?.[0]).toBe(
-      'Name is required.'
-    );
+    await expect(submitPublicInquiry(fd)).rejects.toThrow('Name is required.');
 
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
-  it('returns validation error if email is provided but invalid', async () => {
+  it('throws validation error if email is provided but invalid', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
     const fd = makeFormData({
@@ -82,17 +74,14 @@ describe('submitPublicInquiry', () => {
       response: 'Hello!',
     });
 
-    const result = await submitPublicInquiry(fd);
-
-    expect(result.data).toBeNull();
-    expect((result.error as any).properties?.lastKnownEmail?.errors?.[0]).toBe(
+    await expect(submitPublicInquiry(fd)).rejects.toThrow(
       'Please enter a valid email.'
     );
 
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
-  it('returns validation error if response is over 1500 chars', async () => {
+  it('throws validation error if response is over 1500 chars', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
 
     const fd = makeFormData({
@@ -101,33 +90,27 @@ describe('submitPublicInquiry', () => {
       response: 'a'.repeat(1501),
     });
 
-    const result = await submitPublicInquiry(fd);
-
-    expect(result.data).toBeNull();
-    expect((result.error as any).properties?.response?.errors?.[0]).toBe(
+    await expect(submitPublicInquiry(fd)).rejects.toThrow(
       'Response is too long (max 1500 characters).'
     );
 
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
-  it('returns config error if CONTACT_GOOGLE_SCRIPT_URL is missing', async () => {
+  it('throws config error if CONTACT_GOOGLE_SCRIPT_URL is missing', async () => {
     const fd = makeFormData({
       name: 'Inban',
       lastKnownEmail: 'inban@example.com',
       response: 'Hello!',
     });
 
-    const result = await submitPublicInquiry(fd);
-
-    expect(result).toEqual({
-      error: 'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL',
-      data: null,
-    });
+    await expect(submitPublicInquiry(fd)).rejects.toThrow(
+      'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
+    );
     expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
   });
 
-  it('returns error when submitToGoogleSheets throws, and logs it', async () => {
+  it('throws error when submitToGoogleSheets throws, and logs it', async () => {
     process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
     mocks.submitToGoogleSheets.mockRejectedValueOnce(
       new Error('Sheets is down')
@@ -139,9 +122,7 @@ describe('submitPublicInquiry', () => {
       response: 'Test',
     });
 
-    const result = await submitPublicInquiry(fd);
-
-    expect(result).toEqual({ error: 'Sheets is down', data: null });
+    await expect(submitPublicInquiry(fd)).rejects.toThrow('Sheets is down');
     expect(mocks.loggerError).toHaveBeenCalledTimes(1);
   });
 });

@@ -5,6 +5,7 @@
 import { managementZone, tab } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 import { assertCanEditFarm } from '@/lib/utils/farm-rbac';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { and, eq } from 'drizzle-orm';
@@ -30,7 +31,7 @@ export default async function updateTabName({
     const farmId = result.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(result, 'update-tab-name');
@@ -57,15 +58,15 @@ export default async function updateTabName({
         .set({ name: newName })
         .where(eq(managementZone.id, zone.id));
     } else {
-      return { error: 'Please provide either oldName or tabId' };
+      throwActionError('Please provide either oldName or tabId');
     }
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Failed to update tab' };
+    throwActionError('Failed to update tab');
   }
 }
 
@@ -87,13 +88,13 @@ export async function deleteTab({
     const farmId = result.farmId;
 
     if (!farmId) {
-      return { error: 'User is not associated with a farm' };
+      throwActionError('User is not associated with a farm');
     }
 
     assertCanEditFarm(result, 'delete-tab');
 
     if (!name && !tabId) {
-      return { error: 'Please provide either oldName or tabId' };
+      throwActionError('Please provide either oldName or tabId');
     }
 
     if (name) {
@@ -111,12 +112,12 @@ export async function deleteTab({
       await db.delete(tab).where(eq(tab.id, tabId));
     }
 
-    return { error: null };
+    return {};
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      throwActionError(error.message);
     }
-    return { error: 'Failed to delete tab' };
+    throwActionError('Failed to delete tab');
   }
 }
 

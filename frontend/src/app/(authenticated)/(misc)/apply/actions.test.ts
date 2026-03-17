@@ -147,7 +147,7 @@ describe('saveApplication', () => {
     });
 
     const result = await saveApplication({ farmId: 1 });
-    expect(result.error).toBeNull();
+    expect(result).toEqual({});
   });
 
   it('saves with some information given', async () => {
@@ -163,7 +163,7 @@ describe('saveApplication', () => {
     };
 
     const result = await saveApplication(data);
-    expect(result.error).toBeNull();
+    expect(result).toEqual({});
   });
 
   it('throws error with incorrect email', async () => {
@@ -172,11 +172,10 @@ describe('saveApplication', () => {
       error: null,
     });
 
-    const result = await saveApplication({ farmId: 1 });
-    expect(result.error).not.toBeNull();
+    await expect(saveApplication({ farmId: 1 })).rejects.toThrow();
   });
 
-  it('returns an authorization error for viewers', async () => {
+  it('throws an authorization error for viewers', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -187,16 +186,14 @@ describe('saveApplication', () => {
       .set({ role: 'Viewer' })
       .where(eq(userTable.email, testUserEmail));
 
-    const result = await saveApplication({ farmId: 1 });
-
-    expect(result.error).toBe(
+    await expect(saveApplication({ farmId: 1 })).rejects.toThrow(
       'You do not have permission to edit farm information'
     );
   });
 });
 
 describe('saveGeneralBusinessInformation', () => {
-  it('returns an authorization error for viewers', async () => {
+  it('throws an authorization error for viewers', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -207,14 +204,12 @@ describe('saveGeneralBusinessInformation', () => {
       .set({ role: 'Viewer' })
       .where(eq(userTable.email, testUserEmail));
 
-    const result = await saveGeneralBusinessInformation({
-      farmId: 1,
-      businessName: 'Viewer Farm',
-    });
-
-    expect(result.error).toBe(
-      'You do not have permission to edit farm information'
-    );
+    await expect(
+      saveGeneralBusinessInformation({
+        farmId: 1,
+        businessName: 'Viewer Farm',
+      })
+    ).rejects.toThrow('You do not have permission to edit farm information');
   });
 });
 
@@ -232,7 +227,7 @@ describe('sendApplicationToGoogleSheets', () => {
     });
 
     const result = await submitApplication();
-    expect(result.error).toBeNull();
+    expect(result).toEqual({});
   });
 });
 
@@ -279,24 +274,23 @@ describe('inviteUserToFarm', () => {
     const userData = createValidUserData({ email: newUserEmail });
     const result = await inviteUserToFarm(userData);
 
-    expect(result.error).toBeNull();
     expect(mockInviteUser).toHaveBeenCalledWith(newUserEmail, 'Jane');
   });
 
-  it('returns error when user is not authenticated', async () => {
+  it('throws when user is not authenticated', async () => {
     mockGetClaims.mockReturnValue({
       data: null,
       error: new Error('Not authenticated'),
     });
 
     const userData = createValidUserData();
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).toBe("No email registered with this user's account");
+    await expect(inviteUserToFarm(userData)).rejects.toThrow(
+      "No email registered with this user's account"
+    );
     expect(mockInviteUser).not.toHaveBeenCalled();
   });
 
-  it('returns error when data is invalid (missing required fields)', async () => {
+  it('throws when data is invalid (missing required fields)', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -307,27 +301,23 @@ describe('inviteUserToFarm', () => {
       firstName: 'John',
     } as Parameters<typeof inviteUserToFarm>[0];
 
-    const result = await inviteUserToFarm(invalidData);
-
-    expect(result.error).not.toBeNull();
+    await expect(inviteUserToFarm(invalidData)).rejects.toThrow();
     expect(mockInviteUser).not.toHaveBeenCalled();
   });
 
-  it('returns error when inviteUser fails', async () => {
+  it('throws when inviteUser fails', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
     });
 
     const userData = createValidUserData();
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).toBe(
+    await expect(inviteUserToFarm(userData)).rejects.toThrow(
       'Multiple viewers are not allowed. Please contact support for more information.'
     );
   });
 
-  it('returns error when current user is not found', async () => {
+  it('throws when current user is not found', async () => {
     // Use an email that doesn't exist in the database
     mockGetClaims.mockReturnValue({
       data: { claims: { email: 'nonexistent@example.com' } },
@@ -335,13 +325,11 @@ describe('inviteUserToFarm', () => {
     });
 
     const userData = createValidUserData();
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).toBe('User not found');
+    await expect(inviteUserToFarm(userData)).rejects.toThrow('User not found');
     expect(mockInviteUser).not.toHaveBeenCalled();
   });
 
-  it('does not invite user with Admin role', async () => {
+  it('throws when inviting user with Admin role', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -356,12 +344,10 @@ describe('inviteUserToFarm', () => {
       firstName: 'Admin',
       lastName: 'User',
     });
-    const result = await inviteUserToFarm(userData);
-
-    expect(result.error).not.toBeNull();
+    await expect(inviteUserToFarm(userData)).rejects.toThrow();
   });
 
-  it('returns an authorization error for viewers', async () => {
+  it('throws an authorization error for viewers', async () => {
     mockGetClaims.mockReturnValue({
       data: { claims: { email: testUserEmail } },
       error: null,
@@ -372,9 +358,7 @@ describe('inviteUserToFarm', () => {
       .set({ role: 'Viewer' })
       .where(eq(userTable.email, testUserEmail));
 
-    const result = await inviteUserToFarm(createValidUserData());
-
-    expect(result.error).toBe(
+    await expect(inviteUserToFarm(createValidUserData())).rejects.toThrow(
       'You do not have permission to edit farm information'
     );
     expect(mockInviteUser).not.toHaveBeenCalled();

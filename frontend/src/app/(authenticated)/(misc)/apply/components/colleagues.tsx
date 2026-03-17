@@ -66,15 +66,15 @@ export default function Colleagues() {
   });
 
   async function onSubmit(data: UserInsert) {
-    const result = await inviteUserToFarm(data);
-    if (result.error === null) {
+    try {
+      const result = await inviteUserToFarm(data);
       // Use returned row so the new list entry has a real id (needed for uninvite)
       if (result.data) {
         setUsers([...users, result.data as UserSelect]);
       }
       reset();
-    } else {
-      setError('role', { message: formatActionResponseErrors(result)[0] });
+    } catch (error) {
+      setError('role', { message: formatActionResponseErrors(error)[0] });
     }
   }
 

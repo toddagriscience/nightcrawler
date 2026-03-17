@@ -80,11 +80,13 @@ export default function Join() {
     formData.set('email', data.email);
     formData.set('phone', data.phone);
     formData.set('password', data.password);
-    const result = await signUp(null, formData);
-    if (result?.error) {
-      setActionErrors(formatActionResponseErrors(result));
+    try {
+      await signUp(null, formData);
+    } catch (error) {
+      setActionErrors(formatActionResponseErrors(error));
       return;
     }
+
     posthog.opt_in_capturing();
     setIsSuccess(true);
   }

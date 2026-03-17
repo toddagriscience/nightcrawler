@@ -8,6 +8,7 @@ import { db } from '@/lib/db/schema/connection';
 import { createFarmDefaultSettings } from '@/lib/db/queries/create-farm-default-settings';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import { z } from 'zod';
 
@@ -39,9 +40,7 @@ export async function signUp(
 
   if (!validated.success) {
     logger.info('Sign up data was not valid');
-    return {
-      error: z.treeifyError(validated.error),
-    };
+    throwActionError(z.treeifyError(validated.error));
   }
 
   const { firstName, lastName, farmName, email, phone, password } =
@@ -52,9 +51,7 @@ export async function signUp(
 
   if (signUpResult instanceof Error) {
     logger.warn(`Failed to sign up user in Supabase: ${signUpResult.message}`);
-    return {
-      error: signUpResult.message,
-    };
+    throwActionError(signUpResult.message);
   }
 
   try {
@@ -86,15 +83,13 @@ export async function signUp(
 
     return {
       data: { user: newUser, farm: newFarm },
-      error: null,
     };
   } catch (error) {
     logger.error(`Failed to create user/farm in database: ${error}`);
-    return {
-      error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to create user in database',
-    };
+    throwActionError(
+      error instanceof Error
+        ? error.message
+        : 'Failed to create user in database'
+    );
   }
 }

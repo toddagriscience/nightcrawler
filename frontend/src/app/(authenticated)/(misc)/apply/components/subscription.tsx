@@ -3,6 +3,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useContext, useMemo, useState } from 'react';
 import { ApplicationContext } from './application-tabs';
@@ -24,19 +25,22 @@ export default function Subscription() {
   async function beginStripeCheckout() {
     setError(null);
     setIsLoading(true);
+    try {
+      const result = await createStripeSubscriptionCheckoutSession();
+      if (!result.data?.url) {
+        setError('Unable to start Stripe checkout right now.');
+        setIsLoading(false);
+        return;
+      }
 
-    const result = await createStripeSubscriptionCheckoutSession();
-    if (result.error || !result.data?.url) {
+      window.location.assign(result.data.url);
+    } catch (error) {
       setError(
-        typeof result.error === 'string'
-          ? result.error
-          : 'Unable to start Stripe checkout right now.'
+        formatActionResponseErrors(error)[0] ??
+          'Unable to start Stripe checkout right now.'
       );
       setIsLoading(false);
-      return;
     }
-
-    window.location.assign(result.data.url);
   }
 
   return (
