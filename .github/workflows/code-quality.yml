@@ -10,9 +10,6 @@ jobs:
   code-quality:
     name: Code Quality Checks
     runs-on: ubuntu-latest
-    defaults:
-        run:
-            working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -32,10 +29,10 @@ jobs:
         run: bun i
 
       - name: Check code formatting
-        run: bun format:check
+        run: bun run format:check
 
       - name: Run type checking
-        run: bun type-check
+        run: bun run type-check
 
       - name: Run linting
-        run: bun lint
+        run: bun run lint

@@ -4,7 +4,7 @@ on:
   release:
     types:
       - created
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   production-db-release-push:
@@ -24,9 +24,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    defaults:
-      run:
-        working-directory: ./frontend
     env:
       PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
       PROD_DATABASE_PORT: ${{ secrets.PROD_DATABASE_PORT }}
@@ -80,7 +77,9 @@ jobs:
 
       - name: Validate release schema against cloned production DB
         id: push-check
+        working-directory: ./packages/db
         run: bunx drizzle-kit push --config=drizzle-local.config.ts
 
       - name: Push to production
+        working-directory: ./packages/db
         run: bunx drizzle-kit push --config=drizzle-prod.config.ts

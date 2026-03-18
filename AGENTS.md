@@ -29,7 +29,7 @@
 - If you see "make a PR" or something similar, it's time to make a PR. The following is the workflow
 - Ask for user review/QA testing
 - Add files with `git add .`
-- If an only if the user approves, run `bun run validate` inside of the `./frontend` folder
+- If and only if the user approves, run `bun run validate`
 - Commit the files in conventional commit format with `git commit -m`
 - Push the files with `git push`
 - Make a pull request. Don't request a review from anyone, but fill out all of the other attributes. Use the pull request template found in the `.github` folder.

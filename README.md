@@ -34,20 +34,22 @@ Due to this repository being a monorepo, documentation for each workspace is con
    bun install
    ```
 
-4. **Navigate into correct folder**
+4. **Choose the workspace you need**
 
-Unless you're directly working on the CMS (located in `/sanity-studio`), the majority of your work will take place in the `/frontend` folder. Consequently, the rest of this section will assume that you're operating out of the `/frontend` folder.
+- `apps/site` contains the Next.js marketing site and customer platform.
+- `apps/sanity` contains the Sanity Studio.
+- `packages/db` contains the shared database schema, queries, migrations, and local DB tooling.
 
 5. **Setup environment variables**
 
-Copy any and all environment variables from `env.example` to `.env.local` and update any empty variables as necessary.
+Copy any required environment variables from `apps/site/env.example` to `apps/site/.env.local` and update any empty values as necessary.
 
 **If you need to use a database**: refer to `CONTRIBUTING.md`'s `First-Time Setup`.
 
 6. **Start development server**
 
    ```bash
-   bun dev
+   bun run dev:site
    ```
 
 7. **Open in browser**
@@ -60,8 +62,8 @@ Copy any and all environment variables from `env.example` to `.env.local` and up
 
 8. **Start Storybook**
 
-   ```
-   bun storybook
+   ```bash
+   bun run storybook
    ```
 
 9. **Open Storybook in browser**
