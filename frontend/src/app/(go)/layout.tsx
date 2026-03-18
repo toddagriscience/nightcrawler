@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-
-
 import GoFooter from '@/components/go/footer/footer';
 import GoHeader from '@/components/go/header/header';
 import { FadeIn, SmoothScroll } from '../../components/common';

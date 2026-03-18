@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-
-
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
