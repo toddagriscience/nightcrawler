@@ -10,9 +10,6 @@ jobs:
   security:
     name: Security Audit
     runs-on: ubuntu-latest
-    defaults:
-        run:
-            working-directory: ./frontend
 
     steps:
       - name: Checkout code
