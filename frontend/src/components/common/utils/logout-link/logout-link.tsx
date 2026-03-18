@@ -2,8 +2,9 @@
 
 'use client';
 
-import { logout } from '@/lib/auth';
+import { logout } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { BiLogOut } from 'react-icons/bi';
 
 interface LogoutLinkProps {
   className?: string;
@@ -38,6 +39,7 @@ export default function LogoutLink({
       }
     >
       {label}
+      <BiLogOut className="size-4" />
     </button>
   );
 }

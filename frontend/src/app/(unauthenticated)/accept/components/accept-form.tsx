@@ -51,17 +51,13 @@ export default function AcceptForm({
     setServerError('');
 
     try {
-      const result = await acceptInvite(getValues());
-
-      const errors = formatActionResponseErrors(result);
-
-      if (errors.length > 0) {
-        setServerError(errors[0]);
-      }
-
+      await acceptInvite(getValues());
       // Success is handled by the redirect('/') inside the action
     } catch (e) {
-      setServerError('An unexpected error occurred. Please try again.');
+      setServerError(
+        formatActionResponseErrors(e)[0] ??
+          'An unexpected error occurred. Please try again.'
+      );
     }
   }
 

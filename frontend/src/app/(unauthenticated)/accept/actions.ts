@@ -2,12 +2,15 @@
 
 'use server';
 
-import { isVerified, setPassword, signIn } from '@/lib/auth';
+import { isVerified, setPassword, signIn } from '@/lib/auth-server';
 import { user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
 import logger from '@/lib/logger';
-import { ActionResponse } from '@/lib/types/action-response';
 import { UserInsert } from '@/lib/types/db';
+import {
+  formatActionResponseErrors,
+  throwActionError,
+} from '@/lib/utils/actions';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
@@ -20,26 +23,21 @@ import { AcceptInvite, acceptInviteSchema } from './types';
  * @param {FormData} formData - The form data containing user information and optional password
  * @returns {Promise<ActionResponse>} - Returns a success message if successful, or an error if not
  */
-export async function acceptInvite(
-  formData: AcceptInvite
-): Promise<ActionResponse> {
+export async function acceptInvite(formData: AcceptInvite): Promise<void> {
   const verified = await isVerified();
 
   if (!verified) {
     logger.warn('Attempted to accept invitation for unverified user');
-    return {
-      error:
-        'User email is not verified. Please verify your email before accepting the invitation.',
-    };
+    throwActionError(
+      'User email is not verified. Please verify your email before accepting the invitation.'
+    );
   }
 
   const validated = acceptInviteSchema.safeParse(formData);
 
   if (!validated.success) {
     logger.info('Invitation acceptance data was not valid');
-    return {
-      error: z.treeifyError(validated.error),
-    };
+    throwActionError(z.treeifyError(validated.error));
   }
 
   const {
@@ -59,30 +57,26 @@ export async function acceptInvite(
 
     if (password) {
       if (password != confirmPassword) {
-        return { error: "Passwords don't match" };
+        throwActionError("Passwords don't match");
       }
 
       const { error: authError } = await setPassword(password);
       if (authError) {
         const message =
-          typeof authError === 'string'
-            ? authError
-            : 'message' in authError
-              ? authError.message
-              : authError.errors[0];
+          formatActionResponseErrors(authError)[0] ?? 'Failed to set password';
         logger.warn(
           `Failed to set password during invite acceptance: ${message}`
         );
-        return { error: message };
+        throwActionError(message);
       }
     } else {
-      return { error: 'No password provided' };
+      throwActionError('No password provided');
     }
 
     const { error } = await signIn(validated.data.email, password);
 
     if (error) {
-      return { error: error };
+      throwActionError(error);
     }
 
     const updateData: Partial<UserInsert> = {
@@ -108,12 +102,10 @@ export async function acceptInvite(
       logger.warn(
         `Failed to get authenticated info during invite acceptance: ${error.message}`
       );
-      return { error: error.message };
+      throwActionError(error.message);
     }
 
-    return {
-      error: 'An unexpected error occurred',
-    };
+    throwActionError('An unexpected error occurred');
   }
 
   redirect('/');

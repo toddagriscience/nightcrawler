@@ -10,7 +10,7 @@ const { mockPush, mockLogout } = vi.hoisted(() => ({
   mockLogout: vi.fn(),
 }));
 
-vi.mock('@/lib/auth', () => ({
+vi.mock('@/lib/auth-client', () => ({
   logout: mockLogout,
 }));
 

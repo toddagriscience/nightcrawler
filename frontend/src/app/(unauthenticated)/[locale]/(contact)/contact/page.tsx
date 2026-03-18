@@ -6,6 +6,7 @@ import { FadeIn } from '@/components/common';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Button } from '@/components/ui';
+import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import {
   Carousel,
   CarouselApi,
@@ -28,7 +29,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { LegalSubtext } from '../../../../../components/common/legal-subtext/legal-subtext';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -43,6 +44,7 @@ export default function Contact() {
     getValues,
     clearErrors,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<ContactFormData>({
     defaultValues: {
@@ -54,11 +56,34 @@ export default function Contact() {
       phone: '',
       website: undefined,
       isOrganic: undefined,
-      isHydroponic: false,
-      producesSprouts: false,
+      isHydroponic: undefined,
+      producesSprouts: undefined,
     },
     resolver: zodResolver(contactFormSchema),
   });
+
+  const {
+    firstName,
+    lastName,
+    farmName,
+    email,
+    phone,
+    website,
+    isOrganic,
+    isHydroponic,
+    producesSprouts,
+  } = watch();
+  const requiresWebsite = !isWorkEmail(email ?? '');
+  const organicSlideIndex = requiresWebsite ? 2 : 1;
+  const hydroponicSlideIndex = organicSlideIndex + 1;
+  const sproutsSlideIndex = organicSlideIndex + 2;
+  const canAdvance =
+    (slide === 0 &&
+      Boolean(firstName && lastName && farmName && email && phone)) ||
+    (requiresWebsite && slide === 1 && Boolean(website)) ||
+    (slide === organicSlideIndex && isOrganic !== undefined) ||
+    (slide === hydroponicSlideIndex && isHydroponic !== undefined) ||
+    (slide === sproutsSlideIndex && producesSprouts !== undefined);
 
   useEffect(() => {
     if (!api) return;
@@ -77,17 +102,32 @@ export default function Contact() {
   async function handleNext() {
     if (!api) return;
 
-    if (slide === 0 || slide === 1) {
-      await trigger();
+    const fieldsToValidate =
+      slide === 0
+        ? ([
+            'firstName',
+            'lastName',
+            'farmName',
+            'email',
+            'phone',
+          ] as (keyof ContactFormData)[])
+        : requiresWebsite && slide === 1
+          ? (['website'] as (keyof ContactFormData)[])
+          : slide === organicSlideIndex
+            ? (['isOrganic'] as (keyof ContactFormData)[])
+            : slide === hydroponicSlideIndex
+              ? (['isHydroponic'] as (keyof ContactFormData)[])
+              : slide === sproutsSlideIndex
+                ? (['producesSprouts'] as (keyof ContactFormData)[])
+                : [];
 
-      if (isValid) {
-        api.scrollNext();
-        clearErrors();
-      } else {
-        trigger();
-      }
-    } else {
+    const isStepValid = fieldsToValidate.length
+      ? await trigger(fieldsToValidate)
+      : true;
+
+    if (isStepValid) {
       api.scrollNext();
+      clearErrors();
     }
   }
 
@@ -117,13 +157,7 @@ export default function Contact() {
     <main>
       <div className="max-w-[1400px] mx-auto px-15 lg:px-16 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 place-items-start mx-auto mt-5 md:mt-15 w-full max-w-[1200px] mx-auto">
-          <div
-            className="flex md:w-auto md:min-w-[330px] lg:w-full md:h-[650px] lg:max-w-none justify-center items-start rounded-sm hidden md:block"
-            style={{
-              backgroundImage:
-                'linear-gradient(90deg, hsl(35deg 39% 55%) 0%, hsl(34deg 38% 58%) 29%, hsl(34deg 37% 60%) 39%, hsl(34deg 36% 62%) 46%, hsl(34deg 36% 64%) 52%, hsl(34deg 35% 66%) 56%, hsl(34deg 34% 68%) 61%, hsl(34deg 34% 70%) 65%, hsl(34deg 34% 71%) 69%, hsl(35deg 33% 73%) 74%, hsl(35deg 33% 75%) 80%,hsl(35deg 32% 76%) 99%)',
-            }}
-          />
+          <MarketingGradientBox />
           <div className="flex w-full max-w-[530px] lg:max-w-none flex-col md:mr-0 lg:mr-10">
             <form
               onSubmit={(e) => e.preventDefault()}
@@ -328,6 +362,10 @@ export default function Contact() {
                             placeholder="https://"
                             className="border-[#848484]/80 border-1"
                             {...register('website')}
+                            required
+                            {...register('website', {
+                              required: 'This field is required.',
+                            })}
                           />
                         </Field>
                       </FieldSet>
@@ -347,10 +385,16 @@ export default function Contact() {
                       <div className="flex gap-8">
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            isOrganic === true
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('isOrganic', true);
-                            api?.scrollNext();
+                            setValue('isOrganic', true, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                           }}
                         >
                           {t('buttons.yes')}
@@ -358,10 +402,16 @@ export default function Contact() {
 
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            isOrganic === false
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('isOrganic', false);
-                            api?.scrollNext();
+                            setValue('isOrganic', false, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                           }}
                         >
                           {t('buttons.no')}
@@ -385,10 +435,16 @@ export default function Contact() {
                       <div className="flex gap-8">
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            isHydroponic === true
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('isHydroponic', true);
-                            api?.scrollNext();
+                            setValue('isHydroponic', true, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                           }}
                         >
                           {t('buttons.yes')}
@@ -396,10 +452,16 @@ export default function Contact() {
 
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            isHydroponic === false
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('isHydroponic', false);
-                            api?.scrollNext();
+                            setValue('isHydroponic', false, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                           }}
                         >
                           {t('buttons.no')}
@@ -421,9 +483,16 @@ export default function Contact() {
                       <div className="flex gap-8">
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            producesSprouts === true
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('producesSprouts', true);
+                            setValue('producesSprouts', true, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                             api?.scrollNext();
                           }}
                         >
@@ -432,9 +501,16 @@ export default function Contact() {
 
                         <Button
                           type="button"
-                          className="text-underline text-lg hover:cursor-pointer"
+                          className={`text-lg hover:cursor-pointer decoration-[1px] underline-offset-4 font-thin ${
+                            producesSprouts === false
+                              ? 'underline font-normal'
+                              : 'no-underline hover:underline'
+                          }`}
                           onClick={() => {
-                            setValue('producesSprouts', false);
+                            setValue('producesSprouts', false, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
                             api?.scrollNext();
                           }}
                         >
@@ -450,7 +526,7 @@ export default function Contact() {
                         <h1 className="text-4xl lg:text-5xl">
                           {t('results.matchTitle')}
                         </h1>
-                        <p className="text-md md:text-lg">
+                        <p className="text-normal md:text-lg">
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
@@ -511,6 +587,7 @@ export default function Contact() {
                         className="rounded-full text-background h-auto px-13 h-11 max-w-45 text-sm hover:cursor-pointer font-semibold"
                         type="button"
                         onClick={handleNext}
+                        disabled={!canAdvance}
                       >
                         {t('buttons.next')}
                       </Button>

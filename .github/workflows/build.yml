@@ -41,7 +41,7 @@ jobs:
         run: bun run build-storybook
 
       - name: Upload Next.js build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: nextjs-build
@@ -51,7 +51,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Storybook build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: storybook-build

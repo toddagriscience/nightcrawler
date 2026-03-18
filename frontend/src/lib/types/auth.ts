@@ -10,8 +10,8 @@ export type ZodError = {
 
 /*
  * @typedef AuthResponseTypes
- * @property Login - Response from the `login()` function from `@/lib/auth`, `@/lib/actions/auth`, and any other auth related functions. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signinwithpassword
- * @property Logout - Response from the logout() function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signout
+ * @property Login - Response from the `login()` function from `@/lib/auth-client`, `@/lib/actions/auth`, and any other auth related functions. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signinwithpassword
+ * @property Logout - Response from the logout() function from `@/lib/auth-client`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-signout
  * @property SendResetPasswordEmail - Response from the `resetPassword()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
  * @property UpdateUser - Response from the `SendResetPasswordEmail()` function from `@/lib/auth`. Handles the return type described here: https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
  */
@@ -25,9 +25,11 @@ export enum AuthResponseTypes {
 
 /** Generic interface for a response from a server action/API route involving authentication.
  *
+ * @property {unknown | null} error - Optional auth-specific error payload
  * @property {AuthResponseTypes} responseType - The type of the response
  * */
 export interface AuthResponse extends ActionResponse {
+  error?: unknown | null;
   responseType: AuthResponseTypes;
 }
 

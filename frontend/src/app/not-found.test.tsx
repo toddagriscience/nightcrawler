@@ -15,10 +15,14 @@ vi.mock(
   })
 );
 
-vi.mock('@/components/landing', () => ({
-  Header: () => <div data-testid="public-header">Public Header</div>,
-  Footer: () => <div data-testid="footer">Footer</div>,
-}));
+vi.mock(
+  '@/components/common/unauthenticated-header/unauthenticated-header',
+  () => ({
+    default: () => (
+      <div data-testid="unauthenticated-header">Unauthenticated Header</div>
+    ),
+  })
+);
 
 vi.mock('@/components/common', () => ({
   FadeIn: ({ children }: { children: React.ReactNode }) => (
@@ -42,10 +46,24 @@ vi.mock('next-intl', () => ({
   ),
 }));
 
-// Mock Supabase
+vi.mock('@/i18n/config', () => ({
+  Link: ({
+    href,
+    children,
+    ...rest
+  }: {
+    href: string;
+    children: React.ReactNode;
+  }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  ),
+}));
+
 const mockGetUser = vi.fn();
 vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(() => ({
+  createClient: vi.fn(async () => ({
     auth: {
       getUser: mockGetUser,
     },
@@ -57,20 +75,24 @@ describe('NotFound Page', () => {
     vi.clearAllMocks();
 
     (getLocale as Mock).mockResolvedValue('en');
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     // Default translation mock
     (getTranslations as unknown as Mock).mockResolvedValue(
       Object.assign(
-        (key: string) =>
-          key === 'notFound.title' ? 'Page not available' : key,
+        (key: string) => {
+          if (key === 'notFound.title') return '404';
+          if (key === 'notFound.message')
+            return 'The page you are looking for could not be found. Please check the URL and try again.';
+          if (key === 'notFound.homeButton') return 'Home';
+          return key;
+        },
         {
           rich: (key: string, chunks: any) => {
-            // Simulate rendering the chunks to ensure Links are called
-            const home = chunks.home('homepage');
-            const news = chunks.news('news');
+            const home = chunks.home('home');
             return (
               <div>
-                {key} {home} {news}
+                {key} {home}
               </div>
             );
           },
@@ -80,33 +102,34 @@ describe('NotFound Page', () => {
   });
 
   it('should render AuthenticatedHeader when user is logged in', async () => {
-    // Mock authenticated user
     mockGetUser.mockResolvedValue({
-      data: { user: { id: '123', email: 'test@example.com' } },
+      data: {
+        user: {
+          id: '123',
+          email: 'test@example.com',
+        },
+      },
     });
 
     const jsx = await NotFound();
     render(jsx);
 
     expect(screen.getByTestId('authenticated-header')).toBeInTheDocument();
-    expect(screen.queryByTestId('public-header')).not.toBeInTheDocument();
-    expect(screen.getByTestId('footer')).toBeInTheDocument();
+    expect(
+      screen.queryByTestId('unauthenticated-header')
+    ).not.toBeInTheDocument();
   });
 
   it('should render Public Header when user is not logged in', async () => {
-    // Mock unauthenticated user
-    mockGetUser.mockResolvedValue({
-      data: { user: null },
-    });
+    mockGetUser.mockResolvedValue({ data: { user: null } });
 
     const jsx = await NotFound();
     render(jsx);
 
-    expect(screen.getByTestId('public-header')).toBeInTheDocument();
+    expect(screen.getByTestId('unauthenticated-header')).toBeInTheDocument();
     expect(
       screen.queryByTestId('authenticated-header')
     ).not.toBeInTheDocument();
-    expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
 
   it('should render the correct translation for title', async () => {
@@ -115,7 +138,12 @@ describe('NotFound Page', () => {
     const jsx = await NotFound();
     render(jsx);
 
-    expect(screen.getByText('Page not available')).toBeInTheDocument();
+    expect(screen.getByText('404')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The page you are looking for could not be found. Please check the URL and try again.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('should use the correct locale', async () => {

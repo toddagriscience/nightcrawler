@@ -4,38 +4,51 @@
 
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ManagementZoneSelect } from '@/lib/types/db';
+import Link from 'next/link';
+import { useTransition } from 'react';
+import NewTabButton from './components/new-tab-button';
 
+/** Presents the management zone menu used to create tabs and shows a loading state on the trigger while creation is pending. */
 export default function NewTabDropdown({
   addTab,
-  children,
   managementZones,
 }: {
-  addTab: (arg0: number, arg1: string | null) => void;
-  children: React.ReactNode;
+  addTab: (managementZoneId: number) => Promise<void>;
   managementZones: ManagementZoneSelect[];
 }) {
+  const [pending, startTransition] = useTransition();
+
+  function handleAddTab(managementZoneId: number) {
+    startTransition(async () => {
+      await addTab(managementZoneId);
+    });
+  }
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white">
+      <DropdownMenuTrigger asChild>
+        <NewTabButton pending={pending} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-white border-1 border-[#D9D9D9] w-55 translate-x-[98px]">
         {managementZones.length > 0 ? (
           managementZones.map((zone, index) => (
             <div key={zone.id}>
               <DropdownMenuItem
                 className="hover:cursor-pointer"
-                onClick={() => addTab(zone.id, zone.name)}
+                disabled={pending}
+                onClick={() => handleAddTab(zone.id)}
               >
                 {zone.name || 'Untitled Zone'}
               </DropdownMenuItem>
               {index < managementZones.length - 1 && (
-                <DropdownMenuSeparator className="mx-auto w-[95%]" />
+                <DropdownMenuSeparator className="mx-auto w-[90%] bg-[#D9D9D9]" />
               )}
             </div>
           ))
@@ -44,6 +57,15 @@ export default function NewTabDropdown({
             No management zones
           </DropdownMenuLabel>
         )}
+        <DropdownMenuSeparator className="bg-[#D9D9D9]" />
+        <DropdownMenuLabel className="text-foreground/90 font-normal text-center">
+          <Link
+            href="/account/management-zones"
+            className="hover:cursor-pointer"
+          >
+            Edit Management Zones
+          </Link>
+        </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { farm, user } from '@/lib/db/schema';
+import { farm, standardValues, user } from '@/lib/db/schema';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signUp } from './actions';
 
@@ -63,6 +63,8 @@ describe('signUp', () => {
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(user);
     // eslint-disable-next-line drizzle/enforce-delete-with-where
+    await db.delete(standardValues);
+    // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(farm);
   });
 
@@ -78,107 +80,82 @@ describe('signUp', () => {
   };
 
   describe('validation', () => {
-    it('returns error when firstName is missing', async () => {
+    it('throws when firstName is missing', async () => {
       const formData = createValidFormData();
       // eslint-disable-next-line drizzle/enforce-delete-with-where
       formData.delete('firstName');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when lastName is missing', async () => {
+    it('throws when lastName is missing', async () => {
       const formData = createValidFormData();
       // eslint-disable-next-line drizzle/enforce-delete-with-where
       formData.delete('lastName');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when farmName is missing', async () => {
+    it('throws when farmName is missing', async () => {
       const formData = createValidFormData();
       // eslint-disable-next-line drizzle/enforce-delete-with-where
       formData.delete('farmName');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when email is missing', async () => {
+    it('throws when email is missing', async () => {
       const formData = createValidFormData();
       // eslint-disable-next-line drizzle/enforce-delete-with-where
       formData.delete('email');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when email is invalid', async () => {
+    it('throws when email is invalid', async () => {
       const formData = createValidFormData();
       formData.set('email', 'not-an-email');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when phone is invalid', async () => {
+    it('throws when phone is invalid', async () => {
       const formData = createValidFormData();
       formData.set('phone', 'invalid-phone');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when password is missing', async () => {
+    it('throws when password is missing', async () => {
       const formData = createValidFormData();
       // eslint-disable-next-line drizzle/enforce-delete-with-where
       formData.delete('password');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
 
-    it('returns error when password is too short', async () => {
+    it('throws when password is too short', async () => {
       const formData = createValidFormData();
       formData.set('password', 'short');
 
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBeDefined();
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow();
     });
   });
 
   describe('Supabase signup', () => {
-    it('returns error when Supabase signup fails', async () => {
+    it('throws when Supabase signup fails', async () => {
       mockSignUp.mockResolvedValue({
         data: null,
         error: new Error('User already exists'),
       });
 
       const formData = createValidFormData();
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBe('User already exists');
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow(
+        'User already exists'
+      );
     });
 
-    it('returns error when Supabase returns an AuthError', async () => {
+    it('throws when Supabase returns an AuthError', async () => {
       const authError = new Error('Email rate limit exceeded');
       mockSignUp.mockResolvedValue({
         data: null,
@@ -186,10 +163,9 @@ describe('signUp', () => {
       });
 
       const formData = createValidFormData();
-      const result = await signUp(null, formData);
-
-      expect(result.error).toBe('Email rate limit exceeded');
-      expect(result.data).toBeUndefined();
+      await expect(signUp(null, formData)).rejects.toThrow(
+        'Email rate limit exceeded'
+      );
     });
   });
 
@@ -203,7 +179,6 @@ describe('signUp', () => {
       const formData = createValidFormData();
       const result = await signUp(null, formData);
 
-      expect(result.error).toBeNull();
       expect(result.data).toBeDefined();
 
       const data = result.data as {
@@ -226,6 +201,11 @@ describe('signUp', () => {
       expect(users[0].email).toBe('john@example.com');
       expect(users[0].role).toBe('Admin');
       expect(users[0].farmId).toBe(farms[0].id);
+
+      // Verify default farm settings were initialized
+      const settingsRows = await db.select().from(standardValues);
+      expect(settingsRows).toHaveLength(1);
+      expect(settingsRows[0].farmId).toBe(farms[0].id);
     });
 
     it('returns the created user and farm data', async () => {
@@ -258,8 +238,6 @@ describe('signUp', () => {
       formData.set('phone', '555-123-4567');
 
       const result = await signUp(null, formData);
-
-      expect(result.error).toBeNull();
 
       const users = await db.select().from(user);
       // Phone should be preprocessed to E.164 format

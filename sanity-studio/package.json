@@ -14,6 +14,10 @@
   "keywords": [
     "sanity"
   ],
+  "overrides": {
+    "flatted": "^3.4.0",
+    "undici": "^7.24.0"
+  },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/vision": "^5.1.0",
@@ -26,7 +30,7 @@
   "devDependencies": {
     "@sanity/eslint-config-studio": "^6.0.0",
     "@types/react": "^19.1",
-    "eslint": "^9.28",
+    "eslint": "^10.0",
     "prettier": "^3.5",
     "typescript": "^5.8"
   },

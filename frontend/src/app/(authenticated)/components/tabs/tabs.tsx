@@ -2,21 +2,23 @@
 
 'use client';
 
-import { Button } from '@/components/ui';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import logger from '@/lib/logger';
 import { ManagementZoneSelect } from '@/lib/types/db';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
-import { X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { BiPlus, BiX } from 'react-icons/bi';
 import updateTabName, {
   createTab as createTabAction,
   deleteTab as deleteTabAction,
 } from './actions';
+import TabCloseButton from './components/tab-close-button';
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
 import { getTabHash } from './utils';
+import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 
 const maxTabs = 8;
 
@@ -24,46 +26,55 @@ export default function PlatformTabs({
   currentTabs,
   currentUser,
   managementZones,
+  selectedTabHash,
+  header,
+  addWidgetDropdown,
   children,
 }: {
   currentTabs: NamedTab[];
   currentUser: AuthenticatedInfo;
   managementZones: ManagementZoneSelect[];
+  selectedTabHash: string;
+  header: React.ReactNode;
+  addWidgetDropdown: React.ReactNode;
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const [curTab, setCurTab] = useState(
-    currentTabs.length !== 0 ? getTabHash(currentTabs[0]) : 'home'
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [curTab, setCurTab] = useState(selectedTabHash);
+  const canEditFarm = currentUser.role === 'Admin';
+  const selectedTabIndex = currentTabs.findIndex(
+    (tab) => getTabHash(tab) === curTab
   );
+  const selectedTab = currentTabs[selectedTabIndex] ?? currentTabs[0];
 
-  async function setCurTabHelper({
-    newTab,
-    deletedTab,
-  }: {
-    newTab?: NamedTab;
-    deletedTab?: NamedTab;
-  }) {
-    if (newTab) {
-      setCurTab(getTabHash(newTab));
-    } else if (deletedTab) {
-      if (deletedTab && currentTabs.length === 1) {
-        setCurTab('home');
-      }
-      for (const tab of currentTabs) {
-        if (getTabHash(tab) !== getTabHash(deletedTab)) {
-          setCurTab(getTabHash(tab));
-          break;
-        }
-      }
-    } else {
-      setCurTab(getTabHash(currentTabs[0]));
+  // Set the title of the page based on the current tab.
+  useEffect(() => {
+    const fallbackTabName =
+      selectedTabIndex >= 0 ? `Untitled Zone ${selectedTabIndex}` : 'Home';
+    document.title = `${selectedTab?.name || fallbackTabName} | Todd`;
+  }, [selectedTab, selectedTabIndex]);
+
+  /** Sets the current tab */
+  function setTab(nextTabHash: string) {
+    setCurTab(nextTabHash);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', nextTabHash);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+
+  /** Updates information about the tab */
+  async function updateTab(newName: string, tabId: number) {
+    try {
+      await updateTabName({ newName, tabId });
+      router.refresh();
+    } catch (error) {
+      logger.error(error);
     }
   }
 
-  async function createTab(
-    managementZoneId: number,
-    managementZoneName: string | null
-  ) {
+  async function createTab(managementZoneId: number) {
     const maybeNewTab = await createTabAction(managementZoneId);
 
     if (maybeNewTab.error) {
@@ -71,16 +82,8 @@ export default function PlatformTabs({
       return;
     }
 
-    router.refresh();
-
-    setCurTabHelper({
-      newTab: {
-        name: managementZoneName || 'Untitled Zone',
-        managementZone: managementZoneId,
-        id: maybeNewTab.data!.tabId,
-        user: currentUser.id,
-      },
-    });
+    const nextTabHash = String(maybeNewTab.data!.tabId);
+    setTab(nextTabHash);
   }
 
   async function deleteTab(tab: NamedTab) {
@@ -90,74 +93,72 @@ export default function PlatformTabs({
     }
 
     const tabId = tab.id;
-    const result = await deleteTabAction({ tabId });
-
-    if (result.error) {
-      logger.error(result.error);
+    try {
+      await deleteTabAction({ tabId });
+    } catch (error) {
+      logger.error(error);
       return;
     }
 
-    router.refresh();
+    const remainingTabs = currentTabs.filter(
+      (existingTab) => existingTab.id !== tab.id
+    );
+    const fallbackTabHash = remainingTabs[0]
+      ? getTabHash(remainingTabs[0])
+      : 'home';
 
-    setCurTabHelper({ deletedTab: tab });
-  }
-
-  async function updateTab(newName: string, tabId: number) {
-    const result = await updateTabName({ newName, tabId });
-
-    if (result.error) {
-      logger.error(result.error);
-      return;
-    }
-
-    router.refresh();
+    setTab(fallbackTabHash);
   }
 
   return (
-    <Tabs value={curTab}>
-      <div className="absolute top-4 left-40 max-w-[70vw] min-[107rem]:right-0 min-[107rem]:left-0 min-[107rem]:m-auto min-[107rem]:w-[107rem] min-[107rem]:max-w-300">
-        <TabsList className="flex flex-row flex-nowrap justify-start gap-2 bg-transparent">
+    <Tabs value={curTab} className="h-[calc(100vh-5rem)]">
+      <header
+        className="flex w-full max-w-540 flex-row items-center justify-between px-3 pt-3"
+        role="banner"
+      >
+        <ToddHeader className="flex scale-90 flex-row items-center" />
+        <TabsList className="mr-auto ml-2 flex h-9 flex-row flex-nowrap justify-start gap-0 bg-gradient-to-r from-[#D9D9D9]/10 to-[#D9D9D9]/0">
           {currentTabs.map((tab, index) => (
-            <TabsTrigger
-              className="group group flex max-w-36 min-w-36 flex-row items-center justify-between truncate border-none px-2 data-[state=active]:bg-gray-200"
-              key={tab.id}
-              value={getTabHash(tab)}
-              onClick={() => setCurTabHelper({ newTab: tab })}
-            >
-              <input
-                className="pointer-events-none max-w-25 cursor-pointer truncate group-data-[state=active]:pointer-events-auto focus:ring-0 focus:outline-none"
-                defaultValue={tab.name || `Untitled Zone ${index}`}
-                onChange={(e) => updateTab(e.target.value, tab.id)}
-                onBlur={(e) => (e.target.scrollLeft = 0)}
-              />
-              {currentTabs.length !== 1 && (
-                <div>
-                  {/** This isn't the best solution, but it's the easiest way to nest buttons. Getting the entire background to render with a wrapping div via data-[state=active] is just a pain */}
-                  <div
-                    aria-roledescription="Close the current tab"
-                    role="button"
-                    onClick={() => deleteTab(tab)}
-                    className="h-min p-0"
-                  >
-                    <X className="h-min w-4" />
-                  </div>
-                </div>
-              )}
-            </TabsTrigger>
+            <div key={tab.id} className="group relative">
+              <TabsTrigger
+                className="group/tab flex max-w-36 min-w-36 flex-row items-center justify-center truncate border-none px-3 py-1.5 pr-8 data-[state=active]:bg-[#D9D9D9]/32"
+                value={getTabHash(tab)}
+                onClick={() => {
+                  const nextTabHash = getTabHash(tab);
+                  setTab(nextTabHash);
+                }}
+              >
+                <input
+                  className="pointer-events-none max-w-25 cursor-pointer truncate text-center group-data-[state=active]/tab:pointer-events-auto focus:ring-0 focus:outline-none"
+                  defaultValue={tab.name || `Untitled Zone ${index}`}
+                  data-readonly={!canEditFarm}
+                  readOnly={!canEditFarm}
+                  onChange={(e) => updateTab(e.target.value, tab.id)}
+                  onBlur={(e) => (e.target.scrollLeft = 0)}
+                />
+              </TabsTrigger>
+              {canEditFarm && currentTabs.length !== 1 ? (
+                <TabCloseButton
+                  onClose={() => deleteTab(tab)}
+                  tabName={tab.name || `Untitled Zone ${index}`}
+                  visible={curTab === getTabHash(tab)}
+                />
+              ) : null}
+            </div>
           ))}
-          {currentTabs.length <= maxTabs && (
+          {canEditFarm && currentTabs.length < maxTabs && (
             <NewTabDropdown
               managementZones={managementZones}
               addTab={createTab}
-            >
-              <Button className="ml-2 min-w-10 cursor-pointer border-none text-4xl font-light focus-visible:ring-0! focus-visible:ring-offset-0!">
-                <span className="absolute top-[-3.5px]">+</span>
-              </Button>
-            </NewTabDropdown>
+            />
           )}
-          <div className="grow"></div>
         </TabsList>
-      </div>
+        <div className="flex flex-row items-center gap-6 border-none">
+          {currentUser.approved ? <SearchNavForm /> : null}
+          {addWidgetDropdown}
+          {header}
+        </div>
+      </header>
       {children}
     </Tabs>
   );

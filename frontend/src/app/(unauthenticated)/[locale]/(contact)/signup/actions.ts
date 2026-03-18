@@ -2,13 +2,15 @@
 
 'use server';
 
-import { signUpUser } from '@/lib/auth';
+import { signUpUser } from '@/lib/auth-server';
 import { farm, user } from '@/lib/db/schema';
 import { db } from '@/lib/db/schema/connection';
+import { createFarmDefaultSettings } from '@/lib/db/queries/create-farm-default-settings';
+import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
+import { throwActionError } from '@/lib/utils/actions';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import { z } from 'zod';
-import logger from '@/lib/logger';
 
 /** Schema for sign up validation - extends userInfo with password */
 const signUpSchema = userInfo.extend({
@@ -38,9 +40,7 @@ export async function signUp(
 
   if (!validated.success) {
     logger.info('Sign up data was not valid');
-    return {
-      error: z.treeifyError(validated.error),
-    };
+    throwActionError(z.treeifyError(validated.error));
   }
 
   const { firstName, lastName, farmName, email, phone, password } =
@@ -51,9 +51,7 @@ export async function signUp(
 
   if (signUpResult instanceof Error) {
     logger.warn(`Failed to sign up user in Supabase: ${signUpResult.message}`);
-    return {
-      error: signUpResult.message,
-    };
+    throwActionError(signUpResult.message);
   }
 
   try {
@@ -64,6 +62,9 @@ export async function signUp(
         informalName: farmName,
       })
       .returning({ id: farm.id });
+
+    // Initialize default per-farm settings immediately after farm creation.
+    await createFarmDefaultSettings(newFarm.id);
 
     // Create the user record linked to the farm
     const [newUser] = await db
@@ -82,15 +83,13 @@ export async function signUp(
 
     return {
       data: { user: newUser, farm: newFarm },
-      error: null,
     };
   } catch (error) {
     logger.error(`Failed to create user/farm in database: ${error}`);
-    return {
-      error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to create user in database',
-    };
+    throwActionError(
+      error instanceof Error
+        ? error.message
+        : 'Failed to create user in database'
+    );
   }
 }

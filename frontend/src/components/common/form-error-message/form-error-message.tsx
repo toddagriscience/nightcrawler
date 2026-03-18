@@ -14,7 +14,7 @@ export default function FormErrorMessage({
   return (
     <div>
       <FadeIn>
-        <p className="leading-snug text-red-500 text-xs font-medium">
+        <p className="leading-snug text-red-500 text-xs font-medium mb-[-6px]">
           {errorMessage}
         </p>
       </FadeIn>

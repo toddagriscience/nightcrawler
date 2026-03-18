@@ -1,19 +1,18 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
+  boolean,
   date,
+  integer,
   pgEnum,
   pgTable,
   point,
   serial,
+  text,
   timestamp,
   varchar,
-  boolean,
-  text,
-  integer,
 } from 'drizzle-orm/pg-core';
 import { farm } from './farm';
-import { levelCategory } from './level-category';
 
 /** A management zone. For the majority of the time, you may think of this as a field. */
 export const managementZone = pgTable('management_zone', {
@@ -37,8 +36,6 @@ export const managementZone = pgTable('management_zone', {
   irrigation: boolean(),
   /** Some areas have aqueducts that feed to fields -- if this is false, the farm is either receiving plenty of water or has enough runoff to feed back into the aqueduct. If this field is true, the aqueduct is currently being restricted.  */
   waterConservation: boolean(),
-  /** The evaluated contamination risk of the zone. See the documentation of the enum for more details. */
-  contaminationRisk: levelCategory(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

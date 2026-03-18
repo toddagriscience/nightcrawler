@@ -1,0 +1,89 @@
+name: Database Compatibility Check
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: 
+
+jobs:
+  staging-db-push-dry-run:
+    name: Staging Clone + Drizzle Push Check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nightcrawler_validation
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d nightcrawler_validation"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: ./frontend
+    env:
+      STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
+      STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
+      STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
+      STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+      STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      LOCAL_DATABASE_HOST: 127.0.0.1
+      LOCAL_DATABASE_PORT: 5432
+      LOCAL_DATABASE_USER: postgres
+      LOCAL_DATABASE_PASSWORD: postgres
+      LOCAL_DATABASE_DATABASE: nightcrawler_validation
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /tmp/pgdg.asc
+          gpg --dearmor --batch --yes -o /tmp/apt.postgresql.org.gpg /tmp/pgdg.asc
+          sudo mv /tmp/apt.postgresql.org.gpg /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+          /usr/lib/postgresql/18/bin/pg_dump --version
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Clone staging DB into local validation DB
+        run: |
+          printf '%s' "$DATABASE_PEM_CERT" \
+            | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
+            > /tmp/staging-db-ca.pem
+          openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
+
+          PGPASSWORD="$STAGING_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
+            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            --format=plain \
+            --file=/tmp/staging-db.sql
+          PGPASSWORD="$LOCAL_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/psql \
+            "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
+            --file=/tmp/staging-db.sql
+
+      - name: Validate PR schema against cloned staging DB
+        id: push-check
+        run: bunx drizzle-kit push --config=drizzle-local.config.ts
+
+        # we are using push instead of generate -> migrate because drizzle-kit is scuffed at the moment when it comes to making enums for some reason
+      - name: Push to staging if successful
+        run: bunx drizzle-kit push --config=drizzle-staging.config.ts
