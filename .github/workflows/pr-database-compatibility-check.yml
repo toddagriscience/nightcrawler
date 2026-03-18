@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   staging-db-push-dry-run:
@@ -24,9 +24,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    defaults:
-      run:
-        working-directory: ./frontend
     env:
       STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
       STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
@@ -82,8 +79,10 @@ jobs:
 
       - name: Validate PR schema against cloned staging DB
         id: push-check
+        working-directory: ./packages/db
         run: bunx drizzle-kit push --config=drizzle-local.config.ts
 
         # we are using push instead of generate -> migrate because drizzle-kit is scuffed at the moment when it comes to making enums for some reason
       - name: Push to staging if successful
+        working-directory: ./packages/db
         run: bunx drizzle-kit push --config=drizzle-staging.config.ts

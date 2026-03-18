@@ -1,0 +1,44 @@
+{
+  "name": "@nightcrawler/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./queries": "./src/queries/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./schema/*": "./src/schema/*.ts",
+    "./schema/connection": "./src/schema/connection.ts",
+    "./types": "./src/types/index.ts",
+    "./utils/get-embedding": "./src/utils/get-embedding.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "db:local:up": "docker compose up -d postgres-local",
+    "db:local:down": "docker compose down",
+    "db:local:wipe": "tsx scripts/wipe-local-db.ts",
+    "db:local:migrate": "tsx scripts/migrate-local-db.ts",
+    "db:local:seed": "tsx scripts/seed-local-db.ts",
+    "db:create-admin-farm-user": "tsx scripts/create-admin-farm-user.ts",
+    "db:seed-knowledge": "tsx scripts/seed-knowledge.ts",
+    "db:local:init": "bun run db:local:migrate && bun run db:local:seed",
+    "db:local:reset": "bun run db:local:wipe && bun run db:local:init"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.97.0",
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.1",
+    "drizzle-seed": "^0.3.1",
+    "openai": "^6.25.0",
+    "pg": "^8.19.0",
+    "react-grid-layout": "^2.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.9",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
