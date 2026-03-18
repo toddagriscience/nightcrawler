@@ -5,40 +5,40 @@
 
 [37m[1m [22m[39m Creating an optimized production build ...
 
-[2m[207.09ms][22m [@tailwindcss/postcss] src/app/globals.css
-[2m[  0.09ms][22m  [2m ↳ [22mQuick bail check
-[2m[ 61.03ms][22m  [2m ↳ [22mSetup compiler
-[2m[  0.80ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
-[2m[ 60.19ms][22m    [2m ↳ [22mCreate compiler
-[2m[  0.13ms][22m  [2m ↳ [22mRegister full rebuild paths
-[2m[  4.11ms][22m  [2m ↳ [22mSetup scanner
-[2m[ 38.20ms][22m  [2m ↳ [22mScan for candidates
-[2m[  7.60ms][22m  [2m ↳ [22mRegister dependency messages
-[2m[ 62.81ms][22m  [2m ↳ [22mBuild utilities
-[2m[ 26.81ms][22m  [2m ↳ [22mOptimization
-[2m[  0.99ms][22m    [2m ↳ [22mAST -> CSS
-[2m[ 14.33ms][22m    [2m ↳ [22mLightning CSS
-[2m[ 11.47ms][22m    [2m ↳ [22mCSS -> PostCSS AST
-[2m[  5.76ms][22m  [2m ↳ [22mUpdate PostCSS AST
+[2m[148.27ms][22m [@tailwindcss/postcss] src/app/globals.css
+[2m[  0.10ms][22m  [2m ↳ [22mQuick bail check
+[2m[ 38.85ms][22m  [2m ↳ [22mSetup compiler
+[2m[  0.69ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
+[2m[ 38.13ms][22m    [2m ↳ [22mCreate compiler
+[2m[  0.10ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[  1.01ms][22m  [2m ↳ [22mSetup scanner
+[2m[ 18.65ms][22m  [2m ↳ [22mScan for candidates
+[2m[  5.64ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 50.12ms][22m  [2m ↳ [22mBuild utilities
+[2m[ 27.30ms][22m  [2m ↳ [22mOptimization
+[2m[  1.17ms][22m    [2m ↳ [22mAST -> CSS
+[2m[ 14.97ms][22m    [2m ↳ [22mLightning CSS
+[2m[ 11.12ms][22m    [2m ↳ [22mCSS -> PostCSS AST
+[2m[  6.06ms][22m  [2m ↳ [22mUpdate PostCSS AST
 
 
-[2m[0.02ms][22m [@tailwindcss/postcss] src/lib/utahwglcondensed_11354007.module.css
+[2m[0.03ms][22m [@tailwindcss/postcss] src/lib/utahwglcondensed_11354007.module.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/lib/neuehaasunica_ced36e3b.module.css
 [2m[0.02ms][22m  [2m ↳ [22mQuick bail check
 
-
-[2m[0.20ms][22m [@tailwindcss/postcss] src/lib/neuehaasunica_ced36e3b.module.css
-[2m[0.19ms][22m  [2m ↳ [22mQuick bail check
-
-[32m[1m✓[22m[39m Compiled successfully in 6.1s
-[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[?25h[?25l[37m[1m [22m[39m Finished TypeScript in 8.9s  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finished TypeScript in 8.9s    [32m[1m✓[22m[39m Finished TypeScript in 8.9s 
-[?25l[37m[1m [22m[39m Collecting page data using 15 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m..[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m...[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Collecting page data using 15 workers in 1252.4ms    [32m[1m✓[22m[39m Collecting page data using 15 workers in 1252.4ms 
+[32m[1m✓[22m[39m Compiled successfully in 6.2s
+[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[?25h[?25l[37m[1m [22m[39m Finished TypeScript in 9.2s  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finished TypeScript in 9.2s    [32m[1m✓[22m[39m Finished TypeScript in 9.2s 
+[?25l[37m[1m [22m[39m Collecting page data using 15 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m..[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m...[39m[2K[1G[37m[1m [22m[39m Collecting page data using 15 workers  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Collecting page data using 15 workers in 1392.5ms    [32m[1m✓[22m[39m Collecting page data using 15 workers in 1392.5ms 
 [?25l[37m[1m [22m[39m Generating static pages using 15 workers (0/58)  [36m[    ][39m[2K[1G[?25h[33m[1m⚠[22m[39m metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
 [33m[1m⚠[22m[39m metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
 [33m[1m⚠[22m[39m metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
-(node:1946149) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(node:2010012) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
 (Use `node --trace-warnings ...` to show where the warning was created)
-[?25h[32m[1m✓[22m[39m Generating static pages using 15 workers (58/58) in 573.8ms
-[?25l[37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finalizing page optimization in 3.9ms    [32m[1m✓[22m[39m Finalizing page optimization in 3.9ms 
+[?25h[32m[1m✓[22m[39m Generating static pages using 15 workers (58/58) in 600.0ms
+[?25l[37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finalizing page optimization in 5.9ms    [32m[1m✓[22m[39m Finalizing page optimization in 5.9ms 
 
 [4mRoute (app)[24m                                   [4mRevalidate[24m  [4mExpire[24m
 ┌ ƒ /

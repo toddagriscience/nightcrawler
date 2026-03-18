@@ -1,22 +1,22 @@
 
 [0m[2m[35m$[0m [2m[1meslint .[0m
-[0m
-[4m/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/[locale]/(marketing)/who-we-are/page.test.tsx[24m
-  [2m17:5[22m  [33mwarning[39m  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  [2m@next/next/no-img-element[22m
-
-[4m/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/accept/components/accept-form.tsx[24m
-  [2m230:23[22m  [33mwarning[39m  Compilation Skipped: Use of incompatible library
-
-This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
-
-/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/accept/components/accept-form.tsx:230:23
-  228 |           </div>
-  229 |           <PasswordChecklist
-> 230 |             password={watch('password')}
-      |                       ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
-  231 |             confirmationPassword={watch('confirmPassword')}
-  232 |           />
-  233 |           <SubmitButton  [2mreact-hooks/incompatible-library[22m
-
-[33m[1m✖ 2 problems (0 errors, 2 warnings)[22m[39m
-[0m
+[0m[0m
+[0m[4m/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/[locale]/(marketing)/who-we-are/page.test.tsx[24m[0m
+[0m  [2m17:5[22m  [33mwarning[39m  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  [2m@next/next/no-img-element[22m[0m
+[0m[0m
+[0m[4m/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/accept/components/accept-form.tsx[24m[0m
+[0m  [2m230:23[22m  [33mwarning[39m  Compilation Skipped: Use of incompatible library[0m
+[0m[0m
+[0mThis API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.[0m
+[0m[0m
+[0m/home/oscar/Code/work/nightcrawler-worktrees/refactor-migrate-to-turbopack/apps/site/src/app/(unauthenticated)/accept/components/accept-form.tsx:230:23[0m
+[0m  228 |           </div>[0m
+[0m  229 |           <PasswordChecklist[0m
+[0m> 230 |             password={watch('password')}[0m
+[0m      |                       ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.[0m
+[0m  231 |             confirmationPassword={watch('confirmPassword')}[0m
+[0m  232 |           />[0m
+[0m  233 |           <SubmitButton  [2mreact-hooks/incompatible-library[22m[0m
+[0m[0m
+[0m[33m[1m✖ 2 problems (0 errors, 2 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m
