@@ -83,14 +83,6 @@ const articles: SeedArticle[] = [
     category: 'planting',
     source: 'Todd Field Guide',
   },
-  {
-    title: 'Todd Seed Product: Crimson Clover',
-    slug: 'todd-seed-product-crimson-clover',
-    content: `Crimson clover is a cool-season annual legume and one of our most popular cover crop seeds. It fixes 70 to 150 pounds of nitrogen per acre, reducing or eliminating the need for synthetic nitrogen on the following crop. It establishes quickly in fall, provides excellent weed suppression, and produces dense biomass. The deep red flowers attract pollinators and beneficial insects. Seed at 15 to 25 pounds per acre. Plant in early fall for best results, at least 6 weeks before the first expected frost. Crimson clover prefers well-drained soils with pH between 6.0 and 7.0. It winter-kills in very cold climates (below zone 6) which can be an advantage for no-till systems.`,
-    articleType: 'imp',
-    category: 'seed_products',
-    source: 'Todd Seed Catalog',
-  },
 ];
 
 async function seed() {

@@ -4,6 +4,13 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
+const seedImageHostnames = (process.env.NEXT_PUBLIC_SEED_IMAGE_HOSTNAMES ?? '')
+  .split(',')
+  .map((hostname) => hostname.trim())
+  .filter(Boolean);
+const seedImageOrigins = seedImageHostnames.map(
+  (hostname) => `https://${hostname}`
+);
 
 // Enhanced security headers configuration for privacy and data leak prevention
 const securityHeaders = [
@@ -69,7 +76,7 @@ const securityHeaders = [
       "default-src 'self'", // Only allow resources from same origin
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com",
       "style-src 'self' 'unsafe-inline' https://*.posthog.com", // Allow inline styles for CSS-in-JS
-      "img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io", // Allow images from self, blob URLs, and data URLs
+      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageOrigins.join(' ')}`.trim(), // Allow images from self, blob URLs, and data URLs
       "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
       "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co", // Allow PostHog analytics in cookieless mode
       "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
@@ -118,6 +125,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      ...seedImageHostnames.map((hostname) => ({
+        protocol: 'https' as const,
+        hostname,
+        port: '',
+        pathname: '/**',
+      })),
     ],
   },
 

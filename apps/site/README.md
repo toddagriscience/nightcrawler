@@ -8,6 +8,7 @@ A few important things to mention:
 
 - "the marketing site" refers to anything under the `[locale]` route; i.e. anything that is internationalized.
 - Please use the logging function from `./src/lib/logger`
+- Authenticated search now includes both IMP articles and seed products. Seed product detail pages live at `/product/[slug]`, and the local-storage-backed order review screen lives at `/order`.
 
 ## Development Scripts
 

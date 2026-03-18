@@ -17,7 +17,9 @@ import {
   farmInfoInternalApplication,
   farmSubscription,
   knowledgeArticle,
+  seedProduct,
 } from '../src/schema';
+import { getEmbedding } from '../src/utils/get-embedding';
 
 const DEFAULT_SEED_ADMIN_EMAIL = 'example@testmail.com';
 
@@ -33,6 +35,21 @@ type SeedArticle = Pick<
   InferInsertModel<typeof knowledgeArticle>,
   'title' | 'slug' | 'content' | 'category' | 'source' | 'articleType'
 >;
+
+type SeedProductRecord = Pick<
+  InferInsertModel<typeof seedProduct>,
+  | 'name'
+  | 'slug'
+  | 'description'
+  | 'stock'
+  | 'priceInCents'
+  | 'unit'
+  | 'imageUrl'
+  | 'advisorContactUrl'
+> & {
+  /** Optional IMP slug used to wire a related article after insert. */
+  relatedImpSlug?: string;
+};
 
 const knowledgeArticles: SeedArticle[] = [
   {
@@ -73,6 +90,45 @@ const knowledgeArticles: SeedArticle[] = [
   },
 ];
 
+const seedProducts: SeedProductRecord[] = [
+  {
+    name: 'Crimson Clover',
+    slug: 'crimson-clover',
+    description:
+      'A cool-season annual legume that establishes quickly, suppresses weeds, and helps fix nitrogen ahead of the next cash crop.',
+    stock: 240,
+    priceInCents: 1899,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
+  },
+  {
+    name: 'Daikon Tillage Radish',
+    slug: 'daikon-tillage-radish',
+    description:
+      'A bio-drilling brassica used to break compaction, improve infiltration, and leave deep rooting channels for spring planting.',
+    stock: 96,
+    priceInCents: 2499,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
+  },
+  {
+    name: 'Hairy Vetch',
+    slug: 'hairy-vetch',
+    description:
+      'A winter-hardy vetch blend selected for biomass and nitrogen fixation in mixed vegetable and orchard rotations.',
+    stock: 64,
+    priceInCents: 2799,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
+  },
+];
+
 const EMBEDDING_DIMENSIONS = 3072;
 
 function createDeterministicEmbedding(seedText: string): number[] {
@@ -91,6 +147,14 @@ function createDeterministicEmbedding(seedText: string): number[] {
   }
 
   return values;
+}
+
+async function createEmbedding(text: string): Promise<number[]> {
+  if (!process.env.OPENAI_EMBEDDINGS_KEY) {
+    return createDeterministicEmbedding(text);
+  }
+
+  return getEmbedding(text);
 }
 
 async function createSupabaseUserIfMissing(email: string): Promise<void> {
@@ -189,6 +253,8 @@ async function seedLocalDb() {
   await db.delete(farm);
   // eslint-disable-next-line
   await db.delete(knowledgeArticle);
+  // eslint-disable-next-line
+  await db.delete(seedProduct);
 
   const [seededFarm] = await db
     .insert(farm)
@@ -331,13 +397,39 @@ async function seedLocalDb() {
     version: 'v1',
   });
 
-  await db.insert(knowledgeArticle).values(
-    knowledgeArticles.map((article) => ({
-      ...article,
-      embedding: createDeterministicEmbedding(
-        `${article.title} ${article.content}`
-      ),
-    }))
+  const insertedKnowledgeArticles = await db
+    .insert(knowledgeArticle)
+    .values(
+      await Promise.all(
+        knowledgeArticles.map(async (article) => ({
+          ...article,
+          embedding: await createEmbedding(
+            `${article.title} ${article.content}`
+          ),
+        }))
+      )
+    )
+    .returning({
+      id: knowledgeArticle.id,
+      slug: knowledgeArticle.slug,
+    });
+
+  const knowledgeArticleIdsBySlug = new Map(
+    insertedKnowledgeArticles.map((article) => [article.slug, article.id])
+  );
+
+  await db.insert(seedProduct).values(
+    await Promise.all(
+      seedProducts.map(async (product) => ({
+        ...product,
+        impKnowledgeArticleId: product.relatedImpSlug
+          ? (knowledgeArticleIdsBySlug.get(product.relatedImpSlug) ?? null)
+          : null,
+        embedding: await createEmbedding(
+          `${product.name} ${product.description}`
+        ),
+      }))
+    )
   );
 
   await createSupabaseUserIfMissing(seedEmail);

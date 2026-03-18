@@ -11,6 +11,7 @@ import {
   integratedManagementPlanNote,
   knowledgeArticle,
   managementZone,
+  seedProduct,
   tab,
   user,
   widget,
@@ -36,6 +37,7 @@ export type IntegratedManagementPlanNoteSelect = InferSelectModel<
   typeof integratedManagementPlanNote
 >;
 export type KnowledgeArticleSelect = InferSelectModel<typeof knowledgeArticle>;
+export type SeedProductSelect = InferSelectModel<typeof seedProduct>;
 
 export type FarmInsert = InferInsertModel<typeof farm>;
 export type FarmLocationInsert = InferInsertModel<typeof farmLocation>;
