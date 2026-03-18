@@ -8,8 +8,6 @@ import { messageFiles } from '../../src/i18n/message-files';
 
 // Load all separated message files synchronously for Storybook - mirrors jest setup
 const loadMessagesSync = (locale: string) => {
-  
-
   const messages: Record<string, unknown> = {};
 
   messageFiles.forEach((file) => {
@@ -17,7 +15,9 @@ const loadMessagesSync = (locale: string) => {
       const fileMessages = require(`../../src/messages/${file}/${locale}.json`);
       Object.assign(messages, fileMessages);
     } catch (error) {
-      console.warn(`Warning: Could not load Storybook message file ${file}/${locale}.json`);
+      console.warn(
+        `Warning: Could not load Storybook message file ${file}/${locale}.json`
+      );
     }
   });
 
@@ -36,26 +36,28 @@ const StorybookThemeWrapper: React.FC<{
   locale: string;
 }> = ({ children, isDark, locale }) => {
   return (
-    <div 
+    <div
       className={isDark ? 'dark' : ''}
-      style={{ 
+      style={{
         minHeight: '100vh',
         background: 'hsl(var(--background))',
-        color: 'hsl(var(--foreground))'
+        color: 'hsl(var(--foreground))',
       }}
     >
       <div style={{ padding: '1rem' }}>
-        <div style={{ 
-          position: 'fixed', 
-          top: '10px', 
-          right: '10px', 
-          zIndex: 1000,
-          fontSize: '12px',
-          background: 'hsl(var(--muted))',
-          color: 'hsl(var(--muted-foreground))',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: '10px',
+            right: '10px',
+            zIndex: 1000,
+            fontSize: '12px',
+            background: 'hsl(var(--muted))',
+            color: 'hsl(var(--muted-foreground))',
+            padding: '4px 8px',
+            borderRadius: '4px',
+          }}
+        >
           Locale: {locale} | Theme: {isDark ? 'Dark' : 'Light'}
         </div>
         {children}
@@ -66,16 +68,22 @@ const StorybookThemeWrapper: React.FC<{
 
 export const withStorybookProvider: Decorator = (Story, context) => {
   const { args, parameters, globals } = context;
-  
+
   // Use global controls for locale, fallback to args, then defaults
-  const locale = globals?.locale ?? args?.locale ?? parameters?.storybook?.locale ?? routing.defaultLocale;
+  const locale =
+    globals?.locale ??
+    args?.locale ??
+    parameters?.storybook?.locale ??
+    routing.defaultLocale;
   const isDark = args?.isDark ?? parameters?.storybook?.isDark ?? false;
 
   // Validate locale
-  const validLocale = routing.locales.includes(locale) ? locale : routing.defaultLocale;
+  const validLocale = routing.locales.includes(locale)
+    ? locale
+    : routing.defaultLocale;
 
   return (
-    <NextIntlClientProvider 
+    <NextIntlClientProvider
       messages={getMessages(validLocale)}
       locale={validLocale}
     >
