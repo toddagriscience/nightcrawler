@@ -40,11 +40,11 @@ const securityHeaders = [
   },
   {
     key: 'Cross-Origin-Embedder-Policy',
-    value: 'credentialless', // More flexible than require-corp, allows images/media
+    value: 'unsafe-none', // Stripe Elements does not support cross-origin isolated sites
   },
   {
     key: 'Cross-Origin-Opener-Policy',
-    value: 'same-origin',
+    value: 'same-origin-allow-popups',
   },
   {
     key: 'Cross-Origin-Resource-Policy',
@@ -74,17 +74,19 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'", // Only allow resources from same origin
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com",
-      "style-src 'self' 'unsafe-inline' https://*.posthog.com", // Allow inline styles for CSS-in-JS
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://js.stripe.com",
+      "style-src 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Allow Stripe-hosted styles used by Elements
+      "style-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Explicitly allow stylesheet elements used by Stripe iframes and Elements
+      "style-src-attr 'unsafe-inline'", // Allow inline style attributes required by third-party embeds
       `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageOrigins.join(' ')}`.trim(), // Allow images from self, blob URLs, and data URLs
       "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
-      "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co", // Allow PostHog analytics in cookieless mode
+      "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co https://api.stripe.com https://r.stripe.com", // Allow payment requests and Stripe telemetry required by Elements
       "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
       "object-src 'none'", // Block object/embed/applet
       "base-uri 'self'", // Restrict base tag URLs
       "form-action 'self'", // Restrict form submissions
       "frame-ancestors 'self'", // Prevent embedding in frames
-      "frame-src 'self'",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
       'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
     ].join('; '),
   },
