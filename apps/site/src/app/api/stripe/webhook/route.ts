@@ -6,6 +6,10 @@ import {
   upsertFarmSubscriptionFromStripe,
 } from '@/lib/utils/stripe/subscription-db';
 import logger from '@/lib/logger';
+import {
+  fulfillSeedOrderCheckout,
+  parseSeedOrderItemSummary,
+} from '@/lib/order/server/order-fulfillment';
 import { getStripeClient } from '@/lib/stripe/client';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
@@ -49,6 +53,36 @@ export async function POST(request: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
+        if (session.mode === 'payment') {
+          const farmId = Number.parseInt(session.metadata?.farmId ?? '', 10);
+          const userId = Number.parseInt(session.metadata?.userId ?? '', 10);
+
+          if (!Number.isInteger(farmId) || !Number.isInteger(userId)) {
+            logger.warn(
+              'Missing fulfillment metadata for completed seed checkout session',
+              {
+                checkoutSessionId: session.id,
+                metadata: session.metadata,
+              }
+            );
+            break;
+          }
+
+          await fulfillSeedOrderCheckout({
+            checkoutSessionId: session.id,
+            paymentIntentId:
+              typeof session.payment_intent === 'string'
+                ? session.payment_intent
+                : (session.payment_intent?.id ?? null),
+            farmId,
+            userId,
+            customerEmail:
+              session.customer_details?.email ?? session.customer_email,
+            items: parseSeedOrderItemSummary(session.metadata?.itemSummary),
+          });
+          break;
+        }
+
         if (session.mode !== 'subscription') {
           break;
         }

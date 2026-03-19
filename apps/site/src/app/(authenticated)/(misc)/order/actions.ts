@@ -7,6 +7,10 @@ import { db } from '@nightcrawler/db/schema/connection';
 import { inArray } from 'drizzle-orm';
 import { env } from '@/lib/env';
 import logger from '@/lib/logger';
+import {
+  fulfillSeedOrderCheckout,
+  parseSeedOrderItemSummary,
+} from '@/lib/order/server/order-fulfillment';
 import { getStripeClient } from '@/lib/stripe/client';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import type {
@@ -212,6 +216,22 @@ export async function getOrderCheckoutSessionStatus(
         customerEmail: null,
         error: 'This checkout session is no longer available.',
       };
+    }
+
+    if (checkoutSession.status === 'complete') {
+      await fulfillSeedOrderCheckout({
+        checkoutSessionId: checkoutSession.id,
+        paymentIntentId:
+          typeof checkoutSession.payment_intent === 'string'
+            ? checkoutSession.payment_intent
+            : (checkoutSession.payment_intent?.id ?? null),
+        farmId: currentUser.farmId,
+        userId: currentUser.id,
+        customerEmail:
+          checkoutSession.customer_details?.email ??
+          checkoutSession.customer_email,
+        items: parseSeedOrderItemSummary(checkoutSession.metadata?.itemSummary),
+      });
     }
 
     return {

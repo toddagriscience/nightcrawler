@@ -20,3 +20,4 @@ export { tab } from './tab';
 export { widget, widgetEnum } from './widget';
 export { standardValues } from './standard-values';
 export { seedProduct } from './seed-product';
+export { seedOrderCheckout } from './seed-order-checkout';
