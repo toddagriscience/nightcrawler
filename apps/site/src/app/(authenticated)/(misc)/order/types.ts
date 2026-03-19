@@ -32,8 +32,6 @@ export interface CreateOrderCheckoutSessionResult {
 export interface OrderCheckoutSessionStatusResult {
   /** Stripe Checkout Session status. */
   status: string | null;
-  /** Customer email associated with the completed checkout session. */
-  customerEmail: string | null;
   /** Recoverable configuration or validation error for checkout status. */
   error: string | null;
 }

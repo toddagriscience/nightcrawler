@@ -20,6 +20,7 @@
 - All files should be in kebab-case, unless otherwise specified.
 - Run `bun format` after every change you make
 - Document ALL interfaces, functions, classes, and constant variables by utilizing JSDoc standards
+- Implement appropriate logging via the `logger` module
 
 ## Creating an issue via GitHub's MCP
 

@@ -28,6 +28,6 @@ export interface SeedOrderFulfillmentInput {
 export interface SeedOrderFulfillmentResult {
   /** Whether the checkout had already been fulfilled previously. */
   alreadyFulfilled: boolean;
-  /** Whether the confirmation email was sent during this attempt. */
+  /** Whether the internal notification email was sent during this attempt. */
   emailSent: boolean;
 }

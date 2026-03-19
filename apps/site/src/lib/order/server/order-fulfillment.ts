@@ -5,7 +5,7 @@ import { seedOrderCheckout, seedProduct, user } from '@nightcrawler/db/schema';
 import type { SeedOrderCheckoutItem } from '@nightcrawler/db/schema/seed-order-checkout';
 import { and, eq, gte, inArray, sql } from 'drizzle-orm';
 import logger from '@/lib/logger';
-import { sendSeedOrderConfirmationEmail } from './order-email';
+import { sendInternalSeedOrderNotificationEmail } from './order-email';
 import type {
   SeedOrderFulfillmentInput,
   SeedOrderFulfillmentItem,
@@ -78,7 +78,7 @@ function normalizeSeedOrderItems(
 }
 
 /**
- * Sends a seed-order confirmation email for a processed checkout when needed.
+ * Sends an internal seed-order notification email for a processed checkout when needed.
  *
  * @param {number} orderId - Stored seed-order checkout id.
  * @returns {Promise<boolean>} True when the confirmation email was sent.
@@ -125,7 +125,7 @@ async function sendSeedOrderConfirmationEmailForOrder(
     ])
   );
 
-  const emailSent = await sendSeedOrderConfirmationEmail({
+  const emailSent = await sendInternalSeedOrderNotificationEmail({
     customerEmail: orderRecord.customerEmail,
     customerName: orderRecord.firstName ?? null,
     items: orderRecord.items,
@@ -149,7 +149,7 @@ async function sendSeedOrderConfirmationEmailForOrder(
  * Decrements seed stock and stores an idempotent fulfillment record for a successful checkout.
  *
  * @param {SeedOrderFulfillmentInput} input - Stripe checkout data required for fulfillment.
- * @returns {Promise<SeedOrderFulfillmentResult>} Fulfillment status for stock and email handling.
+ * @returns {Promise<SeedOrderFulfillmentResult>} Fulfillment status for stock and internal email handling.
  */
 export async function fulfillSeedOrderCheckout(
   input: SeedOrderFulfillmentInput

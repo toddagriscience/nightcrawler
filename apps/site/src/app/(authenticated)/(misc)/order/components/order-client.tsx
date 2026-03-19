@@ -35,8 +35,6 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
   const [checkoutItems, setCheckoutItems] = useState<OrderItem[]>([]);
   /** Recoverable checkout error shown inside the modal. */
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  /** Customer email returned from a completed Stripe Checkout Session. */
-  const [customerEmail, setCustomerEmail] = useState<string | null>(null);
   /** Replaces the empty-order state after checkout finishes or fails. */
   const [pageState, setPageState] = useState<'idle' | 'success' | 'error'>(
     'idle'
@@ -87,7 +85,6 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
       }
 
       if (result.status === 'complete') {
-        setCustomerEmail(result.customerEmail);
         clear();
         setPageState('success');
         setIsCheckoutOpen(false);
@@ -116,7 +113,6 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
    * @returns {void}
    */
   function handleCheckoutStart() {
-    setCustomerEmail(null);
     setPageState('idle');
 
     if (order.items.length === 0) {
@@ -151,7 +147,6 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
     if (!nextOpen) {
       setCheckoutModalState('checkout');
       setErrorMessage(null);
-      setCustomerEmail(null);
     }
   }
 
@@ -180,20 +175,16 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
             </h1>
             <p className="mt-3 text-center text-base leading-relaxed text-foreground/70">
               Your seed order has been submitted successfully.
-              {customerEmail
-                ? ` A confirmation email will be sent to ${customerEmail}.`
-                : ''}
             </p>
             <p className="mt-3 text-center text-base leading-relaxed text-foreground/70">
-              A Todd advisor will follow up with you soon to confirm fulfillment
-              and next steps.
+              The Todd team has been notified internally and will follow up with
+              you soon to confirm fulfillment and next steps.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button
                 type="button"
                 variant="brand"
                 onClick={() => {
-                  setCustomerEmail(null);
                   setPageState('idle');
                 }}
               >

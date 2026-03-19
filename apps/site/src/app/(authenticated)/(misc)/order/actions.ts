@@ -191,7 +191,6 @@ export async function getOrderCheckoutSessionStatus(
   if (!sessionId.trim()) {
     return {
       status: null,
-      customerEmail: null,
       error: 'Missing Stripe checkout session id.',
     };
   }
@@ -213,7 +212,6 @@ export async function getOrderCheckoutSessionStatus(
       });
       return {
         status: null,
-        customerEmail: null,
         error: 'This checkout session is no longer available.',
       };
     }
@@ -236,9 +234,6 @@ export async function getOrderCheckoutSessionStatus(
 
     return {
       status: checkoutSession.status,
-      customerEmail:
-        checkoutSession.customer_details?.email ??
-        checkoutSession.customer_email,
       error: null,
     };
   } catch (error) {
@@ -248,7 +243,6 @@ export async function getOrderCheckoutSessionStatus(
     });
     return {
       status: null,
-      customerEmail: null,
       error:
         'We could not verify checkout status right now. Please try again in a moment.',
     };

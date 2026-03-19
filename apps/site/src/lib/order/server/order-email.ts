@@ -12,6 +12,12 @@ const orderEmailPort = Number.parseInt(
 /** Whether the configured SMTP transport should use TLS immediately. */
 const orderEmailSecure = process.env.ORDER_EMAIL_SECURE === 'true';
 
+/** Internal email recipients notified after a successful seed order. */
+const internalOrderEmailRecipients = (process.env.INTERNAL_ORDER_EMAIL_TO ?? '')
+  .split(',')
+  .map((value) => value.trim())
+  .filter(Boolean);
+
 /**
  * Builds the configured seed-order mail transporter.
  *
@@ -21,6 +27,7 @@ function getOrderEmailTransporter() {
   if (
     !process.env.ORDER_EMAIL_HOST ||
     !process.env.ORDER_EMAIL_FROM ||
+    internalOrderEmailRecipients.length === 0 ||
     !Number.isInteger(orderEmailPort)
   ) {
     return null;
@@ -41,17 +48,17 @@ function getOrderEmailTransporter() {
 }
 
 /**
- * Sends a seed-order confirmation email when SMTP settings are configured.
+ * Sends an internal seed-order notification email when SMTP settings are configured.
  *
- * @param {object} input - Confirmation email content and recipient details.
- * @param {string | null} input.customerEmail - Recipient email from Stripe.
- * @param {string | null} input.customerName - Recipient display name, if known.
+ * @param {object} input - Notification email content and order details.
+ * @param {string | null} input.customerEmail - Customer email from Stripe, if available.
+ * @param {string | null} input.customerName - Customer display name, if known.
  * @param {SeedOrderCheckoutItem[]} input.items - Purchased line items for the order.
  * @param {Map<number, { name: string; unit: string }>} input.productsById - Purchased products keyed by id.
  * @param {string} input.checkoutSessionId - Stripe Checkout Session id for support/debugging.
  * @returns {Promise<boolean>} True when an email was sent successfully.
  */
-export async function sendSeedOrderConfirmationEmail({
+export async function sendInternalSeedOrderNotificationEmail({
   customerEmail,
   customerName,
   items,
@@ -64,21 +71,11 @@ export async function sendSeedOrderConfirmationEmail({
   productsById: Map<number, { name: string; unit: string }>;
   checkoutSessionId: string;
 }): Promise<boolean> {
-  if (!customerEmail) {
-    logger.warn(
-      'Skipping seed-order confirmation email without customer email',
-      {
-        checkoutSessionId,
-      }
-    );
-    return false;
-  }
-
   const transporter = getOrderEmailTransporter();
 
   if (!transporter) {
     logger.warn(
-      'Skipping seed-order confirmation email because SMTP is not configured',
+      'Skipping internal seed-order notification email because SMTP is not configured',
       {
         checkoutSessionId,
         customerEmail,
@@ -102,13 +99,13 @@ export async function sendSeedOrderConfirmationEmail({
 
   await transporter.sendMail({
     from: process.env.ORDER_EMAIL_FROM,
-    to: customerEmail,
-    replyTo: process.env.ORDER_EMAIL_REPLY_TO,
-    subject: 'Your Todd Agriscience seed order is confirmed',
+    to: internalOrderEmailRecipients,
+    subject: 'New Todd Agriscience seed order received',
     text: [
-      customerName ? `Hi ${customerName},` : 'Hi,',
+      'A new seed order payment completed successfully.',
       '',
-      'We received your seed order and will follow up with fulfillment details soon.',
+      `Customer name: ${customerName ?? 'Unknown'}`,
+      `Customer email: ${customerEmail ?? 'Unknown'}`,
       '',
       'Order summary:',
       orderLines,
