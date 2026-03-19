@@ -10,9 +10,6 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    defaults:
-        run:
-            working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -31,11 +28,11 @@ jobs:
       - name: Install dependencies
         run: bun i
 
-      - name: Run unit tests
-        run: bun run test
+      - name: Run unit tests with coverage
+        run: bun run --filter @nightcrawler/site test:coverage
 
       - name: Upload test coverage
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage/lcov.info
+          file: ./apps/site/coverage/lcov.info
           fail_ci_if_error: false

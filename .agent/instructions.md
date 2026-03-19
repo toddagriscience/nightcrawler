@@ -1,9 +1,11 @@
 # ToddAgriScience Website - Development Rules & Context
 
 ## Project Overview
+
 A modern, production-ready Next.js website for Todd Agriscience emphasizing maintainability, type safety, internationalization support, and component-driven architecture.
 
 ## Tech Stack
+
 - **Next.js 15** with App Router & Turbopack
 - **TypeScript**, **Tailwind CSS v4**, **React 19**
 - **Drizzle ORM** with PostgreSQL
@@ -11,6 +13,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
 - **Infrastructure**: Vitest v4, Storybook v9.1, ESLint v9
 
 ## Command and Execution Rules
+
 - **Directory**: All `bun` commands MUST be run in the `./frontend` folder.
 - **Commands**:
   - `bun dev` - Dev server
@@ -21,6 +24,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
   - `bun format` - Format code
 
 ## Development & Code Quality Guidelines
+
 1. **Type Safety**: Maintain strict TypeScript (no `any`).
 2. **Internationalization**: Support multi-language architecture (en, es).
 3. **Testing**: Write tests for functionality and accessibility.
@@ -31,6 +35,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
 8. **Logging Standards**:
    - Use `@/lib/logger` instead of console methods in production code.
    - Use `logger.error` for critical issues, `logger.warn` for debug info.
+
 - Example:
   ```tsx
   import { logger } from '@/lib/logger';
@@ -39,6 +44,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
   ```
 
 ## File Organization & Component Structure
+
 - **Slice Architecture**: Page-specific components go in `app/[locale]/page-name/components/`.
 - **Co-location**: Test files (`.test.tsx`) and Storybook (`.stories.tsx`) live alongside components.
 - **Global components**: Reusable components in `src/components/common/` and `src/components/ui/`.
@@ -46,6 +52,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
 - **Path Aliases**: Use `@/` alias for all src imports.
 
 ## State Management Approach
+
 - React Context for global state (theme, locale).
 - `useState`/`useReducer` for component-specific state.
 - `requestAnimationFrame` for scroll/animation effects.

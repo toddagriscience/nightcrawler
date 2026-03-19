@@ -1,3 +1,2 @@
-cd ./frontend
 bun run format
-bun lint-staged
+bunx lint-staged
