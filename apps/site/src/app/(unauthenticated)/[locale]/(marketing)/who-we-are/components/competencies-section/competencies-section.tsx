@@ -3,9 +3,7 @@
 'use client';
 
 import { motion, MotionValue, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-
-import useWindowWidth from '@/lib/hooks/useWindowWidth';
+import { useRef, useSyncExternalStore } from 'react';
 
 interface CompetenciesSectionProps {
   t: (key: string) => string;
@@ -13,14 +11,87 @@ interface CompetenciesSectionProps {
 
 /**
  * Competencies section with scroll-driven animation
- * Uses framer-motion useScroll to drive animations based on scroll position
+ * Uses framer-motion useScroll to drive animations based on scroll position.
+ * On lg and smaller, uses a simplified whileInView animation
  */
-export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const windowWidth = useWindowWidth();
-  const isMobile = windowWidth ? windowWidth < 768 : false;
+const desktopQuery = '(min-width: 1024px)';
 
-  // Track scroll progress within this section
+function subscribeToMediaQuery(callback: () => void) {
+  const mq = window.matchMedia(desktopQuery);
+  mq.addEventListener('change', callback);
+  return () => mq.removeEventListener('change', callback);
+}
+
+function getMediaQuerySnapshot() {
+  return window.matchMedia(desktopQuery).matches;
+}
+
+function getMediaQueryServerSnapshot() {
+  return false;
+}
+
+export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
+  const isDesktop = useSyncExternalStore(
+    subscribeToMediaQuery,
+    getMediaQuerySnapshot,
+    getMediaQueryServerSnapshot
+  );
+
+  if (!isDesktop) {
+    return <CompetenciesSectionMobile t={t} />;
+  }
+
+  return <CompetenciesSectionDesktop t={t} />;
+}
+
+/**
+ * simplified layout with CSS/whileInView animations.
+ */
+function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
+  return (
+    <section className="relative w-full py-24 px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="flex flex-col items-center gap-12"
+      >
+        <h2 className="text-2xl max-w-[300px] leading-tight font-thin text-center">
+          {t('competencies.title')}
+        </h2>
+        <div className="flex flex-col items-center gap-8">
+          {[0, 1, 2].map((index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: 'easeOut',
+              }}
+              className="flex size-48 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 text-center transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10"
+            >
+              <p className="text-3xl font-thin">{index + 1}</p>
+              <p className="text-sm font-thin leading-relaxed">
+                {t(`competencies.items.${index}`)}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/**
+ * full scroll-driven animation
+ */
+function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
@@ -28,20 +99,17 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
 
   const titleOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
   const vennOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
-
-  const vennScale = useTransform(
-    scrollYProgress,
-    [0.25, 0.45],
-    [isMobile ? 0.8 : 0.7, 1]
-  );
-
+  const vennScale = useTransform(scrollYProgress, [0.25, 0.45], [0.7, 1]);
   const progressBarHeight = useTransform(
     scrollYProgress,
     [0, 1],
     ['0%', '100%']
   );
-
-  // Emulate sticky behavior
+  const progressBarOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    [0, 1, 1, 0]
+  );
   const stickyY = useTransform(scrollYProgress, [0, 1], ['0%', '300%']);
 
   return (
@@ -50,15 +118,8 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
         style={{ y: stickyY }}
         className="relative top-0 h-screen w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Progress Bar Indicator */}
         <motion.div
-          style={{
-            opacity: useTransform(
-              scrollYProgress,
-              [0, 0.1, 0.9, 1],
-              [0, 1, 1, 0]
-            ),
-          }}
+          style={{ opacity: progressBarOpacity }}
           className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none"
         >
           <motion.div
@@ -68,7 +129,6 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
         </motion.div>
 
         <div className="relative w-full max-w-[1400px] h-[400px] md:h-[600px] flex items-center justify-center">
-          {/* Competencies Title */}
           <motion.div
             style={{ opacity: titleOpacity }}
             className="absolute inset-0 flex items-center justify-center z-10 px-6"
@@ -78,12 +138,8 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
             </h2>
           </motion.div>
 
-          {/* Competencies Circles */}
           <motion.div
-            style={{
-              opacity: vennOpacity,
-              scale: vennScale,
-            }}
+            style={{ opacity: vennOpacity, scale: vennScale }}
             className="absolute inset-0"
           >
             <div className="relative w-full h-full flex items-center justify-center">
@@ -93,7 +149,7 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
                   index={index}
                   progress={scrollYProgress}
                   t={t}
-                  isMobile={isMobile}
+                  isMobile={false}
                 />
               ))}
             </div>
