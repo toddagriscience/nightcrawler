@@ -16,10 +16,22 @@ export default function Certifications() {
     formState: { errors },
     watch,
     register,
+    trigger,
   } = useFormContext<GeneralBusinessInformationInsert>();
   return (
     <>
-      <h2 className="text-lg font-semibold">Certification Information</h2>
+      <h2 className="text-xl font-semibold">Certification Information</h2>
+      <div className="flex items-center justify-start gap-6">
+        <p className="text-base font-normal">
+          <span className="text-red-500 text-base leading-tight">*</span> Please
+          select all that apply.
+        </p>
+        <ErrorMessage
+          errors={errors}
+          name="certifications"
+          render={({ message }) => <FormErrorMessage errorMessage={message} />}
+        />
+      </div>
       <FieldSet className="mb-6 flex flex-col gap-6">
         <Field>
           <div className="flex flex-row items-center gap-3">
@@ -30,7 +42,10 @@ export default function Certifications() {
                 <Checkbox
                   id="hasGAP"
                   checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
                 />
               )}
             />
@@ -82,7 +97,10 @@ export default function Certifications() {
                 <Checkbox
                   id="hasLocalInspection"
                   checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
                 />
               )}
             />
@@ -132,7 +150,10 @@ export default function Certifications() {
                 <Checkbox
                   id="hasOrganic"
                   checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
                 />
               )}
             />
@@ -182,7 +203,10 @@ export default function Certifications() {
                 <Checkbox
                   id="hasBiodynamic"
                   checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
                 />
               )}
             />
@@ -232,7 +256,10 @@ export default function Certifications() {
                 <Checkbox
                   id="hasRegenerativeOrganic"
                   checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
                 />
               )}
             />
@@ -274,6 +301,34 @@ export default function Certifications() {
               />
             </div>
           )}
+        </Field>
+        <Field>
+          <div className="flex flex-row items-center gap-3">
+            <Controller
+              name="hasNone"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  id="hasNone"
+                  checked={field.value ?? false}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    trigger();
+                  }}
+                />
+              )}
+            />
+            <FieldLabel htmlFor="noCertification" className="leading-tight">
+              None
+            </FieldLabel>
+            <ErrorMessage
+              errors={errors}
+              name="hasNone"
+              render={({ message }) => (
+                <FormErrorMessage errorMessage={message} />
+              )}
+            />
+          </div>
         </Field>
       </FieldSet>
     </>

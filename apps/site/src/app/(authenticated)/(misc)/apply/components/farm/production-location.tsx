@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function ProductionLocation() {
   const {
@@ -18,7 +18,7 @@ export default function ProductionLocation() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           Does any production take place in greenhouses, shadehouses, or
           buildings?
         </FieldLabel>
@@ -64,6 +64,7 @@ export default function ProductionLocation() {
             {field.value?.greenhouse?.isGreenhouse && (
               <div className="ml-6 mb-4 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe..."
                   value={field.value?.greenhouse?.description ?? ''}
                   onChange={(e) =>
@@ -95,6 +96,7 @@ export default function ProductionLocation() {
             {field.value?.shadehouse?.isShadehouse && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe..."
                   value={field.value?.shadehouse?.description ?? ''}
                   onChange={(e) =>
@@ -126,6 +128,7 @@ export default function ProductionLocation() {
             {field.value?.buildings?.isBuildings && (
               <div className="mb-4 flex flex-row ml-6 flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe..."
                   value={field.value?.buildings?.description ?? ''}
                   onChange={(e) =>
@@ -157,6 +160,7 @@ export default function ProductionLocation() {
             {field.value?.other?.isOther && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe..."
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>
@@ -172,7 +176,7 @@ export default function ProductionLocation() {
               </div>
             )}
             <div className="mt-4">
-              <FieldLabel className="mb-4">
+              <FieldLabel className="mb-4 text-base leading-tight">
                 Does your operation also have conventional production in
                 greenhouses, shadehouses, or buildings?
               </FieldLabel>
@@ -240,6 +244,7 @@ export default function ProductionLocation() {
                 {field.value?.conventionalProduction?.isOther && (
                   <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                     <Textarea
+                      className="bg-transparent border-1 border-[#848484]/80"
                       placeholder="Describe..."
                       value={
                         field.value?.conventionalProduction?.otherDescription ??

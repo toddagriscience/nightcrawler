@@ -92,8 +92,8 @@ export default function Colleagues() {
   return (
     <div className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
-        <p className="mb-5 text-sm text-muted-foreground/70">
+        <h2 className="mb-3 text-xl font-semibold">Current Team Members</h2>
+        <p className="mb-4 text-foreground/80 text-sm font-thin">
           Only one viewer account is allowed per user. Please contact support
           for more information.
         </p>
@@ -114,7 +114,7 @@ export default function Colleagues() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm italic">
+            <p className="text-foreground/80 text-sm italic">
               No team members added yet.
             </p>
           )}
@@ -123,11 +123,11 @@ export default function Colleagues() {
 
         {canEditFarm ? (
           <>
-            <h2 className="mb-4 text-lg font-semibold">
+            <h2 className="mb-4 text-xl font-semibold">
               Invite a New Team Member
             </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FieldSet className="flex flex-col gap-6">
+              <FieldSet className="flex flex-col gap-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <div className="flex flex-row justify-between">
@@ -294,7 +294,7 @@ export default function Colleagues() {
                 </Field>
 
                 <Field>
-                  <div className="flex flex-row items-center gap-3">
+                  <div className="flex flex-row items-center gap-3 mt-1">
                     <Controller
                       name="didOwnAndControlParcel"
                       control={control}
@@ -354,9 +354,9 @@ export default function Colleagues() {
                 </Field>
               </FieldSet>
 
-              <div className="mt-10 flex flex-row gap-6">
+              <div className="mt-12 flex flex-row gap- justify-between">
                 <SubmitButton
-                  buttonText="Invite team member"
+                  buttonText="Invite Team Member"
                   className="h-11 w-[200px] rounded-full bg-white text-black hover:cursor-pointer border-primary border-1 hover:border-[#848484]/80 font-semibold hover:bg-white hover:text-foreground/80"
                   reactHookFormPending={isSubmitting}
                 />

@@ -51,20 +51,24 @@ export default function Subscription() {
           License.
         </p>
       )}
-      <div>
-        <h2 className="text-lg font-semibold">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold">
           Activate Your Todd Partnership
         </h2>
-        <p className="text-muted-foreground mt-2 text-sm">
+        <p className="text-foreground/80 mt-4 text-normal">
           To complete your application, please provide payment information for
-          your Platform License. Checkout is provided securely through Stripe.{' '}
-          <i>Billing will start after the 7 day grace period.</i>
+          your Platform License. Checkout is provided securely through Stripe.
+        </p>
+        <p className="text-foreground/80 mt-2 text-normal italic">
+          Billing will start after the 7 day grace period.
         </p>
       </div>
 
-      <div className="space-y-3 rounded-md border p-5">
-        <p className="text-xl font-semibold">Todd Agriscience</p>
-        <p className="text-sm">{'$1,695.00 per month'}</p>
+      <div className="space-y-5 rounded-md border p-8 pb-10 border-[#848484]/80">
+        <p className="text-xl font-semibold mb-6">Todd Agriscience</p>
+        <p className="text-foreground/80 text-normal">
+          {'$1,695.00 per month'}
+        </p>
         {hasActiveSubscription ? (
           <p className="rounded-md border border-emerald-400/60 bg-emerald-50 p-3 text-sm text-emerald-700">
             Platform License active. You can continue to Terms and submit your
@@ -75,18 +79,10 @@ export default function Subscription() {
             Platform License not active yet. Complete checkout to continue.
           </p>
         )}
-      </div>
 
-      {error && (
-        <p className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </p>
-      )}
-
-      <div className="flex flex-row gap-4 justify-center">
         <Button
           type="button"
-          className="h-11 w-[180px] rounded-full text-sm hover:cursor-pointer hover:bg-foreground/80 bg-foreground text-background font-semibold"
+          className="h-11 w-[225px] rounded-full text-sm hover:cursor-pointer hover:bg-foreground/80 bg-foreground text-background font-semibold mt-4"
           onClick={beginStripeCheckout}
           disabled={!canEditFarm || isLoading || hasActiveSubscription}
         >
@@ -96,19 +92,29 @@ export default function Subscription() {
               ? 'Opening Checkout'
               : 'Start Secure Checkout'}
         </Button>
+      </div>
 
+      {error && (
+        <p className="rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
+      <div className="flex flex-col gap-12 mt-4 mx-1">
+        <div className="flex flex-row items-baseline ml-2">
+          <p className="text-base font-semibold">Already paid?</p>
+          <Button
+            type="button"
+            className="w-35 h-6 text-sm hover:cursor-pointer hover:underline font-semibold bg-transparent text-foreground/80"
+            variant="default"
+            onClick={() => router.refresh()}
+          >
+            Refresh Status Here
+          </Button>
+        </div>
         <Button
           type="button"
-          className="h-11 w-[225px] rounded-full text-sm hover:cursor-pointer hover:border-[#848484]/80 font-semibold"
-          variant="outline"
-          onClick={() => router.refresh()}
-        >
-          Refresh Platform License Status
-        </Button>
-
-        <Button
-          type="button"
-          className="h-11 w-[150px] rounded-full text-sm hover:cursor-pointer bg-foreground text-background font-semibold"
+          className="h-11 w-[225px] rounded-full text-sm hover:cursor-pointer bg-foreground text-background font-semibold"
           onClick={() => {
             setCurrentTab('terms');
             scrollTo(0, 0);

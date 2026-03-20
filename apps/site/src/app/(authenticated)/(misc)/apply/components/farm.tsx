@@ -100,11 +100,11 @@ export default function Farm() {
                 Viewers can review this section but cannot edit it.
               </p>
             )}
-            <h2 className="text-lg font-semibold">General Farm Information</h2>
+            <h2 className="text-xl font-semibold">General Farm Information</h2>
             <FieldSet className="mx-auto mb-8 flex flex-col gap-6">
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Total gross income on certified crops/products (preceding 12
                     months)
                   </FieldLabel>
@@ -129,7 +129,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Total acreage of the farm
                   </FieldLabel>
                   <ErrorMessage
@@ -153,7 +153,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What are your main crops or highest demand produce?
                   </FieldLabel>
                   <ErrorMessage
@@ -173,7 +173,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Do you have a current conservation plan/contract with USDA
                     NRCS or other conservation agency?
                   </FieldLabel>
@@ -194,7 +194,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How do you structure your management zones or fields?
                   </FieldLabel>
                   <ErrorMessage
@@ -219,7 +219,7 @@ export default function Farm() {
               <FarmActivities />
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Production &amp; Cultivation
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -229,7 +229,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Is livestock incorporated into your farming system?
                   </FieldLabel>
                   <ErrorMessage
@@ -250,7 +250,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What measures are taken to reduce weed, insect, and disease
                     issues?
                   </FieldLabel>
@@ -274,7 +274,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What mechanical equipment is used for production?
                   </FieldLabel>
                   <ErrorMessage
@@ -295,7 +295,7 @@ export default function Farm() {
             </FieldSet>
 
             {/* Inputs & Materials */}
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Inputs &amp; Materials
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -306,7 +306,7 @@ export default function Farm() {
               <SupplierContracts />
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Irrigation &amp; Water
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -314,7 +314,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="text-base leading-tight">
                     What factors are considered in irrigation scheduling?
                   </FieldLabel>
                   <ErrorMessage
@@ -335,7 +335,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How is soil moisture monitored?
                   </FieldLabel>
                   <ErrorMessage
@@ -356,7 +356,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Do you apply materials via irrigation water?
                   </FieldLabel>
                   <ErrorMessage
@@ -377,7 +377,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How is water conservation or rainwater utilization measured?
                   </FieldLabel>
                   <ErrorMessage
@@ -398,7 +398,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How is water quality protected from runoff?
                   </FieldLabel>
                   <ErrorMessage
@@ -419,13 +419,13 @@ export default function Farm() {
             </FieldSet>
 
             {/* Environmental & Conservation */}
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Environmental &amp; Conservation
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What measures are taken to prevent or minimize erosion?
                   </FieldLabel>
                   <ErrorMessage
@@ -450,7 +450,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel className="leading-tight mb-[-6px]">
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How do you maintain natural resources in non-crop areas?
                   </FieldLabel>
                   <ErrorMessage
@@ -470,7 +470,7 @@ export default function Farm() {
               </Field>
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Harvest &amp; Markets
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -487,8 +487,9 @@ export default function Farm() {
 
             {canEditFarm && (
               <SubmitButton
+                className="bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full h-11 w-[200px]"
                 reactHookFormPending={isSubmitting}
-                buttonText="Save and next"
+                buttonText="Save & Next"
               />
             )}
           </form>

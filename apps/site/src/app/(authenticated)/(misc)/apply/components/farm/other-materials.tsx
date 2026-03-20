@@ -19,7 +19,7 @@ export default function OtherMaterials() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           What, if any, synthetic fertilizers, pesticides, fungicides, or any
           other materials such as treated seed (including coatings, pelleting
           materials, and inoculants), growing media (substrate, planting mix,
@@ -35,7 +35,7 @@ export default function OtherMaterials() {
         control={control}
         name="otherMaterials"
         render={({ field }) => (
-          <FieldSet className="flex flex-col gap-2">
+          <FieldSet className="flex flex-col gap-3">
             <Field orientation="horizontal">
               <Checkbox
                 defaultChecked={true}
@@ -186,6 +186,7 @@ export default function OtherMaterials() {
             {field.value?.usesNpk?.isUsesNpk && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe NPK usage..."
                   value={field.value?.usesNpk?.description ?? ''}
                   onChange={(e) =>
@@ -221,6 +222,7 @@ export default function OtherMaterials() {
             {field.value?.usesSodiumNitrate?.isUsesSodiumNitrate && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe sodium nitrate usage..."
                   value={field.value?.usesSodiumNitrate?.description ?? ''}
                   onChange={(e) =>
@@ -257,6 +259,7 @@ export default function OtherMaterials() {
             {field.value?.treatedLumber?.isTreatedLumber && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe treated lumber installations..."
                   value={field.value?.treatedLumber?.description ?? ''}
                   onChange={(e) =>

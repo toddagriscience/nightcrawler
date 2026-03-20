@@ -81,6 +81,7 @@ export const farmCertificate = pgTable('farm_certificate', {
   biodynamicDate: date(),
   hasRegenerativeOrganic: boolean().default(false),
   regenerativeOrganic: date(),
+  hasNone: boolean().default(false),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

@@ -5,8 +5,8 @@
 import { Button } from '@/components/ui';
 import { UserSelect } from '@/lib/types/db';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import { RefreshCw, UserMinus } from 'lucide-react';
 import { useState } from 'react';
+import { BiRefresh, BiUserMinus } from 'react-icons/bi';
 import { resendVerificationEmail, uninviteUser } from './action';
 
 export default function InvitedUser({
@@ -51,28 +51,34 @@ export default function InvitedUser({
   }
 
   return (
-    <div className="flex flex-col gap-1 rounded-md border p-3">
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex w-full flex-col sm:flex-row">
-          <p className="font-medium">
+    <div className="flex flex-col gap-1 rounded-md border p-6 border-[#848484]/80">
+      <div className="flex flex-row items-center justify-between mx-2">
+        <div className="flex w-full flex-col">
+          <p className="font-thin text-base">
             {invitedUser.firstName} {invitedUser.lastName}
           </p>
-          <p className="text-muted-foreground sm:ml-2">({invitedUser.email})</p>
+          <p className="text-foreground/80 text-sm font-thin sm:ml-1">
+            {invitedUser.email}
+          </p>
         </div>
-        <div className="mr-3 flex flex-row items-center justify-center gap-2">
+        <div className="mr-8 flex flex-row items-center justify-center gap-2">
           <span
-            className={`text-muted-foreground rounded-4xl border border-solid border-black/40 px-2 py-1 text-sm text-nowrap select-none ${isVerified ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
+            className={`text-foreground/80 rounded-4xl border border-solid border-black/40 px-2 py-1 text-xs font-normal text-nowrap select-none ${isVerified ? 'bg-green-500/30' : 'bg-yellow-500/30'}`}
           >
             {isVerified ? 'Verified' : 'Not verified'}
           </span>
           {canEditFarm && !isVerified && (
             <Button
               onClick={handleResend}
-              className="hover:cursor-pointer"
+              className="hover:cursor-pointer hover:text-green-500"
               disabled={!isResendActive}
+              title="Resend verification email"
             >
-              <RefreshCw
-                className={!isResendActive ? 'stroke-gray-500/40' : ''}
+              <BiRefresh
+                className={
+                  !isResendActive ? 'text-green-500' : 'text-foreground/80'
+                }
+                style={{ width: 22, height: 22 }}
               />
             </Button>
           )}
@@ -84,7 +90,10 @@ export default function InvitedUser({
               variant="ghost"
               title="Uninvite"
             >
-              <UserMinus className={isUninviting ? 'stroke-gray-500/40' : ''} />
+              <BiUserMinus
+                className={isUninviting ? 'text-red-500' : 'text-foreground/80'}
+                style={{ width: 22, height: 22 }}
+              />
             </Button>
           )}
         </div>

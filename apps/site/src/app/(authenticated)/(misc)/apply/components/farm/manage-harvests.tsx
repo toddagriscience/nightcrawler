@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function ManageHarvests() {
   const {
@@ -18,7 +18,9 @@ export default function ManageHarvests() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>How do you manage your harvests?</FieldLabel>
+        <FieldLabel className="text-base leading-tight">
+          How do you manage your harvests?
+        </FieldLabel>
         <ErrorMessage
           errors={errors}
           name="manageHarvests"
@@ -72,6 +74,7 @@ export default function ManageHarvests() {
                     Name and address of contract harvester
                   </FieldLabel>
                   <Textarea
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Enter name and address"
                     value={field.value?.contractHarvester?.nameAndAddress ?? ''}
                     onChange={(e) =>
@@ -178,6 +181,7 @@ export default function ManageHarvests() {
             {field.value?.otherResponsibility?.isOtherResponsibility && (
               <div className="mb-4 ml-4 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe other responsibility for harvest"
                   value={field.value?.otherResponsibility?.description ?? ''}
                   onChange={(e) =>
@@ -214,6 +218,7 @@ export default function ManageHarvests() {
             {field.value?.notApplicable?.isNotApplicable && (
               <div className="mb-4 ml-4 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe why not applicable"
                   value={field.value?.notApplicable?.description ?? ''}
                   onChange={(e) =>

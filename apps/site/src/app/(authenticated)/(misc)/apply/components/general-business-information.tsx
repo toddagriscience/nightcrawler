@@ -24,8 +24,16 @@ export default function GeneralBusinessInformation() {
   const { farmInfo, setCurrentTab, canEditFarm } =
     useContext(ApplicationContext);
   const defaultValues = farmInfo;
+  const hasAddressDefault = defaultValues?.address1
+    ? 'yes'
+    : defaultValues?.apn
+      ? 'no'
+      : undefined;
   const methods = useForm<GeneralBusinessInformationInsert>({
-    defaultValues: defaultValues ?? {},
+    defaultValues: {
+      ...defaultValues,
+      hasAddress: hasAddressDefault,
+    },
     resolver: zodResolver(generalBusinessInformationInsertSchema),
   });
   const {
@@ -61,14 +69,14 @@ export default function GeneralBusinessInformation() {
       <FormProvider {...methods}>
         <form
           className={cn(
-            'mt-6 flex max-w-3xl flex-col gap-6',
+            'mt-6 flex max-w-3xl flex-col gap-5',
             !canEditFarm && 'pointer-events-none opacity-70'
           )}
-          onSubmit={() => {
-            handleSubmit(save)();
+          onSubmit={handleSubmit(async (data) => {
+            await save(data);
             setCurrentTab('colleagues');
             scrollTo(0, 0);
-          }}
+          })}
           onChange={onChangeHelper}
         >
           {!canEditFarm && (
@@ -76,11 +84,16 @@ export default function GeneralBusinessInformation() {
               Viewers can review this section but cannot edit it.
             </p>
           )}
-          <h2 className="text-lg font-semibold">Business Information</h2>
-          <FieldSet className="flex flex-col gap-6">
+          <h2 className="text-xl font-semibold">Business Information</h2>
+          <FieldSet className="flex flex-col gap-5 mb-6">
             <Field>
               <div className="flex flex-row justify-between mb-[-6px]">
-                <FieldLabel>Registered Legal Business Name</FieldLabel>
+                <FieldLabel htmlFor="businessName">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
+                  Registered Legal Business Name
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="businessName"
@@ -92,14 +105,23 @@ export default function GeneralBusinessInformation() {
               <Input
                 className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
+                required
+                aria-required="true"
                 placeholder="Enter your legal business name"
-                {...register('businessName')}
+                {...register('businessName', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
               <div className="flex flex-row justify-between mb-[-6px]">
-                <FieldLabel>Informal / DBA Name</FieldLabel>
+                <FieldLabel htmlFor="informalName">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
+                  Informal / DBA Name
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="informalName"
@@ -111,14 +133,20 @@ export default function GeneralBusinessInformation() {
               <Input
                 className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
+                required
+                aria-required="true"
                 placeholder="Enter your informal or DBA name"
-                {...register('informalName')}
+                {...register('informalName', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
               <div className="flex flex-row justify-between mb-[-6px]">
-                <FieldLabel>Business Website</FieldLabel>
+                <FieldLabel htmlFor="businessWebsite">
+                  Business Website
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="businessWebsite"
@@ -130,14 +158,21 @@ export default function GeneralBusinessInformation() {
               <Input
                 className="border-[#848484]/80 border-1 bg-transparent"
                 type="url"
+                required
+                aria-required="true"
                 placeholder="https://example.com"
-                {...register('businessWebsite')}
+                {...register('businessWebsite', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
               <div className="flex flex-row justify-between mb-[-6px]">
-                <FieldLabel>
+                <FieldLabel htmlFor="managementStartDate">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
                   When did you begin managing this parcel?
                 </FieldLabel>
                 <ErrorMessage
@@ -151,20 +186,16 @@ export default function GeneralBusinessInformation() {
               <Input
                 className="border-[#848484]/80 border-1 bg-transparent"
                 type="date"
-                {...register('managementStartDate')}
+                required
+                aria-required="true"
+                {...register('managementStartDate', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
           </FieldSet>
 
-          <Address
-            defaultAddressState={
-              defaultValues?.address1
-                ? 'yes'
-                : defaultValues?.apn
-                  ? 'no'
-                  : 'unanswered'
-            }
-          />
+          <Address />
 
           <Certifications />
 
