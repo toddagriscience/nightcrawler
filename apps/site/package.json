@@ -69,7 +69,7 @@
     "intersection-observer-polyfill": "^0.1.0",
     "jsdom": "^28.1.0",
     "lucide-react": "^0.575.0",
-    "next": "^16.1.6",
+    "next": "^16.1.7",
     "next-intl": "^4.8.3",
     "next-sanity": "^12.1.0",
     "posthog-js": "^1.354.3",
