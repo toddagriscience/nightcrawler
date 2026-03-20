@@ -14,11 +14,5 @@ export default async function OrderPage() {
     notFound();
   }
 
-  return (
-    <OrderClient
-      stripePublishableKey={
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? null
-      }
-    />
-  );
+  return <OrderClient />;
 }

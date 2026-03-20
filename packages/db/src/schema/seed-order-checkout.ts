@@ -19,7 +19,12 @@ export interface SeedOrderCheckoutItem {
   quantity: number;
 }
 
-/** Processed Stripe checkout session for a seed order. */
+/**
+ * Processed Stripe checkout session for a seed order.
+ * This is stored outside Stripe so fulfillment stays idempotent even if Stripe
+ * metadata changes, internal email delivery has to be retried, or inventory
+ * needs to be reconciled without depending on a remote API read.
+ */
 export const seedOrderCheckout = pgTable('seed_order_checkout', {
   /** Auto increment id. */
   id: serial().primaryKey().notNull(),

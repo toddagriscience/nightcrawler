@@ -11,9 +11,8 @@
 import { logger } from '@/lib/logger';
 import { getEmbedding } from '@nightcrawler/db/utils/get-embedding';
 import { db } from '@nightcrawler/db/schema/connection';
-import { knowledgeArticle, seedProduct } from '@nightcrawler/db/schema';
 import type { SearchResult } from './types';
-import { and, desc, eq, gt, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 const SIMILARITY_THRESHOLD = 0.22;
 const MAX_RESULTS = 5;
@@ -30,75 +29,67 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
   try {
     const embedding = await getEmbedding(query);
     const embeddingVector = JSON.stringify(embedding);
-    const articleSimilarity = sql<number>`1 - (${knowledgeArticle.embedding} <=> ${embeddingVector})`;
-    const seedSimilarity = sql<number>`1 - (${seedProduct.embedding} <=> ${embeddingVector})`;
-
-    const articleResults = await db
-      .select({
-        id: knowledgeArticle.id,
-        title: knowledgeArticle.title,
-        slug: knowledgeArticle.slug,
-        content: knowledgeArticle.content,
-        source: knowledgeArticle.source,
-        category: knowledgeArticle.category,
-        similarity: articleSimilarity,
-      })
-      .from(knowledgeArticle)
-      .where(
-        and(
-          eq(knowledgeArticle.articleType, 'imp'),
-          gt(articleSimilarity, SIMILARITY_THRESHOLD)
-        )
+    const results = await db.execute(sql`
+      with article_matches as (
+        select
+          article.id,
+          article.title,
+          article.slug,
+          article.content,
+          article.source,
+          article.category::text as category,
+          'imp'::text as result_type,
+          1 - (article.embedding <=> ${embeddingVector}::vector) as similarity,
+          null::integer as stock,
+          null::integer as price_in_cents,
+          null::varchar as unit
+        from knowledge_article article
+        where
+          article.article_type = 'imp'
+          and 1 - (article.embedding <=> ${embeddingVector}::vector) > ${SIMILARITY_THRESHOLD}
+      ),
+      seed_matches as (
+        select
+          product.id,
+          product.name as title,
+          product.slug,
+          product.description as content,
+          coalesce(related_imp.source, 'Todd Seed Catalog') as source,
+          'seed products'::text as category,
+          'seed'::text as result_type,
+          1 - (product.embedding <=> ${embeddingVector}::vector) as similarity,
+          product.stock,
+          product.price_in_cents,
+          product.unit
+        from seed_product product
+        left join knowledge_article related_imp
+          on related_imp.id = product.imp_knowledge_article_id
+        where 1 - (product.embedding <=> ${embeddingVector}::vector) > ${SIMILARITY_THRESHOLD}
       )
-      .orderBy(desc(articleSimilarity))
-      .limit(MAX_RESULTS);
+      select *
+      from (
+        select * from article_matches
+        union all
+        select * from seed_matches
+      ) combined_matches
+      order by similarity desc
+      limit ${MAX_RESULTS}
+    `);
 
-    const seedResults = await db
-      .select({
-        id: seedProduct.id,
-        name: seedProduct.name,
-        slug: seedProduct.slug,
-        description: seedProduct.description,
-        stock: seedProduct.stock,
-        priceInCents: seedProduct.priceInCents,
-        unit: seedProduct.unit,
-        similarity: seedSimilarity,
-      })
-      .from(seedProduct)
-      .where(gt(seedSimilarity, SIMILARITY_THRESHOLD))
-      .orderBy(desc(seedSimilarity))
-      .limit(MAX_RESULTS);
-
-    return [
-      ...articleResults.map((article) => ({
-        id: article.id,
-        title: article.title,
-        slug: article.slug,
-        content: article.content,
-        source: article.source ?? null,
-        category: article.category,
-        resultType: 'imp' as const,
-        similarity: article.similarity,
-        stock: null,
-        priceInCents: null,
-        unit: null,
-      })),
-      ...seedResults.map((seed) => ({
-        id: seed.id,
-        title: seed.name,
-        slug: seed.slug,
-        content: seed.description,
-        source: 'Todd Seed Catalog',
-        category: 'seed products',
-        resultType: 'seed' as const,
-        similarity: seed.similarity,
-        stock: seed.stock,
-        priceInCents: seed.priceInCents,
-        unit: seed.unit,
-      })),
-    ]
-      .sort((left, right) => right.similarity - left.similarity)
-      .slice(0, MAX_RESULTS);
+    return results.rows.map((row) => ({
+      id: Number(row.id),
+      title: String(row.title),
+      slug: String(row.slug),
+      content: String(row.content),
+      source: row.source ? String(row.source) : null,
+      category: String(row.category),
+      resultType: row.result_type === 'seed' ? 'seed' : 'imp',
+      similarity: Number(row.similarity),
+      stock: row.stock === null ? null : Number(row.stock),
+      priceInCents:
+        row.price_in_cents === null ? null : Number(row.price_in_cents),
+      unit: row.unit ? String(row.unit) : null,
+    }));
   } catch (error) {
     logger.error('[Search] Search failed:', error);
     throw error;

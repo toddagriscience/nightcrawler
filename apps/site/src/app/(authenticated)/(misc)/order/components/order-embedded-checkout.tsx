@@ -20,11 +20,10 @@ import type { OrderEmbeddedCheckoutProps } from '../types';
  */
 export function OrderEmbeddedCheckout({
   checkoutItems,
-  stripePublishableKey,
   onPaymentSuccess,
   onErrorChange,
 }: OrderEmbeddedCheckoutProps) {
-  const stripePromise = getStripeJsClient(stripePublishableKey);
+  const stripePromise = getStripeJsClient();
   /** Frozen order snapshot for the active Stripe embedded checkout instance. */
   const checkoutItemsRef = useRef(checkoutItems);
   /** Latest error callback without forcing Stripe provider reconfiguration. */

@@ -43,13 +43,6 @@
       "when": 1773866423805,
       "tag": "0005_chunky_sally_floyd",
       "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1779990000000,
-      "tag": "0006_seed_order_checkout",
-      "breakpoints": true
     }
   ]
 }

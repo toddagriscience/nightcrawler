@@ -2,7 +2,6 @@
 
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,22 +9,25 @@ import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrder } from '@/lib/order/hooks';
 import type { OrderItem } from '@/lib/order/types';
-import { formatPrice } from '@/lib/order/utils';
 import { getOrderCheckoutSessionStatus } from '../actions';
-import type { OrderCheckoutModalState, OrderClientProps } from '../types';
+import type { OrderCheckoutModalState } from '../types';
 import { OrderCheckoutModal } from './order-checkout-modal';
+import { OrderLineItemCard } from './order-line-item-card';
+import { OrderSummaryCard } from './order-summary-card';
 
 /**
  * Client order page that renders the local-storage-backed shopping cart.
  *
- * @param {OrderClientProps} props - Server-provided Stripe configuration.
  * @returns {JSX.Element} Order review and embedded checkout experience.
  */
-export function OrderClient({ stripePublishableKey }: OrderClientProps) {
+export function OrderClient() {
   const { order, itemCount, subtotal, updateQuantity, removeItem, clear } =
     useOrder();
   const router = useRouter();
   const searchParams = useSearchParams();
+  /** Browser-safe Stripe publishable key used for the embedded checkout flow. */
+  const stripePublishableKey =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? null;
   /** Controls whether the checkout modal is visible. */
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   /** Current checkout phase shown inside the modal. */
@@ -48,16 +50,14 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
 
-    if (!sessionId) {
+    if (!sessionId || processedSessionIdRef.current === sessionId) {
       return;
     }
 
-    if (processedSessionIdRef.current === sessionId) {
-      return;
-    }
-
+    /** Stable checkout-session id for the lifetime of this effect run. */
+    const checkoutSessionId = sessionId;
     processedSessionIdRef.current = sessionId;
-    const returnedSessionId = sessionId;
+    /** Prevents state updates after this effect is cleaned up or replaced. */
     let isActive = true;
 
     /**
@@ -70,7 +70,7 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
       setCheckoutModalState('loading');
       setErrorMessage(null);
 
-      const result = await getOrderCheckoutSessionStatus(returnedSessionId);
+      const result = await getOrderCheckoutSessionStatus(checkoutSessionId);
 
       if (!isActive) {
         return;
@@ -250,127 +250,23 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
               </div>
 
               {order.items.map((item) => (
-                <article
+                <OrderLineItemCard
                   key={item.slug}
-                  className="grid gap-4 rounded-3xl border border-stone-200 bg-white p-4 shadow-sm md:grid-cols-[8rem_minmax(0,1fr)_auto]"
-                >
-                  <Link
-                    href={`/product/${item.slug}`}
-                    className="relative block aspect-square overflow-hidden rounded-2xl bg-stone-100"
-                  >
-                    <Image
-                      src={item.imageUrl || '/seed-placeholder.svg'}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                      sizes="128px"
-                    />
-                  </Link>
-
-                  <div className="space-y-2">
-                    <Link
-                      href={`/product/${item.slug}`}
-                      className="text-xl font-semibold text-foreground transition-opacity hover:opacity-70"
-                    >
-                      {item.name}
-                    </Link>
-                    <p className="text-sm text-foreground/70">
-                      {item.description}
-                    </p>
-                    <p className="text-sm font-medium text-foreground/70">
-                      {formatPrice(item.priceInCents)} / {item.unit}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-start gap-3 md:items-end">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        aria-label={`Decrease quantity of ${item.name}`}
-                        onClick={() =>
-                          updateQuantity(item.slug, item.quantity - 1)
-                        }
-                        disabled={isCheckoutLocked}
-                      >
-                        -
-                      </Button>
-                      <div className="min-w-12 text-center text-sm font-medium text-foreground">
-                        {item.quantity}
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        aria-label={`Increase quantity of ${item.name}`}
-                        onClick={() =>
-                          updateQuantity(item.slug, item.quantity + 1)
-                        }
-                        disabled={isCheckoutLocked}
-                      >
-                        +
-                      </Button>
-                    </div>
-                    <p className="text-sm font-medium text-foreground">
-                      {formatPrice(item.quantity * item.priceInCents)}
-                    </p>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="px-0 text-sm text-red-600 hover:bg-transparent hover:text-red-700"
-                      onClick={() => removeItem(item.slug)}
-                      disabled={isCheckoutLocked}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                </article>
+                  item={item}
+                  isCheckoutLocked={isCheckoutLocked}
+                  onUpdateQuantity={updateQuantity}
+                  onRemoveItem={removeItem}
+                />
               ))}
             </section>
 
-            <aside className="h-max rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-sm text-foreground/70">
-                  <span>Items</span>
-                  <span>{itemCount}</span>
-                </div>
-                <div className="flex items-center justify-between text-lg font-semibold text-foreground">
-                  <span>Subtotal</span>
-                  <span>{formatPrice(subtotal)}</span>
-                </div>
-                <p className="text-sm text-foreground/60">
-                  Taxes, shipping, and final fulfillment are not calculated yet.
-                </p>
-
-                {isCheckoutLocked ? (
-                  <p className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-foreground/70">
-                    Checkout is using your current order snapshot. Close the
-                    modal to make changes.
-                  </p>
-                ) : null}
-
-                <Button
-                  type="button"
-                  variant="brand"
-                  className="w-full"
-                  onClick={handleCheckoutStart}
-                  disabled={isCheckoutLocked}
-                >
-                  Checkout
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={clear}
-                  disabled={isCheckoutLocked}
-                >
-                  Clear order
-                </Button>
-              </div>
-            </aside>
+            <OrderSummaryCard
+              itemCount={itemCount}
+              subtotal={subtotal}
+              isCheckoutLocked={isCheckoutLocked}
+              onCheckout={handleCheckoutStart}
+              onClear={clear}
+            />
           </div>
         </div>
       )}
@@ -380,12 +276,6 @@ export function OrderClient({ stripePublishableKey }: OrderClientProps) {
         onOpenChange={handleCheckoutOpenChange}
         modalState={checkoutModalState}
         checkoutItems={checkoutItems}
-        subtotal={checkoutItems.reduce(
-          (sum, item) => sum + item.priceInCents * item.quantity,
-          0
-        )}
-        totalUnits={checkoutItems.reduce((sum, item) => sum + item.quantity, 0)}
-        stripePublishableKey={stripePublishableKey}
         onErrorChange={setErrorMessage}
         onPaymentSuccess={handleCheckoutSuccess}
       />

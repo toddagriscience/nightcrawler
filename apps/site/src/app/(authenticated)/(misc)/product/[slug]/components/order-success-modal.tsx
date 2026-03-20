@@ -15,10 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import type { OrderSuccessModalProps } from '../types';
 
-/** Class names for the success icon wrapper. */
-const successIconContainerClassName =
-  'mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700';
-
 /**
  * Success modal shown after adding a seed product to the local order.
  */
@@ -32,7 +28,10 @@ export function OrderSuccessModal({
       <DialogContent className="gap-6 overflow-hidden rounded-3xl border-stone-200 p-0 shadow-2xl sm:max-w-xl">
         <div className="bg-gradient-to-br from-emerald-50 via-white to-stone-50 p-6 sm:p-8">
           <DialogHeader className="items-center text-center">
-            <div className={successIconContainerClassName} aria-hidden="true">
+            <div
+              className="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+              aria-hidden="true"
+            >
               <CircleCheckBig className="size-8" />
             </div>
             <DialogTitle className="text-2xl font-semibold text-foreground">

@@ -4,13 +4,10 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
-const seedImageHostnames = (process.env.NEXT_PUBLIC_SEED_IMAGE_HOSTNAMES ?? '')
-  .split(',')
-  .map((hostname) => hostname.trim())
-  .filter(Boolean);
-const seedImageOrigins = seedImageHostnames.map(
-  (hostname) => `https://${hostname}`
-);
+/** Optional base URL for externally hosted seed product imagery. */
+const seedImageBaseUrl = process.env.NEXT_PUBLIC_SEED_IMAGE_BASE_URL?.trim();
+/** Parsed URL for externally hosted seed product imagery. */
+const seedImageUrl = seedImageBaseUrl ? new URL(seedImageBaseUrl) : null;
 
 // Enhanced security headers configuration for privacy and data leak prevention
 const securityHeaders = [
@@ -78,7 +75,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Allow Stripe-hosted styles used by Elements
       "style-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Explicitly allow stylesheet elements used by Stripe iframes and Elements
       "style-src-attr 'unsafe-inline'", // Allow inline style attributes required by third-party embeds
-      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageOrigins.join(' ')}`.trim(), // Allow images from self, blob URLs, and data URLs
+      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageUrl?.origin ?? ''}`.trim(), // Allow images from self, blob URLs, and data URLs
       "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
       "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co https://api.stripe.com https://r.stripe.com", // Allow payment requests and Stripe telemetry required by Elements
       "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
@@ -127,12 +124,16 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-      ...seedImageHostnames.map((hostname) => ({
-        protocol: 'https' as const,
-        hostname,
-        port: '',
-        pathname: '/**',
-      })),
+      ...(seedImageUrl
+        ? [
+            {
+              protocol: seedImageUrl.protocol.replace(':', '') as 'https',
+              hostname: seedImageUrl.hostname,
+              port: seedImageUrl.port,
+              pathname: '/**',
+            },
+          ]
+        : []),
     ],
   },
 

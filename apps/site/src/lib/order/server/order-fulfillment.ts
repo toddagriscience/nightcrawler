@@ -191,6 +191,11 @@ export async function fulfillSeedOrderCheckout(
   let createdOrderId: number | null = null;
 
   await db.transaction(async (tx) => {
+    /**
+     * Insert the fulfillment record before decrementing stock so duplicate
+     * completion requests race on the unique checkout-session id and only one
+     * request is allowed to mutate inventory for this payment.
+     */
     const insertedOrders = await tx
       .insert(seedOrderCheckout)
       .values({

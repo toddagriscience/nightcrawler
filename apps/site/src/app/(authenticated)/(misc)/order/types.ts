@@ -36,12 +36,6 @@ export interface OrderCheckoutSessionStatusResult {
   error: string | null;
 }
 
-/** Props required to render the `/order` client page. */
-export interface OrderClientProps {
-  /** Current server-provided Stripe publishable key. */
-  stripePublishableKey: string | null;
-}
-
 /** Visual state for the `/order` checkout modal. */
 export type OrderCheckoutModalState = 'loading' | 'checkout';
 
@@ -49,8 +43,6 @@ export type OrderCheckoutModalState = 'loading' | 'checkout';
 export interface OrderEmbeddedCheckoutProps {
   /** Snapshot of the current local order used to create the checkout session. */
   checkoutItems: OrderItem[];
-  /** Current server-provided Stripe publishable key. */
-  stripePublishableKey: string;
   /** Called after Stripe reports the checkout completed successfully. */
   onPaymentSuccess: () => void;
   /** Updates the recoverable checkout error shown above the embedded checkout. */
@@ -67,14 +59,34 @@ export interface OrderCheckoutModalProps {
   modalState: OrderCheckoutModalState;
   /** Snapshot of the current local order used to create the checkout session. */
   checkoutItems: OrderItem[];
-  /** Current order subtotal shown in the modal summary. */
-  subtotal: number;
-  /** Total quantity shown in the modal summary. */
-  totalUnits: number;
-  /** Current server-provided Stripe publishable key. */
-  stripePublishableKey: string | null;
   /** Updates the recoverable checkout error shown inside the modal. */
   onErrorChange: (errorMessage: string | null) => void;
   /** Called after Stripe reports the checkout completed successfully. */
   onPaymentSuccess: () => void;
+}
+
+/** Props for a single line item card within the order review UI. */
+export interface OrderLineItemCardProps {
+  /** The order item being rendered. */
+  item: OrderItem;
+  /** Whether checkout has locked edits against the frozen order snapshot. */
+  isCheckoutLocked: boolean;
+  /** Updates the stored quantity for an item by slug. */
+  onUpdateQuantity: (slug: string, quantity: number) => void;
+  /** Removes an item from the order by slug. */
+  onRemoveItem: (slug: string) => void;
+}
+
+/** Props for the order summary sidebar. */
+export interface OrderSummaryCardProps {
+  /** Total quantity across all order line items. */
+  itemCount: number;
+  /** Subtotal in cents for the current order. */
+  subtotal: number;
+  /** Whether checkout has locked edits against the frozen order snapshot. */
+  isCheckoutLocked: boolean;
+  /** Starts embedded checkout for the frozen order snapshot. */
+  onCheckout: () => void;
+  /** Clears the current local order. */
+  onClear: () => void;
 }
