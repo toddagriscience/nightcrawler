@@ -13,12 +13,67 @@ interface CompetenciesSectionProps {
 
 /**
  * Competencies section with scroll-driven animation
- * Uses framer-motion useScroll to drive animations based on scroll position
+ * Uses framer-motion useScroll to drive animations based on scroll position.
+ * On lg and smaller, uses a simplified whileInView animation to avoid scroll jitter.
  */
 export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const windowWidth = useWindowWidth();
-  const isMobile = windowWidth ? windowWidth < 768 : false;
+  const isDesktop = windowWidth ? windowWidth >= 1024 : false;
+
+  if (!isDesktop) {
+    return <CompetenciesSectionMobile t={t} />;
+  }
+
+  return <CompetenciesSectionDesktop t={t} />;
+}
+
+/**
+ * Simplified layout with whileInView animations.
+ */
+function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
+  return (
+    <section className="relative w-full py-24 px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="flex flex-col items-center gap-12"
+      >
+        <h2 className="text-2xl max-w-[300px] leading-tight font-thin text-center">
+          {t('competencies.title')}
+        </h2>
+        <div className="flex flex-col items-center gap-8">
+          {[0, 1, 2].map((index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: 'easeOut',
+              }}
+              className="flex size-48 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 text-center transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10"
+            >
+              <p className="text-3xl font-thin">{index + 1}</p>
+              <p className="text-sm font-thin leading-relaxed">
+                {t(`competencies.items.${index}`)}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+/**
+ * Full scroll-driven animation with sticky emulation
+ */
+function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Track scroll progress within this section
   const { scrollYProgress } = useScroll({
@@ -29,11 +84,7 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
   const vennOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
 
-  const vennScale = useTransform(
-    scrollYProgress,
-    [0.25, 0.45],
-    [isMobile ? 0.8 : 0.7, 1]
-  );
+  const vennScale = useTransform(scrollYProgress, [0.25, 0.45], [0.7, 1]);
 
   const progressBarHeight = useTransform(
     scrollYProgress,
@@ -93,7 +144,6 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
                   index={index}
                   progress={scrollYProgress}
                   t={t}
-                  isMobile={isMobile}
                 />
               ))}
             </div>
@@ -111,16 +161,14 @@ function CompetencyCircle({
   index,
   progress,
   t,
-  isMobile,
 }: {
   index: number;
   progress: MotionValue<number>;
   t: (key: string) => string;
-  isMobile: boolean;
 }) {
-  const radius = isMobile ? 96 : 128;
-  const triangleOffset = isMobile ? 150 : 200;
-  const spreadDistance = isMobile ? 240 : 320;
+  const radius = 128;
+  const triangleOffset = 200;
+  const spreadDistance = 320;
 
   // Venn diagram positions (triangular formation)
   const vennPositions = [
@@ -137,18 +185,12 @@ function CompetencyCircle({
     },
   ];
 
-  // Spread positions (vertical on mobile, horizontal on desktop)
-  const spreadPositions = isMobile
-    ? [
-        { top: '50%', x: -radius, y: -(radius + spreadDistance) }, // Top
-        { top: '50%', x: -radius, y: -radius }, // Center
-        { top: '50%', x: -radius, y: -(radius - spreadDistance) }, // Bottom
-      ]
-    : [
-        { top: '50%', x: -(radius + spreadDistance), y: -radius },
-        { top: '50%', x: -radius, y: -radius },
-        { top: '50%', x: -(radius - spreadDistance), y: -radius },
-      ];
+  // Spread positions (horizontal)
+  const spreadPositions = [
+    { top: '50%', x: -(radius + spreadDistance), y: -radius },
+    { top: '50%', x: -radius, y: -radius },
+    { top: '50%', x: -(radius - spreadDistance), y: -radius },
+  ];
 
   const start = vennPositions[index];
   const end = spreadPositions[index];
