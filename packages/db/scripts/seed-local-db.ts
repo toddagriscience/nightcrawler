@@ -16,6 +16,8 @@ import {
   accountAgreementAcceptance,
   farmInfoInternalApplication,
   farmSubscription,
+  integratedManagementPlan,
+  integratedManagementPlanNote,
   knowledgeArticle,
   seedProduct,
 } from '../src/schema';
@@ -32,8 +34,8 @@ const localDatabaseUrl =
     : process.env.DATABASE_URL;
 
 type SeedArticle = Pick<
-  InferInsertModel<typeof knowledgeArticle>,
-  'title' | 'slug' | 'content' | 'category' | 'source' | 'articleType'
+  InferInsertModel<typeof integratedManagementPlan>,
+  'title' | 'slug' | 'content' | 'category' | 'source'
 >;
 
 type SeedProductRecord = Pick<
@@ -57,7 +59,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'understanding-soil-ph-for-crop-production',
     content:
       'Soil pH strongly affects nutrient availability, microbial activity, and root health. Most crops perform best between pH 6.0 and 7.0.',
-    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
@@ -66,7 +67,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'the-four-lows-condition-in-soil',
     content:
       'When calcium, magnesium, potassium, and sodium are all low, the soil is biologically depleted. Restore biology first, then rebalance minerals.',
-    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
@@ -75,7 +75,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'carrot-production-and-soil-requirements',
     content:
       'Carrots prefer loose, well-drained sandy loam with pH 6.0 to 6.8. Avoid excess nitrogen and keep moisture consistent during germination.',
-    articleType: 'imp',
     category: 'planting',
     source: 'Todd Field Guide',
   },
@@ -84,7 +83,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'irrigation-scheduling-and-water-management',
     content:
       'Effective irrigation maintains root-zone moisture without waterlogging. Sandy soils need lighter, frequent watering and clay soils need slower cycles.',
-    articleType: 'imp',
     category: 'water',
     source: 'Todd Field Guide',
   },
@@ -252,6 +250,10 @@ async function seedLocalDb() {
   // eslint-disable-next-line
   await db.delete(farm);
   // eslint-disable-next-line
+  await db.delete(integratedManagementPlanNote);
+  // eslint-disable-next-line
+  await db.delete(integratedManagementPlan);
+  // eslint-disable-next-line
   await db.delete(knowledgeArticle);
   // eslint-disable-next-line
   await db.delete(seedProduct);
@@ -397,38 +399,69 @@ async function seedLocalDb() {
     version: 'v1',
   });
 
-  const insertedKnowledgeArticles = await db
-    .insert(knowledgeArticle)
-    .values(
-      await Promise.all(
-        knowledgeArticles.map(async (article) => ({
-          ...article,
-          embedding: await createEmbedding(
-            `${article.title} ${article.content}`
-          ),
-        }))
-      )
-    )
-    .returning({
-      id: knowledgeArticle.id,
-      slug: knowledgeArticle.slug,
-    });
+  const insertedIntegratedManagementPlans = [];
 
-  const knowledgeArticleIdsBySlug = new Map(
-    insertedKnowledgeArticles.map((article) => [article.slug, article.id])
+  for (const article of knowledgeArticles) {
+    const [knowledgeRow] = await db
+      .insert(knowledgeArticle)
+      .values({
+        embedding: await createEmbedding(`${article.title} ${article.content}`),
+      })
+      .returning({
+        id: knowledgeArticle.id,
+      });
+
+    const [insertedIntegratedManagementPlan] = await db
+      .insert(integratedManagementPlan)
+      .values({
+        knowledgeArticleId: knowledgeRow.id,
+        title: article.title,
+        slug: article.slug,
+        content: article.content,
+        category: article.category,
+        source: article.source,
+        initialized: new Date('2026-01-15'),
+        managementZone: seededZone.id,
+        analysis: analysisId,
+      })
+      .returning({
+        id: integratedManagementPlan.id,
+        slug: integratedManagementPlan.slug,
+      });
+
+    insertedIntegratedManagementPlans.push(insertedIntegratedManagementPlan);
+  }
+
+  const integratedManagementPlanIdsBySlug = new Map(
+    insertedIntegratedManagementPlans.map((article) => [
+      article.slug,
+      article.id,
+    ])
   );
 
   await db.insert(seedProduct).values(
     await Promise.all(
-      seedProducts.map(async (product) => ({
-        ...product,
-        impKnowledgeArticleId: product.relatedImpSlug
-          ? (knowledgeArticleIdsBySlug.get(product.relatedImpSlug) ?? null)
-          : null,
-        embedding: await createEmbedding(
-          `${product.name} ${product.description}`
-        ),
-      }))
+      seedProducts.map(async (product) => {
+        const [knowledgeRow] = await db
+          .insert(knowledgeArticle)
+          .values({
+            embedding: await createEmbedding(
+              `${product.name} ${product.description}`
+            ),
+          })
+          .returning({
+            id: knowledgeArticle.id,
+          });
+
+        return {
+          ...product,
+          knowledgeArticleId: knowledgeRow.id,
+          relatedIntegratedManagementPlanId: product.relatedImpSlug
+            ? (integratedManagementPlanIdsBySlug.get(product.relatedImpSlug) ??
+              null)
+            : null,
+        };
+      })
     )
   );
 

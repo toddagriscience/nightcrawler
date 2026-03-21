@@ -43,6 +43,13 @@
       "when": 1773866423805,
       "tag": "0005_chunky_sally_floyd",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1774049121695,
+      "tag": "0006_normalize-knowledge",
+      "breakpoints": true
     }
   ]
 }

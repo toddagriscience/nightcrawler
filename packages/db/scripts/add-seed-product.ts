@@ -3,7 +3,11 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
-import { knowledgeArticle, seedProduct } from '../src/schema';
+import {
+  integratedManagementPlan,
+  knowledgeArticle,
+  seedProduct,
+} from '../src/schema';
 import { getEmbedding } from '../src/utils/get-embedding';
 
 const EMBEDDING_DIMENSIONS = 3072;
@@ -89,8 +93,8 @@ async function addSeedProduct() {
   const imageUrl = getCliArg('image-url')?.trim();
   const advisorContactUrl =
     getCliArg('advisor-contact-url')?.trim() || '/contact';
-  const impKnowledgeArticleId = getCliArg('imp-article-id')
-    ? getRequiredIntegerArg('imp-article-id')
+  const relatedIntegratedManagementPlanId = getCliArg('imp-id')
+    ? getRequiredIntegerArg('imp-id')
     : undefined;
 
   if (!name || !slug || !description) {
@@ -112,23 +116,33 @@ async function addSeedProduct() {
     throw new Error(`A seed product with slug "${slug}" already exists.`);
   }
 
-  if (impKnowledgeArticleId !== undefined) {
+  if (relatedIntegratedManagementPlanId !== undefined) {
     const relatedImp = await db
-      .select({ id: knowledgeArticle.id })
-      .from(knowledgeArticle)
-      .where(eq(knowledgeArticle.id, impKnowledgeArticleId))
+      .select({ id: integratedManagementPlan.id })
+      .from(integratedManagementPlan)
+      .where(eq(integratedManagementPlan.id, relatedIntegratedManagementPlanId))
       .limit(1);
 
     if (relatedImp.length === 0) {
       throw new Error(
-        `No IMP article exists with id "${impKnowledgeArticleId}".`
+        `No IMP exists with id "${relatedIntegratedManagementPlanId}".`
       );
     }
   }
 
+  const [knowledgeRow] = await db
+    .insert(knowledgeArticle)
+    .values({
+      embedding,
+    })
+    .returning({
+      id: knowledgeArticle.id,
+    });
+
   const [insertedProduct] = await db
     .insert(seedProduct)
     .values({
+      knowledgeArticleId: knowledgeRow.id,
       name,
       slug,
       description,
@@ -137,8 +151,7 @@ async function addSeedProduct() {
       unit,
       imageUrl,
       advisorContactUrl,
-      impKnowledgeArticleId,
-      embedding,
+      relatedIntegratedManagementPlanId,
     })
     .returning({
       id: seedProduct.id,

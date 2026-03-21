@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { knowledgeArticle, seedProduct } from '@nightcrawler/db/schema';
+import { integratedManagementPlan, seedProduct } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { eq } from 'drizzle-orm';
 
@@ -19,13 +19,16 @@ export async function getSeedProductBySlug(slug: string) {
       unit: seedProduct.unit,
       imageUrl: seedProduct.imageUrl,
       advisorContactUrl: seedProduct.advisorContactUrl,
-      relatedImpTitle: knowledgeArticle.title,
-      relatedImpSlug: knowledgeArticle.slug,
+      relatedImpTitle: integratedManagementPlan.title,
+      relatedImpSlug: integratedManagementPlan.slug,
     })
     .from(seedProduct)
     .leftJoin(
-      knowledgeArticle,
-      eq(seedProduct.impKnowledgeArticleId, knowledgeArticle.id)
+      integratedManagementPlan,
+      eq(
+        seedProduct.relatedIntegratedManagementPlanId,
+        integratedManagementPlan.id
+      )
     )
     .where(eq(seedProduct.slug, slug))
     .limit(1);
