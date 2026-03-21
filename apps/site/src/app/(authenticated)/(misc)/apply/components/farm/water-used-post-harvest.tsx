@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function WaterUsedPostHarvest() {
   const {
@@ -18,7 +18,7 @@ export default function WaterUsedPostHarvest() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           Is water used in direct contact with produce post-harvest?
         </FieldLabel>
         <ErrorMessage
@@ -294,6 +294,7 @@ export default function WaterUsedPostHarvest() {
                           ?.isChlorineOther && (
                           <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                             <Textarea
+                              className="bg-transparent border-1 border-[#848484]/80"
                               placeholder="Describe other chlorine type"
                               value={
                                 field.value?.yes?.disinfectants?.yes
@@ -541,6 +542,7 @@ export default function WaterUsedPostHarvest() {
                           ?.isOther && (
                           <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                             <Textarea
+                              className="bg-transparent border-1 border-[#848484]/80"
                               placeholder="Describe other disinfectant"
                               value={
                                 field.value?.yes?.disinfectants?.yes?.other

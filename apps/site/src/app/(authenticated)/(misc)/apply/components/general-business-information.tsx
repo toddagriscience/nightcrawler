@@ -2,30 +2,38 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { saveGeneralBusinessInformation } from '../actions';
 import {
   type GeneralBusinessInformationInsert,
   generalBusinessInformationInsertSchema,
 } from '../types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { useForm, FormProvider } from 'react-hook-form';
-import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { saveGeneralBusinessInformation } from '../actions';
-import { Address, Certifications } from './general-business-information/index';
-import { useState, useContext } from 'react';
 import { ApplicationContext } from './application-tabs';
-import { cn } from '@/lib/utils';
+import { Address, Certifications } from './general-business-information/index';
 
 /** The 1st tab in the application page for general business information */
 export default function GeneralBusinessInformation() {
   const { farmInfo, setCurrentTab, canEditFarm } =
     useContext(ApplicationContext);
   const defaultValues = farmInfo;
+  const hasAddressDefault = defaultValues?.address1
+    ? 'yes'
+    : defaultValues?.apn
+      ? 'no'
+      : undefined;
   const methods = useForm<GeneralBusinessInformationInsert>({
-    defaultValues: defaultValues ?? {},
+    defaultValues: {
+      ...defaultValues,
+      hasAddress: hasAddressDefault,
+    },
     resolver: zodResolver(generalBusinessInformationInsertSchema),
   });
   const {
@@ -61,14 +69,14 @@ export default function GeneralBusinessInformation() {
       <FormProvider {...methods}>
         <form
           className={cn(
-            'mt-6 flex max-w-3xl flex-col gap-6',
+            'mt-6 flex max-w-3xl flex-col gap-5',
             !canEditFarm && 'pointer-events-none opacity-70'
           )}
-          onSubmit={() => {
-            handleSubmit(save)();
+          onSubmit={handleSubmit(async (data) => {
+            await save(data);
             setCurrentTab('colleagues');
             scrollTo(0, 0);
-          }}
+          })}
           onChange={onChangeHelper}
         >
           {!canEditFarm && (
@@ -76,11 +84,16 @@ export default function GeneralBusinessInformation() {
               Viewers can review this section but cannot edit it.
             </p>
           )}
-          <h2 className="text-lg font-semibold">Business Information</h2>
-          <FieldSet className="flex flex-col gap-6">
+          <h2 className="text-xl font-semibold">Business Information</h2>
+          <FieldSet className="flex flex-col gap-5 mb-6">
             <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Registered Legal Business Name</FieldLabel>
+              <div className="flex flex-row justify-between mb-[-6px]">
+                <FieldLabel htmlFor="businessName">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
+                  Registered Legal Business Name
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="businessName"
@@ -90,15 +103,25 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
+                required
+                aria-required="true"
                 placeholder="Enter your legal business name"
-                {...register('businessName')}
+                {...register('businessName', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Informal / DBA Name</FieldLabel>
+              <div className="flex flex-row justify-between mb-[-6px]">
+                <FieldLabel htmlFor="informalName">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
+                  Informal / DBA Name
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="informalName"
@@ -108,15 +131,22 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
+                required
+                aria-required="true"
                 placeholder="Enter your informal or DBA name"
-                {...register('informalName')}
+                {...register('informalName', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>Business Website</FieldLabel>
+              <div className="flex flex-row justify-between mb-[-6px]">
+                <FieldLabel htmlFor="businessWebsite">
+                  Business Website
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="businessWebsite"
@@ -126,15 +156,23 @@ export default function GeneralBusinessInformation() {
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="url"
+                required
+                aria-required="true"
                 placeholder="https://example.com"
-                {...register('businessWebsite')}
+                {...register('businessWebsite', {
+                  required: 'This field is required.',
+                })}
               />
             </Field>
 
             <Field>
-              <div className="flex flex-row justify-between">
-                <FieldLabel>
+              <div className="flex flex-row justify-between mb-[-6px]">
+                <FieldLabel htmlFor="managementStartDate">
+                  <span className="text-red-500 text-base leading-tight">
+                    *
+                  </span>{' '}
                   When did you begin managing this parcel?
                 </FieldLabel>
                 <ErrorMessage
@@ -145,25 +183,26 @@ export default function GeneralBusinessInformation() {
                   )}
                 />
               </div>
-              <Input type="date" {...register('managementStartDate')} />
+              <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
+                type="date"
+                required
+                aria-required="true"
+                {...register('managementStartDate', {
+                  required: 'This field is required.',
+                })}
+              />
             </Field>
           </FieldSet>
 
-          <Address
-            defaultAddressState={
-              defaultValues?.address1
-                ? 'yes'
-                : defaultValues?.apn
-                  ? 'no'
-                  : 'unanswered'
-            }
-          />
+          <Address />
 
           <Certifications />
 
           {canEditFarm && (
             <SubmitButton
-              buttonText="Save & next"
+              className="bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full h-11 w-[200px]"
+              buttonText="Save & Next"
               reactHookFormPending={isSubmitting}
             ></SubmitButton>
           )}

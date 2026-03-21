@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function NearContaminationSource() {
   const {
@@ -18,7 +18,7 @@ export default function NearContaminationSource() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           Is your farm near conventional agriculture or mining that may present
           the potential for contamination?
         </FieldLabel>
@@ -79,6 +79,7 @@ export default function NearContaminationSource() {
                   this parcel
                 </FieldLabel>
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe adjacent land uses and buffer zones"
                   value={field.value?.yes?.description ?? ''}
                   onChange={(e) =>
@@ -97,6 +98,7 @@ export default function NearContaminationSource() {
                     farm:
                   </FieldLabel>
                   <Textarea
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Describe the non-crop buffer zones"
                     value={field.value?.yes?.bufferZones ?? ''}
                     onChange={(e) =>
@@ -280,6 +282,7 @@ export default function NearContaminationSource() {
                       ?.isManagesAdjacentLand && (
                       <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                         <Textarea
+                          className="bg-transparent border-1 border-[#848484]/80"
                           placeholder="Describe precautions taken"
                           value={
                             field.value?.yes?.measures?.managesAdjacentLand

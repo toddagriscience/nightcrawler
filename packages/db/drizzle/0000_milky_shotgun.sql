@@ -40,6 +40,7 @@ CREATE TABLE "farm_certificate" (
 	"biodynamic_date" date,
 	"has_regenerative_organic" boolean DEFAULT false,
 	"regenerative_organic" date,
+	"has_none" boolean DEFAULT false,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

@@ -2,6 +2,10 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { Button } from '@/components/ui';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
@@ -11,22 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { UserSelect, UserInsert } from '@/lib/types/db';
-import { userInsertSchema } from '@/lib/zod-schemas/db';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import SubmitButton from '@/components/common/utils/submit-button/submit-button';
-import { inviteUserToFarm } from '../actions';
-import { userRoleEnum } from '@nightcrawler/db/schema';
-import { Button } from '@/components/ui';
-import SelfSelectAdmin from './colleagues/self-select-admin';
+import { UserInsert, UserSelect } from '@/lib/types/db';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
+import { userInsertSchema } from '@/lib/zod-schemas/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { userRoleEnum } from '@nightcrawler/db/schema';
+import { useContext, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { inviteUserToFarm } from '../actions';
 import { ApplicationContext } from './application-tabs';
 import InvitedUser from './colleagues/invited-user';
+import SelfSelectAdmin from './colleagues/self-select-admin';
 
 const userRoles = userRoleEnum.enumValues;
 
@@ -92,8 +92,8 @@ export default function Colleagues() {
   return (
     <div className="mt-6">
       <div className="max-w-3xl">
-        <h2 className="mb-1 text-lg font-semibold">Current Team Members</h2>
-        <p className="mb-5">
+        <h2 className="mb-3 text-xl font-semibold">Current Team Members</h2>
+        <p className="mb-4 text-foreground/80 text-sm font-thin">
           Only one viewer account is allowed per user. Please contact support
           for more information.
         </p>
@@ -114,7 +114,7 @@ export default function Colleagues() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-foreground/80 text-sm italic">
               No team members added yet.
             </p>
           )}
@@ -123,15 +123,20 @@ export default function Colleagues() {
 
         {canEditFarm ? (
           <>
-            <h2 className="mb-4 text-lg font-semibold">
+            <h2 className="mb-4 text-xl font-semibold">
               Invite a New Team Member
             </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FieldSet className="flex flex-col gap-6">
+              <FieldSet className="flex flex-col gap-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <div className="flex flex-row justify-between">
-                      <FieldLabel>First Name</FieldLabel>
+                      <FieldLabel
+                        htmlFor="firstName"
+                        className="leading-tight mb-[-6px]"
+                      >
+                        First Name
+                      </FieldLabel>
                       <ErrorMessage
                         errors={errors}
                         name="firstName"
@@ -141,6 +146,7 @@ export default function Colleagues() {
                       />
                     </div>
                     <Input
+                      className="border-[#848484]/80 border-1 bg-transparent"
                       type="text"
                       placeholder="First name"
                       {...register('firstName')}
@@ -149,7 +155,12 @@ export default function Colleagues() {
 
                   <Field>
                     <div className="flex flex-row justify-between">
-                      <FieldLabel>Last Name</FieldLabel>
+                      <FieldLabel
+                        htmlFor="lastName"
+                        className="leading-tight mb-[-6px]"
+                      >
+                        Last Name
+                      </FieldLabel>
                       <ErrorMessage
                         errors={errors}
                         name="lastName"
@@ -159,6 +170,7 @@ export default function Colleagues() {
                       />
                     </div>
                     <Input
+                      className="border-[#848484]/80 border-1 bg-transparent"
                       type="text"
                       placeholder="Last name"
                       {...register('lastName')}
@@ -168,7 +180,12 @@ export default function Colleagues() {
 
                 <Field>
                   <div className="flex flex-row justify-between">
-                    <FieldLabel>Email</FieldLabel>
+                    <FieldLabel
+                      htmlFor="email"
+                      className="leading-tight mb-[-6px]"
+                    >
+                      Email
+                    </FieldLabel>
                     <ErrorMessage
                       errors={errors}
                       name="email"
@@ -178,6 +195,7 @@ export default function Colleagues() {
                     />
                   </div>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     type="email"
                     placeholder="colleague@example.com"
                     {...register('email')}
@@ -186,7 +204,12 @@ export default function Colleagues() {
 
                 <Field>
                   <div className="flex flex-row justify-between">
-                    <FieldLabel>Phone (optional)</FieldLabel>
+                    <FieldLabel
+                      htmlFor="phone"
+                      className="leading-tight mb-[-6px]"
+                    >
+                      Phone (optional)
+                    </FieldLabel>
                     <ErrorMessage
                       errors={errors}
                       name="phone"
@@ -196,6 +219,7 @@ export default function Colleagues() {
                     />
                   </div>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     type="tel"
                     placeholder="+1234567890"
                     {...register('phone')}
@@ -204,7 +228,12 @@ export default function Colleagues() {
 
                 <Field>
                   <div className="flex flex-row justify-between">
-                    <FieldLabel>Job Title (optional)</FieldLabel>
+                    <FieldLabel
+                      htmlFor="job"
+                      className="leading-tight mb-[-6px]"
+                    >
+                      Job Title (optional)
+                    </FieldLabel>
                     <ErrorMessage
                       errors={errors}
                       name="job"
@@ -214,6 +243,7 @@ export default function Colleagues() {
                     />
                   </div>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     type="text"
                     placeholder="e.g., Farm Manager"
                     {...register('job')}
@@ -222,7 +252,12 @@ export default function Colleagues() {
 
                 <Field>
                   <div className="flex flex-row justify-between">
-                    <FieldLabel>Role</FieldLabel>
+                    <FieldLabel
+                      htmlFor="role"
+                      className="leading-tight mb-[-6px]"
+                    >
+                      Role
+                    </FieldLabel>
                     <ErrorMessage
                       errors={errors}
                       name="role"
@@ -239,12 +274,16 @@ export default function Colleagues() {
                         onValueChange={field.onChange}
                         value={field.value || ''}
                       >
-                        <SelectTrigger className="rounded-md border px-3">
+                        <SelectTrigger className="border-[#848484]/80 border-1 bg-transparent rounded-md px-3 hover:cursor-pointer">
                           <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white">
+                        <SelectContent className="bg-white border-[#848484]/80 border-1">
                           {userRolesWithDescription.map((role) => (
-                            <SelectItem key={role.role} value={role.role}>
+                            <SelectItem
+                              key={role.role}
+                              value={role.role}
+                              className="text-muted-foreground/70 font-thin hover:cursor-pointer hover:bg-[#d9d9d9]/50"
+                            >
                               {role.role} - {role.description}
                             </SelectItem>
                           ))}
@@ -255,7 +294,7 @@ export default function Colleagues() {
                 </Field>
 
                 <Field>
-                  <div className="flex flex-row items-center gap-3">
+                  <div className="flex flex-row items-center gap-3 mt-1">
                     <Controller
                       name="didOwnAndControlParcel"
                       control={control}
@@ -267,7 +306,10 @@ export default function Colleagues() {
                         />
                       )}
                     />
-                    <FieldLabel htmlFor="didOwnAndControlParcel">
+                    <FieldLabel
+                      className="leading-tight"
+                      htmlFor="didOwnAndControlParcel"
+                    >
                       This person owned and controlled the parcel for the past 3
                       years
                     </FieldLabel>
@@ -294,7 +336,10 @@ export default function Colleagues() {
                         />
                       )}
                     />
-                    <FieldLabel htmlFor="didManageAndControl">
+                    <FieldLabel
+                      className="leading-tight"
+                      htmlFor="didManageAndControl"
+                    >
                       This person managed and controlled (but did not own) the
                       parcel for the past 3 years
                     </FieldLabel>
@@ -309,10 +354,10 @@ export default function Colleagues() {
                 </Field>
               </FieldSet>
 
-              <div className="mt-10 flex flex-row gap-6">
+              <div className="mt-12 flex flex-row gap- justify-between">
                 <SubmitButton
-                  buttonText="Invite team member"
-                  className="basis-2/3"
+                  buttonText="Invite Team Member"
+                  className="h-11 w-[200px] rounded-full bg-white text-black hover:cursor-pointer border-primary border-1 hover:border-[#848484]/80 font-semibold hover:bg-white hover:text-foreground/80"
                   reactHookFormPending={isSubmitting}
                 />
                 <Button
@@ -320,7 +365,7 @@ export default function Colleagues() {
                     setCurrentTab('farm');
                     scrollTo(0, 0);
                   }}
-                  className="w-full basis-1/3 bg-black text-white hover:cursor-pointer hover:bg-black/80"
+                  className="h-11 w-[200px] rounded-full bg-black text-white hover:cursor-pointer hover:bg-black/80 font-semibold"
                 >
                   Next
                 </Button>
