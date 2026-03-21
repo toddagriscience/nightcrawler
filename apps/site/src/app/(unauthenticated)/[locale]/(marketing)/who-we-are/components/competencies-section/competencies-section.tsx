@@ -3,7 +3,9 @@
 'use client';
 
 import { motion, MotionValue, useScroll, useTransform } from 'framer-motion';
-import { useRef, useSyncExternalStore } from 'react';
+import { useRef } from 'react';
+
+import useWindowWidth from '@/lib/hooks/useWindowWidth';
 
 interface CompetenciesSectionProps {
   t: (key: string) => string;
@@ -12,30 +14,11 @@ interface CompetenciesSectionProps {
 /**
  * Competencies section with scroll-driven animation
  * Uses framer-motion useScroll to drive animations based on scroll position.
- * On lg and smaller, uses a simplified whileInView animation
+ * On lg and smaller, uses a simplified whileInView animation to avoid scroll jitter.
  */
-const desktopQuery = '(min-width: 1024px)';
-
-function subscribeToMediaQuery(callback: () => void) {
-  const mq = window.matchMedia(desktopQuery);
-  mq.addEventListener('change', callback);
-  return () => mq.removeEventListener('change', callback);
-}
-
-function getMediaQuerySnapshot() {
-  return window.matchMedia(desktopQuery).matches;
-}
-
-function getMediaQueryServerSnapshot() {
-  return false;
-}
-
 export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
-  const isDesktop = useSyncExternalStore(
-    subscribeToMediaQuery,
-    getMediaQuerySnapshot,
-    getMediaQueryServerSnapshot
-  );
+  const windowWidth = useWindowWidth();
+  const isDesktop = windowWidth ? windowWidth >= 1024 : false;
 
   if (!isDesktop) {
     return <CompetenciesSectionMobile t={t} />;
@@ -45,7 +28,7 @@ export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
 }
 
 /**
- * simplified layout with CSS/whileInView animations.
+ * Simplified layout with whileInView animations.
  */
 function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
   return (
@@ -87,11 +70,12 @@ function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
 }
 
 /**
- * full scroll-driven animation
+ * Full scroll-driven animation with sticky emulation
  */
 function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Track scroll progress within this section
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
@@ -99,17 +83,16 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
 
   const titleOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
   const vennOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
+
   const vennScale = useTransform(scrollYProgress, [0.25, 0.45], [0.7, 1]);
+
   const progressBarHeight = useTransform(
     scrollYProgress,
     [0, 1],
     ['0%', '100%']
   );
-  const progressBarOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.1, 0.9, 1],
-    [0, 1, 1, 0]
-  );
+
+  // Emulate sticky behavior
   const stickyY = useTransform(scrollYProgress, [0, 1], ['0%', '300%']);
 
   return (
@@ -118,8 +101,15 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
         style={{ y: stickyY }}
         className="relative top-0 h-screen w-full flex items-center justify-center overflow-hidden"
       >
+        {/* Progress Bar Indicator */}
         <motion.div
-          style={{ opacity: progressBarOpacity }}
+          style={{
+            opacity: useTransform(
+              scrollYProgress,
+              [0, 0.1, 0.9, 1],
+              [0, 1, 1, 0]
+            ),
+          }}
           className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none"
         >
           <motion.div
@@ -129,6 +119,7 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
         </motion.div>
 
         <div className="relative w-full max-w-[1400px] h-[400px] md:h-[600px] flex items-center justify-center">
+          {/* Competencies Title */}
           <motion.div
             style={{ opacity: titleOpacity }}
             className="absolute inset-0 flex items-center justify-center z-10 px-6"
@@ -138,8 +129,12 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
             </h2>
           </motion.div>
 
+          {/* Competencies Circles */}
           <motion.div
-            style={{ opacity: vennOpacity, scale: vennScale }}
+            style={{
+              opacity: vennOpacity,
+              scale: vennScale,
+            }}
             className="absolute inset-0"
           >
             <div className="relative w-full h-full flex items-center justify-center">
@@ -149,7 +144,6 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
                   index={index}
                   progress={scrollYProgress}
                   t={t}
-                  isMobile={false}
                 />
               ))}
             </div>
@@ -167,16 +161,14 @@ function CompetencyCircle({
   index,
   progress,
   t,
-  isMobile,
 }: {
   index: number;
   progress: MotionValue<number>;
   t: (key: string) => string;
-  isMobile: boolean;
 }) {
-  const radius = isMobile ? 96 : 128;
-  const triangleOffset = isMobile ? 150 : 200;
-  const spreadDistance = isMobile ? 240 : 320;
+  const radius = 128;
+  const triangleOffset = 200;
+  const spreadDistance = 320;
 
   // Venn diagram positions (triangular formation)
   const vennPositions = [
@@ -193,18 +185,12 @@ function CompetencyCircle({
     },
   ];
 
-  // Spread positions (vertical on mobile, horizontal on desktop)
-  const spreadPositions = isMobile
-    ? [
-        { top: '50%', x: -radius, y: -(radius + spreadDistance) }, // Top
-        { top: '50%', x: -radius, y: -radius }, // Center
-        { top: '50%', x: -radius, y: -(radius - spreadDistance) }, // Bottom
-      ]
-    : [
-        { top: '50%', x: -(radius + spreadDistance), y: -radius },
-        { top: '50%', x: -radius, y: -radius },
-        { top: '50%', x: -(radius - spreadDistance), y: -radius },
-      ];
+  // Spread positions (horizontal)
+  const spreadPositions = [
+    { top: '50%', x: -(radius + spreadDistance), y: -radius },
+    { top: '50%', x: -radius, y: -radius },
+    { top: '50%', x: -(radius - spreadDistance), y: -radius },
+  ];
 
   const start = vennPositions[index];
   const end = spreadPositions[index];
