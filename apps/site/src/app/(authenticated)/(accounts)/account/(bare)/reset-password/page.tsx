@@ -54,8 +54,8 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="mx-auto flex h-screen w-[90vw] max-w-[450px] flex-col items-center justify-center">
-      <div className="w-[90vw] max-w-[inherit]">
+    <div className="mx-auto flex h-[calc(100vh-150px)] w-[90vw] max-w-[450px] flex-col items-center justify-center">
+      <div className="w-[90vw] max-w-[450px]">
         <FadeIn>
           {isSuccess && (
             <>
