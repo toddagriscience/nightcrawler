@@ -165,6 +165,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "has_none": {
+          "name": "has_none",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "has_local_inspection": {
           "name": "has_local_inspection",
           "type": "boolean",

@@ -21,24 +21,26 @@ export default function SelfSelectAdmin({
 
   return (
     <>
-      <h2 className="mb-1 text-lg font-semibold">You</h2>
-      <p className="mb-5">
+      <h2 className="mb-2 text-lg font-normal">You</h2>
+      <p className="mb-4 text-foreground/80 text-sm font-thin">
         Only one administrator account is permitted per farm. Please contact
         support for more information.
       </p>
       {canEditFarm ? (
-        <form onChange={handleSubmit(updateRole)} className="mb-8">
+        <form onChange={handleSubmit(updateRole)} className="mb-10">
           <Field orientation={'horizontal'}>
             <Checkbox
               onCheckedChange={() => setValue('isAdmin', !getValues().isAdmin)}
               {...register('isAdmin')}
               defaultChecked={getValues().isAdmin}
             />
-            <Label>I am an administrator</Label>
+            <Label className="text-sm text-muted-foreground/70 leading-tight">
+              I am an administrator
+            </Label>
           </Field>
         </form>
       ) : (
-        <p className="mb-8 text-sm text-muted-foreground">
+        <p className="mb-8 text-sm text-muted-foreground/70">
           Your role is {role}. Only administrators can change farm permissions.
         </p>
       )}

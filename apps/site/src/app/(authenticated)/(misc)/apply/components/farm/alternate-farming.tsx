@@ -2,12 +2,12 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function AlternateFarming() {
   const {
@@ -16,7 +16,7 @@ export default function AlternateFarming() {
   } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <div className="flex flex-col justify-between">
-      <FieldLabel className="mb-4">
+      <FieldLabel className="mb-4 text-base leading-tight">
         Does your operation alternate organic and conventional farming?
       </FieldLabel>
       <ErrorMessage

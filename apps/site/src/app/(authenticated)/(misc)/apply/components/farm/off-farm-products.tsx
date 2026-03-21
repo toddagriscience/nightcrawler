@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function OffFarmProducts() {
   const {
@@ -18,7 +18,7 @@ export default function OffFarmProducts() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           What, if any, off-farm products, including commercial compost, manure,
           gypsum, limestone, micronutrients, or other fertilizers/soil
           amendments are used?
@@ -185,6 +185,7 @@ export default function OffFarmProducts() {
                         ?.isOther && (
                         <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                           <Textarea
+                            className="bg-transparent border-1 border-[#848484]/80"
                             placeholder="Describe other verification method"
                             value={
                               field.value?.seeds?.biodynamicCertified?.other
@@ -383,6 +384,7 @@ export default function OffFarmProducts() {
                       {field.value?.seeds?.conventional?.other?.isOther && (
                         <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                           <Textarea
+                            className="bg-transparent border-1 border-[#848484]/80"
                             placeholder="Describe other documentation method"
                             value={
                               field.value?.seeds?.conventional?.other
@@ -567,6 +569,7 @@ export default function OffFarmProducts() {
                           ?.isOther && (
                           <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                             <Textarea
+                              className="bg-transparent border-1 border-[#848484]/80"
                               placeholder="Describe other documentation method"
                               value={
                                 field.value?.seeds?.conventionalTreated?.other
@@ -802,6 +805,7 @@ export default function OffFarmProducts() {
                           ?.isOther && (
                           <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                             <Textarea
+                              className="bg-transparent border-1 border-[#848484]/80"
                               placeholder="Describe other method"
                               value={
                                 field.value?.transplants?.conventional
@@ -893,6 +897,7 @@ export default function OffFarmProducts() {
                           ?.isOther && (
                           <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                             <Textarea
+                              className="bg-transparent border-1 border-[#848484]/80"
                               placeholder="Describe other documentation method"
                               value={
                                 field.value?.transplants?.conventional?.gmoOther

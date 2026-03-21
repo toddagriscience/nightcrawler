@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function ProductDifferentiation() {
   const {
@@ -18,7 +18,7 @@ export default function ProductDifferentiation() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           How do you differentiate your produce to your consumers? (select all
           that apply)
         </FieldLabel>
@@ -119,6 +119,7 @@ export default function ProductDifferentiation() {
             {field.value?.other?.isOther && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe other differentiation method"
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>
@@ -155,6 +156,7 @@ export default function ProductDifferentiation() {
             {field.value?.notApplicable?.isNotApplicable && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe why not applicable"
                   value={field.value?.notApplicable?.description ?? ''}
                   onChange={(e) =>

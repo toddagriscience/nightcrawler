@@ -2,14 +2,14 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function PrimaryMarketVenues() {
   const {
@@ -19,7 +19,9 @@ export default function PrimaryMarketVenues() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>What are your primary market venues:</FieldLabel>
+        <FieldLabel className="text-base leading-tight">
+          What are your primary market venues:
+        </FieldLabel>
         <ErrorMessage
           errors={errors}
           name="primaryMarketVenues"
@@ -71,6 +73,7 @@ export default function PrimaryMarketVenues() {
                   Address of Post-Harvest Handling
                 </FieldLabel>
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Enter address"
                   value={field.value?.copackingServices?.address ?? ''}
                   onChange={(e) =>
@@ -186,6 +189,7 @@ export default function PrimaryMarketVenues() {
                     {field.value?.export?.foreignMarkets?.other?.isOther && (
                       <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                         <Textarea
+                          className="bg-transparent border-1 border-[#848484]/80"
                           placeholder="Describe other markets"
                           value={
                             field.value?.export?.foreignMarkets?.other
@@ -281,6 +285,7 @@ export default function PrimaryMarketVenues() {
                     {field.value?.export?.finalProcessing?.some?.isSome && (
                       <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                         <Textarea
+                          className="bg-transparent border-1 border-[#848484]/80"
                           placeholder="Describe"
                           value={
                             field.value?.export?.finalProcessing?.some
@@ -344,6 +349,7 @@ export default function PrimaryMarketVenues() {
                     for the destination market? Describe:
                   </FieldLabel>
                   <Textarea
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Describe prevention measures"
                     value={field.value?.export?.preventNonCompliant ?? ''}
                     onChange={(e) =>
@@ -385,6 +391,7 @@ export default function PrimaryMarketVenues() {
                     Name:
                   </FieldLabel>
                   <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter market name"
                     value={field.value?.farmersMarket?.name ?? ''}
                     onChange={(e) =>
@@ -403,6 +410,7 @@ export default function PrimaryMarketVenues() {
                     Address:
                   </FieldLabel>
                   <Textarea
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter address"
                     value={field.value?.farmersMarket?.address ?? ''}
                     onChange={(e) =>
@@ -476,6 +484,7 @@ export default function PrimaryMarketVenues() {
                   Domain
                 </FieldLabel>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   placeholder="Enter website domain"
                   value={field.value?.website?.domain ?? ''}
                   onChange={(e) =>
@@ -532,6 +541,7 @@ export default function PrimaryMarketVenues() {
                     Name and location of retailers
                   </FieldLabel>
                   <Textarea
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Enter retailer name and location"
                     value={field.value?.retail?.nameAndLocation ?? ''}
                     onChange={(e) =>
@@ -551,6 +561,7 @@ export default function PrimaryMarketVenues() {
                     with nonorganic:
                   </FieldLabel>
                   <Textarea
+                    className="border-[#848484]/80 border-1 bg-transparent"
                     placeholder="Describe co-mingling prevention"
                     value={field.value?.retail?.coMinglingPrevention ?? ''}
                     onChange={(e) =>
@@ -604,6 +615,7 @@ export default function PrimaryMarketVenues() {
             {field.value?.other?.isOther && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Textarea
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   placeholder="Describe other market venues"
                   value={field.value?.other?.description ?? ''}
                   onChange={(e) =>

@@ -2,14 +2,14 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function IrrigationWaterSource() {
   const {
@@ -19,7 +19,7 @@ export default function IrrigationWaterSource() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           What is the source of your irrigation water? (select all that apply)
         </FieldLabel>
         <ErrorMessage
@@ -90,6 +90,7 @@ export default function IrrigationWaterSource() {
                     Name of district:
                   </FieldLabel>
                   <Input
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Enter district name"
                     value={field.value?.waterDistrict?.districtName ?? ''}
                     onChange={(e) =>
@@ -147,6 +148,7 @@ export default function IrrigationWaterSource() {
                       ?.isYes && (
                       <div className="mb-4 flex flex-row flex-wrap items-center gap-3">
                         <Textarea
+                          className="bg-transparent border-1 border-[#848484]/80"
                           placeholder="Describe shared irrigation"
                           value={
                             field.value?.waterDistrict?.sharesIrrigation?.yes
@@ -230,6 +232,7 @@ export default function IrrigationWaterSource() {
                   Name of water body:
                 </FieldLabel>
                 <Input
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Enter water body name"
                   value={field.value?.fishBearingWater?.waterBodyName ?? ''}
                   onChange={(e) =>

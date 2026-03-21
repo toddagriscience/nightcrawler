@@ -2,22 +2,22 @@
 
 'use client';
 
-import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
-import GeneralBusinessInformation from './general-business-information';
-import Colleagues from './colleagues';
-import Farm from './farm';
-import {
-  GeneralBusinessInformationUpdate,
-  TabTypes,
-  VerificationStatus,
-} from '../types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   FarmInfoInternalApplicationSelect,
   FarmSubscriptionSelect,
   UserSelect,
 } from '@/lib/types/db';
-import { createContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { createContext, useEffect, useState } from 'react';
+import {
+  GeneralBusinessInformationUpdate,
+  TabTypes,
+  VerificationStatus,
+} from '../types';
+import Colleagues from './colleagues';
+import Farm from './farm';
+import GeneralBusinessInformation from './general-business-information';
 import Subscription from './subscription';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
   ssr: false,

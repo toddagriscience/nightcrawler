@@ -2,14 +2,14 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
-import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
 import { Textarea } from '@/components/ui/textarea';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function FarmActivities() {
   const {
@@ -18,7 +18,7 @@ export default function FarmActivities() {
   } = useFormContext<FarmInfoInternalApplicationInsert>();
   return (
     <div className="flex flex-col justify-between">
-      <FieldLabel className="mb-4">
+      <FieldLabel className="mb-4 text-base leading-tight">
         What activities have occurred at the farm during the past three years?
       </FieldLabel>
       <ErrorMessage
@@ -44,7 +44,7 @@ export default function FarmActivities() {
               />
               <FieldLabel
                 htmlFor="farmActivitiesFallow"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap leading-tight"
               >
                 Fallow
               </FieldLabel>
@@ -52,7 +52,7 @@ export default function FarmActivities() {
             {field.value?.fallow?.isFallow && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.fallow?.from || ''}
                   onChange={(e) =>
@@ -67,7 +67,7 @@ export default function FarmActivities() {
                 />
                 <span>to</span>
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.fallow?.to || ''}
                   onChange={(e) =>
@@ -98,7 +98,7 @@ export default function FarmActivities() {
               />
               <FieldLabel
                 htmlFor="farmActivitiesCoverCropping"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap leading-tight"
               >
                 Cover Cropping
               </FieldLabel>
@@ -106,7 +106,7 @@ export default function FarmActivities() {
             {field.value?.coverCropping?.isCoverCropping && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.coverCropping?.from || ''}
                   onChange={(e) =>
@@ -121,7 +121,7 @@ export default function FarmActivities() {
                 />
                 <span>to</span>
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.coverCropping?.to || ''}
                   onChange={(e) =>
@@ -135,6 +135,7 @@ export default function FarmActivities() {
                   }
                 />
                 <Input
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="List crops..."
                   value={field.value?.coverCropping?.crops ?? ''}
                   onChange={(e) =>
@@ -162,7 +163,7 @@ export default function FarmActivities() {
               />
               <FieldLabel
                 htmlFor="farmActivitiesPasture"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap leading-tight"
               >
                 Pasture
               </FieldLabel>
@@ -170,7 +171,7 @@ export default function FarmActivities() {
             {field.value?.pasture?.isPasture && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.pasture?.from || ''}
                   onChange={(e) =>
@@ -185,7 +186,7 @@ export default function FarmActivities() {
                 />
                 <span>to</span>
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.pasture?.to || ''}
                   onChange={(e) =>
@@ -199,6 +200,7 @@ export default function FarmActivities() {
                   }
                 />
                 <Input
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="List crops..."
                   value={field.value?.pasture?.crops ?? ''}
                   onChange={(e) =>
@@ -231,7 +233,7 @@ export default function FarmActivities() {
               />
               <FieldLabel
                 htmlFor="production-of-crops"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap leading-tight"
               >
                 Production of Crops
               </FieldLabel>
@@ -239,7 +241,7 @@ export default function FarmActivities() {
             {field.value?.productionOfCrops?.isProductionOfCrops && (
               <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.productionOfCrops?.from || ''}
                   onChange={(e) =>
@@ -254,7 +256,7 @@ export default function FarmActivities() {
                 />
                 <span>to</span>
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.productionOfCrops?.to || ''}
                   onChange={(e) =>
@@ -268,6 +270,7 @@ export default function FarmActivities() {
                   }
                 />
                 <Input
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="List crops..."
                   value={field.value?.productionOfCrops?.crops ?? ''}
                   onChange={(e) =>
@@ -295,7 +298,7 @@ export default function FarmActivities() {
               />
               <FieldLabel
                 htmlFor="farmActivitiesOther"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap leading-tight"
               >
                 Other
               </FieldLabel>
@@ -303,7 +306,7 @@ export default function FarmActivities() {
             {field.value?.other?.isOther && (
               <FieldSet className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.other?.from || ''}
                   onChange={(e) =>
@@ -318,7 +321,7 @@ export default function FarmActivities() {
                 />
                 <span>to</span>
                 <Input
-                  className="basis-1/4"
+                  className="basis-1/4 bg-transparent border-1 border-[#848484]/80"
                   type="date"
                   value={field.value?.other?.to || ''}
                   onChange={(e) =>
@@ -332,6 +335,7 @@ export default function FarmActivities() {
                   }
                 />
                 <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
                   placeholder="Describe the activites that occurred"
                   value={field.value?.other?.crops ?? ''}
                   onChange={(e) =>
