@@ -74,7 +74,7 @@ export default function Contact() {
     isOrganic,
     isHydroponic,
     producesSprouts,
-    instagramHandle
+    instagramHandle,
   } = watch();
   const requiresWebsite = !isWorkEmail(email ?? '');
   const organicSlideIndex = requiresWebsite ? 2 : 1;
