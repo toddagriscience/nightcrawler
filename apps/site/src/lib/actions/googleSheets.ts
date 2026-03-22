@@ -63,3 +63,10 @@ export async function submitToGoogleSheets(
     );
   }
 }
+
+export async function submitContactToSheets(formData: FormData | Object) {
+  return submitToGoogleSheets(
+    formData,
+    process.env.CONTACT_GOOGLE_SCRIPT_URL || ''
+  );
+}

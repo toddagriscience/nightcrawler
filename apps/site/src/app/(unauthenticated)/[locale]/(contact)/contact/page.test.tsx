@@ -7,8 +7,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './page';
 
 import { ThemeProvider } from '@/context/theme/ThemeContext';
-import userEvent from '@testing-library/user-event';
 import contactMessages from '@/messages/contact/en.json';
+import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
 // @ts-ignore type error due to lack of types from this polyfill
@@ -252,6 +252,23 @@ describe('Contact page', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Based on your information/)).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Instagram/)).toBeInTheDocument();
+    });
+
+    // Answer instagram question
+    const instagramInput = getRequiredInput('instagramHandle');
+    await user.type(instagramInput, 'magicalfarms');
+
+    const nextButton2 = screen.getByText('Submit');
+    await user.click(nextButton2);
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
+      expect(calledUrl).toContain('what-we-do');
     });
   });
 
