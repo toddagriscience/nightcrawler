@@ -171,7 +171,7 @@ A few notes:
 
 ## First-Time Setup
 
-`nightcrawler` is a monorepo. The majority of your work will likely take place in the `/frontend` folder. `/sanity-studio` is the folder for anything regarding Sanity's CMS management.
+`nightcrawler` is a monorepo. `apps/site` contains the Next.js application, `apps/sanity` contains the Sanity Studio, and `packages/db` contains the shared database package.
 
 ### Prerequisites
 
@@ -197,7 +197,7 @@ A few notes:
 3. **Create environment file**
 
    ```bash
-   cp envexample.md .env.local
+   cp apps/site/env.example apps/site/.env.local
    # Edit .env.local with basic development settings
    ```
 
@@ -270,7 +270,7 @@ However, husky/workflows will handle the majority of code validation/testing for
 - Follow AirBNB's JavaScript style [guide](https://github.com/airbnb/javascript) for all JavaScript/TypeScript
 - JSDoc _everything_ -- even with TypeScript. There should be no confusion in variable purpose or meaning
 - Format all code with `prettier`. Additionally ensure that your formatter is using the configuration found in `.prettierrc`
-- Each file should have a license header (copyright) defined in license-header.txt. Upon running `bun run lint:fix`, the following steps will run:
+- Each file should have a license header (copyright) defined in the repository root `license-header.txt`. Upon running `bun run lint:fix`, the following steps will run:
   1.  A custom script: cleans up documents that contain a starting file comment, preparing them so they are not overriden by the plugin
   2.  Run `eslint-plugin-license-header`: adds a copyright statement to the beginning of each file written by a Todd organization member
 
@@ -330,13 +330,13 @@ components/
 Always use the environment-aware to display warnings instead of console logging:
 
 ```tsx
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 
 // Instead of console.log
-logger.warn("Warning message");
+logger.warn('Warning message');
 
 // Errors always show (even in production)
-logger.error("Critical error");
+logger.error('Critical error');
 ```
 
 ### Logging Best Practices
@@ -359,10 +359,10 @@ logger.error("Critical error");
 2. **Use next-intl** for all user-facing text:
 
    ```tsx
-   import { useTranslations } from "next-intl";
+   import { useTranslations } from 'next-intl';
 
-   const t = useTranslations("ComponentName");
-   return <h1>{t("title")}</h1>;
+   const t = useTranslations('ComponentName');
+   return <h1>{t('title')}</h1>;
    ```
 
 #### Translation Guidelines
@@ -434,13 +434,13 @@ export default function YourComponent({ title, variant = 'primary' }: Props) {
 
 ```tsx
 // my-component.test.tsx
-import { render, screen } from "@/test/test-utils";
-import MyComponent from "./my-component";
+import { render, screen } from '@/test/test-utils';
+import MyComponent from './my-component';
 
-describe("MyComponent", () => {
-  it("renders title correctly", () => {
+describe('MyComponent', () => {
+  it('renders title correctly', () => {
     render(<MyComponent title="Test" />);
-    expect(screen.getByText("Test")).toBeInTheDocument();
+    expect(screen.getByText('Test')).toBeInTheDocument();
   });
 });
 ```
@@ -449,17 +449,17 @@ describe("MyComponent", () => {
 
 ```tsx
 // my-component.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import MyComponent from "./my-component";
+import type { Meta, StoryObj } from '@storybook/react';
+import MyComponent from './my-component';
 
 const meta: Meta<typeof MyComponent> = {
-  title: "UI/MyComponent",
+  title: 'UI/MyComponent',
   component: MyComponent,
 };
 
 export default meta;
 export const Default: StoryObj<typeof MyComponent> = {
-  args: { title: "Example" },
+  args: { title: 'Example' },
 };
 ```
 

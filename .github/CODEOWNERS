@@ -8,9 +8,10 @@
 
 # CI/CD and deployment
 /.github/workflows/ @toddagriscience/devops-team
-/next.config.ts @toddagriscience/devops-team
+/apps/site/next.config.ts @toddagriscience/devops-team
 /package.json @toddagriscience/devops-team
 /package-lock.json @toddagriscience/devops-team
+/turbo.json @toddagriscience/devops-team
 
 # Environment and configuration
 /.env* @toddagriscience/devops-team
@@ -19,29 +20,31 @@
 # Code quality and tooling
 /eslint.config.mjs @toddagriscience/frontend-team
 /prettier.config.* @toddagriscience/frontend-team
-/tailwind.config.ts @toddagriscience/frontend-team
-/tsconfig.json @toddagriscience/frontend-team
+/apps/site/tailwind.config.ts @toddagriscience/frontend-team
+/apps/site/tsconfig.json @toddagriscience/frontend-team
+/packages/db/tsconfig.json @toddagriscience/frontend-team
 
 # Testing configuration
 /jest.config.js @toddagriscience/frontend-team
 /jest.setup.* @toddagriscience/frontend-team
-/.storybook/ @toddagriscience/frontend-team
+/apps/site/.storybook/ @toddagriscience/frontend-team
 
 # Internationalization
-/src/messages/ @toddagriscience/content-team @toddagriscience/frontend-team
-/src/i18n/ @toddagriscience/frontend-team
-/src/middleware.ts @toddagriscience/frontend-team
+/apps/site/src/messages/ @toddagriscience/content-team @toddagriscience/frontend-team
+/apps/site/src/i18n/ @toddagriscience/frontend-team
+/apps/site/src/middleware.ts @toddagriscience/frontend-team
 
 # Core application structure
-/src/app/ @toddagriscience/frontend-team
-/src/components/ @toddagriscience/frontend-team
-/src/lib/ @toddagriscience/frontend-team
+/apps/site/src/app/ @toddagriscience/frontend-team
+/apps/site/src/components/ @toddagriscience/frontend-team
+/apps/site/src/lib/ @toddagriscience/frontend-team
+/packages/db/src/ @toddagriscience/frontend-team
 
 # Public assets and branding
-/public/ @toddagriscience/design-team @toddagriscience/frontend-team
-/public/fonts/ @toddagriscience/design-team
+/apps/site/public/ @toddagriscience/design-team @toddagriscience/frontend-team
+/apps/site/public/fonts/ @toddagriscience/design-team
 
 # Documentation
 /README.md @toddagriscience/core-team
-/CLAUDE.md @toddagriscience/core-team
+/apps/site/CLAUDE.md @toddagriscience/core-team
 /.github/CONTRIBUTING.md @toddagriscience/core-team
