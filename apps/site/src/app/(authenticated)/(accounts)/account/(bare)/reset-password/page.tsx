@@ -95,7 +95,7 @@ export default function ResetPassword() {
                       </FieldLabel>
                       <div className="relative">
                         <Input
-                          className="focus:ring-0! bg-transparent mt-[-6px]"
+                          className="focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
                           id="newPassword"
                           data-testid="new-password"
                           type={showPassword ? 'text' : 'password'}
@@ -127,7 +127,7 @@ export default function ResetPassword() {
                       </FieldLabel>
                       <div className="relative">
                         <Input
-                          className="focus:ring-0! bg-transparent mt-[-6px]"
+                          className="focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
                           id="confirmNewPassword"
                           data-testid="confirm-new-password"
                           type={showPassword ? 'text' : 'password'}
@@ -168,8 +168,8 @@ export default function ResetPassword() {
                     reactHookFormPending={isSubmitting}
                     className={
                       !isPasswordValid
-                        ? 'bg-transparent text-black/80 border-black border-1 border-solid w-[144px] h-11'
-                        : 'w-[144px] h-11'
+                        ? 'bg-transparent text-black/80 border-black border-1 border-solid w-[144px] h-11 rounded-full font-semibold'
+                        : 'w-[144px] h-11 rounded-full font-semibold'
                     }
                   />
 

@@ -4,6 +4,7 @@
 
 import { FadeIn } from '@/components/common';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Button } from '@/components/ui';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
@@ -17,7 +18,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { submitPublicInquiry } from './action';
 import { PublicInquiryData, publicInquirySchema } from './types';
-import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 
 /**
  * Support page. Allows users to submit a public inquiry support ticket.
@@ -183,7 +183,7 @@ export default function Support() {
                       </FieldSet>
                       <SubmitButton
                         buttonText={t('buttons.submit')}
-                        className="w-[144px]"
+                        className="w-[144px] h-11 rounded-full px-8 py-3 font-semibold"
                         disabled={isSubmitting || !isValid}
                         reactHookFormPending={isSubmitting}
                       />
