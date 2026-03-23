@@ -15,7 +15,7 @@ export default async function DashboardLoading() {
           </div>
         </div>
       </header>
-      <div className="h-[calc(100vh-190px)] flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <h1 className="text-2xl">
             Thinking
