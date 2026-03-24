@@ -156,7 +156,7 @@ export default function Login() {
                   <div className="flex-1">
                     <SubmitButton
                       buttonText="Login"
-                      className="w-full rounded-full px-8 py-3 font-semibold"
+                      className="w-full h-11 rounded-full px-8 py-3 font-semibold"
                       cooldownTime={defaultCooldownTime}
                       sendCooldownTime={(date) => setCooldownTime(date)}
                       cooldownClickHandler={() => {
