@@ -22,6 +22,7 @@
     "db:local:seed": "tsx scripts/seed-local-db.ts",
     "db:create-admin-farm-user": "tsx scripts/create-admin-farm-user.ts",
     "db:seed-knowledge": "tsx scripts/seed-knowledge.ts",
+    "db:add-seed-product": "tsx scripts/add-seed-product.ts",
     "db:local:init": "bun run db:local:migrate && bun run db:local:seed",
     "db:local:reset": "bun run db:local:wipe && bun run db:local:init"
   },

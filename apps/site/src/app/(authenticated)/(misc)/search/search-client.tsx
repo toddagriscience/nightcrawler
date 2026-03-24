@@ -8,13 +8,9 @@ import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SearchClientProps } from './types';
+import type { SearchClientProps, SearchFormValues } from './types';
 import { SearchResultsSkeleton } from './components/search-results-skeleton';
 import { SearchResultCard } from './components/search-result-card';
-
-interface SearchFormValues {
-  q: string;
-}
 
 export function SearchClient({ query, results, error }: SearchClientProps) {
   const router = useRouter();
@@ -107,7 +103,10 @@ export function SearchClient({ query, results, error }: SearchClientProps) {
       {!isLoading && !error && results.length > 0 && (
         <div className="space-y-4">
           {results.map((result) => (
-            <SearchResultCard key={result.id} result={result} />
+            <SearchResultCard
+              key={`${result.resultType}-${result.id}`}
+              result={result}
+            />
           ))}
         </div>
       )}

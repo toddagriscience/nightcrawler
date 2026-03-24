@@ -5,8 +5,8 @@
 import { logger } from '@/lib/logger';
 import { db } from '@nightcrawler/db/schema/connection';
 import {
+  integratedManagementPlan,
   integratedManagementPlanNote,
-  knowledgeArticle,
 } from '@nightcrawler/db/schema';
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
@@ -31,16 +31,11 @@ export async function saveImpNotes(
 
     const [article] = await db
       .select({
-        id: knowledgeArticle.id,
-        slug: knowledgeArticle.slug,
+        id: integratedManagementPlan.id,
+        slug: integratedManagementPlan.slug,
       })
-      .from(knowledgeArticle)
-      .where(
-        and(
-          eq(knowledgeArticle.id, articleId),
-          eq(knowledgeArticle.articleType, 'imp')
-        )
-      )
+      .from(integratedManagementPlan)
+      .where(eq(integratedManagementPlan.id, articleId))
       .limit(1);
 
     if (!article) {
@@ -54,7 +49,10 @@ export async function saveImpNotes(
         .delete(integratedManagementPlanNote)
         .where(
           and(
-            eq(integratedManagementPlanNote.knowledgeArticleId, article.id),
+            eq(
+              integratedManagementPlanNote.integratedManagementPlanId,
+              article.id
+            ),
             eq(integratedManagementPlanNote.userId, currentUser.id)
           )
         );
@@ -72,13 +70,13 @@ export async function saveImpNotes(
     const [savedNote] = await db
       .insert(integratedManagementPlanNote)
       .values({
-        knowledgeArticleId: article.id,
+        integratedManagementPlanId: article.id,
         userId: currentUser.id,
         notes: normalizedNotes,
       })
       .onConflictDoUpdate({
         target: [
-          integratedManagementPlanNote.knowledgeArticleId,
+          integratedManagementPlanNote.integratedManagementPlanId,
           integratedManagementPlanNote.userId,
         ],
         set: {

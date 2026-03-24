@@ -16,8 +16,12 @@ import {
   accountAgreementAcceptance,
   farmInfoInternalApplication,
   farmSubscription,
+  integratedManagementPlan,
+  integratedManagementPlanNote,
   knowledgeArticle,
+  seedProduct,
 } from '../src/schema';
+import { getEmbedding } from '../src/utils/get-embedding';
 
 const DEFAULT_SEED_ADMIN_EMAIL = 'example@testmail.com';
 
@@ -30,9 +34,24 @@ const localDatabaseUrl =
     : process.env.DATABASE_URL;
 
 type SeedArticle = Pick<
-  InferInsertModel<typeof knowledgeArticle>,
-  'title' | 'slug' | 'content' | 'category' | 'source' | 'articleType'
+  InferInsertModel<typeof integratedManagementPlan>,
+  'title' | 'slug' | 'content' | 'category' | 'source'
 >;
+
+type SeedProductRecord = Pick<
+  InferInsertModel<typeof seedProduct>,
+  | 'name'
+  | 'slug'
+  | 'description'
+  | 'stock'
+  | 'priceInCents'
+  | 'unit'
+  | 'imageUrl'
+  | 'advisorContactUrl'
+> & {
+  /** Optional IMP slug used to wire a related article after insert. */
+  relatedImpSlug?: string;
+};
 
 const knowledgeArticles: SeedArticle[] = [
   {
@@ -40,7 +59,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'understanding-soil-ph-for-crop-production',
     content:
       'Soil pH strongly affects nutrient availability, microbial activity, and root health. Most crops perform best between pH 6.0 and 7.0.',
-    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
@@ -49,7 +67,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'the-four-lows-condition-in-soil',
     content:
       'When calcium, magnesium, potassium, and sodium are all low, the soil is biologically depleted. Restore biology first, then rebalance minerals.',
-    articleType: 'imp',
     category: 'soil',
     source: 'Todd Field Guide',
   },
@@ -58,7 +75,6 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'carrot-production-and-soil-requirements',
     content:
       'Carrots prefer loose, well-drained sandy loam with pH 6.0 to 6.8. Avoid excess nitrogen and keep moisture consistent during germination.',
-    articleType: 'imp',
     category: 'planting',
     source: 'Todd Field Guide',
   },
@@ -67,9 +83,47 @@ const knowledgeArticles: SeedArticle[] = [
     slug: 'irrigation-scheduling-and-water-management',
     content:
       'Effective irrigation maintains root-zone moisture without waterlogging. Sandy soils need lighter, frequent watering and clay soils need slower cycles.',
-    articleType: 'imp',
     category: 'water',
     source: 'Todd Field Guide',
+  },
+];
+
+const seedProducts: SeedProductRecord[] = [
+  {
+    name: 'Crimson Clover',
+    slug: 'crimson-clover',
+    description:
+      'A cool-season annual legume that establishes quickly, suppresses weeds, and helps fix nitrogen ahead of the next cash crop.',
+    stock: 240,
+    priceInCents: 1899,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
+  },
+  {
+    name: 'Daikon Tillage Radish',
+    slug: 'daikon-tillage-radish',
+    description:
+      'A bio-drilling brassica used to break compaction, improve infiltration, and leave deep rooting channels for spring planting.',
+    stock: 96,
+    priceInCents: 2499,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
+  },
+  {
+    name: 'Hairy Vetch',
+    slug: 'hairy-vetch',
+    description:
+      'A winter-hardy vetch blend selected for biomass and nitrogen fixation in mixed vegetable and orchard rotations.',
+    stock: 64,
+    priceInCents: 2799,
+    unit: 'bag',
+    imageUrl: '/seed-placeholder.svg',
+    advisorContactUrl: '/contact',
+    relatedImpSlug: 'cover-cropping-for-soil-health',
   },
 ];
 
@@ -91,6 +145,14 @@ function createDeterministicEmbedding(seedText: string): number[] {
   }
 
   return values;
+}
+
+async function createEmbedding(text: string): Promise<number[]> {
+  if (!process.env.OPENAI_EMBEDDINGS_KEY) {
+    return createDeterministicEmbedding(text);
+  }
+
+  return getEmbedding(text);
 }
 
 async function createSupabaseUserIfMissing(email: string): Promise<void> {
@@ -188,7 +250,13 @@ async function seedLocalDb() {
   // eslint-disable-next-line
   await db.delete(farm);
   // eslint-disable-next-line
+  await db.delete(integratedManagementPlanNote);
+  // eslint-disable-next-line
+  await db.delete(integratedManagementPlan);
+  // eslint-disable-next-line
   await db.delete(knowledgeArticle);
+  // eslint-disable-next-line
+  await db.delete(seedProduct);
 
   const [seededFarm] = await db
     .insert(farm)
@@ -331,13 +399,70 @@ async function seedLocalDb() {
     version: 'v1',
   });
 
-  await db.insert(knowledgeArticle).values(
-    knowledgeArticles.map((article) => ({
-      ...article,
-      embedding: createDeterministicEmbedding(
-        `${article.title} ${article.content}`
-      ),
-    }))
+  const insertedIntegratedManagementPlans = [];
+
+  for (const article of knowledgeArticles) {
+    const [knowledgeRow] = await db
+      .insert(knowledgeArticle)
+      .values({
+        embedding: await createEmbedding(`${article.title} ${article.content}`),
+      })
+      .returning({
+        id: knowledgeArticle.id,
+      });
+
+    const [insertedIntegratedManagementPlan] = await db
+      .insert(integratedManagementPlan)
+      .values({
+        knowledgeArticleId: knowledgeRow.id,
+        title: article.title,
+        slug: article.slug,
+        content: article.content,
+        category: article.category,
+        source: article.source,
+        initialized: new Date('2026-01-15'),
+        managementZone: seededZone.id,
+        analysis: analysisId,
+      })
+      .returning({
+        id: integratedManagementPlan.id,
+        slug: integratedManagementPlan.slug,
+      });
+
+    insertedIntegratedManagementPlans.push(insertedIntegratedManagementPlan);
+  }
+
+  const integratedManagementPlanIdsBySlug = new Map(
+    insertedIntegratedManagementPlans.map((article) => [
+      article.slug,
+      article.id,
+    ])
+  );
+
+  await db.insert(seedProduct).values(
+    await Promise.all(
+      seedProducts.map(async (product) => {
+        const [knowledgeRow] = await db
+          .insert(knowledgeArticle)
+          .values({
+            embedding: await createEmbedding(
+              `${product.name} ${product.description}`
+            ),
+          })
+          .returning({
+            id: knowledgeArticle.id,
+          });
+
+        return {
+          ...product,
+          knowledgeArticleId: knowledgeRow.id,
+          relatedIntegratedManagementPlanId: product.relatedImpSlug
+            ? (integratedManagementPlanIdsBySlug.get(product.relatedImpSlug) ??
+              null)
+            : null,
+        };
+      })
+    )
   );
 
   await createSupabaseUserIfMissing(seedEmail);
