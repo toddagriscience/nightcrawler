@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use server';
-
 import { logger } from '@/lib/logger';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { eq } from 'drizzle-orm';

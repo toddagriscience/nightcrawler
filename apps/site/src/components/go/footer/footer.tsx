@@ -2,6 +2,7 @@
 
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -9,11 +10,18 @@ import {
   FaYoutube,
 } from 'react-icons/fa6';
 
+async function maybeFix() {
+  // Fixes pre-rendering errors
+  await connection();
+
+  return new Date().getFullYear();
+}
+
 /**
  * Custom footer for the Todd go domain
  * @returns {JSX.Element} - The go domain footer component
  */
-const GoFooter = () => {
+const GoFooter = async () => {
   const legalLinks = [
     { href: '/terms', label: 'Terms & Conditions' },
     { href: '/privacy', label: 'Privacy Policy' },
@@ -48,7 +56,7 @@ const GoFooter = () => {
     },
   ];
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = await maybeFix();
 
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-16 py-10 sm:mb-0 md:px-24 lg:px-36 xl:px-48">
