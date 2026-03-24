@@ -1,9 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import NotFound from './not-found';
+import { renderWithNextIntl } from '@/test/test-utils';
 
 // Mock the child components to verify which one is rendered
 vi.mock(
@@ -111,11 +112,14 @@ describe('NotFound Page', () => {
       },
     });
 
-    const jsx = await NotFound();
-    render(jsx);
+    await act(() => {
+      renderWithNextIntl(NotFound());
+    });
 
-    expect(screen.getByTestId('authenticated-header')).toBeInTheDocument();
-    expect(
+    await expect(
+      screen.getByTestId('authenticated-header')
+    ).toBeInTheDocument();
+    await expect(
       screen.queryByTestId('unauthenticated-header')
     ).not.toBeInTheDocument();
   });
@@ -123,11 +127,14 @@ describe('NotFound Page', () => {
   it('should render Public Header when user is not logged in', async () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
 
-    const jsx = await NotFound();
-    render(jsx);
+    await act(() => {
+      renderWithNextIntl(NotFound());
+    });
 
-    expect(screen.getByTestId('unauthenticated-header')).toBeInTheDocument();
-    expect(
+    await expect(
+      screen.getByTestId('unauthenticated-header')
+    ).toBeInTheDocument();
+    await expect(
       screen.queryByTestId('authenticated-header')
     ).not.toBeInTheDocument();
   });
@@ -135,11 +142,12 @@ describe('NotFound Page', () => {
   it('should render the correct translation for title', async () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
 
-    const jsx = await NotFound();
-    render(jsx);
+    await act(() => {
+      renderWithNextIntl(NotFound());
+    });
 
-    expect(screen.getByText('404')).toBeInTheDocument();
-    expect(
+    await expect(screen.getByText('404')).toBeInTheDocument();
+    await expect(
       screen.getByText(
         'The page you are looking for could not be found. Please check the URL and try again.'
       )
@@ -150,10 +158,11 @@ describe('NotFound Page', () => {
     (getLocale as Mock).mockResolvedValue('es');
     mockGetUser.mockResolvedValue({ data: { user: null } });
 
-    const jsx = await NotFound();
-    render(jsx);
+    await act(() => {
+      renderWithNextIntl(NotFound());
+    });
 
-    expect(getTranslations).toHaveBeenCalledWith({
+    await expect(getTranslations).toHaveBeenCalledWith({
       locale: 'es',
       namespace: 'common',
     });
