@@ -36,13 +36,13 @@ const preview: Preview = {
     },
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
     a11y: {
-      test: 'todo'
-    }
+      test: 'todo',
+    },
   },
 };
 

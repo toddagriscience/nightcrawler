@@ -7,54 +7,70 @@ import { Button } from '@/components/ui';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ErrorMessage } from '@hookform/error-message';
-import { useState } from 'react';
-import { GeneralBusinessInformationInsert } from '../../types';
 import { useFormContext } from 'react-hook-form';
+import { GeneralBusinessInformationInsert } from '../../types';
 
-export default function Address({
-  defaultAddressState,
-}: {
-  defaultAddressState: 'yes' | 'no' | 'unanswered';
-}) {
+export default function Address() {
   const {
     register,
+    watch,
+    setValue,
+    trigger,
     formState: { errors },
   } = useFormContext<GeneralBusinessInformationInsert>();
-  const [hasAddress, setHasAddress] = useState<'yes' | 'no' | 'unanswered'>(
-    defaultAddressState
-  );
+
+  const hasAddress = watch('hasAddress');
 
   return (
     <>
-      <h2 className="mt-6 text-lg font-semibold">Address Information</h2>
+      <div className="flex items-center justify-start gap-6">
+        <h2 className="text-xl font-semibold">Address Information</h2>
+      </div>
 
-      <div className="gap-2">
-        <h3>Does your farm have a physical address?</h3>
+      <div className="gap-2 mb-[-10px]">
+        <h3 className="text-base font-normal mb-1">
+          <span className="text-red-500 text-base leading-tight">* </span>
+          Does your farm have a physical address?
+        </h3>
+        <ErrorMessage
+          errors={errors}
+          name="hasAddress"
+          render={({ message }) => <FormErrorMessage errorMessage={message} />}
+        />
         <div className="flex flex-row gap-4">
           <Button
             type="button"
-            onClick={() => setHasAddress('yes')}
+            onClick={() => {
+              setValue('hasAddress', 'yes');
+              trigger();
+            }}
             className={`hover:cursor-pointer ${hasAddress === 'yes' ? 'rounded-none border-b border-b-black' : ''}`}
           >
             Yes
           </Button>
           <Button
             type="button"
-            onClick={() => setHasAddress('no')}
+            onClick={() => {
+              setValue('hasAddress', 'no');
+              trigger();
+            }}
             className={`hover:cursor-pointer ${hasAddress === 'no' ? 'rounded-none border-b border-b-black' : ''}`}
           >
             No
           </Button>
         </div>
       </div>
-      <FieldSet
-        className={`flex flex-col gap-4 ${hasAddress !== 'unanswered' ? 'mb-6' : ''}`}
-      >
+      <FieldSet className={`flex flex-col gap-4 mb-8`}>
         {hasAddress === 'yes' ? (
           <>
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>Address Line 1</FieldLabel>
+                <FieldLabel
+                  htmlFor="address1"
+                  className="leading-tight mb-[-6px]"
+                >
+                  Address Line 1
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="address1"
@@ -64,6 +80,7 @@ export default function Address({
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Street address"
                 {...register('address1')}
@@ -72,7 +89,12 @@ export default function Address({
 
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>Address Line 2</FieldLabel>
+                <FieldLabel
+                  htmlFor="address2"
+                  className="leading-tight mb-[-6px]"
+                >
+                  Address Line 2
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="address2"
@@ -82,6 +104,7 @@ export default function Address({
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Apt, suite, unit, etc. (optional)"
                 {...register('address2')}
@@ -90,7 +113,12 @@ export default function Address({
 
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>Address Line 3</FieldLabel>
+                <FieldLabel
+                  htmlFor="address3"
+                  className="leading-tight mb-[-6px]"
+                >
+                  Address Line 3
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="address3"
@@ -100,6 +128,7 @@ export default function Address({
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Additional address info (optional)"
                 {...register('address3')}
@@ -109,7 +138,12 @@ export default function Address({
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>State</FieldLabel>
+                  <FieldLabel
+                    htmlFor="state"
+                    className="leading-tight mb-[-6px]"
+                  >
+                    State
+                  </FieldLabel>
                   <ErrorMessage
                     errors={errors}
                     name="state"
@@ -118,12 +152,22 @@ export default function Address({
                     )}
                   />
                 </div>
-                <Input type="text" placeholder="State" {...register('state')} />
+                <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
+                  type="text"
+                  placeholder="State"
+                  {...register('state')}
+                />
               </Field>
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>Postal Code</FieldLabel>
+                  <FieldLabel
+                    htmlFor="postalCode"
+                    className="leading-tight mb-[-6px]"
+                  >
+                    Postal Code
+                  </FieldLabel>
                   <ErrorMessage
                     errors={errors}
                     name="postalCode"
@@ -133,6 +177,7 @@ export default function Address({
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="ZIP / Postal code"
                   {...register('postalCode')}
@@ -142,7 +187,12 @@ export default function Address({
 
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>Country</FieldLabel>
+                <FieldLabel
+                  htmlFor="country"
+                  className="leading-tight mb-[-6px]"
+                >
+                  Country
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="country"
@@ -152,6 +202,7 @@ export default function Address({
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="Country"
                 {...register('country')}
@@ -162,7 +213,12 @@ export default function Address({
           <>
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>County, State</FieldLabel>
+                <FieldLabel
+                  htmlFor="countyState"
+                  className="leading-tight mb-[-6px]"
+                >
+                  County, State
+                </FieldLabel>
                 <ErrorMessage
                   errors={errors}
                   name="countyState"
@@ -172,6 +228,7 @@ export default function Address({
                 />
               </div>
               <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
                 type="text"
                 placeholder="e.g., Los Angeles County, California"
                 {...register('countyState')}
@@ -180,7 +237,7 @@ export default function Address({
 
             <Field>
               <div className="flex flex-row justify-between">
-                <FieldLabel>
+                <FieldLabel htmlFor="apn" className="leading-tight mb-[-6px]">
                   APN (County Assessor&apos;s Parcel Number)
                 </FieldLabel>
                 <ErrorMessage
@@ -191,7 +248,11 @@ export default function Address({
                   )}
                 />
               </div>
-              <Input type="text" {...register('apn')} />
+              <Input
+                className="border-[#848484]/80 border-1 bg-transparent"
+                type="text"
+                {...register('apn')}
+              />
             </Field>
           </>
         ) : null}

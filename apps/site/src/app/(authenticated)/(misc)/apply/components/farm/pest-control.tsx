@@ -2,13 +2,13 @@
 
 'use client';
 
-import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { ErrorMessage } from '@hookform/error-message';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
 import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function PestControl() {
   const {
@@ -18,7 +18,7 @@ export default function PestControl() {
   return (
     <Field>
       <div className="flex flex-row justify-between">
-        <FieldLabel>
+        <FieldLabel className="text-base leading-tight">
           What measures are taken to prevent or control pests?
         </FieldLabel>
         <ErrorMessage
@@ -89,6 +89,7 @@ export default function PestControl() {
                     contaminating soil and crops:
                   </FieldLabel>
                   <Textarea
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Describe..."
                     value={
                       field.value?.pestControlMaterials?.preventContamination ??
@@ -111,6 +112,7 @@ export default function PestControl() {
                     measures taken to protect organic crops:
                   </FieldLabel>
                   <Textarea
+                    className="bg-transparent border-1 border-[#848484]/80"
                     placeholder="Describe..."
                     value={
                       field.value?.pestControlMaterials?.recordPestControlUse ??

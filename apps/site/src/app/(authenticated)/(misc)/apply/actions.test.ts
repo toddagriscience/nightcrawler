@@ -210,6 +210,7 @@ describe('saveGeneralBusinessInformation', () => {
       saveGeneralBusinessInformation({
         farmId: 1,
         businessName: 'Viewer Farm',
+        hasAddress: 'yes',
       })
     ).rejects.toThrow('You do not have permission to edit farm information');
   });

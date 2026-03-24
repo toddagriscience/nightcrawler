@@ -4,9 +4,10 @@
 
 import { FadeIn } from '@/components/common';
 import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
+import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Button } from '@/components/ui';
-import MarketingGradientBox from '@/components/common/marketing-gradient-box/marketing-gradient-box';
 import {
   Carousel,
   CarouselApi,
@@ -20,6 +21,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { submitContactToSheets } from '@/lib/actions/googleSheets';
 import isWorkEmail from '@/lib/utils/is-work-email';
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,7 +31,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -58,6 +59,7 @@ export default function Contact() {
       isOrganic: undefined,
       isHydroponic: undefined,
       producesSprouts: undefined,
+      instagramHandle: '',
     },
     resolver: zodResolver(contactFormSchema),
   });
@@ -72,18 +74,21 @@ export default function Contact() {
     isOrganic,
     isHydroponic,
     producesSprouts,
+    instagramHandle,
   } = watch();
   const requiresWebsite = !isWorkEmail(email ?? '');
   const organicSlideIndex = requiresWebsite ? 2 : 1;
   const hydroponicSlideIndex = organicSlideIndex + 1;
   const sproutsSlideIndex = organicSlideIndex + 2;
+  const instagramSlideIndex = organicSlideIndex + 3;
   const canAdvance =
     (slide === 0 &&
       Boolean(firstName && lastName && farmName && email && phone)) ||
     (requiresWebsite && slide === 1 && Boolean(website)) ||
     (slide === organicSlideIndex && isOrganic !== undefined) ||
     (slide === hydroponicSlideIndex && isHydroponic !== undefined) ||
-    (slide === sproutsSlideIndex && producesSprouts !== undefined);
+    (slide === sproutsSlideIndex && producesSprouts !== undefined) ||
+    (slide === instagramSlideIndex && Boolean(instagramHandle));
 
   useEffect(() => {
     if (!api) return;
@@ -119,7 +124,9 @@ export default function Contact() {
               ? (['isHydroponic'] as (keyof ContactFormData)[])
               : slide === sproutsSlideIndex
                 ? (['producesSprouts'] as (keyof ContactFormData)[])
-                : [];
+                : slide === instagramSlideIndex
+                  ? (['instagramHandle'] as (keyof ContactFormData)[])
+                  : [];
 
     const isStepValid = fieldsToValidate.length
       ? await trigger(fieldsToValidate)
@@ -142,8 +149,32 @@ export default function Contact() {
         farm_name: getValues().farmName,
         email: getValues().email,
         phone: getValues().phone,
+        instagram_handle: getValues().instagramHandle || '',
       });
       router.push(`/signup?${params.toString()}`);
+    }
+  }
+
+  async function onInstagramSubmit() {
+    await trigger();
+
+    if (isValid) {
+      const params = new URLSearchParams({
+        first_name: getValues().firstName,
+        last_name: getValues().lastName,
+        farm_name: getValues().farmName,
+        email: getValues().email,
+        phone: getValues().phone,
+        instagram_handle: getValues().instagramHandle || '',
+      });
+      // Push to Google Sheets
+      try {
+        await submitContactToSheets(Object.fromEntries(params.entries()));
+      } catch (error) {
+        console.error('Failed to submit to Google Sheets:', error);
+      }
+      // Redirect to What We Do
+      router.push(`/what-we-do`);
     }
   }
 
@@ -530,7 +561,7 @@ export default function Contact() {
                           {t('results.matchBody')}
                         </p>
                         <SubmitButton
-                          className="w-[200px] h-11 ml-1 rounded-full mt-4"
+                          className="w-[200px] h-1s1 ml-1 rounded-full mt-4"
                           buttonText={t('results.matchJoinUs')}
                           onClickFunction={onSubmit}
                         />
@@ -543,21 +574,21 @@ export default function Contact() {
                         <p className="text-sm md:text-normal md:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchBody')}
                         </p>
-                        {/* Commenting out for now until we have form and logic to submit the Instagram handle. */}
-                        {/* <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
+                        {/* WIP: Need form and logic** to submit the Instagram handle. */}
+                        <p className="text-sm md:text-normal max-w-[280px] sm:max-w-[360px] lg:max-w-[420px]">
                           {t('results.noMatchInstagram')}
                         </p>
                         <Input
                           className="border-[#848484]/80 border-1 w-full max-w-[280px] sm:max-w-[355px]"
                           type="text"
                           placeholder="@handle"
-                          // {...register('instagramHandle')}
+                          {...register('instagramHandle')}
                         />
                         <SubmitButton
                           className="w-[200px] h-11 ml-1 rounded-full mt-2"
                           buttonText={t('results.noMatchSubmit')}
-                          onClickFunction={() => {}}
-                        /> */}
+                          onClickFunction={onInstagramSubmit}
+                        />
                       </div>
                     )}
                   </CarouselItem>

@@ -2,20 +2,23 @@
 
 'use client';
 
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
-  FarmInfoInternalApplicationSelect,
   FarmInfoInternalApplicationInsert,
+  FarmInfoInternalApplicationSelect,
 } from '@/lib/types/db';
 import { cn } from '@/lib/utils';
 import { farmInfoInternalApplicationInsertSchema } from '@/lib/zod-schemas/db';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
-import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
-import { useForm, FormProvider } from 'react-hook-form';
-import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { saveApplication } from '../actions';
+import { ApplicationContext } from './application-tabs';
 import {
   ActiveWildAreas,
   AlternateFarming,
@@ -35,9 +38,6 @@ import {
   SupplierContracts,
   WaterUsedPostHarvest,
 } from './farm/index';
-import { Textarea } from '@/components/ui/textarea';
-import { useState, useContext } from 'react';
-import { ApplicationContext } from './application-tabs';
 
 /** The 3rd page of the application (and absolutely the longest). This is where the majority of farm related information is collected. */
 export default function Farm() {
@@ -100,11 +100,11 @@ export default function Farm() {
                 Viewers can review this section but cannot edit it.
               </p>
             )}
-            <h2 className="text-lg font-semibold">General Farm Information</h2>
+            <h2 className="text-xl font-semibold">General Farm Information</h2>
             <FieldSet className="mx-auto mb-8 flex flex-col gap-6">
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Total gross income on certified crops/products (preceding 12
                     months)
                   </FieldLabel>
@@ -117,7 +117,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
-                  className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none border-[#848484]/80 border-1 bg-transparent"
                   type="number"
                   step="0.01"
                   placeholder="e.g., 150000.00"
@@ -129,7 +129,9 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>Total acreage of the farm</FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
+                    Total acreage of the farm
+                  </FieldLabel>
                   <ErrorMessage
                     errors={errors}
                     name="totalAcreage"
@@ -139,7 +141,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
-                  className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none border-[#848484]/80 border-1 bg-transparent"
                   type="number"
                   placeholder="e.g., 7"
                   {...register('totalAcreage', {
@@ -151,7 +153,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What are your main crops or highest demand produce?
                   </FieldLabel>
                   <ErrorMessage
@@ -163,6 +165,7 @@ export default function Farm() {
                   />
                 </div>
                 <Textarea
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   placeholder="e.g., Tomatoes, Lettuce, Carrots"
                   {...register('mainCrops')}
                 />
@@ -170,7 +173,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Do you have a current conservation plan/contract with USDA
                     NRCS or other conservation agency?
                   </FieldLabel>
@@ -183,6 +186,7 @@ export default function Farm() {
                   />
                 </div>
                 <Textarea
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   placeholder="If yes, describe your conservation plan"
                   {...register('conservationPlan')}
                 />
@@ -190,7 +194,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How do you structure your management zones or fields?
                   </FieldLabel>
                   <ErrorMessage
@@ -202,6 +206,7 @@ export default function Farm() {
                   />
                 </div>
                 <Textarea
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   placeholder="Include acreage, main crops, practices, irrigation, soil issues"
                   {...register('managementZoneStructure')}
                 />
@@ -214,7 +219,7 @@ export default function Farm() {
               <FarmActivities />
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Production &amp; Cultivation
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -224,7 +229,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Is livestock incorporated into your farming system?
                   </FieldLabel>
                   <ErrorMessage
@@ -236,6 +241,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Describe species, amount, manure management, etc."
                   {...register('livestockIncorporation')}
@@ -244,7 +250,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What measures are taken to reduce weed, insect, and disease
                     issues?
                   </FieldLabel>
@@ -257,6 +263,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Describe crop rotation, cover crops, fallow periods"
                   {...register('weedInsectDiseasesControl')}
@@ -267,7 +274,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What mechanical equipment is used for production?
                   </FieldLabel>
                   <ErrorMessage
@@ -279,6 +286,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Describe seeding/planting equipment"
                   {...register('mechanicalEquipment')}
@@ -287,7 +295,7 @@ export default function Farm() {
             </FieldSet>
 
             {/* Inputs & Materials */}
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Inputs &amp; Materials
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -298,7 +306,7 @@ export default function Farm() {
               <SupplierContracts />
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Irrigation &amp; Water
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -306,7 +314,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="text-base leading-tight">
                     What factors are considered in irrigation scheduling?
                   </FieldLabel>
                   <ErrorMessage
@@ -318,6 +326,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Crop requirements, rainfall, soil types, evaporation"
                   {...register('irrigationScheduling')}
@@ -326,7 +335,9 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>How is soil moisture monitored?</FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
+                    How is soil moisture monitored?
+                  </FieldLabel>
                   <ErrorMessage
                     errors={errors}
                     name="soilMoistureMonitoring"
@@ -336,6 +347,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Describe monitoring methods for irrigation efficiency"
                   {...register('soilMoistureMonitoring')}
@@ -344,7 +356,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     Do you apply materials via irrigation water?
                   </FieldLabel>
                   <ErrorMessage
@@ -356,6 +368,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Fertigation, line cleaners, pH adjusters, etc."
                   {...register('irrigationMaterials')}
@@ -364,7 +377,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How is water conservation or rainwater utilization measured?
                   </FieldLabel>
                   <ErrorMessage
@@ -376,6 +389,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Describe water conservation practices"
                   {...register('waterConservation')}
@@ -384,7 +398,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How is water quality protected from runoff?
                   </FieldLabel>
                   <ErrorMessage
@@ -396,6 +410,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Protection for rivers, ponds, wetlands in watershed"
                   {...register('waterQualityProtection')}
@@ -404,13 +419,13 @@ export default function Farm() {
             </FieldSet>
 
             {/* Environmental & Conservation */}
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Environmental &amp; Conservation
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     What measures are taken to prevent or minimize erosion?
                   </FieldLabel>
                   <ErrorMessage
@@ -422,6 +437,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="No-till, cover cropping, terraces, windbreaks, etc."
                   {...register('erosionPrevention')}
@@ -434,7 +450,7 @@ export default function Farm() {
 
               <Field>
                 <div className="flex flex-row justify-between">
-                  <FieldLabel>
+                  <FieldLabel className="leading-tight mb-[-6px] text-base">
                     How do you maintain natural resources in non-crop areas?
                   </FieldLabel>
                   <ErrorMessage
@@ -446,6 +462,7 @@ export default function Farm() {
                   />
                 </div>
                 <Input
+                  className="border-[#848484]/80 border-1 bg-transparent"
                   type="text"
                   placeholder="Borders, fallow land, non-farming habitats"
                   {...register('naturalResources')}
@@ -453,7 +470,7 @@ export default function Farm() {
               </Field>
             </FieldSet>
 
-            <h2 className="mt-6 text-lg font-semibold">
+            <h2 className="mt-6 text-xl font-semibold">
               Harvest &amp; Markets
             </h2>
             <FieldSet className="mb-8 flex flex-col gap-6">
@@ -470,8 +487,9 @@ export default function Farm() {
 
             {canEditFarm && (
               <SubmitButton
+                className="bg-black text-white hover:cursor-pointer hover:bg-black/80 rounded-full h-11 w-[200px]"
                 reactHookFormPending={isSubmitting}
-                buttonText="Save and next"
+                buttonText="Save & Next"
               />
             )}
           </form>
