@@ -70,15 +70,23 @@ export async function handleAuthRouting(
     if (isAuthenticated) {
       if (isRouteInternationalized(pathname)) {
         const response = NextResponse.redirect(new URL('/', request.url));
-        supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
+        for (const {
+          name,
+          value,
+          ...options
+        } of supabaseResponse.cookies.getAll()) {
           response.cookies.set(name, value, options);
-        });
+        }
         return response;
       }
       const response = NextResponse.next();
-      supabaseResponse.cookies.getAll().map(({ name, value, ...options }) => {
+      for (const {
+        name,
+        value,
+        ...options
+      } of supabaseResponse.cookies.getAll()) {
         response.cookies.set(name, value, options);
-      });
+      }
       return response;
     }
   }
