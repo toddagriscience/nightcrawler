@@ -13,7 +13,8 @@ import {
  * Custom footer for the Todd go domain
  * @returns {JSX.Element} - The go domain footer component
  */
-const GoFooter = () => {
+const GoFooter = async () => {
+  'use cache';
   const legalLinks = [
     { href: '/terms', label: 'Terms & Conditions' },
     { href: '/privacy', label: 'Privacy Policy' },

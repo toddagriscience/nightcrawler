@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use server';
-
 import { createClient as createServerClient } from './supabase/server';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
 
