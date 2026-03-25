@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { Suspense } from 'react';
 import GoFooter from '@/components/go/footer/footer';
 import GoHeader from '@/components/go/header/header';
 import { FadeIn, SmoothScroll } from '../../components/common';
@@ -22,7 +23,9 @@ export default function GoLayout({ children }: { children: React.ReactNode }) {
             <div className="flex-grow flex flex-col justify-end">
               {children}
             </div>
-            <GoFooter />
+            <Suspense>
+              <GoFooter />
+            </Suspense>
           </FadeIn>
         </SmoothScroll>
       </body>

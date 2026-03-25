@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { Suspense } from 'react';
 import { FadeIn, SmoothScroll } from '@/components/common';
 import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
 import Button from '@/components/common/button/button';
@@ -15,7 +16,38 @@ import {
   FaYoutube,
 } from 'react-icons/fa6';
 
-export default async function NotFound() {
+/** Social media links displayed at the bottom of the 404 page. */
+const socialMediaIcons = [
+  {
+    icon: <FaInstagram aria-hidden="true" />,
+    href: 'https://www.instagram.com/toddagriscience/',
+    ariaLabel: 'Visit our Instagram page',
+  },
+  {
+    icon: <FaLinkedinIn aria-hidden="true" />,
+    href: 'https://www.linkedin.com/company/toddagriscience/',
+    ariaLabel: 'Visit our LinkedIn page',
+  },
+  {
+    icon: <FaXTwitter aria-hidden="true" />,
+    href: 'https://x.com/toddagriscience',
+    ariaLabel: 'Visit our X (Twitter) page',
+  },
+  {
+    icon: <FaYoutube aria-hidden="true" />,
+    href: 'https://www.youtube.com/@toddagriscience',
+    ariaLabel: 'Visit our YouTube channel',
+  },
+];
+
+/**
+ * Async server component that fetches locale data and auth state.
+ * Kept inside a Suspense boundary so uncached request-time calls
+ * (`getLocale`, `cookies`) do not block prerendering.
+ *
+ * @returns The full not-found page content with the correct header
+ */
+async function NotFoundContent() {
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: 'common' });
   const messages = await getMessages({ locale });
@@ -23,29 +55,6 @@ export default async function NotFound() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const socialMediaIcons = [
-    {
-      icon: <FaInstagram aria-hidden="true" />,
-      href: 'https://www.instagram.com/toddagriscience/',
-      ariaLabel: 'Visit our Instagram page',
-    },
-    {
-      icon: <FaLinkedinIn aria-hidden="true" />,
-      href: 'https://www.linkedin.com/company/toddagriscience/',
-      ariaLabel: 'Visit our LinkedIn page',
-    },
-    {
-      icon: <FaXTwitter aria-hidden="true" />,
-      href: 'https://x.com/toddagriscience',
-      ariaLabel: 'Visit our X (Twitter) page',
-    },
-    {
-      icon: <FaYoutube aria-hidden="true" />,
-      href: 'https://www.youtube.com/@toddagriscience',
-      ariaLabel: 'Visit our YouTube channel',
-    },
-  ];
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -90,5 +99,20 @@ export default async function NotFound() {
         </FadeIn>
       </SmoothScroll>
     </NextIntlClientProvider>
+  );
+}
+
+/**
+ * Root not-found page rendered for any unmatched route.
+ * All request-time data access (locale, cookies) is wrapped in Suspense
+ * so the page can be prerendered without blocking.
+ *
+ * @returns The 404 page with Suspense-wrapped content
+ */
+export default function NotFound() {
+  return (
+    <Suspense>
+      <NotFoundContent />
+    </Suspense>
   );
 }

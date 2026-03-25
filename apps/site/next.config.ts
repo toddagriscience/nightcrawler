@@ -90,6 +90,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+
   transpilePackages: ['@nightcrawler/db'],
 
   async headers() {

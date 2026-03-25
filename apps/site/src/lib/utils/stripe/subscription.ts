@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use server';
-
 import { farm } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { logger } from '@/lib/logger';
