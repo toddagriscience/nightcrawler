@@ -77,6 +77,14 @@ const eslintConfig = defineConfig([
       '@next/next/no-html-link-for-pages': 'off',
     },
   },
+  {
+    files: ['apps/internal/**/*.{js,jsx,ts,tsx}'],
+    settings: {
+      next: {
+        rootDir: 'apps/internal',
+      },
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -50,6 +50,13 @@
       "when": 1774049121695,
       "tag": "0006_normalize-knowledge",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1774461530048,
+      "tag": "0007_add-internal-account",
+      "breakpoints": true
     }
   ]
 }
