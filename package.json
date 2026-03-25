@@ -26,6 +26,7 @@
     "dev": "turbo run dev --parallel",
     "dev:site": "bun run --filter @nightcrawler/site dev",
     "dev:sanity": "bun run --filter @nightcrawler/sanity dev",
+    "dev:internal": "bun run --filter @nightcrawler/internal dev",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
@@ -45,7 +46,7 @@
     "format:check": "prettier --check .",
     "validate": "bun run format:check && bun run type-check && bun run lint && bun run test && bun run build",
     "prepare": "husky",
-    "clean": "rm -rf node_modules apps/site/node_modules apps/sanity/node_modules packages/db/node_modules bun.lockb apps/site/bun.lockb apps/sanity/bun.lockb packages/db/bun.lockb apps/site/.next apps/site/storybook-static apps/site/coverage apps/sanity/.sanity apps/sanity/.dist"
+    "clean": "rm -rf node_modules apps/site/node_modules apps/sanity/node_modules apps/internal/node_modules packages/db/node_modules bun.lockb apps/site/bun.lockb apps/sanity/bun.lockb apps/internal/bun.lockb packages/db/bun.lockb apps/site/.next apps/internal/.next apps/site/storybook-static apps/site/coverage apps/sanity/.sanity apps/sanity/.dist"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^8.54.0",
