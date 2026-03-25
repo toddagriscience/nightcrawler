@@ -4,17 +4,15 @@ import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { hasAcceptedAccountAgreement } from '@/lib/utils/account-agreement';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
 
 /**
- * Layout for authenticated/platform routes
- * Applies platform background color and includes the authenticated header
- * Wraps the children in an AuthErrorTrigger to handle testing UI for authentication errors
- * @param {React.ReactNode} children - The children of the layout
- * @returns {React.ReactNode} - The authenticated layout
+ * Checks whether the current viewer has accepted the account agreement.
+ * Redirects to the agreement page when acceptance is missing.
  */
-export default async function AuthenticatedLayout({
+async function ViewerAgreementGate({
   children,
 }: {
   children: React.ReactNode;
@@ -30,12 +28,29 @@ export default async function AuthenticatedLayout({
     }
   }
 
+  return <>{children}</>;
+}
+
+/**
+ * Root layout for all authenticated routes.
+ * Children are wrapped in Suspense because the agreement gate needs cookies/DB access.
+ *
+ * @param {React.ReactNode} children - The children of the layout
+ * @returns {React.ReactNode} - The authenticated layout
+ */
+export default function AuthenticatedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className="authenticated-root bg-background-platform">
       <body
         className={`${fontVariables} authenticated-root bg-background-platform min-h-screen`}
       >
-        {children}
+        <Suspense>
+          <ViewerAgreementGate>{children}</ViewerAgreementGate>
+        </Suspense>
         <DesktopGate />
       </body>
     </html>
