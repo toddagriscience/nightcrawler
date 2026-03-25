@@ -1,5 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+/**
+ * Force dynamic rendering to ensure dashboard data is fetched at request time.
+ */
+export const dynamic = 'force-dynamic';
+
 import { getInternalAccounts } from './actions';
 import InternalAccountsClient from './components/internal-accounts-client';
 

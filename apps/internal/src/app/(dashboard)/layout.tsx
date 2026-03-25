@@ -4,6 +4,11 @@ import { Sidebar } from '@/components/sidebar';
 import type { Metadata } from 'next';
 
 /**
+ * Force dynamic rendering for all dashboard routes to avoid build-time database access.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
  * Dashboard layout metadata
  */
 export const metadata: Metadata = {

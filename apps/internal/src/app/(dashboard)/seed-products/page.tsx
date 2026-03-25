@@ -1,5 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+/**
+ * Force dynamic rendering to ensure dashboard data is fetched at request time.
+ */
+export const dynamic = 'force-dynamic';
+
 import { getSeedProducts } from './actions';
 import SeedProductsClient from './components/seed-products-client';
 
