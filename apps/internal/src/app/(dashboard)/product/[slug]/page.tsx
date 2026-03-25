@@ -23,6 +23,11 @@ import { ArrowLeft } from 'lucide-react';
 import { getSeedProductBySlug } from '../../seed-products/actions';
 
 /**
+ * Force dynamic rendering to ensure dashboard data is fetched at request time.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
  * Generates sample trend data for price and inventory charts.
  * In production, this would be replaced with real historical data.
  * @param priceInCents - Current price in cents
