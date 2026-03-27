@@ -1,1 +1,0 @@
-ALTER TABLE "management_zone" RENAME COLUMN "water_convservation" TO "water_conservation";

@@ -1,0 +1,180 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
+/** Optional base URL for externally hosted seed product imagery. */
+const seedImageBaseUrl = process.env.NEXT_PUBLIC_SEED_IMAGE_BASE_URL?.trim();
+/** Parsed URL for externally hosted seed product imagery. */
+const seedImageUrl = seedImageBaseUrl ? new URL(seedImageBaseUrl) : null;
+
+// Enhanced security headers configuration for privacy and data leak prevention
+const securityHeaders = [
+  {
+    key: 'X-DNS-Prefetch-Control',
+    value: 'on',
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=31536000; includeSubDomains; preload', // Force HTTPS for 1 year
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'SAMEORIGIN',
+  },
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+  },
+  {
+    key: 'Server',
+    value: 'Todd-Server/1.0', // Hide server information
+  },
+  {
+    key: 'X-Permitted-Cross-Domain-Policies',
+    value: 'none',
+  },
+  {
+    key: 'Cross-Origin-Embedder-Policy',
+    value: 'unsafe-none', // Stripe Elements does not support cross-origin isolated sites
+  },
+  {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin-allow-popups',
+  },
+  {
+    key: 'Cross-Origin-Resource-Policy',
+    value: 'same-origin',
+  },
+  {
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin', // Enhanced privacy - prevents URL data leaks
+  },
+  {
+    key: 'Permissions-Policy',
+    value: [
+      'accelerometer=()', // Disable accelerometer access
+      'camera=()', // Disable camera access
+      'geolocation=()', // Disable geolocation
+      'gyroscope=()', // Disable gyroscope
+      'magnetometer=()', // Disable magnetometer
+      'microphone=()', // Disable microphone
+      'payment=()', // Disable payment API
+      'usb=()', // Disable USB access
+      'interest-cohort=()', // Disable FLoC/Topics API for privacy
+      'browsing-topics=()', // Disable Topics API (successor to FLoC)
+      'attribution-reporting=()', // Disable Attribution Reporting API
+    ].join(', '),
+  },
+  {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'", // Only allow resources from same origin
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://js.stripe.com",
+      "style-src 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Allow Stripe-hosted styles used by Elements
+      "style-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Explicitly allow stylesheet elements used by Stripe iframes and Elements
+      "style-src-attr 'unsafe-inline'", // Allow inline style attributes required by third-party embeds
+      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageUrl?.origin ?? ''}`.trim(), // Allow images from self, blob URLs, and data URLs
+      "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
+      "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co https://api.stripe.com https://r.stripe.com", // Allow payment requests and Stripe telemetry required by Elements
+      "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
+      "object-src 'none'", // Block object/embed/applet
+      "base-uri 'self'", // Restrict base tag URLs
+      "form-action 'self'", // Restrict form submissions
+      "frame-ancestors 'self'", // Prevent embedding in frames
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+      'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
+    ].join('; '),
+  },
+];
+
+const nextConfig: NextConfig = {
+  cacheComponents: true,
+
+  transpilePackages: ['@nightcrawler/db'],
+
+  async headers() {
+    return [
+      {
+        // Apply security headers to all routes
+        source: '/(.*)',
+        headers: securityHeaders,
+      },
+      {
+        // Additional headers for font files to prevent data leaks
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+        port: '',
+        pathname: '/**',
+      },
+      ...(seedImageUrl
+        ? [
+            {
+              protocol: seedImageUrl.protocol.replace(':', '') as 'https',
+              hostname: seedImageUrl.hostname,
+              port: seedImageUrl.port,
+              pathname: '/**',
+            },
+          ]
+        : []),
+    ],
+  },
+
+  redirects() {
+    return [
+      // Handles requests to go.toddagriscience.com/invite
+      {
+        source: '/invite',
+        has: [
+          {
+            type: 'host',
+            value: `go.${process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN}`,
+          },
+        ],
+        permanent: true,
+        destination: '/contact',
+      },
+      // Ex. if a user tries to navigate to https://toddagriscience.com/invite, they're redirected to /. If they access https://go.toddagriscience.com though, they're allowed through and are redirected to /contact.
+      {
+        source: '/:path(invite|creators|partner)',
+        has: [
+          {
+            type: 'host',
+            value: String(process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN),
+          },
+        ],
+        permanent: true,
+        destination: '/',
+      },
+    ];
+  },
+
+  // Disable powered-by header to reduce information disclosure
+  poweredByHeader: false,
+
+  // Enable compression for better performance
+  compress: true,
+
+  // Disable X-Powered-By header
+};
+
+export default withNextIntl(nextConfig);

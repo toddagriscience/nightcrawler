@@ -1,0 +1,49 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalEnv": [
+    "DATABASE_URL",
+    "DATABASE_PEM_CERT",
+    "NEXT_PUBLIC_SUPABASE_PROJECT_ID",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+    "NODE_ENV"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "storybook-static/**"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "outputs": []
+    },
+    "type-check": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": ["coverage/**"]
+    },
+    "test:coverage": {
+      "outputs": ["coverage/**"]
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
+      "outputs": []
+    },
+    "validate": {
+      "outputs": []
+    },
+    "db:local:reset": {
+      "cache": false
+    }
+  }
+}

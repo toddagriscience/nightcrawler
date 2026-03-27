@@ -1,0 +1,282 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+'use client';
+
+import FormErrorMessage from '@/components/common/form-error-message/form-error-message';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { FarmInfoInternalApplicationInsert } from '@/lib/types/db';
+import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
+
+export default function OtherMaterials() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FarmInfoInternalApplicationInsert>();
+  return (
+    <Field>
+      <div className="flex flex-row justify-between">
+        <FieldLabel className="text-base leading-tight">
+          What, if any, synthetic fertilizers, pesticides, fungicides, or any
+          other materials such as treated seed (including coatings, pelleting
+          materials, and inoculants), growing media (substrate, planting mix,
+          potting soil), adjuvants, etc. are used on your farm?
+        </FieldLabel>
+        <ErrorMessage
+          errors={errors}
+          name="otherMaterials"
+          render={({ message }) => <FormErrorMessage errorMessage={message} />}
+        />
+      </div>
+      <Controller
+        control={control}
+        name="otherMaterials"
+        render={({ field }) => (
+          <FieldSet className="flex flex-col gap-3">
+            <Field orientation="horizontal">
+              <Checkbox
+                defaultChecked={true}
+                checked={field.value?.noMaterials?.isNoMaterials}
+                onCheckedChange={(e) =>
+                  field.onChange({
+                    ...field.value,
+                    noMaterials: {
+                      ...field.value?.noMaterials,
+                      isNoMaterials: e,
+                    },
+                  })
+                }
+              />
+              <FieldLabel htmlFor="noMaterials">
+                We do not use any of the above materials
+              </FieldLabel>
+            </Field>
+            {!field.value?.noMaterials?.isNoMaterials && (
+              <div className="ml-6 mb-4 flex flex-col gap-4">
+                <div>
+                  <FieldLabel
+                    htmlFor="productName"
+                    className="leading-tight mb-[4px]"
+                  >
+                    Product name, including formulation:
+                  </FieldLabel>
+                  <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
+                    placeholder="Enter product name..."
+                    value={field.value?.noMaterials?.productName ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          productName: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel
+                    htmlFor="manufacturerName"
+                    className="leading-tight mb-[4px]"
+                  >
+                    Manufacturer name:
+                  </FieldLabel>
+                  <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
+                    placeholder="Enter manufacturer name..."
+                    value={field.value?.noMaterials?.manufacturerName ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          manufacturerName: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel
+                    htmlFor="reasonForUse"
+                    className="leading-tight mb-[4px]"
+                  >
+                    Reason for use:
+                  </FieldLabel>
+                  <Input
+                    className="border-[#848484]/80 border-1 bg-transparent"
+                    placeholder="Enter reason for use..."
+                    value={field.value?.noMaterials?.reasonForUse ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          reasonForUse: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel
+                    htmlFor="lastApplication"
+                    className="leading-tight mb-[4px]"
+                  >
+                    Last application:
+                  </FieldLabel>
+                  <Input
+                    type="date"
+                    className="border-[#848484]/80 border-1 bg-transparent"
+                    value={field.value?.noMaterials?.lastApplication ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          lastApplication: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <FieldLabel
+                    htmlFor="otherInformation"
+                    className="leading-tight mb-[4px]"
+                  >
+                    Other information:
+                  </FieldLabel>
+                  <Textarea
+                    className="border-[#848484]/80 border-1 bg-transparent"
+                    value={field.value?.noMaterials?.otherInformation ?? ''}
+                    onChange={(e) =>
+                      field.onChange({
+                        ...field.value,
+                        noMaterials: {
+                          ...field.value?.noMaterials,
+                          otherInformation: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
+
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={field.value?.usesNpk?.isUsesNpk}
+                onCheckedChange={(e) =>
+                  field.onChange({
+                    ...field.value,
+                    usesNpk: {
+                      ...field.value?.usesNpk,
+                      isUsesNpk: e,
+                    },
+                  })
+                }
+              />
+              <FieldLabel htmlFor="usesNpk">Our farm uses NPK</FieldLabel>
+            </Field>
+            {field.value?.usesNpk?.isUsesNpk && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
+                  placeholder="Describe NPK usage..."
+                  value={field.value?.usesNpk?.description ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      usesNpk: {
+                        ...field.value?.usesNpk,
+                        description: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={field.value?.usesSodiumNitrate?.isUsesSodiumNitrate}
+                onCheckedChange={(e) =>
+                  field.onChange({
+                    ...field.value,
+                    usesSodiumNitrate: {
+                      ...field.value?.usesSodiumNitrate,
+                      isUsesSodiumNitrate: e,
+                    },
+                  })
+                }
+              />
+              <FieldLabel htmlFor="usesSodiumNitrate">
+                Our farm uses sodium (Chilean) nitrate
+              </FieldLabel>
+            </Field>
+            {field.value?.usesSodiumNitrate?.isUsesSodiumNitrate && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
+                  placeholder="Describe sodium nitrate usage..."
+                  value={field.value?.usesSodiumNitrate?.description ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      usesSodiumNitrate: {
+                        ...field.value?.usesSodiumNitrate,
+                        description: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={field.value?.treatedLumber?.isTreatedLumber}
+                onCheckedChange={(e) =>
+                  field.onChange({
+                    ...field.value,
+                    treatedLumber: {
+                      ...field.value?.treatedLumber,
+                      isTreatedLumber: e,
+                    },
+                  })
+                }
+              />
+              <FieldLabel htmlFor="treatedLumber">
+                There are existing installations of lumber treated with
+                arsenate, describe (e.g. endpost, trellis, stakes, etc.)
+              </FieldLabel>
+            </Field>
+            {field.value?.treatedLumber?.isTreatedLumber && (
+              <div className="mb-4 ml-6 flex flex-row flex-wrap items-center gap-3">
+                <Textarea
+                  className="bg-transparent border-1 border-[#848484]/80"
+                  placeholder="Describe treated lumber installations..."
+                  value={field.value?.treatedLumber?.description ?? ''}
+                  onChange={(e) =>
+                    field.onChange({
+                      ...field.value,
+                      treatedLumber: {
+                        ...field.value?.treatedLumber,
+                        description: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+          </FieldSet>
+        )}
+      />
+    </Field>
+  );
+}

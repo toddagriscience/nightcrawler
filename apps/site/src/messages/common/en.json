@@ -1,0 +1,18 @@
+{
+  "common": {
+    "buttons": {
+      "learn_more": "Learn More",
+      "view_all": "View All"
+    },
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": {
+      "title": "404",
+      "message": "The page you are looking for could not be found. Please check the URL and try again.",
+      "homeButton": "Home"
+    }
+  },
+  "metadata": {
+    "description": "Todd combines deep experience in regenerative agriculture, farm management and engaging consumers."
+  }
+}
