@@ -33,6 +33,7 @@
 - Ask for user review/QA testing
 - Add files with `git add .`
 - If and only if the user approves, run `bun run validate`
+- If you must use `git commit --no-verify` or `git push --no-verify`, first run `cd frontend && rm -rf .next && bun i` from the repo root
 - Commit the files in conventional commit format with `git commit -m`
 - Push the files with `git push`
 - Make a pull request. Don't request a review from anyone, but fill out all of the other attributes. Use the pull request template found in the `.github` folder.

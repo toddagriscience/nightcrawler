@@ -14,6 +14,7 @@ A modern, production-ready Next.js website for Todd Agriscience emphasizing main
 
 ## Command and Execution Rules
 
+- **No-verify commits/pushes**: Before any commit or push that uses `--no-verify`, run `cd frontend && rm -rf .next && bun i` from the repo root (rerun with elevated permissions if sandbox blocks file/network access).
 - **Directory**: All `bun` commands MUST be run in the `./frontend` folder.
 - **Commands**:
   - `bun dev` - Dev server
