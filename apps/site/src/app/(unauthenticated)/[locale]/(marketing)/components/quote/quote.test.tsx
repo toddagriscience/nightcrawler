@@ -24,7 +24,9 @@ describe('Quote', () => {
     renderWithNextIntl(<Quote isDark={false} />);
     const aboutLink = screen.getByTestId('button-component');
     expect(aboutLink).toBeInTheDocument();
-    expect(aboutLink).toHaveAttribute('href', '/who-we-are');
+    const href = aboutLink.getAttribute('href');
+    expect(href).toMatch(/^\/who-we-are\?/);
+    expect(href).toContain('utm_source=home');
     expect(aboutLink).toHaveTextContent('Who We Are');
   });
 
