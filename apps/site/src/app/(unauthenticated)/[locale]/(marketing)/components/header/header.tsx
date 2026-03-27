@@ -37,10 +37,7 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
 
   const menuItems: MenuItem[] = [
-    {
-      href: '/who-we-are?utm_source=home&utm_medium=internal&utm_campaign=who_we_are_click',
-      label: t('navigation.whoWeAre'),
-    },
+    { href: '/who-we-are', label: t('navigation.whoWeAre') },
     { href: '/what-we-do', label: t('navigation.whatWeDo') },
     { href: '/news', label: t('navigation.news') },
     { href: '/careers', label: t('navigation.careers') },
