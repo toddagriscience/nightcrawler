@@ -38,7 +38,7 @@ export default async function ImpPage({
     .from(integratedManagementPlanNote)
     .where(
       and(
-        eq(integratedManagementPlanNote.knowledgeArticleId, article.id),
+        eq(integratedManagementPlanNote.integratedManagementPlanId, article.id),
         eq(integratedManagementPlanNote.userId, currentUser.id)
       )
     )

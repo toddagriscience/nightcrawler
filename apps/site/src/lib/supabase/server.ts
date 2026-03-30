@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use server';
-
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import logger from '../logger';
@@ -11,6 +9,7 @@ export async function createClient(supabaseKey?: string) {
     supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
   }
 
+  // If you're looking at this, you might've come from the errors in `next build`. I have no idea why this is happening, but it doesn't seem to interfere with anything at runtime.
   const cookieStore = await cookies();
 
   return createServerClient(

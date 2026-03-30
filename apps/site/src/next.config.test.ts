@@ -59,6 +59,12 @@ describe('Next.js Security Headers Configuration', () => {
 
     const csp = cspHeader!.value;
     expect(csp).toContain("default-src 'self'");
+    expect(csp).toContain('https://js.stripe.com');
+    expect(csp).toContain('https://m.stripe.network');
+    expect(csp).toContain('https://api.stripe.com');
+    expect(csp).toContain('https://hooks.stripe.com');
+    expect(csp).toContain("style-src-elem 'self' 'unsafe-inline'");
+    expect(csp).toContain("style-src-attr 'unsafe-inline'");
     expect(csp).toContain("font-src 'self'"); // No external font loading
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("frame-ancestors 'self'");
@@ -97,10 +103,10 @@ describe('Next.js Security Headers Configuration', () => {
     );
 
     expect(coepHeader).toBeDefined();
-    expect(coepHeader!.value).toBe('credentialless');
+    expect(coepHeader!.value).toBe('unsafe-none');
 
     expect(coopHeader).toBeDefined();
-    expect(coopHeader!.value).toBe('same-origin');
+    expect(coopHeader!.value).toBe('same-origin-allow-popups');
 
     expect(corpHeader).toBeDefined();
     expect(corpHeader!.value).toBe('same-origin');

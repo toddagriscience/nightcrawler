@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
+import { OrderNavLink } from './components/order-nav-link';
 
 /** Reusable navigation links component.
  *
@@ -13,6 +14,7 @@ export async function NavLinks() {
   return (
     <nav className="flex items-center gap-4">
       <div className="flex items-center gap-6">
+        <OrderNavLink />
         {[
           { href: '/contact', label: 'Contact' },
           { href: '/account', label: 'Account' },

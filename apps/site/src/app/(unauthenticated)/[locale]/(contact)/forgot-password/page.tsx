@@ -120,7 +120,7 @@ export default function ForgotPassword() {
                           <div className="mt-5 md:mt-10">
                             <SubmitButton
                               buttonText="Submit"
-                              className="w-[144px]"
+                              className="w-[144px] h-11 rounded-full px-8 py-3 font-semibold"
                               reactHookFormPending={isSubmitting}
                             />
                           </div>

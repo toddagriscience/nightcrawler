@@ -30,7 +30,7 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
         <span className="tracking-normal leading-tight">{t('quote')}</span>
       </h1>
       <Button
-        href="/who-we-are"
+        href="/who-we-are?utm_source=home&utm_medium=internal&utm_campaign=who_we_are_click"
         text={t('whoWeAre')}
         variant="outline"
         // isDark={isDark}

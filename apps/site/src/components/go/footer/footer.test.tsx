@@ -6,21 +6,21 @@ import { describe, expect, it } from 'vitest';
 import GoFooter from './footer';
 
 describe('GoFooter', () => {
-  it('renders without crashing', () => {
-    renderWithNextIntl(<GoFooter />);
+  it('renders without crashing', async () => {
+    renderWithNextIntl(await GoFooter());
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 
-  it('displays copyright text', () => {
-    renderWithNextIntl(<GoFooter />);
+  it('displays copyright text', async () => {
+    renderWithNextIntl(await GoFooter());
     const currentYear = new Date().getFullYear();
     expect(
       screen.getByText(`© Todd Agriscience ${currentYear}`)
     ).toBeInTheDocument();
   });
 
-  it('includes legal links', () => {
-    renderWithNextIntl(<GoFooter />);
+  it('includes legal links', async () => {
+    renderWithNextIntl(await GoFooter());
     expect(screen.getByText('Terms & Conditions')).toBeInTheDocument();
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
     expect(screen.getByText('Accessibility')).toBeInTheDocument();
@@ -28,8 +28,8 @@ describe('GoFooter', () => {
     expect(screen.getByText('Vulnerability Reporting')).toBeInTheDocument();
   });
 
-  it('has social media links with accessible names', () => {
-    renderWithNextIntl(<GoFooter />);
+  it('has social media links with accessible names', async () => {
+    renderWithNextIntl(await GoFooter());
     expect(
       screen.getByRole('link', { name: 'Visit our X (Twitter) page' })
     ).toBeInTheDocument();
