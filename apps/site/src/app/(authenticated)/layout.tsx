@@ -1,12 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { hasAcceptedAccountAgreement } from '@/lib/utils/account-agreement';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
+import AuthErrorFallback from './components/auth-error-fallback';
 
 /**
  * Checks whether the current viewer has accepted the account agreement.
@@ -17,7 +18,12 @@ async function ViewerAgreementGate({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser = await getAuthenticatedInfo();
+  let currentUser;
+  try {
+    currentUser = await getAuthenticatedInfo();
+  } catch {
+    return <AuthErrorFallback />;
+  }
 
   if (currentUser.role === 'Viewer') {
     const hasAcceptedAgreement = await hasAcceptedAccountAgreement(

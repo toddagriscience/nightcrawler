@@ -2,14 +2,14 @@
 
 'use client';
 
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
-import ToddHeader from '../../components/common/wordmark/todd-wordmark';
 
 /**
  * Page to handle authentication errors when logging in to the platform.
  */
-export default function Error() {
+export default function AuthErrorFallback() {
   return (
     <>
       <header className="w-full" role="banner">
@@ -26,16 +26,18 @@ export default function Error() {
         <p className="md:text-base text-sm text-foreground/80">
           If you continue to experience issues, please contact support.
         </p>
-        <Button
-          variant="outline"
-          className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
-          size="default"
-          onClick={() => {
-            logout();
-          }}
-        >
-          Log out
-        </Button>
+        <div className="flex gap-4 md:flex-row flex-col mt-4">
+          <Button
+            variant="outline"
+            className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
+            size="default"
+            onClick={() => {
+              logout();
+            }}
+          >
+            Log out
+          </Button>
+        </div>
       </div>
     </>
   );
