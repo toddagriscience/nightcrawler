@@ -63,21 +63,21 @@ export default function DesktopGate({
         </header>
         <div className="fixed inset-0 z-[50] flex min-h-screen flex-col items-center justify-center bg-background-platform px-6 gap-10">
           <div className="max-w-xl text-center space-y-8 border-b-1 border-[#D9D9D9] pb-10">
-            <h1 className="text-4xl font-thin w-[60%] sm:w-[60%] md:w-[93%] mx-auto leading-tight">
+            <h1 className="text-3xl md:text-4xl font-thin w-[60%] sm:w-[60%] md:w-[93%] mx-auto leading-tight">
               This Page Works Best on Desktop
             </h1>
-            <p className="text-lg text-foreground font-thin w-[83%] sm:w-[70%] lg:w-[93%] mx-auto leading-tight">
+            <p className="text-base md:text-lg text-foreground font-thin w-[83%] sm:w-[70%] lg:w-[93%] mx-auto leading-tight">
               To give you the best experience, this platform is designed for
               desktop viewing. Please open it on a desktop or laptop to
               continue.
             </p>
           </div>
           <div className="max-w-xl text-center space-y-5">
-            <p className="text-sm text-foreground/80 italic w-[60%] md:w-full mx-auto">
+            <p className="text-xs md:text-sm text-foreground/80 italic w-[60%] md:w-full mx-auto">
               Hint: If on desktop, widen your browser window to at least{' '}
               {MIN_WIDTH}px wide.
             </p>
-            <p className="text-sm text-foreground font-thin">OR</p>
+            <p className="text-xs md:text-sm text-foreground font-thin">OR</p>
             <Button
               onClick={handleLogout}
               className="brand h-11 w-[144px] bg-foreground text-background hover:bg-foreground/90 hover:cursor-pointer rounded-full"
