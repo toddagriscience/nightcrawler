@@ -27,8 +27,8 @@ export default function CreatorsPage() {
   return (
     <div className="max-w-[1400px] mx-auto">
       <HeaderImg
-        src="/meadow-4.webp"
-        alt="Meadow"
+        src="/m4a.jpg"
+        alt="garden"
         overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
       />
       <div>
@@ -48,12 +48,8 @@ export default function CreatorsPage() {
                     Creator Program
                   </h1>
                   <p className="text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-[770px]">
-                    Calling all{' '}
-                    <span className="italic">
-                      publishers, creators, bloggers,
-                    </span>{' '}
-                    and
-                    <span className="italic"> moggers!</span> <br />
+                    Calling all publishers, creators, bloggers, and moggers!
+                    <br />
                     <br />
                     Join the Todd Creator Program to monetize your content and
                     connect with the broader Todd community.
@@ -84,7 +80,13 @@ export default function CreatorsPage() {
                 </h2>
                 <div className="flex flex-col">
                   <div className="text-normal md:text-base lg:text-lg font-thin leading-relaxed space-y-10">
-                    <div className="flex gap-10">
+                    <motion.div
+                      initial={{ opacity: 0, x: 54 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 1.3, ease: 'easeOut' }}
+                      viewport={{ once: true, amount: 0.5 }}
+                      className="flex gap-10"
+                    >
                       <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
                         01
                       </p>
@@ -93,16 +95,19 @@ export default function CreatorsPage() {
                           Apply
                         </p>
                         <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light text-foreground/90">
-                          Get started by filling out your application{' '}
-                          <span className="italic">
-                            (it only takes a couple minutes)
-                          </span>
-                          . You can expect to hear back from us within a couple
-                          days.
+                          Get started by filling out your application (it only
+                          takes a couple minutes). You can expect to hear back
+                          from us within a couple days.
                         </p>
                       </div>
-                    </div>
-                    <div className="flex gap-10">
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: 84 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 1.3, ease: 'easeOut' }}
+                      viewport={{ once: true, amount: 0.5 }}
+                      className="flex gap-10"
+                    >
                       <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
                         02
                       </p>
@@ -116,8 +121,14 @@ export default function CreatorsPage() {
                           with our content team!
                         </p>
                       </div>
-                    </div>
-                    <div className="flex gap-10">
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: 104 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 1.3, ease: 'easeOut' }}
+                      viewport={{ once: true, amount: 0.5 }}
+                      className="flex gap-10"
+                    >
                       <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
                         03
                       </p>
@@ -131,7 +142,7 @@ export default function CreatorsPage() {
                           competitive rates and offers.
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -196,7 +207,7 @@ export default function CreatorsPage() {
           </div>
           {/* Apply Section */}
           <div className="w-full h-fit mt-16 lg:mt-20 mb-32 py-12 md:py-20 space-y-8 md:space-y-16">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-thin italic flex justify-center items-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-thin flex justify-center items-center">
               Help us make an impact on society.
             </h2>
             <Link

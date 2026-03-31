@@ -50,7 +50,7 @@ export default function Faq() {
         <Accordion type="single" collapsible className="border-t">
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="group text-left text-lg md:text-xl lg:text-2xl font-thin tracking-normal hover:no-underline py-6 md:py-8 [&>svg:last-child]:hidden">
+              <AccordionTrigger className="group text-left text-lg md:text-xl lg:text-2xl font-thin tracking-normal hover:no-underline py-6 md:py-8 [&>svg:last-child]:hidden transition-all duration-300 ease-in-out">
                 <span className="mx-2 flex-1 text-left text-foreground max-w-[75%] lg:max-w-[90%]">
                   {item.question}
                 </span>

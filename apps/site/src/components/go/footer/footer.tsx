@@ -29,27 +29,27 @@ const GoFooter = async () => {
 
   const socialMediaIcons = [
     {
-      icon: <FaXTwitter aria-hidden="true" />,
+      icon: <FaXTwitter aria-hidden="true" size={20} />,
       href: 'https://x.com/toddagriscience',
       ariaLabel: 'Visit our X (Twitter) page',
     },
     {
-      icon: <FaInstagram aria-hidden="true" />,
+      icon: <FaInstagram aria-hidden="true" size={20} />,
       href: 'https://www.instagram.com/toddagriscience/',
       ariaLabel: 'Visit our Instagram page',
     },
     {
-      icon: <FaLinkedinIn aria-hidden="true" />,
+      icon: <FaLinkedinIn aria-hidden="true" size={20} />,
       href: 'https://www.linkedin.com/company/toddagriscience/',
       ariaLabel: 'Visit our LinkedIn page',
     },
     {
-      icon: <FaYoutube aria-hidden="true" />,
+      icon: <FaYoutube aria-hidden="true" size={20} />,
       href: 'https://www.youtube.com/@toddagriscience',
       ariaLabel: 'Visit our YouTube channel',
     },
     {
-      icon: <FaDiscord aria-hidden="true" />,
+      icon: <FaDiscord aria-hidden="true" size={20} />,
       href: 'https://discord.gg/rFY3kc4deK ',
       ariaLabel: 'Join our Discord server',
     },
@@ -58,9 +58,9 @@ const GoFooter = async () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-background text-foreground font-light mt-8 mb-8 px-16 py-10 sm:mb-0 md:px-24 lg:px-36 xl:px-48">
+    <footer className="bg-background text-foreground font-light px-16 py-10 sm:mb-2 md:px-24 lg:px-36 xl:px-48">
       <div className="flex flex-col">
-        <ToddHeader className="mb-20 [&_img]:w-[120px] [&_img]:h-auto" />
+        <ToddHeader className="mb-20 md:text-4xl lg:text-5xl" />
         <p className="mb-8">© Todd Agriscience {currentYear}</p>
         <div className="mb-16 flex flex-col flex-wrap gap-6 items-start md:flex-row">
           {legalLinks.map((val) => (
