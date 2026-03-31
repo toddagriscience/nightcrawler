@@ -20,6 +20,10 @@ export default function CreatorsPage() {
   });
   const imageY = useTransform(scrollYProgress, [-0.5, 2], [100, -200]);
 
+  const url =
+    // eslint-disable-next-line no-secrets/no-secrets
+    'https://docs.google.com/forms/d/e/1FAIpQLSfYqvSYKfTX-C4Cri3MNhB9ndhEN1_QNAAmaCBPNwvYaPCdAA/viewform?usp=header';
+
   return (
     <div className="max-w-[1400px] mx-auto">
       <HeaderImg
@@ -38,24 +42,33 @@ export default function CreatorsPage() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <section className="flex flex-col w-full mb-2 lg:mb-8 border-b border-[#2A2727]/50">
-              <div className="w-full flex flex-col h-fit px-4 md:px-8 lg:px-12 py-16 lg:py-6">
+              <div className="w-full flex flex-col h-fit px-4 md:px-8 lg:px-12 py-12 lg:py-6">
                 <div className="flex mb-6 md:mb-10 lg:mb-16 flex-col max-w-[910px]">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-light mb-6 lg:mb-10 lg:mt-2">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-light mb-8 lg:mb-10 lg:mt-2">
                     Creator Program
                   </h1>
-                  <p className="text-sm md:text-normal lg:text-base font-light leading-relaxed max-w-[770px]">
-                    As a proud Partner of the NFL Leigue, Todd connects clients
-                    and player to the heart of the game through unique
-                    experiences, while supporting sustainable management
-                    practices on and off the field.
+                  <p className="text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-[770px]">
+                    Calling all{' '}
+                    <span className="italic">
+                      publishers, creators, bloggers,
+                    </span>{' '}
+                    and
+                    <span className="italic"> moggers!</span> <br />
+                    <br />
+                    Join the Todd Creator Program to monetize your content and
+                    connect with the broader Todd community.
                   </p>
                   <Button
                     variant="brand"
                     size="lg"
-                    className="h-11 w-[144px] lg:h-13 lg:w-[180px] self-start font-thin mt-8 rounded-full text-base lg:text-normal lg:text-lg"
+                    onClick={() => window.open(url, '_blank')}
+                    className="h-12 w-[154px] lg:h-13 lg:w-[180px] font-thin mt-12 md:mt-16 rounded-full text-base lg:text-normal lg:text-lg"
                   >
                     Apply Now
-                    <HiArrowLongRight className="size-8 text-background" />
+                    <HiArrowLongRight
+                      className="text-background"
+                      style={{ width: 28, height: 28 }}
+                    />
                   </Button>
                 </div>
               </div>
@@ -64,86 +77,114 @@ export default function CreatorsPage() {
 
           {/* How it works Section */}
           <section className="mx-auto w-[85%] lg:w-full">
-            <div className="w-full flex flex-col h-fit px-6 md:px-24 lg:px-36 xl:px-48 py-8 md:py-6 mt-16 mb-16 lg:mb-20">
-              <div className="flex flex-col gap-6 lg:flex-row lg:gap-32">
+            <div className="w-full flex flex-col h-fit px-6 md:px-24 lg:px-36 xl:px-48 py-8 md:py-6 mt-10 mb-16 lg:mb-16">
+              <div className="flex flex-col gap-10 lg:flex-row lg:gap-28">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[200px] md:max-w-[250px] lg:max-w-[350px] leading-tight font-light shrink-0">
                   How it works
                 </h2>
-                <div className="flex flex-col flex-1">
-                  <div className="text-normal md:text-base lg:text-lg font-thin leading-relaxed space-y-4">
-                    <p>
-                      Todd attaches great importance to ensuring that its
-                      suppliers and business partners as well as their
-                      subcontractors share a set of common rules, practices and
-                      principles with respect to ethics, social responsibility
-                      and protection of the environment.
-                    </p>
-                    <p>
-                      Todd therefore requires its suppliers and business
-                      partners to respect the principles detailed in the
-                      Supplier and Business Partner Code of Conduct and to
-                      ensure that their own suppliers and subcontractors do the
-                      same in the conduct of their activities for the Group.
-                    </p>
+                <div className="flex flex-col">
+                  <div className="text-normal md:text-base lg:text-lg font-thin leading-relaxed space-y-10">
+                    <div className="flex gap-10">
+                      <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
+                        01
+                      </p>
+                      <div className="flex flex-col gap-4 mt-1 md:mt-3">
+                        <p className="text-2xl md:text-3xl lg:text-4xl font-thin">
+                          Apply
+                        </p>
+                        <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light text-foreground/90">
+                          Get started by filling out your application{' '}
+                          <span className="italic">
+                            (it only takes a couple minutes)
+                          </span>
+                          . You can expect to hear back from us within a couple
+                          days.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-10">
+                      <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
+                        02
+                      </p>
+                      <div className="flex flex-col gap-4 mt-1 md:mt-3">
+                        <p className="text-2xl md:text-3xl lg:text-4xl font-thin">
+                          Connect
+                        </p>
+                        <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light text-foreground/90">
+                          You know the drill. Once approved, we&apos;ll reach
+                          out to you to setup, share our resources, and network
+                          with our content team!
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-10">
+                      <p className="text-4xl md:text-5xl lg:text-6xl leading-tight font-thin shrink-0">
+                        03
+                      </p>
+                      <div className="flex flex-col gap-4 mt-1 md:mt-3">
+                        <p className="text-2xl md:text-3xl lg:text-4xl font-thin">
+                          Earn
+                        </p>
+                        <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light text-foreground/90">
+                          Get creative! You&apos;ll earn for each sucessful
+                          referral you make (or per keyword review). We offer
+                          competitive rates and offers.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <Link
-                    href="#"
-                    className="text-sm md:text-base font-thin leading-relaxed mt-6 underline hover:opacity-80"
-                  >
-                    &gt; Access the Supplier and Business Partner Code of
-                    Conduct
-                  </Link>
                 </div>
               </div>
             </div>
           </section>
 
           {/* Benefits Section */}
-          <section className="mx-auto w-[85%] lg:w-full ">
-            <div className="w-full flex flex-col h-fit px-6 md:px-24 lg:px-36 xl:px-48 pt-16 md:pt-20">
+          <section className="flex flex-col items-center justify-center mx-auto w-[90%] lg:w-full">
+            <div className="w-full mr-37 md:mr-0 md:px-24 lg:px-36 xl:px-48 text-center md:text-left pt-16 md:pt-20">
               <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin mb-10 md:mb-18">
                 Benefits
               </h2>
             </div>
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-16 px-6 md:px-24 lg:px-36 xl:px-48 pb-16 md:pb-30 max-w-[300px] md:max-w-full">
-              <div>
-                <h3 className="text-2xl md:text-2xl lg:text-3xl font-thin mb-4 tracking-normal">
-                  Firm Representation
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 px-6 md:px-24 lg:px-36 xl:px-48 pb-16 md:pb-30 max-w-[300px] md:max-w-full">
+              <div className="md:w-[80%]">
+                <h3 className="text-2xl lg:text-3xl font-thin mb-4 tracking-normal">
+                  Network with Todd&apos;s community
                 </h3>
-                <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light">
-                  Todd is assembling a firm designed to mirror the consumer
-                  bases of our farms, embracing a holistic pace of life that
-                  nourishes the the na
+                <p className="text-sm md:text-normal lg:text-base leading-relaxed text-foreground/90 font-light">
+                  Todd has a network of successful creators, founders, and
+                  community builders! Our alumni include 8-figure startup
+                  founders and million-follower YouTube creators.
                 </p>
               </div>
-              <div>
+              <div className="md:w-[80%]">
                 <h3 className="text-2xl md:text-2xl lg:text-3xl font-thin mb-4 tracking-normal">
-                  Team Focus
+                  Earn special offers throughout the year
                 </h3>
-                <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light">
-                  We seek to instill responsibility and sustainability into our
-                  values and culture and we strive to partner with
-                  self-supporting fa
+                <p className="text-sm md:text-normal lg:text-base leading-relaxed text-foreground/90 font-light">
+                  We&apos;ll share special offers and unique incentives with our
+                  creators throughout the year. Top performers will receive
+                  special perks and rewards.
                 </p>
               </div>
-              <div>
+              <div className="md:w-[80%]">
                 <h3 className="text-2xl md:text-2xl lg:text-3xl font-thin mb-4 tracking-normal">
-                  Farm Alignment and Integration
+                  Make content people actually engage with
                 </h3>
-                <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light">
-                  Agreement on and implementation of farm management practices
-                  in an effort to achieve well-defined goals focused on
-                  responsibility and sustainability.
+                <p className="text-sm md:text-normal lg:text-base leading-relaxed text-foreground/90 font-light">
+                  Todd branded content has historically performed well with Gen
+                  Z and Millennial audiences who are aligned with our vision.
+                  We&apos;ll help you create content that resonates with our
+                  target audience.
                 </p>
               </div>
-              <div>
-                <h3 className="text-2xl md:text-2xl lg:text-3xl font-thin mb-4 tracking-normal">
-                  Broader Communities
+              <div className="md:w-[80%]">
+                <h3 className="text-2xl md:text-2xl lg:text-3xl font-thin mb-4 tracking-normal max-w-[300px]">
+                  Attend exclusive events
                 </h3>
-                <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light">
-                  We believe our farmers should seek to emulate and propel the
-                  responsible and sustainable values of our Firm in the
-                  communities they.
+                <p className="text-sm md:text-normal lg:text-base leading-relaxed text-foreground/90 font-light">
+                  We host or sponsor in-person and virtual meetups throughout
+                  the year, as well as hackathons and other creative challenges
+                  with top talent in the country!
                 </p>
               </div>
             </div>
@@ -154,9 +195,13 @@ export default function CreatorsPage() {
             <Faq />
           </div>
           {/* Apply Section */}
-          <div className="w-full h-fit mt-20 mb-32 py-12 md:py-20">
+          <div className="w-full h-fit mt-16 lg:mt-20 mb-32 py-12 md:py-20 space-y-8 md:space-y-16">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-thin italic flex justify-center items-center">
+              Help us make an impact on society.
+            </h2>
             <Link
-              href="#"
+              href={url}
+              target="_blank"
               className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin flex justify-center items-center gap-5"
             >
               Apply

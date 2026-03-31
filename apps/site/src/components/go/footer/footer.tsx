@@ -3,6 +3,7 @@
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import Link from 'next/link';
 import {
+  FaDiscord,
   FaInstagram,
   FaLinkedinIn,
   FaXTwitter,
@@ -47,6 +48,11 @@ const GoFooter = async () => {
       href: 'https://www.youtube.com/@toddagriscience',
       ariaLabel: 'Visit our YouTube channel',
     },
+    {
+      icon: <FaDiscord aria-hidden="true" />,
+      href: 'https://discord.gg/rFY3kc4deK ',
+      ariaLabel: 'Join our Discord server',
+    },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -65,7 +71,12 @@ const GoFooter = async () => {
         </div>
         <div className="flex flex-row flex-wrap gap-6">
           {socialMediaIcons.map((val) => (
-            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
+            <Link
+              key={val.href}
+              href={val.href}
+              target="_blank"
+              aria-label={val.ariaLabel}
+            >
               {val.icon}
             </Link>
           ))}

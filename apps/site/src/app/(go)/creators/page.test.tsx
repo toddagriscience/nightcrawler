@@ -1,14 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { renderWithNextIntl, screen } from '@/test/test-utils';
-import '@testing-library/jest-dom';
 import { describe, expect, it } from 'vitest';
 import CreatorsPage from './page';
 
 describe('CreatorsPage', () => {
   it('renders without crashing', () => {
     renderWithNextIntl(<CreatorsPage />);
-    expect(screen.getByText('Apply')).toBeInTheDocument();
+    expect(screen.getByText('Creator Program')).toBeInTheDocument();
   });
 
   it('has an Apply link', () => {
@@ -26,19 +25,20 @@ describe('CreatorsPage', () => {
   it('renders the How it works section', () => {
     renderWithNextIntl(<CreatorsPage />);
     expect(screen.getByText('How it works')).toBeInTheDocument();
-    expect(
-      screen.getByText(/Access the Supplier and Business Partner/)
-    ).toBeInTheDocument();
   });
 
   it('renders the Benefits section with all four items', () => {
     renderWithNextIntl(<CreatorsPage />);
     expect(screen.getByText('Benefits')).toBeInTheDocument();
-    expect(screen.getByText('Firm Representation')).toBeInTheDocument();
-    expect(screen.getByText('Team Focus')).toBeInTheDocument();
     expect(
-      screen.getByText('Farm Alignment and Integration')
+      screen.getByText("Network with Todd's community")
     ).toBeInTheDocument();
-    expect(screen.getByText('Broader Communities')).toBeInTheDocument();
+    expect(
+      screen.getByText('Earn special offers throughout the year')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Make content people actually engage with')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Attend exclusive events')).toBeInTheDocument();
   });
 });
