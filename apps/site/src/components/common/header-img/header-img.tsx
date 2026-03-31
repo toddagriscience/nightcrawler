@@ -42,6 +42,7 @@ export default function HeaderImg({
         <Image
           src={src}
           alt={alt}
+          loading="eager"
           fill
           sizes="100vw"
           className={`object-cover ${imageClassName}`.trim() + ' rounded-sm'}

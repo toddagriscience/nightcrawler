@@ -12,52 +12,52 @@ import { LuMinus, LuPlus } from 'react-icons/lu';
 
 const faqItems = [
   {
-    question: 'This is a Test Firm Article',
+    question: 'What platform do you use for your affiliate program?',
     answer:
-      'Since 2024, Todd has supported fresh produce so it never has to go to waste. In the US alone, 100 billion pounds of perfectly good food ends up in the landfills annually. This collaboration allows Todd to provide funds and raise awareness to combat food insecurity, prevent food waste and build sustainable food systems.',
+      "We use an internal system to track and pay out commissions. We'll send you an invite to join once accepted.",
   },
   {
-    question: 'This is a really really long Test Article Title for Todd',
+    question: 'Is there a limit on how many videos I can create?',
     answer:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+      'No, there is no cap on how much content (videos or posts) you can create. You can create and share as much as you want.',
   },
   {
-    question: 'This is a Test Firm Article',
+    question: 'How long does it take to get paid?',
     answer:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui.',
+      "We pay out commissions on a rolling basis. You'll start to receive payments once you've earned $50 in commissions (and locking and invoice periods have passed).",
   },
   {
-    question: 'This is a Test Firm Article',
+    question: 'How do I get approved to join the program?',
     answer:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes.',
+      'We carefully review each application individually through our team. We take many factors into account including your audience size, engagement, and overall reach.',
   },
   {
-    question: 'This is a really really long Test Article Title for Todd',
+    question: 'Does Todd have an internship program for growth and content?',
     answer:
-      'Since 2024, Todd has supported fresh produce so it never has to go to waste. In the US alone, 100 billion pounds of perfectly good food ends up in the landfills annually. This collaboration allows Todd to provide funds and raise awareness to combat food insecurity, prevent food waste and build sustainable food systems.',
+      'Yes, we have an internship program for growth, content, and marketing. Top creators in this cycle will have an opportunity to join our team as an intern. Due to US Labor Laws, we cannot guarentee financial compensation to potential interns. This offer is subject to terms and conditions.',
   },
 ];
 
 export default function Faq() {
   return (
-    <section className="w-full bg-neutral-50 px-6 md:px-12 lg:px-24 py-16 md:py-24">
-      <div className="md:px-12 lg:px-12 xl:px-24">
+    <section className="w-full lg:px-24 py-16 md:py-24">
+      <div className="mx-auto w-full max-w-[95%] md:max-w-[80%] lg:max-w-[84%]">
         <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin mb-10 md:mb-16">
           FAQ
         </h2>
       </div>
-      <div className="mx-auto w-full md:max-w-[70%]">
+      <div className="mx-auto w-full max-w-[95%] md:max-w-[80%] lg:max-w-[70%]">
         <Accordion type="single" collapsible className="border-t">
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="group text-left text-xl sm:text-2xl md:text-2xl lg:text-3xl font-thin mb-2 tracking-normal hover:no-underline py-6 md:py-8 [&>svg:last-child]:hidden">
-                <span className="flex-1 text-left text-foreground max-w-[75%] lg:max-w-[90%]">
+              <AccordionTrigger className="group text-left text-lg md:text-xl lg:text-2xl font-thin tracking-normal hover:no-underline py-6 md:py-8 [&>svg:last-child]:hidden transition-all duration-300 ease-in-out">
+                <span className="mx-2 flex-1 text-left text-foreground max-w-[75%] lg:max-w-[90%]">
                   {item.question}
                 </span>
-                <LuPlus className="shrink-0 size-7 stroke-[1.5] group-data-[state=open]:hidden" />
-                <LuMinus className="shrink-0 size-7 stroke-[1.5] group-data-[state=closed]:hidden" />
+                <LuPlus className="mx-2 shrink-0 size-7 stroke-[1.5] group-data-[state=open]:hidden" />
+                <LuMinus className="mx-2 shrink-0 size-7 stroke-[1.5] group-data-[state=closed]:hidden" />
               </AccordionTrigger>
-              <AccordionContent className="text-sm md:text-normal lg:text-base leading-relaxed font-light pb-6 md:pb-8 max-w-[90%]">
+              <AccordionContent className="ml-2 text-sm md:text-normal lg:text-base text-foreground/80 font-light pb-8 max-w-[80%]">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
