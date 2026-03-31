@@ -26,6 +26,10 @@ function LinkList({ linkItem }: { linkItem: LinkSections }) {
   );
 }
 
+/**
+ * Disclosures page displaying general and UK-specific legal disclosure links.
+ * @returns {Promise<JSX.Element>} The rendered disclosures page
+ */
 export default async function DisclosuresPage() {
   const t = await getTranslations('disclosures');
 
