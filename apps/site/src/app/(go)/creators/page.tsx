@@ -36,7 +36,7 @@ export default function CreatorsPage() {
           {/* Creator Program Section*/}
           <motion.div
             className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 lg:py-6"
-            initial={{ opacity: 0.5, y: 34 }}
+            initial={{ opacity: 0.25, y: 34 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.3, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}

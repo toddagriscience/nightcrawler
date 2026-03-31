@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import GoFooter from '@/app/(go)/creators/components/footer/footer';
+import GoHeader from '@/app/(go)/creators/components/header/header';
 import { Suspense } from 'react';
-import GoFooter from '@/components/go/footer/footer';
-import GoHeader from '@/components/go/header/header';
 import { FadeIn, SmoothScroll } from '../../components/common';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
