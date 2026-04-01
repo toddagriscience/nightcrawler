@@ -109,9 +109,13 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
  * @returns {JSX.Element} - A link to `/login` with internationalized description text.*/
 function LoginLink() {
   const t = useTranslations('header');
-  const contactLabel = t.has('navigation.contact')
-    ? t('navigation.contact')
-    : 'Contact';
+  const contactLabel = (() => {
+    try {
+      return t('navigation.contact');
+    } catch {
+      return 'Contact';
+    }
+  })();
   const actionLinkClassName =
     'group relative inline-flex items-center justify-center min-h-10 px-5 py-2 no-underline transition-colors duration-300 ease-in-out cursor-pointer hover:no-underline';
   const actionLinkBgClassName =
