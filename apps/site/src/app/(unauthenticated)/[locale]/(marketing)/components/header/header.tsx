@@ -11,6 +11,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { useTheme } from '@/context/theme/ThemeContext';
+import { Link } from '@/i18n/config';
 import { MenuItem } from '@/lib/types/components';
 import { MenuIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -108,17 +109,35 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
  * @returns {JSX.Element} - A link to `/login` with internationalized description text.*/
 function LoginLink() {
   const t = useTranslations('header');
+  const contactLabel = t.has('navigation.contact')
+    ? t('navigation.contact')
+    : 'Contact';
+  const actionLinkClassName =
+    'group relative inline-flex items-center justify-center min-h-10 px-5 py-2 no-underline transition-colors duration-300 ease-in-out cursor-pointer hover:no-underline';
+  const actionLinkBgClassName =
+    'pointer-events-none absolute inset-0 rounded-[8px] bg-[#f1f1f1] opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100';
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
       <NextLink
         locale={undefined}
         href="/login"
-        className="tracking-tight rounded-md p-1 text-underline transition-all duration-300 ease-in-out items-center flex cursor-pointer"
+        className={actionLinkClassName}
         data-testid="login-link"
       >
-        {t('navigation.logIn')}
+        <span aria-hidden="true" className={actionLinkBgClassName} />
+        <span className="relative z-10 tracking-tight">
+          {t('navigation.logIn')}
+        </span>
       </NextLink>
+      <Link
+        href="/contact"
+        className={actionLinkClassName}
+        data-testid="contact-link"
+      >
+        <span aria-hidden="true" className={actionLinkBgClassName} />
+        <span className="relative z-10 tracking-tight">{contactLabel}</span>
+      </Link>
     </div>
   );
 }
