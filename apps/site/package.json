@@ -54,7 +54,7 @@
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^5.12.0",
     "@stripe/react-stripe-js": "^5.6.1",
-    "@stripe/stripe-js": "^8.11.0",
+    "@stripe/stripe-js": "^9.0.1",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.97.0",
