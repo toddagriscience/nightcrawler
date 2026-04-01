@@ -34,7 +34,7 @@
     "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.3.15",
+    "@electric-sql/pglite": "^0.4.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@nightcrawler/db": "workspace:*",
