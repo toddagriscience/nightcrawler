@@ -66,8 +66,8 @@
   },
   "overrides": {
     "flatted": "^3.4.2",
-    "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23",
+    "lodash": "^4.17.24",
+    "lodash-es": "^4.17.24",
     "js-yaml": "^4.1.1",
     "esbuild": "^0.25.0",
     "minimatch": ">=10.2.3",
