@@ -77,7 +77,7 @@ export default function WhatWeDoPage() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
         >
           <HeaderImg
-            src="/meadow-4.webp"
+            src="/marketing/meadow-4.webp"
             alt="Meadow"
             overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
           />
@@ -123,7 +123,7 @@ export default function WhatWeDoPage() {
                 className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
               >
                 <Image
-                  src="/pinklemonade.webp"
+                  src="/marketing/pinklemonade.webp"
                   alt="Farmer"
                   width={500}
                   height={500}
@@ -136,7 +136,7 @@ export default function WhatWeDoPage() {
                 className="w-full max-w-[350px] md:max-w-[460px] lg:max-w-[500px]"
               >
                 <Image
-                  src="/farmer.webp"
+                  src="/marketing/farmer.webp"
                   alt="Pink Lemonade"
                   width={500}
                   height={500}

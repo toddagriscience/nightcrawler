@@ -2,12 +2,11 @@
 
 'use client';
 
+import HeaderVideo from '@/components/common/header-video/header-video';
+import { Button } from '@/components/ui';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-
-import { Button } from '@/components/ui';
 import { HiArrowLongRight } from 'react-icons/hi2';
-import HeaderImg from '../../../components/common/header-img/header-img';
 import Faq from './components/faq/faq';
 
 /**
@@ -26,10 +25,19 @@ export default function CreatorsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto">
-      <HeaderImg
-        src="/m4a.jpg"
-        alt="garden"
-        overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+      <HeaderVideo
+        src="/go/creatorssmall.mp4"
+        alt="Todd Creator Program Video"
+        wrapperClassName="block md:hidden"
+        videoClassName="object-cover"
+        overlayClassName="transition-all duration-200 ease-in-out"
+      />
+      <HeaderVideo
+        src="/go/creatorsbig.mp4"
+        alt="Todd Creator Program Video"
+        wrapperClassName="hidden md:block"
+        videoClassName="object-cover"
+        overlayClassName="transition-all duration-200 ease-in-out"
       />
       <div>
         <div className="flex flex-col mx-auto max-w-[1450px]">
@@ -137,8 +145,8 @@ export default function CreatorsPage() {
                           Earn
                         </p>
                         <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light text-foreground/90">
-                          Get creative! You&apos;ll earn for each sucessful
-                          referral you make (or per keyword review). We offer
+                          Get creative! You&apos;ll earn for each successful
+                          referral you make (or per k views). We offer
                           competitive rates and offers.
                         </p>
                       </div>
