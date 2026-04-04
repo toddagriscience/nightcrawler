@@ -83,7 +83,7 @@ export default function TermsAndConditions() {
         waitTimeMs={waitTime}
         onConfirm={async () => {
           await submitApplication();
-          router.push('/application-success');
+          router.push('/');
         }}
         onError={() => setSubmitError(true)}
       />

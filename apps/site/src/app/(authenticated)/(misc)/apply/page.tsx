@@ -101,7 +101,7 @@ export default async function Apply() {
   }
 
   if (hasApplied) {
-    redirect('/application-success');
+    redirect('/');
   }
 
   return (

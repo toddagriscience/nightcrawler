@@ -65,7 +65,7 @@ export async function signUpUser(
     email,
     password,
     options: {
-      emailRedirectTo: `${baseUrl}/auth/confirm?next=/`,
+      emailRedirectTo: `${baseUrl}/auth/confirm?next=/apply`,
       data: {
         // This is for the email template
         first_name: name,

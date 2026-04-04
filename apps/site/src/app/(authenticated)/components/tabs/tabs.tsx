@@ -154,7 +154,10 @@ export default function PlatformTabs({
           )}
         </TabsList>
         <div className="flex flex-row items-center gap-6 border-none">
-          {currentUser.approved ? <SearchNavForm /> : null}
+          {/* Previously: SearchNavForm only when currentUser.approved. Now always
+              shown here; farm.approved still drives ApplicationReviewBanner. */}
+          {/* {currentUser.approved ? <SearchNavForm /> : null} */}
+          <SearchNavForm />
           {addWidgetDropdown}
           {header}
         </div>

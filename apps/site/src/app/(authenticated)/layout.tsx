@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
+import ApplicationReviewBanner from './components/application-review-banner';
 import AuthErrorFallback from './components/auth-error-fallback';
 
 /**
@@ -34,7 +35,12 @@ async function ViewerAgreementGate({
     }
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <ApplicationReviewBanner />
+      {children}
+    </>
+  );
 }
 
 /**
