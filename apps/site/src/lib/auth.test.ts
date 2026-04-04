@@ -241,7 +241,7 @@ describe('signUpUser', () => {
       email: 'test@example.com',
       password: 'securePassword123',
       options: {
-        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/',
+        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/apply',
         data: {
           first_name: 'Oscar',
           name: 'Oscar',
@@ -286,7 +286,7 @@ describe('signUpUser', () => {
       email: 'john@example.com',
       password: 'password123',
       options: {
-        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/',
+        emailRedirectTo: 'https://toddagriscience.com/auth/confirm?next=/apply',
         data: {
           name: 'John Doe',
           first_name: 'John Doe',

@@ -1,5 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { redirect } from 'next/navigation';
+
+/*
 import { accountAgreementAcceptance } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
@@ -28,4 +31,10 @@ export default async function ApplicationSuccess() {
       </Link>
     </div>
   );
+}
+*/
+
+/** Legacy success route; redirects to `/` (apply flow uses client navigation). */
+export default async function ApplicationSuccess() {
+  redirect('/');
 }

@@ -18,11 +18,13 @@ export default async function ProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const currentUser = await getAuthenticatedInfo();
+  await getAuthenticatedInfo();
 
-  if (!currentUser.approved) {
-    notFound();
-  }
+  // Open platform access; farm.approved still used for ApplicationReviewBanner
+  // and internal tooling. Old guard after getAuthenticatedInfo():
+  // if (!currentUser.approved) {
+  //   notFound();
+  // }
 
   const { slug } = await params;
   const product = await getSeedProductBySlug(slug);

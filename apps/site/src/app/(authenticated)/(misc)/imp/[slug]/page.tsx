@@ -18,9 +18,11 @@ export default async function ImpPage({
 }) {
   const currentUser = await getAuthenticatedInfo();
 
-  if (!currentUser.approved) {
-    notFound();
-  }
+  // Open platform access; farm.approved still used for ApplicationReviewBanner
+  // and internal tooling. Previously:
+  // if (!currentUser.approved) {
+  //   notFound();
+  // }
 
   const { slug } = await params;
 

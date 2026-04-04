@@ -1,5 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { redirect } from 'next/navigation';
+
+/*
 import { Button } from '@/components/ui/button';
 import {
   accountAgreementAcceptance,
@@ -11,7 +14,6 @@ import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import ApplyButton from '../../components/apply-button';
 
-/** The page that is shown when a user is either not approved or is approved but has no tabs or management zones */
 export default async function Landing() {
   const currentUser = await getAuthenticatedInfo();
   const managementZones = await db
@@ -87,4 +89,10 @@ export default async function Landing() {
       </Link>
     </div>
   );
+}
+*/
+
+/** Legacy `/welcome` route; redirects to `/`. */
+export default async function Landing() {
+  redirect('/');
 }

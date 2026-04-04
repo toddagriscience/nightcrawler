@@ -25,9 +25,11 @@ export async function saveImpNotes(
 
     const currentUser = await getAuthenticatedInfo();
 
-    if (!currentUser.approved) {
-      throwActionError('Your farm is not approved to access IMPs.');
-    }
+    // Open platform access; farm.approved still used for ApplicationReviewBanner
+    // and internal tooling. Previously:
+    // if (!currentUser.approved) {
+    //   throwActionError('Your farm is not approved to access IMPs.');
+    // }
 
     const [article] = await db
       .select({
