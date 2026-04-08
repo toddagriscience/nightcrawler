@@ -94,8 +94,19 @@ export async function getStripeSubscriptionData(): Promise<StripeSubscriptionDat
     }
 
     // Payment method
+    const customer = await stripe.customers.retrieve(
+      farmRecord.stripeCustomerId,
+      {
+        expand: ['invoice_settings.default_payment_method'],
+      }
+    );
+
+    const customerDefaultPaymentMethod = !customer.deleted
+      ? (customer.invoice_settings?.default_payment_method ?? null)
+      : null;
+
     const paymentMethod = formatPaymentMethod(
-      subscription.default_payment_method
+      subscription.default_payment_method ?? customerDefaultPaymentMethod
     );
 
     return {
