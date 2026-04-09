@@ -31,9 +31,8 @@ const Footer = () => {
     { href: '/news', label: t('links.news') },
     { href: '/careers', label: t('links.careers') },
     { href: '/contact', label: t('links.contact') },
-    { href: '/investors', label: t('links.investors') },
-    { href: '/sponsorships', label: t('links.sponsorships') },
-    { href: '/foundation', label: t('links.foundation') },
+    // comment out until we have a foundation page
+    // { href: '/foundation', label: t('links.foundation') },
   ];
 
   const legalLinks = [
