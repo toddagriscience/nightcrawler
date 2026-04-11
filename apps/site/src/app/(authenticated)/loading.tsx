@@ -8,7 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
  */
 export default async function DashboardLoading() {
   return (
-    <FadeIn className="bg-background min-h-screen flex items-center justify-center">
+    <FadeIn className="bg-background-platform min-h-screen flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <Spinner />
       </div>
