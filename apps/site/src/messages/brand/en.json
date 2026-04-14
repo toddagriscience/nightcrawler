@@ -1,0 +1,103 @@
+{
+  "brand": {
+    "pageHeading": {
+      "subtitle": "Company",
+      "title": "Brand Guideline"
+    },
+    "sectionContent": {
+      "intro": {
+        "title": "Introduction",
+        "text": {
+          "count": "2",
+          "0": "We’ve created the following guidelines to help others use our brand and assets, including our logo, content, and trademarks.",
+          "1": "The preferred written format is \"Todd\". \"Todd Agriscience\" should not be used. For tagging on social media, #Todd is an accepted format."
+        }
+      },
+      "logo": {
+        "title": "Logo",
+        "subtitle": "Wordmark",
+        "text": {
+          "count": "2",
+          "0": "Our wordmark is the most direct distillation of our visual philosophy.",
+          "1": "While it can freely scale in size, the balance and proportions are fixed to give consistency across our range of products, services and departments. It can also appear in different forms depending on context and degree of recognition our branding has at a given time or geographic location."
+        },
+        "caption": "Our primary wordmark requires prescribed clear space"
+      },
+      "brandPartnerships": {
+        "title": "Brand Partnerships",
+        "text": {
+          "count": "2",
+          "0": "When pairing the wordmarks with partner logos, maintain balanced spacing and clear hierarchy. Avoid placing logos too close to one another, ensuring sufficient space to preserve clarity and visual impact. Ensure each logo is displayed at an appropriate size, uses its approved color format, and is not distorted or altered in any way.",
+          "1": "All co-branded materials must undergo an approval process by both brands to guarantee consistency and adherence to branding standards."
+        }
+      },
+      "pressReleases": {
+        "title": "Press Releases",
+        "text": {
+          "count": "2",
+          "0": "When mentioning our company in press materials, please identify Todd as a Generative Agriculture and Al research lab. Todd’s mission is creating ultra sustainable diversified farms to reshape the future of agriculture.",
+          "1": "If announcements, blogs, or other communications go beyond the cases outlined above, or if you have questions about our guidelines, reach out to Todd's Media Communications team at media@toddagriscience.com"
+        }
+      },
+      "usageTerms": {
+        "title": "Usage Terms",
+        "text": {
+          "count": "4",
+          "0": "By using the Todd trademarks you agree to the guidelines as well as our Terms of Use and all our rules and policies. Todd reserves the right to cancel, modify, or change the permission in these guidelines at any time at its sole discretion. For further information about use of the Todd name and trademarks, please contact brand@todd.com.",
+          "1": "You may use the Todd marks to truthfully describe the products, services, and technologies that we offer. You may also use Todd marks to truthfully state that you are a client and are using a Todd product. For example, “Our farm runs on the Todd platform.”",
+          "2": "All other uses of Todd marks, including in connection with out vendors, products, services or software require prior written permission from us. Note that a copyright license for software does not provide a license to use a trademark related to the brand. For inquiries, please contact brand@todd.com",
+          "3": "Any advertisements, documentations, websites, or other references that include the following attribution statement which can be displayed at the end of the material, in the footer of the document, or some other clear and conspicuous location that can be quickly identified: Todd, the Todd design, and related marks, designs and logos are trademarks or registered trademarks of Todd Agriscience, Inc. or its affiliates in the US and other countries."
+        }
+      }
+    },
+    "wordmarkDosAndDonts": {
+      "subtitle": "Do's and Don'ts: Wordmark",
+      "caption": {
+        "count": "5",
+        "0": "DON'T use any effects or textures",
+        "1": "DON'T stretch or alter wordmark in any way",
+        "2": "DON'T crop wordmarks",
+        "3": "DON'T use any unapproved colors",
+        "4": "DON'T use any unapproved variations"
+      }
+    },
+    "partnershipDosAndDonts": {
+      "subtitle": "Do's and Don'ts: Brand partnerships",
+      "caption": {
+        "count": "3",
+        "0": "DON'T use the wordmark as very different sizes",
+        "1": "DON'T use the wordmark over a busy image",
+        "2": "DON'T add any colors to the wordmark"
+      }
+    },
+    "languageDosAndDonts": {
+      "subtitle": "Do's and Don'ts: Language",
+      "text": "Todd has official partnerships and specific language about these partnerships, as well as non-partnership language guidance. If you are not an official partner, please don’t use “collaborated with,” “worked with,” or “partnered with,” in any form."
+    },
+    "howToUseWordmark": {
+      "count": "2",
+      "title": "How to use our Wordmark",
+      "1": {
+        "subtitle": "Do:",
+        "text": {
+          "count": "3",
+          "0": "Use the wordmark only when it directly relates to Todd services or products.",
+          "1": "Follow Todd's style guides and usage terms.",
+          "2": "Use the wordmark exactly as provided and acknowledge that it belongs to Todd."
+        }
+      },
+      "2": {
+        "title": "Don't:",
+        "text": {
+          "count": "6",
+          "0": "Use Todd marks in the name of your business, product, service, application, domain name, publication, or other offering.",
+          "1": "Use marks, logos, company names, slogans, domain names, or designs, that are confusingly similar to any Todd's marks.",
+          "2": "Use the Todd marks in any manner likely to create confusion as to the sponsorship or relationship, affiliation, or endorsement of your company, product, or service by Todd.",
+          "3": "Use the Todd marks in a false or misleading manner.",
+          "4": "Display the Todd marks more prominently than your trademarks, product, service, or company name.",
+          "5": "Use Todd marks for commercial purposes. e.g. do not include Todd marks on merchandise or marketing collateral for your commercial products or services."
+        }
+      }
+    }
+  }
+}

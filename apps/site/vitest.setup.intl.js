@@ -58,7 +58,8 @@ vitest.mock('next-intl', () => ({
 
 vitest.mock('next-intl/server', () => ({
   getMessages: vitest.fn().mockResolvedValue(enMessages),
-  getTranslations: vitest.fn().mockImplementation(({ namespace } = {}) => {
+  getTranslations: vitest.fn().mockImplementation((opts) => {
+    const namespace = typeof opts === 'string' ? opts : opts?.namespace;
     return vitest.fn((key) => {
       const nestedGet = (obj, path) => {
         return path.split('.').reduce((current, segment) => {

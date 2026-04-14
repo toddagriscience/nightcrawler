@@ -5,6 +5,7 @@
  * @returns {string[]} - The list existing message files
  */
 export const messageFiles = [
+  'brand',
   'common',
   'contact',
   'header',
