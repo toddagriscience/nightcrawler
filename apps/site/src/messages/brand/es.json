@@ -1,0 +1,103 @@
+{
+  "brand": {
+    "pageHeading": {
+      "subtitle": "Empresa",
+      "title": "Guía de marca"
+    },
+    "sectionContent": {
+      "intro": {
+        "title": "Introducción",
+        "text": {
+          "count": "2",
+          "0": "Hemos creado las siguientes directrices para ayudar a otras personas a usar nuestra marca y nuestros activos, incluidos nuestro logotipo, contenido y marcas registradas.",
+          "1": "El formato escrito preferido es «Todd». No debe usarse «Todd Agriscience». Para etiquetar en redes sociales, #Todd es un formato aceptado."
+        }
+      },
+      "logo": {
+        "title": "Logotipo",
+        "subtitle": "Marca verbal",
+        "text": {
+          "count": "2",
+          "0": "Nuestra marca verbal es la destilación más directa de nuestra filosofía visual.",
+          "1": "Aunque puede escalarse libremente en tamaño, el equilibrio y las proporciones son fijos para dar coherencia en nuestra gama de productos, servicios y departamentos. También puede aparecer en distintas formas según el contexto y el grado de reconocimiento que tenga nuestra marca en un momento o lugar geográfico determinado."
+        },
+        "caption": "Nuestra marca verbal principal requiere un espacio libre prescrito"
+      },
+      "brandPartnerships": {
+        "title": "Alianzas de marca",
+        "text": {
+          "count": "2",
+          "0": "Al combinar las marcas verbales con los logotipos de socios, mantén un espaciado equilibrado y una jerarquía clara. Evita colocar los logotipos demasiado cerca unos de otros, asegurando espacio suficiente para preservar la claridad y el impacto visual. Asegúrate de que cada logotipo se muestre a un tamaño adecuado, use su formato de color aprobado y no esté distorsionado ni alterado de ninguna manera.",
+          "1": "Todo el material de marca conjunta debe someterse a un proceso de aprobación por ambas marcas para garantizar la coherencia y el cumplimiento de los estándares de marca."
+        }
+      },
+      "pressReleases": {
+        "title": "Comunicados de prensa",
+        "text": {
+          "count": "2",
+          "0": "Al mencionar nuestra empresa en material de prensa, identifica a Todd como un laboratorio de investigación en agricultura generativa e IA. La misión de Todd es crear fincas diversificadas ultrassostenibles para transformar el futuro de la agricultura.",
+          "1": "Si los anuncios, blogs u otras comunicaciones van más allá de los casos descritos anteriormente, o si tienes preguntas sobre nuestras directrices, contacta al equipo de Comunicaciones de Medios de Todd en media@toddagriscience.com"
+        }
+      },
+      "usageTerms": {
+        "title": "Condiciones de uso",
+        "text": {
+          "count": "4",
+          "0": "Al usar las marcas registradas de Todd aceptas estas directrices, así como nuestros Términos de uso y todas nuestras reglas y políticas. Todd se reserva el derecho de cancelar, modificar o cambiar el permiso de estas directrices en cualquier momento a su entera discreción. Para más información sobre el uso del nombre y las marcas de Todd, contacta a brand@todd.com.",
+          "1": "Puedes usar las marcas de Todd para describir con veracidad los productos, servicios y tecnologías que ofrecemos. También puedes usar las marcas de Todd para indicar con veracidad que eres cliente y que utilizas un producto de Todd. Por ejemplo: «Nuestra finca funciona con la plataforma Todd».",
+          "2": "Todo otro uso de las marcas de Todd, incluido en relación con proveedores, productos, servicios o software, requiere permiso previo por escrito nuestro. Ten en cuenta que una licencia de copyright de software no otorga licencia para usar una marca relacionada con la marca. Para consultas, contacta a brand@todd.com",
+          "3": "Cualquier publicidad, documentación, sitio web u otra referencia que incluya la siguiente declaración de atribución, que puede mostrarse al final del material, en el pie del documento u otro lugar claro y visible que se identifique fácilmente: Todd, el diseño Todd y las marcas, diseños y logotipos relacionados son marcas comerciales o marcas registradas de Todd Agriscience, Inc. o sus filiales en EE. UU. y otros países."
+        }
+      }
+    },
+    "wordmarkDosAndDonts": {
+      "subtitle": "Qué hacer y qué no: marca verbal",
+      "caption": {
+        "count": "5",
+        "0": "NO uses efectos ni texturas",
+        "1": "NO estires ni alteres la marca verbal de ninguna manera",
+        "2": "NO recortes las marcas verbales",
+        "3": "NO uses colores no aprobados",
+        "4": "NO uses variaciones no aprobadas"
+      }
+    },
+    "partnershipDosAndDonts": {
+      "subtitle": "Qué hacer y qué no: alianzas de marca",
+      "caption": {
+        "count": "3",
+        "0": "NO uses la marca verbal a tamaños muy distintos entre sí",
+        "1": "NO uses la marca verbal sobre una imagen recargada",
+        "2": "NO añadas colores a la marca verbal"
+      }
+    },
+    "languageDosAndDonts": {
+      "subtitle": "Qué hacer y qué no: lenguaje",
+      "text": "Todd tiene alianzas oficiales y un lenguaje específico sobre esas alianzas, así como orientación sobre el lenguaje cuando no hay alianza. Si no eres socio oficial, no uses «colaboró con», «trabajó con» ni «se asoció con», en ninguna forma."
+    },
+    "howToUseWordmark": {
+      "count": "2",
+      "title": "Cómo usar nuestra marca verbal",
+      "1": {
+        "subtitle": "Sí:",
+        "text": {
+          "count": "3",
+          "0": "Usa la marca verbal solo cuando se relacione directamente con los servicios o productos de Todd.",
+          "1": "Sigue las guías de estilo y las condiciones de uso de Todd.",
+          "2": "Usa la marca verbal exactamente como se proporciona y reconoce que pertenece a Todd."
+        }
+      },
+      "2": {
+        "title": "No:",
+        "text": {
+          "count": "6",
+          "0": "Usar las marcas de Todd en el nombre de tu negocio, producto, servicio, aplicación, nombre de dominio, publicación u otra oferta.",
+          "1": "Usar marcas, logotipos, nombres de empresa, eslóganes, nombres de dominio o diseños que sean confusamente similares a cualquier marca de Todd.",
+          "2": "Usar las marcas de Todd de forma que pueda generar confusión sobre el patrocinio o la relación, afiliación o respaldo de tu empresa, producto o servicio por parte de Todd.",
+          "3": "Usar las marcas de Todd de manera falsa o engañosa.",
+          "4": "Mostrar las marcas de Todd de forma más prominente que tus marcas comerciales, producto, servicio o nombre de empresa.",
+          "5": "Usar las marcas de Todd con fines comerciales; por ejemplo, no incluyas las marcas de Todd en merchandising o material de marketing para tus productos o servicios comerciales."
+        }
+      }
+    }
+  }
+}
