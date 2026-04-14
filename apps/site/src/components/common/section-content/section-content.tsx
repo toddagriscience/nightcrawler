@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import type React from 'react';
+
 /**
  * Builds paragraph rows from a `text` map: prefers `count` plus `"0"`, `"1"`, …
  * If `count` is missing or invalid, falls back to sorted entries (excluding `count`).
@@ -45,28 +47,42 @@ export default function SectionContent({
   subtitle,
   text,
   className,
+  subtitleClassName,
+  renderParagraph,
 }: {
   title?: string;
   subtitle?: string;
   text?: Record<string, string>;
   className?: string;
+  /** Extra classes applied to the subtitle `<h3>`. */
+  subtitleClassName?: string;
+  /** Override default plain-text rendering per paragraph. Receives the body string and its 0-based index. */
+  renderParagraph?: (body: string, index: number) => React.ReactNode;
 }) {
   const paragraphs = mapSectionTextParagraphs(text);
 
   return (
-    <div className={`flex flex-col gap-4 text-left max-w-[800px] ${className}`}>
+    <div
+      className={`flex flex-col gap-4 text-left mx-10 md:max-w-[800px] ${className}`}
+    >
       {title ? (
-        <h2 className="text-3xl md:text-3xl lg:text-5xl/[80px] text-foreground">
+        <h2 className="text-[24px] md:text-3xl lg:text-5xl/[80px] text-foreground">
           {title}
         </h2>
       ) : null}
       {subtitle ? (
-        <h3 className="text-xl md:text-xl lg:text-3xl/[56px]">{subtitle}</h3>
+        <h3
+          className={`text-[17px] md:text-xl lg:text-3xl/[56px] ${subtitleClassName ?? ''}`}
+        >
+          {subtitle}
+        </h3>
       ) : null}
       {paragraphs.length > 0 ? (
-        <div className="text-sm lg:text-[17px]/[28px] font-thin space-y-4.75">
-          {paragraphs.map(({ key, body }) => (
-            <p key={key}>{body}</p>
+        <div className="text-[17px] lg:text-[17px]/[28px] font-thin space-y-4.75">
+          {paragraphs.map(({ key, body }, index) => (
+            <p key={key}>
+              {renderParagraph ? renderParagraph(body, index) : body}
+            </p>
           ))}
         </div>
       ) : null}

@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { mapSectionTextParagraphs } from '@/components/section-content/section-content';
+import { mapSectionTextParagraphs } from '@/components/common/section-content/section-content';
 
 /**
  * Two-column “Do / Don’t” layout for the How to use wordmark section (matches brand guideline art direction).
@@ -28,16 +28,16 @@ export default function HowToUseWordmark({
   const dontItems = mapSectionTextParagraphs(dontText);
 
   const listClassName =
-    'list-disc pl-8 marker:text-foreground text-sm lg:text-[17px]/[30px] font-thin [&_li::marker]:text-[0.65em]';
+    'list-disc pl-8 marker:text-foreground text-[17px]/[30px] font-thin [&_li::marker]:text-[0.65em]';
 
   return (
     <section
-      className="w-full max-w-[800px] mx-auto my-58 px-3"
+      className="w-full max-w-[800px] my-22.5 md:my-58 px-10 md:px-3"
       aria-labelledby="how-to-use-wordmark-heading"
     >
       <h3
         id="how-to-use-wordmark-heading"
-        className="text-center text-xl md:text-xl lg:text-3xl/[56px] mb-10 md:mb-8"
+        className="text-center text-[24px] md:text-xl lg:text-3xl/[56px] mb-10 md:mb-8"
       >
         {title}
       </h3>
