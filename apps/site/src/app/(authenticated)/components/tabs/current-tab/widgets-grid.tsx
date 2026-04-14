@@ -46,7 +46,7 @@ export default function WidgetsGrid({
     newItem: LayoutItem | null,
     placeholder: LayoutItem | null,
     event: Event,
-    element?: HTMLElement
+    element: HTMLElement | null | undefined
   ) {
     // Only save widgets whose positions actually changed.
     const changed = layout.filter((item) => {
