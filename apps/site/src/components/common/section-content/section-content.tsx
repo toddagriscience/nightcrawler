@@ -72,13 +72,13 @@ export default function SectionContent({
       ) : null}
       {subtitle ? (
         <h3
-          className={`text-[17px] md:text-xl lg:text-3xl/[56px] ${subtitleClassName ?? ''}`}
+          className={`text-[16px] md:text-xl lg:text-3xl/[56px] ${subtitleClassName ?? ''}`}
         >
           {subtitle}
         </h3>
       ) : null}
       {paragraphs.length > 0 ? (
-        <div className="text-[17px] lg:text-[17px]/[28px] font-thin space-y-4.75">
+        <div className="text-[16px] lg:text-[17px]/[28px] font-thin space-y-4.75">
           {paragraphs.map(({ key, body }, index) => (
             <p key={key}>
               {renderParagraph ? renderParagraph(body, index) : body}

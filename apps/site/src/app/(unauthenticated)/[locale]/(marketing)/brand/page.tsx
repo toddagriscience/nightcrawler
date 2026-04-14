@@ -8,7 +8,7 @@ import { Link } from '@/i18n/config';
 import { getMessages, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import HowToUseWordmark from './components/how-to-use-wordmark/how-to-use-wordmark';
-import WordmarkImage from './components/wordmarkimage/wordmarkimage';
+import WordmarkImage from './components/wordmark-image/wordmark-image';
 
 const TERMS_OF_USE = 'Terms of Use';
 const BRAND_EMAIL = 'brand@todd.com';
@@ -166,7 +166,7 @@ export default async function BrandPage() {
       />
       <div className="flex justify-center mx-6">
         <WordmarkImage
-          className="w-full min-w-[300px] md:min-w-[400px] max-w-[600px] transform translate-y-[-15px] md:translate-y-[-75px]"
+          className="w-full min-w-[250px] md:min-w-[400px] max-w-[600px] transform translate-y-[-15px] md:translate-y-[-75px]"
           src={wordmarkLogoImage.src}
           alt="Todd Wordmark"
           caption={logo?.caption}
@@ -182,7 +182,7 @@ export default async function BrandPage() {
         {wordmarkDosAndDontsRows.map(({ key, src, caption }) => (
           <WordmarkImage
             key={key}
-            className="mb-0 md:mb-10"
+            className="mb-0 md:mb-10 min-w-[320px] md:min-w-[400px] max-w-[600px]"
             src={src}
             alt="Todd Wordmark Dos and Donts"
             caption={caption}
@@ -206,7 +206,7 @@ export default async function BrandPage() {
       />
       <div className="flex justify-center my-10 mx-6">
         <WordmarkImage
-          className="w-full min-w-[300px] md:min-w-[400px] max-w-[600px]"
+          className="w-full min-w-[320px] md:min-w-[400px] max-w-[600px]"
           src={partnershipGoodImage.src}
           alt="Correct Todd wordmark and partner logo pairing"
         />
@@ -219,7 +219,7 @@ export default async function BrandPage() {
         {partnershipDosAndDontsRows.map(({ key, src, caption }) => (
           <WordmarkImage
             key={key}
-            className="mb-10"
+            className="mb-10 min-w-[320px] md:min-w-[400px] max-w-[600px]"
             src={src}
             alt="Brand partnership guideline example"
             caption={caption}

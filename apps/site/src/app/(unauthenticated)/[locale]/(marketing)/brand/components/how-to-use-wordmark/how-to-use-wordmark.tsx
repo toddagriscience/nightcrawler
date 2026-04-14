@@ -28,7 +28,7 @@ export default function HowToUseWordmark({
   const dontItems = mapSectionTextParagraphs(dontText);
 
   const listClassName =
-    'list-disc pl-8 marker:text-foreground text-[17px]/[30px] font-thin [&_li::marker]:text-[0.65em]';
+    'list-disc pl-8 marker:text-foreground text-[16px]/[28px] font-thin [&_li::marker]:text-[0.65em]';
 
   return (
     <section
@@ -43,7 +43,7 @@ export default function HowToUseWordmark({
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-12 lg:gap-x-12 md:items-start text-left">
         <div>
-          <h4 className="text-[17px]/[30px] mb-4 md:mb-6">{doHeading}</h4>
+          <h4 className="text-[16px]/[30px] mb-4 md:mb-6">{doHeading}</h4>
           {doItems.length > 0 ? (
             <ul className={listClassName}>
               {doItems.map(({ key, body }) => (
@@ -53,7 +53,7 @@ export default function HowToUseWordmark({
           ) : null}
         </div>
         <div>
-          <h4 className="text-[17px]/[30px] mb-4 md:mb-6">{dontHeading}</h4>
+          <h4 className="text-[16px]/[30px] mb-4 md:mb-6">{dontHeading}</h4>
           {dontItems.length > 0 ? (
             <ul className={listClassName}>
               {dontItems.map(({ key, body }) => (
