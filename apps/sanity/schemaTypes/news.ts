@@ -19,6 +19,12 @@ export default defineType({
         'Only the title of the article. Nothing extra (such as `Your title here | Todd Agriscience`) is required.',
     }),
     defineField({
+      name: 'subtitle',
+      title: 'Subtitle',
+      type: 'string',
+      description: 'Optional subtitle shown below the title on the article page.',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -35,6 +41,18 @@ export default defineType({
       title: 'Date',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'string',
+      description: 'Author name (if applicable).',
+    }),
+    defineField({
+      name: 'company',
+      title: 'Company',
+      type: 'string',
+      description: 'Company or organization associated with the article (if applicable).',
     }),
     defineField({
       name: 'content',
@@ -72,6 +90,54 @@ export default defineType({
             },
           ],
         },
+      ],
+    }),
+    defineField({
+      name: 'subscripts',
+      title: 'Subscripts',
+      type: 'array',
+      description:
+        'Optional list of subscript entries (footnotes/citations). Add as many as needed and drag to reorder.',
+      of: [
+        defineField({
+          name: 'item',
+          title: 'Subscript',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'Optional marker such as 1, *, a.',
+            }),
+            defineField({
+              name: 'text',
+              title: 'Text',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+              description: 'The full subscript/footnote text.',
+            }),
+            defineField({
+              name: 'url',
+              title: 'Link URL',
+              type: 'url',
+              description: 'Optional external URL for this subscript entry.',
+            }),
+          ],
+          preview: {
+            select: {
+              label: 'label',
+              text: 'text',
+            },
+            prepare({label, text}) {
+              return {
+                title: label ? `[${label}]` : 'Subscript',
+                subtitle: text || '',
+              }
+            },
+          },
+        }),
       ],
     }),
     defineField({
@@ -136,12 +202,16 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      date: 'date',
+      publishedAt: 'date',
+      authorName: 'author',
     },
-    prepare({title, date}) {
-      const subtitles = [date && `on ${format(parseISO(date), 'LLL d, yyyy')}`].filter(Boolean)
+    prepare({title, publishedAt, authorName}) {
+      const parts = [
+        authorName && `by ${authorName}`,
+        publishedAt && `on ${format(parseISO(publishedAt), 'LLL d, yyyy')}`,
+      ].filter(Boolean)
 
-      return {title, subtitle: subtitles.join(' ')}
+      return {title, subtitle: parts.join(' · ')}
     },
   },
 })
