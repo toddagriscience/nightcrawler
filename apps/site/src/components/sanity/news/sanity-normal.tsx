@@ -18,11 +18,11 @@ export default function SanityNormal(props: SanityNormalProps) {
   return (
     <>
       {summary && index === 0 && (
-        <p className="text-[17px] font-normal leading-[28px] tracking-normal">
+        <p className="text-[16px] font-normal leading-[27px] tracking-normal">
           {summary}
         </p>
       )}
-      <p className="text-[17px] font-normal leading-[28px] tracking-normal">
+      <p className="text-[16px] font-normal leading-[27px] tracking-normal">
         {children}
       </p>
     </>

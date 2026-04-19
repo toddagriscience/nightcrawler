@@ -135,7 +135,7 @@ export default async function NewsPage({
           </div>
         )}
         {/* Article Content */}
-        <div className="mt-10 mb-10 sm:mb-20 md:mb-30 flex w-full max-w-[685px] flex-col gap-[19px] mx-auto text-left text-[17px] font-normal leading-[28px] tracking-normal">
+        <div className="mt-10 mb-10 sm:mb-20 md:mb-30 flex w-full max-w-[685px] flex-col gap-[19px] mx-auto text-left text-[16px] font-normal leading-[27px] tracking-normal">
           {Array.isArray(article.content) && (
             <PortableText
               value={article.content}
