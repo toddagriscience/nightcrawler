@@ -65,27 +65,27 @@ export default async function NewsPage({
       normal: (props) => <SanityNormal {...props} summary={article.summary} />,
 
       h1: ({ children }) => (
-        <h1 className="mt-6 mb-2 text-3xl md:text-4xl lg:text-5xl font-normal leading-snug">
+        <h1 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug">
           {children}
         </h1>
       ),
       h2: ({ children }) => (
-        <h2 className="mt-6 mb-2 text-2xl md:text-3xl lg:text-4xl font-normal leading-snug">
+        <h2 className="mt-[53px] text-2xl md:text-3xl lg:text-4xl font-normal leading-snug">
           {children}
         </h2>
       ),
       h3: ({ children }) => (
-        <h3 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h3 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
           {children}
         </h3>
       ),
       h4: ({ children }) => (
-        <h4 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h4 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
           {children}
         </h4>
       ),
       h5: ({ children }) => (
-        <h5 className="mt-4 mb-2 text-lg md:text-xl lg:text-2xl font-normal leading-snug">
+        <h5 className="mt-[53px] text-lg md:text-xl lg:text-2xl font-normal leading-snug">
           {children}
         </h5>
       ),
@@ -114,11 +114,11 @@ export default async function NewsPage({
             {article.title}
           </h2>
           {subtitle ? (
-            <p className="w-full max-w-[661px] mx-auto mb-8 text-center text-[17px] font-normal leading-[28px] tracking-normal text-foreground">
+            <p className="w-full max-w-[661px] mx-auto mb-8 text-center text-[16px] font-normal leading-[27px] tracking-normal text-foreground">
               {subtitle}
             </p>
           ) : null}
-          <div className="mt-10 w-full border-t-[1px] border-[#E6E6E6] pt-6">
+          <div className="mt-10 w-full border-t-[1px] border-[#EFEFEF] pt-6">
             <ArticleShareCopyLink />
           </div>
         </header>
@@ -135,7 +135,7 @@ export default async function NewsPage({
           </div>
         )}
         {/* Article Content */}
-        <div className="mb-10 sm:mb-20 md:mb-30 flex w-full max-w-[685px] flex-col gap-10 mx-auto text-left text-[17px] font-normal leading-[28px] tracking-normal">
+        <div className="mt-10 mb-10 sm:mb-20 md:mb-30 flex w-full max-w-[685px] flex-col gap-[19px] mx-auto text-left text-[17px] font-normal leading-[28px] tracking-normal">
           {Array.isArray(article.content) && (
             <PortableText
               value={article.content}

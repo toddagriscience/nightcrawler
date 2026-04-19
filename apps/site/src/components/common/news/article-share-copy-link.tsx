@@ -10,6 +10,7 @@ import {
 import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
 import logger from '@/lib/logger';
 import { useState } from 'react';
+import { BiLinkAlt } from 'react-icons/bi';
 
 /**
  * Link-styled control that copies the current page URL to the clipboard (same URL used for sharing).
@@ -36,15 +37,16 @@ export default function ArticleShareCopyLink() {
   }
 
   return (
-    <div onMouseLeave={() => setIsTooltipOpen(false)}>
+    <div onMouseLeave={() => setIsTooltipOpen(false)} className="ml-2">
       <Tooltip onOpenChange={() => setIsTooltipOpen(true)} open={isTooltipOpen}>
         <TooltipTrigger asChild>
           <button
             type="button"
             onMouseOut={() => setCopied(false)}
             onClick={() => void copyUrl()}
-            className="bg-transparent p-0 border-0 cursor-pointer text-left text-[14px] font-normal leading-[28px] tracking-normal text-foreground underline-offset-2 hover:underline"
+            className="bg-transparent p-0 border-0 cursor-pointer text-left text-[14px] font-normal leading-[28px] tracking-normal text-foreground underline-offset-2 hover:underline flex items-center gap-1"
           >
+            <BiLinkAlt className="w-4 h-4" />
             Share
           </button>
         </TooltipTrigger>
