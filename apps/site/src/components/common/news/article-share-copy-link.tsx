@@ -29,20 +29,22 @@ export default function ArticleShareCopyLink() {
       await navigator.clipboard.writeText(url);
       logger.log(`${url} copied to clipboard`);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1300);
-      setTimeout(() => setIsTooltipOpen(false), 1300);
+      setIsTooltipOpen(true);
+      setTimeout(() => {
+        setCopied(false);
+        setIsTooltipOpen(false);
+      }, 1300);
     } catch (e) {
       logger.error(e);
     }
   }
 
   return (
-    <div onMouseLeave={() => setIsTooltipOpen(false)} className="ml-2">
-      <Tooltip onOpenChange={() => setIsTooltipOpen(true)} open={isTooltipOpen}>
+    <div className="ml-2">
+      <Tooltip open={isTooltipOpen}>
         <TooltipTrigger asChild>
           <button
             type="button"
-            onMouseOut={() => setCopied(false)}
             onClick={() => void copyUrl()}
             className="bg-transparent p-0 border-0 cursor-pointer text-left text-[14px] font-normal leading-[28px] tracking-normal text-foreground underline-offset-2 hover:underline flex items-center gap-1"
           >
@@ -55,7 +57,7 @@ export default function ArticleShareCopyLink() {
           className="px-2 py-0.5 text-sm m-0 relative bottom-2 bg-background"
           onClick={() => void copyUrl()}
         >
-          <p>{copied ? 'Copied!' : 'Click to copy'}</p>
+          <p>Copied!</p>
         </TooltipContent>
       </Tooltip>
     </div>
