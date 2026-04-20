@@ -3,11 +3,11 @@
 import ArticleShareCopyLink from '@/components/common/news/article-share-copy-link';
 import SanityHeaderImage from '@/components/sanity/news/sanity-header-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
+import SanityLink from '@/components/sanity/sanity-link';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound, redirect } from 'next/navigation';
-import SanityLink from '@/components/sanity/sanity-link';
 
 /**
  * A news article page, rendered with Sanity CMS.
@@ -65,27 +65,27 @@ export default async function NewsPage({
       normal: (props) => <SanityNormal {...props} summary={article.summary} />,
 
       h1: ({ children }) => (
-        <h1 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug">
+        <h1 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug mb-2">
           {children}
         </h1>
       ),
       h2: ({ children }) => (
-        <h2 className="mt-[53px] text-2xl md:text-3xl lg:text-4xl font-normal leading-snug">
+        <h2 className="mt-[53px] text-2xl md:text-3xl lg:text-[30px]/[41px] font-normal leading-snug mb-2">
           {children}
         </h2>
       ),
       h3: ({ children }) => (
-        <h3 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h3 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug mb-2">
           {children}
         </h3>
       ),
       h4: ({ children }) => (
-        <h4 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h4 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug mb-2">
           {children}
         </h4>
       ),
       h5: ({ children }) => (
-        <h5 className="mt-[53px] text-lg md:text-xl lg:text-2xl font-normal leading-snug">
+        <h5 className="mt-[53px] text-lg md:text-xl lg:text-[20px]/[28px] font-normal leading-snug mb-2">
           {children}
         </h5>
       ),
@@ -110,7 +110,7 @@ export default async function NewsPage({
               </>
             ) : null}
           </div>
-          <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-8 md:mb-8">
+          <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-8">
             {article.title}
           </h2>
           {subtitle ? (
@@ -135,7 +135,7 @@ export default async function NewsPage({
           </div>
         )}
         {/* Article Content */}
-        <div className="mt-10 mb-10 sm:mb-20 md:mb-30 flex w-full max-w-[685px] flex-col gap-[19px] mx-auto text-left text-[16px] font-normal leading-[27px] tracking-normal">
+        <div className="mt-10 mb-10 sm:mb-20 md:mb-26 flex w-full max-w-[685px] flex-col gap-[7px] mx-auto text-left">
           {Array.isArray(article.content) && (
             <PortableText
               value={article.content}
@@ -150,7 +150,7 @@ export default async function NewsPage({
                 <p className="text-[14px] font-normal leading-[32px] tracking-normal text-[#848484]">
                   Author
                 </p>
-                <p className="mt-4 text-[14px] font-normal leading-[32px] tracking-normal text-foreground">
+                <p className="text-[14px] font-normal leading-[32px] tracking-normal text-foreground">
                   {author}
                 </p>
               </>
