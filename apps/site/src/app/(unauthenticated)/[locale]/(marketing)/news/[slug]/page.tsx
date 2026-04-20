@@ -1,15 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import ShareArticleButtons from '@/components/common/share-article/share-article';
+import ArticleShareCopyLink from '@/components/common/news/article-share-copy-link';
 import SanityHeaderImage from '@/components/sanity/news/sanity-header-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
-import { Link } from '@/i18n/config';
+import SanityLink from '@/components/sanity/sanity-link';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound, redirect } from 'next/navigation';
-import { HiArrowLongLeft } from 'react-icons/hi2';
-import SanityLink from '@/components/sanity/sanity-link';
 
 /**
  * A news article page, rendered with Sanity CMS.
@@ -40,33 +38,54 @@ export default async function NewsPage({
     ? urlFor(article.headerImage)?.url()
     : undefined;
 
+  const formattedDate =
+    article.date != null
+      ? new Date(article.date as string)
+          .toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })
+          .replace(/\s(\d{4})$/, ', $1')
+      : '';
+  const company = article.company;
+  const author = article.author;
+  const subtitle = article.subtitle;
+  const parsedSubscripts = Array.isArray(article.subscripts)
+    ? article.subscripts.filter(
+        (item): item is { label?: string; text: string; url?: string } =>
+          typeof item?.text === 'string' && item.text.trim().length > 0
+      )
+    : [];
+  const subscripts = parsedSubscripts;
+
   /** Sanity helpers. See: https://github.com/portabletext/react-portabletext#customizing-components */
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
       normal: (props) => <SanityNormal {...props} summary={article.summary} />,
 
       h1: ({ children }) => (
-        <h1 className="mt-6 mb-2 text-3xl md:text-4xl lg:text-5xl font-normal leading-snug">
+        <h1 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug mb-2">
           {children}
         </h1>
       ),
       h2: ({ children }) => (
-        <h2 className="mt-6 mb-2 text-2xl md:text-3xl lg:text-4xl font-normal leading-snug">
+        <h2 className="mt-[53px] text-2xl md:text-3xl lg:text-[30px]/[41px] font-normal leading-snug mb-2">
           {children}
         </h2>
       ),
       h3: ({ children }) => (
-        <h3 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h3 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug mb-2">
           {children}
         </h3>
       ),
       h4: ({ children }) => (
-        <h4 className="mt-6 mb-2 text-xl md:text-2xl lg:text-3xl font-normal leading-snug">
+        <h4 className="mt-[53px] text-xl md:text-2xl lg:text-3xl font-normal leading-snug mb-2">
           {children}
         </h4>
       ),
       h5: ({ children }) => (
-        <h5 className="mt-4 mb-2 text-lg md:text-xl lg:text-2xl font-normal leading-snug">
+        <h5 className="mt-[53px] text-lg md:text-xl lg:text-[20px]/[28px] font-normal leading-snug mb-2">
           {children}
         </h5>
       ),
@@ -79,36 +98,33 @@ export default async function NewsPage({
   return (
     <div className="max-w-[80%] mx-auto">
       <main className="mt-20 container mx-auto min-h-screen flex flex-col gap-10 md:gap-4">
-        {/* Navigation back to /news page */}
-        <div className="flex flex-col gap-2 w-fit">
-          <Link
-            href="/news"
-            className="hover:underline flex items-center gap-2 text-normal font-light hover:text-foreground/80"
-          >
-            <HiArrowLongLeft className="size-6" />
-            Back to articles
-          </Link>
-        </div>
         {/* Article Header */}
-        <div className="flex lg:mb-6 flex-col items-center justify-center max-w-[78%] mx-auto">
-          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl w-full text-left leading-tight font-thin md:mb-6 mb-10 lg:mb-12 mt-4">
+        <header className="flex w-full max-w-[686px] flex-col items-center mx-auto lg:mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center text-[14px] font-normal leading-[28px] tracking-normal">
+            {formattedDate ? (
+              <time dateTime={String(article.date)}>{formattedDate}</time>
+            ) : null}
+            {company ? (
+              <>
+                <span className="text-[#848484]">{company}</span>
+              </>
+            ) : null}
+          </div>
+          <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-8">
             {article.title}
           </h2>
-          <div className="w-full md:w-min w-[150px] md:w-[200px] lg:w-[250px] text-center">
-            <p className="md:mb-4 text-xs md:text-sm lg:text-normal font-light leading-relaxed text-center whitespace-nowrap">
-              {new Date(article.date)
-                .toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })
-                .replace(/\s(\d{4})$/, ', $1')}
+          {subtitle ? (
+            <p className="w-full max-w-[661px] mx-auto mb-8 text-center text-[16px] font-normal leading-[27px] tracking-normal text-foreground">
+              {subtitle}
             </p>
+          ) : null}
+          <div className="mt-10 w-full border-t-[1px] border-[#EFEFEF] pt-6">
+            <ArticleShareCopyLink />
           </div>
-        </div>
+        </header>
         {/* Article Header Image */}
         {article.headerImage && (
-          <div className="mb-8 md:mb-12 lg:mb-16 flex flex-col items-center justify-center w-full mx-auto">
+          <div className="mt-8 mb-8 md:mb-12 lg:mb-16 flex flex-col items-center justify-center w-full mx-auto">
             <SanityHeaderImage
               headerImage={article.headerImage}
               src={headerImageUrl}
@@ -119,7 +135,7 @@ export default async function NewsPage({
           </div>
         )}
         {/* Article Content */}
-        <div className="mb-10 sm:mb-20 md:mb-30 flex flex-col gap-10 items-center justify-center max-w-[80%] md:max-w-[70%] mx-auto text-normal md:text-base lg:text-base font-light leading-relaxed text-center">
+        <div className="mt-10 mb-10 sm:mb-20 md:mb-26 flex w-full max-w-[685px] flex-col gap-[7px] mx-auto text-left">
           {Array.isArray(article.content) && (
             <PortableText
               value={article.content}
@@ -127,15 +143,53 @@ export default async function NewsPage({
             />
           )}
         </div>
-        {/* Share Article Buttons */}
-        <div className="flex flex-col gap-2 items-center justify-center h-[15vh]">
-          <h3 className="text-xs lg:text-sm w-full text-center leading-tight font-normal">
-            SHARE
-          </h3>
-          <div className="flex flex-row justify-center gap-2 items-center">
-            <ShareArticleButtons title={article.title} />
-          </div>
-        </div>
+        {author || subscripts.length > 0 ? (
+          <section className="mb-10 w-full max-w-[685px] mx-auto text-left">
+            {author ? (
+              <>
+                <p className="text-[14px] font-normal leading-[32px] tracking-normal text-[#848484]">
+                  Author
+                </p>
+                <p className="text-[14px] font-normal leading-[32px] tracking-normal text-foreground">
+                  {author}
+                </p>
+              </>
+            ) : null}
+            {subscripts.length > 0 ? (
+              <div className="mt-6 w-full max-w-[645px]">
+                {subtitle ? (
+                  <p className="text-[14px] font-normal leading-[32px] tracking-normal text-foreground">
+                    {subtitle}
+                  </p>
+                ) : null}
+                <div className="mt-4 flex flex-col gap-3">
+                  {subscripts.map((subscript, index) => (
+                    <p
+                      key={`${subscript.label ?? index}-${subscript.text}`}
+                      className="text-[14px] italic font-normal leading-[22px] tracking-normal text-foreground"
+                    >
+                      <sup className="mr-1 inline-block align-super text-[10px] not-italic leading-none text-[#848484]">
+                        {subscript.label || `${index + 1}`}
+                      </sup>
+                      {subscript.url ? (
+                        <a
+                          href={subscript.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-2"
+                        >
+                          {subscript.text}
+                        </a>
+                      ) : (
+                        subscript.text
+                      )}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
       </main>
     </div>
   );

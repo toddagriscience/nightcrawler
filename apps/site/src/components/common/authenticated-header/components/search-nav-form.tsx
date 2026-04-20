@@ -89,9 +89,6 @@ export function SearchNavForm() {
     // Only debounce when the dropdown is open and query is non-empty.
     if (!isOpen || query.trim().length === 0) return;
 
-    // Immediately show the loading skeleton.
-    setIsLoading(true);
-
     debounceRef.current = setTimeout(() => {
       loadItems(query);
     }, DEBOUNCE_MS);
@@ -132,6 +129,10 @@ export function SearchNavForm() {
     setIsOpen(true);
     if (query.trim().length === 0) {
       loadDefaults();
+    } else {
+      // Opening with an existing query — show skeleton while the effect
+      // re-debounces a fetch for the current query.
+      setIsLoading(true);
     }
   }
 
@@ -151,6 +152,9 @@ export function SearchNavForm() {
       }
       setIsLoading(false);
       loadDefaults();
+    } else {
+      // User is typing — show skeleton immediately, effect handles the fetch.
+      setIsLoading(true);
     }
   }
 
