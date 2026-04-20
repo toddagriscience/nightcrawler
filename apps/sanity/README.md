@@ -7,8 +7,8 @@ Good news for you -- you probably don't need to touch this workspace. This is pu
 Sanity requires itself to be placed in its own folder (or technically speaking, "package"). This means that Sanity comes with its own set of commands & own development server. Sanity's documentation isn't the best, so a few relevant commands are documented here:
 
 - `bun run dev` - Runs Sanity's development server
-- `bun run start` - Previews the production build
 - `bun run build` - Builds the current Sanity configuration to a static bundle
+- `bun run preview` - Previews the production build
 - `bun run deploy` - Push Sanity changes to the cloud
 - `bun run deploy-graphql` - Push GraphQL API changes to the cloud
 
