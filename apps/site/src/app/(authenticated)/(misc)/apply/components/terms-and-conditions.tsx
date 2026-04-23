@@ -20,25 +20,23 @@ export default function TermsAndConditions() {
     useContext(ApplicationContext);
   const [submitError, setSubmitError] = useState(false);
   const router = useRouter();
-  const hasActiveSubscription = ['active', 'trialing'].includes(
+  const hasBankSetup = ['bank_setup_complete', 'active', 'trialing'].includes(
     farmSubscription?.status ?? ''
   );
 
-  if (!hasActiveSubscription) {
+  if (!hasBankSetup) {
     return (
       <div className="mt-12 rounded-md border border-amber-400/60 bg-amber-50 p-4 text-amber-800">
-        <p className="text-sm">
-          Your payment information has not been added yet.
-        </p>
+        <p className="text-sm">Your bank information has not been added yet.</p>
         <Button
           type="button"
           className="mt-4"
           onClick={() => {
-            setCurrentTab('subscription');
+            setCurrentTab('bank-information');
             scrollTo(0, 0);
           }}
         >
-          Add your payment information
+          Add your bank information
         </Button>
       </div>
     );
@@ -67,7 +65,7 @@ export default function TermsAndConditions() {
           <div className="flex flex-row items-center justify-between rounded-md border border-red-400/60 bg-red-50 p-3 text-sm text-red-700">
             <p>
               Please complete General Business Information, Farm Information,
-              and Platform License Setup before submitting your application.
+              and Bank Information before submitting your application.
             </p>
             <Button
               className="h-min p-0 hover:cursor-pointer"

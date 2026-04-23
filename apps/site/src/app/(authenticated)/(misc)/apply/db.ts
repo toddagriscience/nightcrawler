@@ -10,6 +10,27 @@ import {
 import { db } from '@nightcrawler/db/schema/connection';
 import { and, eq, inArray } from 'drizzle-orm';
 
+/** `farmSubscription.status` values that satisfy the ACH-collection gate.
+ *
+ * The application itself only requires that a bank account has been captured
+ * (`bank_setup_complete`); active/trialing subscriptions also satisfy the
+ * gate so legacy paid farms can still submit.
+ */
+const BANK_READY_STATUSES = [
+  'bank_setup_complete',
+  'active',
+  'trialing',
+] as const;
+
+/** Whether an application has the data required to be submitted.
+ *
+ * Requires a farm location, an internal-application record, and a
+ * `farmSubscription` row whose status indicates bank information has been
+ * captured. No payment is taken at submission time.
+ *
+ * @param {number} farmId - The applying farm's id.
+ * @returns {Promise<boolean>} True if the application can be submitted.
+ */
 export async function isApplicationReadyForSubmission(
   farmId: number
 ): Promise<boolean> {
@@ -31,7 +52,7 @@ export async function isApplicationReadyForSubmission(
     .where(
       and(
         eq(farmSubscription.farmId, farmId),
-        inArray(farmSubscription.status, ['active', 'trialing'])
+        inArray(farmSubscription.status, [...BANK_READY_STATUSES])
       )
     )
     .limit(1);
