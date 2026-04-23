@@ -1,0 +1,25 @@
+/*!
+ * Stripe Elements iframe font stylesheet.
+ *
+ * Stripe renders PaymentElement in an iframe that does not inherit parent
+ * fonts. It loads this file directly when passed via the `fonts` option on
+ * <Elements>. The `@font-face` URLs below are root-relative so they resolve
+ * correctly against whatever origin Next.js is serving from (localhost in
+ * dev, the production domain in prod).
+ */
+
+@font-face {
+  font-family: 'Neue Haas Unica';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/NeueHaasUnica/NeueHaasUnicaLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/NeueHaasUnica/NeueHaasUnicaRegular.ttf') format('truetype');
+}

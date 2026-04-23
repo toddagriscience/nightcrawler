@@ -25,15 +25,24 @@ const BANK_READY_STATUSES = [
   'trialing',
 ] as const;
 
-/** Visual tweaks for Stripe Elements to match the surrounding form. */
+/** Visual tweaks for Stripe Elements to match the surrounding form.
+ *
+ * `fontFamily` names Neue Haas Unica explicitly (not `inherit`) because
+ * Stripe Elements runs inside an iframe that cannot read the parent
+ * document's computed styles. The iframe loads the font via the `fonts`
+ * option on `<Elements>` (see `elementsOptions` in `BankInformation`).
+ */
 const elementsAppearance: Appearance = {
   theme: 'stripe',
   variables: {
-    fontFamily: 'inherit',
+    fontFamily: '"Neue Haas Unica", Arial, sans-serif',
     colorPrimary: '#111111',
     borderRadius: '6px',
   },
 };
+
+/** URL of the `@font-face` stylesheet the Stripe iframe should load. */
+const STRIPE_FONTS_CSS_PATH = '/fonts/stripe-elements.css';
 
 /** The 4th tab in the application: collects ACH bank information.
  *
@@ -79,9 +88,23 @@ export default function BankInformation() {
     }
   }, []);
 
-  const elementsOptions: StripeElementsOptions | null = clientSecret
-    ? { clientSecret, appearance: elementsAppearance }
-    : null;
+  const elementsOptions = useMemo<StripeElementsOptions | null>(() => {
+    if (!clientSecret) {
+      return null;
+    }
+    // Stripe expects `cssSrc` to be an absolute URL. `window.location.origin`
+    // gives the correct scheme+host for both local dev and production without
+    // needing to thread an env var through.
+    const cssSrc =
+      typeof window === 'undefined'
+        ? STRIPE_FONTS_CSS_PATH
+        : `${window.location.origin}${STRIPE_FONTS_CSS_PATH}`;
+    return {
+      clientSecret,
+      appearance: elementsAppearance,
+      fonts: [{ cssSrc }],
+    };
+  }, [clientSecret]);
 
   return (
     <div className="mt-6 flex max-w-3xl flex-col gap-6">
