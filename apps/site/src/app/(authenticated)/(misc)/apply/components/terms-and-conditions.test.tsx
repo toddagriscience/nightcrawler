@@ -112,4 +112,29 @@ describe('TermsAndConditions', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /AGREE/i })).toBeDisabled();
   });
+
+  it('renders the terms when the farm only has bank-setup-complete (no subscription)', () => {
+    renderWithContext({
+      farmSubscription: { status: 'bank_setup_complete' } as any,
+    });
+
+    // Should show the terms, not the "add your bank information" block.
+    expect(
+      screen.getByText('Electronic Delivery of Documents')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/your bank information has not been added yet/i)
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows the bank-information gate when no subscription/bank row exists', () => {
+    renderWithContext({ farmSubscription: null as any });
+
+    expect(
+      screen.getByText(/your bank information has not been added yet/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /add your bank information/i })
+    ).toBeInTheDocument();
+  });
 });

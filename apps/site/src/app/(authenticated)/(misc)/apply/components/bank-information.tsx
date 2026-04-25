@@ -12,6 +12,7 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js';
 import type { Appearance, StripeElementsOptions } from '@stripe/stripe-js';
+import Link from 'next/link';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { createAchSetupIntent, recordAchSetupComplete } from '../actions';
 import { ApplicationContext } from './application-tabs';
@@ -124,6 +125,15 @@ export default function BankInformation() {
           charge or subscribe you now—your account will remain free once your
           application is approved.
         </p>
+        <p className="text-foreground/80 text-normal mt-2">
+          You&apos;ll be asked to sign in to your bank in a secure pop-up so we
+          can verify the account instantly. If your bank isn&apos;t available,
+          please{' '}
+          <Link className="underline" href="/contact">
+            contact us
+          </Link>{' '}
+          and we&apos;ll help you finish your application.
+        </p>
         <p className="text-foreground/80 text-normal mt-2 italic">
           Bank details are stored with Stripe and can be updated from your
           account page at any time.
@@ -183,6 +193,37 @@ export default function BankInformation() {
   );
 }
 
+/**
+ * Turns Stripe's raw error message into something friendlier for the user.
+ * Since we only allow the bank-sign-in flow, the most common failure is
+ * "your bank isn't supported." If we recognize that kind of message, we
+ * tack on a hint to contact us. Anything we don't recognize is shown
+ * as-is so we don't accidentally hide useful detail from the user.
+ */
+function friendlyConfirmErrorMessage(
+  stripeMessage: string | undefined
+): string {
+  const fallback =
+    'We could not verify your bank information. If your bank is not supported, please contact us and we will help finish your application.';
+
+  if (!stripeMessage) {
+    return fallback;
+  }
+
+  const lower = stripeMessage.toLowerCase();
+  const looksLikeUnsupportedBank =
+    lower.includes('financial connections') ||
+    lower.includes('not supported') ||
+    lower.includes('institution') ||
+    lower.includes('unavailable');
+
+  if (looksLikeUnsupportedBank) {
+    return `${stripeMessage} If this keeps happening, please contact us and we'll finish your application together.`;
+  }
+
+  return stripeMessage;
+}
+
 /** Inner form rendered inside `<Elements>` that confirms the SetupIntent. */
 function BankSetupForm({ setupIntentId }: { setupIntentId: string }) {
   const stripe = useStripe();
@@ -209,10 +250,7 @@ function BankSetupForm({ setupIntentId }: { setupIntentId: string }) {
     });
 
     if (confirmError) {
-      setError(
-        confirmError.message ??
-          'We could not verify your bank information. Please try again.'
-      );
+      setError(friendlyConfirmErrorMessage(confirmError.message));
       setIsSubmitting(false);
       return;
     }

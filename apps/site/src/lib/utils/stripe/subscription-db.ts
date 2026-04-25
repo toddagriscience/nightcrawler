@@ -17,6 +17,35 @@ function parseUnixTimestamp(seconds: number | null | undefined): Date | null {
   return new Date(seconds * 1000);
 }
 
+/**
+ * Sets the given bank as the customer's default payment method in Stripe.
+ *
+ * If Stripe fails for any reason, we just log it and keep going. The bank
+ * is already saved on the customer at this point — making it the default
+ * is just a nice-to-have so /account can show it and any future bill can
+ * use it without us re-asking the user.
+ *
+ * @param {string} stripeCustomerId - The Stripe customer ID.
+ * @param {string} paymentMethodId - The Stripe payment method ID to default.
+ */
+export async function setCustomerDefaultPaymentMethod(
+  stripeCustomerId: string,
+  paymentMethodId: string
+): Promise<void> {
+  try {
+    const stripe = getStripeClient();
+    await stripe.customers.update(stripeCustomerId, {
+      invoice_settings: { default_payment_method: paymentMethodId },
+    });
+  } catch (error) {
+    logger.error('Failed to set customer default payment method', {
+      stripeCustomerId,
+      paymentMethodId,
+      error,
+    });
+  }
+}
+
 /** Upserts a farm's local subscription record from a Stripe subscription object. */
 export async function upsertFarmSubscriptionFromStripe({
   farmId,
@@ -154,6 +183,7 @@ export async function upsertFarmBankSetupFromStripe({
 
   if (stripeCustomerId) {
     await db.update(farm).set({ stripeCustomerId }).where(eq(farm.id, farmId));
+    await setCustomerDefaultPaymentMethod(stripeCustomerId, paymentMethodId);
   }
 }
 

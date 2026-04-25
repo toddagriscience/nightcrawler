@@ -16,6 +16,7 @@ import { db } from '@nightcrawler/db/schema/connection';
 import { env } from '@/lib/env';
 import logger from '@/lib/logger';
 import { getStripeClient } from '@/lib/stripe/client';
+import { setCustomerDefaultPaymentMethod } from '@/lib/utils/stripe/subscription-db';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   FarmCertificateInsert,
@@ -327,6 +328,15 @@ export async function createAchSetupIntent(): Promise<ActionResponse> {
       currentUser.firstName
     );
 
+    /**
+     * We decided that we only let people verify their bank by
+     * signing into it (Stripe Financial Connections).
+     * We do not let them type in a routing/account number by hand. Those
+     * hand-typed accounts have to be checked with tiny test deposits,
+     * and if the customer never confirms the deposits we can't charge
+     * them later. So we refuse anything else and tell people whose bank
+     * isn't supported to contact us.
+     */
     const setupIntent = await stripe.setupIntents.create({
       customer: stripeCustomerId,
       payment_method_types: ['us_bank_account'],
@@ -334,7 +344,7 @@ export async function createAchSetupIntent(): Promise<ActionResponse> {
       payment_method_options: {
         us_bank_account: {
           financial_connections: { permissions: ['payment_method'] },
-          verification_method: 'automatic',
+          verification_method: 'instant',
         },
       },
       metadata: {
@@ -399,15 +409,14 @@ export async function recordAchSetupComplete(
         ? setupIntent.payment_method
         : (setupIntent.payment_method?.id ?? null);
 
-    // `succeeded` means the bank is fully verified. `processing` means the
-    // verification is still in flight (e.g. micro-deposits) but the payment
-    // method is already attached and usable for future charges.
-    const isUsableStatus =
-      setupIntent.status === 'succeeded' ||
-      setupIntent.status === 'processing' ||
-      setupIntent.status === 'requires_action';
-
-    if (!isUsableStatus || !paymentMethodId) {
+    /**
+     * We only save the bank if Stripe says the SetupIntent is
+     * `succeeded`. Because we forced the bank-sign-in flow, that's the
+     * only "good" status we should ever see. Anything else means the
+     * bank wasn't really verified, and we shouldn't pretend we have a
+     * working account.
+     */
+    if (setupIntent.status !== 'succeeded' || !paymentMethodId) {
       throwActionError(
         `Bank information setup is not complete (status: ${setupIntent.status}).`
       );
@@ -436,6 +445,20 @@ export async function recordAchSetupComplete(
           updatedAt: new Date(),
         },
       });
+
+    /**
+     * Tell Stripe that this new bank is the customer's default for
+     * future invoices. That way the /account page can show it right
+     * away, and any future subscription will bill the right account
+     * without us asking the user again.
+     */
+    const stripeCustomerId =
+      typeof setupIntent.customer === 'string'
+        ? setupIntent.customer
+        : (setupIntent.customer?.id ?? null);
+    if (stripeCustomerId) {
+      await setCustomerDefaultPaymentMethod(stripeCustomerId, paymentMethodId);
+    }
 
     return {};
   } catch (error) {
