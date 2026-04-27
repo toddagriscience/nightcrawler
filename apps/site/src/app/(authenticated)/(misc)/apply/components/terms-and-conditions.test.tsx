@@ -16,10 +16,10 @@ import type {
   UserSelect,
 } from '@/lib/types/db';
 
-/** Builds a typed `FarmSubscriptionSelect`-shaped value with only the fields
- * the component touches. Other consumers of `ApplicationContext` will see
- * `undefined` for the rest, which mirrors how Drizzle returns rows when
- * columns aren't selected.
+/** Builds a typed value matching the farm subscription row shape, with
+ * only the fields the component touches. Other consumers of
+ * `ApplicationContext` will see `undefined` for the rest, which mirrors
+ * how Drizzle returns rows when columns aren't selected.
  */
 function farmSubscription(
   status: string | null
