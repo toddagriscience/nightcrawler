@@ -12,8 +12,23 @@ import type {
 } from '../types';
 import type {
   FarmInfoInternalApplicationSelect,
+  FarmSubscriptionSelect,
   UserSelect,
 } from '@/lib/types/db';
+
+/** Builds a typed `FarmSubscriptionSelect`-shaped value with only the fields
+ * the component touches. Other consumers of `ApplicationContext` will see
+ * `undefined` for the rest, which mirrors how Drizzle returns rows when
+ * columns aren't selected.
+ */
+function farmSubscription(
+  status: string | null
+): FarmSubscriptionSelect | null {
+  if (status === null) {
+    return null;
+  }
+  return { status } as FarmSubscriptionSelect;
+}
 
 /** Mock context with canSubmitApplication true so the AGREE button is enabled. */
 const mockContextValue = {
@@ -21,7 +36,7 @@ const mockContextValue = {
   allUsers: [] as UserSelect[],
   currentUser: {} as UserSelect,
   internalApplication: {} as FarmInfoInternalApplicationSelect,
-  farmSubscription: { status: 'active' } as any,
+  farmSubscription: farmSubscription('active'),
   invitedUserVerificationStatus: [] as VerificationStatus[],
   setCurrentTab: () => {},
   canSubmitApplication: true,
@@ -51,9 +66,9 @@ describe('TermsAndConditions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({
+    vi.mocked(useRouter).mockReturnValue({
       push: mockPush,
-    });
+    } as unknown as ReturnType<typeof useRouter>);
   });
 
   afterEach(() => {
@@ -115,7 +130,7 @@ describe('TermsAndConditions', () => {
 
   it('renders the terms when the farm only has bank-setup-complete (no subscription)', () => {
     renderWithContext({
-      farmSubscription: { status: 'bank_setup_complete' } as any,
+      farmSubscription: farmSubscription('bank_setup_complete'),
     });
 
     // Should show the terms, not the "add your bank information" block.
@@ -128,7 +143,7 @@ describe('TermsAndConditions', () => {
   });
 
   it('shows the bank-information gate when no subscription/bank row exists', () => {
-    renderWithContext({ farmSubscription: null as any });
+    renderWithContext({ farmSubscription: farmSubscription(null) });
 
     expect(
       screen.getByText(/your bank information has not been added yet/i)

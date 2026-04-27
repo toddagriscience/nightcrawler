@@ -221,6 +221,17 @@ describe('BankInformation', () => {
       expect(screen.getByText(/bank information on file/i)).toBeInTheDocument();
     });
 
+    it('also accepts a `trialing` Stripe subscription as bank-on-file', () => {
+      renderWithContext({
+        farmSubscription: farmSubscriptionWithStatus('trialing'),
+      });
+
+      expect(screen.getByText(/bank information on file/i)).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /add bank information/i })
+      ).not.toBeInTheDocument();
+    });
+
     it('navigates to the terms tab when "Continue to Terms" is clicked', async () => {
       const user = userEvent.setup();
       renderWithContext({
@@ -231,6 +242,27 @@ describe('BankInformation', () => {
         screen.getByRole('button', { name: /continue to terms/i })
       );
 
+      expect(mockSetCurrentTab).toHaveBeenCalledWith('terms');
+    });
+
+    it('still lets a read-only viewer continue to terms when a bank is already on file', async () => {
+      const user = userEvent.setup();
+      renderWithContext({
+        canEditFarm: false,
+        farmSubscription: farmSubscriptionWithStatus('bank_setup_complete'),
+      });
+
+      // Read-only warning is still shown for context...
+      expect(
+        screen.getByText(/your account is read only/i)
+      ).toBeInTheDocument();
+
+      // ...but Continue to Terms is fully enabled because the data is set.
+      const continueButton = screen.getByRole('button', {
+        name: /continue to terms/i,
+      });
+      expect(continueButton).toBeEnabled();
+      await user.click(continueButton);
       expect(mockSetCurrentTab).toHaveBeenCalledWith('terms');
     });
   });
@@ -264,6 +296,73 @@ describe('BankInformation', () => {
       expect(
         screen.getByRole('button', { name: /save bank information/i })
       ).toBeInTheDocument();
+    });
+
+    it('shows "Preparing…" and disables the button while the setup intent is in flight', async () => {
+      const user = userEvent.setup();
+      let resolveCreate: (value: unknown) => void = () => {};
+      mockCreateAchSetupIntent.mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveCreate = resolve;
+        })
+      );
+
+      renderWithContext();
+
+      const button = screen.getByRole('button', {
+        name: /add bank information/i,
+      });
+      await user.click(button);
+
+      // Mid-flight: button text flips to "Preparing…" and stays disabled.
+      const preparing = await screen.findByRole('button', {
+        name: /preparing/i,
+      });
+      expect(preparing).toBeDisabled();
+
+      // Now complete the request to keep the test from leaking a pending promise.
+      resolveCreate({
+        data: {
+          clientSecret: 'seti_test_secret_xyz',
+          setupIntentId: 'seti_test_xyz',
+        },
+      });
+
+      await waitFor(() => {
+        expect(
+          screen.getByTestId('stripe-payment-element')
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('clears a previous init error when the user retries', async () => {
+      const user = userEvent.setup();
+      // 1st call fails, 2nd call succeeds.
+      mockCreateAchSetupIntent.mockResolvedValueOnce({ data: undefined });
+      mockCreateAchSetupIntent.mockResolvedValueOnce({
+        data: {
+          clientSecret: 'seti_retry_secret',
+          setupIntentId: 'seti_retry',
+        },
+      });
+
+      renderWithContext();
+
+      await user.click(
+        screen.getByRole('button', { name: /add bank information/i })
+      );
+      await screen.findByText(/unable to start bank information setup/i);
+
+      await user.click(
+        screen.getByRole('button', { name: /add bank information/i })
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.queryByText(/unable to start bank information setup/i)
+        ).not.toBeInTheDocument();
+      });
+      expect(screen.getByTestId('stripe-payment-element')).toBeInTheDocument();
     });
   });
 
@@ -314,6 +413,99 @@ describe('BankInformation', () => {
       });
       expect(mockRecordAchSetupComplete).not.toHaveBeenCalled();
       expect(reloadSpy).not.toHaveBeenCalled();
+    });
+
+    it('shows "Saving…" while the server is recording the setup', async () => {
+      const user = userEvent.setup();
+      await openSetupForm(user);
+
+      mockConfirmSetup.mockResolvedValueOnce({
+        setupIntent: { id: 'seti_test_123' },
+        error: undefined,
+      });
+      let resolveRecord: (value: unknown) => void = () => {};
+      mockRecordAchSetupComplete.mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveRecord = resolve;
+        })
+      );
+
+      await user.click(
+        screen.getByRole('button', { name: /save bank information/i })
+      );
+
+      const saving = await screen.findByRole('button', { name: /saving/i });
+      expect(saving).toBeDisabled();
+
+      resolveRecord({});
+      await waitFor(() => {
+        expect(reloadSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('passes a generic confirm error through unchanged (non-bank wording)', async () => {
+      const user = userEvent.setup();
+      await openSetupForm(user);
+
+      mockConfirmSetup.mockResolvedValueOnce({
+        setupIntent: undefined,
+        error: { message: 'Network request failed.' },
+      });
+
+      await user.click(
+        screen.getByRole('button', { name: /save bank information/i })
+      );
+
+      // `friendlyConfirmErrorMessage` only adds the "contact us" hint for
+      // recognizably bank-related wording. A plain network error should
+      // pass through verbatim.
+      await waitFor(() => {
+        expect(screen.getByText(/network request failed/i)).toBeInTheDocument();
+      });
+      expect(screen.queryByText(/please contact us/i)).not.toBeInTheDocument();
+    });
+
+    it('uses the generic fallback when Stripe returns no error message', async () => {
+      const user = userEvent.setup();
+      await openSetupForm(user);
+
+      mockConfirmSetup.mockResolvedValueOnce({
+        setupIntent: undefined,
+        error: { message: undefined },
+      });
+
+      await user.click(
+        screen.getByRole('button', { name: /save bank information/i })
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/we could not verify your bank information/i)
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('falls back to the setupIntentId prop when Stripe omits setupIntent.id', async () => {
+      const user = userEvent.setup();
+      await openSetupForm(user);
+
+      // Stripe handed back no setupIntent (e.g. redirect flow); we should
+      // still record the original intent id we kicked off the flow with.
+      mockConfirmSetup.mockResolvedValueOnce({
+        setupIntent: undefined,
+        error: undefined,
+      });
+      mockRecordAchSetupComplete.mockResolvedValueOnce({});
+
+      await user.click(
+        screen.getByRole('button', { name: /save bank information/i })
+      );
+
+      await waitFor(() => {
+        expect(mockRecordAchSetupComplete).toHaveBeenCalledWith(
+          'seti_test_123'
+        );
+      });
     });
 
     it('surfaces a server error if recordAchSetupComplete rejects', async () => {
