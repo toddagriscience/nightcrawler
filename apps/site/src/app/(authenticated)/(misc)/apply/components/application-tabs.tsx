@@ -15,10 +15,10 @@ import {
   TabTypes,
   VerificationStatus,
 } from '../types';
+import BankInformation from './bank-information';
 import Colleagues from './colleagues';
 import Farm from './farm';
 import GeneralBusinessInformation from './general-business-information';
-import Subscription from './subscription';
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
   ssr: false,
 });
@@ -54,19 +54,19 @@ export default function ApplicationTabs({
   canSubmitApplication: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<TabTypes>('general');
-  const hasActiveSubscription = ['active', 'trialing'].includes(
+  const hasBankSetup = ['bank_setup_complete', 'active', 'trialing'].includes(
     farmSubscription?.status ?? ''
   );
   const canEditFarm = currentUser.role === 'Admin';
 
   useEffect(() => {
     async function helper() {
-      if (hasActiveSubscription) {
+      if (hasBankSetup) {
         setCurrentTab('terms');
       }
     }
     helper();
-  }, [setCurrentTab, hasActiveSubscription]);
+  }, [setCurrentTab, hasBankSetup]);
 
   return (
     <ApplicationContext.Provider
@@ -103,10 +103,10 @@ export default function ApplicationTabs({
             Farm Information
           </TabsTrigger>
           <TabsTrigger
-            onClick={() => setCurrentTab('subscription')}
-            value="subscription"
+            onClick={() => setCurrentTab('bank-information')}
+            value="bank-information"
           >
-            Platform License
+            Bank Information
           </TabsTrigger>
           <TabsTrigger value="terms" onClick={() => setCurrentTab('terms')}>
             Terms
@@ -125,8 +125,8 @@ export default function ApplicationTabs({
           <Farm />
         </TabsContent>
 
-        <TabsContent value="subscription">
-          <Subscription />
+        <TabsContent value="bank-information">
+          <BankInformation />
         </TabsContent>
 
         <TabsContent value="terms">

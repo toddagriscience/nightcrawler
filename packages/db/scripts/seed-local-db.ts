@@ -265,7 +265,6 @@ async function seedLocalDb() {
       businessName: 'Nightcrawler Demo Farm LLC',
       businessWebsite: 'https://example.com',
       approved: true,
-      stripeCustomerId: 'cus_local_demo_001',
     })
     .returning({ id: farm.id });
 

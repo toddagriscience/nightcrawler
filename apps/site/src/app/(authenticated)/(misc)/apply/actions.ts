@@ -16,6 +16,7 @@ import { db } from '@nightcrawler/db/schema/connection';
 import { env } from '@/lib/env';
 import logger from '@/lib/logger';
 import { getStripeClient } from '@/lib/stripe/client';
+import { setCustomerDefaultPaymentMethod } from '@/lib/utils/stripe/subscription-db';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   FarmCertificateInsert,
@@ -211,7 +212,7 @@ export async function submitApplication(): Promise<ActionResponse> {
     const canSubmit = await isApplicationReadyForSubmission(farmId);
     if (!canSubmit) {
       throwActionError(
-        'Please complete General Business Information, Farm Information, and an active Platform License before submitting.'
+        'Please complete General Business Information, Farm Information, and Bank Information before submitting.'
       );
     }
 
@@ -234,7 +235,246 @@ export async function submitApplication(): Promise<ActionResponse> {
   }
 }
 
-/** Creates a Stripe-hosted checkout session for the $2,000/month Platform License. */
+/** Ensures the farm has a Stripe customer, creating one if needed.
+ *
+ * @returns {Promise<string>} The Stripe customer ID.
+ */
+async function ensureStripeCustomerForFarm(
+  farmId: number,
+  userId: number,
+  userEmail: string,
+  fallbackName: string
+): Promise<string> {
+  const stripe = getStripeClient();
+
+  const [currentFarm] = await db
+    .select({
+      id: farm.id,
+      stripeCustomerId: farm.stripeCustomerId,
+      businessName: farm.businessName,
+    })
+    .from(farm)
+    .where(eq(farm.id, farmId))
+    .limit(1);
+
+  if (!currentFarm) {
+    throwActionError('Farm not found');
+  }
+
+  if (currentFarm.stripeCustomerId) {
+    try {
+      const existing = await stripe.customers.retrieve(
+        currentFarm.stripeCustomerId
+      );
+      if (!existing.deleted) {
+        return existing.id;
+      }
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        !('code' in error) ||
+        error.code !== 'resource_missing'
+      ) {
+        throw error;
+      }
+      logger.warn(
+        'Stored Stripe customer id no longer exists; creating a new one',
+        {
+          farmId,
+          staleStripeCustomerId: currentFarm.stripeCustomerId,
+        }
+      );
+    }
+  }
+
+  const createdCustomer = await stripe.customers.create({
+    email: userEmail,
+    name: currentFarm.businessName ?? fallbackName,
+    metadata: {
+      farmId: String(farmId),
+      userId: String(userId),
+    },
+  });
+
+  await db
+    .update(farm)
+    .set({ stripeCustomerId: createdCustomer.id })
+    .where(eq(farm.id, farmId));
+
+  return createdCustomer.id;
+}
+
+/** Creates a Stripe SetupIntent for collecting ACH Direct Debit bank info.
+ *
+ * The SetupIntent is attached to the farm's Stripe customer and is used to
+ * collect payment method information for future off-session ACH charges. No
+ * payment is taken at setup time.
+ *
+ * @returns {Promise<ActionResponse>} The SetupIntent `client_secret` for use
+ *   with Stripe Elements.
+ */
+export async function createAchSetupIntent(): Promise<ActionResponse> {
+  try {
+    const stripe = getStripeClient();
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
+
+    assertCanEditFarm(currentUser, 'create-ach-setup-intent');
+
+    const stripeCustomerId = await ensureStripeCustomerForFarm(
+      farmId,
+      currentUser.id,
+      currentUser.email,
+      currentUser.firstName
+    );
+
+    /**
+     * We decided that we only let people verify their bank by
+     * signing into it (Stripe Financial Connections).
+     * We do not let them type in a routing/account number by hand. Those
+     * hand-typed accounts have to be checked with tiny test deposits,
+     * and if the customer never confirms the deposits we can't charge
+     * them later. So we refuse anything else and tell people whose bank
+     * isn't supported to contact us.
+     */
+    const setupIntent = await stripe.setupIntents.create({
+      customer: stripeCustomerId,
+      payment_method_types: ['us_bank_account'],
+      usage: 'off_session',
+      payment_method_options: {
+        us_bank_account: {
+          financial_connections: { permissions: ['payment_method'] },
+          verification_method: 'instant',
+        },
+      },
+      metadata: {
+        farmId: String(farmId),
+        userId: String(currentUser.id),
+        purpose: 'application_ach_setup',
+      },
+    });
+
+    if (!setupIntent.client_secret) {
+      throwActionError('Unable to start bank information setup.');
+    }
+
+    return {
+      data: {
+        clientSecret: setupIntent.client_secret,
+        setupIntentId: setupIntent.id,
+      },
+    };
+  } catch (error) {
+    logger.error('Failed to create ACH SetupIntent', { error });
+    if (error instanceof Error) {
+      throwActionError(error.message);
+    }
+    throwActionError('Unknown error');
+  }
+}
+
+/** Records a successful ACH SetupIntent against the farm.
+ *
+ * Verifies the SetupIntent with Stripe (to prevent spoofed client calls),
+ * then upserts a `farmSubscription` row with `status = 'bank_setup_complete'`
+ * and the resulting payment method ID so the farm can be billed later.
+ *
+ * @param {string} setupIntentId - The Stripe SetupIntent ID returned by
+ *   `createAchSetupIntent` and confirmed on the client.
+ * @returns {Promise<ActionResponse>} Empty on success.
+ */
+export async function recordAchSetupComplete(
+  setupIntentId: string
+): Promise<ActionResponse> {
+  try {
+    if (!setupIntentId || typeof setupIntentId !== 'string') {
+      throwActionError('A SetupIntent ID is required.');
+    }
+
+    const stripe = getStripeClient();
+    const currentUser = await getAuthenticatedInfo();
+    const farmId = currentUser.farmId;
+
+    assertCanEditFarm(currentUser, 'record-ach-setup-complete');
+
+    const setupIntent = await stripe.setupIntents.retrieve(setupIntentId);
+
+    const metadataFarmId = Number(setupIntent.metadata?.farmId ?? '');
+    if (!Number.isInteger(metadataFarmId) || metadataFarmId !== farmId) {
+      throwActionError('SetupIntent does not belong to this farm.');
+    }
+
+    const paymentMethodId =
+      typeof setupIntent.payment_method === 'string'
+        ? setupIntent.payment_method
+        : (setupIntent.payment_method?.id ?? null);
+
+    /**
+     * We only save the bank if Stripe says the SetupIntent is
+     * `succeeded`. Because we forced the bank-sign-in flow, that's the
+     * only "good" status we should ever see. Anything else means the
+     * bank wasn't really verified, and we shouldn't pretend we have a
+     * working account.
+     */
+    if (setupIntent.status !== 'succeeded' || !paymentMethodId) {
+      throwActionError(
+        `Bank information setup is not complete (status: ${setupIntent.status}).`
+      );
+    }
+
+    const nowStatus = 'bank_setup_complete';
+
+    // Reuse existing columns to avoid a schema migration:
+    // - `stripeSubscriptionId` stores the SetupIntent ID (unique constraint
+    //   is still satisfied; SetupIntent IDs are distinct from sub IDs).
+    // - `stripePriceId` stores the payment method ID.
+    await db
+      .insert(farmSubscription)
+      .values({
+        farmId,
+        status: nowStatus,
+        stripeSubscriptionId: setupIntent.id,
+        stripePriceId: paymentMethodId,
+      })
+      .onConflictDoUpdate({
+        target: farmSubscription.farmId,
+        set: {
+          status: nowStatus,
+          stripeSubscriptionId: setupIntent.id,
+          stripePriceId: paymentMethodId,
+          updatedAt: new Date(),
+        },
+      });
+
+    /**
+     * Tell Stripe that this new bank is the customer's default for
+     * future invoices. That way the /account page can show it right
+     * away, and any future subscription will bill the right account
+     * without us asking the user again.
+     */
+    const stripeCustomerId =
+      typeof setupIntent.customer === 'string'
+        ? setupIntent.customer
+        : (setupIntent.customer?.id ?? null);
+    if (stripeCustomerId) {
+      await setCustomerDefaultPaymentMethod(stripeCustomerId, paymentMethodId);
+    }
+
+    return {};
+  } catch (error) {
+    logger.error('Failed to record ACH SetupIntent completion', { error });
+    if (error instanceof Error) {
+      throwActionError(error.message);
+    }
+    throwActionError('Unknown error');
+  }
+}
+
+/** Creates a Stripe-hosted checkout session for the paid Platform License.
+ *
+ * Not used during the application flow. Retained so a farm can optionally
+ * subscribe later from an authenticated area of the site.
+ */
 export async function createStripeSubscriptionCheckoutSession(): Promise<ActionResponse> {
   const MONTHLY_SUBSCRIPTION_PRICE_USD_CENTS = 169_500;
 
