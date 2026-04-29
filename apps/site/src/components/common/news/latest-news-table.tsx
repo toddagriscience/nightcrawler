@@ -4,10 +4,10 @@
 
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
+import { Link } from '@/i18n/config';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import Link from 'next/link';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
