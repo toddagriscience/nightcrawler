@@ -2,17 +2,31 @@
 
 'use client';
 
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
+import { Link } from '@/i18n/config';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
-import Link from 'next/link';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
 interface LatestNewsTableProps {
-  items: SanityDocument[];
+  items: SanityArticle[];
+}
+
+/** Formats listing dates with a safe fallback when `date` is missing. */
+function formatArticleListingDate(
+  dateValue: string | undefined,
+  locale: string
+): string {
+  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
+  if (safe.length === 0) return '';
+  return new Date(safe).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
@@ -24,7 +38,6 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   };
 
   const locale = useLocale();
-  const windowHref = useCurrentUrl();
 
   return (
     <div className="rounded-md text-[#555555] mx-auto px-2 md:px-6 flex flex-col justify-center">
@@ -47,11 +60,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           <div>{item.title}</div>
 
           <Link
-            href={
-              item.offSiteUrl
-                ? item.offSiteUrl
-                : windowHref + '/' + item.slug.current
-            }
+            href={getArticleCardHref(item)}
             rel="noopener noreferrer"
             aria-label={`Open ${item.title} in this tab`}
           >
@@ -62,11 +71,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           </Link>
 
           <div className="text-right">
-            {new Date(item.date).toLocaleDateString(locale, {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
+            {formatArticleListingDate(item.date, locale)}
           </div>
         </div>
       ))}

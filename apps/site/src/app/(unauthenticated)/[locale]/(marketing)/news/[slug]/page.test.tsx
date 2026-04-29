@@ -1,113 +1,81 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
-import NewsPage from './page';
+import { redirect, permanentRedirect, notFound } from 'next/navigation';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import LegacyNewsArticleRedirect from './page';
 
-const { item } = vi.hoisted(() => {
-  return {
-    item: {
-      title: 'New AI Model Sets Performance Record',
-      source: 'TechCrunch',
-      date: '2024-11-20T00:00:00.000Z',
-      summary:
-        'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
-      slug: { current: 'new-ai' },
-      content: [
-        {
-          _key: 'ce12009ed6af',
-          _type: 'block',
-          children: [
-            {
-              _key: '64e6a6b07265',
-              _type: 'span',
-              marks: [],
-              text: 'Test content.',
-            },
-          ],
-          markDefs: [],
-          style: 'normal',
-        },
-      ],
-      headerImage: {
-        _type: 'image',
-        alt: 'Header image',
-        asset: {
-          _ref: 'image-test-asset-2518x1690-png',
-          _type: 'reference',
-        },
-      },
-    },
-  };
-});
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+  permanentRedirect: vi.fn(),
+  notFound: vi.fn(),
+}));
 
-// Mock embla-carousel-react
-vi.mock('embla-carousel-react', () => {
-  const mockEmblaApi = {
-    scrollSnapList: vi.fn(() => [0, 1, 2]),
-    selectedScrollSnap: vi.fn(() => 0),
-    scrollPrev: vi.fn(),
-    scrollNext: vi.fn(),
-    scrollTo: vi.fn(),
-    on: vi.fn(),
-    off: vi.fn(),
-    canScrollPrev: vi.fn(() => true),
-    canScrollNext: vi.fn(() => true),
-  };
+const { getArticleBySlugMock, isInternalArticleMock } = vi.hoisted(() => ({
+  getArticleBySlugMock: vi.fn(),
+  isInternalArticleMock: vi.fn(),
+}));
 
-  return {
-    __esModule: true,
-    default: vi.fn(() => [
-      vi.fn(), // emblaRef
-      mockEmblaApi, // emblaApi
-    ]),
-  };
-});
+vi.mock('@/lib/sanity/articles', () => ({
+  getArticleBySlug: getArticleBySlugMock,
+  isInternalArticle: isInternalArticleMock,
+}));
 
-vi.mock('@/lib/sanity/query', () => {
-  return {
-    default: vi.fn().mockResolvedValue(item),
-  };
-});
+describe('Legacy /news/[slug] redirect handler', () => {
+  beforeEach(() => {
+    vi.mocked(redirect).mockClear();
+    vi.mocked(permanentRedirect).mockClear();
+    vi.mocked(notFound).mockClear();
+    getArticleBySlugMock.mockReset();
+    isInternalArticleMock.mockReset();
+  });
 
-const builder = {
-  width: vi.fn().mockReturnThis(),
-  height: vi.fn().mockReturnThis(),
-  src: vi.fn().mockReturnValue('mocked-url'),
-  url: vi.fn().mockReturnValue('https://google.com/test.png'),
-};
+  it('redirects externally when off-site URL is set', async () => {
+    getArticleBySlugMock.mockResolvedValueOnce({
+      _id: '1',
+      _type: 'news',
+      title: 'External story',
+      slug: { current: 'ext' },
+      offSiteUrl: 'https://press.example/ext',
+      summary: '',
+    });
+    isInternalArticleMock.mockReturnValueOnce(false);
 
-vi.mock('@/lib/sanity/utils', () => {
-  return {
-    urlFor: vi.fn(() => builder),
-  };
-});
+    await LegacyNewsArticleRedirect({
+      params: Promise.resolve({ locale: 'en', slug: 'ext' }),
+    });
 
-describe('News Page', () => {
-  it('renders without exploding', async () => {
-    // ??? tbh idk why this works exactly
-    renderWithNextIntl(
-      <TooltipProvider>
-        {await NewsPage({ params: Promise.resolve({ slug: 'news-article' }) })}
-      </TooltipProvider>
-    );
+    expect(permanentRedirect).not.toHaveBeenCalled();
+    expect(redirect).toHaveBeenCalledWith('https://press.example/ext');
+  });
 
-    expect(screen.getByText(item.title)).toBeInTheDocument();
+  it('permanent-redirects internal articles to /index/[slug]', async () => {
+    getArticleBySlugMock.mockResolvedValueOnce({
+      _id: '2',
+      _type: 'news',
+      title: 'Internal piece',
+      slug: { current: 'internal-piece' },
+      summary: '',
+    });
+    isInternalArticleMock.mockReturnValueOnce(true);
 
-    const formattedDate = new Date(item.date)
-      .toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
-      .replace(/\s(\d{4})$/, ', $1');
+    await LegacyNewsArticleRedirect({
+      params: Promise.resolve({ locale: 'es', slug: 'internal-piece' }),
+    });
 
-    expect(screen.getByText(formattedDate)).toBeInTheDocument();
-    expect(screen.getByText(item.summary)).toBeInTheDocument();
-    expect(
-      screen.getByText(item.content[0].children[0].text)
-    ).toBeInTheDocument();
+    expect(redirect).not.toHaveBeenCalled();
+    expect(permanentRedirect).toHaveBeenCalledWith('/es/index/internal-piece');
+  });
+
+  it('calls notFound when article is missing', async () => {
+    getArticleBySlugMock.mockResolvedValueOnce(null);
+
+    await LegacyNewsArticleRedirect({
+      params: Promise.resolve({ locale: 'en', slug: 'missing' }),
+    });
+
+    expect(notFound).toHaveBeenCalled();
+    expect(permanentRedirect).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
   });
 });

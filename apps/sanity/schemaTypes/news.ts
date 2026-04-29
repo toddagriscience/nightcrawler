@@ -4,12 +4,73 @@ import {DocumentTextIcon} from '@sanity/icons'
 import {format, parseISO} from 'date-fns'
 import {defineField, defineType} from 'sanity'
 
+/** Shared article model — `_type` remains `news` for migration parity. */
 export default defineType({
   name: 'news',
-  title: 'News Article',
+  title: 'Article',
   icon: DocumentTextIcon,
   type: 'document',
   fields: [
+    defineField({
+      name: 'contentType',
+      title: 'Content type',
+      type: 'string',
+      initialValue: 'news',
+      options: {
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+        ],
+        layout: 'radio',
+      },
+      description:
+        'Primary category for routing and parent pages (newsroom, research, stories, etc.). Defaults to news for older posts.',
+    }),
+    defineField({
+      name: 'collections',
+      title: 'Additional collections',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+        ],
+        layout: 'tags',
+      },
+      description:
+        'Optional extra groupings when an article should appear on more than one parent page.',
+    }),
+    defineField({
+      name: 'canonicalParent',
+      title: 'Canonical parent (optional)',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+        ],
+      },
+      description:
+        'Preferred parent for breadcrumbs or analytics when an article spans multiple collections.',
+    }),
+    defineField({
+      name: 'excludeFromSitemap',
+      title: 'Exclude from sitemap',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Internal articles only: when enabled, no XML sitemap entry is generated. External articles are always excluded.',
+    }),
     defineField({
       name: 'title',
       title: 'Title',
@@ -182,7 +243,7 @@ export default defineType({
       title: 'Off Site Link',
       type: 'url',
       description:
-        'If a URL is present in this field, no news page will exist for this article. Specifically, navigating to a URL such as `/en/news/{your-slug}` will redirect to this URL.',
+        'When set, navigating to `/[locale]/news/{slug}`, `/[locale]/index/{slug}`, or older legacy links redirects to this external URL.',
     }),
     defineField({
       name: 'isFeatured',

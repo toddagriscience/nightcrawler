@@ -3,11 +3,26 @@
 'use client';
 
 import { Carousel, NewsCard } from '@/components/common';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
 import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
+
+/** Formats listing dates with a safe fallback when `date` is missing. */
+function formatArticleListingDate(
+  dateValue: string | undefined,
+  locale: string
+): string {
+  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
+  if (safe.length === 0) return '';
+  return new Date(safe).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 
 /*
  * A carousel for featured news.
@@ -16,7 +31,7 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
 export function FeaturedNewsCarousel({
   items = [],
 }: {
-  items: SanityDocument[];
+  items: SanityArticle[];
 }) {
   const locale = useLocale();
 
@@ -32,26 +47,19 @@ export function FeaturedNewsCarousel({
           image={
             article.thumbnail && article.thumbnail.asset
               ? {
-                  url: urlFor(article.thumbnail)?.url(),
-                  alt: article.thumbnail.alt,
+                  url:
+                    urlFor(article.thumbnail)?.url() ?? articlePlaceholderRoute,
+                  alt: article.thumbnail.alt ?? '',
                 }
               : {
                   url: articlePlaceholderRoute,
                   alt: '',
                 }
           }
-          source={article.source}
-          date={new Date(article.date).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          excerpt={article.summary}
-          link={
-            article.offSiteUrl && article.offSiteUrl.length > 0
-              ? article.offSiteUrl
-              : `/news/${article.slug.current}`
-          }
+          source={article.source ?? ''}
+          date={formatArticleListingDate(article.date, locale)}
+          excerpt={article.summary ?? ''}
+          link={getArticleCardHref(article)}
         />
       ))}
     </Carousel>

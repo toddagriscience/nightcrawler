@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { FeaturedNewsCarousel } from './featured-news-carousel';
 import { render } from '@testing-library/react';
 import { vi, beforeEach, describe, it, expect } from 'vitest';
-import { SanityDocument } from 'next-sanity';
+import type { SanityArticle } from '@/lib/sanity/article-types';
 
 // Mock embla-carousel-react
 vi.mock('embla-carousel-react', () => {
@@ -129,7 +129,7 @@ describe('FeaturedNewsCarousel', () => {
   });
   it('renders without imploding', () => {
     render(
-      <FeaturedNewsCarousel items={items as unknown as SanityDocument[]} />
+      <FeaturedNewsCarousel items={items as unknown as SanityArticle[]} />
     );
 
     // Should only show the first three articles (assuming we're rendering this on a reasonably sized 16:9 screen)

@@ -4,7 +4,7 @@ import { screen, renderWithNextIntl } from '@/test/test-utils';
 import { LatestNewsTable } from './latest-news-table';
 import '@testing-library/jest-dom';
 import { act } from 'react';
-import { SanityDocument } from 'next-sanity';
+import type { SanityArticle } from '@/lib/sanity/article-types';
 import { describe, it, expect } from 'vitest';
 
 const items = [
