@@ -115,6 +115,25 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Last so CORP wins: allow wordmark <img> off-site (e.g. email templates).
+      {
+        source: '/wordmark.png',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/wordmark.svg',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
     ];
   },
 
