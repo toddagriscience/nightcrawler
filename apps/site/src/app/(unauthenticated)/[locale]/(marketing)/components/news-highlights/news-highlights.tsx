@@ -5,13 +5,28 @@
 import { FadeIn, NewsCard } from '@/components/common';
 import { Spinner } from '@/components/ui/spinner';
 import { useTheme } from '@/context/theme/ThemeContext';
-import sanityQuery from '@/lib/sanity/query';
+import { loadArticlesForHighlights } from '@/lib/sanity/article-actions';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
 import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
 import { useEffect, useState } from 'react';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
+
+/** Formats listing dates with a safe fallback when `date` is missing. */
+function formatArticleListingDate(
+  dateValue: string | undefined,
+  locale: string
+): string {
+  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
+  if (safe.length === 0) return '';
+  return new Date(safe).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 
 /**
  * News highlight card component
@@ -19,7 +34,7 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
  */
 export default function NewsHighlights() {
   const { isDark: contextIsDark } = useTheme();
-  const [allNews, setAllNews] = useState<SanityDocument[]>();
+  const [allNews, setAllNews] = useState<SanityArticle[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const featuredNews = allNews
@@ -30,9 +45,7 @@ export default function NewsHighlights() {
 
   useEffect(() => {
     async function getNews() {
-      const news = (await sanityQuery(
-        'news'
-      )) as unknown as Array<SanityDocument>;
+      const news = await loadArticlesForHighlights('news');
       setAllNews(news);
       setIsLoading(false);
     }
@@ -57,11 +70,12 @@ export default function NewsHighlights() {
                 image={
                   article.thumbnail && article.thumbnail.asset
                     ? {
-                        url: urlFor(article.thumbnail)
-                          ?.width(400)
-                          .height(400)
-                          .url(),
-                        alt: article.thumbnail.alt,
+                        url:
+                          urlFor(article.thumbnail)
+                            ?.width(400)
+                            .height(400)
+                            .url() ?? articlePlaceholderRoute,
+                        alt: article.thumbnail.alt ?? '',
                         height: 400,
                         width: 400,
                       }
@@ -72,18 +86,10 @@ export default function NewsHighlights() {
                         width: 400,
                       }
                 }
-                source={article.source}
-                date={new Date(article.date).toLocaleDateString(locale, {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-                excerpt={article.summary}
-                link={
-                  article.offSiteUrl && article.offSiteUrl.length > 0
-                    ? article.offSiteUrl
-                    : `${locale}/news/${article.slug.current}`
-                }
+                source={article.source ?? ''}
+                date={formatArticleListingDate(article.date, locale)}
+                excerpt={article.summary ?? ''}
+                link={getArticleCardHref(article)}
               />
             ))}
           </div>

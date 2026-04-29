@@ -3,9 +3,8 @@
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
-import sanityQuery from '@/lib/sanity/query';
+import { getSitemapArticles } from '@/lib/sanity/articles';
 import type { MetadataRoute } from 'next';
-import { SanityDocument } from 'next-sanity';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 const baseUrl = env.baseUrl;
@@ -20,7 +19,7 @@ export const revalidate = 86400;
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap().concat(
-    await getSanityNewsSitemap()
+    await getSanityArticleIndexSitemap()
   );
 
   return sitemapEntries;
@@ -76,37 +75,30 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   return sitemapEntries;
 }
 
-/** Generates sitemap entries based off of all of the documents from Sanity. Ignores articles with offsite URLs. Note the potentially scuffed type assertion:
+/** Sanity-driven article URLs (`/index/[slug]`), excluding outbound links and explicit SEO exclusions via `excludeFromSitemap`.
  *
- * ```ts
- * const newsArticles = (await sanityQuery(
- *   'news'
- * )) as unknown as Array<SanityDocument>;
- * ```
- *
- * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
+ * @returns {MetadataRoute.Sitemap} Sitemap rows for canonical article detail pages
  */
-async function getSanityNewsSitemap(): Promise<MetadataRoute.Sitemap> {
+async function getSanityArticleIndexSitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   try {
-    // Valid
-    const newsArticles = (await sanityQuery(
-      'news'
-    )) as unknown as Array<SanityDocument>;
+    const articles = await getSitemapArticles({
+      next: { revalidate: 86400 },
+    });
 
     for (const locale of routing.locales) {
-      for (const newsArticle of newsArticles) {
-        if (newsArticle.offSiteUrl && newsArticle.offSiteUrl.length > 0) {
+      for (const article of articles) {
+        const slug = article.slug?.current;
+
+        if (slug === undefined || slug === null || slug.length === 0) {
           continue;
         }
-        const slug = newsArticle.slug.current;
-        const lastModified = newsArticle._updatedAt;
 
-        // Normalize internal article links so sitemap URLs are:
-        // toddagriscience.com/{locale}/news/{example-article-title}
-        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
-        const url = `${baseUrl}/${locale}/news/${slug}`;
+        const lastModified =
+          article._updatedAt !== undefined ? article._updatedAt : new Date();
+        /** toddagriscience.com/{locale}/index/{slug} */
+        const url = `${baseUrl}/${locale}/index/${slug}`;
 
         sitemapEntries.push({
           url,
@@ -114,64 +106,16 @@ async function getSanityNewsSitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: 'weekly',
           priority: 0.7,
           alternates: {
-            // Ensure alternates match the normalized news URL shape
-            languages: getSupportedLanguages(`/news/${slug}`),
+            languages: getSupportedLanguages(`/index/${slug}`),
           },
         });
       }
     }
   } catch (error) {
-    logger.error('Error generating Sanity news sitemap: ', error);
+    logger.error('Error generating Sanity article sitemap:', error);
   }
 
   return sitemapEntries;
-}
-
-/**
- * Parses article dates with fallback handling for various formats
- * Supports formats like "Apr 15, 2025" and ISO strings
- * @param {string} dateString - The date string to parse
- * @returns {string} ISO date string or current date as fallback
- */
-function parseArticleDate(dateString: string): string {
-  try {
-    // Try parsing the date string directly first
-    let articleDate = new Date(dateString);
-
-    // If that fails, try parsing common formats
-    if (isNaN(articleDate.getTime())) {
-      // Try parsing formats like "Apr 15, 2025", "Mar 30, 2025"
-      const monthNames = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
-
-      for (let i = 0; i < monthNames.length; i++) {
-        if (dateString.includes(monthNames[i])) {
-          articleDate = new Date(dateString);
-          break;
-        }
-      }
-    }
-
-    // Return ISO string if valid, otherwise use current date
-    return isNaN(articleDate.getTime())
-      ? new Date().toISOString()
-      : articleDate.toISOString();
-  } catch (error) {
-    logger.warn(`Failed to parse date "${dateString}":`, error);
-    return new Date().toISOString();
-  }
 }
 
 /**
