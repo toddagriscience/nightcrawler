@@ -76,7 +76,7 @@
     "next-sanity": "^12.2.2",
     "nodemailer": "^8.0.5",
     "posthog-js": "^1.365.4",
-    "preact": "10.29.0",
+    "preact": "10.29.1",
     "react": "^19.2.5",
     "react-docgen": "^8.0.3",
     "react-dom": "^19.2.5",
