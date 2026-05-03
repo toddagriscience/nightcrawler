@@ -12,7 +12,7 @@ const Hero = () => {
   const t = useTranslations('homepage');
 
   return (
-    <div className="absolute z-20 left-0 right-0 text-center justify-center mx-4 flex flex-col items-center h-[50vh]">
+    <div className="absolute left-0 right-0 text-center justify-center mx-4 flex flex-col items-center h-[50vh]">
       <h3 className="text-3xl sm:text-4xl md:text-5xl w-[75%] sm:w-[55%] md:w-[62%] lg:w-full mx-auto font-thin my-5 select-none pointer-events-none">
         <span className="tracking-normal leading-tight">
           {t('hero.tagline')}
