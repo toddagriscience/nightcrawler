@@ -6,10 +6,57 @@
       "whatWeDo": "What We Do",
       "impact": "Our Impact",
       "news": "News",
-      "logIn": "Client Login",
+      "logIn": "Login",
       "contact": "Contact",
       "getStarted": "Get Started",
-      "careers": "Careers"
+      "careers": "Careers",
+      "research": "Research",
+      "products": "Products",
+      "company": "Company",
+      "foundation": "Foundation"
+    },
+    "research": {
+      "researchIndex": {
+        "title": "Research Index",
+        "description": "Explore our research and development efforts"
+      },
+      "researchOverview": {
+        "title": "Research Overview",
+        "description": "Learn more about our research and development efforts"
+      }
+    },
+    "products": {
+      "iris": {
+        "title": "Iris",
+        "description": "Our flagship technology for sustainable agriculture"
+      }
+    },
+    "company": {
+      "about": {
+        "title": "About",
+        "description": "Learn more about Todd"
+      },
+      "stories": {
+        "title": "Stories",
+        "description": "Read about our work and the impact we're making"
+      },
+      "careers": {
+        "title": "Careers",
+        "description": "Explore our open roles and join our team"
+      },
+      "press": {
+        "title": "Press",
+        "description": "Read our latest press releases and media coverage"
+      },
+      "brand": {
+        "title": "Brand",
+        "description": "Follow our brand guidelines and use our logo responsibly"
+      }
+    },
+    "dropdownDescription": {
+      "products": "Our flagship technologies and crop genetics designed to advance sustainable agriculture worldwide.",
+      "company": "Learn how Todd partners with growers, researchers, and consumers to build a healthier planet.",
+      "research": "Explore our research and development efforts"
     },
     "menu": {
       "open": "Open menu",

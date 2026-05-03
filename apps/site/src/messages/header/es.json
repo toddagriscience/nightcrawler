@@ -9,7 +9,54 @@
       "logIn": "Inicio de sesión de cliente",
       "contact": "Contacto",
       "getStarted": "Comenzar",
-      "careers": "Carreras"
+      "careers": "Carreras",
+      "research": "Investigación",
+      "products": "Productos",
+      "company": "Compañía",
+      "foundation": "Fundación"
+    },
+    "research": {
+      "researchIndex": {
+        "title": "Índice de investigación",
+        "description": "Explora nuestros esfuerzos de investigación y desarrollo"
+      },
+      "researchOverview": {
+        "title": "Resumen de investigación",
+        "description": "Conoce más sobre nuestros esfuerzos de investigación y desarrollo"
+      }
+    },
+    "products": {
+      "iris": {
+        "title": "Iris",
+        "description": "Nuestra tecnología insignia para la agricultura sostenible"
+      }
+    },
+    "company": {
+      "about": {
+        "title": "Acerca de",
+        "description": "Conoce más sobre Todd"
+      },
+      "stories": {
+        "title": "Historias",
+        "description": "Lee sobre nuestro trabajo y el impacto que estamos generando"
+      },
+      "careers": {
+        "title": "Carreras",
+        "description": "Explora nuestras ofertas y únete al equipo"
+      },
+      "press": {
+        "title": "Prensa",
+        "description": "Lee nuestros últimos comunicados y la cobertura de medios"
+      },
+      "brand": {
+        "title": "Marca",
+        "description": "Sigue nuestras pautas de marca y usa nuestro logo de forma responsable"
+      }
+    },
+    "dropdownDescription": {
+      "products": "Nuestras tecnologías y genética de cultivos diseñadas para impulsar una agricultura sostenible global.",
+      "company": "Conoce cómo Todd colabora con productores, investigadores y consumidores para construir un planeta más saludable.",
+      "research": "Explora nuestros esfuerzos de investigación y desarrollo"
     },
     "menu": {
       "open": "Abrir menú",
