@@ -1,13 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
-import Careers from './page';
+import { CareersExternship } from './components/careers-externship';
 import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
 
 describe('Careers page', () => {
   it('renders the page', () => {
-    renderWithNextIntl(<Careers />);
+    renderWithNextIntl(<CareersExternship />);
 
     // Check that the page renders
     const h1Element = screen.getByRole('heading', { level: 1 });
@@ -15,7 +15,7 @@ describe('Careers page', () => {
   });
 
   it('has a level-one heading for accessibility', () => {
-    const { container } = renderWithNextIntl(<Careers />);
+    const { container } = renderWithNextIntl(<CareersExternship />);
 
     // Ensure there's exactly one h1 element on the page
     const h1Elements = container.querySelectorAll('h1');
@@ -23,7 +23,7 @@ describe('Careers page', () => {
   });
 
   it('has a main landmark region', () => {
-    renderWithNextIntl(<Careers />);
+    renderWithNextIntl(<CareersExternship />);
 
     // Check that main landmark exists
     const mainLandmark = screen.getByRole('main');
@@ -31,7 +31,7 @@ describe('Careers page', () => {
   });
 
   it('contains page content within the main landmark', () => {
-    const { container } = renderWithNextIntl(<Careers />);
+    const { container } = renderWithNextIntl(<CareersExternship />);
 
     const mainLandmark = screen.getByRole('main');
 
