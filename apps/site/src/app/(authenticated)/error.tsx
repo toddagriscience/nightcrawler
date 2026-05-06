@@ -5,12 +5,11 @@
 import { Button } from '@/components/ui/button';
 import ToddHeader from '../../components/common/wordmark/todd-wordmark';
 import Link from 'next/link';
-import { SYSTEM_STATUS_PAGE_URL } from './system-status-url';
 
 /**
  * Error UI for authenticated routes when rendering fails.
  *
- * @returns {JSX.Element} Recovery screen with home and system status actions
+ * @returns {JSX.Element} Recovery screen with home and status links
  */
 export default function Error() {
   return (
@@ -45,7 +44,7 @@ export default function Error() {
             asChild
           >
             <a
-              href={SYSTEM_STATUS_PAGE_URL}
+              href="https://status.toddagriscience.com"
               target="_blank"
               rel="noopener noreferrer"
             >

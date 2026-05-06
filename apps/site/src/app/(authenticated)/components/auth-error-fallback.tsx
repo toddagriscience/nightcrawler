@@ -5,12 +5,11 @@
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { SYSTEM_STATUS_PAGE_URL } from '../system-status-url';
 
 /**
  * Fallback when loading the current user fails in the authenticated layout.
  *
- * @returns {JSX.Element} Recovery screen with home and system status actions
+ * @returns {JSX.Element} Recovery screen with home and status links
  */
 export default function AuthErrorFallback() {
   return (
@@ -45,7 +44,7 @@ export default function AuthErrorFallback() {
             asChild
           >
             <a
-              href={SYSTEM_STATUS_PAGE_URL}
+              href="https://status.toddagriscience.com"
               target="_blank"
               rel="noopener noreferrer"
             >
