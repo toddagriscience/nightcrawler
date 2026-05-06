@@ -3,11 +3,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/auth-client';
 import ToddHeader from '../../components/common/wordmark/todd-wordmark';
+import Link from 'next/link';
 
 /**
- * Page to handle authentication errors when logging in to the platform.
+ * Error UI for authenticated routes when rendering fails.
+ *
+ * @returns {JSX.Element} Recovery screen with a link back to home
  */
 export default function Error() {
   return (
@@ -21,7 +23,7 @@ export default function Error() {
       </header>
       <div className="flex h-[calc(100vh-150px)] flex-col items-center text-center justify-center gap-10">
         <h1 className="md:text-3xl text-2xl font-thin">
-          Something went wrong. <br /> Please log out and try again.
+          Something went wrong. <br /> Please return home and try again.
         </h1>
         <p className="md:text-base text-sm text-foreground/80">
           If you continue to experience issues, please contact support.
@@ -30,11 +32,9 @@ export default function Error() {
           variant="outline"
           className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
           size="default"
-          onClick={() => {
-            logout();
-          }}
+          asChild
         >
-          Log out
+          <Link href="/home">Home</Link>
         </Button>
       </div>
     </>

@@ -4,10 +4,12 @@
 
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/auth-client';
+import Link from 'next/link';
 
 /**
- * Page to handle authentication errors when logging in to the platform.
+ * Fallback when loading the current user fails in the authenticated layout.
+ *
+ * @returns {JSX.Element} Recovery screen with a link back to home
  */
 export default function AuthErrorFallback() {
   return (
@@ -21,21 +23,19 @@ export default function AuthErrorFallback() {
       </header>
       <div className="flex h-[calc(100vh-150px)] flex-col items-center text-center justify-center gap-10">
         <h1 className="md:text-3xl text-2xl font-thin">
-          Something went wrong. <br /> Please log out and try again.
+          Something went wrong. <br /> Please return home and try again.
         </h1>
         <p className="md:text-base text-sm text-foreground/80">
           If you continue to experience issues, please contact support.
         </p>
-        <div className="flex gap-4 md:flex-row flex-col mt-4">
+        <div className="mt-4 flex flex-col gap-4 md:flex-row">
           <Button
             variant="outline"
             className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
             size="default"
-            onClick={() => {
-              logout();
-            }}
+            asChild
           >
-            Log out
+            <Link href="/home">Home</Link>
           </Button>
         </div>
       </div>
