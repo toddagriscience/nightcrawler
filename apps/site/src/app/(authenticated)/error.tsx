@@ -5,11 +5,12 @@
 import { Button } from '@/components/ui/button';
 import ToddHeader from '../../components/common/wordmark/todd-wordmark';
 import Link from 'next/link';
+import { SYSTEM_STATUS_PAGE_URL } from './system-status-url';
 
 /**
  * Error UI for authenticated routes when rendering fails.
  *
- * @returns {JSX.Element} Recovery screen with a link back to home
+ * @returns {JSX.Element} Recovery screen with home and system status actions
  */
 export default function Error() {
   return (
@@ -28,14 +29,30 @@ export default function Error() {
         <p className="md:text-base text-sm text-foreground/80">
           If you continue to experience issues, please contact support.
         </p>
-        <Button
-          variant="outline"
-          className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
-          size="default"
-          asChild
-        >
-          <Link href="/home">Home</Link>
-        </Button>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <Button
+            variant="outline"
+            className="bg-foreground w-[154px] rounded-full text-background hover:bg-foreground/80 hover:text-background"
+            size="default"
+            asChild
+          >
+            <Link href="/home">Home</Link>
+          </Button>
+          <Button
+            variant="outline"
+            className="w-[154px] rounded-full"
+            size="default"
+            asChild
+          >
+            <a
+              href={SYSTEM_STATUS_PAGE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Status
+            </a>
+          </Button>
+        </div>
       </div>
     </>
   );
