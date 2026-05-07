@@ -30,7 +30,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { ContactFormData, contactFormSchema } from './types';
 
 export default function Contact() {
@@ -45,7 +45,7 @@ export default function Contact() {
     getValues,
     clearErrors,
     setValue,
-    watch,
+    control,
     formState: { errors, isValid },
   } = useForm<ContactFormData>({
     defaultValues: {
@@ -75,7 +75,7 @@ export default function Contact() {
     isHydroponic,
     producesSprouts,
     instagramHandle,
-  } = watch();
+  } = useWatch<ContactFormData>({ control }) ?? {};
   const requiresWebsite = !isWorkEmail(email ?? '');
   const organicSlideIndex = requiresWebsite ? 2 : 1;
   const hydroponicSlideIndex = organicSlideIndex + 1;
@@ -93,11 +93,24 @@ export default function Contact() {
   useEffect(() => {
     if (!api) return;
 
-    setTotalSlides(api.slideNodes().length);
-    setSlide(api.selectedScrollSnap());
+    const syncSlide = () => setSlide(api.selectedScrollSnap());
+    const syncSlideCount = () => setTotalSlides(api.slideNodes().length);
+    const syncAll = () => {
+      syncSlideCount();
+      syncSlide();
+    };
 
-    api.on('select', () => setSlide(api.selectedScrollSnap()));
-    api.on('slidesChanged', () => setTotalSlides(api.slideNodes().length));
+    api.on('select', syncSlide);
+    api.on('slidesChanged', syncSlideCount);
+    api.on('reInit', syncAll);
+
+    queueMicrotask(syncAll);
+
+    return () => {
+      api.off('select', syncSlide);
+      api.off('slidesChanged', syncSlideCount);
+      api.off('reInit', syncAll);
+    };
   }, [api]);
 
   function handleBack() {
