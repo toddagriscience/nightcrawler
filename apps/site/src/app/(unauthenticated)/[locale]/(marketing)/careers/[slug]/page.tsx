@@ -1,10 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
+import {
+  getArticleBySlug,
+  isCareerArticle,
+  isInternalArticle,
+} from '@/lib/sanity/articles';
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
 
 /**
- * Legacy `/careers/[slug]` entry point preserved with redirects to `/index/[slug]` or outbound URLs.
+ * `/careers/[slug]` resolves only Sanity articles classified as careers; internal posts 308 to
+ * `/index/[slug]`, outbound roles redirect to `offSiteUrl`.
  *
  * @param params - Locale and slug
  */
@@ -18,6 +23,10 @@ export default async function LegacyCareersArticleRedirect({
     next: { revalidate: 60 * 60 },
   });
   if (article === undefined || article === null) {
+    notFound();
+    return;
+  }
+  if (!isCareerArticle(article)) {
     notFound();
     return;
   }
