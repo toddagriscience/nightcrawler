@@ -13,6 +13,7 @@ Disallow: /signup/
 Disallow: /*/careers/externship
 Disallow: /login/
 Disallow: /api/
+Disallow: /_next/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
