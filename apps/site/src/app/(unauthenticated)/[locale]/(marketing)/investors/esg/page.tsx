@@ -3,8 +3,8 @@
 'use client';
 
 import { PageHero } from '@/components/common';
-import { ScrollShrinkWrapper } from '../../components';
 import { useTranslations } from 'next-intl';
+import { ScrollShrinkWrapper } from '../../components';
 
 /**
  * ESGPage component renders the Environmental, Social, and Governance (ESG) information page.
