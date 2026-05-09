@@ -66,6 +66,20 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 }
 
 /**
+ * Whether the article is categorized as career content for `/careers` listings and the careers sitemap slice.
+ *
+ * @param article - Article classification fields from Sanity
+ * @returns True when `contentType` or `collections` includes `careers`
+ */
+export function isCareerArticle(
+  article: Pick<SanityArticle, 'contentType' | 'collections'>
+): boolean {
+  if (article.contentType === 'careers') return true;
+  const cols = article.collections;
+  return Array.isArray(cols) && cols.includes('careers');
+}
+
+/**
  * Lowercase collection key used in GROQ filters.
  *
  * @param collection - Marketing collection key
@@ -175,16 +189,16 @@ export async function getFeaturedArticles(
 }
 
 /**
- * Articles eligible for the dynamic sitemap: internal URLs only, respecting `excludeFromSitemap`.
+ * Internal articles for the main sitemap slice: excludes career-tagged rows (see {@link getCareersSitemapArticles}).
  *
  * @param options - Optional Sanity fetch options (`revalidate` defaults to sitemap cadence externally)
  * @returns Article list sorted by `_updatedAt` descending when present
  */
-export async function getSitemapArticles(
+export async function getMainSitemapArticles(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type == "${ARTICLE_DOCUMENT_TYPE}" && (!defined(offSiteUrl) || offSiteUrl == "")] | order(_updatedAt desc) ${ARTICLE_PROJECTION}`;
+    const query = `*[_type == "${ARTICLE_DOCUMENT_TYPE}" && (!defined(offSiteUrl) || offSiteUrl == "") && !(coalesce(contentType, "news") == "careers" || "careers" in coalesce(collections, []))] | order(_updatedAt desc) ${ARTICLE_PROJECTION}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {},
@@ -193,7 +207,31 @@ export async function getSitemapArticles(
     if (!Array.isArray(articles)) return [];
     return articles.filter(isSitemapArticle);
   } catch (error) {
-    logger.error('Sanity getSitemapArticles failed', error);
+    logger.error('Sanity getMainSitemapArticles failed', error);
+    return [];
+  }
+}
+
+/**
+ * Internal career articles only (`contentType` or `collections` includes `careers`), for a dedicated sitemap file.
+ *
+ * @param options - Optional Sanity fetch options
+ * @returns Article list sorted by `_updatedAt` descending when present
+ */
+export async function getCareersSitemapArticles(
+  options?: FilteredResponseQueryOptions
+): Promise<SanityArticle[]> {
+  try {
+    const query = `*[_type == "${ARTICLE_DOCUMENT_TYPE}" && (!defined(offSiteUrl) || offSiteUrl == "") && (coalesce(contentType, "news") == "careers" || "careers" in coalesce(collections, []))] | order(_updatedAt desc) ${ARTICLE_PROJECTION}`;
+    const articles = await client.fetch<SanityArticle[]>(
+      query,
+      {},
+      options ?? {}
+    );
+    if (!Array.isArray(articles)) return [];
+    return articles.filter(isSitemapArticle);
+  } catch (error) {
+    logger.error('Sanity getCareersSitemapArticles failed', error);
     return [];
   }
 }

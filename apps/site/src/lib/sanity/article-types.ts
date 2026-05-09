@@ -9,12 +9,14 @@ export const ARTICLE_CONTENT_TYPES = [
   'story',
   'product-release',
   'press',
+  /** Job postings and other careers CMS pages (same `/index/[slug]` template as news). */
+  'careers',
 ] as const;
 
 /** Type for `news.contentType`. */
 export type ArticleContentType = (typeof ARTICLE_CONTENT_TYPES)[number];
 
-/** Allowed collection keys for Discover / parent pages (`/news`, future `/research`, etc.). */
+/** Allowed collection keys for parent pages (`/news`, `/careers`, future `/research`, etc.). */
 export const ARTICLE_COLLECTIONS = ARTICLE_CONTENT_TYPES;
 
 export type ArticleCollection = (typeof ARTICLE_COLLECTIONS)[number];

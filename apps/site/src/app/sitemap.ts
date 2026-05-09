@@ -3,26 +3,40 @@
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
-import { getSitemapArticles } from '@/lib/sanity/articles';
+import {
+  getCareersSitemapArticles,
+  getMainSitemapArticles,
+} from '@/lib/sanity/articles';
+import type { SanityArticle } from '@/lib/sanity/article-types';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 const baseUrl = env.baseUrl;
 
+/** Child sitemap identifiers: main site URLs vs career CMS articles (`/index/[slug]` only). */
+export async function generateSitemaps(): Promise<Array<{ id: string }>> {
+  return [{ id: 'main' }, { id: 'careers' }];
+}
+
 // Revalidate sitemap every 24 hours (86400 seconds)
 export const revalidate = 86400;
 
 /**
- * Generates the complete sitemap for the Todd Agriscience website
- * Combines static pages and dynamic news articles with proper internationalization
- * @returns {MetadataRoute.Sitemap} Complete sitemap entries with hreflang alternates
+ * Generates split sitemaps: `main` (static pages + non-career articles) and `careers` (career articles only).
+ *
+ * @param props - Resolved sitemap slice id from {@link generateSitemaps}
+ * @returns URL entries for this sitemap file
  */
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap().concat(
-    await getSanityArticleIndexSitemap()
-  );
-
-  return sitemapEntries;
+export default async function sitemap({
+  id,
+}: {
+  id: Promise<string>;
+}): Promise<MetadataRoute.Sitemap> {
+  const slice = await id;
+  if (slice === 'careers') {
+    return await getSanityCareersArticleIndexSitemap();
+  }
+  return getStaticSitemap().concat(await getSanityArticleMainIndexSitemap());
 }
 
 /**
@@ -75,47 +89,66 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   return sitemapEntries;
 }
 
-/** Sanity-driven article URLs (`/index/[slug]`), excluding outbound links and explicit SEO exclusions via `excludeFromSitemap`.
+/**
+ * Converts internal article documents to `/index/[slug]` sitemap rows per locale.
  *
- * @returns {MetadataRoute.Sitemap} Sitemap rows for canonical article detail pages
+ * @param articles - Sanity articles (already filtered for sitemap eligibility)
+ * @returns Sitemap rows
  */
-async function getSanityArticleIndexSitemap(): Promise<MetadataRoute.Sitemap> {
+function articleListToIndexSitemapEntries(
+  articles: SanityArticle[]
+): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
+  for (const locale of routing.locales) {
+    for (const article of articles) {
+      const slug = article.slug?.current;
 
+      if (slug === undefined || slug === null || slug.length === 0) {
+        continue;
+      }
+
+      const lastModified =
+        article._updatedAt !== undefined ? article._updatedAt : new Date();
+      const url = `${baseUrl}/${locale}/index/${slug}`;
+
+      sitemapEntries.push({
+        url,
+        lastModified,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+        alternates: {
+          languages: getSupportedLanguages(`/index/${slug}`),
+        },
+      });
+    }
+  }
+  return sitemapEntries;
+}
+
+/** Non-career Sanity article URLs for the main sitemap slice. */
+async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const articles = await getSitemapArticles({
+    const articles = await getMainSitemapArticles({
       next: { revalidate: 86400 },
     });
-
-    for (const locale of routing.locales) {
-      for (const article of articles) {
-        const slug = article.slug?.current;
-
-        if (slug === undefined || slug === null || slug.length === 0) {
-          continue;
-        }
-
-        const lastModified =
-          article._updatedAt !== undefined ? article._updatedAt : new Date();
-        /** toddagriscience.com/{locale}/index/{slug} */
-        const url = `${baseUrl}/${locale}/index/${slug}`;
-
-        sitemapEntries.push({
-          url,
-          lastModified,
-          changeFrequency: 'weekly',
-          priority: 0.7,
-          alternates: {
-            languages: getSupportedLanguages(`/index/${slug}`),
-          },
-        });
-      }
-    }
+    return articleListToIndexSitemapEntries(articles);
   } catch (error) {
-    logger.error('Error generating Sanity article sitemap:', error);
+    logger.error('Error generating main Sanity article sitemap:', error);
+    return [];
   }
+}
 
-  return sitemapEntries;
+/** Career-tagged Sanity article URLs for the dedicated careers sitemap file. */
+async function getSanityCareersArticleIndexSitemap(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const articles = await getCareersSitemapArticles({
+      next: { revalidate: 86400 },
+    });
+    return articleListToIndexSitemapEntries(articles);
+  } catch (error) {
+    logger.error('Error generating careers Sanity article sitemap:', error);
+    return [];
+  }
 }
 
 /**
