@@ -76,9 +76,9 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 }
 
 /**
- * Whether the document counts as careers content for `/careers` routes and the careers sitemap.
+ * Whether the document counts as careers content for `/careers` routes and the careers sitemap slice.
  *
- * @param article - Document classification from Sanity (`_type` or legacy tags)
+ * @param article - Document classification from Sanity (`_type` or legacy tagging)
  * @returns True when the row should behave as a careers article on the marketing site
  */
 export function isCareerArticle(
@@ -211,7 +211,7 @@ export async function getFeaturedArticles(
 }
 
 /**
- * Internal docs for the main sitemap slice: excludes careers (`career` type and legacy tagging).
+ * Internal articles for the main sitemap slice: excludes careers (`career` type and legacy tagging; see {@link getCareersSitemapArticles}).
  *
  * @param options - Optional Sanity fetch options (`revalidate` defaults to sitemap cadence externally)
  * @returns Article list sorted by `_updatedAt` descending when present
