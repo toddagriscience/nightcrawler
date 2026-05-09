@@ -38,13 +38,10 @@ export interface SanityArticleSubscript {
   url?: string;
 }
 
-/**
- * Article document fetched from Sanity (`_type`: `news`).
- * Editorial fields overlap with Portable Text previews and listing cards.
- */
+/** Article-like document returned from Sanity (`news` or standalone `career` job posts). */
 export interface SanityArticle {
   _id: string;
-  _type: 'news';
+  _type: 'news' | 'career';
   _updatedAt?: string;
   title: string;
   subtitle?: string;
