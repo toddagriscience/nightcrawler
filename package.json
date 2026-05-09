@@ -66,10 +66,12 @@
   },
   "overrides": {
     "flatted": "^3.4.2",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "lodash": "^4.17.24",
     "lodash-es": "^4.17.24",
     "js-yaml": "^4.1.1",
     "esbuild": "^0.25.0",
+    "fast-uri": "^3.1.2",
     "minimatch": "^10.2.3",
     "markdown-it": "^14.1.1",
     "picomatch": "^4.0.4",
