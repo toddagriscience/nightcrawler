@@ -1,0 +1,27 @@
+{
+  "landing": {
+    "pageHeading": {
+      "title": "We create sustainable farms",
+      "subtitle": "Our mission is to ensure sustainable agriculture benefits all of humanity.",
+      "button": "Explore our research"
+    },
+    "sectionContent": {
+      "section1": {
+        "caption": "Focus areas",
+        "title": "We are the frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture."
+      },
+      "articles": {
+        "title1": "Stories",
+        "title2": "Latest research"
+      },
+      "explore": {
+        "title": "Explore all research",
+        "button": "View research index"
+      },
+      "contactUs": {
+        "title": "Get started with Todd",
+        "button": "Contact"
+      }
+    }
+  }
+}
