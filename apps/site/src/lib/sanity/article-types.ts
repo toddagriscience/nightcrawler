@@ -49,6 +49,8 @@ export interface SanityArticle {
   date?: string;
   author?: string;
   company?: string;
+  /** Job location for careers listings (optional; `career` documents in Studio). */
+  jobLocation?: string;
   content?: SanityArticlePortableText;
   summary?: string;
   thumbnail?: SanityArticleImageField;

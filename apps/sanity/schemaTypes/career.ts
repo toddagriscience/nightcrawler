@@ -2,7 +2,7 @@
 
 import {CaseIcon} from '@sanity/icons'
 import {format, parseISO} from 'date-fns'
-import {defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 import {articlePortableBodyFields} from './article-shared-fields'
 
@@ -16,7 +16,15 @@ export default defineType({
   title: 'Careers',
   icon: CaseIcon,
   type: 'document',
-  fields: [...articlePortableBodyFields],
+  fields: [
+    ...articlePortableBodyFields,
+    defineField({
+      name: 'jobLocation',
+      title: 'Location',
+      type: 'string',
+      description: 'City, region, hybrid note, or “Remote” — shown on the public careers listing.',
+    }),
+  ],
   preview: {
     select: {
       title: 'title',
