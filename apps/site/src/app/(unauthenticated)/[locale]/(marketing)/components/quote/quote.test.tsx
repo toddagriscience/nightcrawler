@@ -10,7 +10,7 @@ describe('Quote', () => {
     renderWithNextIntl(<Quote isDark={false} />);
     const section = screen.getByRole('region');
     expect(section).toBeInTheDocument();
-    expect(section).toHaveAttribute('id', 'who-we-are');
+    expect(section).toHaveAttribute('id', 'about');
   });
 
   it('displays the about heading content', () => {
@@ -25,7 +25,7 @@ describe('Quote', () => {
     const aboutLink = screen.getByTestId('button-component');
     expect(aboutLink).toBeInTheDocument();
     const href = aboutLink.getAttribute('href');
-    expect(href).toMatch(/^\/who-we-are\?/);
+    expect(href).toMatch(/^\/about\?/);
     expect(href).toContain('utm_source=home');
     expect(aboutLink).toHaveTextContent('Who We Are');
   });

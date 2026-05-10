@@ -26,8 +26,8 @@ const Footer = () => {
   const tCookiePreferences = useTranslations('cookiePreferences');
 
   const siteLinks = [
-    { href: '/who-we-are', label: t('links.whoWeAre') },
-    { href: '/what-we-do', label: t('links.whatWeDo') },
+    { href: '/about', label: t('links.whoWeAre') },
+    { href: '/research', label: t('links.whatWeDo') },
     { href: '/news', label: t('links.news') },
     { href: '/careers', label: t('links.careers') },
     { href: '/contact', label: t('links.contact') },

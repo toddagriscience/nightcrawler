@@ -268,7 +268,7 @@ describe('Contact page', () => {
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledTimes(1);
       const calledUrl = mockPush.mock.calls[0][0];
-      expect(calledUrl).toContain('what-we-do');
+      expect(calledUrl).toContain('research');
     });
   });
 

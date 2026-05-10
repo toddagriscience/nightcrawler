@@ -174,7 +174,7 @@ export default function Contact() {
         console.error('Failed to submit to Google Sheets:', error);
       }
       // Redirect to What We Do
-      router.push(`/what-we-do`);
+      router.push(`/research`);
     }
   }
 

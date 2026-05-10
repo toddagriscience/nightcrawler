@@ -19,8 +19,8 @@ import { useRef } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
 
 /**
- * What We Do page component
- * @returns {JSX.Element} - The what we do page
+ * Research page component (formerly What We Do)
+ * @returns {JSX.Element} - The research page
  */
 export default function WhatWeDoPage() {
   const t = useTranslations('whatWeDo');
@@ -217,7 +217,7 @@ export default function WhatWeDoPage() {
           <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
             <Link
               href={`/contact?${new URLSearchParams({
-                utm_source: 'what_we_do',
+                utm_source: 'research',
                 utm_medium: 'internal',
                 utm_campaign: 'build_a_better_farm_click',
               }).toString()}`}
