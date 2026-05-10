@@ -104,7 +104,11 @@ export default function WhoWeArePage() {
 
         <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
           <Link
-            href="/research?utm_source=about&utm_medium=internal&utm_campaign=what_we_do_click"
+            href={`/research?${new URLSearchParams({
+              utm_source: 'about',
+              utm_medium: 'internal',
+              utm_campaign: 'what_we_do_click',
+            }).toString()}`}
             className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
           >
             {t('navigation.whatWeDo')}
