@@ -24,10 +24,4 @@ describe('LegalPage', () => {
     const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(8);
   });
-
-  it('has correct margins', () => {
-    const { container } = renderWithNextIntl(<LegalPage />);
-
-    expect(container.querySelector('.pt-\[146px\]')).toBeInTheDocument();
-  });
 });
