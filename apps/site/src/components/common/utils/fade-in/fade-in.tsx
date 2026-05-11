@@ -9,11 +9,10 @@ import React from 'react';
 import type FadeInProps from './types/fade-in';
 
 /**
- * Inner component that accesses `usePathname()` (uncached request data)
- * and applies a fade-in animation keyed to the current route.
+ * Inner component keyed by `usePathname()`; opacity remains solid to avoid transition flashes.
  *
  * @param props - {@link FadeInProps}
- * @returns Animated wrapper around children
+ * @returns Wrapper around children
  */
 function FadeInInner({
   children,
@@ -25,9 +24,8 @@ function FadeInInner({
   return (
     <motion.div
       key={pathname}
-      initial={{ opacity: 0.1 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       transition={{ duration, type: 'tween' }}
       className={className}
     >
@@ -37,15 +35,13 @@ function FadeInInner({
 }
 
 /**
- * FadeIn component that fades the entire page content on navigation.
- * Wraps the pathname-dependent animation in a Suspense boundary so
- * it does not block prerendering when `cacheComponents` is enabled.
- * The fallback renders children immediately without animation.
+ * Layout wrapper keyed by pathname inside `Suspense` (for `cacheComponents` compatibility).
+ * Uses full opacity so route changes do not show a semi-transparent loading frame.
  *
  * @param {React.ReactNode} children - The content to animate
- * @param {number} duration - Animation duration in seconds (default: 0.73)
+ * @param {number} duration - Kept for API compatibility with Framer Motion transition
  * @param {string} className - Additional CSS classes
- * @returns {JSX.Element} - The animated fade-in component
+ * @returns {JSX.Element} - The fade-in shell component
  */
 const FadeIn: React.FC<FadeInProps> = ({
   children,

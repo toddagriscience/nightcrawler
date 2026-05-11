@@ -24,6 +24,10 @@ vi.mock('@/lib/sanity/articles', () => ({
   isCareerArticle: isCareerArticleMock,
 }));
 
+vi.mock('@/lib/env', () => ({
+  env: { baseUrl: 'https://toddagriscience.com' },
+}));
+
 describe('Legacy /careers/[slug] redirect handler', () => {
   beforeEach(() => {
     vi.mocked(redirect).mockClear();
@@ -32,6 +36,28 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     getArticleBySlugMock.mockReset();
     isInternalArticleMock.mockReset();
     isCareerArticleMock.mockReset();
+  });
+
+  it('permanent-redirects to /index when off-site URL points at the same legacy careers path', async () => {
+    const article = {
+      _id: '1b',
+      _type: 'news',
+      title: 'Loop role',
+      slug: { current: 'loop-role' },
+      offSiteUrl: 'https://toddagriscience.com/en/careers/loop-role',
+      summary: '',
+      contentType: 'careers' as const,
+    };
+    getArticleBySlugMock.mockResolvedValueOnce(article);
+    isCareerArticleMock.mockReturnValueOnce(true);
+    isInternalArticleMock.mockReturnValueOnce(false);
+
+    await LegacyCareersArticleRedirect({
+      params: Promise.resolve({ locale: 'en', slug: 'loop-role' }),
+    });
+
+    expect(redirect).not.toHaveBeenCalled();
+    expect(permanentRedirect).toHaveBeenCalledWith('/en/index/loop-role');
   });
 
   it('redirects externally when off-site URL is set', async () => {
