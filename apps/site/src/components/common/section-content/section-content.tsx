@@ -38,7 +38,7 @@ export function mapSectionTextParagraphs(
  * SectionContent for title, optional subtitle, paragraph map (`text`) with optional `count`, and optional `subtext`.
  * @param title - Section heading
  * @param subtitle - Optional subheading
- * @param text - Paragraph map: `count` (string number) plus `"0"`, `"1"`, … per what-we-do pattern
+ * @param text - Paragraph map: `count` (string number) plus `"0"`, `"1"`, … per research page pattern
  * @param subtext - Optional line after paragraphs (e.g. logo clear space)
  * @returns {JSX.Element} - The section content component
  */

@@ -63,7 +63,7 @@ export function handleI18nMiddleware(
       return response;
     }
 
-    // For paths without locale (like /who-we-are, /no-page-here),
+    // For paths without locale (like /about, /no-page-here),
     // redirect using NEXT_LOCALE cookie if set, else default to en
     const preferredLocale =
       request.cookies?.get('NEXT_LOCALE')?.value ||

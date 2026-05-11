@@ -161,7 +161,7 @@ describe('handleAuthRouting', () => {
   });
 
   it('allows unauthenticated users on a non-protected marketing route', async () => {
-    const mockRequest = makeMockRequest('https://example.com/en/who-we-are');
+    const mockRequest = makeMockRequest('https://example.com/en/about');
 
     (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: false })
@@ -173,7 +173,7 @@ describe('handleAuthRouting', () => {
   });
 
   it('redirects unauthenticated users on a non-protected unintl route', async () => {
-    const mockRequest = makeMockRequest('https://example.com/who-we-are');
+    const mockRequest = makeMockRequest('https://example.com/about');
 
     (createServerClient as Mock).mockReturnValue(
       mockSupabase({ authenticated: false })
