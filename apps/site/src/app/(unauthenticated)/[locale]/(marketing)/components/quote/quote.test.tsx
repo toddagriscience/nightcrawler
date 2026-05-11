@@ -25,8 +25,7 @@ describe('Quote', () => {
     const aboutLink = screen.getByTestId('button-component');
     expect(aboutLink).toBeInTheDocument();
     const href = aboutLink.getAttribute('href');
-    expect(href).toMatch(/^\/about\?/);
-    expect(href).toContain('utm_source=home');
+    expect(href).toBe('/about');
     expect(aboutLink).toHaveTextContent('Who We Are');
   });
 
