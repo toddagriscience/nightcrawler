@@ -20,31 +20,18 @@ export function useMenuItems({
   const t = useTranslations('header');
 
   const defaultMenu: MenuItem[] = [
-    {
-      title: t('navigation.research'),
-      url: '#',
-      items: [
-        { title: t('research.researchIndex.title'), url: '#' },
-        { title: t('research.researchOverview.title'), url: '#' },
-      ],
-    },
-    {
-      title: t('navigation.products'),
-      url: '#',
-      items: [{ title: t('products.iris.title'), url: '#' }],
-    },
+    { title: t('navigation.research'), url: '/research' },
+    { title: t('navigation.products'), url: '/index/introducing-iris' },
     {
       title: t('navigation.company'),
-      url: '#',
+      url: '/about',
       items: [
-        { title: t('company.about.title'), url: '/who-we-are' },
-        { title: t('company.stories.title'), url: '#' },
+        { title: t('company.about.title'), url: '/about' },
         { title: t('company.careers.title'), url: '/careers' },
-        { title: t('company.press.title'), url: '/news' },
-        { title: t('company.brand.title'), url: '/brand' },
+        { title: t('navigation.news'), url: '/news' },
       ],
     },
-    // TODO: Add foundation menu item when it is available
+    // TODO: Add foundation URL when the route is available
     { title: t('navigation.foundation'), url: '#' },
   ];
 
