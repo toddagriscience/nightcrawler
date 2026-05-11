@@ -28,7 +28,7 @@ export default function NewHeader({
       {/* Glassy blur applied to the page behind the dropdown when a trigger is open. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 top-32 bottom-0 z-[5] hidden bg-foreground/5 backdrop-blur-md transition-opacity duration-200 group-has-[[data-state=open]]:block"
+        className="pointer-events-none fixed inset-x-0 top-20 bottom-0 z-[5] hidden bg-foreground/5 backdrop-blur-md transition-opacity duration-200 group-has-[[data-state=open]]:block"
       />
       <DesktopNav menuItems={menuItems} authLinks={authLinks} />
       <MobileNav menuItems={menuItems} authLinks={authLinks} />

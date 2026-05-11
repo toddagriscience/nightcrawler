@@ -19,11 +19,9 @@ export default function DesktopNav({ menuItems, authLinks }: NavLayoutProps) {
   return (
     <div className="hidden lg:block">
       <NavigationMenu>
-        <div className="grid h-14 w-full grid-cols-[auto_auto_1fr] items-center px-4 sm:px-6 lg:px-5 lg:mx-3 lg:my-8">
-          <div className="px-8">
-            <ToddHeader />
-          </div>
-          <NavigationMenuList>
+        <div className="grid w-full grid-cols-[auto_auto_1fr] items-center px-8 py-5">
+          <ToddHeader />
+          <NavigationMenuList className="ml-[1rem]">
             {menuItems.map((item) => (
               <DesktopMenuItem key={item.title} item={item} />
             ))}

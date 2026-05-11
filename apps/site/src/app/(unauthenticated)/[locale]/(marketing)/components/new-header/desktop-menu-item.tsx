@@ -36,7 +36,7 @@ export default function DesktopMenuItem({ item }: DesktopMenuItemProps) {
                 <NavigationMenuLink asChild>
                   <a
                     href={subItem.url}
-                    className="block whitespace-nowrap py-1 text-[18px] font-thin transition-opacity duration-200 hover:opacity-70"
+                    className="block whitespace-nowrap py-1 text-[18px] font-normal transition-opacity duration-200 hover:opacity-70"
                   >
                     {subItem.title}
                   </a>

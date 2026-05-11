@@ -30,7 +30,7 @@ export default function MobileNav({ menuItems, authLinks }: NavLayoutProps) {
   return (
     <div className="block lg:hidden">
       {/* Logo at top of the page */}
-      <div className="relative flex pl-5 pt-3">
+      <div className="relative flex px-8 py-5">
         <ToddHeader />
       </div>
 
