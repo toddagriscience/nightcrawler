@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { env } from '@/lib/env';
+import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
 
@@ -22,6 +24,17 @@ export default async function LegacyNewsArticleRedirect({
     return;
   }
   if (!isInternalArticle(article)) {
+    if (
+      isSelfReferentialArticleUrl(
+        String(article.offSiteUrl),
+        locale,
+        slug,
+        env.baseUrl
+      )
+    ) {
+      permanentRedirect(`/${locale}/index/${slug}`);
+      return;
+    }
     redirect(String(article.offSiteUrl));
     return;
   }
