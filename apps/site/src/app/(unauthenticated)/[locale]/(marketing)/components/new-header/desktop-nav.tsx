@@ -1,16 +1,25 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
+import { Link } from '@/i18n/config';
+import { cn } from '@/lib/utils';
 import DesktopMenuItem from './desktop-menu-item';
 import { NavLayoutProps } from './types';
 
 /**
  * Desktop layout for the marketing header. Hidden below the `lg` breakpoint.
+ *
+ * Auth links are rendered as locale-aware `Link` elements styled with
+ * `buttonVariants` (rather than `Button asChild + Link`) to avoid the Radix
+ * Slot + `next/link` composition issue (see shadcn-ui/ui#8378) that can cause
+ * full page reloads in Next.js 16 + React 19.
  *
  * @param props - Resolved menu items and auth links to display.
  * @returns The desktop navigation row with logo, menu list, and auth buttons.
@@ -27,19 +36,24 @@ export default function DesktopNav({ menuItems, authLinks }: NavLayoutProps) {
             ))}
           </NavigationMenuList>
           <div className="flex items-center gap-5 px-5 justify-self-end">
-            <Button
-              className="text-sm font-normal"
-              asChild
-              variant="ghost"
-              size="sm"
+            <Link
+              href={authLinks.login.url}
+              className={cn(
+                buttonVariants({ variant: 'ghost', size: 'sm' }),
+                'text-sm font-normal'
+              )}
             >
-              <a href={authLinks.login.url}>{authLinks.login.title}</a>
-            </Button>
-            <Button className="text-sm font-normal" asChild size="sm">
-              <a className="text-sm font-normal" href={authLinks.signup.url}>
-                {authLinks.signup.title}
-              </a>
-            </Button>
+              {authLinks.login.title}
+            </Link>
+            <Link
+              href={authLinks.signup.url}
+              className={cn(
+                buttonVariants({ size: 'sm' }),
+                'text-sm font-normal'
+              )}
+            >
+              {authLinks.signup.title}
+            </Link>
           </div>
         </div>
       </NavigationMenu>

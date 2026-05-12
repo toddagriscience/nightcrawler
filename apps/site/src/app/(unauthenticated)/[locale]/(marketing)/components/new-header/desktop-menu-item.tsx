@@ -1,17 +1,23 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import {
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
+import NavMenuLink from './nav-menu-link';
 import { DesktopMenuItemProps } from './types';
 
 /**
  * Renders a single top-level desktop menu entry. When the entry has children,
  * a NavigationMenu trigger reveals a full-width hover dropdown; otherwise the
  * entry is rendered as a plain navigation link.
+ *
+ * Uses `NavMenuLink` (which wraps Radix `NavigationMenuLink` directly with an
+ * intercepting onClick) so that internal navigation stays client-side and
+ * preserves the active locale prefix (e.g. `/es/about` instead of `/about`).
  *
  * @param props - The menu item to render.
  * @returns A `NavigationMenuItem` with optional dropdown content.
@@ -33,14 +39,12 @@ export default function DesktopMenuItem({ item }: DesktopMenuItemProps) {
           <ul className="relative grid w-full grid-flow-col grid-rows-3 gap-x-10 gap-y-1 py-4 pl-4">
             {item.items.map((subItem) => (
               <li key={subItem.title}>
-                <NavigationMenuLink asChild>
-                  <a
-                    href={subItem.url}
-                    className="block whitespace-nowrap py-1 text-[18px] font-normal transition-opacity duration-200 hover:opacity-70"
-                  >
-                    {subItem.title}
-                  </a>
-                </NavigationMenuLink>
+                <NavMenuLink
+                  href={subItem.url}
+                  className="block whitespace-nowrap py-1 text-[18px] font-normal transition-opacity duration-200 hover:opacity-70"
+                >
+                  {subItem.title}
+                </NavMenuLink>
               </li>
             ))}
           </ul>
@@ -51,12 +55,12 @@ export default function DesktopMenuItem({ item }: DesktopMenuItemProps) {
 
   return (
     <NavigationMenuItem>
-      <NavigationMenuLink
+      <NavMenuLink
         href={item.url}
         className="inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-normal transition-opacity hover:opacity-70"
       >
         {item.title}
-      </NavigationMenuLink>
+      </NavMenuLink>
     </NavigationMenuItem>
   );
 }
