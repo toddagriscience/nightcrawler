@@ -3,13 +3,15 @@
 'use client';
 
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { Link } from '@/i18n/config';
+import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import HamburgerButton from './hamburger-button';
@@ -19,6 +21,11 @@ import { NavLayoutProps } from './types';
 /**
  * Mobile layout for the marketing header. Visible below the `lg` breakpoint
  * with a fullscreen sheet menu triggered from a fixed bottom bar.
+ *
+ * Auth links are rendered as locale-aware `Link` elements styled with
+ * `buttonVariants` (rather than `Button asChild + Link`) to avoid the Radix
+ * Slot + `next/link` composition issue (see shadcn-ui/ui#8378) that can cause
+ * full page reloads in Next.js 16 + React 19.
  *
  * @param props - Resolved menu items and auth links to display.
  * @returns The mobile navigation chrome and its sheet menu.
@@ -63,18 +70,16 @@ export default function MobileNav({ menuItems, authLinks }: NavLayoutProps) {
               ))}
             </nav>
             <div className="flex flex-col gap-3 px-6 pb-10">
-              <Button
-                className="w-auto justify-start text-lg hover:opacity-70"
-                asChild
-                variant="ghost"
+              <Link
+                href={authLinks.signup.url}
+                onClick={() => setIsMobileOpen(false)}
+                className={cn(
+                  buttonVariants({ variant: 'ghost' }),
+                  'w-auto justify-start text-lg hover:opacity-70'
+                )}
               >
-                <a
-                  href={authLinks.signup.url}
-                  onClick={() => setIsMobileOpen(false)}
-                >
-                  {authLinks.signup.title}
-                </a>
-              </Button>
+                {authLinks.signup.title}
+              </Link>
             </div>
           </SheetContent>
         </Sheet>
@@ -84,14 +89,15 @@ export default function MobileNav({ menuItems, authLinks }: NavLayoutProps) {
             label={t('menu.open')}
             onClick={() => setIsMobileOpen(true)}
           />
-          <Button
-            className="text-lg font-normal"
-            asChild
-            variant="ghost"
-            size="sm"
+          <Link
+            href={authLinks.login.url}
+            className={cn(
+              buttonVariants({ variant: 'ghost', size: 'sm' }),
+              'text-lg font-normal'
+            )}
           >
-            <a href={authLinks.login.url}>{authLinks.login.title}</a>
-          </Button>
+            {authLinks.login.title}
+          </Link>
         </div>
       </div>
     </div>
