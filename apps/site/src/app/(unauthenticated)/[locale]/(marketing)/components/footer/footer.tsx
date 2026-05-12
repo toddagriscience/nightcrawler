@@ -78,8 +78,16 @@ const Footer = () => {
   const [langOpen, setLangOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 
+  const trimPath = (p: string) => p.replace(/\/+$/, '') || '/';
+
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
+    const segments = pathname.split('/');
+    segments[1] = newLocale;
+    const newPath = segments.join('/') || `/${newLocale}`;
+    if (trimPath(newPath) === trimPath(pathname)) {
+      return;
+    }
     setPendingLocale(newLocale);
   };
 

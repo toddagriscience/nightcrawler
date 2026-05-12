@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { env } from '@/lib/env';
+import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
   getArticleBySlug,
   isCareerArticle,
@@ -31,6 +33,17 @@ export default async function LegacyCareersArticleRedirect({
     return;
   }
   if (!isInternalArticle(article)) {
+    if (
+      isSelfReferentialArticleUrl(
+        String(article.offSiteUrl),
+        locale,
+        slug,
+        env.baseUrl
+      )
+    ) {
+      permanentRedirect(`/${locale}/index/${slug}`);
+      return;
+    }
     redirect(String(article.offSiteUrl));
     return;
   }
