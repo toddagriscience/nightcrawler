@@ -12,8 +12,13 @@ import { DesktopMenuItemProps } from './types';
 
 /**
  * Renders a single top-level desktop menu entry. When the entry has children,
- * a NavigationMenu trigger reveals a full-width hover dropdown; otherwise the
+ * a NavigationMenu trigger reveals a click-to-open dropdown; otherwise the
  * entry is rendered as a plain navigation link.
+ *
+ * The trigger's `onPointerMove` handler calls `preventDefault` so Radix's
+ * internal hover-open behavior is skipped (Radix composes user handlers with
+ * `checkForDefaultPrevented: true`). The menu therefore only opens on click or
+ * keyboard activation, while close-on-pointer-leave continues to work.
  *
  * Uses `NavMenuLink` (which wraps Radix `NavigationMenuLink` directly with an
  * intercepting onClick) so that internal navigation stays client-side and
@@ -26,7 +31,10 @@ export default function DesktopMenuItem({ item }: DesktopMenuItemProps) {
   if (item.items?.length) {
     return (
       <NavigationMenuItem>
-        <NavigationMenuTrigger className="rounded-none bg-transparent text-sm font-normal hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent">
+        <NavigationMenuTrigger
+          onPointerMove={(event) => event.preventDefault()}
+          className="cursor-pointer rounded-none bg-transparent text-sm font-normal transition-opacity hover:bg-transparent hover:opacity-70 focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+        >
           {item.title}
         </NavigationMenuTrigger>
         <NavigationMenuContent className="w-full h-[11rem]">
