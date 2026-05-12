@@ -118,9 +118,9 @@ describe('I18n Middleware', () => {
     it('should redirect non-locale routes to /en/{path} when unauthenticated', () => {
       const mockRequest = {
         nextUrl: {
-          pathname: '/who-we-are',
+          pathname: '/about',
           clone: vi.fn().mockReturnValue({
-            pathname: '/who-we-are',
+            pathname: '/about',
           }),
         },
       } as unknown as NextRequest;
@@ -132,7 +132,7 @@ describe('I18n Middleware', () => {
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
       expect(result.headers.get('location')).toStrictEqual({
-        pathname: '/en/who-we-are',
+        pathname: '/en/about',
       });
     });
 

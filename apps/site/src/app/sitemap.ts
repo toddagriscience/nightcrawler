@@ -50,7 +50,8 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '/',
     '/careers',
-    '/who-we-are',
+    '/about',
+    '/research',
     '/news',
     '/terms',
     '/privacy',
