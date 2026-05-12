@@ -26,7 +26,7 @@ export default function LegalPage() {
             Library
           </h1>
 
-          <ul className="lg:ml-[170px] max-w-[385px] flex flex-col gap-[15px] text-[17px] font-normal leading-[18px]">
+          <ul className="lg:ml-[170px] max-w-[385px] flex flex-col gap-[15px] text-[16px] font-normal leading-[18px]">
             {legalItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
