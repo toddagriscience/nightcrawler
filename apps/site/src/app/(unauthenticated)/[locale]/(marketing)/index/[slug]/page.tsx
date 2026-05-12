@@ -2,6 +2,8 @@
 
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
+import { env } from '@/lib/env';
+import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableTextReactComponents } from 'next-sanity';
@@ -22,7 +24,7 @@ export default async function ArticleIndexPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const article = await getArticleBySlug(slug, {
     next: { revalidate: 60 * 60 },
   });
@@ -32,7 +34,16 @@ export default async function ArticleIndexPage({
     return;
   }
 
-  if (!isInternalArticle(article)) {
+  const outbound =
+    !isInternalArticle(article) &&
+    !isSelfReferentialArticleUrl(
+      String(article.offSiteUrl),
+      locale,
+      slug,
+      env.baseUrl
+    );
+
+  if (outbound) {
     redirect(article.offSiteUrl as string);
     return;
   }
