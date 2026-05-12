@@ -2,15 +2,20 @@
 
 import { env } from '@/lib/env';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
-import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
+import {
+  getArticleBySlug,
+  isCareerArticle,
+  isInternalArticle,
+} from '@/lib/sanity/articles';
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
 
 /**
- * Legacy `/news/[slug]` entry point preserved with redirects to `/index/[slug]` or outbound URLs.
+ * `/careers/[slug]` resolves only Sanity articles classified as careers; internal posts 308 to
+ * `/index/[slug]`, outbound roles redirect to `offSiteUrl`.
  *
  * @param params - Locale and slug
  */
-export default async function LegacyNewsArticleRedirect({
+export default async function LegacyCareersArticleRedirect({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
@@ -20,6 +25,10 @@ export default async function LegacyNewsArticleRedirect({
     next: { revalidate: 60 * 60 },
   });
   if (article === undefined || article === null) {
+    notFound();
+    return;
+  }
+  if (!isCareerArticle(article)) {
     notFound();
     return;
   }

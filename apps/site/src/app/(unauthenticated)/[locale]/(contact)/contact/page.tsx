@@ -174,7 +174,7 @@ export default function Contact() {
         console.error('Failed to submit to Google Sheets:', error);
       }
       // Redirect to What We Do
-      router.push(`/what-we-do`);
+      router.push(`/research`);
     }
   }
 
@@ -361,10 +361,7 @@ export default function Contact() {
                     <div className="mt-10">
                       <p className="text-xs mb-5 font-thin">
                         Already started?{' '}
-                        <Link
-                          href="/login?utm_source=contact&utm_medium=internal&utm_campaign=already_started_click"
-                          className="underline font-normal"
-                        >
+                        <Link href="/login" className="underline font-normal">
                           Login to complete your application
                         </Link>
                       </p>

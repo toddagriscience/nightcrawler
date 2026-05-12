@@ -3,11 +3,11 @@
 import { client } from '@/lib/sanity/client';
 import { FilteredResponseQueryOptions, SanityDocument } from 'next-sanity';
 
-/** A helper function for querying Sanity. This function may need to be refactored in the future, as when it was created, the only Sanity document type that existed was `news`.
+/** A helper for querying Sanity (`news`, `career`, etc.).
  *
  * Queries with `@lib/sanity/client`'s fetch function.
  *
- * @param {string} documentType - The document type, most likely `news`
+ * @param {string} documentType - Sanity `_type`, e.g. `news` or `career`
  * @param {string} params.slug - Optional. The parameters for the query
  * @param {FilteredResponseQueryOptions} - Any options for the query.
  * @param {number} index - The index for the GROQ query. The default, 0, is usually fine.*/

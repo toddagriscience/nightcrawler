@@ -24,7 +24,7 @@ const webSiteStructuredData: WithContext<WebSite> = {
   '@type': 'WebSite',
   name: 'Todd',
   url: 'https://toddagriscience.com/',
-  alternateName: ['Todd Agriscience'],
+  alternateName: ['Todd'],
 };
 
 const organizationStructuredData: WithContext<Organization> = {

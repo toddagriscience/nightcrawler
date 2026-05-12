@@ -22,7 +22,7 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
 
   return (
     <section
-      id="who-we-are"
+      id="about"
       className="flex flex-col justify-center items-center text-center px-0 lg:px-0 h-[65vh] md:h-[75vh]"
       role="region"
     >
@@ -30,7 +30,7 @@ const Quote: React.FC<QuoteProps> = ({ isDark: propIsDark }) => {
         <span className="tracking-normal leading-tight">{t('quote')}</span>
       </h1>
       <Button
-        href="/who-we-are?utm_source=home&utm_medium=internal&utm_campaign=who_we_are_click"
+        href="/about"
         text={t('whoWeAre')}
         variant="outline"
         // isDark={isDark}

@@ -160,6 +160,21 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
+      {
+        source: '/:locale(en|es)/who-we-are/:path*',
+        destination: '/:locale/about/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/who-we-are',
+        destination: '/:locale/about',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/what-we-do',
+        destination: '/:locale/research',
+        permanent: true,
+      },
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',
