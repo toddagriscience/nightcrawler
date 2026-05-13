@@ -13,7 +13,7 @@ import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 const baseUrl = env.baseUrl;
 
-/** Child sitemap identifiers: main site URLs vs career CMS articles (`/index/[slug]` only). */
+/** Child sitemap identifiers: main site URLs vs career CMS articles under `/careers/[slug]`. */
 export async function generateSitemaps(): Promise<Array<{ id: string }>> {
   return [{ id: 'main' }, { id: 'careers' }];
 }
@@ -34,7 +34,7 @@ export default async function sitemap({
 }): Promise<MetadataRoute.Sitemap> {
   const slice = await id;
   if (slice === 'careers') {
-    return await getSanityCareersArticleIndexSitemap();
+    return await getSanityCareersArticleCareersRouteSitemap();
   }
   return getStaticSitemap().concat(await getSanityArticleMainIndexSitemap());
 }
@@ -50,6 +50,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '/',
     '/careers',
+    '/careers/index',
     '/about',
     '/research',
     '/news',
@@ -126,6 +127,42 @@ function articleListToIndexSitemapEntries(
   return sitemapEntries;
 }
 
+/**
+ * Converts careers posting documents to `/careers/[slug]` sitemap rows per locale.
+ *
+ * @param articles - Sanity career articles eligible for indexing
+ * @returns Sitemap rows for the careers sitemap slice
+ */
+function articleListToCareersPostingSitemapEntries(
+  articles: SanityArticle[]
+): MetadataRoute.Sitemap {
+  const sitemapEntries: MetadataRoute.Sitemap = [];
+  for (const locale of routing.locales) {
+    for (const article of articles) {
+      const slug = article.slug?.current;
+
+      if (slug === undefined || slug === null || slug.length === 0) {
+        continue;
+      }
+
+      const lastModified =
+        article._updatedAt !== undefined ? article._updatedAt : new Date();
+      const url = `${baseUrl}/${locale}/careers/${slug}`;
+
+      sitemapEntries.push({
+        url,
+        lastModified,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+        alternates: {
+          languages: getSupportedLanguages(`/careers/${slug}`),
+        },
+      });
+    }
+  }
+  return sitemapEntries;
+}
+
 /** Non-career Sanity article URLs for the main sitemap slice. */
 async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -139,13 +176,13 @@ async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap
   }
 }
 
-/** Career-tagged Sanity article URLs for the dedicated careers sitemap file. */
-async function getSanityCareersArticleIndexSitemap(): Promise<MetadataRoute.Sitemap> {
+/** Career-tagged Sanity article URLs under `/careers/[slug]` for the dedicated careers sitemap file. */
+async function getSanityCareersArticleCareersRouteSitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const articles = await getCareersSitemapArticles({
       next: { revalidate: 86400 },
     });
-    return articleListToIndexSitemapEntries(articles);
+    return articleListToCareersPostingSitemapEntries(articles);
   } catch (error) {
     logger.error('Error generating careers Sanity article sitemap:', error);
     return [];

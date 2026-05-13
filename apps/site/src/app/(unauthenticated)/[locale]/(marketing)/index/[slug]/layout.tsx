@@ -1,11 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createMetadata } from '@/lib/metadata';
-import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
+import {
+  getArticleBySlug,
+  isCareerArticle,
+  isInternalArticle,
+} from '@/lib/sanity/articles';
 import type { Metadata } from 'next';
 
 /**
- * SEO metadata for the canonical CMS article route.
+ * SEO metadata for the canonical CMS article route (`/index/[slug]` or careers canonical path).
  *
  * @param params - Locale and slug
  */
@@ -24,7 +28,9 @@ export async function generateMetadata({
   if (!isInternalArticle(article)) {
     return {};
   }
-  const path = `/${locale}/index/${slug}`;
+  const path = isCareerArticle(article)
+    ? `/${locale}/careers/${slug}`
+    : `/${locale}/index/${slug}`;
   const summary = article.summary;
   const description =
     summary !== undefined && summary !== null && summary.length > 0

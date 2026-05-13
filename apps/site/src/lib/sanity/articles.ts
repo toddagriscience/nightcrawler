@@ -56,7 +56,7 @@ const defaultListingOptions: FilteredResponseQueryOptions = {
  * Whether this article is intended to be read on-site (has no off-site URL).
  *
  * @param article - Sanity article document
- * @returns True when the article should use `/index/[slug]`
+ * @returns True when the article should render on-site (path is `/index/[slug]` or `/careers/[slug]` based on taxonomy)
  */
 export function isInternalArticle(
   article: Pick<SanityArticle, 'offSiteUrl'>
@@ -77,7 +77,7 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 }
 
 /**
- * Whether the document counts as careers content for `/careers` routes and the careers sitemap slice.
+ * Whether the document counts as careers content for `/careers/index`, `/careers/[slug]`, and the careers sitemap slice.
  *
  * @param article - Document classification from Sanity (`_type` or legacy tagging)
  * @returns True when the row should behave as a careers article on the marketing site

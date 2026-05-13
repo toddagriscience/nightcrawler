@@ -1,9 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import { redirect, permanentRedirect, notFound } from 'next/navigation';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import LegacyCareersArticleRedirect from './page';
+import CareersPostingPage from './page';
 
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
@@ -28,7 +29,14 @@ vi.mock('@/lib/env', () => ({
   env: { baseUrl: 'https://toddagriscience.com' },
 }));
 
-describe('Legacy /careers/[slug] redirect handler', () => {
+vi.mock(
+  '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page',
+  () => ({
+    CmsArticlePage: () => <div data-testid="cms-article-page" />,
+  })
+);
+
+describe('/careers/[slug] postings', () => {
   beforeEach(() => {
     vi.mocked(redirect).mockClear();
     vi.mocked(permanentRedirect).mockClear();
@@ -38,10 +46,10 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     isCareerArticleMock.mockReset();
   });
 
-  it('permanent-redirects to /index when off-site URL points at the same legacy careers path', async () => {
+  it('permanent-redirects when off-site URL points at same legacy careers path', async () => {
     const article = {
       _id: '1b',
-      _type: 'news',
+      _type: 'news' as const,
       title: 'Loop role',
       slug: { current: 'loop-role' },
       offSiteUrl: 'https://toddagriscience.com/en/careers/loop-role',
@@ -52,18 +60,18 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     isCareerArticleMock.mockReturnValueOnce(true);
     isInternalArticleMock.mockReturnValueOnce(false);
 
-    await LegacyCareersArticleRedirect({
+    await CareersPostingPage({
       params: Promise.resolve({ locale: 'en', slug: 'loop-role' }),
     });
 
     expect(redirect).not.toHaveBeenCalled();
-    expect(permanentRedirect).toHaveBeenCalledWith('/en/index/loop-role');
+    expect(permanentRedirect).toHaveBeenCalledWith('/en/careers/loop-role');
   });
 
   it('redirects externally when off-site URL is set', async () => {
     const article = {
       _id: '1',
-      _type: 'news',
+      _type: 'news' as const,
       title: 'External role',
       slug: { current: 'ext' },
       offSiteUrl: 'https://jobs.example/ext',
@@ -74,7 +82,7 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     isCareerArticleMock.mockReturnValueOnce(true);
     isInternalArticleMock.mockReturnValueOnce(false);
 
-    await LegacyCareersArticleRedirect({
+    await CareersPostingPage({
       params: Promise.resolve({ locale: 'en', slug: 'ext' }),
     });
 
@@ -82,10 +90,10 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     expect(redirect).toHaveBeenCalledWith('https://jobs.example/ext');
   });
 
-  it('permanent-redirects internal articles to /index/[slug]', async () => {
+  it('renders internal career articles', async () => {
     const article = {
       _id: '2',
-      _type: 'news',
+      _type: 'news' as const,
       title: 'Internal posting',
       slug: { current: 'internal-role' },
       summary: '',
@@ -95,26 +103,28 @@ describe('Legacy /careers/[slug] redirect handler', () => {
     isCareerArticleMock.mockReturnValueOnce(true);
     isInternalArticleMock.mockReturnValueOnce(true);
 
-    await LegacyCareersArticleRedirect({
+    const node = await CareersPostingPage({
       params: Promise.resolve({ locale: 'es', slug: 'internal-role' }),
     });
 
+    render(node);
+    expect(screen.getByTestId('cms-article-page')).toBeInTheDocument();
+    expect(permanentRedirect).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
-    expect(permanentRedirect).toHaveBeenCalledWith('/es/index/internal-role');
   });
 
   it('calls notFound when article is not career-classified', async () => {
     getArticleBySlugMock.mockResolvedValueOnce({
       _id: '3',
-      _type: 'news',
+      _type: 'news' as const,
       title: 'News piece',
       slug: { current: 'press-hit' },
       summary: '',
-      contentType: 'news',
+      contentType: 'news' as const,
     });
     isCareerArticleMock.mockReturnValueOnce(false);
 
-    await LegacyCareersArticleRedirect({
+    await CareersPostingPage({
       params: Promise.resolve({ locale: 'en', slug: 'press-hit' }),
     });
 
@@ -126,7 +136,7 @@ describe('Legacy /careers/[slug] redirect handler', () => {
   it('calls notFound when article is missing', async () => {
     getArticleBySlugMock.mockResolvedValueOnce(null);
 
-    await LegacyCareersArticleRedirect({
+    await CareersPostingPage({
       params: Promise.resolve({ locale: 'en', slug: 'missing' }),
     });
 

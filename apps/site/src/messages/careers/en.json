@@ -1,12 +1,13 @@
 {
   "careers": {
     "metadata": {
-      "description": "Discover our open roles. Our teams inspire, educate and enable people all over the world.",
+      "description": "Explore roles at Todd. Our teams inspire, educate and enable people all over the world.",
       "shortTitle": "Careers",
       "title": "Careers at Todd"
     },
-    "openRoles": {
-      "apply": "Apply →"
+    "jobListings": {
+      "apply": "Apply →",
+      "empty": "No postings are listed here right now. See our Todd University externship program on the main careers page."
     },
     "disclaimers": {
       "0": "Todd is a equal opportunity employer in the regions where we operate.",

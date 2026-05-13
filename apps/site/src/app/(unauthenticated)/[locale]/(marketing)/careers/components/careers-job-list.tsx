@@ -7,7 +7,7 @@ import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { Link } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
 
-interface CareersOpenRolesListProps {
+interface CareersJobListProps {
   /** Careers collection documents from Sanity */
   items: SanityArticle[];
 }
@@ -31,9 +31,9 @@ function isExternalPosting(
 }
 
 /**
- * Row-based open roles: job title, Apply →, posting date, location. No header row.
+ * Row-based postings: job title, Apply →, posting date, location. No header row.
  */
-export function CareersOpenRolesList({ items }: CareersOpenRolesListProps) {
+export function CareersJobList({ items }: CareersJobListProps) {
   const locale = useLocale();
   const t = useTranslations('careers');
 
@@ -55,14 +55,14 @@ export function CareersOpenRolesList({ items }: CareersOpenRolesListProps) {
             rel="noopener noreferrer"
             className="inline-flex shrink-0 text-sm font-medium underline underline-offset-4 transition hover:opacity-80"
           >
-            {t('openRoles.apply')}
+            {t('jobListings.apply')}
           </a>
         ) : (
           <Link
             href={href}
             className="inline-flex shrink-0 text-sm font-medium underline underline-offset-4 transition hover:opacity-80"
           >
-            {t('openRoles.apply')}
+            {t('jobListings.apply')}
           </Link>
         );
 

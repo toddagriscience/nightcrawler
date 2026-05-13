@@ -1,5 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import type { SanityArticle } from '@/lib/sanity/article-types';
+
+import { isCareerArticle } from '@/lib/sanity/articles';
+
 /** Normalizes hostnames so `www.example.com` matches `example.com`. */
 function hostnameWithoutWww(host: string): string {
   return host.replace(/^www\./i, '');
@@ -60,7 +64,7 @@ export function isSelfReferentialArticleUrl(
 }
 
 /**
- * Builds the locale-relative path for an on-site CMS article (`/index/[slug]`).
+ * Builds the locale-relative path for an on-site non-careers CMS article (`/index/[slug]`).
  *
  * @param slug - Article slug `current`
  * @returns Path without locale prefix (`next-intl` adds locale)
@@ -70,15 +74,28 @@ export function getInternalArticlePath(slug: string): string {
 }
 
 /**
- * Destination for listing cards: external URL when set, otherwise the internal article path.
+ * Builds the locale-relative path for an on-site careers posting (`/careers/[slug]`).
+ *
+ * @param slug - Article slug `current`
+ * @returns Path without locale prefix (`next-intl` adds locale)
+ */
+export function getInternalCareerArticlePath(slug: string): string {
+  return `/careers/${slug}`;
+}
+
+/**
+ * Destination for listing cards: external URL when set, otherwise the internal article path
+ * (`/careers/[slug]` for careers documents, `/index/[slug]` for news and other collections).
  *
  * @param article - Article-shaped object (`slug.current` required)
  * @returns Absolute external URL or internal path for `Link`
  */
-export function getArticleCardHref(article: {
-  offSiteUrl?: string | null;
-  slug: { current: string };
-}): string {
+export function getArticleCardHref(
+  article: {
+    offSiteUrl?: string | null;
+    slug: { current: string };
+  } & Pick<SanityArticle, '_type' | 'contentType' | 'collections'>
+): string {
   const external = article.offSiteUrl;
   if (
     external !== undefined &&
@@ -86,6 +103,9 @@ export function getArticleCardHref(article: {
     String(external).trim() !== ''
   ) {
     return external;
+  }
+  if (isCareerArticle(article)) {
+    return getInternalCareerArticlePath(article.slug.current);
   }
   return getInternalArticlePath(article.slug.current);
 }

@@ -9,7 +9,7 @@ export const ARTICLE_CONTENT_TYPES = [
   'story',
   'product-release',
   'press',
-  /** Job postings and other careers CMS pages (same `/index/[slug]` template as news). */
+  /** Job postings and other careers CMS pages (canonical `/careers/[slug]` template). */
   'careers',
 ] as const;
 

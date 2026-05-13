@@ -27,7 +27,7 @@ export function useMenuItems({
       url: '/about',
       items: [
         { title: t('company.about.title'), url: '/about' },
-        { title: t('company.careers.title'), url: '/careers' },
+        { title: t('company.careers.title'), url: '/careers/index' },
         { title: t('navigation.news'), url: '/news' },
       ],
     },

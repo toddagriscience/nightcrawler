@@ -175,11 +175,6 @@ const nextConfig: NextConfig = {
         destination: '/:locale/research',
         permanent: true,
       },
-      {
-        source: '/:locale(en|es)/careers/index',
-        destination: '/:locale/careers',
-        permanent: true,
-      },
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',

@@ -69,7 +69,7 @@ export default function WhoWeArePage() {
                 size="md"
                 className="px-6 py-2 max-w-[210px] self-start font-thin mt-8"
                 text={t('culture.cta.careers')}
-                href="/careers"
+                href="/careers/index"
                 showArrow={true}
               />
             </div>

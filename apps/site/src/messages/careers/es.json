@@ -1,12 +1,13 @@
 {
   "careers": {
     "metadata": {
-      "description": "Discover our open roles. Our teams inspire, educate and enable people all over the world.",
+      "description": "Explora las oportunidades en Todd. Nuestros equipos inspiran, educan y capacitan a personas en todo el mundo.",
       "shortTitle": "Careers",
       "title": "Careers at Todd"
     },
-    "openRoles": {
-      "apply": "Aplicar →"
+    "jobListings": {
+      "apply": "Aplicar →",
+      "empty": "Aún no hay vacantes aquí. Consulta el programa de externships en Todd en la página principal de carreras."
     },
     "disclaimers": {
       "0": "Todd es un empleador de igualdad de oportunidades en las regiones donde operamos.",
