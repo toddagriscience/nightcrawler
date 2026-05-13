@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ isDark: propIsDark }) => {
     { href: '/about', label: t('navigation.whoWeAre') },
     { href: '/research', label: t('navigation.whatWeDo') },
     { href: '/news', label: t('navigation.news') },
-    { href: '/careers/index', label: t('navigation.careers') },
+    { href: '/careers', label: t('navigation.careers') },
   ];
 
   return (
