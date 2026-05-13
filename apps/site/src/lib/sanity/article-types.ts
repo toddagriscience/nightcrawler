@@ -49,8 +49,12 @@ export interface SanityArticle {
   date?: string;
   author?: string;
   company?: string;
-  /** Job location for careers listings (optional; `career` documents in Studio). */
+  /** Job location (`career` documents); listings and `/careers/[slug]` hero. */
   jobLocation?: string;
+  /** Job posting team label (`career` documents); editors may omit on legacy rows. */
+  jobTeam?: string;
+  /** Apply CTA destination for internal career postings (`career`). */
+  applyUrl?: string;
   content?: SanityArticlePortableText;
   summary?: string;
   thumbnail?: SanityArticleImageField;

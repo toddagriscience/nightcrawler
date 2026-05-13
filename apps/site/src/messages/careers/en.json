@@ -5,6 +5,10 @@
       "shortTitle": "Careers",
       "title": "Careers at Todd"
     },
+    "jobPosting": {
+      "kicker": "Careers",
+      "applyNow": "Apply now"
+    },
     "jobListings": {
       "apply": "Apply now →",
       "toolbarAria": "Filter job postings",

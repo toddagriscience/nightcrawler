@@ -5,6 +5,10 @@
       "shortTitle": "Careers",
       "title": "Careers at Todd"
     },
+    "jobPosting": {
+      "kicker": "Carreras",
+      "applyNow": "Aplicar ahora"
+    },
     "jobListings": {
       "apply": "Aplicar ahora →",
       "toolbarAria": "Filtrar vacantes",

@@ -30,9 +30,9 @@ vi.mock('@/lib/env', () => ({
 }));
 
 vi.mock(
-  '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page',
+  '@/app/(unauthenticated)/[locale]/(marketing)/careers/components/careers-job-posting',
   () => ({
-    CmsArticlePage: () => <div data-testid="cms-article-page" />,
+    CareersJobPosting: () => <div data-testid="careers-job-posting" />,
   })
 );
 
@@ -108,7 +108,7 @@ describe('/careers/[slug] postings', () => {
     });
 
     render(node);
-    expect(screen.getByTestId('cms-article-page')).toBeInTheDocument();
+    expect(screen.getByTestId('careers-job-posting')).toBeInTheDocument();
     expect(permanentRedirect).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
   });

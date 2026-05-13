@@ -34,8 +34,10 @@ interface JobFiltersFormValues {
   location: string;
 }
 
-/** Department / label shown after the role title (`company`, else `subtitle`). */
+/** Department / label shown after the role title (`jobTeam`, else `company`, else `subtitle`). */
 function departmentLabel(item: SanityArticle): string | null {
+  const fromTeam = item.jobTeam?.trim();
+  if (fromTeam !== undefined && fromTeam.length > 0) return fromTeam;
   const fromCompany = item.company?.trim();
   if (fromCompany !== undefined && fromCompany.length > 0) return fromCompany;
   const fromSubtitle = item.subtitle?.trim();
@@ -123,13 +125,7 @@ export function CareersJobList({ items }: CareersJobListProps) {
       }
 
       if (q.length > 0) {
-        const parts = [
-          item.title,
-          dept ?? '',
-          loc ?? '',
-          item.company ?? '',
-          item.summary ?? '',
-        ];
+        const parts = [item.title, dept ?? '', loc ?? ''];
         const combined = parts.join(' ');
         if (!containsIgnoreCase(combined, q)) return false;
       }

@@ -33,6 +33,8 @@ const ARTICLE_PROJECTION = `{
   author,
   company,
   jobLocation,
+  jobTeam,
+  applyUrl,
   content,
   summary,
   thumbnail,

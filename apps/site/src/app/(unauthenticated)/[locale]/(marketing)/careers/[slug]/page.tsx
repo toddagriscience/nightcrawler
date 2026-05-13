@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { CmsArticlePage } from '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page';
+import { CareersJobPosting } from '@/app/(unauthenticated)/[locale]/(marketing)/careers/components/careers-job-posting';
 import { env } from '@/lib/env';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
@@ -47,5 +47,5 @@ export default async function CareersPostingPage({
     redirect(String(article.offSiteUrl));
     return;
   }
-  return <CmsArticlePage article={article} />;
+  return <CareersJobPosting article={article} locale={locale} />;
 }
