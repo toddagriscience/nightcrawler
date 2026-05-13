@@ -6,7 +6,17 @@
       "title": "Careers at Todd"
     },
     "jobListings": {
-      "apply": "Aplicar →",
+      "apply": "Aplicar ahora →",
+      "toolbarAria": "Filtrar vacantes",
+      "searchPlaceholder": "Buscar",
+      "searchAria": "Buscar vacantes",
+      "teamFilterAria": "Filtrar por equipo",
+      "locationFilterAria": "Filtrar por ubicación",
+      "filterAllTeams": "Todos los equipos",
+      "filterAllLocations": "Todas las ubicaciones",
+      "locationNotListed": "—",
+      "showingCount": "Mostrando {visible} vacantes de {total}",
+      "noMatches": "Ninguna vacante coincide con estos filtros.",
       "empty": "Aún no hay vacantes aquí. Consulta el programa de externships en Todd en la página principal de carreras."
     },
     "disclaimers": {

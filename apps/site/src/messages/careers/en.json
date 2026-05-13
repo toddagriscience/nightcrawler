@@ -6,7 +6,17 @@
       "title": "Careers at Todd"
     },
     "jobListings": {
-      "apply": "Apply →",
+      "apply": "Apply now →",
+      "toolbarAria": "Filter job postings",
+      "searchPlaceholder": "Search",
+      "searchAria": "Search job postings",
+      "teamFilterAria": "Filter by team",
+      "locationFilterAria": "Filter by location",
+      "filterAllTeams": "All teams",
+      "filterAllLocations": "All locations",
+      "locationNotListed": "—",
+      "showingCount": "Showing {visible} jobs of {total}",
+      "noMatches": "No postings match these filters.",
       "empty": "No postings are listed here right now. See our Todd University externship program on the main careers page."
     },
     "disclaimers": {

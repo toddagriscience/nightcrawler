@@ -27,19 +27,19 @@ export default async function CareersListingsPage({
   return (
     <section
       aria-labelledby="careers-at-todd-heading"
-      className="max-w-[1200px] mx-auto px-4 md:px-6 pb-16"
+      className="mx-auto max-w-[1200px] pl-4 pb-16 md:pl-6 pr-0"
     >
-      <div className="fadeInAnimation relative z-10 mx-auto mt-12 lg:max-w-[95%] pb-4">
-        <h2
+      <div className="fadeInAnimation relative z-10 mt-12 ml-auto mr-0 w-full max-w-4xl">
+        <h1
           id="careers-at-todd-heading"
-          className="md:px-6 px-4 mb-4 sm:mb-6 lg:mb-12 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight"
+          className="mb-14 text-center text-3xl font-light leading-tight tracking-tight text-foreground sm:text-4xl md:mb-16 md:text-5xl lg:text-6xl"
         >
           {t('metadata.title')}
-        </h2>
+        </h1>
         {careerArticles.length > 0 ? (
           <CareersJobList items={careerArticles} />
         ) : (
-          <p className="mx-auto max-w-2xl px-4 text-center text-[#555555] md:text-lg">
+          <p className="mx-auto max-w-2xl px-0 text-center text-[#555555] md:text-lg">
             {t('jobListings.empty')}
           </p>
         )}
