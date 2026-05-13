@@ -2,25 +2,15 @@
 
 'use client';
 
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { Link } from '@/i18n/config';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 interface CareersJobListProps {
   /** Careers collection documents from Sanity */
   items: SanityArticle[];
-}
-
-/** Formats listing dates with a safe fallback when `date` is missing. */
-function formatRoleDate(dateValue: string | undefined, locale: string): string {
-  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
-  if (safe.length === 0) return '';
-  return new Date(safe).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }
 
 function isExternalPosting(
@@ -34,7 +24,6 @@ function isExternalPosting(
  * Row-based postings: job title, Apply →, posting date, location. No header row.
  */
 export function CareersJobList({ items }: CareersJobListProps) {
-  const locale = useLocale();
   const t = useTranslations('careers');
 
   return (
@@ -46,7 +35,7 @@ export function CareersJobList({ items }: CareersJobListProps) {
           [item.jobLocation, item.company].find(
             (s) => s !== undefined && String(s).trim() !== ''
           ) ?? '';
-        const dateLabel = formatRoleDate(item.date, locale);
+        const dateLabel = formatArticleListDate(item.date);
 
         const applyControl = external ? (
           <a
