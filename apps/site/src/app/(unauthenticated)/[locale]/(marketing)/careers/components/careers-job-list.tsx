@@ -10,10 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Link } from '@/i18n/config';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
-import { Link } from '@/i18n/config';
-import { Search } from 'lucide-react';
+import { BiSearch } from 'react-icons/bi';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
@@ -151,10 +151,10 @@ export function CareersJobList({ items }: CareersJobListProps) {
           e.preventDefault();
         }}
       >
-        <div className="flex w-full flex-row flex-wrap items-start justify-between gap-x-6 gap-y-6 border-foreground/10">
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex max-w-lg items-center gap-3 border-b border-[#dcdcdc] pb-2">
-              <Search
+        <div className="grid w-full grid-cols-1 gap-x-8 gap-y-6 border-foreground/10 pb-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <div className="flex min-w-0 flex-col gap-2">
+            <div className="flex w-full items-center gap-3 border-b border-[#dcdcdc] pb-2">
+              <BiSearch
                 aria-hidden
                 className="h-4 w-4 shrink-0 text-[#848484]"
                 strokeWidth={2}
@@ -164,19 +164,19 @@ export function CareersJobList({ items }: CareersJobListProps) {
                 id="careers-job-search"
                 type="search"
                 autoComplete="off"
-                className="font-light h-9 min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 shadow-none outline-none placeholder:text-[#848484] focus-visible:ring-0"
+                className="h-9 min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 font-normal shadow-none outline-none placeholder:text-[#848484] focus-visible:ring-0"
                 placeholder={t('jobListings.searchPlaceholder')}
                 aria-label={t('jobListings.searchAria')}
               />
             </div>
-            <p className="text-sm font-light text-[#848484]">
+            <p className="text-sm font-normal text-[#848484]">
               {t('jobListings.showingCount', {
                 visible,
                 total,
               })}
             </p>
           </div>
-          <div className="flex shrink-0 flex-row flex-nowrap items-center justify-end gap-2 sm:gap-3">
+          <div className="flex flex-row flex-nowrap items-center justify-start gap-2 sm:justify-end sm:gap-3">
             <Controller
               name="team"
               control={control}
@@ -236,7 +236,7 @@ export function CareersJobList({ items }: CareersJobListProps) {
 
       {filteredItems.length === 0 && total > 0 ? (
         <p
-          className="w-full py-14 text-center text-sm font-light text-[#848484]"
+          className="w-full py-14 text-center text-sm font-normal text-[#848484]"
           role="status"
         >
           {t('jobListings.noMatches')}
@@ -244,7 +244,7 @@ export function CareersJobList({ items }: CareersJobListProps) {
       ) : null}
 
       {filteredItems.length > 0 ? (
-        <ul className="w-full list-none pr-0 pl-0">
+        <ul className="w-full list-none pl-0 pr-0">
           {filteredItems.map((item) => {
             const href = getArticleCardHref(item);
             const external = isExternalPosting(item);
@@ -274,21 +274,19 @@ export function CareersJobList({ items }: CareersJobListProps) {
                 key={item.slug.current}
                 className="border-b border-black/10 py-5 first:pt-0 last:border-b-0 md:py-6"
               >
-                <div className="flex flex-col gap-3 md:flex-row md:items-baseline md:justify-between md:gap-10">
-                  <div className="min-w-0 flex-1 text-base leading-snug">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-baseline md:gap-x-6 lg:gap-x-10">
+                  <div className="min-w-0 text-base leading-snug">
                     <span className="font-normal text-foreground">
                       {item.title}
                     </span>
                     {dept !== null ? (
-                      <span className="font-light text-[#848484] pl-3"> {dept}</span>
+                      <span className="font-normal text-[#848484]">{` · ${dept}`}</span>
                     ) : null}
                   </div>
-                  <div className="flex w-full flex-col gap-3 sm:ml-auto sm:w-auto sm:flex-row sm:items-baseline sm:justify-end sm:gap-6 md:gap-8">
-                    <span className="shrink-0 text-sm font-light text-[#848484] md:text-right md:tabular-nums">
-                      {loc !== null ? loc : t('jobListings.locationNotListed')}
-                    </span>
-                    {applyControl}
-                  </div>
+                  <span className="shrink-0 text-sm font-normal text-[#848484] md:text-right md:tabular-nums">
+                    {loc !== null ? loc : t('jobListings.locationNotListed')}
+                  </span>
+                  <div className="shrink-0 md:text-right">{applyControl}</div>
                 </div>
               </li>
             );
