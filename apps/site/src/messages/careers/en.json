@@ -5,6 +5,84 @@
       "shortTitle": "Careers",
       "title": "Careers at Todd"
     },
+    "landing": {
+      "hero": {
+        "kicker": "Company",
+        "title": "Build the future of sustainable agriculture",
+        "subtitle": "Todd is building a team that embodies diversity of thought, experience and background.",
+        "viewCareersCta": "View careers"
+      },
+      "bridgeStatement": "We are scientists, engineers, and builders who've created some of the most widely used technology in the world",
+      "values": {
+        "heading": "Values:",
+        "intro": "These values define what we consider to be the most important things. They guide our decision-making. We believe that channeling these values is the most promising way to achieve our mission.",
+        "item1Title": "Act with humility.",
+        "item1Body": "Humility reminds us to recognize the limits of our own knowledge and to remain open to new ideas, perspectives, and the possibility of being wrong. This mindset influences our iterative approach to build, and the reintegration of feedback into our research.",
+        "item2Title": "Transparency.",
+        "item2Body": "Building a company requires rigor and discipline, boundless imagination, and a deep sense of responsibility. We approach research and product development with respect for the transformative technology we are helping create, and the coupled benefits, changes, and risks that come along with it.",
+        "item3Title": "Driven by excellence.",
+        "item3Body": "We are a collaborative, intensely driven team operating at the highest level of performance. Innovation happens when the best ideas win. We seek to operate with the highest standards and strive to not be constrained by industry norms.",
+        "item4Title": "Creative.",
+        "item4Body": "Through our research we develop products that can transform how society thrives. Our technology reflects an internal culture of optimism for the future and stewardship of our mission."
+      },
+      "operatingPrinciples": {
+        "heading": "Operating Principles:",
+        "intro": "These principles define how we work together. They are important for establishing our operating culture.",
+        "item1Title": "Find a way.",
+        "item1Body": "We believe in finding a way to do the things that matter. We give agency to individuals and teams to find an approach that works. Ideas come from anywhere, regardless of title or tenure.",
+        "item2Title": "Creativity over control.",
+        "item2Body": "We look to find creative solutions, even if sometimes imperfect, over rigidity and control. Our approach to solving problems is based on best principles (first principles and best practices).",
+        "item3Title": "Update quickly.",
+        "item3Body": "We believe in finding a way to do the things that matter. We give agency to individuals and teams to find an approach that works. Ideas come from anywhere, regardless of title or tenure.",
+        "item4Title": "Intense focus.",
+        "item4Body": "We are hard workers who are here to make an impact on the world. This intensity and resilience are pivotal to the mission, while clarity and focus enable us to make hard decisions."
+      },
+      "heroImageAlt": "Todd colleagues collaborating together",
+      "benefits": {
+        "title": "Benefits",
+        "subtitle": "We want you to do the most impactful work of your career with the confidence that you and the people you care about most are supported.",
+        "employeesTitle": "For employees",
+        "employeesBullets": "Health, dental, and vision insurance\nMental healthcare support and services\nCompany sponsored retirement plan\nDomestic conference budget for each employee",
+        "lifeTitle": "Life & family",
+        "lifeBullets": "24-week paid birth-parent leave, WFH for up to 4 weeks after leave\n20-week paid parental leave, WFH for up to 4 weeks after leave\nLife and AD&D insurance\nGenerous paid time off to recharge, care for yourself and loved ones, and handle life's moments",
+        "cultureTitle": "Culture & developments",
+        "cultureBullets": "Annual learning & development stipend\nEmployee resource groups\nTeam-driven celebrations and events\nDaily breakfast, lunch, and dinner\n6 coaching sessions, for you and your dependents"
+      },
+      "splits": {
+        "residency": {
+          "heading": "Todd Residency",
+          "body": "Our early talent programs offers a chance to make a direct impact at Todd and contribute to Todd's growth journey. We welcome curious, driven people early in their professional journey through.",
+          "cta": "Learn more →",
+          "ctaHref": "/about",
+          "imageAlt": "Two Todd teammates talking in a bright office lounge"
+        },
+        "talent": {
+          "heading": "Early talent",
+          "body": "We welcome curious, driven people early in their professional journey to make a direct impact at Todd and contribute to Todd's own growth journey.",
+          "cta": "Learn more →",
+          "ctaHref": "/about",
+          "imageAlt": "Early-career teammates collaborating in a modern office"
+        }
+      },
+      "quote": {
+        "text": "My colleagues recognize the importance of what they're building and genuinely care about the outcomes in ways that surpass previous scientific breakthroughs.",
+        "attribution": "Oscar Gaske, Founding Engineer at Todd"
+      },
+      "resources": {
+        "eyebrow": "Resources",
+        "card1Title": "Leadership",
+        "card1Category": "Company",
+        "card2Title": "Interview guide",
+        "card2Category": "Careers",
+        "card3Title": "Building dynamic teams",
+        "card3Category": "Company"
+      },
+      "footerCta": {
+        "heading": "Shape the future of agriculture",
+        "cta": "View careers →",
+        "ctaHref": "/careers/index"
+      }
+    },
     "jobPosting": {
       "kicker": "Careers",
       "applyNow": "Apply now"

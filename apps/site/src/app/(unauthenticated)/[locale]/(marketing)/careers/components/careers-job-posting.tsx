@@ -1,12 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { MarketingPillLink } from '@/app/(unauthenticated)/[locale]/(marketing)/components/marketing-blocks';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { logger } from '@/lib/logger';
 import { PortableText } from 'next-sanity';
 import type { PortableTextReactComponents } from 'next-sanity';
-import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 /** Props for {@link CareersJobPosting}. */
@@ -38,46 +38,6 @@ function careerHeroSubtitle(article: SanityArticle): string | undefined {
   if (team !== undefined && location !== undefined)
     return `${team} — ${location}`;
   return team ?? location;
-}
-
-/**
- * True when applying should open in a separate tab (`http` / `https` only).
- *
- * @param href - Resolved apply URL from Sanity
- */
-function shouldOpenApplyInNewTab(href: string): boolean {
-  return /^https?:\/\//i.test(href);
-}
-
-/**
- * Accessible apply CTA reused for duplicate buttons on one posting page.
- *
- * @param props - Anchor attributes and pill label
- */
-function ApplyNowPill({
-  href,
-  opensInNewTab,
-  children,
-}: {
-  /** Resolved apply URL (`https:` or trusted internal path) */
-  href: string;
-  /** When true, navigates external apply flows in another tab safely */
-  opensInNewTab: boolean;
-  /** Localized button label */
-  children: ReactNode;
-}) {
-  const externalAttrs = opensInNewTab
-    ? { target: '_blank' as const, rel: 'noopener noreferrer' as const }
-    : {};
-  return (
-    <a
-      className="inline-flex items-center justify-center rounded-full border border-neutral-400 bg-background px-6 py-2.5 text-base font-normal tracking-tight text-foreground outline-offset-2 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
-      href={href}
-      {...externalAttrs}
-    >
-      {children}
-    </a>
-  );
 }
 
 /**
@@ -134,11 +94,6 @@ export async function CareersJobPosting({
     },
   };
 
-  const showApplyButtons = applyHref !== undefined;
-
-  const applyOpensNewTab =
-    applyHref !== undefined && shouldOpenApplyInNewTab(applyHref);
-
   return (
     <main className="min-h-[50vh]" id={`careers-post-${article.slug.current}`}>
       <div className="mx-auto mt-16 max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
@@ -156,9 +111,9 @@ export async function CareersJobPosting({
           ) : null}
           {applyHref ? (
             <div className="mt-8 flex justify-center">
-              <ApplyNowPill href={applyHref} opensInNewTab={applyOpensNewTab}>
+              <MarketingPillLink href={applyHref}>
                 {t('jobPosting.applyNow')}
-              </ApplyNowPill>
+              </MarketingPillLink>
             </div>
           ) : null}
         </header>
@@ -172,9 +127,9 @@ export async function CareersJobPosting({
         </div>
         {applyHref ? (
           <div className="mt-16 flex justify-center pb-8">
-            <ApplyNowPill href={applyHref} opensInNewTab={applyOpensNewTab}>
+            <MarketingPillLink href={applyHref}>
               {t('jobPosting.applyNow')}
-            </ApplyNowPill>
+            </MarketingPillLink>
           </div>
         ) : null}
       </div>

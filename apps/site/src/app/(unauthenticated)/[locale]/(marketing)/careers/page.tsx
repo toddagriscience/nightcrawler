@@ -1,12 +1,17 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { CareersExternship } from './components/careers-externship';
+import { CareersLanding } from './components/careers-landing';
 
 /**
- * Careers overview: Todd University externship landing. Open roles live at `/careers/index`.
+ * Careers hub at `/careers`: company story and values; open roles live at `/careers/index`.
  *
- * @returns Externship content
+ * @param params - Route params including locale
  */
-export default async function CareersPage() {
-  return <CareersExternship />;
+export default async function CareersPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return <CareersLanding locale={locale} />;
 }
