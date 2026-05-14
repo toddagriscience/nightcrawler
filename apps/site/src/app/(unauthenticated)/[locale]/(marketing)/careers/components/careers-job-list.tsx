@@ -2,18 +2,18 @@
 
 'use client';
 
-import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { Link } from '@/i18n/config';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
-import { BiSearch } from 'react-icons/bi';
+import { BiChevronDown, BiSearch } from 'react-icons/bi';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
@@ -65,8 +65,15 @@ function containsIgnoreCase(haystack: string, needle: string): boolean {
   return haystack.toLowerCase().includes(needle.toLowerCase());
 }
 
+/** Matches prior toolbar styling; `DropdownMenu` avoids Radix Select’s `RemoveScroll` (body padding / layout shift). */
+const CAREERS_FILTER_TRIGGER_CLASS =
+  'inline-flex h-auto w-max min-w-0 max-w-none items-center justify-start gap-1 rounded-none border-0 bg-transparent py-2 pl-0 pr-0 text-left text-sm font-normal text-foreground shadow-none outline-none focus-visible:ring-1 focus-visible:ring-offset-2';
+
 /**
  * Careers index layout: toolbar (search + filters + counts) and list rows styled like the Todd careers reference.
+ *
+ * Filters use **dropdown menus** instead of `Select` so opening them does not mount `react-remove-scroll` on the
+ * document (which was shifting the page when the scrollbar gutter changed).
  *
  * @param props - Careers documents from Sanity
  */
@@ -176,55 +183,89 @@ export function CareersJobList({ items }: CareersJobListProps) {
             <Controller
               name="team"
               control={control}
-              render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    className="inline-flex h-auto !w-max min-w-0 max-w-none items-center justify-start gap-2 rounded-none border-0 bg-transparent py-2 pl-0 pr-0 text-left text-sm font-normal text-foreground shadow-none focus-visible:ring-1 focus-visible:ring-offset-2 [&>span]:line-clamp-none [&>span]:whitespace-nowrap"
-                    aria-label={t('jobListings.teamFilterAria')}
-                  >
-                    <SelectValue
-                      placeholder={t('jobListings.filterAllTeams')}
-                    />
-                  </SelectTrigger>
-                  <SelectContent align="end">
-                    <SelectItem value={ALL_TEAMS_VALUE}>
-                      {t('jobListings.filterAllTeams')}
-                    </SelectItem>
-                    {teamOptions.map(({ value }) => (
-                      <SelectItem key={value} value={value}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              render={({ field }) => {
+                const triggerLabel =
+                  field.value === ALL_TEAMS_VALUE
+                    ? t('jobListings.filterAllTeams')
+                    : field.value;
+                return (
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger
+                      type="button"
+                      className={CAREERS_FILTER_TRIGGER_CLASS}
+                      aria-label={t('jobListings.teamFilterAria')}
+                    >
+                      <span className="whitespace-nowrap">{triggerLabel}</span>
+                      <BiChevronDown
+                        aria-hidden
+                        className="h-4 w-4 shrink-0 opacity-50"
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="max-h-72 overflow-y-auto"
+                    >
+                      <DropdownMenuRadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <DropdownMenuRadioItem value={ALL_TEAMS_VALUE}>
+                          {t('jobListings.filterAllTeams')}
+                        </DropdownMenuRadioItem>
+                        {teamOptions.map(({ value }) => (
+                          <DropdownMenuRadioItem key={value} value={value}>
+                            {value}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              }}
             />
 
             <Controller
               name="location"
               control={control}
-              render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    className="inline-flex h-auto !w-max min-w-0 max-w-none items-center justify-start gap-2 rounded-none border-0 bg-transparent py-2 pl-0 pr-0 text-left text-sm font-normal text-foreground shadow-none focus-visible:ring-1 focus-visible:ring-offset-2 [&>span]:line-clamp-none [&>span]:whitespace-nowrap"
-                    aria-label={t('jobListings.locationFilterAria')}
-                  >
-                    <SelectValue
-                      placeholder={t('jobListings.filterAllLocations')}
-                    />
-                  </SelectTrigger>
-                  <SelectContent align="end">
-                    <SelectItem value={ALL_LOCATIONS_VALUE}>
-                      {t('jobListings.filterAllLocations')}
-                    </SelectItem>
-                    {locationOptions.map(({ value }) => (
-                      <SelectItem key={value} value={value}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              render={({ field }) => {
+                const triggerLabel =
+                  field.value === ALL_LOCATIONS_VALUE
+                    ? t('jobListings.filterAllLocations')
+                    : field.value;
+                return (
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger
+                      type="button"
+                      className={CAREERS_FILTER_TRIGGER_CLASS}
+                      aria-label={t('jobListings.locationFilterAria')}
+                    >
+                      <span className="whitespace-nowrap">{triggerLabel}</span>
+                      <BiChevronDown
+                        aria-hidden
+                        className="h-4 w-4 shrink-0 opacity-50"
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="max-h-72 overflow-y-auto"
+                    >
+                      <DropdownMenuRadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <DropdownMenuRadioItem value={ALL_LOCATIONS_VALUE}>
+                          {t('jobListings.filterAllLocations')}
+                        </DropdownMenuRadioItem>
+                        {locationOptions.map(({ value }) => (
+                          <DropdownMenuRadioItem key={value} value={value}>
+                            {value}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              }}
             />
           </div>
         </div>
