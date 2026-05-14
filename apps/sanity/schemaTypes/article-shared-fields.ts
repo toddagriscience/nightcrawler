@@ -227,15 +227,9 @@ const sourceField = defineField({
 export const careerArticleLeadFields = [excludeFromSitemapField, titleField, slugField]
 
 /**
- * Portable Text body for `career` documents — follows team/location/apply in Studio (`summary` and `source` stay on `news` only).
+ * Portable Text body for `career` documents — follows team/location/apply/SEO description in Studio (`source` stays on `news` only).
  */
 export const careerArticleTrailFields = [contentFieldCareer]
-
-/**
- * Full `career` shared field set without job rows (lead + trail). Prefer {@link careerArticleLeadFields}
- * + `career.ts` job fields + {@link careerArticleTrailFields} for editor flow.
- */
-export const careerArticleBaseFields = [...careerArticleLeadFields, ...careerArticleTrailFields]
 
 /**
  * Full article body + media + routing fields for `news` (and legacy career-tagged articles).

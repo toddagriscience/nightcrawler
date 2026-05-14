@@ -64,7 +64,7 @@ export function MarketingImageTextSplit({
       >
         {heading}
       </h2>
-      <p className="mt-5 text-base font-normal leading-relaxed text-[#444444] md:text-lg">
+      <p className="mt-5 text-base font-normal leading-relaxed text-[#444444]">
         {body}
       </p>
       <div className="mt-8">

@@ -1,11 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Link } from '@/i18n/config';
+import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
 /** Tailwind classes shared by outline pill CTAs across marketing surfaces */
 export const MARKETING_PILL_LINK_CLASSNAME =
-  'inline-flex items-center justify-center rounded-full border border-neutral-400 bg-background px-7 py-2.5 text-base font-normal tracking-tight text-foreground outline-offset-2 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
+  'inline-flex items-center justify-center rounded-full border border-neutral-400 bg-background px-7 py-2.5 text-sm font-normal tracking-tight text-foreground outline-offset-2 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 
 /** Props for {@link MarketingPillLink} */
 export interface MarketingPillLinkProps {
@@ -26,7 +27,7 @@ export function MarketingPillLink({
   children,
   className = '',
 }: MarketingPillLinkProps) {
-  const combined = `${MARKETING_PILL_LINK_CLASSNAME} ${className}`.trim();
+  const combined = cn(MARKETING_PILL_LINK_CLASSNAME, className);
   const external = /^https?:\/\//i.test(href) || href.startsWith('mailto:');
 
   if (href.startsWith('#')) {

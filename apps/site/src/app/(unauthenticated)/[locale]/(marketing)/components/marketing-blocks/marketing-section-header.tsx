@@ -1,11 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { cn } from '@/lib/utils';
+
 /** Centered stack used above grids (benefits, resources, etc.) */
 export interface MarketingSectionHeaderProps {
   /** Optional DOM id for `aria-labelledby` (on `h2`, or on the eyebrow when there is no title) */
   id?: string;
   /** Small centered eyebrow above the title */
   eyebrow?: string;
+  /** Extra classes for the eyebrow (e.g. `text-black`); defaults to muted gray */
+  eyebrowClassName?: string;
   /** Primary heading; omit for eyebrow-only sections */
   title?: string;
   /** Supporting sentence under the title */
@@ -20,6 +24,7 @@ export interface MarketingSectionHeaderProps {
 export function MarketingSectionHeader({
   id,
   eyebrow,
+  eyebrowClassName,
   title,
   subtitle,
 }: MarketingSectionHeaderProps) {
@@ -30,7 +35,10 @@ export function MarketingSectionHeader({
     <header className="mx-auto max-w-3xl px-4 text-center md:px-6">
       {hasEyebrow ? (
         <p
-          className="text-sm font-normal tracking-normal text-[#848484]"
+          className={cn(
+            'text-sm font-normal tracking-normal text-[#848484]',
+            eyebrowClassName
+          )}
           id={hasTitle ? undefined : id}
         >
           {eyebrow}

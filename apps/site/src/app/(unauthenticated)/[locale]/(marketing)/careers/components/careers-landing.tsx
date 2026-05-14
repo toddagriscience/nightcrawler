@@ -122,6 +122,7 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
         <MarketingResourceCards
           cards={resourceCards}
           eyebrow={resourcesEyebrow}
+          eyebrowClassName="text-black"
           sectionId="careers-resources"
         />
 

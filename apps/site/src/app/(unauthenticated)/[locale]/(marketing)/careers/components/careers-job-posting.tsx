@@ -98,14 +98,14 @@ export async function CareersJobPosting({
     <main className="min-h-[50vh]" id={`careers-post-${article.slug.current}`}>
       <div className="mx-auto mt-16 max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
         <header className="flex flex-col items-center text-center">
-          <p className="text-sm font-normal tracking-normal text-[#848484]">
+          <p className="text-sm font-normal tracking-normal text-black">
             {t('jobPosting.kicker')}
           </p>
-          <h1 className="mt-6 text-4xl leading-tight tracking-tight text-foreground font-normal md:text-[44px] md:leading-tight">
+          <h1 className="mt-6 text-4xl leading-tight tracking-tight text-black font-normal md:text-[44px] md:leading-tight">
             {article.title}
           </h1>
           {subtitle !== undefined ? (
-            <p className="mt-4 max-w-xl text-lg font-normal text-foreground">
+            <p className="mt-4 max-w-xl text-base font-normal text-foreground">
               {subtitle}
             </p>
           ) : null}

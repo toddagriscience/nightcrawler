@@ -265,23 +265,59 @@ export function CareersJobList({ items }: CareersJobListProps) {
               </Link>
             );
 
+            const rowLinkClassName =
+              'contents rounded-sm no-underline outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
+            const rowAriaLabel = [item.title, dept, loc]
+              .filter((s): s is string => s !== null && s.length > 0)
+              .join(', ');
+
+            const titleLocationLink = external ? (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={rowLinkClassName}
+                aria-label={rowAriaLabel}
+              >
+                <div className="min-w-0 text-sm leading-snug">
+                  <span className="font-normal text-foreground">
+                    {item.title}
+                  </span>
+                  {dept !== null ? (
+                    <span className="font-normal text-[#848484]">{` · ${dept}`}</span>
+                  ) : null}
+                </div>
+                <span className="shrink-0 text-sm font-normal text-[#848484] md:text-right md:tabular-nums">
+                  {loc !== null ? loc : t('jobListings.locationNotListed')}
+                </span>
+              </a>
+            ) : (
+              <Link
+                href={href}
+                className={rowLinkClassName}
+                aria-label={rowAriaLabel}
+              >
+                <div className="min-w-0 text-sm leading-snug">
+                  <span className="font-normal text-foreground">
+                    {item.title}
+                  </span>
+                  {dept !== null ? (
+                    <span className="font-normal text-[#848484]">{` · ${dept}`}</span>
+                  ) : null}
+                </div>
+                <span className="shrink-0 text-sm font-normal text-[#848484] md:text-right md:tabular-nums">
+                  {loc !== null ? loc : t('jobListings.locationNotListed')}
+                </span>
+              </Link>
+            );
+
             return (
               <li
                 key={item.slug.current}
                 className="border-b border-black/10 py-5 first:pt-0 last:border-b-0 md:py-6"
               >
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-baseline md:gap-x-6 lg:gap-x-10">
-                  <div className="min-w-0 text-base leading-snug">
-                    <span className="font-normal text-foreground">
-                      {item.title}
-                    </span>
-                    {dept !== null ? (
-                      <span className="font-normal text-[#848484]">{` · ${dept}`}</span>
-                    ) : null}
-                  </div>
-                  <span className="shrink-0 text-sm font-normal text-[#848484] md:text-right md:tabular-nums">
-                    {loc !== null ? loc : t('jobListings.locationNotListed')}
-                  </span>
+                  {titleLocationLink}
                   <div className="shrink-0 md:text-right">{applyControl}</div>
                 </div>
               </li>

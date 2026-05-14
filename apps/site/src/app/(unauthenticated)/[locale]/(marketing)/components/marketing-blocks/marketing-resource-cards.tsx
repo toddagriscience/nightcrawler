@@ -16,6 +16,8 @@ export interface MarketingResourceCard {
 export interface MarketingResourceCardsProps {
   sectionId?: string;
   eyebrow?: string;
+  /** Merged onto the eyebrow line (e.g. `text-black` on the careers hub) */
+  eyebrowClassName?: string;
   title?: string;
   cards: readonly MarketingResourceCard[];
 }
@@ -28,6 +30,7 @@ export interface MarketingResourceCardsProps {
 export function MarketingResourceCards({
   sectionId,
   eyebrow,
+  eyebrowClassName,
   title,
   cards,
 }: MarketingResourceCardsProps) {
@@ -48,6 +51,7 @@ export function MarketingResourceCards({
       {showHeader ? (
         <MarketingSectionHeader
           eyebrow={eyebrow}
+          eyebrowClassName={eyebrowClassName}
           id={headingId}
           title={title}
         />

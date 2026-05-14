@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 /**
- * Open Graph / meta `description` for a careers posting: prefers `summary` when present (legacy `news`), else team and location, else a default line.
+ * Open Graph / meta `description` for a careers posting: prefers optional `summary` from Sanity when present, else team and location, else a default line.
  *
  * @param article - Internal career-classified document from Sanity
  * @returns Plain-text description for `<meta name="description">`

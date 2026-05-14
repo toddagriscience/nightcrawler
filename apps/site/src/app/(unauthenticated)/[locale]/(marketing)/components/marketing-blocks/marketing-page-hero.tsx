@@ -34,18 +34,18 @@ export function MarketingPageHero({
       className="flex flex-col items-center px-4 text-center md:px-6"
     >
       {kicker !== undefined && kicker.length > 0 ? (
-        <p className="text-sm font-normal tracking-normal text-[#848484]">
+        <p className="text-sm font-normal tracking-normal text-black">
           {kicker}
         </p>
       ) : null}
       <h1
         id={titleId}
-        className={`max-w-3xl text-4xl font-normal leading-tight tracking-tight text-foreground md:text-5xl md:leading-tight ${kicker !== undefined && kicker.length > 0 ? 'mt-6' : ''}`}
+        className={`max-w-4xl text-[64px] font-normal leading-tight tracking-tight text-black ${kicker !== undefined && kicker.length > 0 ? 'mt-6' : ''}`}
       >
         {title}
       </h1>
       {subtitle !== undefined && subtitle.length > 0 ? (
-        <p className="mx-auto mt-6 max-w-xl text-base font-normal leading-relaxed text-foreground md:text-lg">
+        <p className="mx-auto mt-6 max-w-xl text-base font-normal leading-relaxed text-foreground">
           {subtitle}
         </p>
       ) : null}

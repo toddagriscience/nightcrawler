@@ -8,7 +8,7 @@ import {careerArticleLeadFields, careerArticleTrailFields} from './article-share
 /**
  * Job postings for `/[locale]/careers/[slug]`; separate `_type` for a dedicated Studio list and a slimmer field set than `news`.
  *
- * Does not use thumbnails, header image, featured flag, subscripts, redirect URL, source, summary, company/author/subtitle/date (`news` / article template only).
+ * Does not use thumbnails, header image, featured flag, subscripts, `offSiteUrl`, `source`, `company` / `author` / `subtitle` / `date` (`news` only).
  */
 export default defineType({
   name: 'career',
@@ -42,6 +42,14 @@ export default defineType({
           const u = url !== undefined && url !== null && url !== '' ? String(url).trim() : ''
           return u !== '' ? true : 'Apply URL is required.'
         }),
+    }),
+    defineField({
+      name: 'summary',
+      title: 'SEO description',
+      type: 'text',
+      rows: 2,
+      description:
+        'Optional. Used for `<meta name="description">` and social previews when set; otherwise the site uses team and location.',
     }),
     ...careerArticleTrailFields,
   ],
