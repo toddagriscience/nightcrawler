@@ -13,7 +13,7 @@ import specialRedirect from './proxy/special-redirect';
 
 /**
  * Proxy for internationalization, authorization, and privacy controls.
- * Runs careers-specific routing first (`special-redirect`: externship redirect, `/careers/index` rewrite).
+ * Runs careers-specific routing first (`special-redirect`: externship redirect).
  * Handles Global Privacy Control (GPC) signals and privacy preferences.
  * @param {NextRequest} request - The request object
  * @returns {NextResponse} - The response object

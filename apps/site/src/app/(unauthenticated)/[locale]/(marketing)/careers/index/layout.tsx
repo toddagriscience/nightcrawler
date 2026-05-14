@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 /**
- * Metadata for careers listings — canonical URL `/careers/index` (rewritten here internally).
+ * Metadata for **`/{locale}/careers/index`** (job listings index).
  *
  * @param params - Route params with locale
  */
@@ -51,11 +51,11 @@ export async function generateMetadata({
 }
 
 /**
- * Passthrough layout for the careers listings subtree.
+ * Passthrough layout for the careers **`/index`** subtree.
  *
  * @param props - Layout children slot
  */
-export default function CareersListingsLayout({
+export default function CareersIndexLayout({
   children,
 }: {
   children: React.ReactNode;

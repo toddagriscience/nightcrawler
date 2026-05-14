@@ -6,15 +6,14 @@ import { getTranslations } from 'next-intl/server';
 import { CareersJobList } from '../components/careers-job-list';
 
 /**
- * Careers postings from Sanity (links use `/careers/[slug]` or external ATS URLs).
+ * Careers job listings from Sanity (links use `/careers/[slug]` or external ATS URLs).
  *
- * Public URL is **`/careers/index`** via middleware rewrite (implementation lives here because the App Router
- * cannot expose both `/careers` and `/careers/index` from filesystem routes alone).
+ * Public URL: **`/{locale}/careers/index`** (distinct from the hub at **`/{locale}/careers`**).
  *
  * @param params - Route params with locale
  * @returns Job listings or empty-state message
  */
-export default async function CareersListingsPage({
+export default async function CareersIndexPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
