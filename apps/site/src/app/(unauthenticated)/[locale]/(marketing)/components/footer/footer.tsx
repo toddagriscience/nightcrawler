@@ -29,7 +29,7 @@ const Footer = () => {
     { href: '/about', label: t('links.whoWeAre') },
     { href: '/research', label: t('links.whatWeDo') },
     { href: '/news', label: t('links.news') },
-    { href: '/careers/index', label: t('links.careers') },
+    { href: '/careers', label: t('links.careers') },
     { href: '/contact', label: t('links.contact') },
     // comment out until we have a foundation page
     // { href: '/foundation', label: t('links.foundation') },

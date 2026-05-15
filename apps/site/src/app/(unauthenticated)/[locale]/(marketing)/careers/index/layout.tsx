@@ -18,7 +18,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'careers.metadata' });
 
   return {
-    metadataBase: new URL('https://toddagriscience.com'),
+    metadataBase: new URL(env.baseUrl),
     title: {
       absolute: `${t('shortTitle')} | Todd United States`,
     },
