@@ -49,6 +49,11 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-muted: var(--muted);
+  --color-popover: var(--background);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 }
@@ -118,6 +123,7 @@ body:has(.authenticated-root) {
 
 html {
   position: relative;
+  scrollbar-gutter: stable;
 }
 
 html,

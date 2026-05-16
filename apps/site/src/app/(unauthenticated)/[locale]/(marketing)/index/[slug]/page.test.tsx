@@ -3,43 +3,59 @@
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ArticleIndexPage from './page';
 
-const { item } = vi.hoisted(() => {
-  return {
-    item: {
-      title: 'New AI Model Sets Performance Record',
-      source: 'TechCrunch',
-      date: '2024-11-20T00:00:00.000Z',
-      summary:
-        'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
-      slug: { current: 'new-ai' },
-      content: [
-        {
-          _key: 'ce12009ed6af',
-          _type: 'block',
-          children: [
-            {
-              _key: '64e6a6b07265',
-              _type: 'span',
-              marks: [],
-              text: 'Test content.',
-            },
-          ],
-          markDefs: [],
-          style: 'normal',
-        },
-      ],
-      headerImage: {
-        _type: 'image',
-        alt: 'Header image',
-        asset: {
-          _ref: 'image-test-asset-2518x1690-png',
-          _type: 'reference',
-        },
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+  permanentRedirect: vi.fn(),
+  notFound: vi.fn(),
+}));
+
+const {
+  item,
+  getArticleBySlugMock,
+  isCareerArticleMock,
+  isInternalArticleMock,
+} = vi.hoisted(() => {
+  const article = {
+    title: 'New AI Model Sets Performance Record',
+    source: 'TechCrunch',
+    date: '2024-11-20T00:00:00.000Z',
+    summary:
+      'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
+    slug: { current: 'new-ai' },
+    _type: 'news' as const,
+    content: [
+      {
+        _key: 'ce12009ed6af',
+        _type: 'block',
+        children: [
+          {
+            _key: '64e6a6b07265',
+            _type: 'span',
+            marks: [],
+            text: 'Test content.',
+          },
+        ],
+        markDefs: [],
+        style: 'normal',
+      },
+    ],
+    headerImage: {
+      _type: 'image',
+      alt: 'Header image',
+      asset: {
+        _ref: 'image-test-asset-2518x1690-png',
+        _type: 'reference',
       },
     },
+  };
+  return {
+    item: article,
+    getArticleBySlugMock: vi.fn(),
+    isCareerArticleMock: vi.fn(),
+    isInternalArticleMock: vi.fn(),
   };
 });
 
@@ -64,8 +80,9 @@ vi.mock('embla-carousel-react', () => {
 });
 
 vi.mock('@/lib/sanity/articles', () => ({
-  getArticleBySlug: vi.fn().mockResolvedValue(item),
-  isInternalArticle: vi.fn(() => true),
+  getArticleBySlug: getArticleBySlugMock,
+  isInternalArticle: isInternalArticleMock,
+  isCareerArticle: isCareerArticleMock,
 }));
 
 const builder = {
@@ -82,6 +99,15 @@ vi.mock('@/lib/sanity/utils', () => {
 });
 
 describe('Article index Page', () => {
+  beforeEach(() => {
+    getArticleBySlugMock.mockReset();
+    isCareerArticleMock.mockReset();
+    isInternalArticleMock.mockReset();
+    getArticleBySlugMock.mockResolvedValue(item);
+    isCareerArticleMock.mockReturnValue(false);
+    isInternalArticleMock.mockReturnValue(true);
+  });
+
   it('renders Portable Text headline and formatted date', async () => {
     renderWithNextIntl(
       <TooltipProvider>

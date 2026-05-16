@@ -20,9 +20,29 @@ const LISTING_REVALIDATE = 60 * 60;
 const GROQ_IS_CAREERS_DOC = `(_type == "career" || coalesce(contentType, "news") == "careers" || "careers" in coalesce(collections, []))`;
 
 /**
- * Shared projection with coerced routing fields so `career` documents match site expectations without duplicating taxonomy in Studio.
+ * GROQ field set for standalone `career` job documents (slim; see `career` schema in Sanity).
  */
-const ARTICLE_PROJECTION = `{
+const GROQ_CAREER_BODY = `
+  _id,
+  _type,
+  _updatedAt,
+  title,
+  slug,
+  jobTeam,
+  jobLocation,
+  applyUrl,
+  content,
+  summary,
+  excludeFromSitemap,
+  "contentType": "careers",
+  "collections": ["careers"],
+  "canonicalParent": "careers"
+`;
+
+/**
+ * GROQ field set for `news` CMS rows (legacy career-tagged posts use the same shape).
+ */
+const GROQ_NEWS_BODY = `
   _id,
   _type,
   _updatedAt,
@@ -32,6 +52,9 @@ const ARTICLE_PROJECTION = `{
   date,
   author,
   company,
+  jobLocation,
+  jobTeam,
+  applyUrl,
   content,
   summary,
   thumbnail,
@@ -40,10 +63,21 @@ const ARTICLE_PROJECTION = `{
   isFeatured,
   source,
   subscripts,
-  "contentType": coalesce(contentType, select(_type == "career" => "careers"), "news"),
-  "collections": coalesce(collections, select(_type == "career" => ["careers"]), []),
-  "canonicalParent": coalesce(canonicalParent, select(_type == "career" => "careers")),
+  "contentType": coalesce(contentType, "news"),
+  "collections": coalesce(collections, []),
+  canonicalParent,
   excludeFromSitemap
+`;
+
+/** Wrapped projection when the query only returns `news` documents. */
+const GROQ_NEWS_ONLY = `{${GROQ_NEWS_BODY}}`;
+
+/**
+ * Per-`_type` projection for queries that return both `career` and `news` (smaller payload for job templates).
+ */
+const GROQ_BY_DOCUMENT_TYPE = `{
+  _type == "career" => {${GROQ_CAREER_BODY}},
+  _type == "news" => {${GROQ_NEWS_BODY}}
 }`;
 
 /** Query options reused for article fetch surfaces. */
@@ -55,7 +89,7 @@ const defaultListingOptions: FilteredResponseQueryOptions = {
  * Whether this article is intended to be read on-site (has no off-site URL).
  *
  * @param article - Sanity article document
- * @returns True when the article should use `/index/[slug]`
+ * @returns True when the article should render on-site (path is `/index/[slug]` or `/careers/[slug]` based on taxonomy)
  */
 export function isInternalArticle(
   article: Pick<SanityArticle, 'offSiteUrl'>
@@ -76,7 +110,7 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 }
 
 /**
- * Whether the document counts as careers content for `/careers` routes and the careers sitemap slice.
+ * Whether the document counts as careers content for `/careers/index`, `/careers/[slug]`, and the careers sitemap slice.
  *
  * @param article - Document classification from Sanity (`_type` or legacy tagging)
  * @returns True when the row should behave as a careers article on the marketing site
@@ -112,7 +146,7 @@ export async function getArticleBySlug(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle | null> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug] | order(_type asc)[0] ${ARTICLE_PROJECTION}`;
+    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug] | order(_type asc)[0] ${GROQ_BY_DOCUMENT_TYPE}`;
     const article = await client.fetch<SanityArticle | null>(
       query,
       { slug },
@@ -140,11 +174,11 @@ export async function getArticlesByCollection(
   try {
     const query =
       collection === 'careers'
-        ? `*[_type in ${ARTICLE_GROQ_TYPES} && (${GROQ_IS_CAREERS_DOC})] | order(date desc) ${ARTICLE_PROJECTION}`
+        ? `*[_type in ${ARTICLE_GROQ_TYPES} && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`
         : `*[_type == "news" && (
           coalesce(contentType, "news") == $collection ||
           $collection in coalesce(collections, [])
-        )] | order(date desc) ${ARTICLE_PROJECTION}`;
+        )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       collection === 'careers' ? {} : { collection: c },
@@ -170,7 +204,7 @@ export async function getFeaturedArticles(
 ): Promise<SanityArticle[]> {
   if (collection === undefined) {
     try {
-      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true] | order(date desc) ${ARTICLE_PROJECTION}`;
+      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
       const articles = await client.fetch<SanityArticle[]>(
         query,
         {},
@@ -186,7 +220,7 @@ export async function getFeaturedArticles(
   try {
     const c = collectionParam(collection);
     if (collection === 'careers') {
-      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true && (${GROQ_IS_CAREERS_DOC})] | order(date desc) ${ARTICLE_PROJECTION}`;
+      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
       const articles = await client.fetch<SanityArticle[]>(
         query,
         {},
@@ -197,7 +231,7 @@ export async function getFeaturedArticles(
     const query = `*[_type == "news" && isFeatured == true && (
       coalesce(contentType, "news") == $collection ||
       $collection in coalesce(collections, [])
-    )] | order(date desc) ${ARTICLE_PROJECTION}`;
+    )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       { collection: c },
@@ -220,7 +254,7 @@ export async function getMainSitemapArticles(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && !(${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${ARTICLE_PROJECTION}`;
+    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && !(${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {},
@@ -244,7 +278,7 @@ export async function getCareersSitemapArticles(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && (${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${ARTICLE_PROJECTION}`;
+    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && (${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_BY_DOCUMENT_TYPE}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {},
