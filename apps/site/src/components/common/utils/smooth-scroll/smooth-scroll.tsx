@@ -3,8 +3,9 @@
 'use client';
 
 import Lenis from '@studio-freight/lenis';
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * Global Window interface extension to include Lenis instance
@@ -27,9 +28,18 @@ export default function SmoothScroll({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const pathname = usePathname();
   const [isLenisReady, setIsLenisReady] = useState(false);
+  /** When true, the latest navigation came from the history stack (back/forward); skip scroll-to-top. */
+  const skipScrollFromHistory = useRef(false);
+
+  useEffect(() => {
+    const onPopState = () => {
+      skipScrollFromHistory.current = true;
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   useEffect(() => {
     let lenis: Lenis | null = null;
@@ -51,7 +61,7 @@ export default function SmoothScroll({
         window.lenis = lenis;
         setIsLenisReady(true);
       } catch (e) {
-        console.error('Lenis Initialization Error', e);
+        logger.error('Lenis initialization failed', e);
         return;
       }
 
@@ -89,13 +99,16 @@ export default function SmoothScroll({
         delete window.lenis;
       }
     };
-  }, [router]);
+  }, []);
 
   // Handle scroll to top on navigation - only when Lenis is ready
   useEffect(() => {
-    if (isLenisReady && window.lenis) {
-      window.lenis.scrollTo(0, { immediate: true });
+    if (!isLenisReady || !window.lenis) return;
+    if (skipScrollFromHistory.current) {
+      skipScrollFromHistory.current = false;
+      return;
     }
+    window.lenis.scrollTo(0, { immediate: true });
   }, [pathname, isLenisReady]);
 
   return <>{children}</>;

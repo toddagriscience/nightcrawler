@@ -17,7 +17,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
-/** The partners section of the who-we-are page
+/** The partners section of the About page
  * @returns {JSX.Element} - The partners section */
 export default function Partners() {
   const t = useTranslations('whoWeAre');

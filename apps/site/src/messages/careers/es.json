@@ -1,9 +1,105 @@
 {
   "careers": {
     "metadata": {
-      "description": "Discover our open roles. Our teams inspire, educate and enable people all over the world.",
+      "description": "Explora las oportunidades en Todd. Nuestros equipos inspiran, educan y capacitan a personas en todo el mundo.",
       "shortTitle": "Careers",
       "title": "Careers at Todd"
+    },
+    "landing": {
+      "hero": {
+        "kicker": "Empresa",
+        "title": "Construye el futuro de una agricultura sostenible",
+        "subtitle": "Todd está formando un equipo que refleja diversidad de pensamiento, experiencia y trayectoria.",
+        "viewCareersCta": "Ver carreras"
+      },
+      "bridgeStatement": "Somos científicos, ingenieras e ingenieros y personas constructoras que han creado parte de la tecnología más usada en el mundo",
+      "values": {
+        "heading": "Valores:",
+        "intro": "Estos valores definen lo que consideramos más importante. Orientan nuestras decisiones. Creemos que canalizarlos es la forma más prometedora de cumplir nuestra misión.",
+        "item1Title": "Actuar con humildad.",
+        "item1Body": "La humildad nos recuerda reconocer los límites de lo que sabemos y mantenernos abiertos a ideas nuevas, perspectivas distintas y la posibilidad de equivocarnos. Esta mentalidad guía nuestra forma iterativa de construir y de integrar la retroalimentación en la investigación.",
+        "item2Title": "Transparencia.",
+        "item2Body": "Construir una empresa exige rigor y disciplina, imaginación sin límites y un profundo sentido de responsabilidad. Afrontamos la investigación y el desarrollo de productos con respeto por la tecnología transformadora que ayudamos a crear, y por los beneficios, cambios y riesgos que conlleva.",
+        "item3Title": "Impulsados por la excelencia.",
+        "item3Body": "Somos un equipo colaborativo e intensamente comprometido, con un nivel muy alto de desempeño. La innovación ocurre cuando ganan las mejores ideas. Buscamos los más altos estándares y evitamos quedar atrapados en normas del sector.",
+        "item4Title": "Creatividad.",
+        "item4Body": "A través de nuestra investigación desarrollamos productos que pueden transformar cómo prospera la sociedad. Nuestra tecnología refleja una cultura interna de optimismo y custodia responsable de la misión."
+      },
+      "operatingPrinciples": {
+        "heading": "Principios operativos:",
+        "intro": "Estos principios definen cómo trabajamos juntos. Son importantes para establecer nuestra cultura operativa.",
+        "item1Title": "Encuentra el camino.",
+        "item1Body": "Creemos en encontrar el camino para hacer lo que importa. Damos autonomía a personas y equipos para encontrar un enfoque que funcione. Las ideas pueden venir de cualquier parte, sin importar el título o la antigüedad.",
+        "item2Title": "Creatividad frente al control.",
+        "item2Body": "Buscamos soluciones creativas, aunque a veces imperfectas, antes que rigidez y control. Nuestro enfoque se basa en buenos principios (principios fundamentales y mejores prácticas).",
+        "item3Title": "Actualizar con rapidez.",
+        "item3Body": "Partimos con una hipótesis y estamos dispuestos a cambiar nuestro enfoque al recibir nueva información. Buscamos la verdad y nos adaptamos, conscientes de que la flexibilidad es clave para el progreso en la agricultura.",
+        "item4Title": "Enfoque intenso.",
+        "item4Body": "Trabajamos con intensidad porque queremos impactar al mundo. Esa intensidad y resiliencia son clave para la misión; la claridad y el enfoque nos permiten tomar decisiones difíciles."
+      },
+      "heroImageAlt": "Colegas de Todd colaborando juntos",
+      "benefits": {
+        "title": "Beneficios",
+        "subtitle": "Queremos que hagas el trabajo con mayor impacto de tu carrera con la confianza de que tú y quienes más te importan están apoyados.",
+        "employeesTitle": "Para personas colaboradoras",
+        "employeesBullets": "Seguro médico, dental y de visión\nApoyo y servicios de salud mental\nPlan de retiro patrocinado por la empresa\nPresupuesto de conferencias nacionales para cada persona",
+        "lifeTitle": "Vida y familia",
+        "lifeBullets": "Licencia remunerada de 24 semanas para quien da a luz, trabajo remoto hasta 4 semanas después\nLicencia parental remunerada de 20 semanas, trabajo remoto hasta 4 semanas después\nSeguro de vida y AD&D\nTiempo remunerado generoso para recargar, cuidarte y afrontar los momentos de la vida",
+        "cultureTitle": "Cultura y desarrollo",
+        "cultureBullets": "Estipendio anual de aprendizaje y desarrollo\nGrupos de recursos para personas colaboradoras\nCelebraciones y eventos impulsados por los equipos\nDesayuno, almuerzo y cena diarios\n6 sesiones de coaching para ti y tus dependientes."
+      },
+      "splits": {
+        "residency": {
+          "heading": "Residencia Todd",
+          "body": "Nuestros programas de talento emergente ofrecen la oportunidad de generar un impacto directo en Todd y contribuir al recorrido de crecimiento de Todd. Damos la bienvenida a personas curiosas y con impulso en una etapa temprana de su trayectoria profesional.",
+          "cta": "Saber más →",
+          "ctaHref": "/careers/index",
+          "imageAlt": "Dos compañeros de Todd conversando en una sala luminosa"
+        },
+        "talent": {
+          "heading": "Talento emergente",
+          "body": "Damos la bienvenida a personas curiosas y con impulso, en una etapa temprana de su trayectoria profesional, para generar un impacto directo en Todd y contribuir al propio recorrido de crecimiento de Todd.",
+          "cta": "Saber más →",
+          "ctaHref": "/careers/index",
+          "imageAlt": "Personas en etapa inicial colaborando en una oficina moderna"
+        }
+      },
+      "quote": {
+        "text": "Mis colegas reconocen la importancia de lo que construyen y realmente les importan los resultados de formas que superan hitos científicos anteriores.",
+        "attribution": "Nombre Nombre, ingeniera fundadora en Todd"
+      },
+      "resources": {
+        "eyebrow": "Recursos",
+        "card1Title": "Liderazgo",
+        "card1Category": "Empresa",
+        "card2Title": "Guía de entrevistas",
+        "card2Category": "Carreras",
+        "card3Title": "Construcción de equipos dinámicos",
+        "card3Category": "Empresa"
+      },
+      "footerCta": {
+        "heading": "Da forma al futuro de la agricultura",
+        "cta": "Ver carreras →",
+        "ctaHref": "/careers/index"
+      }
+    },
+    "jobPosting": {
+      "kicker": "Carreras",
+      "applyNow": "Aplicar ahora"
+    },
+    "jobListings": {
+      "apply": "Aplicar ahora →",
+      "toolbarAria": "Filtrar vacantes",
+      "searchPlaceholder": "Buscar",
+      "searchAria": "Buscar vacantes",
+      "teamFilterAria": "Filtrar por equipo",
+      "locationFilterAria": "Filtrar por ubicación",
+      "filterAllTeams": "Todos los equipos",
+      "filterAllLocations": "Todas las ubicaciones",
+      "locationNotListed": "—",
+      "showingCount": "Mostrando {visible} vacantes de {total}",
+      "noMatches": "Ninguna vacante coincide con estos filtros.",
+      "empty": "Aún no hay vacantes aquí. Consulta el programa de externships en Todd en la página principal de carreras."
     },
     "disclaimers": {
       "0": "Todd es un empleador de igualdad de oportunidades en las regiones donde operamos.",

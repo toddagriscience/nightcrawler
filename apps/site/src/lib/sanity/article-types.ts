@@ -9,12 +9,14 @@ export const ARTICLE_CONTENT_TYPES = [
   'story',
   'product-release',
   'press',
+  /** Job postings and other careers CMS pages (canonical `/careers/[slug]` template). */
+  'careers',
 ] as const;
 
 /** Type for `news.contentType`. */
 export type ArticleContentType = (typeof ARTICLE_CONTENT_TYPES)[number];
 
-/** Allowed collection keys for Discover / parent pages (`/news`, future `/research`, etc.). */
+/** Allowed collection keys for parent pages (`/news`, `/careers`, future `/research`, etc.). */
 export const ARTICLE_COLLECTIONS = ARTICLE_CONTENT_TYPES;
 
 export type ArticleCollection = (typeof ARTICLE_COLLECTIONS)[number];
@@ -36,13 +38,10 @@ export interface SanityArticleSubscript {
   url?: string;
 }
 
-/**
- * Article document fetched from Sanity (`_type`: `news`).
- * Editorial fields overlap with Portable Text previews and listing cards.
- */
+/** Article-like document returned from Sanity (`news` or standalone `career` job posts). */
 export interface SanityArticle {
   _id: string;
-  _type: 'news';
+  _type: 'news' | 'career';
   _updatedAt?: string;
   title: string;
   subtitle?: string;
@@ -50,6 +49,12 @@ export interface SanityArticle {
   date?: string;
   author?: string;
   company?: string;
+  /** Job location (`career` documents); listings and `/careers/[slug]` hero. */
+  jobLocation?: string;
+  /** Job posting team label (`career` documents); editors may omit on legacy rows. */
+  jobTeam?: string;
+  /** Apply CTA destination for internal career postings (`career`). */
+  applyUrl?: string;
   content?: SanityArticlePortableText;
   summary?: string;
   thumbnail?: SanityArticleImageField;

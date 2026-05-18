@@ -11,7 +11,7 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/eslintrc": "^3.3.5",
     "eslint": "^10.2.0",
-    "eslint-config-next": "^16.2.3",
+    "eslint-config-next": "16.3.0-canary.19",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-license-header": "^0.9.0",
     "espree": "^11.2.0",
@@ -53,7 +53,7 @@
     "@typescript-eslint/parser": "^8.58.1",
     "@vitest/eslint-plugin": "^1.6.15",
     "ajv": "^8.18.0",
-    "basic-ftp": "^5.3.0",
+    "basic-ftp": "^5.3.1",
     "esbuild": "^0.28.0",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-no-secrets": "^2.3.3",
@@ -66,20 +66,22 @@
   },
   "overrides": {
     "flatted": "^3.4.2",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "lodash": "^4.17.24",
     "lodash-es": "^4.17.24",
     "js-yaml": "^4.1.1",
     "esbuild": "^0.25.0",
+    "fast-uri": "^3.1.2",
     "minimatch": "^10.2.3",
     "markdown-it": "^14.1.1",
     "picomatch": "^4.0.4",
     "rollup": "^4.59.0",
-    "basic-ftp": "^5.2.0",
+    "basic-ftp": "^5.3.1",
     "tar": "^7.5.11",
     "dompurify": "3.3.2",
     "undici": "^7.24.0",
     "vite": "^7.3.2",
-    "protobufjs": "^7.5.5"
+    "protobufjs": "^7.5.8"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
