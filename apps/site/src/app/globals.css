@@ -132,6 +132,8 @@ body {
   overflow-y: auto;
 }
 
+html,
+body,
 .thin-scrollbar {
   /* IE/Edge (legacy) */
   -ms-overflow-style: auto;
@@ -142,20 +144,28 @@ body {
 }
 
 /* Chrome, Safari, Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
 .thin-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px; /* for horizontal scrollbars */
 }
 
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
 .thin-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
 .thin-scrollbar::-webkit-scrollbar-thumb {
   background-color: #888;
   border-radius: 3px;
 }
 
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
