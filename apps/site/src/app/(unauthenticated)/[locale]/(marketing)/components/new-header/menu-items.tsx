@@ -38,7 +38,7 @@ export function useMenuItems({
   const menuItems = menu ?? defaultMenu;
   const authLinks: AuthLinks = auth ?? {
     login: { title: t('navigation.logIn'), url: '/login' },
-    signup: { title: t('navigation.contact'), url: '/contact' },
+    signup: { title: t('navigation.contact'), url: '/support' },
   };
 
   return { menuItems, authLinks };

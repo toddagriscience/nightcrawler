@@ -135,7 +135,7 @@ function LoginLink() {
         </span>
       </NextLink>
       <Link
-        href="/contact"
+        href="/support"
         className={actionLinkClassName}
         data-testid="contact-link"
       >
