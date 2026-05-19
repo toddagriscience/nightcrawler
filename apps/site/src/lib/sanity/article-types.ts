@@ -9,7 +9,7 @@ export const ARTICLE_CONTENT_TYPES = [
   'story',
   'product-release',
   'press',
-  /** Job postings and other careers CMS pages (same `/index/[slug]` template as news). */
+  /** Job postings and other careers CMS pages (canonical `/careers/[slug]` template). */
   'careers',
 ] as const;
 
@@ -49,6 +49,12 @@ export interface SanityArticle {
   date?: string;
   author?: string;
   company?: string;
+  /** Job location (`career` documents); listings and `/careers/[slug]` hero. */
+  jobLocation?: string;
+  /** Job posting team label (`career` documents); editors may omit on legacy rows. */
+  jobTeam?: string;
+  /** Apply CTA destination for internal career postings (`career`). */
+  applyUrl?: string;
   content?: SanityArticlePortableText;
   summary?: string;
   thumbnail?: SanityArticleImageField;

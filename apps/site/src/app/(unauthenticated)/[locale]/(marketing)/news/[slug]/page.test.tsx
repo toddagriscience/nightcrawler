@@ -11,14 +11,17 @@ vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
-const { getArticleBySlugMock, isInternalArticleMock } = vi.hoisted(() => ({
-  getArticleBySlugMock: vi.fn(),
-  isInternalArticleMock: vi.fn(),
-}));
+const { getArticleBySlugMock, isInternalArticleMock, isCareerArticleMock } =
+  vi.hoisted(() => ({
+    getArticleBySlugMock: vi.fn(),
+    isInternalArticleMock: vi.fn(),
+    isCareerArticleMock: vi.fn(),
+  }));
 
 vi.mock('@/lib/sanity/articles', () => ({
   getArticleBySlug: getArticleBySlugMock,
   isInternalArticle: isInternalArticleMock,
+  isCareerArticle: isCareerArticleMock,
 }));
 
 describe('Legacy /news/[slug] redirect handler', () => {
@@ -28,6 +31,7 @@ describe('Legacy /news/[slug] redirect handler', () => {
     vi.mocked(notFound).mockClear();
     getArticleBySlugMock.mockReset();
     isInternalArticleMock.mockReset();
+    isCareerArticleMock.mockReset();
   });
 
   it('redirects externally when off-site URL is set', async () => {
@@ -58,6 +62,7 @@ describe('Legacy /news/[slug] redirect handler', () => {
       summary: '',
     });
     isInternalArticleMock.mockReturnValueOnce(true);
+    isCareerArticleMock.mockReturnValueOnce(false);
 
     await LegacyNewsArticleRedirect({
       params: Promise.resolve({ locale: 'es', slug: 'internal-piece' }),
@@ -65,6 +70,25 @@ describe('Legacy /news/[slug] redirect handler', () => {
 
     expect(redirect).not.toHaveBeenCalled();
     expect(permanentRedirect).toHaveBeenCalledWith('/es/index/internal-piece');
+  });
+
+  it('permanent-redirects internal career articles to /careers/[slug]', async () => {
+    getArticleBySlugMock.mockResolvedValueOnce({
+      _id: '3',
+      _type: 'career',
+      title: 'Engineer',
+      slug: { current: 'engineer' },
+      summary: '',
+    });
+    isInternalArticleMock.mockReturnValueOnce(true);
+    isCareerArticleMock.mockReturnValueOnce(true);
+
+    await LegacyNewsArticleRedirect({
+      params: Promise.resolve({ locale: 'en', slug: 'engineer' }),
+    });
+
+    expect(redirect).not.toHaveBeenCalled();
+    expect(permanentRedirect).toHaveBeenCalledWith('/en/careers/engineer');
   });
 
   it('calls notFound when article is missing', async () => {

@@ -1,37 +1,71 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {CaseIcon} from '@sanity/icons'
-import {format, parseISO} from 'date-fns'
-import {defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
-import {articlePortableBodyFields} from './article-shared-fields'
+import {careerArticleLeadFields, careerArticleTrailFields} from './article-shared-fields'
 
 /**
- * Job postings and other careers pages; same public URL shape as `news` (`/[locale]/index/[slug]`).
+ * Job postings for `/[locale]/careers/[slug]`; separate `_type` for a dedicated Studio list and a slimmer field set than `news`.
  *
- * Kept as a separate `_type` so editors get a dedicated Studio list as volume grows.
+ * Does not use thumbnails, header image, featured flag, subscripts, `offSiteUrl`, `source`, `company` / `author` / `subtitle` / `date` (`news` only).
  */
 export default defineType({
   name: 'career',
   title: 'Careers',
   icon: CaseIcon,
   type: 'document',
-  fields: [...articlePortableBodyFields],
+  fields: [
+    ...careerArticleLeadFields,
+    defineField({
+      name: 'jobTeam',
+      title: 'Team',
+      type: 'string',
+      description:
+        'Department or role family (e.g. Software Engineer). Shown with location on listings and the posting hero.',
+    }),
+    defineField({
+      name: 'jobLocation',
+      title: 'Location',
+      type: 'string',
+      description:
+        'City, region, hybrid note, or “Remote” — shown on listings and job detail hero.',
+    }),
+    defineField({
+      name: 'applyUrl',
+      title: 'Apply URL',
+      type: 'url',
+      description:
+        'Every “Apply now” control on the public posting opens this URL (external ATS, email `mailto:`, etc.).',
+      validation: (rule) =>
+        rule.custom((url) => {
+          const u = url !== undefined && url !== null && url !== '' ? String(url).trim() : ''
+          return u !== '' ? true : 'Apply URL is required.'
+        }),
+    }),
+    defineField({
+      name: 'summary',
+      title: 'SEO description',
+      type: 'text',
+      rows: 2,
+      description:
+        'Optional. Used for `<meta name="description">` and social previews when set; otherwise the site uses team and location.',
+    }),
+    ...careerArticleTrailFields,
+  ],
   preview: {
     select: {
       title: 'title',
-      publishedAt: 'date',
-      authorName: 'author',
+      jobTeam: 'jobTeam',
+      jobLocation: 'jobLocation',
     },
-    prepare({title, publishedAt, authorName}) {
-      const parts = [
-        authorName && `by ${authorName}`,
-        publishedAt && `on ${format(parseISO(publishedAt), 'LLL d, yyyy')}`,
-      ].filter(Boolean)
-
+    prepare({title, jobTeam, jobLocation}) {
+      const bits = [jobTeam, jobLocation].filter(
+        (s): s is string => typeof s === 'string' && s.trim() !== '',
+      )
       return {
         title: title ?? 'Untitled',
-        subtitle: parts.join(' · '),
+        subtitle: bits.length > 0 ? bits.join(' · ') : undefined,
       }
     },
   },

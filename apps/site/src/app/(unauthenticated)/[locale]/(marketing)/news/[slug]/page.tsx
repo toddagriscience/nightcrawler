@@ -2,11 +2,16 @@
 
 import { env } from '@/lib/env';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
-import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
+import {
+  getArticleBySlug,
+  isCareerArticle,
+  isInternalArticle,
+} from '@/lib/sanity/articles';
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
 
 /**
- * Legacy `/news/[slug]` entry point preserved with redirects to `/index/[slug]` or outbound URLs.
+ * Legacy `/news/[slug]` entry point preserved with redirects to `/index/[slug]`, `/careers/[slug]`,
+ * or outbound URLs.
  *
  * @param params - Locale and slug
  */
@@ -23,6 +28,9 @@ export default async function LegacyNewsArticleRedirect({
     notFound();
     return;
   }
+  const careerPath = `/${locale}/careers/${slug}`;
+  const newsPath = `/${locale}/index/${slug}`;
+
   if (!isInternalArticle(article)) {
     if (
       isSelfReferentialArticleUrl(
@@ -32,11 +40,11 @@ export default async function LegacyNewsArticleRedirect({
         env.baseUrl
       )
     ) {
-      permanentRedirect(`/${locale}/index/${slug}`);
+      permanentRedirect(isCareerArticle(article) ? careerPath : newsPath);
       return;
     }
     redirect(String(article.offSiteUrl));
     return;
   }
-  permanentRedirect(`/${locale}/index/${slug}`);
+  permanentRedirect(isCareerArticle(article) ? careerPath : newsPath);
 }

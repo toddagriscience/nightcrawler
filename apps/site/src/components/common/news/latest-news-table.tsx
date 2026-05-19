@@ -2,31 +2,17 @@
 
 'use client';
 
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { Link } from '@/i18n/config';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
-import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
 interface LatestNewsTableProps {
   items: SanityArticle[];
-}
-
-/** Formats listing dates with a safe fallback when `date` is missing. */
-function formatArticleListingDate(
-  dateValue: string | undefined,
-  locale: string
-): string {
-  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
-  if (safe.length === 0) return '';
-  return new Date(safe).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
@@ -36,8 +22,6 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 3); // Show 3 more each time
   };
-
-  const locale = useLocale();
 
   return (
     <div className="rounded-md text-[#555555] mx-auto px-2 md:px-6 flex flex-col justify-center">
@@ -70,9 +54,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             </div>
           </Link>
 
-          <div className="text-right">
-            {formatArticleListingDate(item.date, locale)}
-          </div>
+          <div className="text-right">{formatArticleListDate(item.date)}</div>
         </div>
       ))}
 

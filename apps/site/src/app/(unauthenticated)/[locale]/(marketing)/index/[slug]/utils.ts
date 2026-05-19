@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { ARTICLE_DISPLAY_DATE_LOCALE } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 
 import type { ArticleUiSubscript } from './types';
@@ -13,7 +14,7 @@ import type { ArticleUiSubscript } from './types';
 export function formatArticleHeroDate(isoDate: unknown): string {
   return isoDate != null
     ? new Date(isoDate as string)
-        .toLocaleDateString('en-GB', {
+        .toLocaleDateString(ARTICLE_DISPLAY_DATE_LOCALE, {
           day: 'numeric',
           month: 'long',
           year: 'numeric',

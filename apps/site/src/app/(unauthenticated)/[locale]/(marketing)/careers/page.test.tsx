@@ -1,55 +1,57 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { screen, renderWithNextIntl } from '@/test/test-utils';
-import { CareersExternship } from './components/careers-externship';
+import { CareersLandingView } from './components/careers-landing';
+import { CAREERS_LANDING_VIEW_FIXTURE } from './fixtures/careers-landing-view.fixture';
 import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
 
-describe('Careers page', () => {
+describe('Careers landing view', () => {
   it('renders the page', () => {
-    renderWithNextIntl(<CareersExternship />);
+    renderWithNextIntl(
+      <CareersLandingView copy={CAREERS_LANDING_VIEW_FIXTURE} />
+    );
 
-    // Check that the page renders
     const h1Element = screen.getByRole('heading', { level: 1 });
-    expect(h1Element).toBeInTheDocument();
+    expect(h1Element).toHaveTextContent('Build the future');
   });
 
   it('has a level-one heading for accessibility', () => {
-    const { container } = renderWithNextIntl(<CareersExternship />);
+    const { container } = renderWithNextIntl(
+      <CareersLandingView copy={CAREERS_LANDING_VIEW_FIXTURE} />
+    );
 
-    // Ensure there's exactly one h1 element on the page
     const h1Elements = container.querySelectorAll('h1');
     expect(h1Elements).toHaveLength(1);
   });
 
   it('has a main landmark region', () => {
-    renderWithNextIntl(<CareersExternship />);
+    renderWithNextIntl(
+      <CareersLandingView copy={CAREERS_LANDING_VIEW_FIXTURE} />
+    );
 
-    // Check that main landmark exists
     const mainLandmark = screen.getByRole('main');
     expect(mainLandmark).toBeInTheDocument();
   });
 
-  it('contains page content within the main landmark', () => {
-    const { container } = renderWithNextIntl(<CareersExternship />);
+  it('anchors values pill and routes footer CTA to listings', () => {
+    renderWithNextIntl(
+      <CareersLandingView copy={CAREERS_LANDING_VIEW_FIXTURE} />
+    );
 
     const mainLandmark = screen.getByRole('main');
-
-    // Verify that the h1 heading is within the main landmark
     const h1Element = screen.getByRole('heading', { level: 1 });
     expect(mainLandmark).toContainElement(h1Element);
 
-    // Verify that header images are within the main landmark
-    const headerImages = container.querySelectorAll(
-      'img[alt="Todd University"]'
-    );
-    headerImages.forEach((img) => {
-      expect(mainLandmark).toContainElement(img as HTMLElement);
-    });
+    const valuesLink = screen.getByRole('link', { name: 'View careers' });
+    expect(valuesLink).toHaveAttribute('href', '/careers/index');
 
-    // Verify that all headings are within the main landmark
-    const headings = screen.getAllByRole('heading');
-    headings.forEach((heading) => {
+    const listingLink = screen.getByRole('link', {
+      name: 'View careers →',
+    });
+    expect(listingLink).toHaveAttribute('href', '/careers/index');
+
+    screen.getAllByRole('heading', { level: 2 }).forEach((heading) => {
       expect(mainLandmark).toContainElement(heading);
     });
   });

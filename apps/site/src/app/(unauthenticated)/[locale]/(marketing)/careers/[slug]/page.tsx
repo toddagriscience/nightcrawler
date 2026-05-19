@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { CareersJobPosting } from '@/app/(unauthenticated)/[locale]/(marketing)/careers/components/careers-job-posting';
 import { env } from '@/lib/env';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
@@ -10,12 +11,11 @@ import {
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
 
 /**
- * `/careers/[slug]` resolves only Sanity articles classified as careers; internal posts 308 to
- * `/index/[slug]`, outbound roles redirect to `offSiteUrl`.
+ * Canonical on-site careers posting at `/careers/[slug]` (Sanity career-tagged docs).
  *
  * @param params - Locale and slug
  */
-export default async function LegacyCareersArticleRedirect({
+export default async function CareersPostingPage({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
@@ -41,11 +41,11 @@ export default async function LegacyCareersArticleRedirect({
         env.baseUrl
       )
     ) {
-      permanentRedirect(`/${locale}/index/${slug}`);
+      permanentRedirect(`/${locale}/careers/${slug}`);
       return;
     }
     redirect(String(article.offSiteUrl));
     return;
   }
-  permanentRedirect(`/${locale}/index/${slug}`);
+  return <CareersJobPosting article={article} locale={locale} />;
 }
