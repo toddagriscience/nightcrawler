@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { logger } from '@/lib/logger';
+
 /**
  * Boots the New Relic Node agent on the Node.js server runtime only (not Edge), after Next has
  * applied environment files such as `.env.local`.
@@ -25,7 +27,7 @@ export async function register(): Promise<void> {
   const hasKey = Boolean(lk && String(lk).trim());
 
   if (!hasKey) {
-    console.warn(
+    logger.warn(
       '[newrelic] NEW_RELIC_LICENSE_KEY is not set; agent not loaded. Add it to .env.local (or your host env) or set NEW_RELIC_ENABLED=false.'
     );
     return;
