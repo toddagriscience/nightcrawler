@@ -67,7 +67,7 @@ export default function SectionContent({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 text-left mx-10 md:max-w-[800px]',
+        'flex flex-col gap-7 text-left mx-10 md:max-w-[803px]',
         className
       )}
     >
