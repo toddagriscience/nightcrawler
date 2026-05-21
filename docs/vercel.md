@@ -32,6 +32,9 @@ SUPABASE_SECRET_KEY=...
 OPENAI_EMBEDDINGS_KEY=...
 STRIPE_SECRET_KEY=...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=...
+NEW_RELIC_LICENSE_KEY=(ingest license key)
+NEW_RELIC_APP_NAME=TODD_SITE
+NEW_RELIC_ENABLED=false
 (see apps/site/env.example for full list)
 ```
 
@@ -91,6 +94,7 @@ VERCEL_TOKEN=...           # Vercel auth token
 # apps/site/.env (copy from env.example)
 DATABASE_URL=postgresql://postgres:Test123!@localhost:5432/postgres
 LOCAL_DATABASE_HOST=localhost
+NEW_RELIC_ENABLED=false
 # ... other env vars
 
 bun run dev:site      # Start on port 3000
@@ -121,12 +125,13 @@ bun run dev:site      # Start on port 3000
 
 ## Troubleshooting
 
-| Problem                        | Solution                                                             |
-| ------------------------------ | -------------------------------------------------------------------- |
-| Build fails in Vercel          | Run `bun run build` locally. Missing env var? Check Vercel settings. |
-| Works locally, fails in Vercel | Environment variable missing or different value                      |
-| Old version still live         | Hard refresh (Cmd+Shift+R). Clear CDN cache if needed.               |
-| DB won't connect               | Verify `DATABASE_URL` set. Verify `DATABASE_PEM_CERT` set (if SSL).  |
+| Problem                        | Solution                                                                                                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build fails in Vercel          | Run `bun run build` locally. Missing env var? Check Vercel settings.                                                                                       |
+| Works locally, fails in Vercel | Environment variable missing or different value                                                                                                            |
+| Old version still live         | Hard refresh (Cmd+Shift+R). Clear CDN cache if needed.                                                                                                     |
+| DB won't connect               | Verify `DATABASE_URL` set. Verify `DATABASE_PEM_CERT` set (if SSL).                                                                                        |
+| New Relic shows no data        | Confirm Site (not Internal) project has `NEW_RELIC_LICENSE_KEY`, `NEW_RELIC_APP_NAME`, and `NEW_RELIC_ENABLED` is not `false`. Redeploy after env changes. |
 
 ## Manual Redeploy
 
