@@ -10,7 +10,7 @@ const siteConfig = {
   name: 'Todd',
   title: 'Todd',
   description:
-    'Todd Agriscience is a first-generation generative agriculture firm.',
+    'Todd is the frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture.',
   url: 'https://www.toddagriscience.com',
   ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
   twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
