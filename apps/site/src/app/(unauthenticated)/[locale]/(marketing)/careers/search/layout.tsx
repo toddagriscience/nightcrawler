@@ -1,11 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { env } from '@/lib/env';
+import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 /**
- * Metadata for **`/{locale}/careers/index`** (job listings index).
+ * Metadata for **`/{locale}/careers/search`** (job listings).
  *
  * @param params - Route params with locale
  */
@@ -20,14 +21,14 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(env.baseUrl),
     title: {
-      absolute: `${t('shortTitle')} | Todd United States`,
+      absolute: `${t('shortTitle')} | ${siteConfig.name}`,
     },
     description: t('description'),
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${env.baseUrl}/${locale}/careers/index`,
-      siteName: 'Todd United States',
+      url: `${env.baseUrl}/${locale}/careers/search`,
+      siteName: siteConfig.name,
       locale: locale,
       type: 'website',
       images: [
@@ -51,11 +52,11 @@ export async function generateMetadata({
 }
 
 /**
- * Passthrough layout for the careers **`/index`** subtree.
+ * Passthrough layout for the careers **`/search`** subtree.
  *
  * @param props - Layout children slot
  */
-export default function CareersIndexLayout({
+export default function CareersSearchLayout({
   children,
 }: {
   children: React.ReactNode;

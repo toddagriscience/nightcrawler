@@ -44,12 +44,12 @@ describe('Careers landing view', () => {
     expect(mainLandmark).toContainElement(h1Element);
 
     const valuesLink = screen.getByRole('link', { name: 'View careers' });
-    expect(valuesLink).toHaveAttribute('href', '/careers/index');
+    expect(valuesLink).toHaveAttribute('href', '/careers/search');
 
     const listingLink = screen.getByRole('link', {
       name: 'View careers →',
     });
-    expect(listingLink).toHaveAttribute('href', '/careers/index');
+    expect(listingLink).toHaveAttribute('href', '/careers/search');
 
     screen.getAllByRole('heading', { level: 2 }).forEach((heading) => {
       expect(mainLandmark).toContainElement(heading);

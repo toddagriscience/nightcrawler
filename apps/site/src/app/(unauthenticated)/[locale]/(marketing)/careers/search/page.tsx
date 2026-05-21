@@ -8,12 +8,12 @@ import { CareersJobList } from '../components/careers-job-list';
 /**
  * Careers job listings from Sanity (links use `/careers/[slug]` or external ATS URLs).
  *
- * Public URL: **`/{locale}/careers/index`** (distinct from the hub at **`/{locale}/careers`**).
+ * Public URL: **`/{locale}/careers/search`** (distinct from the hub at **`/{locale}/careers`**).
  *
  * @param params - Route params with locale
  * @returns Job listings or empty-state message
  */
-export default async function CareersIndexPage({
+export default async function CareersSearchPage({
   params,
 }: {
   params: Promise<{ locale: string }>;

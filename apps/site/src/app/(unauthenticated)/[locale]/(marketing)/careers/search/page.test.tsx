@@ -4,7 +4,7 @@ import type { SanityArticle } from '@/lib/sanity/article-types';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import CareersIndexPage from './page';
+import CareersSearchPage from './page';
 
 const { getArticlesByCollectionMock } = vi.hoisted(() => ({
   getArticlesByCollectionMock: vi.fn(),
@@ -18,14 +18,14 @@ vi.mock('@/lib/sanity/articles', async (importOriginal) => {
   };
 });
 
-describe('CareersIndexPage', () => {
+describe('CareersSearchPage', () => {
   beforeEach(() => {
     getArticlesByCollectionMock.mockReset();
   });
 
   it('shows empty-state copy when Sanity returns no jobs', async () => {
     getArticlesByCollectionMock.mockResolvedValueOnce([]);
-    const node = await CareersIndexPage({
+    const node = await CareersSearchPage({
       params: Promise.resolve({ locale: 'en' }),
     });
     renderWithNextIntl(node);
@@ -49,7 +49,7 @@ describe('CareersIndexPage', () => {
       summary: '',
     };
     getArticlesByCollectionMock.mockResolvedValueOnce([job]);
-    const node = await CareersIndexPage({
+    const node = await CareersSearchPage({
       params: Promise.resolve({ locale: 'en' }),
     });
     renderWithNextIntl(node);

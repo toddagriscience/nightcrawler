@@ -8,7 +8,7 @@ import type { Locale } from 'next-intl';
  * Early routing tweaks before auth/i18n.
  *
  * Careers hub and job listings live under `app/(unauthenticated)/[locale]/(marketing)/careers/` as
- * normal routes (`/careers` and `/careers/index`); no rewrite is applied here.
+ * normal routes (`/careers` and `/careers/search`); no rewrite is applied here.
  *
  * @param request - Incoming request
  */

@@ -3,6 +3,7 @@
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
+import { siteConfig } from '@/lib/metadata';
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
@@ -27,8 +28,8 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: 'Todd United States',
-      template: '%s | Todd United States',
+      default: siteConfig.name,
+      template: `%s | ${siteConfig.name}`,
     },
     description: t('description'),
     metadataBase: new URL('https://toddagriscience.com'),
@@ -43,7 +44,7 @@ export async function generateMetadata({
       title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
-      siteName: 'Todd United States',
+      siteName: siteConfig.name,
       locale: ogLocale,
       type: 'website',
       images: [
@@ -52,7 +53,7 @@ export async function generateMetadata({
           width: 1300,
           height: 740,
           type: 'image/png',
-          alt: 'Todd United States',
+          alt: siteConfig.name,
         },
       ],
     },
