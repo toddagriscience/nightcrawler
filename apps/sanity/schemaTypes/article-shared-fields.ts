@@ -220,6 +220,20 @@ const sourceField = defineField({
   description: 'Attribution string; defaults to “Todd” for toddagriscience.com pages.',
 })
 
+const ctaLabelField = defineField({
+  name: 'ctaLabel',
+  title: 'CTA label',
+  type: 'string',
+  description: 'Optional pill button below the article (e.g. Request access).',
+})
+
+const ctaHrefField = defineField({
+  name: 'ctaHref',
+  title: 'CTA link',
+  type: 'string',
+  description: 'Internal path (/forms/iris-access) or absolute URL for the article CTA.',
+})
+
 /**
  * Opening fields for `career` documents (sitemap, title, slug). Job-specific rows are defined in `career.ts`
  * between this block and {@link careerArticleTrailFields}.
@@ -251,4 +265,6 @@ export const articlePortableBodyFields = [
   offSiteUrlField,
   isFeaturedField,
   sourceField,
+  ctaLabelField,
+  ctaHrefField,
 ]

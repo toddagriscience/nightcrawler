@@ -66,7 +66,9 @@ const GROQ_NEWS_BODY = `
   "contentType": coalesce(contentType, "news"),
   "collections": coalesce(collections, []),
   canonicalParent,
-  excludeFromSitemap
+  excludeFromSitemap,
+  ctaLabel,
+  ctaHref
 `;
 
 /** Wrapped projection when the query only returns `news` documents. */

@@ -72,4 +72,8 @@ export interface SanityArticle {
   canonicalParent?: ArticleCollection | string;
   /** When true, omit from dynamic sitemap (internal articles only). */
   excludeFromSitemap?: boolean;
+  /** Optional article footer CTA label */
+  ctaLabel?: string;
+  /** Optional article footer CTA href */
+  ctaHref?: string;
 }

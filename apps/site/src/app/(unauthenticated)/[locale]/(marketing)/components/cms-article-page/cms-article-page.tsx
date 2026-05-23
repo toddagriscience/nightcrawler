@@ -6,6 +6,8 @@ import type { SanityArticle } from '@/lib/sanity/article-types';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableTextReactComponents } from 'next-sanity';
 
+import { MarketingPillLink } from '../marketing-blocks/marketing-pill-link';
+
 import { ArticleBody } from '../../index/[slug]/components/article-body';
 import { ArticleFooter } from '../../index/[slug]/components/article-footer';
 import { ArticleHeader } from '../../index/[slug]/components/article-header';
@@ -87,6 +89,13 @@ export function CmsArticlePage({ article }: { article: SanityArticle }) {
           footerSubtitle={article.subtitle}
           subscripts={subscripts}
         />
+        {article.ctaLabel && article.ctaHref ? (
+          <div className="mb-16 flex justify-center">
+            <MarketingPillLink href={article.ctaHref}>
+              {article.ctaLabel}
+            </MarketingPillLink>
+          </div>
+        ) : null}
       </main>
     </div>
   );
