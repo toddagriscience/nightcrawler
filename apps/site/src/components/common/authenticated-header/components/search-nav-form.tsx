@@ -89,9 +89,6 @@ export function SearchNavForm() {
     // Only debounce when the dropdown is open and query is non-empty.
     if (!isOpen || query.trim().length === 0) return;
 
-    // Immediately show the loading skeleton.
-    setIsLoading(true);
-
     debounceRef.current = setTimeout(() => {
       loadItems(query);
     }, DEBOUNCE_MS);
@@ -132,6 +129,8 @@ export function SearchNavForm() {
     setIsOpen(true);
     if (query.trim().length === 0) {
       loadDefaults();
+    } else {
+      setIsLoading(true);
     }
   }
 
@@ -151,6 +150,9 @@ export function SearchNavForm() {
       }
       setIsLoading(false);
       loadDefaults();
+    } else if (isOpen) {
+      // Show loading state immediately while waiting for debounce.
+      setIsLoading(true);
     }
   }
 
