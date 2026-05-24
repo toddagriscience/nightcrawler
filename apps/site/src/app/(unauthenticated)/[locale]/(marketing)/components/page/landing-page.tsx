@@ -1,92 +1,53 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
-import { useTheme } from '@/context/theme/ThemeContext';
-import { motion } from 'framer-motion';
-import { useCallback, useEffect, useRef } from 'react';
-import { Hero, Quote, ScrollShrinkWrapper } from '../';
-import NewsHighlights from '../news-highlights/news-highlights';
+import HeaderImg from '@/components/common/header-img/header-img';
+import PageHeader from '@/components/common/page-header/page-header';
+import SectionContent from '@/components/common/section-content/section-content';
+import { Button } from '@/components/ui';
+import { Link } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 
 /**
  * Landing page component
  * @returns {JSX.Element} - The landing page component
  */
 export default function LandingPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const newsCarouselRef = useRef<HTMLDivElement>(null);
-  const { setIsDark, isDark: contextIsDark } = useTheme();
-
-  // Scroll-based theme detection
-  const detectTheme = useCallback(() => {
-    if (typeof window === 'undefined') return;
-
-    const scrollY = window.scrollY;
-    const windowHeight = window.innerHeight;
-
-    // Get section positions
-    const heroRect = heroRef.current?.getBoundingClientRect();
-    const newsRect = newsCarouselRef.current?.getBoundingClientRect();
-
-    if (!heroRect || !newsRect) return;
-
-    // Calculate when to transition to dark mode
-    // Start transitioning when the news carousel is 20% visible from bottom
-    const newsCarouselTop = scrollY + newsRect.top;
-    const transitionPoint = newsCarouselTop - windowHeight * 0.2;
-
-    // Apply transition for scroll-based switching (handled in global.css)
-    const shouldBeDark = scrollY > transitionPoint;
-    setIsDark(shouldBeDark);
-  }, [setIsDark]);
-
-  // Set up scroll listener for theme detection
-  useEffect(() => {
-    // Initial detection
-    detectTheme();
-
-    // Throttled scroll handler for performance
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          detectTheme();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', detectTheme);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', detectTheme);
-    };
-  }, [detectTheme]);
+  const t = useTranslations('landing');
 
   return (
-    // Note the use of `sm:` and `stopWidth={640}`
-    <div className="mb-32 sm:max-w-232 sm:mx-auto sm:w-[80%]">
-      <ScrollShrinkWrapper stopWidth={640}>
-        <div ref={heroRef} className="h-[40vh]">
-          <Hero />
-        </div>
-        <motion.div
-          className="flex h-fit pt-6 mx-auto flex-col justify-center rounded-2xl bg-transparent"
-          // animate={{
-          //   backgroundColor: contextIsDark ? '#2A2727' : '#CCC5B5',
-          //   color: contextIsDark ? '#FDFDFB' : '#2A2727',
-          // }}
-          ref={newsCarouselRef}
+    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto">
+      <PageHeader
+        title={t('pageHeading.title')}
+        subtitle={t('pageHeading.subtitle')}
+        button={{
+          href: '/research',
+          text: t('pageHeading.button'),
+          buttonClassName: 'w-[174px]',
+        }}
+      />
+      <HeaderImg
+        src="/marketing/garden-bed.svg"
+        alt={t('pageHeading.title')}
+        wrapperClassName="w-full h-[500px] lg:h-[630px] translate-y-[-59px]"
+      />
+      <SectionContent
+        className="mx-auto w-full text-center [&>h2]:text-[28px]/[41px]"
+        caption={t('sectionContent.section1.caption')}
+        title={t('sectionContent.section1.title')}
+      />
+      <div className="flex flex-col items-center justify-center space-y-15 my-44">
+        <h2 className="text-3xl lg:text-5xl/[24px]">
+          {t('sectionContent.explore.title')}
+        </h2>
+        <Button
+          asChild
+          variant="outline"
+          className="rounded-full border-[0.75px] border-[#848484] text-sm w-[168px] h-[47px]"
+          size="lg"
         >
-          <NewsHighlights />
-          {/* Removed the quote component below for now to avoid the background color issue */}
-          {/* <Quote isDark={contextIsDark} /> */}
-          <Quote />
-        </motion.div>
-      </ScrollShrinkWrapper>
-    </div>
+          <Link href="/research">{t('sectionContent.explore.button')}</Link>
+        </Button>
+      </div>
+    </section>
   );
 }

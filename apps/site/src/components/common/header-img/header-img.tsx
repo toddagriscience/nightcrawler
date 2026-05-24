@@ -36,7 +36,7 @@ export default function HeaderImg({
   return (
     <div
       ref={ref}
-      className={`relative mx-6 mt-6 mx-auto w-[85%] lg:max-w-[1124px] lg:h-[630px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
+      className={`relative mx-6 mt-6 mx-auto w-[95%] lg:max-w-[1124px] lg:h-[630px] md:h-[595px] h-[495px] overflow-hidden ${wrapperClassName}`.trim()}
     >
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
