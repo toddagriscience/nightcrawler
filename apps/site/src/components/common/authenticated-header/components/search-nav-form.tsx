@@ -130,8 +130,6 @@ export function SearchNavForm() {
     if (query.trim().length === 0) {
       loadDefaults();
     } else {
-      // Opening with an existing query — show skeleton while the effect
-      // re-debounces a fetch for the current query.
       setIsLoading(true);
     }
   }
@@ -152,8 +150,8 @@ export function SearchNavForm() {
       }
       setIsLoading(false);
       loadDefaults();
-    } else {
-      // User is typing — show skeleton immediately, effect handles the fetch.
+    } else if (isOpen) {
+      // Show loading state immediately while waiting for debounce.
       setIsLoading(true);
     }
   }

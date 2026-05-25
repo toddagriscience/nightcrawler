@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { cn } from '@/lib/utils';
 import type React from 'react';
 
 /**
@@ -43,6 +44,7 @@ export function mapSectionTextParagraphs(
  * @returns {JSX.Element} - The section content component
  */
 export default function SectionContent({
+  caption,
   title,
   subtitle,
   text,
@@ -50,6 +52,7 @@ export default function SectionContent({
   subtitleClassName,
   renderParagraph,
 }: {
+  caption?: string;
   title?: string;
   subtitle?: string;
   text?: Record<string, string>;
@@ -63,8 +66,14 @@ export default function SectionContent({
 
   return (
     <div
-      className={`flex flex-col gap-4 text-left mx-10 md:max-w-[800px] ${className}`}
+      className={cn(
+        'flex flex-col gap-7 text-left mx-10 md:max-w-[803px]',
+        className
+      )}
     >
+      {caption ? (
+        <span className="text-xs md:text-sm text-foreground">{caption}</span>
+      ) : null}
       {title ? (
         <h2 className="text-[24px] md:text-3xl lg:text-5xl/[80px] text-foreground">
           {title}
