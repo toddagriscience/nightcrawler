@@ -1,10 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata } from 'next';
-import LandingPage from './components/page/landing-page';
+import Homepage from './components/homepage/homepage';
 
 /**
- * Homepage metadata
+ * Homepage metadata for SEO and social media
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://toddagriscience.com'),
@@ -47,5 +47,5 @@ export const metadata: Metadata = {
 export default async function HomePage({}: {
   params: Promise<{ locale: string }>;
 }) {
-  return <LandingPage />;
+  return <Homepage />;
 }

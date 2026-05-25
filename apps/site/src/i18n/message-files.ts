@@ -15,7 +15,6 @@ export const messageFiles = [
   'research',
   'investors',
   'governance',
-  'landing',
   'contact',
   'disclosures',
   'accessibility',

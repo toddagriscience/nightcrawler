@@ -10,11 +10,11 @@ import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 
 /**
- * Landing page component
- * @returns {JSX.Element} - The landing page component
+ * Homepage component
+ * @returns {JSX.Element} - The homepage component
  */
-export default function LandingPage() {
-  const t = useTranslations('landing');
+export default function Homepage() {
+  const t = useTranslations('homepage');
 
   return (
     <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto">

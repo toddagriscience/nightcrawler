@@ -3,7 +3,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import LandingPage from './landing-page';
+import Homepage from './homepage';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
@@ -87,9 +87,9 @@ vi.mock('@/components/common/section-content/section-content', () => ({
   ),
 }));
 
-describe('LandingPage', () => {
+describe('Homepage', () => {
   it('renders expected content and links the research CTAs', () => {
-    const { container } = render(<LandingPage />);
+    const { container } = render(<Homepage />);
 
     const root = container.querySelector('section');
     expect(root).toHaveClass(

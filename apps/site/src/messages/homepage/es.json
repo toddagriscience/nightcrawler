@@ -1,19 +1,23 @@
 {
   "homepage": {
-    "welcome": "Bienvenido a Todd",
-    "hero": {
-      "title": "Liderando el futuro de la agricultura sostenble",
-      "subtitle": "Todd es una empresa agrícola generativa de primera generación que se asocia con granjas de alta calidad y marcas reconocidas para cultivar un futuro sostenible.",
-      "tagline": "Avanzando la Agricultura a Través de la Ciencia"
+    "pageHeading": {
+      "title": "Creamos granjas sostenibles",
+      "subtitle": "Nuestra misión es garantizar que la agricultura sostenible beneficie a toda la humanidad.",
+      "button": "Explorar investigación"
     },
-    "news": {
-      "news_highlights": "Noticias Destacadas"
+    "sectionContent": {
+      "section1": {
+        "caption": "Áreas de enfoque",
+        "title": "Somos el laboratorio de investigación de frontera dedicado a construir tecnología de base y genética de cultivos para agricultura sostenible."
+      },
+      "explore": {
+        "title": "Explorar todas las investigaciones",
+        "button": "Ver investigaciones"
+      },
+      "contactUs": {
+        "title": "Comenzar con Todd",
+        "button": "Contactar"
+      }
     }
-  },
-  "about": {
-    "title": "Acerca de Todd Agriscience",
-    "description": "Estamos siendo pioneros en el futuro de la agricultura sostenible a través de prácticas agrícolas innovadoras y tecnología de vanguardia.",
-    "quote": "Creemos que la agricultura sostenible es la base de un planeta saludable y comunidades prósperas.",
-    "whoWeAre": "Quiénes Somos"
   }
 }
