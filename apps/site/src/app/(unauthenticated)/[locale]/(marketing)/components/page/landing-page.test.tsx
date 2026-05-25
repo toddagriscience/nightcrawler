@@ -3,7 +3,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import LandingPageNew from './landing-page';
+import LandingPage from './landing-page';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
@@ -87,9 +87,9 @@ vi.mock('@/components/common/section-content/section-content', () => ({
   ),
 }));
 
-describe('LandingPageNew', () => {
+describe('LandingPage', () => {
   it('renders expected content and links the research CTAs', () => {
-    const { container } = render(<LandingPageNew />);
+    const { container } = render(<LandingPage />);
 
     const root = container.querySelector('section');
     expect(root).toHaveClass(
@@ -114,7 +114,7 @@ describe('LandingPageNew', () => {
     expect(image).toHaveAttribute('data-alt', 'pageHeading.title');
     expect(image).toHaveAttribute(
       'data-wrapper-class-name',
-      'h-[500px] lg:h-[630px] translate-y-[-59px]'
+      'w-full h-[500px] lg:h-[630px] translate-y-[-59px]'
     );
 
     const sectionContent = screen.getByTestId('section-content');

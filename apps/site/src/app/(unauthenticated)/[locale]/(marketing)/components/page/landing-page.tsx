@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import HeaderImg from '@/components/common/header-img/header-img';
 import PageHeader from '@/components/common/page-header/page-header';
 import SectionContent from '@/components/common/section-content/section-content';
