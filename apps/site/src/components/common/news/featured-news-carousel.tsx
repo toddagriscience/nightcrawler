@@ -3,9 +3,10 @@
 'use client';
 
 import { Carousel, NewsCard } from '@/components/common';
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
-import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
@@ -16,10 +17,8 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
 export function FeaturedNewsCarousel({
   items = [],
 }: {
-  items: SanityDocument[];
+  items: SanityArticle[];
 }) {
-  const locale = useLocale();
-
   return (
     <Carousel isDark={true} showDots={true}>
       {items.map((article) => (
@@ -32,26 +31,19 @@ export function FeaturedNewsCarousel({
           image={
             article.thumbnail && article.thumbnail.asset
               ? {
-                  url: urlFor(article.thumbnail)?.url(),
-                  alt: article.thumbnail.alt,
+                  url:
+                    urlFor(article.thumbnail)?.url() ?? articlePlaceholderRoute,
+                  alt: article.thumbnail.alt ?? '',
                 }
               : {
                   url: articlePlaceholderRoute,
                   alt: '',
                 }
           }
-          source={article.source}
-          date={new Date(article.date).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          excerpt={article.summary}
-          link={
-            article.offSiteUrl && article.offSiteUrl.length > 0
-              ? article.offSiteUrl
-              : `/news/${article.slug.current}`
-          }
+          source={article.source ?? ''}
+          date={formatArticleListDate(article.date)}
+          excerpt={article.summary ?? ''}
+          link={getArticleCardHref(article)}
         />
       ))}
     </Carousel>

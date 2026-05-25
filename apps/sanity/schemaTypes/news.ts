@@ -4,144 +4,85 @@ import {DocumentTextIcon} from '@sanity/icons'
 import {format, parseISO} from 'date-fns'
 import {defineField, defineType} from 'sanity'
 
+import {articlePortableBodyFields} from './article-shared-fields'
+
+/** Newsroom + research/etc. Articles. Job postings use the `Career` document type instead. */
 export default defineType({
   name: 'news',
-  title: 'News Article',
+  title: 'Article',
   icon: DocumentTextIcon,
   type: 'document',
   fields: [
     defineField({
-      name: 'title',
-      title: 'Title',
+      name: 'contentType',
+      title: 'Content type',
       type: 'string',
-      validation: (rule) => rule.required(),
-      description:
-        'Only the title of the article. Nothing extra (such as `Your title here | Todd Agriscience`) is required.',
-    }),
-    defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      description: 'A slug is required for the post to be accessible from `toddagriscience.com`',
+      initialValue: 'news',
       options: {
-        source: 'title',
-        maxLength: 96,
-        isUnique: (value, context) => context.defaultIsUnique(value, context),
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+          {title: 'Careers (job posts & career articles)', value: 'careers'},
+        ],
+        layout: 'radio',
       },
-      validation: (rule) => rule.required(),
+      description:
+        'Primary category for routing and parent pages (newsroom, careers, research, stories, etc.). Defaults to news for older posts. Use Careers documents for new job postings.',
     }),
     defineField({
-      name: 'date',
-      title: 'Date',
-      type: 'datetime',
-      initialValue: () => new Date().toISOString(),
-    }),
-    defineField({
-      name: 'content',
-      title: 'Content',
+      name: 'collections',
+      title: 'Additional collections',
       type: 'array',
-      validation: (rule) =>
-        rule.custom((value, context) => {
-          const doc = context.document as {offSiteUrl?: string} | undefined
-
-          // If this is an off-site/external article, allow empty content.
-          // Otherwise, require content.
-          const isExternal = doc?.offSiteUrl !== undefined
-
-          if (isExternal) return true
-
-          return Array.isArray(value) && value.length > 0
-            ? true
-            : 'Content is required unless this is an off-site article.'
-        }),
-      of: [
-        {
-          type: 'block',
-        },
-        {
-          type: 'image', // images
-          options: {
-            hotspot: true,
-          },
-          fields: [
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Alt Text',
-              validation: (rule) => rule.required(),
-            },
-          ],
-        },
-      ],
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+          {title: 'Careers', value: 'careers'},
+        ],
+        layout: 'tags',
+      },
+      description:
+        'Extra groupings when an article spans more than one parent page. Prefer the Careers document type for `/careers` content.',
     }),
     defineField({
-      name: 'summary',
-      title: 'Summary',
+      name: 'canonicalParent',
+      title: 'Canonical parent (optional)',
       type: 'string',
-      validation: (rule) => rule.required(),
-      description: 'A brief description of the article. Used for SEO.',
-    }),
-    defineField({
-      name: 'thumbnail',
-      title: 'Thumbnail',
-      type: 'image',
+      options: {
+        list: [
+          {title: 'News', value: 'news'},
+          {title: 'Research', value: 'research'},
+          {title: 'Story', value: 'story'},
+          {title: 'Product release', value: 'product-release'},
+          {title: 'Press', value: 'press'},
+          {title: 'Careers', value: 'careers'},
+        ],
+      },
       description:
-        'A thumbnail for the article on the `/en/news` page. Not currently used for SEO.',
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-          validation: (rule) => rule.required(),
-        },
-      ],
+        'Preferred parent for breadcrumbs or analytics when an article spans multiple collections.',
     }),
-    defineField({
-      name: 'headerImage',
-      title: 'Header Image',
-      type: 'image',
-      description:
-        'A header image for the article detail page. This image appears above the body content.',
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-          validation: (rule) => rule.required(),
-        },
-      ],
-    }),
-    defineField({
-      name: 'offSiteUrl',
-      title: 'Off Site Link',
-      type: 'url',
-      description:
-        'If a URL is present in this field, no news page will exist for this article. Specifically, navigating to a URL such as `/en/news/{your-slug}` will redirect to this URL.',
-    }),
-    defineField({
-      name: 'isFeatured',
-      title: 'Featured',
-      type: 'boolean',
-      description: 'Featured articles are displayed on the featured section of `/en/news`.',
-    }),
-    defineField({
-      name: 'source',
-      title: 'Source',
-      type: 'string',
-      initialValue: 'Todd',
-      description:
-        'The source of the article. Defaults to "Todd" for articles listed on `toddagriscience.com`.',
-    }),
+    ...articlePortableBodyFields,
   ],
   preview: {
     select: {
       title: 'title',
-      date: 'date',
+      publishedAt: 'date',
+      authorName: 'author',
     },
-    prepare({title, date}) {
-      const subtitles = [date && `on ${format(parseISO(date), 'LLL d, yyyy')}`].filter(Boolean)
+    prepare({title, publishedAt, authorName}) {
+      const parts = [
+        authorName && `by ${authorName}`,
+        publishedAt && `on ${format(parseISO(publishedAt), 'LLL d, yyyy')}`,
+      ].filter(Boolean)
 
-      return {title, subtitle: subtitles.join(' ')}
+      return {title: title ?? 'Untitled', subtitle: parts.join(' · ')}
     },
   },
 })

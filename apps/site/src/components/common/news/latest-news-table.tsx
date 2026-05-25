@@ -2,17 +2,17 @@
 
 'use client';
 
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
+import { Link } from '@/i18n/config';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
-import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
-import Link from 'next/link';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
 interface LatestNewsTableProps {
-  items: SanityDocument[];
+  items: SanityArticle[];
 }
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
@@ -22,9 +22,6 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 3); // Show 3 more each time
   };
-
-  const locale = useLocale();
-  const windowHref = useCurrentUrl();
 
   return (
     <div className="rounded-md text-[#555555] mx-auto px-2 md:px-6 flex flex-col justify-center">
@@ -47,11 +44,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           <div>{item.title}</div>
 
           <Link
-            href={
-              item.offSiteUrl
-                ? item.offSiteUrl
-                : windowHref + '/' + item.slug.current
-            }
+            href={getArticleCardHref(item)}
             rel="noopener noreferrer"
             aria-label={`Open ${item.title} in this tab`}
           >
@@ -61,13 +54,7 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             </div>
           </Link>
 
-          <div className="text-right">
-            {new Date(item.date).toLocaleDateString(locale, {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </div>
+          <div className="text-right">{formatArticleListDate(item.date)}</div>
         </div>
       ))}
 

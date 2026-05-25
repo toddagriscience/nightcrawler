@@ -3,6 +3,7 @@
 import {
   resolveFarmIdFromStripeData,
   syncFarmSubscriptionFromStripe,
+  upsertFarmBankSetupFromStripe,
   upsertFarmSubscriptionFromStripe,
 } from '@/lib/utils/stripe/subscription-db';
 import logger from '@/lib/logger';
@@ -125,6 +126,35 @@ export async function POST(request: Request) {
           farmId,
           subscriptionId,
         });
+        break;
+      }
+
+      case 'setup_intent.succeeded': {
+        const setupIntent = event.data.object as Stripe.SetupIntent;
+
+        // Only act on ACH SetupIntents created during the application flow.
+        if (setupIntent.metadata?.purpose !== 'application_ach_setup') {
+          break;
+        }
+
+        const stripeCustomerId =
+          typeof setupIntent.customer === 'string'
+            ? setupIntent.customer
+            : (setupIntent.customer?.id ?? null);
+
+        const farmId = await resolveFarmIdFromStripeData({
+          metadataFarmId: setupIntent.metadata?.farmId,
+          stripeCustomerId,
+        });
+
+        if (!farmId) {
+          logger.warn('Unable to determine farm for setup_intent.succeeded', {
+            setupIntentId: setupIntent.id,
+          });
+          break;
+        }
+
+        await upsertFarmBankSetupFromStripe({ farmId, setupIntent });
         break;
       }
 

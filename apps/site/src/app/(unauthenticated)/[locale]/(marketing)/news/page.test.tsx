@@ -111,11 +111,11 @@ vi.mock('embla-carousel-react', () => {
   };
 });
 
-vi.mock('@/lib/sanity/query', () => {
-  return {
-    default: vi.fn().mockResolvedValue(items),
-  };
-});
+vi.mock('@/lib/sanity/articles', () => ({
+  getArticlesByCollection: vi.fn().mockResolvedValue(items),
+  getFeaturedArticles: vi.fn().mockResolvedValue(items.slice(0, 2)),
+  isCareerArticle: vi.fn(() => false),
+}));
 
 const builder = {
   width: vi.fn().mockReturnThis(),

@@ -3,27 +3,40 @@
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
-import sanityQuery from '@/lib/sanity/query';
+import {
+  getCareersSitemapArticles,
+  getMainSitemapArticles,
+} from '@/lib/sanity/articles';
+import type { SanityArticle } from '@/lib/sanity/article-types';
 import type { MetadataRoute } from 'next';
-import { SanityDocument } from 'next-sanity';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
 const baseUrl = env.baseUrl;
+
+/** Child sitemap identifiers: main site URLs vs career CMS articles under `/careers/[slug]`. */
+export async function generateSitemaps(): Promise<Array<{ id: string }>> {
+  return [{ id: 'main' }, { id: 'careers' }];
+}
 
 // Revalidate sitemap every 24 hours (86400 seconds)
 export const revalidate = 86400;
 
 /**
- * Generates the complete sitemap for the Todd Agriscience website
- * Combines static pages and dynamic news articles with proper internationalization
- * @returns {MetadataRoute.Sitemap} Complete sitemap entries with hreflang alternates
+ * Generates split sitemaps: `main` (static pages + non-career articles) and `careers` (career articles only).
+ *
+ * @param props - Resolved sitemap slice id from {@link generateSitemaps}
+ * @returns URL entries for this sitemap file
  */
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemapEntries: MetadataRoute.Sitemap = getStaticSitemap().concat(
-    await getSanityNewsSitemap()
-  );
-
-  return sitemapEntries;
+export default async function sitemap({
+  id,
+}: {
+  id: Promise<string>;
+}): Promise<MetadataRoute.Sitemap> {
+  const slice = await id;
+  if (slice === 'careers') {
+    return await getSanityCareersArticleCareersRouteSitemap();
+  }
+  return getStaticSitemap().concat(await getSanityArticleMainIndexSitemap());
 }
 
 /**
@@ -37,7 +50,9 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '/',
     '/careers',
-    '/who-we-are',
+    '/careers/index',
+    '/about',
+    '/research',
     '/news',
     '/terms',
     '/privacy',
@@ -76,101 +91,101 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   return sitemapEntries;
 }
 
-/** Generates sitemap entries based off of all of the documents from Sanity. Ignores articles with offsite URLs. Note the potentially scuffed type assertion:
+/**
+ * Converts internal article documents to `/index/[slug]` sitemap rows per locale.
  *
- * ```ts
- * const newsArticles = (await sanityQuery(
- *   'news'
- * )) as unknown as Array<SanityDocument>;
- * ```
- *
- * @returns {MetadataRoute.Sitemap} Sitemap entries for news articles
+ * @param articles - Sanity articles (already filtered for sitemap eligibility)
+ * @returns Sitemap rows
  */
-async function getSanityNewsSitemap(): Promise<MetadataRoute.Sitemap> {
+function articleListToIndexSitemapEntries(
+  articles: SanityArticle[]
+): MetadataRoute.Sitemap {
   const sitemapEntries: MetadataRoute.Sitemap = [];
+  for (const locale of routing.locales) {
+    for (const article of articles) {
+      const slug = article.slug?.current;
 
-  try {
-    // Valid
-    const newsArticles = (await sanityQuery(
-      'news'
-    )) as unknown as Array<SanityDocument>;
-
-    for (const locale of routing.locales) {
-      for (const newsArticle of newsArticles) {
-        if (newsArticle.offSiteUrl && newsArticle.offSiteUrl.length > 0) {
-          continue;
-        }
-        const slug = newsArticle.slug.current;
-        const lastModified = newsArticle._updatedAt;
-
-        // Normalize internal article links so sitemap URLs are:
-        // toddagriscience.com/{locale}/news/{example-article-title}
-        // instead of toddagriscience.com/{locale}/news/articles/{example-article-title}
-        const url = `${baseUrl}/${locale}/news/${slug}`;
-
-        sitemapEntries.push({
-          url,
-          lastModified,
-          changeFrequency: 'weekly',
-          priority: 0.7,
-          alternates: {
-            // Ensure alternates match the normalized news URL shape
-            languages: getSupportedLanguages(`/news/${slug}`),
-          },
-        });
+      if (slug === undefined || slug === null || slug.length === 0) {
+        continue;
       }
-    }
-  } catch (error) {
-    logger.error('Error generating Sanity news sitemap: ', error);
-  }
 
+      const lastModified =
+        article._updatedAt !== undefined ? article._updatedAt : new Date();
+      const url = `${baseUrl}/${locale}/index/${slug}`;
+
+      sitemapEntries.push({
+        url,
+        lastModified,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+        alternates: {
+          languages: getSupportedLanguages(`/index/${slug}`),
+        },
+      });
+    }
+  }
   return sitemapEntries;
 }
 
 /**
- * Parses article dates with fallback handling for various formats
- * Supports formats like "Apr 15, 2025" and ISO strings
- * @param {string} dateString - The date string to parse
- * @returns {string} ISO date string or current date as fallback
+ * Converts careers posting documents to `/careers/[slug]` sitemap rows per locale.
+ *
+ * @param articles - Sanity career articles eligible for indexing
+ * @returns Sitemap rows for the careers sitemap slice
  */
-function parseArticleDate(dateString: string): string {
-  try {
-    // Try parsing the date string directly first
-    let articleDate = new Date(dateString);
+function articleListToCareersPostingSitemapEntries(
+  articles: SanityArticle[]
+): MetadataRoute.Sitemap {
+  const sitemapEntries: MetadataRoute.Sitemap = [];
+  for (const locale of routing.locales) {
+    for (const article of articles) {
+      const slug = article.slug?.current;
 
-    // If that fails, try parsing common formats
-    if (isNaN(articleDate.getTime())) {
-      // Try parsing formats like "Apr 15, 2025", "Mar 30, 2025"
-      const monthNames = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
-
-      for (let i = 0; i < monthNames.length; i++) {
-        if (dateString.includes(monthNames[i])) {
-          articleDate = new Date(dateString);
-          break;
-        }
+      if (slug === undefined || slug === null || slug.length === 0) {
+        continue;
       }
-    }
 
-    // Return ISO string if valid, otherwise use current date
-    return isNaN(articleDate.getTime())
-      ? new Date().toISOString()
-      : articleDate.toISOString();
+      const lastModified =
+        article._updatedAt !== undefined ? article._updatedAt : new Date();
+      const url = `${baseUrl}/${locale}/careers/${slug}`;
+
+      sitemapEntries.push({
+        url,
+        lastModified,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+        alternates: {
+          languages: getSupportedLanguages(`/careers/${slug}`),
+        },
+      });
+    }
+  }
+  return sitemapEntries;
+}
+
+/** Non-career Sanity article URLs for the main sitemap slice. */
+async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const articles = await getMainSitemapArticles({
+      next: { revalidate: 86400 },
+    });
+    return articleListToIndexSitemapEntries(articles);
   } catch (error) {
-    logger.warn(`Failed to parse date "${dateString}":`, error);
-    return new Date().toISOString();
+    logger.error('Error generating main Sanity article sitemap:', error);
+    return [];
+  }
+}
+
+/** Career-tagged Sanity article URLs under `/careers/[slug]` for the dedicated careers sitemap file. */
+async function getSanityCareersArticleCareersRouteSitemap(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const articles = await getCareersSitemapArticles({
+      next: { revalidate: 86400 },
+    });
+    return articleListToCareersPostingSitemapEntries(articles);
+  } catch (error) {
+    logger.error('Error generating careers Sanity article sitemap:', error);
+    return [];
   }
 }
 

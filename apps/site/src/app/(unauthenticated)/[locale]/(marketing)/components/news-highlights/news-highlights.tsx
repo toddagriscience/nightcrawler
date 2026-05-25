@@ -5,10 +5,11 @@
 import { FadeIn, NewsCard } from '@/components/common';
 import { Spinner } from '@/components/ui/spinner';
 import { useTheme } from '@/context/theme/ThemeContext';
-import sanityQuery from '@/lib/sanity/query';
+import { loadArticlesForHighlights } from '@/lib/sanity/article-actions';
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
+import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
-import { useLocale } from 'next-intl';
-import { SanityDocument } from 'next-sanity';
 import { useEffect, useState } from 'react';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
@@ -19,20 +20,16 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
  */
 export default function NewsHighlights() {
   const { isDark: contextIsDark } = useTheme();
-  const [allNews, setAllNews] = useState<SanityDocument[]>();
+  const [allNews, setAllNews] = useState<SanityArticle[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const featuredNews = allNews
     ? allNews.filter((article) => article.isFeatured)
     : [];
 
-  const locale = useLocale();
-
   useEffect(() => {
     async function getNews() {
-      const news = (await sanityQuery(
-        'news'
-      )) as unknown as Array<SanityDocument>;
+      const news = await loadArticlesForHighlights('news');
       setAllNews(news);
       setIsLoading(false);
     }
@@ -57,11 +54,12 @@ export default function NewsHighlights() {
                 image={
                   article.thumbnail && article.thumbnail.asset
                     ? {
-                        url: urlFor(article.thumbnail)
-                          ?.width(400)
-                          .height(400)
-                          .url(),
-                        alt: article.thumbnail.alt,
+                        url:
+                          urlFor(article.thumbnail)
+                            ?.width(400)
+                            .height(400)
+                            .url() ?? articlePlaceholderRoute,
+                        alt: article.thumbnail.alt ?? '',
                         height: 400,
                         width: 400,
                       }
@@ -72,18 +70,10 @@ export default function NewsHighlights() {
                         width: 400,
                       }
                 }
-                source={article.source}
-                date={new Date(article.date).toLocaleDateString(locale, {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-                excerpt={article.summary}
-                link={
-                  article.offSiteUrl && article.offSiteUrl.length > 0
-                    ? article.offSiteUrl
-                    : `${locale}/news/${article.slug.current}`
-                }
+                source={article.source ?? ''}
+                date={formatArticleListDate(article.date)}
+                excerpt={article.summary ?? ''}
+                link={getArticleCardHref(article)}
               />
             ))}
           </div>

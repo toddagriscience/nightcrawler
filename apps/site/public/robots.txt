@@ -13,6 +13,7 @@ Disallow: /signup/
 Disallow: /*/careers/externship
 Disallow: /login/
 Disallow: /api/
+Disallow: /_next/
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
@@ -139,4 +140,6 @@ User-agent: 360Spider
 Disallow: /
 
 # --- Sitemap Locations ---
-Sitemap: https://toddagriscience.com/sitemap.xml
+# Split via app/sitemap.ts + generateSitemaps (/sitemap.xml serves HTML in Next 16 here—use children).
+Sitemap: https://toddagriscience.com/sitemap/main.xml
+Sitemap: https://toddagriscience.com/sitemap/careers.xml

@@ -115,6 +115,25 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Last so CORP wins: allow wordmark <img> off-site (e.g. email templates).
+      {
+        source: '/wordmark.png',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/wordmark.svg',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
     ];
   },
 
@@ -141,6 +160,22 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
+      {
+        source: '/:locale(en|es)/who-we-are/:path*',
+        destination: '/:locale/about/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/who-we-are',
+        destination: '/:locale/about',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/what-we-do',
+        destination: '/:locale/research',
+        permanent: true,
+      },
+      // `/careers/index` is a real route (`careers/index/page.tsx`); do not add a redirect to `/careers`.
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',

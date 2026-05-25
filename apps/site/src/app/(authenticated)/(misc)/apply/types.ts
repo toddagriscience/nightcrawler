@@ -96,7 +96,7 @@ export type TabTypes =
   | 'general'
   | 'colleagues'
   | 'farm'
-  | 'subscription'
+  | 'bank-information'
   | 'terms';
 
 export type VerificationStatus = { email: string; verified: boolean };

@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "sanity dev",
-    "start": "sanity start",
+    "preview": "sanity preview",
     "build": "sanity build",
     "type-check": "tsc --noEmit",
     "deploy": "sanity deploy",

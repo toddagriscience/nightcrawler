@@ -90,7 +90,7 @@ export default function Farm() {
             )}
             onSubmit={() => {
               handleSubmit(save)();
-              setCurrentTab('subscription');
+              setCurrentTab('bank-information');
               scrollTo(0, 0);
             }}
             onChange={onChangeHelper}

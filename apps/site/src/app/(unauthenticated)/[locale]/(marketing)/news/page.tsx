@@ -4,21 +4,21 @@
 
 import { FeaturedNewsCarousel } from '@/components/common/news/featured-news-carousel';
 import { LatestNewsTable } from '@/components/common/news/latest-news-table';
-import sanityQuery from '@/lib/sanity/query';
-import { SanityDocument } from 'next-sanity';
+import {
+  getArticlesByCollection,
+  getFeaturedArticles,
+} from '@/lib/sanity/articles';
 
 /**
- * Highlighted news & general news
+ * Highlighted news & general news — only articles in the news collection.
+ *
  * @returns {JSX.Element} - The news page
  */
 export default async function News() {
-  const allNews = (await sanityQuery(
-    'news'
-  )) as unknown as Array<SanityDocument>;
-
-  const featuredNews = allNews
-    ? allNews.filter((article) => article.isFeatured)
-    : [];
+  const [allNews, featuredNews] = await Promise.all([
+    getArticlesByCollection('news'),
+    getFeaturedArticles('news'),
+  ]);
 
   return (
     <section id="newsroom" className="max-w-[1200px] mx-auto">
