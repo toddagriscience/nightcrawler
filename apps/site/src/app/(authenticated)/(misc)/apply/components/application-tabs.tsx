@@ -33,6 +33,7 @@ export const ApplicationContext = createContext({
   setCurrentTab: (_tab: TabTypes) => {},
   canSubmitApplication: false,
   canEditFarm: false,
+  nextTabAfterColleagues: 'farm' as TabTypes,
 });
 
 /** The tabs for the application */
@@ -80,6 +81,7 @@ export default function ApplicationTabs({
         setCurrentTab,
         canSubmitApplication,
         canEditFarm,
+        nextTabAfterColleagues: 'farm',
       }}
     >
       <Tabs defaultValue="general" value={currentTab}>

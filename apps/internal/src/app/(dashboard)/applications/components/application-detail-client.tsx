@@ -21,6 +21,7 @@ import {
   getPlatformAccessApplicationById,
   rejectPlatformAccessApplication,
 } from '../actions';
+import { FormSlugBadge } from './form-slug-badge';
 
 /** One platform access application row. */
 export type ApplicationRow = NonNullable<
@@ -124,12 +125,12 @@ export default function ApplicationDetailClient({
             <h1 className="text-2xl font-bold tracking-tight">
               Application #{application.id}
             </h1>
-            <p className="text-sm text-muted-foreground">
-              {application.formSlug}
-              {application.sourceArticleSlug
-                ? ` · referred from ${application.sourceArticleSlug}`
-                : ''}
-            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <FormSlugBadge slug={application.formSlug} />
+              {application.sourceArticleSlug ? (
+                <span>Referred from {application.sourceArticleSlug}</span>
+              ) : null}
+            </div>
           </div>
           <Badge variant="outline">{application.status}</Badge>
         </div>

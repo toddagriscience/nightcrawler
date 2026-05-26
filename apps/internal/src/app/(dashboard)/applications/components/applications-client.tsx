@@ -3,8 +3,17 @@
 'use client';
 
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -14,6 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { getPlatformAccessApplications } from '../actions';
+import { FormSlugBadge } from './form-slug-badge';
 
 /** One platform access application row. */
 type ApplicationRow = Awaited<
@@ -26,6 +36,24 @@ interface ApplicationsClientProps {
   initialApplications: ApplicationRow[];
 }
 
+/** Sentinel value for the “all forms” filter option. */
+const ALL_FORMS_FILTER = 'all';
+
+/**
+ * Unique form slugs from application rows, sorted alphabetically.
+ *
+ * @param applications - Application list
+ */
+function getUniqueFormSlugs(applications: ApplicationRow[]): string[] {
+  return [
+    ...new Set(
+      applications
+        .map((application) => application.formSlug)
+        .filter((slug): slug is string => Boolean(slug?.trim()))
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+}
+
 /**
  * Client UI for listing platform access applications.
  *
@@ -34,6 +62,30 @@ interface ApplicationsClientProps {
 export default function ApplicationsClient({
   initialApplications,
 }: ApplicationsClientProps) {
+  const [formSlugFilter, setFormSlugFilter] = useState(ALL_FORMS_FILTER);
+
+  const formSlugs = useMemo(
+    () => getUniqueFormSlugs(initialApplications),
+    [initialApplications]
+  );
+
+  const filteredApplications = useMemo(() => {
+    if (formSlugFilter === ALL_FORMS_FILTER) {
+      return initialApplications;
+    }
+
+    return initialApplications.filter(
+      (application) => application.formSlug === formSlugFilter
+    );
+  }, [formSlugFilter, initialApplications]);
+
+  const emptyMessage =
+    initialApplications.length === 0
+      ? 'No applications yet.'
+      : formSlugFilter === ALL_FORMS_FILTER
+        ? 'No applications yet.'
+        : `No applications for form “${formSlugFilter}”.`;
+
   return (
     <div className="space-y-6">
       <div>
@@ -42,6 +94,25 @@ export default function ApplicationsClient({
           Review platform access requests submitted from `/forms/[slug]`.
         </p>
       </div>
+
+      {formSlugs.length > 0 ? (
+        <div className="flex flex-col gap-2 sm:max-w-xs">
+          <Label htmlFor="applications-form-filter">Filter by form</Label>
+          <Select value={formSlugFilter} onValueChange={setFormSlugFilter}>
+            <SelectTrigger id="applications-form-filter">
+              <SelectValue placeholder="All forms" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_FORMS_FILTER}>All forms</SelectItem>
+              {formSlugs.map((slug) => (
+                <SelectItem key={slug} value={slug}>
+                  {slug}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
 
       <Table>
         <TableHeader>
@@ -55,17 +126,19 @@ export default function ApplicationsClient({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {initialApplications.length === 0 ? (
+          {filteredApplications.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-muted-foreground">
-                No applications yet.
+                {emptyMessage}
               </TableCell>
             </TableRow>
           ) : (
-            initialApplications.map((application) => (
+            filteredApplications.map((application) => (
               <TableRow key={application.id}>
                 <TableCell>{application.id}</TableCell>
-                <TableCell>{application.formSlug}</TableCell>
+                <TableCell>
+                  <FormSlugBadge slug={application.formSlug} />
+                </TableCell>
                 <TableCell>
                   <Badge variant="outline">{application.status}</Badge>
                 </TableCell>

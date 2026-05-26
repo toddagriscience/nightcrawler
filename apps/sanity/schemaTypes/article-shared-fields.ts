@@ -220,18 +220,61 @@ const sourceField = defineField({
   description: 'Attribution string; defaults to “Todd” for toddagriscience.com pages.',
 })
 
-const ctaLabelField = defineField({
-  name: 'ctaLabel',
-  title: 'CTA label',
-  type: 'string',
-  description: 'Optional pill button below the article (e.g. Request access).',
-})
-
-const ctaHrefField = defineField({
-  name: 'ctaHref',
-  title: 'CTA link',
-  type: 'string',
-  description: 'Internal path (/forms/iris-access) or absolute URL for the article CTA.',
+const articleCtasField = defineField({
+  name: 'ctas',
+  title: 'Call to action buttons',
+  type: 'array',
+  description:
+    'Optional pill buttons on the article. Add none, one, or many. Choose whether each appears under the header or in the footer.',
+  of: [
+    {
+      type: 'object',
+      name: 'articleCta',
+      fields: [
+        defineField({
+          name: 'label',
+          title: 'Label',
+          type: 'string',
+          validation: (rule: Rule) => rule.required().min(1),
+        }),
+        defineField({
+          name: 'href',
+          title: 'Link',
+          type: 'string',
+          description: 'Internal path (/forms/iris-access) or absolute URL for this button.',
+          validation: (rule: Rule) => rule.required().min(1),
+        }),
+        defineField({
+          name: 'placement',
+          title: 'Placement',
+          type: 'string',
+          options: {
+            list: [
+              {title: 'Under header', value: 'under-header'},
+              {title: 'Footer', value: 'footer'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'footer',
+          validation: (rule: Rule) => rule.required(),
+        }),
+      ],
+      preview: {
+        select: {
+          title: 'label',
+          subtitle: 'placement',
+          href: 'href',
+        },
+        prepare({title, subtitle, href}) {
+          const placementLabel = subtitle === 'under-header' ? 'Under header' : 'Footer'
+          return {
+            title: title ?? 'Untitled CTA',
+            subtitle: [placementLabel, href].filter(Boolean).join(' · '),
+          }
+        },
+      },
+    },
+  ],
 })
 
 /**
@@ -265,6 +308,5 @@ export const articlePortableBodyFields = [
   offSiteUrlField,
   isFeaturedField,
   sourceField,
-  ctaLabelField,
-  ctaHrefField,
+  articleCtasField,
 ]

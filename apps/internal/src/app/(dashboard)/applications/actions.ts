@@ -66,18 +66,29 @@ export async function getPlatformAccessApplicationById(id: number) {
   }
 }
 
+/** Filters for {@link getPlatformAccessApplications}. */
+export interface PlatformAccessApplicationListFilters {
+  /** Optional workflow status filter */
+  status?: 'pending' | 'approved' | 'rejected';
+  /** Optional CMS form slug filter (e.g. `iris-access`) */
+  formSlug?: string;
+}
+
 /**
- * Lists platform access applications, optionally filtered by status.
+ * Lists platform access applications, optionally filtered by status or form slug.
  *
- * @param status - Optional workflow status filter
+ * @param filters - Optional list filters
  */
 export async function getPlatformAccessApplications(
-  status?: 'pending' | 'approved' | 'rejected'
+  filters?: PlatformAccessApplicationListFilters
 ) {
   try {
     const conditions = [isNull(platformAccessApplication.deletedAt)];
-    if (status) {
-      conditions.push(eq(platformAccessApplication.status, status));
+    if (filters?.status) {
+      conditions.push(eq(platformAccessApplication.status, filters.status));
+    }
+    if (filters?.formSlug) {
+      conditions.push(eq(platformAccessApplication.formSlug, filters.formSlug));
     }
 
     return await db

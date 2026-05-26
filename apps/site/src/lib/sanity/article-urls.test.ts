@@ -50,7 +50,6 @@ describe('getArticleCardHref', () => {
       getArticleCardHref({
         slug: { current: 'local-role' },
         _type: 'career',
-        contentType: 'careers',
         collections: ['careers'],
       })
     ).toBe('/careers/local-role');
