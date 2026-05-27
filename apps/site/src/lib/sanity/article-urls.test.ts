@@ -27,8 +27,6 @@ describe('getArticleCardHref', () => {
         offSiteUrl: 'https://example.com/story',
         slug: { current: 'ignored' },
         _type: 'news',
-        contentType: 'news',
-        collections: [],
       })
     ).toBe('https://example.com/story');
   });
@@ -39,8 +37,6 @@ describe('getArticleCardHref', () => {
         offSiteUrl: '',
         slug: { current: 'local-article' },
         _type: 'news',
-        contentType: 'news',
-        collections: [],
       })
     ).toBe('/index/local-article');
   });
@@ -50,7 +46,6 @@ describe('getArticleCardHref', () => {
       getArticleCardHref({
         slug: { current: 'local-role' },
         _type: 'career',
-        collections: ['careers'],
       })
     ).toBe('/careers/local-role');
   });

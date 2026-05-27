@@ -235,14 +235,14 @@ const articleCtasField = defineField({
           name: 'label',
           title: 'Label',
           type: 'string',
-          validation: (rule: Rule) => rule.required().min(1),
+          validation: (rule) => rule.required().min(1),
         }),
         defineField({
           name: 'href',
           title: 'Link',
           type: 'string',
           description: 'Internal path (/forms/iris-access) or absolute URL for this button.',
-          validation: (rule: Rule) => rule.required().min(1),
+          validation: (rule) => rule.required().min(1),
         }),
         defineField({
           name: 'placement',
@@ -256,7 +256,7 @@ const articleCtasField = defineField({
             layout: 'radio',
           },
           initialValue: 'footer',
-          validation: (rule: Rule) => rule.required(),
+          validation: (rule) => rule.required(),
         }),
       ],
       preview: {

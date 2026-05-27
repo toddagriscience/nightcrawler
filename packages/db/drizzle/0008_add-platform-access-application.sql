@@ -1,5 +1,4 @@
-CREATE TYPE "platform_access_application_status" AS ENUM('pending', 'approved', 'rejected');
-
+CREATE TYPE "platform_access_application_status" AS ENUM('pending', 'approved', 'rejected');--> statement-breakpoint
 CREATE TABLE "platform_access_application" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"form_slug" varchar(96) NOT NULL,
@@ -15,5 +14,5 @@ CREATE TABLE "platform_access_application" (
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
 );
-
+--> statement-breakpoint
 ALTER TABLE "platform_access_application" ADD CONSTRAINT "platform_access_application_reviewed_by_internal_account_id_internal_account_id_fk" FOREIGN KEY ("reviewed_by_internal_account_id") REFERENCES "public"."internal_account"("id") ON DELETE no action ON UPDATE no action;
