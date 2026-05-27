@@ -20,6 +20,7 @@ import {
   approvePlatformAccessApplication,
   getPlatformAccessApplicationById,
   rejectPlatformAccessApplication,
+  resendPlatformAccessApplicationInvite,
 } from '../actions';
 import { FormSlugBadge } from './form-slug-badge';
 
@@ -72,6 +73,30 @@ export default function ApplicationDetailClient({
 
   const answers = (application.answers ?? {}) as Record<string, unknown>;
 
+  const showInviteEmailResult = (
+    result: Awaited<ReturnType<typeof resendPlatformAccessApplicationInvite>>,
+    successLabel: string
+  ) => {
+    if (!result.application) {
+      toast.error(result.emailError ?? 'Failed to send invite email.');
+      return;
+    }
+
+    setApplication(result.application);
+    setSignupUrl(result.signupUrl);
+
+    if (result.emailSent) {
+      toast.success(`${successLabel} Magic link email sent.`);
+      return;
+    }
+
+    toast.error(
+      result.emailError
+        ? `Could not send email: ${result.emailError}`
+        : 'Could not send email. Copy the signup link below instead.'
+    );
+  };
+
   const handleApprove = async () => {
     setLoading(true);
     try {
@@ -81,10 +106,20 @@ export default function ApplicationDetailClient({
         return;
       }
 
-      setApplication(result.application);
-      setSignupUrl(result.signupUrl);
       setConfirmAction(null);
-      toast.success('Application approved.');
+      showInviteEmailResult(result, 'Application approved.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendInvite = async () => {
+    setLoading(true);
+    try {
+      const result = await resendPlatformAccessApplicationInvite(
+        application.id
+      );
+      showInviteEmailResult(result, 'Invite resent.');
     } finally {
       setLoading(false);
     }
@@ -159,6 +194,32 @@ export default function ApplicationDetailClient({
             </p>
           </div>
         ) : null}
+        {application.status === 'approved' ? (
+          <>
+            <div>
+              <p className="font-medium">Invite email</p>
+              <p className="text-muted-foreground">
+                {application.inviteSentAt
+                  ? `Sent ${new Date(application.inviteSentAt).toLocaleString()}`
+                  : 'Not sent yet'}
+              </p>
+            </div>
+            <div>
+              <p className="font-medium">Signup completed</p>
+              <p className="text-muted-foreground">
+                {application.signedUpAt
+                  ? `Yes — ${new Date(application.signedUpAt).toLocaleString()}`
+                  : 'Not yet'}
+              </p>
+            </div>
+            {application.farmId ? (
+              <div>
+                <p className="font-medium">Farm ID</p>
+                <p className="text-muted-foreground">{application.farmId}</p>
+              </div>
+            ) : null}
+          </>
+        ) : null}
       </div>
 
       <div className="space-y-3 rounded-md border p-4">
@@ -181,14 +242,28 @@ export default function ApplicationDetailClient({
         <div className="rounded-md border p-4 text-sm break-all">
           <p className="font-medium mb-2">Signup link</p>
           <p>{signupUrl}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => void copySignupUrl()}
+            >
+              Copy link
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {application.status === 'approved' && !application.signedUpAt ? (
+        <div className="flex flex-wrap gap-3">
           <Button
             type="button"
             variant="outline"
-            size="sm"
-            className="mt-3"
-            onClick={() => void copySignupUrl()}
+            disabled={loading}
+            onClick={() => void handleResendInvite()}
           >
-            Copy link
+            {loading ? 'Sending…' : 'Resend invite email'}
           </Button>
         </div>
       ) : null}
@@ -229,7 +304,7 @@ export default function ApplicationDetailClient({
             </DialogTitle>
             <DialogDescription>
               {confirmAction === 'approve'
-                ? 'This marks the application approved and generates a pre-filled signup link you can send to the applicant.'
+                ? 'This marks the application approved and emails the applicant a magic link to begin signup. If email delivery fails, copy the signup link shown on this page.'
                 : application.retentionConsent
                   ? 'This marks the application rejected. Their information will be kept on file because they consented to retention.'
                   : 'This marks the application rejected and deletes their submitted answers because they did not consent to retention.'}

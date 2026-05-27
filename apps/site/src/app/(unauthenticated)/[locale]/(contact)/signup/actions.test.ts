@@ -2,21 +2,29 @@
 
 import { farm, standardValues, user } from '@nightcrawler/db/schema';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { signUpUser } from '@/lib/auth-server';
 import { signUp } from './actions';
 
-const mockSignUp = vi.fn();
+vi.mock('@/lib/auth-server', () => ({
+  getUserEmail: vi.fn().mockResolvedValue(null),
+  setPassword: vi.fn(),
+  signIn: vi.fn(),
+  signUpUser: vi.fn(),
+}));
 
-vi.mock('@/lib/supabase/server', async (importActual) => {
-  const actual = await importActual<typeof import('@/lib/supabase/server')>();
-  return {
-    ...actual,
-    createClient: vi.fn(() => ({
-      auth: {
-        signUp: mockSignUp,
-      },
-    })),
-  };
-});
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(async () => ({
+    auth: {
+      updateUser: vi.fn().mockResolvedValue({ error: null }),
+    },
+  })),
+}));
+
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn((path: string) => {
+    throw new Error(`NEXT_REDIRECT:${path}`);
+  }),
+}));
 
 const { db } = await vi.hoisted(async () => {
   // Polyfill for PGlite
@@ -60,7 +68,7 @@ vi.mock('@nightcrawler/db/schema/connection', async (importOriginal) => {
 
 describe('signUp', () => {
   beforeEach(async () => {
-    mockSignUp.mockReset();
+    vi.mocked(signUpUser).mockReset();
     // Clean up any existing data
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(user);
@@ -146,10 +154,7 @@ describe('signUp', () => {
 
   describe('Supabase signup', () => {
     it('throws when Supabase signup fails', async () => {
-      mockSignUp.mockResolvedValue({
-        data: null,
-        error: new Error('User already exists'),
-      });
+      vi.mocked(signUpUser).mockResolvedValue(new Error('User already exists'));
 
       const formData = createValidFormData();
       await expect(signUp(null, formData)).rejects.toThrow(
@@ -158,11 +163,9 @@ describe('signUp', () => {
     });
 
     it('throws when Supabase returns an AuthError', async () => {
-      const authError = new Error('Email rate limit exceeded');
-      mockSignUp.mockResolvedValue({
-        data: null,
-        error: authError,
-      });
+      vi.mocked(signUpUser).mockResolvedValue(
+        new Error('Email rate limit exceeded')
+      );
 
       const formData = createValidFormData();
       await expect(signUp(null, formData)).rejects.toThrow(
@@ -173,9 +176,8 @@ describe('signUp', () => {
 
   describe('successful signup', () => {
     it('creates farm and user records on successful signup', async () => {
-      mockSignUp.mockResolvedValue({
-        data: { user: { id: 'supabase-user-id' } },
-        error: null,
+      vi.mocked(signUpUser).mockResolvedValue({
+        user: { id: 'supabase-user-id' },
       });
 
       const formData = createValidFormData();
@@ -211,9 +213,8 @@ describe('signUp', () => {
     });
 
     it('returns the created user and farm data', async () => {
-      mockSignUp.mockResolvedValue({
-        data: { user: { id: 'supabase-user-id' } },
-        error: null,
+      vi.mocked(signUpUser).mockResolvedValue({
+        user: { id: 'supabase-user-id' },
       });
 
       const formData = createValidFormData();
@@ -231,9 +232,8 @@ describe('signUp', () => {
     });
 
     it('handles phone number preprocessing correctly', async () => {
-      mockSignUp.mockResolvedValue({
-        data: { user: { id: 'supabase-user-id' } },
-        error: null,
+      vi.mocked(signUpUser).mockResolvedValue({
+        user: { id: 'supabase-user-id' },
       });
 
       const formData = createValidFormData();

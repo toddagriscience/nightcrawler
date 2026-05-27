@@ -18,6 +18,7 @@ import {
   resolveFormFooterCheckboxes,
   resolveFormSections,
 } from './utils';
+import { enrichStoredAnswersWithSignupPrefill } from '@nightcrawler/db/utils/extract-applicant-prefill';
 
 /** Payload accepted by {@link submitPlatformAccessApplication}. */
 export interface SubmitPlatformAccessApplicationInput {
@@ -62,9 +63,12 @@ export async function submitPlatformAccessApplication(
   }
 
   const retentionConsent = readRetentionConsentFromValues(validated.data);
-  const storedAnswers = buildStoredFormAnswers(
-    validated.data,
-    footerCheckboxes
+  const storedAnswers = enrichStoredAnswersWithSignupPrefill(
+    buildStoredFormAnswers(validated.data, footerCheckboxes),
+    flattenFormFields(sections).map((field) => ({
+      name: field.name,
+      type: field.type,
+    }))
   );
 
   try {

@@ -11,6 +11,7 @@ import {
   varchar,
   boolean,
 } from 'drizzle-orm/pg-core';
+import { farm } from './farm';
 import { internalAccount } from './internal-account';
 
 /** Review status for a platform access application submission. */
@@ -46,6 +47,12 @@ export const platformAccessApplication = pgTable(
     signupToken: uuid(),
     /** Expiry for the signup token */
     signupTokenExpiresAt: timestamp(),
+    /** When the approval invite email was sent */
+    inviteSentAt: timestamp(),
+    /** When the applicant finished account + farm creation */
+    signedUpAt: timestamp(),
+    /** Farm created from this approved application */
+    farmId: integer().references(() => farm.id),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp()
       .notNull()

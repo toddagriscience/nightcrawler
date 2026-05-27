@@ -120,6 +120,7 @@ export default function ApplicationsClient({
             <TableHead>ID</TableHead>
             <TableHead>Form</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Signup</TableHead>
             <TableHead>Retention</TableHead>
             <TableHead>Submitted</TableHead>
             <TableHead />
@@ -128,7 +129,7 @@ export default function ApplicationsClient({
         <TableBody>
           {filteredApplications.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-muted-foreground">
+              <TableCell colSpan={7} className="text-muted-foreground">
                 {emptyMessage}
               </TableCell>
             </TableRow>
@@ -141,6 +142,15 @@ export default function ApplicationsClient({
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">{application.status}</Badge>
+                </TableCell>
+                <TableCell>
+                  {application.status === 'approved'
+                    ? application.signedUpAt
+                      ? 'Completed'
+                      : application.inviteSentAt
+                        ? 'Invite sent'
+                        : 'Pending'
+                    : '—'}
                 </TableCell>
                 <TableCell>
                   {application.retentionConsent ? 'Yes' : 'No'}

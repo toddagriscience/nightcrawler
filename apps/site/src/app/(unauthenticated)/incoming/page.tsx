@@ -2,6 +2,7 @@
 
 'use client';
 
+import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
 import { useRouter, useSearchParams } from 'next/navigation';
 import OnboardingForm from './components/onboarding-form';
 
@@ -22,7 +23,9 @@ export default function Onboarding() {
       lastName={searchParams.get('last_name') || ''}
       farmName={searchParams.get('farm_name') || ''}
       email={searchParams.get('email') || ''}
-      phone={searchParams.get('phone') || ''}
+      phone={normalizePhoneForUrl(searchParams.get('phone') || '')}
+      applicationId={searchParams.get('application_id') || ''}
+      token={searchParams.get('token') || ''}
       routerPushCallback={routerPushCallback}
     />
   );

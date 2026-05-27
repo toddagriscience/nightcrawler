@@ -42,7 +42,11 @@ export default async function ApplicationDetailPage({
     application.status === 'approved'
       ? buildIncomingSignupUrl(
           getSiteBaseUrl(),
-          (application.answers ?? {}) as Record<string, unknown>
+          (application.answers ?? {}) as Record<string, unknown>,
+          {
+            applicationId: application.id,
+            signupToken: application.signupToken ?? undefined,
+          }
         )
       : null;
 

@@ -8,18 +8,9 @@ import {
   platformAccessApplication,
 } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
-import { buildIncomingSignupUrl } from '@/lib/platform-access/build-incoming-signup-url';
+import { issueApprovedApplicantSignupAccess } from '@/lib/platform-access/issue-approved-applicant-signup';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 import logger from '@/lib/logger';
-
-/** Base URL for generated signup links. */
-function getSiteBaseUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN ??
-    'http://localhost:3000'
-  ).replace(/\/$/, '');
-}
 
 /**
  * Resolves the active internal account for the current Supabase session.
@@ -103,7 +94,7 @@ export async function getPlatformAccessApplications(
 }
 
 /**
- * Approves an application and returns a pre-filled signup URL.
+ * Approves an application, sends a signup email, and returns a fallback signup URL.
  *
  * @param id - Application row id
  */
@@ -116,12 +107,14 @@ export async function approvePlatformAccessApplication(id: number) {
       .where(eq(platformAccessApplication.id, id))
       .limit(1);
 
-    if (!existing) return { application: null, signupUrl: null };
-
-    const signupToken = crypto.randomUUID();
-    const signupTokenExpiresAt = new Date(
-      Date.now() + 1000 * 60 * 60 * 24 * 14
-    );
+    if (!existing) {
+      return {
+        application: null,
+        signupUrl: null,
+        emailSent: false,
+        emailError: 'Application not found.',
+      };
+    }
 
     const [application] = await db
       .update(platformAccessApplication)
@@ -129,21 +122,47 @@ export async function approvePlatformAccessApplication(id: number) {
         status: 'approved',
         reviewedByInternalAccountId: reviewerId,
         reviewedAt: new Date(),
-        signupToken,
-        signupTokenExpiresAt,
       })
       .where(eq(platformAccessApplication.id, id))
       .returning();
 
-    const signupUrl = buildIncomingSignupUrl(
-      getSiteBaseUrl(),
-      (application?.answers ?? {}) as Record<string, unknown>
-    );
+    if (!application) {
+      return {
+        application: null,
+        signupUrl: null,
+        emailSent: false,
+        emailError: 'Failed to approve application.',
+      };
+    }
 
-    return { application, signupUrl };
+    return issueApprovedApplicantSignupAccess(id);
   } catch (error) {
     logger.error('Failed to approve platform access application:', error);
-    return { application: null, signupUrl: null };
+    return {
+      application: null,
+      signupUrl: null,
+      emailSent: false,
+      emailError: 'Failed to approve application.',
+    };
+  }
+}
+
+/**
+ * Resends a fresh magic-link email for an approved application.
+ *
+ * @param id - Application row id
+ */
+export async function resendPlatformAccessApplicationInvite(id: number) {
+  try {
+    return await issueApprovedApplicantSignupAccess(id);
+  } catch (error) {
+    logger.error('Failed to resend platform access application invite:', error);
+    return {
+      application: null,
+      signupUrl: null,
+      emailSent: false,
+      emailError: 'Failed to resend invite email.',
+    };
   }
 }
 
