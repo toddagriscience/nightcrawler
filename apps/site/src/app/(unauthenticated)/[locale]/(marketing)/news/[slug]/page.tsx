@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { env } from '@/lib/env';
+import { getLocalizedPath } from '@/lib/locale-utils';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
   getArticleBySlug,
@@ -28,8 +29,8 @@ export default async function LegacyNewsArticleRedirect({
     notFound();
     return;
   }
-  const careerPath = `/${locale}/careers/${slug}`;
-  const newsPath = `/${locale}/index/${slug}`;
+  const careerPath = getLocalizedPath(locale, `/careers/${slug}`);
+  const newsPath = getLocalizedPath(locale, `/index/${slug}`);
 
   if (!isInternalArticle(article)) {
     if (

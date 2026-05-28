@@ -65,7 +65,7 @@ describe('/careers/[slug] postings', () => {
     });
 
     expect(redirect).not.toHaveBeenCalled();
-    expect(permanentRedirect).toHaveBeenCalledWith('/en/careers/loop-role');
+    expect(permanentRedirect).toHaveBeenCalledWith('/careers/loop-role');
   });
 
   it('redirects externally when off-site URL is set', async () => {

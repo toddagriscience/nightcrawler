@@ -4,10 +4,9 @@
 
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { Link } from '@/i18n/config';
+import { Link, usePathname, useRouter } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   FaInstagram,
@@ -74,18 +73,14 @@ const Footer = () => {
 
   const currentYear = new Date().getFullYear();
 
-  const pathname = usePathname() || '/en';
+  const pathname = usePathname();
+  const router = useRouter();
   const [langOpen, setLangOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 
-  const trimPath = (p: string) => p.replace(/\/+$/, '') || '/';
-
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    const newPath = segments.join('/') || `/${newLocale}`;
-    if (trimPath(newPath) === trimPath(pathname)) {
+    if (newLocale === locale) {
       return;
     }
     setPendingLocale(newLocale);
@@ -94,11 +89,9 @@ const Footer = () => {
   useEffect(() => {
     if (!pendingLocale) return;
     document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
-    const segments = pathname.split('/');
-    segments[1] = pendingLocale;
-    const newPath = segments.join('/') || `/${pendingLocale}`;
-    window.location.assign(newPath);
-  }, [pendingLocale, pathname]);
+    router.replace(pathname, { locale: pendingLocale });
+    setPendingLocale(null);
+  }, [pendingLocale, pathname, router]);
 
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">

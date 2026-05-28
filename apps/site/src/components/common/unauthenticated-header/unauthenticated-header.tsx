@@ -16,7 +16,7 @@ export default function UnauthenticatedHeader() {
           <ToddHeader className="flex min-h-10 flex-row items-center" />
           <nav className="flex items-center">
             <Link
-              href="/en/support"
+              href="/support"
               className="p-1 text-foreground text-base transition-opacity hover:opacity-70 tracking-tight"
             >
               Help

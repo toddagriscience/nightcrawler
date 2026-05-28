@@ -6,15 +6,19 @@ import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { NextResponse, NextRequest } from 'next/server.js';
 
 // Dear reader: to be frank with you, I have no idea why or how this file works. Best of luck.
-// Mock next-intl/middleware
-vi.mock('next-intl/middleware', () => {
+const { mockIntlMiddleware } = vi.hoisted(() => {
   const mockIntlMiddleware = vi.fn(() => {
     const response = NextResponse.next();
     response.headers.set('x-intl-processed', '1');
     return response;
   });
-  return { default: mockIntlMiddleware };
+  return { mockIntlMiddleware };
 });
+
+// Mock next-intl/middleware
+vi.mock('next-intl/middleware', () => ({
+  default: vi.fn(() => mockIntlMiddleware),
+}));
 
 const { MockNextResponse } = vi.hoisted(() => {
   class MockNextResponse {
@@ -115,25 +119,14 @@ describe('I18n Middleware', () => {
       expect(result).toBeInstanceOf(NextResponse);
     });
 
-    it('should redirect non-locale routes to /en/{path} when unauthenticated', () => {
+    it('should delegate unprefixed marketing paths to next-intl middleware', () => {
       const mockRequest = {
-        nextUrl: {
-          pathname: '/about',
-          clone: vi.fn().mockReturnValue({
-            pathname: '/about',
-          }),
-        },
-      } as unknown as NextRequest;
+        nextUrl: { pathname: '/about' },
+      } as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, false);
+      handleI18nMiddleware(mockRequest, false);
 
-      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
-      expect(vi.mocked(MockNextResponse.redirect)).toHaveBeenCalled();
-      expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(NextResponse);
-      expect(result.headers.get('location')).toStrictEqual({
-        pathname: '/en/about',
-      });
+      expect(mockIntlMiddleware).toHaveBeenCalledWith(mockRequest);
     });
 
     it('should not redirect unauth uninternationalized routes', async () => {
@@ -176,17 +169,24 @@ describe('I18n Middleware', () => {
       expect(result.headers.get('location').pathname).toBe('/incoming');
     });
 
-    it('should return next() for locale routes when unauthenticated', () => {
+    it('should delegate legacy /en paths to next-intl middleware', () => {
       const mockRequest = {
         nextUrl: { pathname: '/en/about' },
       } as NextRequest;
 
-      const result = handleI18nMiddleware(mockRequest, false);
+      handleI18nMiddleware(mockRequest, false);
 
-      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
-      expect(MockNextResponse.next).toHaveBeenCalled();
-      expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(NextResponse);
+      expect(mockIntlMiddleware).toHaveBeenCalledWith(mockRequest);
+    });
+
+    it('should delegate locale-prefixed marketing paths to next-intl middleware', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/es/about' },
+      } as NextRequest;
+
+      handleI18nMiddleware(mockRequest, false);
+
+      expect(mockIntlMiddleware).toHaveBeenCalledWith(mockRequest);
     });
   });
 

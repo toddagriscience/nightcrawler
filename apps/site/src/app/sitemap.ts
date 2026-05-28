@@ -2,6 +2,7 @@
 
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
+import { getLocalizedUrl } from '@/lib/locale-utils';
 import { logger } from '@/lib/logger';
 import {
   getCareersSitemapArticles,
@@ -74,7 +75,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
         continue;
       }
 
-      const url = `${baseUrl}/${locale}${page}`;
+      const url = getLocalizedUrl(locale, page);
 
       sitemapEntries.push({
         url,
@@ -111,7 +112,7 @@ function articleListToIndexSitemapEntries(
 
       const lastModified =
         article._updatedAt !== undefined ? article._updatedAt : new Date();
-      const url = `${baseUrl}/${locale}/index/${slug}`;
+      const url = getLocalizedUrl(locale, `/index/${slug}`);
 
       sitemapEntries.push({
         url,
@@ -147,7 +148,7 @@ function articleListToCareersPostingSitemapEntries(
 
       const lastModified =
         article._updatedAt !== undefined ? article._updatedAt : new Date();
-      const url = `${baseUrl}/${locale}/careers/${slug}`;
+      const url = getLocalizedUrl(locale, `/careers/${slug}`);
 
       sitemapEntries.push({
         url,
@@ -196,16 +197,14 @@ async function getSanityCareersArticleCareersRouteSitemap(): Promise<MetadataRou
  * @returns {Languages<string>} Object mapping locales to URLs
  */
 function getSupportedLanguages(page: string): Languages<string> {
+  const cleanPage = page.startsWith('/') ? page : `/${page}`;
   const languages: { [key: string]: string } = {};
+
   routing.locales.forEach((loc) => {
-    // Ensure proper path separator - page might already start with '/' or be empty
-    const cleanPage = page.startsWith('/') ? page : `/${page}`;
-    languages[loc] = `${baseUrl}/${loc}${cleanPage}`;
+    languages[loc] = getLocalizedUrl(loc, cleanPage);
   });
 
-  // Add x-default for better international SEO
-  languages['x-default'] =
-    `${baseUrl}/${routing.defaultLocale}${page.startsWith('/') ? page : `/${page}`}`;
+  languages['x-default'] = getLocalizedUrl(routing.defaultLocale, cleanPage);
 
   return languages;
 }

@@ -3,6 +3,7 @@
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
+import { getLocalizedUrl } from '@/lib/locale-utils';
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
@@ -33,16 +34,16 @@ export async function generateMetadata({
     description: t('description'),
     metadataBase: new URL('https://toddagriscience.com'),
     alternates: {
-      canonical: `${env.baseUrl}/${locale}`,
+      canonical: getLocalizedUrl(locale, '/'),
       languages: Object.fromEntries([
-        ...routing.locales.map((loc) => [loc, `${env.baseUrl}/${loc}`]),
-        ['x-default', `${env.baseUrl}/${routing.defaultLocale}`],
+        ...routing.locales.map((loc) => [loc, getLocalizedUrl(loc, '/')]),
+        ['x-default', getLocalizedUrl(routing.defaultLocale, '/')],
       ]),
     },
     openGraph: {
       title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
-      url: `${env.baseUrl}/${locale}`,
+      url: getLocalizedUrl(locale, '/'),
       siteName: 'Todd United States',
       locale: ogLocale,
       type: 'website',

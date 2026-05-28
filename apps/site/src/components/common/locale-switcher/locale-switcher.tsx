@@ -2,10 +2,10 @@
 
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/config';
+import { LOCALE_FLAGS, LOCALE_NAMES, SUPPORTED_LOCALES } from '@/lib/locales';
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { SUPPORTED_LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from '@/lib/locales';
 
 const locales = SUPPORTED_LOCALES.map((code) => ({
   code,
@@ -13,6 +13,7 @@ const locales = SUPPORTED_LOCALES.map((code) => ({
   flag: LOCALE_FLAGS[code],
 }));
 
+/** Dropdown to switch the active locale while preserving the current page path. */
 export default function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
@@ -20,12 +21,7 @@ export default function LocaleSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLocaleChange = (newLocale: string) => {
-    // Remove current locale from pathname and add new one
-    const segments = pathname.split('/');
-    segments[1] = newLocale; // Replace locale segment
-    const newPath = segments.join('/');
-
-    router.push(newPath);
+    router.replace(pathname, { locale: newLocale });
     setIsOpen(false);
   };
 

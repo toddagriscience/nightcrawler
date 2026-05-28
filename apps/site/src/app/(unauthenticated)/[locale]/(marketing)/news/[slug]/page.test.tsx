@@ -88,7 +88,7 @@ describe('Legacy /news/[slug] redirect handler', () => {
     });
 
     expect(redirect).not.toHaveBeenCalled();
-    expect(permanentRedirect).toHaveBeenCalledWith('/en/careers/engineer');
+    expect(permanentRedirect).toHaveBeenCalledWith('/careers/engineer');
   });
 
   it('calls notFound when article is missing', async () => {

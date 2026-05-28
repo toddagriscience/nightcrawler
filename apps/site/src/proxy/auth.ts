@@ -11,7 +11,7 @@ const protectedUrls = ['/', '/account/*', '/application-success', '/accept'];
  * Handle authentication-based routing. If the user is:
  * - Authenticated and navigating to a protected route: Allow them through
  * - Authenticated and navigating to a non-protected route (marketing site route): Redirect to protected route '/'
- * - Unauthenticated and navigating to a protected route: Redirect to `/en` (marketing site landing page) + the rest of the URL. Ex. /about -> /en/about
+ * - Unauthenticated and navigating to a protected route: Redirect to `/` (marketing site). English marketing routes omit the `/en` prefix.
  * - Unauthenticated and navigating to a non-protected route (marketing site route): Allow them through
  *
  * Note that the "dashboard" is located at '/' and is consequently uninternationalized. The marketing site is the only piece of the site that is internationalized.
@@ -65,7 +65,11 @@ export async function handleAuthRouting(
       return supabaseResponse;
     }
 
-    return NextResponse.redirect(new URL('/en', request.url));
+    if (pathname === '/') {
+      return null;
+    }
+
+    return NextResponse.redirect(new URL('/', request.url));
   } else {
     if (isAuthenticated) {
       if (isRouteInternationalized(pathname)) {

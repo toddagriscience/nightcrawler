@@ -23,7 +23,7 @@ const contactLinkItems: ContactLinkItem[] = [
   },
   {
     label: 'Recent Updates',
-    href: '/en/news',
+    href: '/news',
     icon: <BiSolidInfoSquare className="size-6" />,
   },
   {
@@ -33,7 +33,7 @@ const contactLinkItems: ContactLinkItem[] = [
   },
   {
     label: 'Disclosures',
-    href: '/en/disclosures',
+    href: '/disclosures',
     icon: <BiSolidInfoCircle className="size-6" />,
   },
 ];

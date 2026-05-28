@@ -20,8 +20,8 @@ export const routing = defineRouting({
   // Used when no locale matches
   defaultLocale: 'en',
 
-  // Always show locale prefix
-  localePrefix: 'always',
+  // Default locale (en) has no URL prefix; other locales use /es/, etc.
+  localePrefix: 'as-needed',
 
   // Enable locale detection in production, disable in development for easier testing
   localeDetection: process.env.NODE_ENV === 'production',

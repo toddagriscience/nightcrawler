@@ -1,6 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { isRouteInternationalized } from '@/lib/routing';
+import {
+  getIntlMarketingSegment,
+  isRouteInternationalized,
+} from '@/lib/routing';
 import { NextRequest } from 'next/server';
 
 /** A list of routes that all users need to be able to access. These should be treated as internationalized routes. See the `isAllUserRoute` function for more information. */
@@ -11,8 +14,11 @@ export default async function isAllUserRoute(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isRouteInternationalized(pathname)) {
-    const unIntlRoute = pathname.split('/')[2];
-    return allUserRoutesIntl.includes(unIntlRoute);
+    const marketingSegment = getIntlMarketingSegment(pathname);
+    return (
+      marketingSegment !== undefined &&
+      allUserRoutesIntl.includes(marketingSegment)
+    );
   }
 
   return false;

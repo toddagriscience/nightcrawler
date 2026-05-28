@@ -2,6 +2,7 @@
 
 import { CareersJobPosting } from '@/app/(unauthenticated)/[locale]/(marketing)/careers/components/careers-job-posting';
 import { env } from '@/lib/env';
+import { getLocalizedPath } from '@/lib/locale-utils';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
   getArticleBySlug,
@@ -41,7 +42,7 @@ export default async function CareersPostingPage({
         env.baseUrl
       )
     ) {
-      permanentRedirect(`/${locale}/careers/${slug}`);
+      permanentRedirect(getLocalizedPath(locale, `/careers/${slug}`));
       return;
     }
     redirect(String(article.offSiteUrl));

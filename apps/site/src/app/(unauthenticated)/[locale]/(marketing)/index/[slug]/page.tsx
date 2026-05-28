@@ -2,6 +2,7 @@
 
 import { CmsArticlePage } from '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page';
 import { env } from '@/lib/env';
+import { getLocalizedPath } from '@/lib/locale-utils';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
   getArticleBySlug,
@@ -32,7 +33,7 @@ export default async function ArticleIndexPage({
   }
 
   if (isCareerArticle(article)) {
-    permanentRedirect(`/${locale}/careers/${slug}`);
+    permanentRedirect(getLocalizedPath(locale, `/careers/${slug}`));
     return;
   }
 
