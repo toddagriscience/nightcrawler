@@ -6,24 +6,17 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signUp } from './actions';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import Join from './page';
+import SignupForm from './components/signup-form';
 
 global.ResizeObserver = ResizeObserver;
 
-// Mock useSearchParams and redirect from next/navigation
 const mockGet = vi.fn();
-const mockRedirect = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useSearchParams: () => ({
     get: mockGet,
   }),
   usePathname: () => '/signup',
-  redirect: (path: string) => {
-    mockRedirect(path);
-    // Throw to simulate redirect behavior and stop component rendering
-    throw new Error(`NEXT_REDIRECT:${path}`);
-  },
 }));
 
 vi.mock('@/lib/utils/actions', () => ({
@@ -34,7 +27,6 @@ vi.mock('./actions', () => ({
   signUp: vi.fn(),
 }));
 
-// Mock framer-motion
 vi.mock('framer-motion', () => {
   const MockMotionComponent = ({
     children,
@@ -54,7 +46,7 @@ vi.mock('framer-motion', () => {
   };
 });
 
-describe('Join Page', () => {
+describe('SignupForm', () => {
   const validParams: Record<string, string> = {
     first_name: 'John',
     last_name: 'Doe',
@@ -65,14 +57,13 @@ describe('Join Page', () => {
 
   beforeEach(() => {
     mockGet.mockClear();
-    mockRedirect.mockClear();
   });
 
   describe('form loading with search params', () => {
     it('renders the form correctly when all params are present', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      render(<Join />);
+      render(<SignupForm isApprovedApplicantSignup={false} />);
 
       expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
       expect(
@@ -88,9 +79,10 @@ describe('Join Page', () => {
     it('includes hidden fields with pre-filled values from search params', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      const { container } = render(<Join />);
+      const { container } = render(
+        <SignupForm isApprovedApplicantSignup={false} />
+      );
 
-      // Check hidden inputs have correct values. This is Cursor-ed, and thus doesn't look the best.
       expect(container.querySelector('input[name="firstName"]')).toHaveValue(
         'John'
       );
@@ -111,7 +103,7 @@ describe('Join Page', () => {
     it('displays password checklist requirements', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      render(<Join />);
+      render(<SignupForm isApprovedApplicantSignup={false} />);
 
       expect(
         screen.getByText(
@@ -130,65 +122,6 @@ describe('Join Page', () => {
     });
   });
 
-  describe('redirect when params are missing', () => {
-    it('redirects to /contact when first_name is missing', () => {
-      mockGet.mockImplementation((key: string) => {
-        if (key === 'first_name') return null;
-        return validParams[key] || null;
-      });
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-
-    it('redirects to /contact when last_name is missing', () => {
-      mockGet.mockImplementation((key: string) => {
-        if (key === 'last_name') return null;
-        return validParams[key] || null;
-      });
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-
-    it('redirects to /contact when farm_name is missing', () => {
-      mockGet.mockImplementation((key: string) => {
-        if (key === 'farm_name') return null;
-        return validParams[key] || null;
-      });
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-
-    it('redirects to /contact when email is missing', () => {
-      mockGet.mockImplementation((key: string) => {
-        if (key === 'email') return null;
-        return validParams[key] || null;
-      });
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-
-    it('redirects to /contact when phone is missing', () => {
-      mockGet.mockImplementation((key: string) => {
-        if (key === 'phone') return null;
-        return validParams[key] || null;
-      });
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-
-    it('redirects to /contact when all params are missing', () => {
-      mockGet.mockReturnValue(null);
-
-      expect(() => render(<Join />)).toThrow('NEXT_REDIRECT:/contact');
-      expect(mockRedirect).toHaveBeenCalledWith('/contact');
-    });
-  });
-
   describe('success screen', () => {
     it('shows success screen when action returns without an error', async () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
@@ -197,7 +130,7 @@ describe('Join Page', () => {
       });
 
       const user = userEvent.setup();
-      render(<Join />);
+      render(<SignupForm isApprovedApplicantSignup={false} />);
 
       const validPassword = 'P@ssword1';
       await user.type(
@@ -216,7 +149,6 @@ describe('Join Page', () => {
         screen.getByText('Please check your email to activate your account:')
       ).toBeInTheDocument();
 
-      // Form should not be visible
       expect(
         screen.queryByText("You're Almost There!")
       ).not.toBeInTheDocument();
@@ -225,7 +157,7 @@ describe('Join Page', () => {
     it('shows form when action has not been submitted yet', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      render(<Join />);
+      render(<SignupForm isApprovedApplicantSignup={false} />);
 
       expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
       expect(
@@ -241,7 +173,7 @@ describe('Join Page', () => {
       ]);
 
       const user = userEvent.setup();
-      render(<Join />);
+      render(<SignupForm isApprovedApplicantSignup={false} />);
 
       const validPassword = 'P@ssword1';
       await user.type(
@@ -255,10 +187,8 @@ describe('Join Page', () => {
         expect(screen.getByText('User already exists')).toBeInTheDocument();
       });
 
-      // Form should still be visible
       expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
 
-      // Success screen should not be visible
       expect(
         screen.queryByText('Your Todd Account Has Been Created!')
       ).not.toBeInTheDocument();

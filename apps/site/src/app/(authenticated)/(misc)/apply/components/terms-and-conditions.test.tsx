@@ -8,6 +8,7 @@ import TermsAndConditions from './terms-and-conditions';
 import { ApplicationContext } from './application-tabs';
 import type {
   GeneralBusinessInformationUpdate,
+  TabTypes,
   VerificationStatus,
 } from '../types';
 import type {
@@ -41,6 +42,7 @@ const mockContextValue = {
   setCurrentTab: () => {},
   canSubmitApplication: true,
   canEditFarm: true,
+  nextTabAfterColleagues: 'farm' as TabTypes,
 };
 
 /** Renders the component inside ApplicationContext. Provider for tests. */

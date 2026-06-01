@@ -10,7 +10,9 @@
     "./schema/*": "./src/schema/*.ts",
     "./schema/connection": "./src/schema/connection.ts",
     "./types": "./src/types/index.ts",
-    "./utils/get-embedding": "./src/utils/get-embedding.ts"
+    "./utils/get-embedding": "./src/utils/get-embedding.ts",
+    "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
+    "./utils/normalize-phone": "./src/utils/normalize-phone.ts"
   },
   "scripts": {
     "lint": "eslint .",
