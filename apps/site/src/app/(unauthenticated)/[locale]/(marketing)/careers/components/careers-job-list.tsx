@@ -2,21 +2,15 @@
 
 'use client';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Link } from '@/i18n/config';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
-import { BiChevronDown, BiSearch } from 'react-icons/bi';
+import { BiSearch } from 'react-icons/bi';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
+import { MarketingFilterDropdown } from '../../components/marketing-filter-dropdown';
 
 interface CareersJobListProps {
   /** Careers collection documents from Sanity */
@@ -183,89 +177,45 @@ export function CareersJobList({ items }: CareersJobListProps) {
             <Controller
               name="team"
               control={control}
-              render={({ field }) => {
-                const triggerLabel =
-                  field.value === ALL_TEAMS_VALUE
-                    ? t('jobListings.filterAllTeams')
-                    : field.value;
-                return (
-                  <DropdownMenu modal={false}>
-                    <DropdownMenuTrigger
-                      type="button"
-                      className={CAREERS_FILTER_TRIGGER_CLASS}
-                      aria-label={t('jobListings.teamFilterAria')}
-                    >
-                      <span className="whitespace-nowrap">{triggerLabel}</span>
-                      <BiChevronDown
-                        aria-hidden
-                        className="h-4 w-4 shrink-0 opacity-50"
-                      />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="max-h-72 overflow-y-auto"
-                    >
-                      <DropdownMenuRadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <DropdownMenuRadioItem value={ALL_TEAMS_VALUE}>
-                          {t('jobListings.filterAllTeams')}
-                        </DropdownMenuRadioItem>
-                        {teamOptions.map(({ value }) => (
-                          <DropdownMenuRadioItem key={value} value={value}>
-                            {value}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                );
-              }}
+              render={({ field }) => (
+                <MarketingFilterDropdown
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    {
+                      value: ALL_TEAMS_VALUE,
+                      label: t('jobListings.filterAllTeams'),
+                    },
+                    ...teamOptions,
+                  ]}
+                  placeholder={t('jobListings.filterAllTeams')}
+                  ariaLabel={t('jobListings.teamFilterAria')}
+                  emptyValue={ALL_TEAMS_VALUE}
+                  triggerClassName={CAREERS_FILTER_TRIGGER_CLASS}
+                />
+              )}
             />
 
             <Controller
               name="location"
               control={control}
-              render={({ field }) => {
-                const triggerLabel =
-                  field.value === ALL_LOCATIONS_VALUE
-                    ? t('jobListings.filterAllLocations')
-                    : field.value;
-                return (
-                  <DropdownMenu modal={false}>
-                    <DropdownMenuTrigger
-                      type="button"
-                      className={CAREERS_FILTER_TRIGGER_CLASS}
-                      aria-label={t('jobListings.locationFilterAria')}
-                    >
-                      <span className="whitespace-nowrap">{triggerLabel}</span>
-                      <BiChevronDown
-                        aria-hidden
-                        className="h-4 w-4 shrink-0 opacity-50"
-                      />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="max-h-72 overflow-y-auto"
-                    >
-                      <DropdownMenuRadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <DropdownMenuRadioItem value={ALL_LOCATIONS_VALUE}>
-                          {t('jobListings.filterAllLocations')}
-                        </DropdownMenuRadioItem>
-                        {locationOptions.map(({ value }) => (
-                          <DropdownMenuRadioItem key={value} value={value}>
-                            {value}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                );
-              }}
+              render={({ field }) => (
+                <MarketingFilterDropdown
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    {
+                      value: ALL_LOCATIONS_VALUE,
+                      label: t('jobListings.filterAllLocations'),
+                    },
+                    ...locationOptions,
+                  ]}
+                  placeholder={t('jobListings.filterAllLocations')}
+                  ariaLabel={t('jobListings.locationFilterAria')}
+                  emptyValue={ALL_LOCATIONS_VALUE}
+                  triggerClassName={CAREERS_FILTER_TRIGGER_CLASS}
+                />
+              )}
             />
           </div>
         </div>

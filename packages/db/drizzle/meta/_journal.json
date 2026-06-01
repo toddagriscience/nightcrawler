@@ -57,6 +57,20 @@
       "when": 1774461530048,
       "tag": "0007_add-internal-account",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774461530049,
+      "tag": "0008_add-platform-access-application",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1774461530050,
+      "tag": "0009_platform-access-application-signup-tracking",
+      "breakpoints": true
     }
   ]
 }

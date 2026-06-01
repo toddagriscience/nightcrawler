@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import ArticleShareCopyLink from '@/components/common/news/article-share-copy-link';
+import type { ReactNode } from 'react';
 
 /**
  * Hero block for CMS article titles and metadata lines.
@@ -13,6 +14,7 @@ export function ArticleHeader({
   company,
   dateTime,
   formattedDate,
+  ctaButtons,
 }: {
   /** Article headline */
   title: string;
@@ -24,6 +26,8 @@ export function ArticleHeader({
   dateTime?: string;
   /** Already localized date presentation */
   formattedDate?: string;
+  /** Optional CTA pills rendered above the share link */
+  ctaButtons?: ReactNode;
 }) {
   return (
     <header className="flex w-full max-w-[686px] flex-col items-center mx-auto lg:mb-6">
@@ -51,6 +55,7 @@ export function ArticleHeader({
           {subtitle}
         </p>
       ) : null}
+      {ctaButtons ? <div className="mb-6 w-full">{ctaButtons}</div> : null}
       <div className="mt-6 w-full border-t-[1px] border-[#EFEFEF] pt-6">
         <ArticleShareCopyLink />
       </div>

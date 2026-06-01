@@ -2,6 +2,7 @@
 
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
+import { getArticleCtasForPlacement } from '@/lib/sanity/article-cta-utils';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { urlFor } from '@/lib/sanity/utils';
 import { PortableTextReactComponents } from 'next-sanity';
@@ -13,6 +14,7 @@ import {
   formatArticleHeroDate,
   parseArticleSubscripts,
 } from '../../index/[slug]/utils';
+import { ArticleCtaButtons } from './article-cta-buttons';
 
 /**
  * Shared Sanity article rendering for `/index/[slug]`, `/careers/[slug]`, and legacy routes that
@@ -27,6 +29,8 @@ export function CmsArticlePage({ article }: { article: SanityArticle }) {
 
   const formattedDate = formatArticleHeroDate(article.date);
   const subscripts = parseArticleSubscripts(article);
+  const underHeaderCtas = getArticleCtasForPlacement(article, 'under-header');
+  const footerCtas = getArticleCtasForPlacement(article, 'footer');
 
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
@@ -74,6 +78,7 @@ export function CmsArticlePage({ article }: { article: SanityArticle }) {
           title={article.title}
           dateTime={dateIso !== '' ? dateIso : undefined}
           formattedDate={formattedDate !== '' ? formattedDate : undefined}
+          ctaButtons={<ArticleCtaButtons ctas={underHeaderCtas} />}
         />
         <ArticleBody
           portableTextComponents={portableTextComponents}
@@ -87,6 +92,7 @@ export function CmsArticlePage({ article }: { article: SanityArticle }) {
           footerSubtitle={article.subtitle}
           subscripts={subscripts}
         />
+        <ArticleCtaButtons ctas={footerCtas} className="mb-16" />
       </main>
     </div>
   );
