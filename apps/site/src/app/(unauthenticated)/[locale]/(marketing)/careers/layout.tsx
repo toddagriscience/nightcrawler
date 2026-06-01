@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { env } from '@/lib/env';
+import { siteConfig } from '@/lib/metadata';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
@@ -16,14 +17,14 @@ export async function generateMetadata({
   return {
     metadataBase: new URL('https://toddagriscience.com'),
     title: {
-      absolute: `${t('shortTitle')} | Todd United States`,
+      absolute: `${t('shortTitle')} | ${siteConfig.name}`,
     },
     description: t('description'),
     openGraph: {
       title: t('title'),
       description: t('description'),
       url: `${env.baseUrl}/${locale}/careers`,
-      siteName: 'Todd United States',
+      siteName: siteConfig.name,
       locale: locale,
       type: 'website',
       images: [
