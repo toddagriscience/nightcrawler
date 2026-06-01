@@ -220,6 +220,63 @@ const sourceField = defineField({
   description: 'Attribution string; defaults to “Todd” for toddagriscience.com pages.',
 })
 
+const articleCtasField = defineField({
+  name: 'ctas',
+  title: 'Call to action buttons',
+  type: 'array',
+  description:
+    'Optional pill buttons on the article. Add none, one, or many. Choose whether each appears under the header or in the footer.',
+  of: [
+    {
+      type: 'object',
+      name: 'articleCta',
+      fields: [
+        defineField({
+          name: 'label',
+          title: 'Label',
+          type: 'string',
+          validation: (rule) => rule.required().min(1),
+        }),
+        defineField({
+          name: 'href',
+          title: 'Link',
+          type: 'string',
+          description: 'Internal path (/forms/iris-access) or absolute URL for this button.',
+          validation: (rule) => rule.required().min(1),
+        }),
+        defineField({
+          name: 'placement',
+          title: 'Placement',
+          type: 'string',
+          options: {
+            list: [
+              {title: 'Under header', value: 'under-header'},
+              {title: 'Footer', value: 'footer'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'footer',
+          validation: (rule) => rule.required(),
+        }),
+      ],
+      preview: {
+        select: {
+          title: 'label',
+          subtitle: 'placement',
+          href: 'href',
+        },
+        prepare({title, subtitle, href}) {
+          const placementLabel = subtitle === 'under-header' ? 'Under header' : 'Footer'
+          return {
+            title: title ?? 'Untitled CTA',
+            subtitle: [placementLabel, href].filter(Boolean).join(' · '),
+          }
+        },
+      },
+    },
+  ],
+})
+
 /**
  * Opening fields for `career` documents (sitemap, title, slug). Job-specific rows are defined in `career.ts`
  * between this block and {@link careerArticleTrailFields}.
@@ -251,4 +308,5 @@ export const articlePortableBodyFields = [
   offSiteUrlField,
   isFeaturedField,
   sourceField,
+  articleCtasField,
 ]

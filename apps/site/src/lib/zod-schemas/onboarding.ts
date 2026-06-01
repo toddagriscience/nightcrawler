@@ -10,16 +10,21 @@ export const userInfo = z.object({
   email: z.email('Invalid email address').max(100),
   // Very basic phone number handling
   phone: z.preprocess((phone: string) => {
-    // 5554443333
-    // 555-444-3333
-    if ([10, 12].includes(phone.length) && phone.slice(1) != '+') {
-      return '+1' + phone.replaceAll('-', '');
+    const withoutDashes = phone.replaceAll('-', '');
+    const digits = withoutDashes.replace(/\D/g, '');
+
+    if (withoutDashes.startsWith('+')) {
+      return withoutDashes;
     }
-    // +15554443333
-    // +1-555-444-3333
-    else if ([12, 15].includes(phone.length)) {
-      return phone.replaceAll('-', '');
+
+    if (digits.length === 10) {
+      return `+1${digits}`;
     }
+
+    if (digits.length === 11 && digits.startsWith('1')) {
+      return `+${digits}`;
+    }
+
     return phone;
   }, z.e164('Invalid phone number')),
   // Yes, this is stupid. See: https://github.com/colinhacks/zod/discussions/2801

@@ -2,7 +2,6 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// hoisted-safe mocks
 const mocks = vi.hoisted(() => ({
   submitToGoogleSheets: vi.fn(),
   loggerError: vi.fn(),
@@ -16,8 +15,14 @@ vi.mock('@/lib/logger', () => ({
   default: { error: mocks.loggerError },
 }));
 
-import { submitPublicInquiry } from './action';
+import { submitPublicInquiry } from './actions';
 
+/**
+ * Builds form data for public inquiry action tests.
+ *
+ * @param fields - Field names and values to include
+ * @returns Populated form data instance
+ */
 function makeFormData(fields: Record<string, string | undefined>) {
   const fd = new FormData();
   for (const [k, v] of Object.entries(fields)) {

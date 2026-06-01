@@ -49,12 +49,11 @@ describe('/careers/[slug] postings', () => {
   it('permanent-redirects when off-site URL points at same legacy careers path', async () => {
     const article = {
       _id: '1b',
-      _type: 'news' as const,
+      _type: 'career' as const,
       title: 'Loop role',
       slug: { current: 'loop-role' },
       offSiteUrl: 'https://toddagriscience.com/en/careers/loop-role',
       summary: '',
-      contentType: 'careers' as const,
     };
     getArticleBySlugMock.mockResolvedValueOnce(article);
     isCareerArticleMock.mockReturnValueOnce(true);
@@ -71,12 +70,11 @@ describe('/careers/[slug] postings', () => {
   it('redirects externally when off-site URL is set', async () => {
     const article = {
       _id: '1',
-      _type: 'news' as const,
+      _type: 'career' as const,
       title: 'External role',
       slug: { current: 'ext' },
       offSiteUrl: 'https://jobs.example/ext',
       summary: '',
-      contentType: 'careers' as const,
     };
     getArticleBySlugMock.mockResolvedValueOnce(article);
     isCareerArticleMock.mockReturnValueOnce(true);
@@ -93,11 +91,10 @@ describe('/careers/[slug] postings', () => {
   it('renders internal career articles', async () => {
     const article = {
       _id: '2',
-      _type: 'news' as const,
+      _type: 'career' as const,
       title: 'Internal posting',
       slug: { current: 'internal-role' },
       summary: '',
-      collections: ['careers'] as const,
     };
     getArticleBySlugMock.mockResolvedValueOnce(article);
     isCareerArticleMock.mockReturnValueOnce(true);

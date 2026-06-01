@@ -9,6 +9,7 @@ import { userInfoType } from '@/lib/types/onboarding';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
 import { FormEvent } from 'react';
 
 /**
@@ -28,6 +29,8 @@ export default function OnboardingForm({
   farmName = '',
   email = '',
   phone = '',
+  applicationId = '',
+  token = '',
   routerPushCallback,
 }: {
   firstName: string;
@@ -35,6 +38,8 @@ export default function OnboardingForm({
   farmName: string;
   email: string;
   phone: string;
+  applicationId?: string;
+  token?: string;
   routerPushCallback: (route: string) => void;
 }) {
   // This page isn't using `handleSubmit()` becaues I was having trouble getting it working.
@@ -42,7 +47,7 @@ export default function OnboardingForm({
     register,
     getValues,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<userInfoType>({
     defaultValues: {
       firstName,
@@ -57,16 +62,18 @@ export default function OnboardingForm({
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    await trigger();
+    const valid = await trigger();
 
-    if (isValid) {
+    if (valid) {
       const params = new URLSearchParams({
         first_name: getValues().firstName,
         last_name: getValues().lastName,
         farm_name: getValues().farmName,
         email: getValues().email,
-        phone: getValues().phone,
+        phone: normalizePhoneForUrl(getValues().phone),
       });
+      if (applicationId) params.set('application_id', applicationId);
+      if (token) params.set('token', token);
       routerPushCallback(`/signup?${params.toString()}`);
     }
   }
@@ -178,11 +185,10 @@ export default function OnboardingForm({
               placeholder="Phone Number"
               type="tel"
               required
-              defaultValue={'+1'}
               {...register('phone', {
                 required: 'This field is required.',
               })}
-              maxLength={10}
+              maxLength={16}
             />
           </Field>
         </FieldSet>
