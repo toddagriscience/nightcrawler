@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { PublicInquiryOption } from './types';
 
 /**
- * Public Inquiry modal. Help modal that allows users to navigate to the support page or password reset page.
+ * Public Inquiry modal. Help modal that allows users to navigate to the contact page or password reset page.
  *
  * @param {React.ReactNode} trigger - The element that opens the modal. Optional, defaults to a button.
  * @returns {JSX.Element} - The Public Inquiry modal with related logic.
@@ -29,13 +29,13 @@ export default function PublicInquiryModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const options: PublicInquiryOption[] = [
-    { label: 'Forgot Email', href: '/support', intent: 'forgot-email' },
+    { label: 'Forgot Email', href: '/contact', intent: 'forgot-email' },
     {
       label: 'Forgot Password',
       href: '/forgot-password',
       intent: 'forgot-password',
     },
-    { label: 'Contact Support', href: '/support', intent: 'contact-support' },
+    { label: 'Contact Support', href: '/contact', intent: 'contact-support' },
   ];
 
   return (

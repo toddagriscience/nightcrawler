@@ -33,7 +33,7 @@ type SignUpFormData = {
   confirmPassword: string;
 };
 
-/** Both outbound (/incoming) and inbound (/en/contact) onboarding will redirect here. We only ask for the password since we already have the user's email.
+/** Signup page for users arriving with pre-filled query params. We only ask for the password since we already have the user's email.
  *
  * @returns {JSX.Element} - The signup page.*/
 export default function Join() {

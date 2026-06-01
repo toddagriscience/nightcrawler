@@ -22,5 +22,4 @@ export const messageFiles = [
   'terms',
   'careers',
   'cookiePreferences',
-  'support',
 ];
