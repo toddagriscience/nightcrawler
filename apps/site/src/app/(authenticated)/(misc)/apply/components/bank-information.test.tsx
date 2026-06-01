@@ -74,6 +74,7 @@ const baseContextValue = {
   setCurrentTab: mockSetCurrentTab,
   canSubmitApplication: false,
   canEditFarm: true,
+  nextTabAfterColleagues: 'farm' as TabTypes,
 };
 
 /**

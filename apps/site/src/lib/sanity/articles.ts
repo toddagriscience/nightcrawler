@@ -13,11 +13,9 @@ const ARTICLE_GROQ_TYPES = '["news", "career"]';
 const LISTING_REVALIDATE = 60 * 60;
 
 /**
- * GROQ fragment: career content (`career` documents or legacy `news` tagging).
- *
- * Matches {@link isCareerArticle} behavior for stored `news` rows.
+ * GROQ fragment: standalone `career` job documents.
  */
-const GROQ_IS_CAREERS_DOC = `(_type == "career" || coalesce(contentType, "news") == "careers" || "careers" in coalesce(collections, []))`;
+const GROQ_IS_CAREERS_DOC = `_type == "career"`;
 
 /**
  * GROQ field set for standalone `career` job documents (slim; see `career` schema in Sanity).
@@ -33,14 +31,11 @@ const GROQ_CAREER_BODY = `
   applyUrl,
   content,
   summary,
-  excludeFromSitemap,
-  "contentType": "careers",
-  "collections": ["careers"],
-  "canonicalParent": "careers"
+  excludeFromSitemap
 `;
 
 /**
- * GROQ field set for `news` CMS rows (legacy career-tagged posts use the same shape).
+ * GROQ field set for `news` CMS rows.
  */
 const GROQ_NEWS_BODY = `
   _id,
@@ -66,7 +61,15 @@ const GROQ_NEWS_BODY = `
   "contentType": coalesce(contentType, "news"),
   "collections": coalesce(collections, []),
   canonicalParent,
-  excludeFromSitemap
+  excludeFromSitemap,
+  ctas[]{
+    _key,
+    label,
+    href,
+    placement
+  },
+  ctaLabel,
+  ctaHref
 `;
 
 /** Wrapped projection when the query only returns `news` documents. */
@@ -112,16 +115,13 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 /**
  * Whether the document counts as careers content for `/careers/index`, `/careers/[slug]`, and the careers sitemap slice.
  *
- * @param article - Document classification from Sanity (`_type` or legacy tagging)
- * @returns True when the row should behave as a careers article on the marketing site
+ * @param article - Document classification from Sanity
+ * @returns True when the row is a standalone `career` job posting
  */
 export function isCareerArticle(
-  article: Pick<SanityArticle, '_type' | 'contentType' | 'collections'>
+  article: Pick<SanityArticle, '_type'>
 ): boolean {
-  if (article._type === 'career') return true;
-  if (article.contentType === 'careers') return true;
-  const cols = article.collections;
-  return Array.isArray(cols) && cols.includes('careers');
+  return article._type === 'career';
 }
 
 /**
@@ -160,7 +160,7 @@ export async function getArticleBySlug(
 }
 
 /**
- * Articles for a collection listing; careers merges `career` documents and legacy tagged `news`.
+ * Articles for a collection listing; careers returns standalone `career` documents only.
  *
  * @param collection - e.g. `news`, `careers`
  * @param options - Optional Sanity fetch options
@@ -192,7 +192,7 @@ export async function getArticlesByCollection(
 }
 
 /**
- * Featured documents, optionally scoped to a collection (`careers` includes `career` type docs).
+ * Featured documents, optionally scoped to a collection (`careers` uses standalone `career` documents).
  *
  * @param collection - When set, restricts to documents in this collection
  * @param options - Optional Sanity fetch options
@@ -245,7 +245,7 @@ export async function getFeaturedArticles(
 }
 
 /**
- * Internal articles for the main sitemap slice: excludes careers (`career` type and legacy tagging; see {@link getCareersSitemapArticles}).
+ * Internal articles for the main sitemap slice: excludes standalone `career` documents (see {@link getCareersSitemapArticles}).
  *
  * @param options - Optional Sanity fetch options (`revalidate` defaults to sitemap cadence externally)
  * @returns Article list sorted by `_updatedAt` descending when present
@@ -269,7 +269,7 @@ export async function getMainSitemapArticles(
 }
 
 /**
- * Careers sitemap URLs: internal `career` documents plus legacy careers-tagged `news`.
+ * Careers sitemap URLs: internal standalone `career` documents.
  *
  * @param options - Optional Sanity fetch options
  * @returns Article list sorted by `_updatedAt` descending when present

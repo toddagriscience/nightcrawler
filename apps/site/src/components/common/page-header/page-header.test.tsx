@@ -31,8 +31,13 @@ describe('PageHeader', () => {
     render(<PageHeader subtitle="Small line" title="Big line" />);
 
     const subtitle = screen.getByText('Small line');
-    expect(subtitle.tagName).toBe('SPAN');
-    expect(subtitle).toHaveClass('text-xs', 'md:text-sm', 'text-foreground');
+    expect(subtitle.tagName).toBe('H3');
+    expect(subtitle).toHaveClass(
+      'text-base',
+      'md:text[17px]/[28px]',
+      'w-[80%]',
+      'sm:w-full'
+    );
 
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toHaveClass('text-[33px]', 'md:text-5xl', 'lg:text-[64px]');

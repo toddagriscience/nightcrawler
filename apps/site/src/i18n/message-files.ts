@@ -15,11 +15,11 @@ export const messageFiles = [
   'research',
   'investors',
   'governance',
-  'contact',
   'disclosures',
   'accessibility',
   'privacy',
   'terms',
   'careers',
   'cookiePreferences',
+  'forms',
 ];

@@ -25,12 +25,11 @@ export default defineType({
           {title: 'Story', value: 'story'},
           {title: 'Product release', value: 'product-release'},
           {title: 'Press', value: 'press'},
-          {title: 'Careers (job posts & career articles)', value: 'careers'},
         ],
         layout: 'radio',
       },
       description:
-        'Primary category for routing and parent pages (newsroom, careers, research, stories, etc.). Defaults to news for older posts. Use Careers documents for new job postings.',
+        'Primary category for routing and parent pages (newsroom, research, stories, etc.). Defaults to news for older posts. Job postings use the Careers document type.',
     }),
     defineField({
       name: 'collections',
@@ -44,12 +43,11 @@ export default defineType({
           {title: 'Story', value: 'story'},
           {title: 'Product release', value: 'product-release'},
           {title: 'Press', value: 'press'},
-          {title: 'Careers', value: 'careers'},
         ],
         layout: 'tags',
       },
       description:
-        'Extra groupings when an article spans more than one parent page. Prefer the Careers document type for `/careers` content.',
+        'Extra groupings when an article spans more than one parent page. Job postings use the Careers document type.',
     }),
     defineField({
       name: 'canonicalParent',
@@ -62,7 +60,6 @@ export default defineType({
           {title: 'Story', value: 'story'},
           {title: 'Product release', value: 'product-release'},
           {title: 'Press', value: 'press'},
-          {title: 'Careers', value: 'careers'},
         ],
       },
       description:

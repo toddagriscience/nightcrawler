@@ -1,0 +1,11 @@
+{
+  "formsPage": {
+    "submit": "Enviar solicitud",
+    "submitError": "No se pudo enviar su solicitud. Inténtelo de nuevo.",
+    "defaultSuccessTitle": "Solicitud recibida",
+    "defaultSuccessMessage": "Gracias. Nuestro equipo revisará su solicitud y se comunicará por correo electrónico.",
+    "retentionTitle": "Retención de datos",
+    "retentionLabel": "Pueden conservar mi información para referencia futura si mi solicitud no es aprobada.",
+    "retentionDescription": "Si no marca esta casilla, su información se eliminará después de tomar una decisión."
+  }
+}
