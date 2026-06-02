@@ -14,6 +14,7 @@ import {
   Columns3,
   ShieldCheck,
   LogOut,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -34,6 +35,7 @@ interface NavItem {
 /** Navigation items for the sidebar */
 const navItems: NavItem[] = [
   { label: 'Internal Accounts', href: '/', icon: ShieldCheck },
+  { label: 'Applications', href: '/applications', icon: ClipboardList },
   { label: 'Users', href: '/users', icon: Users },
   { label: 'Farms', href: '/farms', icon: Tractor },
   { label: 'Analyses', href: '/analyses', icon: FlaskConical },

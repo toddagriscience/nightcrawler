@@ -26,8 +26,8 @@ const Footer = () => {
   const tCookiePreferences = useTranslations('cookiePreferences');
 
   const siteLinks = [
-    { href: '/who-we-are', label: t('links.whoWeAre') },
-    { href: '/what-we-do', label: t('links.whatWeDo') },
+    { href: '/about', label: t('links.whoWeAre') },
+    { href: '/research', label: t('links.whatWeDo') },
     { href: '/news', label: t('links.news') },
     { href: '/careers', label: t('links.careers') },
     { href: '/contact', label: t('links.contact') },
@@ -78,8 +78,16 @@ const Footer = () => {
   const [langOpen, setLangOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 
+  const trimPath = (p: string) => p.replace(/\/+$/, '') || '/';
+
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
+    const segments = pathname.split('/');
+    segments[1] = newLocale;
+    const newPath = segments.join('/') || `/${newLocale}`;
+    if (trimPath(newPath) === trimPath(pathname)) {
+      return;
+    }
     setPendingLocale(newLocale);
   };
 

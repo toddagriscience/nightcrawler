@@ -1,16 +1,23 @@
 {
   "homepage": {
-    "welcome": "Welcome to Todd",
-    "hero": {
-      "title": "Leading the future of sustainable agriculture",
-      "subtitle": "Todd is a first-generation generative agriculture firm that partners with high-quality, branded farms to cultivate a sustainable future.",
-      "tagline": "We help regenerate sustainable farms."
+    "pageHeading": {
+      "title": "We create sustainable farms",
+      "subtitle": "Our mission is to ensure sustainable agriculture benefits all of humanity.",
+      "button": "Explore our research"
+    },
+    "sectionContent": {
+      "section1": {
+        "caption": "Focus areas",
+        "title": "We are the frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture."
+      },
+      "explore": {
+        "title": "Explore all research",
+        "button": "View research index"
+      },
+      "contactUs": {
+        "title": "Get started with Todd",
+        "button": "Contact"
+      }
     }
-  },
-  "about": {
-    "title": "About Todd Agriscience",
-    "description": "We are pioneering the future of sustainable agriculture through innovative farming practices and cutting-edge technology.",
-    "quote": "We believe that sustainable agriculture is the foundation of a healthy planet and thriving communities.",
-    "whoWeAre": "Who We Are"
   }
 }

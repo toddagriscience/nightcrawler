@@ -160,6 +160,32 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
+      {
+        source: '/:locale(en|es)/who-we-are/:path*',
+        destination: '/:locale/about/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/who-we-are',
+        destination: '/:locale/about',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/what-we-do',
+        destination: '/:locale/research',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es)/support',
+        destination: '/:locale/contact',
+        permanent: true,
+      },
+      {
+        source: '/support',
+        destination: '/contact',
+        permanent: true,
+      },
+      // `/careers/index` is a real route (`careers/index/page.tsx`); do not add a redirect to `/careers`.
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',

@@ -15,10 +15,10 @@
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 
   /* Shadcn/ui CSS variables mapped to Todd theme */
-  --background: #fcfbf8; /* Your cream background */
+  --background: #ffffff; /* Your cream background — canvas is white (#fcfbf8 historically) */
   --background-platform: #ffffff; /* Platform background for authenticated routes */
-  --background-secondary: #ccc5b5; /* Your light card background */
-  --background-accent: #eaeaeaea; /* Your gradient bottom */
+  --background-secondary: #ffffff; /* Your light card background — @theme surface (#ccc5b5 historically) */
+  --background-accent: #ffffff; /* Your gradient bottom (#eaeaeaea historically) */
   --foreground: #2a2727; /* Your primary text */
   --card: #ccc5b5; /* Your light card background */
   --card-foreground: #2a2727; /* Your primary text */
@@ -35,7 +35,7 @@
   --destructive: #dc2626; /* Red for errors */
   --destructive-foreground: #fafafa;
   --border: #2a2727; /* Your border color */
-  --input: #ccc5b5; /* Your light card */
+  --input: #ffffff; /* Form / control fills — white (was Your light card #ccc5b5) */
   --ring: #2a2727; /* Focus rings */
   --radius: 0.5rem;
 
@@ -49,21 +49,26 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-muted: var(--muted);
+  --color-popover: var(--background);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #fcfbf8;
+    --background: #ffffff; /* Your cream background */
     --foreground: #2a2727;
   }
 }
 
 .dark {
-  /* Dark mode Shadcn/ui variables */
-  --background: #fcfbf8; /* Keep cream background even in dark mode */
-  --background-secondary: #ccc5b5; /* Keep light card background even in dark mode */
+  /* Dark mode Shadcn/ui variables — page canvas stays white; cards/chrome invert */
+  --background: #ffffff;
+  --background-secondary: #ffffff;
   --foreground: #2a2727; /* Your inverse text */
   --card: #2a2727; /* Your dark card */
   --card-foreground: #fcfbf8; /* Your inverse text */
@@ -84,7 +89,7 @@
 
 body {
   color: var(--foreground);
-  background: #fcfbf8;
+  background: #ffffff; /* Your cream background — canvas is white (#fcfbf8 historically) */
   overflow-x: hidden;
   font-family: var(--font-haas);
 }
@@ -118,6 +123,7 @@ body:has(.authenticated-root) {
 
 html {
   position: relative;
+  scrollbar-gutter: stable;
 }
 
 html,
@@ -126,13 +132,42 @@ body {
   overflow-y: auto;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+html,
+body,
+.thin-scrollbar {
+  /* IE/Edge (legacy) */
+  -ms-overflow-style: auto;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Chrome, Safari, Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; /* for horizontal scrollbars */
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 3px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 /* Animations */

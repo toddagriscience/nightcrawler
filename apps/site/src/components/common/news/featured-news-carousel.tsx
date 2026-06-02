@@ -3,26 +3,12 @@
 'use client';
 
 import { Carousel, NewsCard } from '@/components/common';
+import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
-import { useLocale } from 'next-intl';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
-
-/** Formats listing dates with a safe fallback when `date` is missing. */
-function formatArticleListingDate(
-  dateValue: string | undefined,
-  locale: string
-): string {
-  const safe = dateValue !== undefined && dateValue.length > 0 ? dateValue : '';
-  if (safe.length === 0) return '';
-  return new Date(safe).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
 
 /*
  * A carousel for featured news.
@@ -33,8 +19,6 @@ export function FeaturedNewsCarousel({
 }: {
   items: SanityArticle[];
 }) {
-  const locale = useLocale();
-
   return (
     <Carousel isDark={true} showDots={true}>
       {items.map((article) => (
@@ -57,7 +41,7 @@ export function FeaturedNewsCarousel({
                 }
           }
           source={article.source ?? ''}
-          date={formatArticleListingDate(article.date, locale)}
+          date={formatArticleListDate(article.date)}
           excerpt={article.summary ?? ''}
           link={getArticleCardHref(article)}
         />

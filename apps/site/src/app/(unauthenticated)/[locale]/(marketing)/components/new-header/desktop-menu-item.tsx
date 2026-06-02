@@ -1,0 +1,74 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+'use client';
+
+import {
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+import NavMenuLink from './nav-menu-link';
+import { DesktopMenuItemProps } from './types';
+
+/**
+ * Renders a single top-level desktop menu entry. When the entry has children,
+ * a NavigationMenu trigger reveals a click-to-open dropdown; otherwise the
+ * entry is rendered as a plain navigation link.
+ *
+ * The trigger's `onPointerMove` handler calls `preventDefault` so Radix's
+ * internal hover-open behavior is skipped (Radix composes user handlers with
+ * `checkForDefaultPrevented: true`). The menu therefore only opens on click or
+ * keyboard activation, while close-on-pointer-leave continues to work.
+ *
+ * Uses `NavMenuLink` (which wraps Radix `NavigationMenuLink` directly with an
+ * intercepting onClick) so that internal navigation stays client-side and
+ * preserves the active locale prefix (e.g. `/es/about` instead of `/about`).
+ *
+ * @param props - The menu item to render.
+ * @returns A `NavigationMenuItem` with optional dropdown content.
+ */
+export default function DesktopMenuItem({ item }: DesktopMenuItemProps) {
+  if (item.items?.length) {
+    return (
+      <NavigationMenuItem>
+        <NavigationMenuTrigger
+          onPointerMove={(event) => event.preventDefault()}
+          className="cursor-pointer rounded-none bg-transparent text-sm font-normal transition-opacity hover:bg-transparent hover:opacity-70 focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+        >
+          {item.title}
+        </NavigationMenuTrigger>
+        <NavigationMenuContent className="w-full h-[11rem]">
+          {/* Full-width visual panel that extends across the page behind the link list. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-0 -left-[100vw] -right-[100vw] -z-10 bg-background"
+          />
+          {/* Link list anchored to this trigger's column. */}
+          <ul className="relative grid w-full grid-flow-col grid-rows-3 gap-x-10 gap-y-1 py-4 pl-4">
+            {item.items.map((subItem) => (
+              <li key={subItem.title}>
+                <NavMenuLink
+                  href={subItem.url}
+                  className="block whitespace-nowrap py-1 text-[18px] font-normal transition-opacity duration-200 hover:opacity-70"
+                >
+                  {subItem.title}
+                </NavMenuLink>
+              </li>
+            ))}
+          </ul>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    );
+  }
+
+  return (
+    <NavigationMenuItem>
+      <NavMenuLink
+        href={item.url}
+        className="inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-normal transition-opacity hover:opacity-70"
+      >
+        {item.title}
+      </NavMenuLink>
+    </NavigationMenuItem>
+  );
+}
