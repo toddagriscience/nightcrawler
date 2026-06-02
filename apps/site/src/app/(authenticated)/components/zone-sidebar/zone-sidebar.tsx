@@ -26,6 +26,102 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import updateTabName from '../tabs/actions';
 
+/** Shared inner content for a zone row (green dot, name/rename input, shortcut badge). */
+function ZoneItemContent({
+  zone,
+  index,
+  isActive,
+  canEdit,
+  onRename,
+}: {
+  zone: ManagementZoneSelect;
+  index: number;
+  isActive: boolean;
+  canEdit: boolean;
+  onRename: (newName: string, oldName: string) => void;
+}) {
+  return (
+    <>
+      {/* Green dot indicator */}
+      {zone.name ? (
+        <span className="size-2 shrink-0 rounded-full bg-green-500" />
+      ) : (
+        <span className="size-2 shrink-0" />
+      )}
+
+      {/* Zone name - editable on active zone for admins */}
+      {isActive && canEdit ? (
+        <input
+          className="min-w-0 flex-1 truncate bg-transparent text-sm focus:outline-none focus:ring-0"
+          defaultValue={zone.name || 'Untitled Zone'}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) =>
+            onRename(e.target.value, zone.name || 'Untitled Zone')
+          }
+          onBlur={(e) => {
+            e.target.scrollLeft = 0;
+          }}
+        />
+      ) : (
+        <span className="min-w-0 flex-1 truncate">
+          {zone.name || 'Untitled Zone'}
+        </span>
+      )}
+
+      {/* Keyboard shortcut badge */}
+      <kbd className="shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px] text-foreground/40">
+        {index + 1}
+      </kbd>
+    </>
+  );
+}
+
+/** Static (non-draggable) zone row used for SSR and the first client render. */
+function StaticZoneItem({
+  zone,
+  index,
+  isActive,
+  canEdit,
+  onSelect,
+  onRename,
+}: {
+  zone: ManagementZoneSelect;
+  index: number;
+  isActive: boolean;
+  canEdit: boolean;
+  onSelect: (zoneId: number) => void;
+  onRename: (newName: string, oldName: string) => void;
+}) {
+  return (
+    <div
+      className={cn(
+        'group flex items-center gap-2 px-3 py-1.5 text-sm cursor-pointer transition-colors',
+        isActive
+          ? 'text-foreground'
+          : 'text-foreground/70 hover:text-foreground'
+      )}
+      onClick={() => onSelect(zone.id)}
+      aria-current={isActive ? 'page' : undefined}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(zone.id);
+        }
+      }}
+    >
+      <ZoneItemContent
+        zone={zone}
+        index={index}
+        isActive={isActive}
+        canEdit={canEdit}
+        onRename={onRename}
+      />
+    </div>
+  );
+}
+
 /**
  * A single sortable zone item in the sidebar list.
  *
@@ -87,36 +183,13 @@ function SortableZoneItem({
       {...attributes}
       {...listeners}
     >
-      {/* Green dot indicator */}
-      {zone.name ? (
-        <span className="size-2 shrink-0 rounded-full bg-green-500" />
-      ) : (
-        <span className="size-2 shrink-0" />
-      )}
-
-      {/* Zone name - editable on active zone for admins */}
-      {isActive && canEdit ? (
-        <input
-          className="min-w-0 flex-1 truncate bg-transparent text-sm focus:outline-none focus:ring-0"
-          defaultValue={zone.name || 'Untitled Zone'}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) =>
-            onRename(e.target.value, zone.name || 'Untitled Zone')
-          }
-          onBlur={(e) => {
-            e.target.scrollLeft = 0;
-          }}
-        />
-      ) : (
-        <span className="min-w-0 flex-1 truncate">
-          {zone.name || 'Untitled Zone'}
-        </span>
-      )}
-
-      {/* Keyboard shortcut badge */}
-      <kbd className="shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px] text-foreground/40">
-        {index + 1}
-      </kbd>
+      <ZoneItemContent
+        zone={zone}
+        index={index}
+        isActive={isActive}
+        canEdit={canEdit}
+        onRename={onRename}
+      />
     </div>
   );
 }
@@ -144,14 +217,18 @@ export default function ZoneSidebar({
   const selectedZoneId = searchParams.get('zone');
 
   // Sort zones: use localStorage order if available, otherwise by createdAt asc
+  // Deterministic order for SSR + first client render (no localStorage).
   const [orderedZones, setOrderedZones] = useState<ManagementZoneSelect[]>(() =>
-    applySavedOrder(managementZones, userId)
+    defaultOrder(managementZones)
   );
 
-  // Re-sync when zones change from the server
+  // After hydration: enable dnd-kit and apply any saved localStorage order.
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrderedZones(applySavedOrder(managementZones, userId));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
   }, [managementZones, userId]);
 
   const sensors = useSensors(
@@ -214,30 +291,52 @@ export default function ZoneSidebar({
       </div>
 
       <nav className="flex-1 overflow-y-auto px-1.5 pb-2">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={zoneIds}
-            strategy={verticalListSortingStrategy}
+        {!mounted ? (
+          // SSR / pre-hydration: plain list, identical on server and client.
+          orderedZones.map((zone, index) => (
+            <StaticZoneItem
+              key={zone.id}
+              zone={zone}
+              index={index}
+              isActive={String(zone.id) === selectedZoneId}
+              canEdit={canEdit}
+              onSelect={selectZone}
+              onRename={handleRename}
+            />
+          ))
+        ) : (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            {orderedZones.map((zone, index) => (
-              <SortableZoneItem
-                key={zone.id}
-                zone={zone}
-                index={index}
-                isActive={String(zone.id) === selectedZoneId}
-                canEdit={canEdit}
-                onSelect={selectZone}
-                onRename={handleRename}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
+            <SortableContext
+              items={zoneIds}
+              strategy={verticalListSortingStrategy}
+            >
+              {orderedZones.map((zone, index) => (
+                <SortableZoneItem
+                  key={zone.id}
+                  zone={zone}
+                  index={index}
+                  isActive={String(zone.id) === selectedZoneId}
+                  canEdit={canEdit}
+                  onSelect={selectZone}
+                  onRename={handleRename}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        )}
       </nav>
     </aside>
+  );
+}
+
+/** Sorts zones by createdAt ascending (oldest first), the deterministic default. */
+function defaultOrder(zones: ManagementZoneSelect[]): ManagementZoneSelect[] {
+  return [...zones].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 }
 
@@ -275,7 +374,5 @@ function applySavedOrder(
   }
 
   // Default: sort by createdAt ascending (oldest first)
-  return [...zones].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  );
+  return defaultOrder(zones);
 }
