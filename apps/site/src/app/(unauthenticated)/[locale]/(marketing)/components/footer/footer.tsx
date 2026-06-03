@@ -7,7 +7,7 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link, usePathname, useRouter } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   FaInstagram,
   FaLinkedinIn,
@@ -76,22 +76,15 @@ const Footer = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [langOpen, setLangOpen] = useState(false);
-  const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
     if (newLocale === locale) {
       return;
     }
-    setPendingLocale(newLocale);
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
+    router.replace(pathname, { locale: newLocale });
   };
-
-  useEffect(() => {
-    if (!pendingLocale) return;
-    document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
-    router.replace(pathname, { locale: pendingLocale });
-    setPendingLocale(null);
-  }, [pendingLocale, pathname, router]);
 
   return (
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
