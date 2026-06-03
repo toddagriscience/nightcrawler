@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { farm, standardValues, user } from '@nightcrawler/db/schema';
+import { gt } from 'drizzle-orm';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   ensureApprovedApplicantAuthSession,
@@ -91,15 +92,15 @@ describe('signUp', () => {
     vi.mocked(ensureApprovedApplicantAuthSession).mockReset();
     vi.mocked(ensureApprovedApplicantAuthSession).mockResolvedValue(undefined);
     vi.mocked(validatePlatformAccessSignupToken).mockReset();
-    // eslint-disable-next-line drizzle/enforce-delete-with-where
-    await db.delete(user);
-    // eslint-disable-next-line drizzle/enforce-delete-with-where
-    await db.delete(standardValues);
-    // eslint-disable-next-line drizzle/enforce-delete-with-where
-    await db.delete(farm);
+    await db.delete(user).where(gt(user.id, 0));
+    await db.delete(standardValues).where(gt(standardValues.farmId, 0));
+    await db.delete(farm).where(gt(farm.id, 0));
   });
 
-  const createApprovedApplicantFormData = () => {
+  const createApprovedApplicantFormData = (options?: {
+    includeApplicationId?: boolean;
+    includeToken?: boolean;
+  }) => {
     const formData = new FormData();
     formData.set('firstName', 'John');
     formData.set('lastName', 'Doe');
@@ -107,16 +108,20 @@ describe('signUp', () => {
     formData.set('email', 'john@example.com');
     formData.set('phone', '5551234567');
     formData.set('password', 'securePassword123');
-    formData.set('applicationId', '42');
-    formData.set('token', 'test-signup-token');
+    if (options?.includeApplicationId !== false) {
+      formData.set('applicationId', '42');
+    }
+    if (options?.includeToken !== false) {
+      formData.set('token', 'test-signup-token');
+    }
     return formData;
   };
 
   describe('validation', () => {
     it('throws when application id is missing', async () => {
-      const formData = createApprovedApplicantFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where -- FormData, not Drizzle
-      formData.delete('applicationId');
+      const formData = createApprovedApplicantFormData({
+        includeApplicationId: false,
+      });
 
       await expect(signUp(null, formData)).rejects.toThrow(
         'valid onboarding link'
@@ -124,9 +129,7 @@ describe('signUp', () => {
     });
 
     it('throws when signup token is missing', async () => {
-      const formData = createApprovedApplicantFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where -- FormData, not Drizzle
-      formData.delete('token');
+      const formData = createApprovedApplicantFormData({ includeToken: false });
 
       await expect(signUp(null, formData)).rejects.toThrow(
         'valid onboarding link'

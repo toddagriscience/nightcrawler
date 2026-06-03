@@ -1,7 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-/* eslint-disable no-secrets/no-secrets -- test fixtures use realistic onboarding URLs */
-
 import { describe, expect, it, vi } from 'vitest';
 import { resolveAuthConfirmRedirectTarget } from './resolve-auth-confirm-redirect';
 
@@ -12,10 +10,15 @@ vi.mock('@nightcrawler/db/queries', () => ({
 const { resolveIncomingPathForSignupToken } =
   await import('@nightcrawler/db/queries');
 
-describe('resolveAuthConfirmRedirectTarget', () => {
+describe('auth confirm redirect resolution', () => {
   it('redirects to incoming when application_id and signup_token resolve', async () => {
+    const incomingParams = new URLSearchParams({
+      email: 'test@example.com',
+      application_id: '6',
+      token: 'abc',
+    });
     vi.mocked(resolveIncomingPathForSignupToken).mockResolvedValue(
-      '/incoming?email=test%40example.com&application_id=6&token=abc'
+      `/incoming?${incomingParams.toString()}`
     );
 
     const result = await resolveAuthConfirmRedirectTarget({

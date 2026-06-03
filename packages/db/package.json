@@ -13,7 +13,6 @@
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
     "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
-    "./utils/approved-applicant-auth-url": "./src/utils/approved-applicant-auth-url.ts",
     "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts"
   },
   "scripts": {
