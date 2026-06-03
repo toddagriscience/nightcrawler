@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import Homepage from './components/homepage/homepage';
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     description:
       'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
     url: 'https://toddagriscience.com/en/',
-    siteName: 'Todd United States',
+    siteName: siteConfig.name,
     locale: 'en',
     type: 'website',
     images: [
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
         width: 1300,
         height: 740,
         type: 'image/png',
-        alt: 'Todd United States',
+        alt: siteConfig.name,
       },
     ],
   },
