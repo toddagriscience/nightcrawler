@@ -94,7 +94,7 @@ export function getArticleCardHref(
   article: {
     offSiteUrl?: string | null;
     slug: { current: string };
-  } & Pick<SanityArticle, '_type' | 'contentType' | 'collections'>
+  } & Pick<SanityArticle, '_type'>
 ): string {
   const external = article.offSiteUrl;
   if (

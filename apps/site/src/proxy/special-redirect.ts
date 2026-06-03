@@ -18,6 +18,12 @@ export default function specialRedirect(
   const pathname = request.nextUrl.pathname.replace(/\/+$/, '') || '/';
   const segments = pathname.split('/').filter(Boolean);
 
+  if (pathname === '/iris') {
+    return NextResponse.redirect(
+      new URL('/index/introducing-iris', request.url)
+    );
+  }
+
   const locale0 = segments[0];
   const isLocale =
     locale0 !== undefined && SUPPORTED_LOCALES.includes(locale0 as Locale);

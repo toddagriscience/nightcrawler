@@ -7,8 +7,8 @@ import type { Metadata, Viewport } from 'next';
  * @returns {const} - The site configuration
  */
 const siteConfig = {
-  name: 'Todd United States',
-  title: 'Todd United States',
+  name: 'Todd',
+  title: 'Todd',
   description:
     'Todd Agriscience is a first-generation generative agriculture firm.',
   url: 'https://www.toddagriscience.com',
@@ -49,7 +49,7 @@ export const defaultMetadata: Metadata = {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'Todd United States',
+        alt: siteConfig.name,
       },
     ],
     type: 'website',
@@ -101,7 +101,7 @@ function getTitleSuffix(path: string): string {
   if (path.includes('/investors')) {
     return 'Todd Investors';
   }
-  return 'Todd United States';
+  return siteConfig.name;
 }
 
 /**

@@ -1,60 +1,29 @@
 {
   "contactPage": {
-    "title": "Contáctanos",
-    "description": "Ponte en contacto con Todd",
+    "title": "Contacto",
+    "hero": {
+      "title": "¿Necesitas Ayuda?",
+      "subtitle": "Estamos aquí para ayudarte a obtener el máximo provecho de nuestra plataforma."
+    },
     "fields": {
       "name": "Nombre",
-      "firstName": "Nombre",
-      "lastName": "Apellido",
-      "farmName": "Nombre de la granja",
-      "email": "Correo laboral",
-      "emailDescription": "Por favor, use un correo laboral si está disponible.",
-      "phone": "Número de teléfono"
+      "email": "Correo Electrónico",
+      "forgotEmail": "Último correo electrónico conocido",
+      "message": "Mensaje"
     },
     "placeholders": {
       "name": "Nombre",
-      "firstName": "Nombre",
-      "lastName": "Apellido",
-      "farmName": "Nombre de la granja",
-      "email": "Correo laboral",
-      "phone": "Número de teléfono",
-      "website": "Sitio web"
+      "email": "Correo Electrónico",
+      "forgotEmail": "Último correo electrónico conocido",
+      "message": "¿En qué podemos ayudarte?"
     },
     "buttons": {
-      "yes": "Sí",
-      "no": "No",
-      "back": "Atrás",
-      "next": "Continuar"
+      "submit": "Enviar"
     },
-    "errors": {
-      "requiredFields": "Por favor, complete todos los campos."
-    },
-    "questions": {
-      "website": "¿Cuál es el sitio web de {farm}?",
-      "organic": "¿{farm} cultiva utilizando principios orgánicos, biodinámicos o regenerativos?",
-      "hydroponic": "¿{farm} es hidropónica?",
-      "sprouts": "¿{farm} produce brotes u otros cultivos sin medio como producto principal?"
-    },
-    "results": {
-      "matchTitle": "¡Es una coincidencia!",
-      "matchBody": "Vamos a configurar tu cuenta.",
-      "matchJoinUs": "Únete a nosotros",
-      "noMatchTitle": "Según tu información, Todd puede no ser la mejor opción.",
-      "noMatchBody": "Siempre estamos desarrollando servicios para granjas en crecimiento y nos conectaremos cuando tengamos algo que se ajuste mejor a la tuya.",
-      "noMatchInstagram": "Si te gustaría que revisáramos tu aplicación, por favor comparte tu handle de Instagram:",
-      "noMatchSubmit": "Enviar"
-    },
-    "legal": {
-      "byContinuing": "Al continuar, aceptas los",
-      "accountAgreement": "Acuerdo de cuenta de Todd",
-      "and": "y",
-      "privacyPolicy": "Política de privacidad",
-      "termsOfService": "Términos de servicio",
-      "apply": "aplicar."
-    },
-    "login": {
-      "alreadyStarted": "¿Ya has empezado?",
-      "loginToComplete": "Inicia sesión para completar tu aplicación"
+    "success": {
+      "title": "Mensaje Enviado",
+      "subtitle": "Gracias por contactarnos. Te responderemos pronto.",
+      "cta": "Inicio"
     }
   }
 }

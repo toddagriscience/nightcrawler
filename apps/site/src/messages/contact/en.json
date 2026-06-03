@@ -1,60 +1,29 @@
 {
   "contactPage": {
-    "title": "Contact Us",
-    "description": "Get Started with Todd",
+    "title": "Contact",
+    "hero": {
+      "title": "Need Help?",
+      "subtitle": "We're here to help you get the most out of our platform."
+    },
     "fields": {
       "name": "Name",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "farmName": "Farm Name",
-      "email": "Work Email",
-      "emailDescription": "Please use a work email address if available.",
-      "phone": "Phone Number"
+      "email": "Email Address",
+      "forgotEmail": "Last Known Email Address",
+      "message": "Message"
     },
     "placeholders": {
       "name": "Name",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "farmName": "Farm Name",
-      "email": "Work Email",
-      "phone": "Phone Number",
-      "website": "Website"
+      "email": "Email Address",
+      "forgotEmail": "Last Known Email Address",
+      "message": "What can we help you with?"
     },
     "buttons": {
-      "yes": "Yes",
-      "no": "No",
-      "back": "Back",
-      "next": "Continue"
+      "submit": "Submit"
     },
-    "errors": {
-      "requiredFields": "Please ensure all fields are filled out."
-    },
-    "questions": {
-      "website": "What is {farm}'s website?",
-      "organic": "Does {farm} grow using organic, biodynamic or regenerative principles?",
-      "hydroponic": "Is {farm} hydroponic?",
-      "sprouts": "Does {farm} produce sprouts or other non-medium crops as a main product?"
-    },
-    "results": {
-      "matchTitle": "It's a match!",
-      "matchBody": "Let’s get your account set up.",
-      "matchJoinUs": "Join Us",
-      "noMatchTitle": "Based on your information, Todd might not be the right fit.",
-      "noMatchBody": "We’re always working on services to serve growing farms of all kinds— and we’ll connect when we have something that better fits yours.",
-      "noMatchInstagram": "If you'd like us to take a second look at your application, please feel free to share your Instagram handle:",
-      "noMatchSubmit": "Submit"
-    },
-    "legal": {
-      "byContinuing": "By continuing, you agree to the",
-      "accountAgreement": "Todd Account Agreement",
-      "and": "and",
-      "privacyPolicy": "Privacy Policy",
-      "termsOfService": "Terms of Service",
-      "apply": "apply."
-    },
-    "login": {
-      "alreadyStarted": "Already started?",
-      "loginToComplete": "Login to complete your application"
+    "success": {
+      "title": "Message Sent",
+      "subtitle": "Thanks for reaching out. We'll get back to you soon.",
+      "cta": "Home"
     }
   }
 }

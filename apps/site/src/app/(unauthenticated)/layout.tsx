@@ -4,6 +4,7 @@ import { ThemeReset } from '@/components/common';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme/ThemeContext';
 import { fontVariables } from '@/lib/fonts';
+import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import { Organization, WebSite, WithContext } from 'schema-dts';
 import '../globals.css';
@@ -14,8 +15,8 @@ import { PostHogProvider } from '../providers';
  */
 export const metadata: Metadata = {
   title: {
-    default: 'Todd United States',
-    template: '%s | Todd United States',
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
 };
 

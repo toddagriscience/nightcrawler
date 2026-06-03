@@ -10,16 +10,23 @@ import {
   widgetEnum,
 } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
-import { tab } from '@nightcrawler/db/schema/tab';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import PlatformTabContent from '../components/tabs/tab-content';
-import PlatformTabs from '../components/tabs/tabs';
-import { getTablessManagementZones } from '../components/tabs/utils';
-import { getSelectedTab, getSelectedTabHash } from './utils';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
+import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
+import ZoneSidebar from '../components/zone-sidebar/zone-sidebar';
+import CurrentTab from '../components/tabs/current-tab';
+import { NamedTab } from '../components/tabs/types';
+
+// -- Commented out: tab-based imports (kept for future use) ---
+//import PlatformTabContent from '../components/tabs/tab-content';
+//import PlatformTabs from '../components/tabs/tabs';
+//import { getTablessManagementZones } from '../components/tabs/utils';
+//import { getSelectedTab, getSelectedTabHash } from './utils';
+//import { tab } from '@nightcrawler/db/schema/tab';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -29,11 +36,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Dashboard page - served at "/" route for authenticated users. Every page here inside a tab (usually only management zones).
+ * Dashboard page - served at "/" route for authenticated users.
+ * Shows a left sidebar listing all management zones and the selected zone's content.
  *
-   Scaling is a little bit scuffed here. We're taking a div and shoving it into `AuthenticatedHeader` manually, then scaling it accordingly with variables #'s of tabs. This technically works with up to 25 tabs on the smallest screen size. This is fine because the user will be limited to a maximum of 8 tabs.
- *
- * This page is protected by middleware and only accessible to authenticated users
  * @returns {React.ReactNode} - The dashboard page component
  */
 export default async function DashboardPage({
@@ -42,32 +47,17 @@ export default async function DashboardPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const currentUser = await getAuthenticatedInfo();
+  const canEdit = currentUser.role === 'Admin';
 
-  const fetchCurrentTabs = async () =>
-    db
-      .select({
-        id: tab.id,
-        managementZone: tab.managementZone,
-        name: managementZone.name,
-        user: tab.user,
-      })
-      .from(tab)
-      .innerJoin(managementZone, eq(managementZone.id, tab.managementZone))
-      .orderBy(asc(managementZone.name))
-      .where(eq(tab.user, currentUser.id));
+  // Fetch ALL management zones for the farm (oldest first)
+  const allManagementZones = await db
+    .select()
+    .from(managementZone)
+    .where(eq(managementZone.farmId, currentUser.farmId))
+    .orderBy(asc(managementZone.createdAt));
 
-  let currentTabs = await fetchCurrentTabs();
-
-  let managementZones = await getTablessManagementZones(currentUser.farmId);
-
-  // Previously: redirected to /welcome when unapproved or when there were no
-  // tabs and no zones. Removed for direct platform access; farm.approved still
-  // exists for internal approval and ApplicationReviewBanner.
-  // if (!currentUser.approved || (currentTabs.length === 0 && managementZones.length === 0)) {
-  //   redirect('/welcome');
-  // }
-
-  if (currentTabs.length === 0 && managementZones.length === 0) {
+  // No zones at all — check if user has applied, or show empty state
+  if (allManagementZones.length === 0) {
     const [hasApplied] = await db
       .select({ userId: accountAgreementAcceptance.userId })
       .from(accountAgreementAcceptance)
@@ -116,24 +106,26 @@ export default async function DashboardPage({
     );
   }
 
-  // This seems redundant - realistically, this will be called once or twice per user.
-  if (currentTabs.length === 0 && managementZones.length > 0) {
-    await db.insert(tab).values({
-      managementZone: managementZones[0].id,
-      user: currentUser.id,
-    });
+  // Determine selected zone from URL param, default to first zone
+  const params = await searchParams;
+  const zoneParam = typeof params.zone === 'string' ? params.zone : undefined;
+  const selectedZone =
+    allManagementZones.find((z) => String(z.id) === zoneParam) ||
+    allManagementZones[0];
 
-    currentTabs = await fetchCurrentTabs();
-    managementZones = await getTablessManagementZones(currentUser.farmId);
-  }
+  // Build a NamedTab-compatible object for CurrentTab (it expects this shape)
+  const selectedTab: NamedTab = {
+    id: selectedZone.id,
+    user: currentUser.id,
+    managementZone: selectedZone.id,
+    name: selectedZone.name,
+  };
 
-  const selectedTabHash = await getSelectedTabHash(searchParams, currentTabs);
-  const selectedTab = await getSelectedTab(selectedTabHash, currentTabs);
-
+  // Fetch widgets for the selected zone (for the Add Widget dropdown)
   const widgets = await db
     .select()
     .from(widget)
-    .where(eq(widget.managementZone, selectedTab.managementZone));
+    .where(eq(widget.managementZone, selectedZone.id));
   const allWidgetTypes = widgetEnum.enumValues;
   const existingWidgetNames = new Set(widgets.map((w) => w.name));
   const availableWidgets = allWidgetTypes.filter(
@@ -141,37 +133,45 @@ export default async function DashboardPage({
   );
 
   return (
-    <PlatformTabs
-      managementZones={managementZones}
-      currentTabs={currentTabs}
-      currentUser={currentUser}
-      selectedTabHash={selectedTabHash}
-      header={
-        <div className="flex items-center gap-4">
+    <div className="flex h-screen flex-col">
+      {/* Header — full width, same as before */}
+      <header
+        className="flex w-full items-center justify-between px-3 pt-3 pb-2"
+        role="banner"
+      >
+        <ToddHeader className="flex scale-90 flex-row items-center" />
+        <div className="flex flex-row items-center gap-6">
+          <SearchNavForm />
+          {canEdit ? (
+            <AddWidgetDropdown
+              managementZoneId={selectedZone.id}
+              availableWidgets={availableWidgets}
+            >
+              <Button
+                size="sm"
+                variant="default"
+                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
+  focus-visible:ring-offset-transparent!"
+              >
+                Add widget
+              </Button>
+            </AddWidgetDropdown>
+          ) : null}
           <NavLinks />
         </div>
-      }
-      addWidgetDropdown={
-        currentUser.role === 'Admin' ? (
-          <AddWidgetDropdown
-            managementZoneId={selectedTab.managementZone}
-            availableWidgets={availableWidgets}
-          >
-            <Button
-              size="sm"
-              variant="default"
-              className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
-            >
-              Add widget
-            </Button>
-          </AddWidgetDropdown>
-        ) : null
-      }
-    >
-      <PlatformTabContent
-        currentTabs={currentTabs}
-        selectedTabHash={selectedTabHash}
-      />
-    </PlatformTabs>
+      </header>
+
+      {/* Body — sidebar + content */}
+      <div className="flex flex-1 overflow-hidden">
+        <ZoneSidebar
+          managementZones={allManagementZones}
+          canEdit={canEdit}
+          userId={String(currentUser.id)}
+        />
+        <main className="flex-1 overflow-auto">
+          <CurrentTab currentTab={selectedTab} />
+        </main>
+      </div>
+    </div>
   );
 }

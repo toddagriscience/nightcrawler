@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 /**
  * Minimalistic header component for unauthenticated pages
- * Displays the TODD brand and navigation link to support page
+ * Displays the TODD brand and navigation link to the contact page
  * @returns {JSX.Element} - The unauthenticated header component
  */
 export default function UnauthenticatedHeader() {

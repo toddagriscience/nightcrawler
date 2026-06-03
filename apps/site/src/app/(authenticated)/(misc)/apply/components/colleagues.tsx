@@ -50,6 +50,7 @@ export default function Colleagues() {
     invitedUserVerificationStatus,
     setCurrentTab,
     canEditFarm,
+    nextTabAfterColleagues,
   } = useContext(ApplicationContext);
 
   const [users, setUsers] = useState(allUsers);
@@ -362,7 +363,7 @@ export default function Colleagues() {
                 />
                 <Button
                   onClick={() => {
-                    setCurrentTab('farm');
+                    setCurrentTab(nextTabAfterColleagues);
                     scrollTo(0, 0);
                   }}
                   className="h-11 w-[200px] rounded-full bg-black text-white hover:cursor-pointer hover:bg-black/80 font-semibold"

@@ -12,6 +12,19 @@ vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
+vi.mock('next/image', () => ({
+  default: ({
+    src,
+    alt,
+    ...props
+  }: {
+    src: string | { src: string };
+    alt: string;
+  }) => (
+    <img src={typeof src === 'string' ? src : src.src} alt={alt} {...props} />
+  ),
+}));
+
 const {
   item,
   getArticleBySlugMock,

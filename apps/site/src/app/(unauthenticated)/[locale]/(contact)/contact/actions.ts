@@ -4,85 +4,57 @@
 
 import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
 import logger from '@/lib/logger';
-import z from 'zod';
-import { emailSchema } from '@/lib/zod-schemas/auth';
-import { ActionResponse } from '@/lib/types/action-response';
+import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
+import z from 'zod';
+import { publicInquirySchema } from './types';
 
-/** USE ONLY ON THE SERVER SIDE!!! Submits contact information to the Google Sheet for keeping track of potential leads.
+/**
+ * Reads a trimmed string field from submitted form data.
  *
- * @param {unknown} _ - The initial state (unneeded in this function)
- * @param {FormData} formData - The form data containing the contact information
- * @returns {void} - Returns nothing at the moment. This will likely be changed in the future for sake of error handling. */
-export async function submitToGoogleSheetsHelper(formData: FormData) {
-  const messageSchema = z
-    .string()
-    .max(1500, 'Message is too long.')
-    .min(1, 'Message is too short');
-  const message = formData.get('message');
+ * @param formData - Submitted form payload
+ * @param key - Field name to read
+ * @returns Trimmed string value, or empty string when missing
+ */
+function getString(formData: FormData, key: string): string {
+  const v = formData.get(key);
+  return typeof v === 'string' ? v.trim() : '';
+}
 
-  const validated = messageSchema.safeParse(message);
+/**
+ * Validates and submits a public inquiry from the `/contact` page to Google Sheets.
+ *
+ * @param formData - Raw form submission payload
+ * @returns Empty success response when submission succeeds
+ */
+export async function submitPublicInquiry(
+  formData: FormData
+): Promise<ActionResponse> {
+  const raw = {
+    name: getString(formData, 'name'),
+    lastKnownEmail: getString(formData, 'lastKnownEmail'),
+    response: getString(formData, 'response'),
+  };
 
+  const validated = publicInquirySchema.safeParse(raw);
   if (!validated.success) {
-    // Hacky, but it works for now
-    throw new Error(z.treeifyError(validated.error).errors[0]);
+    throwActionError(z.treeifyError(validated.error));
   }
 
-  const contactGoogleScriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
-
-  if (!contactGoogleScriptUrl) {
-    throw new Error(
+  const scriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
+  if (!scriptUrl) {
+    throwActionError(
       'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
     );
   }
 
   try {
-    await submitToGoogleSheets(formData, contactGoogleScriptUrl);
-  } catch (error) {
-    logger.error('Submission error:', error);
-    throw new Error(
-      error instanceof Error ? error.message : 'An unknown error occurred'
+    await submitToGoogleSheets(formData, scriptUrl);
+    return { data: null };
+  } catch (err) {
+    logger.error('Public inquiry submission error:', err);
+    throwActionError(
+      err instanceof Error ? err.message : 'An unknown error occurred.'
     );
-  }
-}
-
-/** USE ONLY ON THE SERVER SIDE!!! Submits an email to the Google Sheet for keeping track of externship emails.
- *
- * @param {unknown} _ - The initial state (unneeded in this function)
- * @param {FormData} formData - The form data containing the email and password
- * @returns {AuthResponse} - The response. The return type will be refactored into a generic in the future.
- * */
-export async function submitEmail(
-  _: unknown,
-  formData: FormData
-): Promise<ActionResponse> {
-  const email = formData.get('email');
-
-  // We are not collecting names. If a name was entered, it was likely entered by a robot. Just act like the request succeeded if this form was filled out.
-  const honeypot = formData.get('name');
-  if (honeypot) {
-    return { data: {} };
-  }
-
-  const validated = emailSchema.safeParse(email);
-
-  if (!validated.success) {
-    logger.info('Login credentials were not valid');
-    throwActionError(z.treeifyError(validated.error));
-  }
-
-  const externshipGoogleScriptUrl = process.env.EXTERNSHIP_GOOGLE_SCRIPT_URL;
-
-  if (!externshipGoogleScriptUrl) {
-    logger.warn('Could not find EXTERNSHIP_GOOGLE_SCRIPT_URL');
-    throwActionError('Error submitting form.');
-  }
-
-  try {
-    await submitToGoogleSheets(formData, externshipGoogleScriptUrl);
-    return { data: {} };
-  } catch (error) {
-    logger.error('Error when submitting email to Google Sheets: ' + error);
-    throwActionError('Error saving email');
   }
 }
