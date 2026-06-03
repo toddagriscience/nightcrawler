@@ -3,11 +3,13 @@
 'use server';
 
 import {
+  ensureApprovedApplicantAuthSession,
   getUserEmail,
   setPassword,
-  signIn,
-  signUpUser,
 } from '@/lib/auth-server';
+import { sendApprovedApplicantInvite } from '@nightcrawler/db/utils/send-approved-applicant-invite';
+import { buildIncomingSignupUrl } from '@nightcrawler/db/utils/extract-applicant-prefill';
+import { platformAccessApplication } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
 import { farm, user, standardValues } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
@@ -130,7 +132,7 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
 }
 
 /**
- * Completes signup for an approved platform-access applicant who arrived via magic link.
+ * Completes signup for an approved platform-access applicant using the application token.
  *
  * @param input - Validated signup payload and application id
  */
@@ -138,18 +140,33 @@ async function completeApprovedApplicantSignup(
   input: SignupRecordInput & { password: string }
 ): Promise<never> {
   const { email, password, firstName } = input;
-  const authenticatedEmail = await getUserEmail();
 
-  if (!authenticatedEmail) {
+  try {
+    await ensureApprovedApplicantAuthSession(email, password, firstName);
+  } catch (error) {
     throwActionError(
-      'Open the link from your approval email to continue setting up your account.'
+      error instanceof Error
+        ? error.message
+        : 'Unable to activate your account. Use your onboarding link from Todd and try again.'
     );
   }
 
-  if (authenticatedEmail.toLowerCase() !== email.toLowerCase()) {
+  const authenticatedEmail = await getUserEmail();
+
+  if (
+    !authenticatedEmail ||
+    authenticatedEmail.toLowerCase() !== email.toLowerCase()
+  ) {
     throwActionError(
-      'You are signed in with a different email. Open the approval link from the same inbox.'
+      'Unable to start your session. Use your onboarding link and try again.'
     );
+  }
+
+  try {
+    await persistSignupRecords(input);
+  } catch (error) {
+    logger.error(`Failed to create user/farm in database: ${error}`);
+    throwActionError(formatSignupDatabaseError(error));
   }
 
   const { error: passwordError } = await setPassword(password);
@@ -168,7 +185,6 @@ async function completeApprovedApplicantSignup(
     data: {
       first_name: firstName,
       name: firstName,
-      email_verified: true,
     },
   });
 
@@ -179,27 +195,86 @@ async function completeApprovedApplicantSignup(
     throwActionError(metadataError.message);
   }
 
-  const { error: signInError } = await signIn(email, password);
-
-  if (signInError) {
-    throwActionError(signInError);
-  }
-
-  try {
-    await persistSignupRecords(input);
-  } catch (error) {
-    logger.error(`Failed to create user/farm in database: ${error}`);
-    throwActionError(formatSignupDatabaseError(error));
-  }
-
   redirect('/apply');
 }
 
-/** Signs up a user with Supabase and creates the corresponding farm and user records in the database.
+/**
+ * Resends the approved-applicant activation email for a valid application signup link.
  *
- * @param {unknown} _ - The initial state (unneeded in this function)
- * @param {FormData} formData - The form data containing user and farm information
- * @returns {Promise<ActionResponse>} - Returns the created user data if successful, or an error if not
+ * @param input - Application id, signup token, and applicant email from the link
+ */
+export async function resendApprovedApplicantActivationEmail(input: {
+  applicationId: number;
+  token: string;
+  email: string;
+}): Promise<{ sent: boolean; error?: string }> {
+  const validated = await validatePlatformAccessSignupToken(
+    input.applicationId,
+    input.token,
+    input.email
+  );
+
+  if (!validated) {
+    throwActionError('This signup link is invalid or expired.');
+  }
+
+  const projectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
+
+  if (!projectId || !secretKey) {
+    throwActionError(
+      'Activation email cannot be sent right now. Contact support for help.'
+    );
+  }
+
+  const baseUrl = (
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN ??
+    'https://toddagriscience.com'
+  ).replace(/\/$/, '');
+
+  const [application] = await db
+    .select()
+    .from(platformAccessApplication)
+    .where(eq(platformAccessApplication.id, validated.applicationId))
+    .limit(1);
+
+  const onboardingUrl = application
+    ? buildIncomingSignupUrl(
+        baseUrl,
+        (application.answers ?? {}) as Record<string, unknown>,
+        {
+          applicationId: validated.applicationId,
+          signupToken: input.token.trim(),
+        }
+      )
+    : null;
+
+  if (!onboardingUrl) {
+    throwActionError('This signup link is invalid or expired.');
+  }
+
+  const result = await sendApprovedApplicantInvite({
+    email: validated.email,
+    onboardingUrl,
+    projectId,
+    secretKey,
+  });
+
+  if (!result.sent) {
+    throwActionError(
+      result.error ?? 'Failed to send activation email. Please try again.'
+    );
+  }
+
+  return { sent: true };
+}
+
+/**
+ * Completes approved-applicant signup (platform access forms only).
+ *
+ * @param _ - The initial state (unneeded in this function)
+ * @param formData - The form data containing user, farm, application id, and token
  */
 export async function signUp(
   _: unknown,
@@ -234,59 +309,37 @@ export async function signUp(
     token,
   } = validated.data;
 
-  let validatedApplicationId: number | undefined;
-
-  if (applicationId && token) {
-    const parsedApplicationId = Number.parseInt(applicationId, 10);
-
-    if (!Number.isFinite(parsedApplicationId)) {
-      throwActionError('This signup link is invalid or expired.');
-    }
-
-    const validatedApplication = await validatePlatformAccessSignupToken(
-      parsedApplicationId,
-      token,
-      email
+  if (!applicationId || !token) {
+    throwActionError(
+      'Account setup requires a valid onboarding link from your approval email.'
     );
-
-    if (!validatedApplication) {
-      throwActionError('This signup link is invalid or expired.');
-    }
-
-    validatedApplicationId = validatedApplication.applicationId;
-
-    await completeApprovedApplicantSignup({
-      firstName,
-      lastName,
-      farmName,
-      email,
-      phone,
-      password,
-      applicationId: validatedApplicationId,
-    });
   }
 
-  const signUpResult = await signUpUser(email, password, firstName);
+  const parsedApplicationId = Number.parseInt(applicationId, 10);
 
-  if (signUpResult instanceof Error) {
-    logger.warn(`Failed to sign up user in Supabase: ${signUpResult.message}`);
-    throwActionError(signUpResult.message);
+  if (!Number.isFinite(parsedApplicationId)) {
+    throwActionError('This signup link is invalid or expired.');
   }
 
-  try {
-    const result = await persistSignupRecords({
-      firstName,
-      lastName,
-      farmName,
-      email,
-      phone,
-    });
+  const validatedApplication = await validatePlatformAccessSignupToken(
+    parsedApplicationId,
+    token,
+    email
+  );
 
-    return {
-      data: result,
-    };
-  } catch (error) {
-    logger.error(`Failed to create user/farm in database: ${error}`);
-    throwActionError(formatSignupDatabaseError(error));
+  if (!validatedApplication) {
+    throwActionError('This signup link is invalid or expired.');
   }
+
+  await completeApprovedApplicantSignup({
+    firstName,
+    lastName,
+    farmName,
+    email,
+    phone,
+    password,
+    applicationId: validatedApplication.applicationId,
+  });
+
+  return { data: null };
 }

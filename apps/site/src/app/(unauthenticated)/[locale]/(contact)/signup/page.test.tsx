@@ -53,6 +53,8 @@ describe('SignupForm', () => {
     farm_name: 'Green Acres',
     email: 'john@example.com',
     phone: '5551234567',
+    application_id: '42',
+    token: 'test-signup-token',
   };
 
   beforeEach(() => {
@@ -60,77 +62,37 @@ describe('SignupForm', () => {
   });
 
   describe('form loading with search params', () => {
-    it('renders the form correctly when all params are present', () => {
+    it('renders the approved-applicant password form when all params are present', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      render(<SignupForm isApprovedApplicantSignup={false} />);
+      render(<SignupForm isApprovedApplicantSignup />);
 
-      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
+      expect(screen.getByText('Create your password')).toBeInTheDocument();
       expect(
-        screen.getByText(
-          "You'll use this to login and access your Todd account in the future."
-        )
+        screen.getByText(/Choose a password for john@example.com/)
       ).toBeInTheDocument();
       expect(screen.getByLabelText('Create a Password')).toBeInTheDocument();
-
       expect(screen.getByText('Continue')).toBeInTheDocument();
     });
 
     it('includes hidden fields with pre-filled values from search params', () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
 
-      const { container } = render(
-        <SignupForm isApprovedApplicantSignup={false} />
-      );
+      const { container } = render(<SignupForm isApprovedApplicantSignup />);
 
       expect(container.querySelector('input[name="firstName"]')).toHaveValue(
         'John'
       );
-      expect(container.querySelector('input[name="lastName"]')).toHaveValue(
-        'Doe'
-      );
-      expect(container.querySelector('input[name="farmName"]')).toHaveValue(
-        'Green Acres'
-      );
-      expect(container.querySelector('input[name="email"]')).toHaveValue(
-        'john@example.com'
-      );
-      expect(container.querySelector('input[name="phone"]')).toHaveValue(
-        '5551234567'
-      );
+      expect(container.querySelector('input[name="applicationId"]')).toBeNull();
     });
 
-    it('displays password checklist requirements', () => {
+    it('shows errors when signup action fails', async () => {
       mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      render(<SignupForm isApprovedApplicantSignup={false} />);
-
-      expect(
-        screen.getByText(
-          /Please make sure to use a secure password matching the rules./
-        )
-      ).toBeInTheDocument();
-      expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
-      expect(
-        screen.getByText(/contains a special character/)
-      ).toBeInTheDocument();
-      expect(screen.getByText(/contains a number/)).toBeInTheDocument();
-      expect(
-        screen.getByText(/contains an uppercase letter/)
-      ).toBeInTheDocument();
-      expect(screen.getByText(/passwords match/)).toBeInTheDocument();
-    });
-  });
-
-  describe('success screen', () => {
-    it('shows success screen when action returns without an error', async () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
-      vi.mocked(signUp).mockResolvedValue({
-        data: { user: {}, farm: {} },
-      });
+      vi.mocked(signUp).mockRejectedValue(new Error('Invalid link'));
+      vi.mocked(formatActionResponseErrors).mockReturnValue(['Invalid link']);
 
       const user = userEvent.setup();
-      render(<SignupForm isApprovedApplicantSignup={false} />);
+      render(<SignupForm isApprovedApplicantSignup />);
 
       const validPassword = 'P@ssword1';
       await user.type(
@@ -141,57 +103,8 @@ describe('SignupForm', () => {
       await user.click(screen.getByRole('button', { name: 'Continue' }));
 
       await waitFor(() => {
-        expect(
-          screen.getByText('Your Todd Account Has Been Created!')
-        ).toBeInTheDocument();
+        expect(screen.getByText('Invalid link')).toBeInTheDocument();
       });
-      expect(
-        screen.getByText('Please check your email to activate your account:')
-      ).toBeInTheDocument();
-
-      expect(
-        screen.queryByText("You're Almost There!")
-      ).not.toBeInTheDocument();
-    });
-
-    it('shows form when action has not been submitted yet', () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      render(<SignupForm isApprovedApplicantSignup={false} />);
-
-      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
-      expect(
-        screen.queryByText('Your Todd Account Has Been Created!')
-      ).not.toBeInTheDocument();
-    });
-
-    it('shows form with errors when action returns with an error', async () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
-      vi.mocked(signUp).mockRejectedValue(new Error('User already exists'));
-      vi.mocked(formatActionResponseErrors).mockReturnValue([
-        'User already exists',
-      ]);
-
-      const user = userEvent.setup();
-      render(<SignupForm isApprovedApplicantSignup={false} />);
-
-      const validPassword = 'P@ssword1';
-      await user.type(
-        screen.getByLabelText('Create a Password'),
-        validPassword
-      );
-      await user.type(screen.getByLabelText('Confirm Password'), validPassword);
-      await user.click(screen.getByRole('button', { name: 'Continue' }));
-
-      await waitFor(() => {
-        expect(screen.getByText('User already exists')).toBeInTheDocument();
-      });
-
-      expect(screen.getByText("You're Almost There!")).toBeInTheDocument();
-
-      expect(
-        screen.queryByText('Your Todd Account Has Been Created!')
-      ).not.toBeInTheDocument();
     });
   });
 });

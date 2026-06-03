@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { createClient as createSupabaseAdminClient } from '@supabase/supabase-js';
+import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { createClient as createServerClient } from './supabase/server';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
 
@@ -107,6 +109,130 @@ export async function inviteUser(
   }
 
   return data;
+}
+
+/**
+ * Ensures the applicant has a Supabase session before completing approved signup.
+ * Uses the existing magic-link session when present; otherwise creates or updates the
+ * auth user without sending another confirmation email.
+ *
+ * @param email - Applicant email from the validated application link
+ * @param password - Password the applicant chose on the signup form
+ * @param firstName - Applicant first name for auth metadata
+ */
+export async function ensureApprovedApplicantAuthSession(
+  email: string,
+  password: string,
+  firstName: string
+): Promise<void> {
+  const sessionEmail = await getUserEmail();
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (sessionEmail?.toLowerCase() === normalizedEmail) {
+    return;
+  }
+
+  if (sessionEmail) {
+    throw new Error(
+      'You are signed in with a different email. Open the approval link from the same inbox.'
+    );
+  }
+
+  const signInResult = await signIn(email, password);
+
+  if (!signInResult.error) {
+    return;
+  }
+
+  const projectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
+
+  if (!projectId || !secretKey) {
+    throw new Error(
+      'Server configuration is incomplete. Contact support to finish activating your account.'
+    );
+  }
+
+  const supabaseAdmin = createSupabaseAdminClient(
+    `https://${projectId}.supabase.co`,
+    secretKey,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+
+  const { error: createError } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: {
+      first_name: firstName,
+      name: firstName,
+      email_verified: true,
+    },
+  });
+
+  if (!createError) {
+    const afterCreateSignIn = await signIn(email, password);
+
+    if (!afterCreateSignIn.error) {
+      return;
+    }
+
+    throw new Error(
+      formatActionResponseErrors(afterCreateSignIn.error)[0] ??
+        'Failed to sign in after creating your account.'
+    );
+  }
+
+  const createMessage = createError.message.toLowerCase();
+
+  if (
+    !createMessage.includes('already') &&
+    !createMessage.includes('registered') &&
+    !createMessage.includes('exists')
+  ) {
+    throw new Error(createError.message);
+  }
+
+  const { data: listedUsers, error: listError } =
+    await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+
+  if (listError) {
+    throw new Error(listError.message);
+  }
+
+  const existingUser = listedUsers.users.find(
+    (user) => user.email?.toLowerCase() === normalizedEmail
+  );
+
+  if (!existingUser) {
+    throw new Error(createError.message);
+  }
+
+  const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+    existingUser.id,
+    {
+      password,
+      email_confirm: true,
+      user_metadata: {
+        first_name: firstName,
+        name: firstName,
+        email_verified: true,
+      },
+    }
+  );
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+
+  const afterUpdateSignIn = await signIn(email, password);
+
+  if (afterUpdateSignIn.error) {
+    throw new Error(
+      formatActionResponseErrors(afterUpdateSignIn.error)[0] ??
+        'Failed to sign in after updating your account.'
+    );
+  }
 }
 
 /** SERVER SIDE FUNCTION. Sets a user's password.

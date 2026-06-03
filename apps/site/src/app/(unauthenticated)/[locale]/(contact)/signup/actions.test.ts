@@ -2,14 +2,22 @@
 
 import { farm, standardValues, user } from '@nightcrawler/db/schema';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { signUpUser } from '@/lib/auth-server';
+import {
+  ensureApprovedApplicantAuthSession,
+  getUserEmail,
+  setPassword,
+} from '@/lib/auth-server';
+import { validatePlatformAccessSignupToken } from '@nightcrawler/db/queries';
 import { signUp } from './actions';
 
 vi.mock('@/lib/auth-server', () => ({
   getUserEmail: vi.fn().mockResolvedValue(null),
-  setPassword: vi.fn(),
-  signIn: vi.fn(),
-  signUpUser: vi.fn(),
+  setPassword: vi.fn().mockResolvedValue({ error: null }),
+  ensureApprovedApplicantAuthSession: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('@nightcrawler/db/utils/send-approved-applicant-invite', () => ({
+  sendApprovedApplicantInvite: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase/server', () => ({
@@ -26,8 +34,16 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
+vi.mock('@nightcrawler/db/queries', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@nightcrawler/db/queries')>();
+  return {
+    ...actual,
+    validatePlatformAccessSignupToken: vi.fn(),
+  };
+});
+
 const { db } = await vi.hoisted(async () => {
-  // Polyfill for PGlite
   Blob.prototype.arrayBuffer = function () {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -68,8 +84,13 @@ vi.mock('@nightcrawler/db/schema/connection', async (importOriginal) => {
 
 describe('signUp', () => {
   beforeEach(async () => {
-    vi.mocked(signUpUser).mockReset();
-    // Clean up any existing data
+    vi.mocked(getUserEmail).mockReset();
+    vi.mocked(getUserEmail).mockResolvedValue('john@example.com');
+    vi.mocked(setPassword).mockReset();
+    vi.mocked(setPassword).mockResolvedValue({ error: null });
+    vi.mocked(ensureApprovedApplicantAuthSession).mockReset();
+    vi.mocked(ensureApprovedApplicantAuthSession).mockResolvedValue(undefined);
+    vi.mocked(validatePlatformAccessSignupToken).mockReset();
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await db.delete(user);
     // eslint-disable-next-line drizzle/enforce-delete-with-where
@@ -78,7 +99,7 @@ describe('signUp', () => {
     await db.delete(farm);
   });
 
-  const createValidFormData = () => {
+  const createApprovedApplicantFormData = () => {
     const formData = new FormData();
     formData.set('firstName', 'John');
     formData.set('lastName', 'Doe');
@@ -86,164 +107,85 @@ describe('signUp', () => {
     formData.set('email', 'john@example.com');
     formData.set('phone', '5551234567');
     formData.set('password', 'securePassword123');
+    formData.set('applicationId', '42');
+    formData.set('token', 'test-signup-token');
     return formData;
   };
 
   describe('validation', () => {
-    it('throws when firstName is missing', async () => {
-      const formData = createValidFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where
-      formData.delete('firstName');
+    it('throws when application id is missing', async () => {
+      const formData = createApprovedApplicantFormData();
+      // eslint-disable-next-line drizzle/enforce-delete-with-where -- FormData, not Drizzle
+      formData.delete('applicationId');
 
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when lastName is missing', async () => {
-      const formData = createValidFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where
-      formData.delete('lastName');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when farmName is missing', async () => {
-      const formData = createValidFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where
-      formData.delete('farmName');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when email is missing', async () => {
-      const formData = createValidFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where
-      formData.delete('email');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when email is invalid', async () => {
-      const formData = createValidFormData();
-      formData.set('email', 'not-an-email');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when phone is invalid', async () => {
-      const formData = createValidFormData();
-      formData.set('phone', 'invalid-phone');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when password is missing', async () => {
-      const formData = createValidFormData();
-      // eslint-disable-next-line drizzle/enforce-delete-with-where
-      formData.delete('password');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-
-    it('throws when password is too short', async () => {
-      const formData = createValidFormData();
-      formData.set('password', 'short');
-
-      await expect(signUp(null, formData)).rejects.toThrow();
-    });
-  });
-
-  describe('Supabase signup', () => {
-    it('throws when Supabase signup fails', async () => {
-      vi.mocked(signUpUser).mockResolvedValue(new Error('User already exists'));
-
-      const formData = createValidFormData();
       await expect(signUp(null, formData)).rejects.toThrow(
-        'User already exists'
+        'valid onboarding link'
       );
     });
 
-    it('throws when Supabase returns an AuthError', async () => {
-      vi.mocked(signUpUser).mockResolvedValue(
-        new Error('Email rate limit exceeded')
-      );
+    it('throws when signup token is missing', async () => {
+      const formData = createApprovedApplicantFormData();
+      // eslint-disable-next-line drizzle/enforce-delete-with-where -- FormData, not Drizzle
+      formData.delete('token');
 
-      const formData = createValidFormData();
       await expect(signUp(null, formData)).rejects.toThrow(
-        'Email rate limit exceeded'
+        'valid onboarding link'
+      );
+    });
+
+    it('throws when signup token validation fails', async () => {
+      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue(null);
+
+      const formData = createApprovedApplicantFormData();
+
+      await expect(signUp(null, formData)).rejects.toThrow(
+        'invalid or expired'
       );
     });
   });
 
-  describe('successful signup', () => {
-    it('creates farm and user records on successful signup', async () => {
-      vi.mocked(signUpUser).mockResolvedValue({
-        user: { id: 'supabase-user-id' },
+  describe('approved applicant signup', () => {
+    it('ensures auth session from application token before persisting records', async () => {
+      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue({
+        applicationId: 42,
+        email: 'john@example.com',
       });
 
-      const formData = createValidFormData();
-      const result = await signUp(null, formData);
+      const formData = createApprovedApplicantFormData();
 
-      expect(result.data).toBeDefined();
+      await expect(signUp(null, formData)).rejects.toThrow(
+        'NEXT_REDIRECT:/apply'
+      );
 
-      const data = result.data as {
-        user: typeof user.$inferSelect;
-        farm: { id: number };
-      };
-      expect(data.user).toBeDefined();
-      expect(data.farm).toBeDefined();
+      expect(ensureApprovedApplicantAuthSession).toHaveBeenCalledWith(
+        'john@example.com',
+        'securePassword123',
+        'John'
+      );
+    });
 
-      // Verify farm was created
-      const farms = await db.select().from(farm);
-      expect(farms).toHaveLength(1);
-      expect(farms[0].informalName).toBe('Green Acres');
+    it('persists farm and user before setting password and redirects to /apply', async () => {
+      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue({
+        applicationId: 42,
+        email: 'john@example.com',
+      });
+      vi.mocked(setPassword).mockImplementation(async () => {
+        const farms = await db.select().from(farm);
+        expect(farms).toHaveLength(1);
+        return { error: null };
+      });
 
-      // Verify user was created with correct data
+      const formData = createApprovedApplicantFormData();
+
+      await expect(signUp(null, formData)).rejects.toThrow(
+        'NEXT_REDIRECT:/apply'
+      );
+
+      expect(setPassword).toHaveBeenCalledWith('securePassword123');
+
       const users = await db.select().from(user);
       expect(users).toHaveLength(1);
-      expect(users[0].firstName).toBe('John');
-      expect(users[0].lastName).toBe('Doe');
       expect(users[0].email).toBe('john@example.com');
-      expect(users[0].role).toBe('Admin');
-      expect(users[0].farmId).toBe(farms[0].id);
-
-      // Verify default farm settings were initialized
-      const settingsRows = await db.select().from(standardValues);
-      expect(settingsRows).toHaveLength(1);
-      expect(settingsRows[0].farmId).toBe(farms[0].id);
-    });
-
-    it('returns the created user and farm data', async () => {
-      vi.mocked(signUpUser).mockResolvedValue({
-        user: { id: 'supabase-user-id' },
-      });
-
-      const formData = createValidFormData();
-      const result = await signUp(null, formData);
-
-      const data = result.data as {
-        user: typeof user.$inferSelect;
-        farm: { id: number };
-      };
-      expect(data.user.firstName).toBe('John');
-      expect(data.user.lastName).toBe('Doe');
-      expect(data.user.email).toBe('john@example.com');
-      // Farm returning only includes id
-      expect(data.farm.id).toBeDefined();
-    });
-
-    it('handles phone number preprocessing correctly', async () => {
-      vi.mocked(signUpUser).mockResolvedValue({
-        user: { id: 'supabase-user-id' },
-      });
-
-      const formData = createValidFormData();
-      formData.set('phone', '555-123-4567');
-
-      const result = await signUp(null, formData);
-
-      const users = await db.select().from(user);
-      // Phone should be preprocessed to E.164 format
-      expect(users[0].phone).toMatch(/^\+1\d{10}$/);
     });
   });
 });
