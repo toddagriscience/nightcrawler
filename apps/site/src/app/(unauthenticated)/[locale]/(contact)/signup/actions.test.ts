@@ -9,14 +9,16 @@ import {
   setPassword,
 } from '@/lib/auth-server';
 import { AuthResponseTypes } from '@/lib/types/auth';
+import type { AuthResponse } from '@/lib/types/auth';
 import { validatePlatformAccessSignupToken } from '@nightcrawler/db/queries';
 import { signUp } from './actions';
 
+/** Hoisted without importing `AuthResponseTypes` (imports are not initialized yet). */
 const { successfulSetPasswordResponse } = vi.hoisted(() => ({
   successfulSetPasswordResponse: {
     error: null,
-    responseType: AuthResponseTypes.UpdateUser,
-  },
+    responseType: 3,
+  } satisfies AuthResponse,
 }));
 
 vi.mock('@/lib/auth-server', () => ({
