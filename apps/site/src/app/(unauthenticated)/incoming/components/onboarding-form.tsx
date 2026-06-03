@@ -9,6 +9,7 @@ import { userInfoType } from '@/lib/types/onboarding';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
+import { routing } from '@/i18n/config';
 import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
 import { FormEvent } from 'react';
 
@@ -74,7 +75,9 @@ export default function OnboardingForm({
       });
       if (applicationId) params.set('application_id', applicationId);
       if (token) params.set('token', token);
-      routerPushCallback(`/signup?${params.toString()}`);
+      routerPushCallback(
+        `/${routing.defaultLocale}/signup?${params.toString()}`
+      );
     }
   }
 
