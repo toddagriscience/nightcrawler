@@ -116,12 +116,12 @@ export async function issueApprovedApplicantSignupAccess(
     };
   }
 
-  const incomingPath = buildIncomingSignupPath(answers, {
-    applicationId: application.id,
-    signupToken,
-  });
-
-  if (!incomingPath) {
+  if (
+    !buildIncomingSignupPath(answers, {
+      applicationId: application.id,
+      signupToken,
+    })
+  ) {
     return {
       application,
       signupUrl,
@@ -130,10 +130,19 @@ export async function issueApprovedApplicantSignupAccess(
     };
   }
 
+  if (!signupUrl) {
+    return {
+      application,
+      signupUrl: null,
+      emailSent: false,
+      emailError: 'Could not build onboarding URL from application answers.',
+    };
+  }
+
   const inviteResult = await sendApprovedApplicantInvite({
     email: prefill.email,
     firstName: prefill.firstName,
-    incomingPath,
+    onboardingUrl: signupUrl,
   });
 
   if (inviteResult.sent) {
