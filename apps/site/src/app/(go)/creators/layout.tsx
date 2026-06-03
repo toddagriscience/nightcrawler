@@ -1,13 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { env } from '@/lib/env';
+import { siteConfig } from '@/lib/metadata';
 import { Metadata } from 'next';
 
 export async function generateMetadata({}: {}): Promise<Metadata> {
   return {
     metadataBase: new URL('https://go.toddagriscience.com'),
     title: {
-      absolute: `Todd Creator Program | Todd United States`,
+      absolute: `Todd Creator Program | ${siteConfig.name}`,
     },
     description: 'Help us make a impact on society.',
     openGraph: {
