@@ -2,7 +2,7 @@
 
 import { FadeIn, SmoothScroll } from '@/components/common';
 import { routing } from '@/i18n/config';
-import { env } from '@/lib/env';
+import { getLocalizedUrl } from '@/lib/locale-utils';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
@@ -43,7 +43,7 @@ export async function generateMetadata({
     openGraph: {
       title: 'Todd | Global Leader in Sustainable Agriculture',
       description: t('description'),
-      url: `${env.baseUrl}/${locale}`,
+      url: getLocalizedUrl(locale, '/'),
       siteName: siteConfig.name,
       locale: ogLocale,
       type: 'website',
