@@ -8,12 +8,20 @@ import {
   getUserEmail,
   setPassword,
 } from '@/lib/auth-server';
+import { AuthResponseTypes } from '@/lib/types/auth';
 import { validatePlatformAccessSignupToken } from '@nightcrawler/db/queries';
 import { signUp } from './actions';
 
+const { successfulSetPasswordResponse } = vi.hoisted(() => ({
+  successfulSetPasswordResponse: {
+    error: null,
+    responseType: AuthResponseTypes.UpdateUser,
+  },
+}));
+
 vi.mock('@/lib/auth-server', () => ({
   getUserEmail: vi.fn().mockResolvedValue(null),
-  setPassword: vi.fn().mockResolvedValue({ error: null }),
+  setPassword: vi.fn().mockResolvedValue(successfulSetPasswordResponse),
   ensureApprovedApplicantAuthSession: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -88,7 +96,7 @@ describe('signUp', () => {
     vi.mocked(getUserEmail).mockReset();
     vi.mocked(getUserEmail).mockResolvedValue('john@example.com');
     vi.mocked(setPassword).mockReset();
-    vi.mocked(setPassword).mockResolvedValue({ error: null });
+    vi.mocked(setPassword).mockResolvedValue(successfulSetPasswordResponse);
     vi.mocked(ensureApprovedApplicantAuthSession).mockReset();
     vi.mocked(ensureApprovedApplicantAuthSession).mockResolvedValue(undefined);
     vi.mocked(validatePlatformAccessSignupToken).mockReset();
@@ -175,7 +183,7 @@ describe('signUp', () => {
       vi.mocked(setPassword).mockImplementation(async () => {
         const farms = await db.select().from(farm);
         expect(farms).toHaveLength(1);
-        return { error: null };
+        return successfulSetPasswordResponse;
       });
 
       const formData = createApprovedApplicantFormData();
