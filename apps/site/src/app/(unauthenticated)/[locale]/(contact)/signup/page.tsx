@@ -1,7 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { getUserEmail } from '@/lib/auth-server';
-import { validatePlatformAccessSignupToken } from '@nightcrawler/db/queries';
+import {
+  isPlatformAccessSignupAlreadyCompleted,
+  validatePlatformAccessSignupToken,
+} from '@nightcrawler/db/queries';
 import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
 import { redirect } from 'next/navigation';
 import ApprovedApplicantGate from './components/approved-applicant-gate';
@@ -25,7 +28,7 @@ function readSearchParam(params: SignupPageSearchParams, key: string): string {
   return value ?? '';
 }
 
-/** Both outbound (/incoming) and inbound (/en/contact) onboarding redirect here for the password step.
+/** Password step for approved platform-access applicants (`/incoming` → `/en/signup`).
  *
  * @param props - Page props including search params
  */
@@ -43,45 +46,66 @@ export default async function Join({
   const applicationId = readSearchParam(params, 'application_id');
   const token = readSearchParam(params, 'token');
 
+  if (!applicationId || !token) {
+    redirect('/contact');
+  }
+
   if (!firstName || !lastName || !farmName || !email || !phone) {
     redirect('/contact');
   }
 
-  const isApprovedApplicantSignup = Boolean(applicationId && token);
+  const parsedApplicationId = Number.parseInt(applicationId, 10);
 
-  if (isApprovedApplicantSignup) {
-    const parsedApplicationId = Number.parseInt(applicationId, 10);
+  if (!Number.isFinite(parsedApplicationId)) {
+    return (
+      <ApprovedApplicantGate
+        email={email}
+        reason="invalid-link"
+        token={token}
+      />
+    );
+  }
 
-    if (!Number.isFinite(parsedApplicationId)) {
-      return <ApprovedApplicantGate email={email} reason="invalid-link" />;
-    }
+  const validatedApplication = await validatePlatformAccessSignupToken(
+    parsedApplicationId,
+    token,
+    email
+  );
 
-    const validatedApplication = await validatePlatformAccessSignupToken(
+  if (!validatedApplication) {
+    const alreadyCompleted = await isPlatformAccessSignupAlreadyCompleted(
       parsedApplicationId,
       token,
       email
     );
 
-    if (!validatedApplication) {
-      return <ApprovedApplicantGate email={email} reason="invalid-link" />;
+    if (alreadyCompleted) {
+      redirect('/apply');
     }
 
-    const sessionEmail = await getUserEmail();
-
-    if (!sessionEmail) {
-      return <ApprovedApplicantGate email={email} reason="missing-session" />;
-    }
-
-    if (sessionEmail.toLowerCase() !== email.toLowerCase()) {
-      return (
-        <ApprovedApplicantGate
-          email={email}
-          reason="email-mismatch"
-          sessionEmail={sessionEmail}
-        />
-      );
-    }
+    return (
+      <ApprovedApplicantGate
+        email={email}
+        reason="invalid-link"
+        applicationId={parsedApplicationId}
+        token={token}
+      />
+    );
   }
 
-  return <SignupForm isApprovedApplicantSignup={isApprovedApplicantSignup} />;
+  const sessionEmail = await getUserEmail();
+
+  if (sessionEmail && sessionEmail.toLowerCase() !== email.toLowerCase()) {
+    return (
+      <ApprovedApplicantGate
+        email={email}
+        reason="email-mismatch"
+        sessionEmail={sessionEmail}
+        applicationId={parsedApplicationId}
+        token={token}
+      />
+    );
+  }
+
+  return <SignupForm isApprovedApplicantSignup />;
 }

@@ -240,7 +240,11 @@ export default function ApplicationDetailClient({
 
       {signupUrl ? (
         <div className="rounded-md border p-4 text-sm break-all">
-          <p className="font-medium mb-2">Signup link</p>
+          <p className="font-medium mb-2">Onboarding link (fallback)</p>
+          <p className="text-muted-foreground mb-2">
+            Same link as the approval email. Applicant confirms details at
+            /incoming, then sets a password to finish account setup.
+          </p>
           <p>{signupUrl}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button

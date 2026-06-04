@@ -12,7 +12,8 @@
     "./types": "./src/types/index.ts",
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
-    "./utils/normalize-phone": "./src/utils/normalize-phone.ts"
+    "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
+    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts"
   },
   "scripts": {
     "lint": "eslint .",
