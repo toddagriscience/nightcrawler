@@ -3,8 +3,14 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { formatPrice } from '@/lib/order/utils';
-import type { SearchResultCardProps } from '../types';
+import type { SearchResultCardProps } from './types';
 
+/**
+ * Renders a single search result (IMP or seed product) as a linked card.
+ *
+ * @param props.result - The search result to display
+ * @returns A card linking to the result's detail page
+ */
 export function SearchResultCard({ result }: SearchResultCardProps) {
   const href =
     result.resultType === 'seed'

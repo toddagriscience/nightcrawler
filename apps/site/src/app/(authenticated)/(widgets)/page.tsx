@@ -20,6 +20,8 @@ import { SearchNavForm } from '@/components/common/authenticated-header/componen
 import ZoneSidebar from '../components/zone-sidebar/zone-sidebar';
 import CurrentTab from '../components/tabs/current-tab';
 import { NamedTab } from '../components/tabs/types';
+import { SearchPanelProvider } from '@/app/(authenticated)/components/search-panel/search-panel-provider';
+import { SearchPanel } from '@/app/(authenticated)/components/search-panel/search-panel';
 
 // -- Commented out: tab-based imports (kept for future use) ---
 //import PlatformTabContent from '../components/tabs/tab-content';
@@ -86,7 +88,7 @@ export default async function DashboardPage({
           >
             {(
               [
-                { href: '/search', label: 'Search knowledge base' },
+                { href: '/', label: 'Search knowledge base' },
                 { href: '/order', label: 'Orders' },
                 { href: '/contact', label: 'Contact' },
                 { href: '/account', label: 'Account' },
@@ -133,45 +135,48 @@ export default async function DashboardPage({
   );
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header — full width, same as before */}
-      <header
-        className="flex w-full items-center justify-between px-3 pt-3 pb-2"
-        role="banner"
-      >
-        <ToddHeader className="flex scale-90 flex-row items-center" />
-        <div className="flex flex-row items-center gap-6">
-          <SearchNavForm />
-          {canEdit ? (
-            <AddWidgetDropdown
-              managementZoneId={selectedZone.id}
-              availableWidgets={availableWidgets}
-            >
-              <Button
-                size="sm"
-                variant="default"
-                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
-  focus-visible:ring-offset-transparent!"
+    <SearchPanelProvider>
+      <div className="flex h-screen flex-col">
+        {/* Header — full width, same as before */}
+        <header
+          className="flex w-full items-center justify-between px-3 pt-3 pb-2"
+          role="banner"
+        >
+          <ToddHeader className="flex scale-90 flex-row items-center" />
+          <div className="flex flex-row items-center gap-6">
+            <SearchNavForm />
+            {canEdit ? (
+              <AddWidgetDropdown
+                managementZoneId={selectedZone.id}
+                availableWidgets={availableWidgets}
               >
-                Add widget
-              </Button>
-            </AddWidgetDropdown>
-          ) : null}
-          <NavLinks />
-        </div>
-      </header>
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
+    focus-visible:ring-offset-transparent!"
+                >
+                  Add widget
+                </Button>
+              </AddWidgetDropdown>
+            ) : null}
+            <NavLinks />
+          </div>
+        </header>
 
-      {/* Body — sidebar + content */}
-      <div className="flex flex-1 overflow-hidden">
-        <ZoneSidebar
-          managementZones={allManagementZones}
-          canEdit={canEdit}
-          userId={String(currentUser.id)}
-        />
-        <main className="flex-1 overflow-auto">
-          <CurrentTab currentTab={selectedTab} />
-        </main>
+        {/* Body — sidebar + content + search panel */}
+        <div className="flex flex-1 overflow-hidden">
+          <ZoneSidebar
+            managementZones={allManagementZones}
+            canEdit={canEdit}
+            userId={String(currentUser.id)}
+          />
+          <main className="flex-1 overflow-auto">
+            <CurrentTab currentTab={selectedTab} />
+          </main>
+          <SearchPanel />
+        </div>
       </div>
-    </div>
+    </SearchPanelProvider>
   );
 }

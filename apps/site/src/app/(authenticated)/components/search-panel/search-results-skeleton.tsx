@@ -3,6 +3,12 @@
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
+/**
+ * Loading placeholder shown while a search request is in flight.
+ *
+ * @param props.count - Number of skeleton cards to render
+ * @returns A list of skeleton result cards
+ */
 export function SearchResultsSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="space-y-4" aria-live="polite" aria-busy="true">
