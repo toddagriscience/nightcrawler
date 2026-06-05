@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createClient } from '@/lib/supabase/server';
+import { resolveAuthConfirmRedirectTarget } from '@/lib/utils/resolve-auth-confirm-redirect';
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -14,15 +15,15 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type') as EmailOtpType | null;
-  const requestedNext = searchParams.get('next');
-  const next =
-    requestedNext &&
-    requestedNext.startsWith('/') &&
-    !requestedNext.startsWith('//')
-      ? requestedNext
-      : '/';
   const redirectTo = request.nextUrl.clone();
-  redirectTo.pathname = next;
+  const { pathname, search } = await resolveAuthConfirmRedirectTarget({
+    applicationIdParam: searchParams.get('application_id'),
+    signupTokenParam: searchParams.get('signup_token'),
+    requestedNext: searchParams.get('next'),
+    origin: request.nextUrl.origin,
+  });
+  redirectTo.pathname = pathname;
+  redirectTo.search = search;
 
   if (token_hash && type) {
     const supabase = await createClient();
