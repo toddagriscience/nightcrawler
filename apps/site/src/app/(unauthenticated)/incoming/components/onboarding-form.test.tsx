@@ -6,13 +6,9 @@ import '@testing-library/jest-dom';
 import { describe, it, expect, vi } from 'vitest';
 import OnboardingForm from './onboarding-form';
 
-// Mock useSearchParams from next/navigation
-const mockGet = vi.fn();
 const mockPush = vi.fn();
+
 vi.mock('next/navigation', () => ({
-  useSearchParams: () => ({
-    get: mockGet,
-  }),
   useRouter: vi.fn(() => ({
     push: mockPush,
     replace: vi.fn(),
@@ -22,8 +18,8 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('OnboardingForm component', () => {
-  it('calls routerPushCallback with correct URL parameters on form submission', async () => {
-    const mockRouterPushCallback = vi.fn();
+  it('navigates to localized signup with URL parameters on form submission', async () => {
+    mockPush.mockClear();
 
     render(
       <OnboardingForm
@@ -32,7 +28,6 @@ describe('OnboardingForm component', () => {
         farmName="Sunny Farms"
         email="jane@sunny.com"
         phone="5559876543"
-        routerPushCallback={mockRouterPushCallback}
       />
     );
 
@@ -40,8 +35,8 @@ describe('OnboardingForm component', () => {
     await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(mockRouterPushCallback).toHaveBeenCalledTimes(1);
-      const calledUrl = mockRouterPushCallback.mock.calls[0][0];
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
       expect(calledUrl).toContain('/en/signup?');
       expect(calledUrl).toContain('first_name=Jane');
       expect(calledUrl).toContain('last_name=Smith');
@@ -51,9 +46,9 @@ describe('OnboardingForm component', () => {
     });
   });
 
-  it('calls routerPushCallback with updated values when form is edited', async () => {
+  it('navigates with updated values when form is edited', async () => {
     const user = userEvent.setup();
-    const mockRouterPushCallback = vi.fn();
+    mockPush.mockClear();
 
     render(
       <OnboardingForm
@@ -62,16 +57,13 @@ describe('OnboardingForm component', () => {
         farmName="Sunny Farms"
         email="jane@sunny.com"
         phone="5559876543"
-        routerPushCallback={mockRouterPushCallback}
       />
     );
 
-    // Edit the first name
     const firstNameInput = screen.getByPlaceholderText('First Name');
     await user.clear(firstNameInput);
     await user.type(firstNameInput, 'Janet');
 
-    // Edit the farm name
     const farmNameInput = screen.getByPlaceholderText('Farm Name');
     await user.clear(farmNameInput);
     await user.type(farmNameInput, 'New Farm Name');
@@ -80,8 +72,8 @@ describe('OnboardingForm component', () => {
     await user.click(submitButton);
 
     await waitFor(() => {
-      expect(mockRouterPushCallback).toHaveBeenCalledTimes(1);
-      const calledUrl = mockRouterPushCallback.mock.calls[0][0];
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      const calledUrl = mockPush.mock.calls[0][0];
       expect(calledUrl).toContain('/en/signup?');
       expect(calledUrl).toContain('first_name=Janet');
       expect(calledUrl).toContain('farm_name=New+Farm+Name');

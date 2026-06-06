@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import type { SanityFormField } from '@/lib/sanity/form-types';
 import { ErrorMessage } from '@hookform/error-message';
+import { useTranslations } from 'next-intl';
 import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { MarketingFilterDropdown } from '../../../components/marketing-filter-dropdown';
@@ -53,6 +54,7 @@ export function FormFieldRenderer({
   register,
   errors,
 }: FormFieldRendererProps) {
+  const t = useTranslations('formsPage');
   const requiredMark = field.required ? ' *' : '';
 
   if (field.type === 'yesNo') {
@@ -201,7 +203,7 @@ export function FormFieldRenderer({
                 }
                 onValueChange={controllerField.onChange}
                 options={options}
-                placeholder="Select an option"
+                placeholder={t('selectPlaceholder')}
                 ariaLabel={field.label}
                 matchTriggerWidth
               />

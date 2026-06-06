@@ -1,32 +1,50 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
-import { useRouter, useSearchParams } from 'next/navigation';
 import OnboardingForm from './components/onboarding-form';
 
-/** This is more commonly referred to as "outbound onboarding". I.e, we've contacted a client and they've agreed to join our platform, and this is the form that we send them.
- *
- * @returns {JSX.Element} The onboarding form */
-export default function Onboarding() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+/** Search params accepted by the incoming onboarding page. */
+type IncomingPageSearchParams = Record<string, string | string[] | undefined>;
 
-  function routerPushCallback(route: string) {
-    router.push(route);
+/**
+ * Reads a single string value from Next.js search params.
+ *
+ * @param params - Page search params
+ * @param key - Query key to read
+ */
+function readSearchParam(
+  params: IncomingPageSearchParams,
+  key: string
+): string {
+  const value = params[key];
+  if (Array.isArray(value)) {
+    return value[0] ?? '';
   }
+
+  return value ?? '';
+}
+
+/**
+ * Outbound onboarding confirm step (`/incoming` → localized signup).
+ *
+ * @param props - Page search params with applicant prefill
+ */
+export default async function Onboarding({
+  searchParams,
+}: {
+  searchParams: Promise<IncomingPageSearchParams>;
+}) {
+  const params = await searchParams;
 
   return (
     <OnboardingForm
-      firstName={searchParams.get('first_name') || ''}
-      lastName={searchParams.get('last_name') || ''}
-      farmName={searchParams.get('farm_name') || ''}
-      email={searchParams.get('email') || ''}
-      phone={normalizePhoneForUrl(searchParams.get('phone') || '')}
-      applicationId={searchParams.get('application_id') || ''}
-      token={searchParams.get('token') || ''}
-      routerPushCallback={routerPushCallback}
+      firstName={readSearchParam(params, 'first_name')}
+      lastName={readSearchParam(params, 'last_name')}
+      farmName={readSearchParam(params, 'farm_name')}
+      email={readSearchParam(params, 'email')}
+      phone={normalizePhoneForUrl(readSearchParam(params, 'phone'))}
+      applicationId={readSearchParam(params, 'application_id')}
+      token={readSearchParam(params, 'token')}
     />
   );
 }

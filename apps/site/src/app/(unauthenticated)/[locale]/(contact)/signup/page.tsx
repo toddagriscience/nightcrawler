@@ -30,28 +30,34 @@ function readSearchParam(params: SignupPageSearchParams, key: string): string {
 
 /** Password step for approved platform-access applicants (`/incoming` → `/en/signup`).
  *
- * @param props - Page props including search params
+ * @param props - Page props including locale and search params
  */
 export default async function Join({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<SignupPageSearchParams>;
 }) {
-  const params = await searchParams;
-  const firstName = readSearchParam(params, 'first_name');
-  const lastName = readSearchParam(params, 'last_name');
-  const farmName = readSearchParam(params, 'farm_name');
-  const email = readSearchParam(params, 'email');
-  const phone = normalizePhoneForUrl(readSearchParam(params, 'phone'));
-  const applicationId = readSearchParam(params, 'application_id');
-  const token = readSearchParam(params, 'token');
+  const { locale } = await params;
+  const contactPath = `/${locale}/contact`;
+  const resolvedSearchParams = await searchParams;
+  const firstName = readSearchParam(resolvedSearchParams, 'first_name');
+  const lastName = readSearchParam(resolvedSearchParams, 'last_name');
+  const farmName = readSearchParam(resolvedSearchParams, 'farm_name');
+  const email = readSearchParam(resolvedSearchParams, 'email');
+  const phone = normalizePhoneForUrl(
+    readSearchParam(resolvedSearchParams, 'phone')
+  );
+  const applicationId = readSearchParam(resolvedSearchParams, 'application_id');
+  const token = readSearchParam(resolvedSearchParams, 'token');
 
   if (!applicationId || !token) {
-    redirect('/contact');
+    redirect(contactPath);
   }
 
   if (!firstName || !lastName || !farmName || !email || !phone) {
-    redirect('/contact');
+    redirect(contactPath);
   }
 
   const parsedApplicationId = Number.parseInt(applicationId, 10);

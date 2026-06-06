@@ -39,7 +39,7 @@ export default async function ApplicationDetailPage({
   }
 
   const signupUrl =
-    application.status === 'approved'
+    application.status === 'approved' && !application.signedUpAt
       ? buildIncomingSignupUrl(
           getSiteBaseUrl(),
           (application.answers ?? {}) as Record<string, unknown>,

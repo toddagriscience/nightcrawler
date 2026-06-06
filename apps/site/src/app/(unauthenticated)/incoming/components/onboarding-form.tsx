@@ -11,6 +11,7 @@ import { userInfo } from '@/lib/zod-schemas/onboarding';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { routing } from '@/i18n/config';
 import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
+import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
 
 /**
@@ -32,7 +33,6 @@ export default function OnboardingForm({
   phone = '',
   applicationId = '',
   token = '',
-  routerPushCallback,
 }: {
   firstName: string;
   lastName: string;
@@ -41,8 +41,8 @@ export default function OnboardingForm({
   phone: string;
   applicationId?: string;
   token?: string;
-  routerPushCallback: (route: string) => void;
 }) {
+  const router = useRouter();
   // This page isn't using `handleSubmit()` becaues I was having trouble getting it working.
   const {
     register,
@@ -75,9 +75,7 @@ export default function OnboardingForm({
       });
       if (applicationId) params.set('application_id', applicationId);
       if (token) params.set('token', token);
-      routerPushCallback(
-        `/${routing.defaultLocale}/signup?${params.toString()}`
-      );
+      router.push(`/${routing.defaultLocale}/signup?${params.toString()}`);
     }
   }
 
