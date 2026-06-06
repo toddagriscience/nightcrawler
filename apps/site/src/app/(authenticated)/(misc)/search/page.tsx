@@ -2,7 +2,7 @@
 
 import { searchKnowledge } from '@/lib/ai/search';
 import { logger } from '@/lib/logger';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { SearchClient } from './search-client';
 
 /**
@@ -15,13 +15,7 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string | string[] }>;
 }) {
-  await getAuthenticatedInfo();
-
-  // Open platform access; farm.approved still used for ApplicationReviewBanner
-  // and internal tooling. Old guard after getAuthenticatedInfo():
-  // if (!currentUser.approved) {
-  //   notFound();
-  // }
+  await requirePlatformOnboardingComplete();
 
   const params = await searchParams;
   const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q;

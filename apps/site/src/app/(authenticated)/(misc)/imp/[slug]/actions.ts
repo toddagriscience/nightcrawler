@@ -11,6 +11,7 @@ import {
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { hasCompletedPlatformOnboarding } from '@/lib/utils/platform-onboarding';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
@@ -25,11 +26,14 @@ export async function saveImpNotes(
 
     const currentUser = await getAuthenticatedInfo();
 
-    // Open platform access; farm.approved still used for ApplicationReviewBanner
-    // and internal tooling. Previously:
-    // if (!currentUser.approved) {
-    //   throwActionError('Your farm is not approved to access IMPs.');
-    // }
+    const onboardingComplete = await hasCompletedPlatformOnboarding(
+      currentUser.id,
+      currentUser.approved
+    );
+
+    if (!onboardingComplete) {
+      throwActionError('Finish onboarding at /apply before accessing IMPs.');
+    }
 
     const [article] = await db
       .select({

@@ -1,16 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
+import MiscAuthenticatedShell from './components/misc-authenticated-shell';
 
+/**
+ * Layout for authenticated misc routes. Hides the platform header on `/apply`.
+ *
+ * @param props.children - Nested misc route content
+ */
 export default function AuthenticatedHeaderLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <AuthenticatedHeader />
-      {children}
-    </>
-  );
+  return <MiscAuthenticatedShell>{children}</MiscAuthenticatedShell>;
 }
