@@ -38,7 +38,7 @@ export default function SidebarNavItem({
         }
       `}
     >
-      <span className="size-4 shrink-0 opacity-60">{icon}</span>
+      <span className="size-4 shrink-0 opacity-60" aria-hidden="true">{icon}</span>
       {children}
     </Link>
   );

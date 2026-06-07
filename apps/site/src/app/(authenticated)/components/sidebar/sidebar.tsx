@@ -22,55 +22,55 @@ export default async function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 px-3 py-2" aria-label="Main navigation">
         <SidebarSectionLabel>Discovery</SidebarSectionLabel>
-        <SidebarNavItem href="/search" icon={<Search size={16} />}>
+        <SidebarNavItem href="/search" icon={<Search />}>
           Search
         </SidebarNavItem>
-        <SidebarNavItem href="/search" icon={<BookOpen size={16} />}>
+        <SidebarNavItem href="/search" icon={<BookOpen />}>
           IMPs
         </SidebarNavItem>
 
         <SidebarSectionLabel>My Farm</SidebarSectionLabel>
-        <SidebarNavItem href="/" icon={<LayoutDashboard size={16} />}>
+        <SidebarNavItem href="/" icon={<LayoutDashboard />}>
           Dashboard
         </SidebarNavItem>
         <SidebarNavItem
           href="/account/management-zones"
-          icon={<Map size={16} />}
+          icon={<Map />}
           prefixMatch
         >
           Zones
         </SidebarNavItem>
         <SidebarNavItem
           href="/account/farm/profile"
-          icon={<User size={16} />}
+          icon={<User />}
         >
           Farm Profile
         </SidebarNavItem>
 
         <SidebarSectionLabel>Tools</SidebarSectionLabel>
-        <SidebarNavItem href="/order" icon={<ShoppingCart size={16} />}>
+        <SidebarNavItem href="/order" icon={<ShoppingCart />}>
           Order
         </SidebarNavItem>
-        <SidebarNavItem href="/contact" icon={<Mail size={16} />}>
+        <SidebarNavItem href="/contact" icon={<Mail />}>
           Contact
         </SidebarNavItem>
 
         <SidebarSectionLabel>Account</SidebarSectionLabel>
-        <SidebarNavItem href="/account" icon={<Settings size={16} />}>
+        <SidebarNavItem href="/account" icon={<Settings />}>
           Account
         </SidebarNavItem>
-        <SidebarNavItem href="/account/users" icon={<Users size={16} />}>
+        <SidebarNavItem href="/account/users" icon={<Users />}>
           Users
         </SidebarNavItem>
-        <SidebarNavItem href="/account/security" icon={<Shield size={16} />}>
+        <SidebarNavItem href="/account/security" icon={<Shield />}>
           Security
         </SidebarNavItem>
-        <SidebarNavItem href="/account/privacy" icon={<Lock size={16} />}>
+        <SidebarNavItem href="/account/privacy" icon={<Lock />}>
           Privacy
         </SidebarNavItem>
 
         <SidebarSectionLabel>System</SidebarSectionLabel>
-        <SidebarNavItem href="/reminders" icon={<Bell size={16} />}>
+        <SidebarNavItem href="/reminders" icon={<Bell />}>
           Reminders
         </SidebarNavItem>
       </nav>
