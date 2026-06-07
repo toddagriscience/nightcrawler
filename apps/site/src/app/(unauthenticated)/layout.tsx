@@ -41,7 +41,7 @@ const organizationStructuredData: WithContext<Organization> = {
   logo: 'https://toddagriscience.com/icon.png',
   name: 'Todd',
   description:
-    'Todd is a frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture.',
+    'Todd is the frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture.',
   founder: {
     '@type': 'Person',
     name: 'Vincent Todd',
