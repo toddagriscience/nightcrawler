@@ -46,11 +46,30 @@ export default async function AccountPage() {
       </div>
 
       <AccountInfoSection title="Account terms">
-        {stripeData.renewal && <AccountInfoRow label="Renewal" value={stripeData.renewal} />}
-        {stripeData.billingCycle && <AccountInfoRow label="Billing cycle" value={stripeData.billingCycle} />}
-        {stripeData.nextBillingDate && <AccountInfoRow label="Next billing date" value={stripeData.nextBillingDate} />}
-        {stripeData.nextPayment && <AccountInfoRow label="Next payment" value={stripeData.nextPayment} />}
-        {stripeData.paymentMethod && <AccountInfoRow label="Payment method" value={stripeData.paymentMethod} />}
+        {stripeData.renewal && (
+          <AccountInfoRow label="Renewal" value={stripeData.renewal} />
+        )}
+        {stripeData.billingCycle && (
+          <AccountInfoRow
+            label="Billing cycle"
+            value={stripeData.billingCycle}
+          />
+        )}
+        {stripeData.nextBillingDate && (
+          <AccountInfoRow
+            label="Next billing date"
+            value={stripeData.nextBillingDate}
+          />
+        )}
+        {stripeData.nextPayment && (
+          <AccountInfoRow label="Next payment" value={stripeData.nextPayment} />
+        )}
+        {stripeData.paymentMethod && (
+          <AccountInfoRow
+            label="Payment method"
+            value={stripeData.paymentMethod}
+          />
+        )}
         <AccountInfoRow
           label="Client since"
           value={accountFarmData.farm.createdAt.toLocaleString().split(',')[0]}
@@ -60,7 +79,7 @@ export default async function AccountPage() {
       <div className="mt-5 flex justify-end px-0.5">
         <Link
           href={'/contact'}
-          className="text-normal text-sm leading-none font-normal text-[#ff4d00] hover:opacity-80"
+          className="text-normal text-sm leading-none font-normal text-orange-600 hover:opacity-80"
         >
           Request deactivation
         </Link>
