@@ -24,7 +24,7 @@ export default function SidebarClient() {
       <div className="flex md:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="m-2">
+            <Button variant="ghost" size="icon" className="m-2" aria-label="Open navigation menu">
               <Menu className="size-5" />
             </Button>
           </SheetTrigger>
