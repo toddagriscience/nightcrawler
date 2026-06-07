@@ -21,9 +21,7 @@ export default function SidebarNavItem({
   prefixMatch = false,
 }: SidebarNavItemProps) {
   const pathname = usePathname();
-  const isActive = prefixMatch
-    ? pathname.startsWith(href)
-    : pathname === href;
+  const isActive = prefixMatch ? pathname.startsWith(href) : pathname === href;
 
   return (
     <Link
@@ -38,7 +36,9 @@ export default function SidebarNavItem({
         }
       `}
     >
-      <span className="size-4 shrink-0 opacity-60" aria-hidden="true">{icon}</span>
+      <span className="size-4 shrink-0 opacity-60" aria-hidden="true">
+        {icon}
+      </span>
       {children}
     </Link>
   );

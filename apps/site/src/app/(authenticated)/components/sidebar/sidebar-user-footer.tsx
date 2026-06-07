@@ -11,9 +11,7 @@ interface SidebarUserFooterProps {
 export default function SidebarUserFooter({ email }: SidebarUserFooterProps) {
   return (
     <div className="border-t border-[var(--border)] px-4 py-4">
-      <div className="text-xs text-muted-foreground mb-2 truncate">
-        {email}
-      </div>
+      <div className="text-xs text-muted-foreground mb-2 truncate">{email}</div>
       <form
         action={async () => {
           'use server';

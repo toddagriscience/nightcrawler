@@ -31,7 +31,10 @@ function ReminderItem({ reminder: r }: { reminder: Reminder }) {
 
   return (
     <div className="flex gap-3 py-4 border-b border-[var(--border)] last:border-b-0">
-      <Icon aria-hidden="true" className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type]}`} />
+      <Icon
+        aria-hidden="true"
+        className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type]}`}
+      />
       <div className="flex-1 min-w-0">
         {r.href ? (
           <a
@@ -92,7 +95,10 @@ export default async function RemindersPage() {
 
       {reminders.length === 0 ? (
         <div role="status" aria-live="polite" className="py-16 text-center">
-          <Bell aria-hidden="true" className="size-8 mx-auto text-muted-foreground/40 mb-3" />
+          <Bell
+            aria-hidden="true"
+            className="size-8 mx-auto text-muted-foreground/40 mb-3"
+          />
           <p className="text-foreground font-medium">You're all caught up.</p>
           <p className="text-sm text-muted-foreground mt-1">
             System notifications will appear here.

@@ -4,7 +4,20 @@ import Link from 'next/link';
 import SidebarSectionLabel from './sidebar-section-label';
 import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
-import { Search, BookOpen, LayoutDashboard, Map, User, ShoppingCart, Mail, Settings, Bell, Users, Shield, Lock } from 'lucide-react';
+import {
+  Search,
+  BookOpen,
+  LayoutDashboard,
+  Map,
+  User,
+  ShoppingCart,
+  Mail,
+  Settings,
+  Bell,
+  Users,
+  Shield,
+  Lock,
+} from 'lucide-react';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 
 export default async function Sidebar() {
@@ -14,7 +27,10 @@ export default async function Sidebar() {
     <aside className="w-[280px] shrink-0 border-r border-[var(--border)] bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
       {/* Brand */}
       <div className="px-4 py-5 border-b border-[var(--border)]">
-        <Link href="/" className="text-foreground font-bold text-base tracking-wide wordmark">
+        <Link
+          href="/"
+          className="text-foreground font-bold text-base tracking-wide wordmark"
+        >
           TODD
         </Link>
       </div>
@@ -40,10 +56,7 @@ export default async function Sidebar() {
         >
           Zones
         </SidebarNavItem>
-        <SidebarNavItem
-          href="/account/farm/profile"
-          icon={<User />}
-        >
+        <SidebarNavItem href="/account/farm/profile" icon={<User />}>
           Farm Profile
         </SidebarNavItem>
 
