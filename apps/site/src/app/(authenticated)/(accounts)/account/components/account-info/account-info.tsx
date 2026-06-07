@@ -42,7 +42,9 @@ export function AccountInfoSection({
   return (
     <div className="mt-10 first:mt-0">
       <h3 className="text-foreground text-xl font-normal">{title}</h3>
-      <div className="border-[var(--border)] mt-3 border-t px-0.5">{children}</div>
+      <div className="border-[var(--border)] mt-3 border-t px-0.5">
+        {children}
+      </div>
     </div>
   );
 }

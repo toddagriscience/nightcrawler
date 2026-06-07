@@ -20,6 +20,10 @@ function AccountLayoutFallback() {
   );
 }
 
-export default function AccountLayout({ children }: { children: React.ReactNode }) {
+export default function AccountLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <Suspense fallback={<AccountLayoutFallback />}>{children}</Suspense>;
 }
