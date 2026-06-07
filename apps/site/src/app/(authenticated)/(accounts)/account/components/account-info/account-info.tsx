@@ -6,8 +6,8 @@ import type { ReactNode } from 'react';
 type AccountInfoStatusTone = 'success' | 'warning';
 
 const statusStyles: Record<AccountInfoStatusTone, string> = {
-  success: 'text-[#00bc1d]',
-  warning: 'text-[#ff4d00]',
+  success: 'text-green-600',
+  warning: 'text-orange-600',
 };
 
 export default function AccountInfo({
@@ -42,7 +42,7 @@ export function AccountInfoSection({
   return (
     <div className="mt-10 first:mt-0">
       <h3 className="text-foreground text-xl font-normal">{title}</h3>
-      <div className="border-[#D9D9D9] mt-3 border-t px-0.5">{children}</div>
+      <div className="border-[var(--border)] mt-3 border-t px-0.5">{children}</div>
     </div>
   );
 }
@@ -89,7 +89,7 @@ export function AccountInfoRow({
     return (
       <Link
         href={href}
-        className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
+        className="border-[var(--border)] flex min-h-11 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
       >
         <span className="text-muted-foreground text-sm mx-0.5">{label}</span>
         <div className="flex items-center gap-1.5">
@@ -102,7 +102,7 @@ export function AccountInfoRow({
   }
 
   return (
-    <div className="border-[#D9D9D9] flex min-h-11 items-center justify-between gap-4 border-b py-2">
+    <div className="border-[var(--border)] flex min-h-11 items-center justify-between gap-4 border-b py-2">
       <span className="text-foreground text-sm mx-0.5">{label}</span>
       <div className="flex items-center gap-1.5">
         <span className="text-sm text-foreground/70 mx-0.5">

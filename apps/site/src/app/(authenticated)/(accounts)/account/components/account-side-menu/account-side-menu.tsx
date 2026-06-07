@@ -30,7 +30,7 @@ export default function AccountSideMenu() {
 
   return (
     <aside className="w-[190px] shrink-0 mt-1">
-      <div className="border-t border-[#D9D9D9] pt-4">
+      <div className="border-t border-[var(--border)] pt-4">
         <nav className="space-y-2.5" aria-label="Account sections">
           {sideMenuItems.map((item) => {
             const isActive = pathname === item.href;
@@ -57,7 +57,7 @@ export default function AccountSideMenu() {
         <Button
           type="button"
           onClick={handleLogout}
-          className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
+          className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70"
         >
           <span className="text-sm font-normal">Log out</span>
           <BiLogOut className="size-5" />

@@ -223,13 +223,6 @@ body::-webkit-scrollbar-thumb:hover,
   background-position: 0 100%;
 }
 
-/* Header theme transitions */
-header {
-  transition:
-    background-color 1.2s ease-in-out,
-    color 1.2s ease-in-out;
-}
-
 /* Header hover effects - adapts to theme */
 .nav-hover-cursor {
   transition:

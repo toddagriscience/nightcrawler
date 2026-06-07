@@ -46,17 +46,11 @@ export default async function AccountPage() {
       </div>
 
       <AccountInfoSection title="Account terms">
-        <AccountInfoRow label="Renewal" value={stripeData.renewal} />
-        <AccountInfoRow label="Billing cycle" value={stripeData.billingCycle} />
-        <AccountInfoRow
-          label="Next billing date"
-          value={stripeData.nextBillingDate}
-        />
-        <AccountInfoRow label="Next payment" value={stripeData.nextPayment} />
-        <AccountInfoRow
-          label="Payment method"
-          value={stripeData.paymentMethod}
-        />
+        {stripeData.renewal && <AccountInfoRow label="Renewal" value={stripeData.renewal} />}
+        {stripeData.billingCycle && <AccountInfoRow label="Billing cycle" value={stripeData.billingCycle} />}
+        {stripeData.nextBillingDate && <AccountInfoRow label="Next billing date" value={stripeData.nextBillingDate} />}
+        {stripeData.nextPayment && <AccountInfoRow label="Next payment" value={stripeData.nextPayment} />}
+        {stripeData.paymentMethod && <AccountInfoRow label="Payment method" value={stripeData.paymentMethod} />}
         <AccountInfoRow
           label="Client since"
           value={accountFarmData.farm.createdAt.toLocaleString().split(',')[0]}
