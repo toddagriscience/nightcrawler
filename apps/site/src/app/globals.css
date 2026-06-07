@@ -38,6 +38,10 @@
   --input: #ffffff; /* Form / control fills — white (was Your light card #ccc5b5) */
   --ring: #2a2727; /* Focus rings */
   --radius: 0.5rem;
+
+  /* Semantic color tokens */
+  --color-warning: #f59e0b;
+  --color-alert: #dc2626;
 }
 
 @theme inline {

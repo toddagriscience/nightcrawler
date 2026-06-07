@@ -16,7 +16,7 @@ export default function SidebarClient() {
   return (
     <>
       {/* Desktop: always visible sidebar */}
-      <div className="hidden md:flex w-[280px] shrink-0 flex-col h-screen sticky top-0">
+      <div className="hidden md:flex w-[280px] shrink-0 flex-col h-screen sticky top-0 border-r border-[var(--border)]">
         <SidebarContent />
       </div>
 

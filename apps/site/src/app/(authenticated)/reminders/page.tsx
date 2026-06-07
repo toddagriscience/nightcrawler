@@ -19,8 +19,8 @@ const typeIcons = {
 
 const typeColors = {
   system: 'text-foreground',
-  deadline: 'text-amber-600',
-  alert: 'text-red-600',
+  deadline: 'text-[var(--color-warning)]',
+  alert: 'text-[var(--color-alert)]',
 };
 
 /**
