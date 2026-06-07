@@ -1,42 +1,26 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
-import SidebarContent from './sidebar';
+import Sidebar from './sidebar';
+import { SidebarSheet } from './sidebar-sheet';
 
 /**
- * Responsive sidebar wrapper that shows:
- * - Full sidebar panel on desktop (>= 768px)
- * - Sheet overlay with toggle button on mobile (< 768px)
+ * Responsive sidebar wrapper — server component.
+ * Desktop: renders full sidebar directly.
+ * Mobile: wraps sidebar in a Sheet overlay triggered by hamburger icon.
  */
 export default function SidebarClient() {
   return (
     <>
-      {/* Desktop: always visible sidebar */}
-      <div className="hidden md:flex w-[280px] shrink-0 flex-col h-screen sticky top-0 border-r border-[var(--border)]">
-        <SidebarContent />
+      {/* Desktop: full sidebar, always visible */}
+      <div className="hidden md:flex w-[280px] shrink-0 flex-col h-screen sticky top-0">
+        <Sidebar />
       </div>
 
-      {/* Mobile: sheet overlay */}
+      {/* Mobile: hamburger + sheet overlay */}
       <div className="flex md:hidden">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="m-2"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="size-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-[280px]">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
+        <SidebarSheet>
+          <Sidebar />
+        </SidebarSheet>
       </div>
     </>
   );
