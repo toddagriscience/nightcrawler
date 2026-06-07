@@ -9,6 +9,7 @@ import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
 import ApplicationReviewBanner from './components/application-review-banner';
 import AuthErrorFallback from './components/auth-error-fallback';
+import Sidebar from './components/sidebar/sidebar';
 
 /**
  * Checks whether the current viewer has accepted the account agreement.
@@ -61,9 +62,16 @@ export default function AuthenticatedLayout({
         className={`${fontVariables} authenticated-root bg-background-platform min-h-screen`}
       >
         <Suspense>
-          <ViewerAgreementGate>{children}</ViewerAgreementGate>
+          <ViewerAgreementGate>
+            <div className="flex">
+              <Sidebar />
+              <div className="flex-1 min-w-0">
+                <DesktopGate />
+                {children}
+              </div>
+            </div>
+          </ViewerAgreementGate>
         </Suspense>
-        <DesktopGate />
       </body>
     </html>
   );
