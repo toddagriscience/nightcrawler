@@ -9,40 +9,26 @@ import { logger } from '@/lib/logger';
 import type { ReminderAction } from './types';
 
 /** Server action to dismiss or mark a reminder as read. */
-export async function updateReminder(
-  _prevState: unknown,
-  formData: FormData
-): Promise<{ success: boolean; error?: string }> {
+export async function updateReminder(formData: FormData): Promise<void> {
   const idStr = formData.get('id');
   const action = formData.get('action');
 
   if (!idStr || !action) {
-    return { success: false, error: 'Missing id or action' };
+    throw new Error('Missing id or action');
   }
 
   const id = Number(idStr);
   const actionStr = String(action);
 
   if (actionStr === 'dismiss') {
-    const { error } = await db.delete(reminder).where(eq(reminder.id, id));
-    if (error) {
-      logger.error('[reminders] dismiss failed', { error, id });
-      return { success: false, error: 'Failed to dismiss reminder' };
-    }
-    return { success: true };
+    await db.delete(reminder).where(eq(reminder.id, id));
+    return;
   }
 
   if (actionStr === 'mark_read') {
-    const { error } = await db
-      .update(reminder)
-      .set({ read: true })
-      .where(eq(reminder.id, id));
-    if (error) {
-      logger.error('[reminders] mark_read failed', { error, id });
-      return { success: false, error: 'Failed to mark reminder as read' };
-    }
-    return { success: true };
+    await db.update(reminder).set({ read: true }).where(eq(reminder.id, id));
+    return;
   }
 
-  return { success: false, error: 'Unknown action' };
+  throw new Error('Unknown action');
 }
