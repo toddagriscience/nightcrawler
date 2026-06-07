@@ -23,14 +23,28 @@ const typeColors = {
   alert: 'text-red-600',
 };
 
+/**
+ * Renders a single reminder item with icon, title, body, and action buttons.
+ */
 function ReminderItem({ reminder: r }: { reminder: Reminder }) {
   const Icon = typeIcons[r.type];
 
   return (
     <div className="flex gap-3 py-4 border-b border-[var(--border)] last:border-b-0">
-      <Icon className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type]}`} />
+      <Icon aria-hidden="true" className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type]}`} />
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">{r.title}</p>
+        {r.href ? (
+          <a
+            href={r.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-foreground hover:underline"
+          >
+            {r.title}
+          </a>
+        ) : (
+          <p className="text-sm font-medium text-foreground">{r.title}</p>
+        )}
         <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
           {r.body}
         </p>
@@ -44,7 +58,7 @@ function ReminderItem({ reminder: r }: { reminder: Reminder }) {
                 variant="ghost"
                 className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
               >
-                <CheckCircle className="size-3 mr-1" />
+                <CheckCircle aria-hidden="true" className="size-3 mr-1" />
                 Mark read
               </Button>
             </form>
@@ -66,6 +80,9 @@ function ReminderItem({ reminder: r }: { reminder: Reminder }) {
   );
 }
 
+/**
+ * Reminders page displaying system notifications with mark-read and dismiss actions.
+ */
 export default async function RemindersPage() {
   const reminders = await getReminders();
 
@@ -74,9 +91,9 @@ export default async function RemindersPage() {
       <h1 className="text-2xl font-bold text-foreground mb-6">Reminders</h1>
 
       {reminders.length === 0 ? (
-        <div className="py-16 text-center">
-          <Bell className="size-8 mx-auto text-muted-foreground/40 mb-3" />
-          <p className="text-foreground font-medium">You&apos;re all caught up.</p>
+        <div role="status" aria-live="polite" className="py-16 text-center">
+          <Bell aria-hidden="true" className="size-8 mx-auto text-muted-foreground/40 mb-3" />
+          <p className="text-foreground font-medium">You're all caught up.</p>
           <p className="text-sm text-muted-foreground mt-1">
             System notifications will appear here.
           </p>
