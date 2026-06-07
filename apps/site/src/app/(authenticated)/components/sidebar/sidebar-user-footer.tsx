@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/auth-client';
+import { sidebarLogout } from './sidebar-actions';
 import { BiLogOut } from 'react-icons/bi';
 
 interface SidebarUserFooterProps {
@@ -12,12 +12,7 @@ export default function SidebarUserFooter({ email }: SidebarUserFooterProps) {
   return (
     <div className="border-t border-[var(--border)] px-4 py-4">
       <div className="text-xs text-muted-foreground mb-2 truncate">{email}</div>
-      <form
-        action={async () => {
-          'use server';
-          await logout();
-        }}
-      >
+      <form action={sidebarLogout}>
         <Button
           type="submit"
           variant="ghost"
