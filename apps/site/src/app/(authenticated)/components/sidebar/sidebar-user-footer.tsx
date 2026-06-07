@@ -1,20 +1,18 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
 import { BiLogOut } from 'react-icons/bi';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 
-export default async function SidebarUserFooter() {
-  const user = await getAuthenticatedInfo();
+interface SidebarUserFooterProps {
+  email: string;
+}
 
+export default function SidebarUserFooter({ email }: SidebarUserFooterProps) {
   return (
     <div className="border-t border-[var(--border)] px-4 py-4">
       <div className="text-xs text-muted-foreground mb-2 truncate">
-        {user.email}
+        {email}
       </div>
       <form
         action={async () => {

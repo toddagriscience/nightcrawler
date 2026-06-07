@@ -5,8 +5,11 @@ import SidebarSectionLabel from './sidebar-section-label';
 import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
 import { Search, BookOpen, LayoutDashboard, Map, User, ShoppingCart, Mail, Settings, Bell, Users, Shield, Lock } from 'lucide-react';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 
-export default function Sidebar() {
+export default async function Sidebar() {
+  const user = await getAuthenticatedInfo();
+
   return (
     <aside className="w-[280px] shrink-0 border-r border-[var(--border)] bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
       {/* Brand */}
@@ -73,7 +76,7 @@ export default function Sidebar() {
       </nav>
 
       {/* User footer */}
-      <SidebarUserFooter />
+      <SidebarUserFooter email={user.email} />
     </aside>
   );
 }
