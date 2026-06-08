@@ -72,7 +72,10 @@ export default async function FarmProfilePage() {
 
   if (!farmId) {
     return (
-      <AccountInfo title="Farm profile" description="Edit farm profile details.">
+      <AccountInfo
+        title="Farm profile"
+        description="Edit farm profile details."
+      >
         <p className="text-sm text-[#ff4d00]">
           User is not associated with a farm.
         </p>
