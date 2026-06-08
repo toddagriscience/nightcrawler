@@ -99,7 +99,9 @@ export default async function RemindersPage() {
             aria-hidden="true"
             className="size-8 mx-auto text-muted-foreground/40 mb-3"
           />
-          <p className="text-foreground font-medium">You're all caught up.</p>
+          <p className="text-foreground font-medium">
+            {"You're all caught up."}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
             System notifications will appear here.
           </p>

@@ -71,6 +71,13 @@
       "when": 1774461530050,
       "tag": "0009_platform-access-application-signup-tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1780876116216,
+      "tag": "0010_add-reminders-table",
+      "breakpoints": true
     }
   ]
 }

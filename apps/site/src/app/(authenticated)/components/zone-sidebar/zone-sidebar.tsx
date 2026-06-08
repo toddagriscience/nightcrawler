@@ -227,7 +227,7 @@ export default function ZoneSidebar({
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrderedZones(applySavedOrder(managementZones, userId));
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setMounted(true);
   }, [managementZones, userId]);
 

@@ -24,7 +24,10 @@ export function SidebarSheet({ children }: SidebarSheetProps) {
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 w-[280px] border-r border-[var(--border)]">
+      <SheetContent
+        side="left"
+        className="p-0 w-[280px] border-r border-[var(--border)]"
+      >
         {children}
       </SheetContent>
     </Sheet>
