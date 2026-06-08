@@ -11,7 +11,6 @@ import { BiLogOut } from 'react-icons/bi';
 const sideMenuItems = [
   { href: '/account', label: 'Farm information' },
   { href: '/account/users', label: 'User information' },
-  { href: '/account/management-zones', label: 'Management zones' },
   { href: '/account/security', label: 'Security' },
   { href: '/account/privacy', label: 'Privacy' },
 ] as const;

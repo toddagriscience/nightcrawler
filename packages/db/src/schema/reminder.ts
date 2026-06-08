@@ -31,4 +31,8 @@ export const reminder = pgTable('reminder', {
   createdAt: timestamp().notNull().defaultNow(),
   /** Optional deep-link URL */
   href: varchar({ length: 500 }),
+  /** Optional exact due date */
+  dueDate: timestamp(),
+  /** Optional seasonal label like "mid March" or "early spring" */
+  seasonalLabel: varchar({ length: 100 }),
 });

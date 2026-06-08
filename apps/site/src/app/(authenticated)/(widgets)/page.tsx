@@ -1,6 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NavLinks } from '@/components/common/authenticated-header/nav-links';
 import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
 import { Button } from '@/components/ui';
 import {
@@ -15,9 +14,6 @@ import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
-import ZoneSidebar from '../components/zone-sidebar/zone-sidebar';
 import CurrentTab from '../components/tabs/current-tab';
 import { NamedTab } from '../components/tabs/types';
 
@@ -133,40 +129,27 @@ export default async function DashboardPage({
   );
 
   return (
-    <div className="flex h-screen flex-col bg-background-platform">
-      {/* Header — full width, refined with bottom border */}
-      <header
-        className="flex w-full items-center justify-between px-5 py-3 border-b border-border/20"
-        role="banner"
-      >
-        <ToddHeader className="flex scale-90 flex-row items-center" />
-        <div className="flex flex-row items-center gap-5">
-          <SearchNavForm />
-          {canEdit ? (
-            <AddWidgetDropdown
-              managementZoneId={selectedZone.id}
-              availableWidgets={availableWidgets}
+    <div className="relative flex h-screen flex-col bg-background-platform">
+      {/* Floating add widget button */}
+      {canEdit ? (
+        <div className="fixed bottom-6 right-6 z-10">
+          <AddWidgetDropdown
+            managementZoneId={selectedZone.id}
+            availableWidgets={availableWidgets}
+          >
+            <Button
+              size="sm"
+              variant="default"
+              className="h-8 px-4 text-xs font-medium tracking-wide text-foreground/80 bg-muted/40 hover:bg-muted/60 border border-border/20 hover:border-border/40 hover:shadow-sm transition-all duration-150 focus-visible:ring-transparent focus-visible:ring-offset-transparent"
             >
-              <Button
-                size="sm"
-                variant="default"
-                className="h-8 px-4 text-xs font-medium tracking-wide text-foreground/80 bg-muted/40 hover:bg-muted/60 border border-border/20 hover:border-border/40 hover:shadow-sm transition-all duration-150 focus-visible:ring-transparent focus-visible:ring-offset-transparent"
-              >
-                Add widget
-              </Button>
-            </AddWidgetDropdown>
-          ) : null}
-          <NavLinks />
+              Add widget
+            </Button>
+          </AddWidgetDropdown>
         </div>
-      </header>
+      ) : null}
 
-      {/* Body — sidebar + content */}
+      {/* Body — content only */}
       <div className="flex flex-1 overflow-hidden">
-        <ZoneSidebar
-          managementZones={allManagementZones}
-          canEdit={canEdit}
-          userId={String(currentUser.id)}
-        />
         <main className="flex-1 overflow-auto">
           <CurrentTab currentTab={selectedTab} />
         </main>

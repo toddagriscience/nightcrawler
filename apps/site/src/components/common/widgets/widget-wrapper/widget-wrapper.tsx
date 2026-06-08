@@ -52,9 +52,15 @@ export default async function WidgetWrapper({
 
       if (!macroStandards) {
         return (
-          <p className="text-sm text-muted-foreground">
-            No standard values configured
-          </p>
+          <div className="flex h-full flex-col overflow-hidden">
+            <div className="flex flex-row items-center justify-between">
+              <h2>Macro Radar</h2>
+              <WidgetDeleteButton widgetId={widget.id} />
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              No standard values configured
+            </p>
+          </div>
         );
       }
 

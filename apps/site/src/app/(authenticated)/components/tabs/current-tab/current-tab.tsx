@@ -22,10 +22,10 @@ export default async function CurrentTab({
   if (widgets.length === 0) {
     return (
       <div className="flex h-[calc(100vh-350px)] flex-1 flex-row items-center justify-center gap-2">
-        <h2 className="text-3xl text-foreground/80 font-thin">
+        <h2 className="text-3xl text-muted-foreground font-thin">
           Add a widget to get started
         </h2>
-        <PiArrowBendUpLeft className="size-12 text-foreground/75 rotate-122 translate-y-[-10px]" />
+        <PiArrowBendUpLeft className="size-12 text-muted-foreground rotate-122 translate-y-[-10px]" />
       </div>
     );
   }
@@ -40,7 +40,7 @@ export default async function CurrentTab({
             return (
               <div
                 key={widget.widgetMetadata.i}
-                className="h-full border bg-white p-4 border-1 border-[#D9D9D9]"
+                className="h-full border border-[var(--border)] bg-[var(--background)] p-4"
               >
                 <WidgetWrapper widget={widget} currentTab={currentTab} />
               </div>

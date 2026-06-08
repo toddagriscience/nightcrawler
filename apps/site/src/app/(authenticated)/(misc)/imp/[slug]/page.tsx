@@ -1,14 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { db } from '@nightcrawler/db/schema/connection';
-import { integratedManagementPlanNote } from '@nightcrawler/db/schema';
-import { and, eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { HiArrowLongLeft } from 'react-icons/hi2';
 import { ImpMarkdown } from './components/imp-markdown';
-import { ImpNotesForm } from './components/imp-notes-form';
+import { SetReminderForm } from './components/set-reminder-form';
 import { getImpArticleBySlug } from './utils';
 
 export default async function ImpPage({
@@ -16,14 +12,6 @@ export default async function ImpPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const currentUser = await getAuthenticatedInfo();
-
-  // Open platform access; farm.approved still used for ApplicationReviewBanner
-  // and internal tooling. Previously:
-  // if (!currentUser.approved) {
-  //   notFound();
-  // }
-
   const { slug } = await params;
 
   const article = await getImpArticleBySlug(slug);
@@ -31,20 +19,6 @@ export default async function ImpPage({
   if (!article) {
     notFound();
   }
-
-  const [note] = await db
-    .select({
-      notes: integratedManagementPlanNote.notes,
-      updatedAt: integratedManagementPlanNote.updatedAt,
-    })
-    .from(integratedManagementPlanNote)
-    .where(
-      and(
-        eq(integratedManagementPlanNote.integratedManagementPlanId, article.id),
-        eq(integratedManagementPlanNote.userId, currentUser.id)
-      )
-    )
-    .limit(1);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
@@ -84,10 +58,9 @@ export default async function ImpPage({
 
         <aside className="h-max">
           <div className="fixed">
-            <ImpNotesForm
+            <SetReminderForm
               articleId={article.id}
-              initialNotes={note?.notes ?? ''}
-              initialUpdatedAt={note?.updatedAt?.toISOString() ?? null}
+              articleTitle={article.title}
             />
           </div>
         </aside>

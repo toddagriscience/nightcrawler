@@ -4,25 +4,16 @@ import Link from 'next/link';
 import SidebarSectionLabel from './sidebar-section-label';
 import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
-import {
-  Search,
-  BookOpen,
-  Sprout,
-  LayoutDashboard,
-  Map,
-  User,
-  ShoppingCart,
-  Mail,
-  Settings,
-  Bell,
-  Users,
-  Shield,
-  Lock,
-} from 'lucide-react';
+import { Icon } from '@/components/common/icon/icon';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { getManagementZones } from '@/app/(authenticated)/(accounts)/account/db';
+import SidebarSearchButton from './sidebar-search-button';
+import NewZoneButton from './new-zone-button';
+import ZoneItem from './zone-item';
 
 export default async function Sidebar() {
   const user = await getAuthenticatedInfo();
+  const zones = await getManagementZones();
 
   return (
     <aside className="w-[280px] shrink-0 border-r border-[var(--border)] bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
@@ -38,58 +29,41 @@ export default async function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-2" aria-label="Main navigation">
-        <SidebarSectionLabel>Discovery</SidebarSectionLabel>
-        <SidebarNavItem href="/search" icon={<Search />}>
-          Search
-        </SidebarNavItem>
-        <SidebarNavItem href="/imps" icon={<BookOpen />}>
-          IMPs
-        </SidebarNavItem>
-        <SidebarNavItem href="/seeds" icon={<Sprout />}>
-          Seeds
-        </SidebarNavItem>
-
-        <SidebarSectionLabel>My Farm</SidebarSectionLabel>
-        <SidebarNavItem href="/" icon={<LayoutDashboard />}>
-          Dashboard
-        </SidebarNavItem>
+        {/* Top actions */}
+        <SidebarSearchButton />
         <SidebarNavItem
-          href="/account/management-zones"
-          icon={<Map />}
-          prefixMatch
+          href="/reminders"
+          icon={<Icon src="/icons/bell.svg" className="size-4" />}
         >
-          Zones
-        </SidebarNavItem>
-        <SidebarNavItem href="/account/farm/profile" icon={<User />}>
-          Farm Profile
-        </SidebarNavItem>
-
-        <SidebarSectionLabel>Tools</SidebarSectionLabel>
-        <SidebarNavItem href="/order" icon={<ShoppingCart />}>
-          Order
-        </SidebarNavItem>
-        <SidebarNavItem href="/contact" icon={<Mail />}>
-          Contact
-        </SidebarNavItem>
-
-        <SidebarSectionLabel>Account</SidebarSectionLabel>
-        <SidebarNavItem href="/account" icon={<Settings />}>
-          Account
-        </SidebarNavItem>
-        <SidebarNavItem href="/account/users" icon={<Users />}>
-          Users
-        </SidebarNavItem>
-        <SidebarNavItem href="/account/security" icon={<Shield />}>
-          Security
-        </SidebarNavItem>
-        <SidebarNavItem href="/account/privacy" icon={<Lock />}>
-          Privacy
-        </SidebarNavItem>
-
-        <SidebarSectionLabel>System</SidebarSectionLabel>
-        <SidebarNavItem href="/reminders" icon={<Bell />}>
           Reminders
         </SidebarNavItem>
+        <SidebarNavItem
+          href="/order"
+          icon={<Icon src="/icons/shopping-cart.svg" className="size-4" />}
+        >
+          Orders
+        </SidebarNavItem>
+        <SidebarNavItem
+          href="/account"
+          icon={<Icon src="/icons/settings.svg" className="size-4" />}
+        >
+          Account
+        </SidebarNavItem>
+
+        {/* Management zones */}
+        {zones.length > 0 && (
+          <>
+            <SidebarSectionLabel>Zones</SidebarSectionLabel>
+            {zones.map((zone) => (
+              <ZoneItem key={zone.id} id={zone.id} name={zone.name} />
+            ))}
+          </>
+        )}
+
+        {/* New zone button */}
+        <div className="mt-2">
+          <NewZoneButton />
+        </div>
       </nav>
 
       {/* User footer */}

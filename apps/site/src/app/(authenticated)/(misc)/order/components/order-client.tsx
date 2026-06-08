@@ -271,7 +271,7 @@ export function OrderClient() {
 
           {/* Action */}
           <Button asChild variant="brand" className="mt-8 gap-2">
-            <Link href="/search">
+            <Link href="/order">
               Explore seeds
               <ArrowRight className="size-4" />
             </Link>
