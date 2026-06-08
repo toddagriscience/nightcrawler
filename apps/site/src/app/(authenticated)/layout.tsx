@@ -65,7 +65,7 @@ export default function AuthenticatedLayout({
           <ViewerAgreementGate>
             <div className="flex">
               <SidebarClient />
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 px-6 py-6">
                 <DesktopGate />
                 {children}
               </div>

@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { BiShieldSlash, BiChevronRight } from 'react-icons/bi';
+import { BiShield, BiChevronRight } from 'react-icons/bi';
 import AccountInfo, {
   AccountInfoRow,
 } from '../../components/account-info/account-info';
@@ -21,7 +21,7 @@ export default function AccountPrivacyPage() {
           label="Personal Information Sharing"
           rightContent={
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--muted)]/10 px-3 py-1.5">
-              <BiShieldSlash className="size-3.5 text-[var(--muted-foreground)]" />
+              <BiShield className="size-3.5 text-[var(--muted-foreground)]" />
               <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
                 Disabled
               </span>

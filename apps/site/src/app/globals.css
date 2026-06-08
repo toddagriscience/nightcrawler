@@ -57,6 +57,7 @@
   /* Text hierarchy */
   --foreground-muted: #6b6b6b;
   --foreground-secondary: #4a4a4a;
+}
 
 @theme inline {
   --color-background: var(--background);
