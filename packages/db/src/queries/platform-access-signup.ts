@@ -1,11 +1,13 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { db } from '../schema/connection';
+import { farm } from '../schema/farm';
 import { platformAccessApplication } from '../schema/platform-access-application';
 import {
   buildIncomingSignupPath,
   extractApplicantPrefillFromAnswers,
 } from '../utils/extract-applicant-prefill';
+import { formatApplicationAnswersAsAdvisorNotes } from '../utils/format-application-answers-as-notes';
 import { and, eq, isNull } from 'drizzle-orm';
 
 /** Result of validating an approved application signup token. */
@@ -182,6 +184,21 @@ export async function completePlatformAccessSignup(
   applicationId: number,
   farmId: number
 ): Promise<void> {
+  const [application] = await db
+    .select({
+      formSlug: platformAccessApplication.formSlug,
+      answers: platformAccessApplication.answers,
+    })
+    .from(platformAccessApplication)
+    .where(
+      and(
+        eq(platformAccessApplication.id, applicationId),
+        eq(platformAccessApplication.status, 'approved'),
+        isNull(platformAccessApplication.signedUpAt)
+      )
+    )
+    .limit(1);
+
   await db
     .update(platformAccessApplication)
     .set({
@@ -195,4 +212,18 @@ export async function completePlatformAccessSignup(
         isNull(platformAccessApplication.signedUpAt)
       )
     );
+
+  if (!application) {
+    return;
+  }
+
+  const seededNotes = formatApplicationAnswersAsAdvisorNotes({
+    formSlug: application.formSlug,
+    answers: (application.answers ?? {}) as Record<string, unknown>,
+  });
+
+  await db
+    .update(farm)
+    .set({ advisorProfileNotes: seededNotes })
+    .where(and(eq(farm.id, farmId), isNull(farm.advisorProfileNotes)));
 }

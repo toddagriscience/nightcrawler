@@ -4,6 +4,7 @@
 
 import { db } from '@nightcrawler/db';
 import {
+  farm,
   internalAccount,
   platformAccessApplication,
 } from '@nightcrawler/db/schema';
@@ -200,5 +201,59 @@ export async function rejectPlatformAccessApplication(id: number) {
   } catch (error) {
     logger.error('Failed to reject platform access application:', error);
     return null;
+  }
+}
+
+/**
+ * Loads advisor-maintained farm profile notes for a linked farm.
+ *
+ * @param farmId - Farm id from an approved application
+ */
+export async function getFarmAdvisorProfileNotes(
+  farmId: number
+): Promise<string> {
+  try {
+    const [row] = await db
+      .select({ advisorProfileNotes: farm.advisorProfileNotes })
+      .from(farm)
+      .where(eq(farm.id, farmId))
+      .limit(1);
+
+    return row?.advisorProfileNotes ?? '';
+  } catch (error) {
+    logger.error('Failed to load farm advisor profile notes:', error);
+    return '';
+  }
+}
+
+/**
+ * Saves advisor-maintained farm profile notes.
+ *
+ * @param farmId - Farm id to update
+ * @param notes - Markdown-style profile content
+ */
+export async function updateFarmAdvisorProfileNotes(
+  farmId: number,
+  notes: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const reviewerId = await getReviewerAccountId();
+    if (!reviewerId) {
+      return { success: false, error: 'Not authorized.' };
+    }
+
+    if (!Number.isFinite(farmId)) {
+      return { success: false, error: 'Invalid farm id.' };
+    }
+
+    await db
+      .update(farm)
+      .set({ advisorProfileNotes: notes })
+      .where(eq(farm.id, farmId));
+
+    return { success: true };
+  } catch (error) {
+    logger.error('Failed to update farm advisor profile notes:', error);
+    return { success: false, error: 'Failed to save notes.' };
   }
 }

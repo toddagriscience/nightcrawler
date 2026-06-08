@@ -13,7 +13,8 @@
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
     "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
-    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts"
+    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts",
+    "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts"
   },
   "scripts": {
     "lint": "eslint .",

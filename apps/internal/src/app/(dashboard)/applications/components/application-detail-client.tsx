@@ -23,6 +23,7 @@ import {
   resendPlatformAccessApplicationInvite,
 } from '../actions';
 import { FormSlugBadge } from './form-slug-badge';
+import FarmAdvisorProfileNotes from './farm-advisor-profile-notes';
 
 /** One platform access application row. */
 export type ApplicationRow = NonNullable<
@@ -38,6 +39,8 @@ export interface ApplicationDetailClientProps {
   application: ApplicationRow;
   /** Pre-built signup URL when already approved */
   signupUrl: string | null;
+  /** Advisor notes when the application is linked to a farm */
+  farmAdvisorProfileNotes: string | null;
 }
 
 /**
@@ -61,6 +64,7 @@ function formatAnswerValue(value: unknown): string {
 export default function ApplicationDetailClient({
   application: initialApplication,
   signupUrl: initialSignupUrl,
+  farmAdvisorProfileNotes,
 }: ApplicationDetailClientProps) {
   const router = useRouter();
   const [application, setApplication] =
@@ -237,6 +241,13 @@ export default function ApplicationDetailClient({
           ))
         )}
       </div>
+
+      {application.farmId && farmAdvisorProfileNotes !== null ? (
+        <FarmAdvisorProfileNotes
+          farmId={application.farmId}
+          initialNotes={farmAdvisorProfileNotes}
+        />
+      ) : null}
 
       {signupUrl ? (
         <div className="rounded-md border p-4 text-sm break-all">
