@@ -6,7 +6,6 @@ import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
 import {
   Search,
-  BookOpen,
   LayoutDashboard,
   Map,
   User,
@@ -40,9 +39,6 @@ export default async function Sidebar() {
         <SidebarSectionLabel>Discovery</SidebarSectionLabel>
         <SidebarNavItem href="/search" icon={<Search />}>
           Search
-        </SidebarNavItem>
-        <SidebarNavItem href="/search" icon={<BookOpen />}>
-          IMPs
         </SidebarNavItem>
 
         <SidebarSectionLabel>My Farm</SidebarSectionLabel>

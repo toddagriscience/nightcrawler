@@ -69,12 +69,12 @@ export default async function DashboardPage({
     }
 
     return (
-      <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center px-6 text-center">
-        <div className="max-w-2xl space-y-4">
-          <h1 className="text-foreground text-4xl font-thin">
+      <div className="flex min-h-full flex-col items-center justify-center px-6 text-center">
+        <div className="max-w-2xl space-y-5">
+          <h1 className="text-foreground text-4xl font-extralight tracking-tight">
             Your platform is ready when you are
           </h1>
-          <p className="text-foreground/75 text-lg font-light">
+          <p className="text-muted-foreground text-base font-light leading-relaxed">
             There are no management zones or dashboard tabs on this account yet.
             <br />
             You can keep exploring the platform while we finish setting things
@@ -82,7 +82,7 @@ export default async function DashboardPage({
           </p>
           <nav
             aria-label="Explore the platform"
-            className="border-foreground/10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t pt-8"
+            className="border-border/20 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t pt-8"
           >
             {(
               [
@@ -95,7 +95,7 @@ export default async function DashboardPage({
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-foreground text-sm font-normal underline underline-offset-4 transition-opacity hover:opacity-70"
+                className="text-foreground/70 text-sm font-normal underline underline-offset-4 transition-opacity hover:text-foreground hover:opacity-100"
               >
                 {item.label}
               </Link>
@@ -133,14 +133,14 @@ export default async function DashboardPage({
   );
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header — full width, same as before */}
+    <div className="flex h-screen flex-col bg-background-platform">
+      {/* Header — full width, refined with bottom border */}
       <header
-        className="flex w-full items-center justify-between px-3 pt-3 pb-2"
+        className="flex w-full items-center justify-between px-5 py-3 border-b border-border/20"
         role="banner"
       >
         <ToddHeader className="flex scale-90 flex-row items-center" />
-        <div className="flex flex-row items-center gap-6">
+        <div className="flex flex-row items-center gap-5">
           <SearchNavForm />
           {canEdit ? (
             <AddWidgetDropdown
@@ -150,8 +150,7 @@ export default async function DashboardPage({
               <Button
                 size="sm"
                 variant="default"
-                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
-  focus-visible:ring-offset-transparent!"
+                className="h-8 px-4 text-xs font-medium tracking-wide text-foreground/80 bg-muted/40 hover:bg-muted/60 border border-border/20 hover:border-border/40 hover:shadow-sm transition-all duration-150 focus-visible:ring-transparent focus-visible:ring-offset-transparent"
               >
                 Add widget
               </Button>

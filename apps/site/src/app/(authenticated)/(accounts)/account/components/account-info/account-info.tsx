@@ -2,14 +2,19 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { cva } from 'class-variance-authority';
 
 type AccountInfoStatusTone = 'success' | 'warning';
 
 const statusStyles: Record<AccountInfoStatusTone, string> = {
-  success: 'text-green-600',
-  warning: 'text-orange-600',
+  success: 'text-[var(--zone-active)]',
+  warning: 'text-[var(--zone-inactive)]',
 };
 
+/**
+ * Main container wrapper for account info pages.
+ * Provides consistent max-width, title hierarchy, and content spacing.
+ */
 export default function AccountInfo({
   title,
   description,
@@ -20,18 +25,26 @@ export default function AccountInfo({
   children: ReactNode;
 }) {
   return (
-    <section className="w-full max-w-[568px]">
-      <h2 className="text-foreground text-3xl leading-none">{title}</h2>
-      {description ? (
-        <p className="text-foreground mt-6 text-sm font-light italic">
-          {description}
-        </p>
-      ) : null}
-      <div className="mt-6">{children}</div>
+    <section className="w-full max-w-[640px]">
+      <header className="border-b border-[var(--border-subtle)] pb-4">
+        <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+          {title}
+        </h2>
+        {description ? (
+          <p className="mt-2 text-sm text-[var(--foreground-muted)] leading-relaxed">
+            {description}
+          </p>
+        ) : null}
+      </header>
+      <div className="pt-6">{children}</div>
     </section>
   );
 }
 
+/**
+ * Section grouping within account info.
+ * Creates a titled group with a subtle left accent and divider line.
+ */
 export function AccountInfoSection({
   title,
   children,
@@ -40,15 +53,37 @@ export function AccountInfoSection({
   children: ReactNode;
 }) {
   return (
-    <div className="mt-10 first:mt-0">
-      <h3 className="text-foreground text-xl font-normal">{title}</h3>
-      <div className="border-[var(--border)] mt-3 border-t px-0.5">
-        {children}
+    <div className="mt-8 first:mt-0">
+      <h3 className="text-xs font-medium uppercase tracking-widest text-[var(--foreground-muted)] mb-3">
+        {title}
+      </h3>
+      <div className="border-l-2 border-[var(--border-strong)] pl-4">
+        <div className="border-t border-[var(--border-subtle)]">{children}</div>
       </div>
     </div>
   );
 }
 
+const rowStyles = cva(
+  'flex min-h-[3rem] items-center justify-between gap-6 border-b border-[var(--border-subtle)] py-3 transition-colors duration-150',
+  {
+    variants: {
+      interactive: {
+        true: 'cursor-pointer hover:bg-[var(--background-hover)] -mx-4 px-4',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      interactive: false,
+    },
+  }
+);
+
+/**
+ * Row displaying a label-value pair within a section.
+ * Can be static or interactive (clickable link) with appropriate hover states.
+ * Supports isEmpty prop to render a graceful empty state marker.
+ */
 export function AccountInfoRow({
   label,
   value,
@@ -56,6 +91,7 @@ export function AccountInfoRow({
   statusTone,
   rightContent,
   valueClassName,
+  isEmpty,
   href,
 }: {
   label: string;
@@ -64,38 +100,37 @@ export function AccountInfoRow({
   statusTone?: AccountInfoStatusTone;
   rightContent?: ReactNode;
   valueClassName?: string;
+  isEmpty?: boolean;
   href?: string;
 }) {
   const renderedRightContent = rightContent ?? (
     <>
-      {value ? (
+      {isEmpty ? (
         <span
-          className={
-            valueClassName ?? 'text-sm font-normal text-muted-foreground mx-0.5'
-          }
+          aria-hidden="true"
+          className="text-sm text-[var(--foreground-muted)] italic opacity-50"
         >
+          —
+        </span>
+      ) : value ? (
+        <span className={valueClassName ?? 'text-sm text-[var(--foreground)]'}>
           {value}
         </span>
       ) : null}
       {status && statusTone ? (
-        <span
-          className={`text-sm font-normal ${statusStyles[statusTone]} mx-0.5`}
-        >
-          {status}
-        </span>
+        <span className={`text-sm ${statusStyles[statusTone]}`}>{status}</span>
       ) : null}
     </>
   );
 
   if (href) {
     return (
-      <Link
-        href={href}
-        className="border-[var(--border)] flex min-h-11 items-center justify-between gap-4 border-b py-2 hover:opacity-70"
-      >
-        <span className="text-muted-foreground text-sm mx-0.5">{label}</span>
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm text-muted-foreground/70 mx-0.5">
+      <Link href={href} className={rowStyles({ interactive: true })}>
+        <span className="text-sm text-[var(--foreground-muted)] shrink-0">
+          {label}
+        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-[var(--foreground-secondary)] text-right">
             {renderedRightContent}
           </span>
         </div>
@@ -104,10 +139,12 @@ export function AccountInfoRow({
   }
 
   return (
-    <div className="border-[var(--border)] flex min-h-11 items-center justify-between gap-4 border-b py-2">
-      <span className="text-foreground text-sm mx-0.5">{label}</span>
-      <div className="flex items-center gap-1.5">
-        <span className="text-sm text-foreground/70 mx-0.5">
+    <div className={rowStyles({ interactive: false })}>
+      <span className="text-sm text-[var(--foreground-muted)] shrink-0">
+        {label}
+      </span>
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-[var(--foreground-secondary)] text-right">
           {renderedRightContent}
         </span>
       </div>

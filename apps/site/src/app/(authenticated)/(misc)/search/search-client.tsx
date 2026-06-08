@@ -6,11 +6,23 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { SearchClientProps, SearchFormValues } from './types';
 import { SearchResultsSkeleton } from './components/search-results-skeleton';
 import { SearchResultCard } from './components/search-result-card';
+
+/** Stagger container variants for result cards */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
 
 export function SearchClient({ query, results, error }: SearchClientProps) {
   const router = useRouter();
@@ -49,29 +61,39 @@ export function SearchClient({ query, results, error }: SearchClientProps) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-2xl font-bold text-foreground mb-2">
-        Todd Knowledge Base
-      </h1>
-      <p className="text-foreground/60 mb-8">
-        Search our guides, recommendations, and seed catalog.
-      </p>
+    <div className="max-w-3xl mx-auto px-6 py-16">
+      {/* Editorial header */}
+      <header className="mb-12">
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          Knowledge Base
+        </p>
+        <h1 className="text-4xl font-light text-foreground tracking-tight mb-4">
+          Search Guides & Catalog
+        </h1>
+        <p className="text-base text-muted-foreground max-w-lg">
+          Find growing guides, seed recommendations, and integrated management
+          practices.
+        </p>
+      </header>
 
+      {/* Search form */}
       <form
         method="GET"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-3 mb-8"
+        className="flex gap-3 mb-12"
       >
-        <Input
-          {...register('q')}
-          placeholder="Search topics... (e.g. carrots, soil pH, cover crops)"
-          className="flex-1"
-        />
+        <div className="relative flex-1">
+          <Input
+            {...register('q')}
+            placeholder="Search topics, crops, practices..."
+            className="flex-1 h-12 pl-4 pr-12 text-base bg-background border-border rounded-none focus:rounded-md transition-all duration-200 placeholder:text-muted-foreground/60"
+          />
+        </div>
         <Button
           type="submit"
           disabled={isLoading}
           variant={'brand'}
-          className="hover:cursor-pointer"
+          className="h-12 px-6 hover:cursor-pointer rounded-none border-border"
         >
           Search
         </Button>
@@ -79,36 +101,50 @@ export function SearchClient({ query, results, error }: SearchClientProps) {
 
       {isLoading && <SearchResultsSkeleton />}
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+      {error && (
+        <p className="text-destructive text-sm mb-4 font-medium">{error}</p>
+      )}
 
       {!isLoading && !error && query.length === 0 && (
-        <p className="text-foreground/60 mb-4">Search to get started.</p>
+        <p className="text-muted-foreground text-sm">
+          Enter a search term to explore our knowledge base.
+        </p>
       )}
 
       {!isLoading && !error && query.length > 0 && results.length === 0 && (
-        <div className="p-6 text-center">
-          <p className="text-foreground/80 mb-2">
-            We don&apos;t have information on that topic yet.
+        <div className="py-12 text-center">
+          <p className="text-foreground/80 mb-3 text-lg font-normal">
+            No results found for "{query}"
           </p>
-          <p className="text-foreground font-medium">
-            Please{' '}
-            <Link href="/contact" className="underline hover:opacity-70">
+          <p className="text-muted-foreground text-sm">
+            Try different keywords, or{' '}
+            <Link
+              href="/contact"
+              className="text-foreground underline underline-offset-4 hover:opacity-70 transition-opacity"
+            >
               contact a Todd advisor
             </Link>{' '}
-            for help with &quot;{query}&quot;.
+            for personalized guidance.
           </p>
         </div>
       )}
 
       {!isLoading && !error && results.length > 0 && (
-        <div className="space-y-4">
-          {results.map((result) => (
-            <SearchResultCard
-              key={`${result.resultType}-${result.id}`}
-              result={result}
-            />
-          ))}
-        </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-5"
+        >
+          <AnimatePresence mode="popLayout">
+            {results.map((result) => (
+              <SearchResultCard
+                key={`${result.resultType}-${result.id}`}
+                result={result}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
     </div>
   );

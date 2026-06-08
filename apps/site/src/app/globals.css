@@ -42,7 +42,21 @@
   /* Semantic color tokens */
   --color-warning: #f59e0b;
   --color-alert: #dc2626;
-}
+
+  /* Zone status tokens */
+  --zone-active: #4a7c59;
+  --zone-inactive: #b87333;
+
+  /* Border hierarchy */
+  --border-subtle: #e8e4df;
+  --border-strong: #2a2727;
+
+  /* Interactive states */
+  --background-hover: #f7f5f2;
+
+  /* Text hierarchy */
+  --foreground-muted: #6b6b6b;
+  --foreground-secondary: #4a4a4a;
 
 @theme inline {
   --color-background: var(--background);

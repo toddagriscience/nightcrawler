@@ -8,36 +8,43 @@ import AccountInfo, {
 import { getManagementZones } from '../../db';
 import { toDisplayValue } from '../../util';
 
+/**
+ * Management Zones page for farm operational zones.
+ * Displays configured zones as actionable data rows with status indicators.
+ */
 export default async function AccountManagementPage() {
   const managementZones = await getManagementZones();
 
   return (
     <AccountInfo title="Management Zones">
       {managementZones.length === 0 ? (
-        <AccountInfoSection title={toDisplayValue()}>
-          <AccountInfoRow label="Nickname" value={toDisplayValue()} />
+        <AccountInfoSection title="No Zones Configured">
           <AccountInfoRow
-            label="Management zone profile"
-            value={<BiChevronRight className="size-6" />}
-            valueClassName="text-foreground"
+            label="Getting Started"
+            value="Set up your first management zone"
             href="/account/management-zones"
           />
         </AccountInfoSection>
       ) : (
-        managementZones.map((zone) => (
-          <AccountInfoSection key={zone.id} title={toDisplayValue(zone.name)}>
+        <AccountInfoSection
+          title={`${managementZones.length} Zone${managementZones.length !== 1 ? 's' : ''}`}
+        >
+          {managementZones.map((zone) => (
             <AccountInfoRow
-              label="Nickname"
-              value={toDisplayValue(zone.name)}
-            />
-            <AccountInfoRow
-              label="Management zone profile"
-              value={<BiChevronRight className="size-6" />}
-              valueClassName="text-foreground"
+              key={zone.id}
+              label={toDisplayValue(zone.name)}
+              value={
+                <div className="flex items-center gap-2">
+                  <span className="text-[var(--zone-active)] text-xs font-medium uppercase tracking-wider">
+                    Active
+                  </span>
+                  <BiChevronRight className="size-4 text-[var(--foreground-muted)]" />
+                </div>
+              }
               href={`/account/management-zones/${zone.id}`}
             />
-          </AccountInfoSection>
-        ))
+          ))}
+        </AccountInfoSection>
       )}
     </AccountInfo>
   );

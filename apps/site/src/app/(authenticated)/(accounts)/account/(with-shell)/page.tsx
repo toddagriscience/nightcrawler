@@ -9,38 +9,53 @@ import AccountInfo, {
 } from '../components/account-info/account-info';
 import { getAccountFarmData } from '../db';
 
+/** Renders a value or a refined empty state marker. */
+function EmptyValue() {
+  return (
+    <span aria-hidden="true" className="text-muted-foreground/50 italic">
+      —
+    </span>
+  );
+}
+
+/** Determines if a string value represents an unset/unconfigured state. */
+function isUnset(value: string | undefined | null): boolean {
+  return !value || value.trim() === '' || value === 'Not set';
+}
+
 export default async function AccountPage() {
   const [accountFarmData, stripeData] = await Promise.all([
     getAccountFarmData(),
     getStripeSubscriptionData(),
   ]);
   const mailingAddress =
-    accountFarmData.location?.address1 + ', ' + accountFarmData.location?.state;
+    accountFarmData.location?.address1 && accountFarmData.location?.state
+      ? `${accountFarmData.location.address1}, ${accountFarmData.location.state}`
+      : null;
 
   return (
     <AccountInfo title="Farm information">
-      <div className="border-t border-black/20">
+      <div className="mt-5 border-t border-[var(--border)]">
         <AccountInfoRow
           label="Nickname"
-          value={accountFarmData.farm.informalName ?? ''}
+          value={accountFarmData.farm.informalName}
+          isEmpty={isUnset(accountFarmData.farm.informalName)}
         />
         <AccountInfoRow
           label="Legal Name"
-          value={accountFarmData.farm.businessName ?? ''}
+          value={accountFarmData.farm.businessName}
+          isEmpty={isUnset(accountFarmData.farm.businessName)}
         />
         <AccountInfoRow
           label="Mailing Address"
-          value={
-            !accountFarmData.location?.address1 ||
-            !accountFarmData.location?.state
-              ? 'Not set'
-              : mailingAddress
-          }
+          value={mailingAddress}
+          isEmpty={!mailingAddress}
         />
         <AccountInfoRow
           label="Farm profile"
-          value={<BiChevronRight className="size-6" />}
-          valueClassName="text-foreground"
+          rightContent={
+            <BiChevronRight className="size-5 text-[var(--muted-foreground)]" />
+          }
           href="/account/farm/profile"
         />
       </div>
@@ -76,10 +91,10 @@ export default async function AccountPage() {
         />
       </AccountInfoSection>
 
-      <div className="mt-5 flex justify-end px-0.5">
+      <div className="mt-8 flex justify-end">
         <Link
           href={'/contact'}
-          className="text-normal text-sm leading-none font-normal text-orange-600 hover:opacity-80"
+          className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:underline hover:underline-offset-4 transition-colors duration-200"
         >
           Request deactivation
         </Link>

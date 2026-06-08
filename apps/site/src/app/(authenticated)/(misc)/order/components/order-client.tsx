@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CircleAlert, CircleCheckBig } from 'lucide-react';
+import { ArrowRight, CircleAlert, CircleCheckBig, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrder } from '@/lib/order/hooks';
 import type { OrderItem } from '@/lib/order/types';
@@ -164,91 +164,138 @@ export function OrderClient() {
 
   return (
     <>
+      {/* Success State */}
       {pageState === 'success' ? (
-        <div className="mx-auto max-w-3xl px-4 py-16">
-          <section className="rounded-3xl border border-stone-200 bg-white p-8 shadow-sm">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-              <CircleCheckBig className="size-8" />
+        <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center md:py-28">
+          {/* Success Icon */}
+          <div className="relative mb-2">
+            <div className="flex size-20 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200/50">
+              <CircleCheckBig className="size-10 text-emerald-600" />
             </div>
-            <h1 className="mt-6 text-center text-3xl font-semibold text-foreground">
-              Payment received
-            </h1>
-            <p className="mt-3 text-center text-base leading-relaxed text-foreground/70">
-              Your seed order has been submitted successfully.
-            </p>
-            <p className="mt-3 text-center text-base leading-relaxed text-foreground/70">
-              The Todd team has been notified internally and will follow up with
-              you soon to confirm fulfillment and next steps.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button
-                type="button"
-                variant="brand"
-                onClick={() => {
-                  setPageState('idle');
-                }}
-              >
-                Continue
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/search">Browse products</Link>
-              </Button>
-            </div>
-          </section>
+            {/* Decorative ring */}
+            <div className="absolute inset-0 rounded-full border border-emerald-200/30 scale-110 pointer-events-none" />
+          </div>
+
+          {/* Heading */}
+          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-foreground">
+            Order received
+          </h1>
+
+          {/* Message */}
+          <p className="mt-4 max-w-sm text-base leading-relaxed text-foreground/60">
+            Your seed order has been submitted successfully. A Todd advisor will
+            follow up with you shortly to confirm fulfillment.
+          </p>
+
+          {/* Actions */}
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Button
+              type="button"
+              variant="brand"
+              className="gap-2"
+              onClick={() => {
+                setPageState('idle');
+              }}
+            >
+              Continue shopping
+              <ArrowRight className="size-4" />
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/search">Browse seeds</Link>
+            </Button>
+          </div>
         </div>
-      ) : pageState === 'error' ? (
-        <div className="mx-auto max-w-3xl px-4 py-16">
-          <section className="rounded-3xl border border-stone-200 bg-white p-8 shadow-sm">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-red-100 text-red-700">
-              <CircleAlert className="size-8" />
+      ) : null}
+
+      {/* Error State */}
+      {pageState === 'error' ? (
+        <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center md:py-28">
+          {/* Error Icon */}
+          <div className="relative mb-2">
+            <div className="flex size-20 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-200/50">
+              <CircleAlert className="size-10 text-red-500" />
             </div>
-            <h1 className="mt-6 text-center text-3xl font-semibold text-foreground">
-              Checkout unavailable
-            </h1>
-            <p className="mt-3 text-center text-base leading-relaxed text-foreground/70">
-              {errorMessage ??
-                'We could not complete checkout right now. Please try again in a moment.'}
-            </p>
-            <div className="mt-8 flex justify-center">
-              <Button
-                type="button"
-                variant="brand"
-                onClick={() => {
-                  setErrorMessage(null);
-                  setPageState('idle');
-                }}
-              >
-                Back to order
-              </Button>
-            </div>
-          </section>
+          </div>
+
+          {/* Heading */}
+          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-foreground">
+            Checkout unavailable
+          </h1>
+
+          {/* Message */}
+          <p className="mt-4 max-w-sm text-base leading-relaxed text-foreground/60">
+            {errorMessage ??
+              'We could not complete checkout right now. Please try again in a moment.'}
+          </p>
+
+          {/* Action */}
+          <div className="mt-10">
+            <Button
+              type="button"
+              variant="brand"
+              onClick={() => {
+                setErrorMessage(null);
+                setPageState('idle');
+              }}
+            >
+              Back to order
+            </Button>
+          </div>
         </div>
-      ) : order.items.length === 0 ? (
-        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-          <h1 className="text-3xl font-semibold text-foreground">
+      ) : null}
+
+      {/* Empty State */}
+      {pageState === 'idle' && order.items.length === 0 ? (
+        <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center md:py-28">
+          {/* Decorative Icon */}
+          <div className="relative mb-6">
+            <div className="flex size-20 items-center justify-center rounded-full bg-stone-100 ring-1 ring-stone-200/50">
+              <Package className="size-9 text-stone-400" />
+            </div>
+            {/* Subtle seed/sparkle accents */}
+            <div className="absolute -top-1 -right-2 size-2 rounded-full bg-amber-300/60" />
+            <div className="absolute -bottom-1 -left-3 size-1.5 rounded-full bg-emerald-400/50" />
+            <div className="absolute top-1/2 -right-4 size-1 rounded-full bg-stone-300/70" />
+          </div>
+
+          {/* Heading */}
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Your order is empty
           </h1>
-          <p className="mt-3 text-foreground/70">
-            Add seed products from search or a product detail page to start an
-            order.
+
+          {/* Message */}
+          <p className="mt-3 max-w-xs text-base leading-relaxed text-foreground/50">
+            Browse our curated seed selection to find varieties suited for your
+            growing conditions.
           </p>
-          <Button asChild variant="brand" className="mt-6">
-            <Link href="/search">Browse products</Link>
+
+          {/* Action */}
+          <Button asChild variant="brand" className="mt-8 gap-2">
+            <Link href="/search">
+              Explore seeds
+              <ArrowRight className="size-4" />
+            </Link>
           </Button>
         </div>
-      ) : (
-        <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+      ) : null}
+
+      {/* Order Items + Summary */}
+      {pageState === 'idle' && order.items.length > 0 ? (
+        <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 lg:py-12">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+            {/* Items Section */}
             <section className="space-y-4">
+              {/* Section Header */}
               <div>
-                <h1 className="text-3xl font-semibold text-foreground">
-                  Order
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+                  Your order
                 </h1>
-                <p className="mt-2 text-foreground/70">
-                  Review your selected seed products before checkout.
+                <p className="mt-2 text-sm text-foreground/50">
+                  Review your selected seed products before checkout
                 </p>
               </div>
 
+              {/* Line Items */}
               {order.items.map((item) => (
                 <OrderLineItemCard
                   key={item.slug}
@@ -260,6 +307,7 @@ export function OrderClient() {
               ))}
             </section>
 
+            {/* Summary Sidebar */}
             <OrderSummaryCard
               itemCount={itemCount}
               subtotal={subtotal}
@@ -269,8 +317,9 @@ export function OrderClient() {
             />
           </div>
         </div>
-      )}
+      ) : null}
 
+      {/* Checkout Modal */}
       <OrderCheckoutModal
         isOpen={isCheckoutOpen}
         onOpenChange={handleCheckoutOpenChange}

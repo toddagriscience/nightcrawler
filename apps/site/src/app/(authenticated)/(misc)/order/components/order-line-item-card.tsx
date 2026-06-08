@@ -4,6 +4,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Minus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/order/utils';
 import type { OrderLineItemCardProps } from '../types';
@@ -21,71 +22,87 @@ export function OrderLineItemCard({
   onRemoveItem,
 }: OrderLineItemCardProps) {
   return (
-    <article className="grid gap-4 rounded-3xl border border-stone-200 bg-white p-4 shadow-sm md:grid-cols-[8rem_minmax(0,1fr)_auto]">
-      <Link
-        href={`/product/${item.slug}`}
-        className="relative block aspect-square overflow-hidden rounded-2xl bg-stone-100"
-      >
-        <Image
-          src={item.imageUrl || '/seed-placeholder.svg'}
-          alt={item.name}
-          fill
-          className="object-cover"
-          sizes="128px"
-        />
-      </Link>
-
-      <div className="space-y-2">
+    <article className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-all duration-300 hover:border-stone-300 hover:shadow-md md:p-6">
+      <div className="grid gap-5 md:grid-cols-[7rem_minmax(0,1fr)_auto] md:items-start">
+        {/* Product Image */}
         <Link
           href={`/product/${item.slug}`}
-          className="text-xl font-semibold text-foreground transition-opacity hover:opacity-70"
+          className="relative block aspect-square overflow-hidden rounded-xl bg-stone-100 ring-1 ring-stone-200/50 transition-all duration-300 group-hover:ring-stone-300/70"
         >
-          {item.name}
+          <Image
+            src={item.imageUrl || '/seed-placeholder.svg'}
+            alt={item.name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="112px"
+          />
         </Link>
-        <p className="text-sm text-foreground/70">{item.description}</p>
-        <p className="text-sm font-medium text-foreground/70">
-          {formatPrice(item.priceInCents)} / {item.unit}
-        </p>
-      </div>
 
-      <div className="flex flex-col items-start gap-3 md:items-end">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label={`Decrease quantity of ${item.name}`}
-            onClick={() => onUpdateQuantity(item.slug, item.quantity - 1)}
-            disabled={isCheckoutLocked}
+        {/* Product Info */}
+        <div className="flex flex-col gap-1.5">
+          <Link
+            href={`/product/${item.slug}`}
+            className="text-lg font-semibold text-foreground transition-colors duration-200 hover:text-foreground/70"
           >
-            -
-          </Button>
-          <div className="min-w-12 text-center text-sm font-medium text-foreground">
-            {item.quantity}
+            {item.name}
+          </Link>
+          <p className="line-clamp-1 text-sm leading-relaxed text-foreground/60">
+            {item.description}
+          </p>
+          <p className="text-sm font-medium text-foreground/50">
+            {formatPrice(item.priceInCents)}
+            <span className="mx-1.5 text-foreground/30">·</span>
+            {item.unit}
+          </p>
+        </div>
+
+        {/* Quantity & Actions */}
+        <div className="flex flex-col items-stretch gap-4 md:items-end md:justify-start">
+          {/* Quantity Controls */}
+          <div className="flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50/50 p-1 ring-1 ring-stone-200/50">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-full text-stone-500 transition-colors duration-200 hover:bg-white hover:text-foreground disabled:opacity-40"
+              aria-label={`Decrease quantity of ${item.name}`}
+              onClick={() => onUpdateQuantity(item.slug, item.quantity - 1)}
+              disabled={isCheckoutLocked}
+            >
+              <Minus className="size-3.5" />
+            </Button>
+            <div className="min-w-[2.5rem] text-center text-sm font-semibold tabular-nums text-foreground">
+              {item.quantity}
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-full text-stone-500 transition-colors duration-200 hover:bg-white hover:text-foreground disabled:opacity-40"
+              aria-label={`Increase quantity of ${item.name}`}
+              onClick={() => onUpdateQuantity(item.slug, item.quantity + 1)}
+              disabled={isCheckoutLocked}
+            >
+              <Plus className="size-3.5" />
+            </Button>
           </div>
+
+          {/* Line Total */}
+          <p className="text-base font-semibold text-foreground tabular-nums">
+            {formatPrice(item.quantity * item.priceInCents)}
+          </p>
+
+          {/* Remove Button */}
           <Button
             type="button"
-            variant="outline"
-            size="icon"
-            aria-label={`Increase quantity of ${item.name}`}
-            onClick={() => onUpdateQuantity(item.slug, item.quantity + 1)}
+            variant="ghost"
+            className="size-8 rounded-full p-0 text-stone-400 transition-colors duration-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-40"
+            onClick={() => onRemoveItem(item.slug)}
             disabled={isCheckoutLocked}
           >
-            +
+            <Trash2 className="size-4" />
           </Button>
         </div>
-        <p className="text-sm font-medium text-foreground">
-          {formatPrice(item.quantity * item.priceInCents)}
-        </p>
-        <Button
-          type="button"
-          variant="ghost"
-          className="px-0 text-sm text-red-600 hover:bg-transparent hover:text-red-700"
-          onClick={() => onRemoveItem(item.slug)}
-          disabled={isCheckoutLocked}
-        >
-          Remove
-        </Button>
       </div>
     </article>
   );
