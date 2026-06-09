@@ -1,11 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { resolveIncomingPathForSignupToken } from '@nightcrawler/db/queries';
+import { resolveSignupPathForSignupToken } from '@nightcrawler/db/queries';
 import { parseSafeRedirectNext } from '@/lib/utils/parse-safe-redirect-next';
 
 /** Resolved redirect target after auth confirm OTP verification. */
 export interface AuthConfirmRedirectTarget {
-  /** Path only (e.g. `/incoming`) */
+  /** Path only (e.g. `/en/signup`) */
   pathname: string;
   /** Query string including leading `?`, or empty string */
   search: string;
@@ -28,7 +28,7 @@ export async function resolveAuthConfirmRedirectTarget(input: {
   );
 
   if (Number.isFinite(parsedApplicationId) && input.signupTokenParam?.trim()) {
-    const incomingPath = await resolveIncomingPathForSignupToken(
+    const incomingPath = await resolveSignupPathForSignupToken(
       parsedApplicationId,
       input.signupTokenParam
     );

@@ -1,5 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+/** Sanity form workflow type copied into Postgres on submit. */
+export type SanityFormWorkflowType = 'generic' | 'platform_access';
+
 /** Whitelisted Sanity form field types rendered on `/forms/[slug]`. */
 export const SANITY_FORM_FIELD_TYPES = [
   'text',
@@ -77,4 +80,6 @@ export interface SanityForm {
   footerCheckboxes?: SanityFormFooterCheckbox[];
   /** Optional disclosure copy shown before submit */
   footerText?: string;
+  /** Post-submit workflow — generic storage vs platform access review/signup */
+  workflowType?: SanityFormWorkflowType;
 }

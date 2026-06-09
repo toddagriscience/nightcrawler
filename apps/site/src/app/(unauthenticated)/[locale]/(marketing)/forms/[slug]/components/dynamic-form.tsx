@@ -12,7 +12,7 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { submitPlatformAccessApplication } from '../actions';
+import { submitFormSubmission } from '../actions';
 import {
   buildFormAnswersSchema,
   buildFormDefaultValues,
@@ -94,7 +94,7 @@ export function DynamicForm({ form }: DynamicFormProps) {
     setSubmitError(null);
 
     try {
-      await submitPlatformAccessApplication({
+      await submitFormSubmission({
         formSlug: form.slug.current,
         answers: getValues(),
         sourceArticleSlug,

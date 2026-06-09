@@ -235,40 +235,62 @@ export function getMissingApplicantEmailMessage(
 }
 
 /**
- * Builds an `/incoming` onboarding path from application answers.
+ * Builds a localized signup path for an approved platform-access submission.
  *
- * @param answers - Stored submission answers
- * @param options - Optional application id and signup token
+ * @param options - Submission id, signup token, and optional locale
+ */
+export function buildSignupPath(options: {
+  applicationId: number;
+  signupToken: string;
+  locale?: string;
+}): string {
+  const params = new URLSearchParams();
+  params.set('application_id', String(options.applicationId));
+  params.set('token', options.signupToken);
+  const locale = options.locale ?? 'en';
+  return `/${locale}/signup?${params.toString()}`;
+}
+
+/**
+ * Builds a signup URL for an approved platform-access submission.
+ *
+ * @param baseUrl - Site origin without trailing slash
+ * @param options - Submission id and signup token
+ */
+export function buildSignupUrl(
+  baseUrl: string,
+  options: {
+    applicationId: number;
+    signupToken: string;
+    locale?: string;
+  }
+): string {
+  return new URL(buildSignupPath(options), baseUrl).toString();
+}
+
+/**
+ * @deprecated Use {@link buildSignupPath}. Kept for transitional imports.
  */
 export function buildIncomingSignupPath(
   answers: Record<string, unknown>,
   options?: { applicationId?: number; signupToken?: string }
 ): string | null {
-  const prefill = extractApplicantPrefillFromAnswers(answers);
-  if (!prefill.email) return null;
-
-  const params = new URLSearchParams();
-  if (prefill.firstName) params.set('first_name', prefill.firstName);
-  if (prefill.lastName) params.set('last_name', prefill.lastName);
-  if (prefill.farmName) params.set('farm_name', prefill.farmName);
-  params.set('email', prefill.email);
-  if (prefill.phone) params.set('phone', normalizePhoneForUrl(prefill.phone));
-  if (options?.applicationId) {
-    params.set('application_id', String(options.applicationId));
-  }
-  if (options?.signupToken) {
-    params.set('token', options.signupToken);
+  if (!options?.applicationId || !options.signupToken) {
+    return null;
   }
 
-  return `/incoming?${params.toString()}`;
+  if (!extractApplicantPrefillFromAnswers(answers).email) {
+    return null;
+  }
+
+  return buildSignupPath({
+    applicationId: options.applicationId,
+    signupToken: options.signupToken,
+  });
 }
 
 /**
- * Builds an `/incoming` onboarding URL from application answers.
- *
- * @param baseUrl - Site origin without trailing slash
- * @param answers - Stored submission answers
- * @param options - Optional application id and signup token
+ * @deprecated Use {@link buildSignupUrl}. Kept for transitional imports.
  */
 export function buildIncomingSignupUrl(
   baseUrl: string,

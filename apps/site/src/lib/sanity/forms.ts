@@ -38,7 +38,8 @@ const GROQ_FORM_BODY = `
     helpText,
     required
   },
-  footerText
+  footerText,
+  workflowType
 `;
 
 /** One hour ISR for CMS form definitions. */

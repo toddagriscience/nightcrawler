@@ -10,7 +10,7 @@ import {
 } from '@/lib/auth-server';
 import { AuthResponseTypes } from '@/lib/types/auth';
 import type { AuthResponse } from '@/lib/types/auth';
-import { validatePlatformAccessSignupToken } from '@nightcrawler/db/queries';
+import { validateFormSubmissionSignupToken } from '@nightcrawler/db/queries';
 import { signUp } from './actions';
 
 /** Hoisted without importing `AuthResponseTypes` (imports are not initialized yet). */
@@ -50,7 +50,8 @@ vi.mock('@nightcrawler/db/queries', async (importOriginal) => {
     await importOriginal<typeof import('@nightcrawler/db/queries')>();
   return {
     ...actual,
-    validatePlatformAccessSignupToken: vi.fn(),
+    validateFormSubmissionSignupToken: vi.fn(),
+    completeFormSubmissionSignup: vi.fn().mockResolvedValue(undefined),
   };
 });
 
@@ -101,7 +102,7 @@ describe('signUp', () => {
     vi.mocked(setPassword).mockResolvedValue(successfulSetPasswordResponse);
     vi.mocked(ensureApprovedApplicantAuthSession).mockReset();
     vi.mocked(ensureApprovedApplicantAuthSession).mockResolvedValue(undefined);
-    vi.mocked(validatePlatformAccessSignupToken).mockReset();
+    vi.mocked(validateFormSubmissionSignupToken).mockReset();
     await db.delete(user).where(gt(user.id, 0));
     await db.delete(standardValues).where(gt(standardValues.farmId, 0));
     await db.delete(farm).where(gt(farm.id, 0));
@@ -147,7 +148,7 @@ describe('signUp', () => {
     });
 
     it('throws when signup token validation fails', async () => {
-      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue(null);
+      vi.mocked(validateFormSubmissionSignupToken).mockResolvedValue(null);
 
       const formData = createApprovedApplicantFormData();
 
@@ -159,7 +160,7 @@ describe('signUp', () => {
 
   describe('approved applicant signup', () => {
     it('ensures auth session from application token before persisting records', async () => {
-      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue({
+      vi.mocked(validateFormSubmissionSignupToken).mockResolvedValue({
         applicationId: 42,
         email: 'john@example.com',
       });
@@ -178,7 +179,7 @@ describe('signUp', () => {
     });
 
     it('persists farm and user before setting password and redirects to /apply', async () => {
-      vi.mocked(validatePlatformAccessSignupToken).mockResolvedValue({
+      vi.mocked(validateFormSubmissionSignupToken).mockResolvedValue({
         applicationId: 42,
         email: 'john@example.com',
       });

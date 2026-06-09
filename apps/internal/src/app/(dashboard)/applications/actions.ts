@@ -46,6 +46,7 @@ export async function getPlatformAccessApplicationById(id: number) {
       .where(
         and(
           eq(platformAccessApplication.id, id),
+          eq(platformAccessApplication.workflowType, 'platform_access'),
           isNull(platformAccessApplication.deletedAt)
         )
       )
@@ -75,7 +76,10 @@ export async function getPlatformAccessApplications(
   filters?: PlatformAccessApplicationListFilters
 ) {
   try {
-    const conditions = [isNull(platformAccessApplication.deletedAt)];
+    const conditions = [
+      isNull(platformAccessApplication.deletedAt),
+      eq(platformAccessApplication.workflowType, 'platform_access'),
+    ];
     if (filters?.status) {
       conditions.push(eq(platformAccessApplication.status, filters.status));
     }

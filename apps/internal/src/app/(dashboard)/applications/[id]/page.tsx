@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { buildIncomingSignupUrl } from '@/lib/platform-access/build-incoming-signup-url';
+import { buildSignupUrl } from '@/lib/platform-access/build-incoming-signup-url';
 import { notFound } from 'next/navigation';
 import {
   getFarmAdvisorProfileNotes,
@@ -42,15 +42,13 @@ export default async function ApplicationDetailPage({
   }
 
   const signupUrl =
-    application.status === 'approved' && !application.signedUpAt
-      ? buildIncomingSignupUrl(
-          getSiteBaseUrl(),
-          (application.answers ?? {}) as Record<string, unknown>,
-          {
-            applicationId: application.id,
-            signupToken: application.signupToken ?? undefined,
-          }
-        )
+    application.status === 'approved' &&
+    !application.signedUpAt &&
+    application.signupToken
+      ? buildSignupUrl(getSiteBaseUrl(), {
+          applicationId: application.id,
+          signupToken: application.signupToken,
+        })
       : null;
 
   const farmAdvisorProfileNotes = application.farmId

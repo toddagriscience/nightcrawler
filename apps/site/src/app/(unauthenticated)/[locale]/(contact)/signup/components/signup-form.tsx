@@ -48,29 +48,55 @@ type SignUpFormData = {
   confirmPassword: string;
 };
 
+/** Server-provided prefill for approved-applicant signup. */
+export interface ApprovedApplicantSignupPrefill {
+  firstName: string;
+  lastName: string;
+  farmName: string;
+  email: string;
+  phone: string;
+  applicationId: string;
+  token: string;
+}
+
 /** Props for the password step of signup. */
 interface SignupFormProps {
   /** Whether this signup came from an approved platform-access application */
   isApprovedApplicantSignup: boolean;
+  /** Server-loaded prefill for approved-applicant signup */
+  prefill?: ApprovedApplicantSignupPrefill;
 }
 
 /**
  * Password form for cold contact signups and approved-applicant onboarding.
  *
- * @param props - Signup mode flags
+ * @param props - Signup mode flags and optional server prefill
  */
 export default function SignupForm({
   isApprovedApplicantSignup,
+  prefill,
 }: SignupFormProps) {
   const searchParams = useSearchParams();
   const [actionErrors, setActionErrors] = useState<string[]>([]);
+  const resolvedPrefill = {
+    firstName: prefill?.firstName ?? searchParams.get('first_name') ?? '',
+    lastName: prefill?.lastName ?? searchParams.get('last_name') ?? '',
+    farmName: prefill?.farmName ?? searchParams.get('farm_name') ?? '',
+    email: prefill?.email ?? searchParams.get('email') ?? '',
+    phone: normalizePhoneForUrl(
+      prefill?.phone ?? searchParams.get('phone') ?? ''
+    ),
+    applicationId:
+      prefill?.applicationId ?? searchParams.get('application_id') ?? '',
+    token: prefill?.token ?? searchParams.get('token') ?? '',
+  };
   const { register, handleSubmit, formState } = useForm<SignUpFormData>({
     defaultValues: {
-      firstName: searchParams.get('first_name') ?? '',
-      lastName: searchParams.get('last_name') ?? '',
-      farmName: searchParams.get('farm_name') ?? '',
-      email: searchParams.get('email') ?? '',
-      phone: normalizePhoneForUrl(searchParams.get('phone') ?? ''),
+      firstName: resolvedPrefill.firstName,
+      lastName: resolvedPrefill.lastName,
+      farmName: resolvedPrefill.farmName,
+      email: resolvedPrefill.email,
+      phone: resolvedPrefill.phone,
       password: '',
       confirmPassword: '',
     },
@@ -83,9 +109,9 @@ export default function SignupForm({
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
 
-  const email = searchParams.get('email') ?? '';
-  const applicationId = searchParams.get('application_id') ?? '';
-  const token = searchParams.get('token') ?? '';
+  const email = resolvedPrefill.email;
+  const applicationId = resolvedPrefill.applicationId;
+  const token = resolvedPrefill.token;
 
   const errors = actionErrors.length > 0 ? actionErrors : null;
 

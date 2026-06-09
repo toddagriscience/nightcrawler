@@ -8,7 +8,7 @@ import {
 export type { SendApprovedApplicantInviteResult };
 
 /**
- * Sends the approved-applicant onboarding email with a tokenized `/incoming` link.
+ * Sends the approved-applicant onboarding email with a tokenized signup link.
  *
  * @param input - Applicant email and full onboarding URL
  */

@@ -139,6 +139,22 @@ export default defineType({
       description: 'Public URL: /forms/[slug].',
     }),
     defineField({
+      name: 'workflowType',
+      title: 'Submission workflow',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Generic (store answers only)', value: 'generic'},
+          {title: 'Platform access (review + signup + farm setup)', value: 'platform_access'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'generic',
+      validation: (rule) => rule.required(),
+      description:
+        'Generic: JSON storage only. Platform access: Internal Applications review, magic-link signup, and farm table hydration.',
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',

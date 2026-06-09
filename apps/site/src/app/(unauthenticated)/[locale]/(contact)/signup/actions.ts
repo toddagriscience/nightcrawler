@@ -8,14 +8,14 @@ import {
   setPassword,
 } from '@/lib/auth-server';
 import { sendApprovedApplicantInvite } from '@nightcrawler/db/utils/send-approved-applicant-invite';
-import { buildIncomingSignupUrl } from '@nightcrawler/db/utils/extract-applicant-prefill';
-import { platformAccessApplication } from '@nightcrawler/db/schema';
+import { buildSignupUrl } from '@nightcrawler/db/utils/extract-applicant-prefill';
+import { formSubmission } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
 import { farm, user, standardValues } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import {
-  completePlatformAccessSignup,
-  validatePlatformAccessSignupToken,
+  completeFormSubmissionSignup,
+  validateFormSubmissionSignupToken,
 } from '@nightcrawler/db/queries';
 import logger from '@/lib/logger';
 import { ActionResponse } from '@/lib/types/action-response';
@@ -83,7 +83,7 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
       .returning();
 
     if (applicationId && existingUser.farmId) {
-      await completePlatformAccessSignup(applicationId, existingUser.farmId);
+      await completeFormSubmissionSignup(applicationId, existingUser.farmId);
     }
 
     logger.info(`Signup reused existing user record for ${email}`);
@@ -123,7 +123,7 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
   });
 
   if (applicationId) {
-    await completePlatformAccessSignup(applicationId, result.farm.id);
+    await completeFormSubmissionSignup(applicationId, result.farm.id);
   }
 
   logger.info(`Successfully created user ${email} with farm ${farmName}`);
@@ -208,7 +208,7 @@ export async function resendApprovedApplicantActivationEmail(input: {
   token: string;
   email: string;
 }): Promise<{ sent: boolean; error?: string }> {
-  const validated = await validatePlatformAccessSignupToken(
+  const validated = await validateFormSubmissionSignupToken(
     input.applicationId,
     input.token,
     input.email
@@ -235,19 +235,15 @@ export async function resendApprovedApplicantActivationEmail(input: {
 
   const [application] = await db
     .select()
-    .from(platformAccessApplication)
-    .where(eq(platformAccessApplication.id, validated.applicationId))
+    .from(formSubmission)
+    .where(eq(formSubmission.id, validated.applicationId))
     .limit(1);
 
-  const onboardingUrl = application
-    ? buildIncomingSignupUrl(
-        baseUrl,
-        (application.answers ?? {}) as Record<string, unknown>,
-        {
-          applicationId: validated.applicationId,
-          signupToken: input.token.trim(),
-        }
-      )
+  const onboardingUrl = application?.signupToken
+    ? buildSignupUrl(baseUrl, {
+        applicationId: validated.applicationId,
+        signupToken: application.signupToken,
+      })
     : null;
 
   if (!onboardingUrl) {
@@ -321,7 +317,7 @@ export async function signUp(
     throwActionError('This signup link is invalid or expired.');
   }
 
-  const validatedApplication = await validatePlatformAccessSignupToken(
+  const validatedApplication = await validateFormSubmissionSignupToken(
     parsedApplicationId,
     token,
     email

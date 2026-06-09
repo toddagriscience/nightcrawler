@@ -1,11 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+export const dynamic = 'force-dynamic';
+
 import { getUserEmail } from '@/lib/auth-server';
 import {
-  isPlatformAccessSignupAlreadyCompleted,
-  validatePlatformAccessSignupToken,
+  isFormSubmissionSignupAlreadyCompleted,
+  resolveSignupContext,
 } from '@nightcrawler/db/queries';
-import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
 import { redirect } from 'next/navigation';
 import ApprovedApplicantGate from './components/approved-applicant-gate';
 import SignupForm from './components/signup-form';
@@ -28,7 +29,7 @@ function readSearchParam(params: SignupPageSearchParams, key: string): string {
   return value ?? '';
 }
 
-/** Password step for approved platform-access applicants (`/incoming` → `/en/signup`).
+/** Password step for approved platform-access applicants.
  *
  * @param props - Page props including locale and search params
  */
@@ -42,13 +43,6 @@ export default async function Join({
   const { locale } = await params;
   const contactPath = `/${locale}/contact`;
   const resolvedSearchParams = await searchParams;
-  const firstName = readSearchParam(resolvedSearchParams, 'first_name');
-  const lastName = readSearchParam(resolvedSearchParams, 'last_name');
-  const farmName = readSearchParam(resolvedSearchParams, 'farm_name');
-  const email = readSearchParam(resolvedSearchParams, 'email');
-  const phone = normalizePhoneForUrl(
-    readSearchParam(resolvedSearchParams, 'phone')
-  );
   const applicationId = readSearchParam(resolvedSearchParams, 'application_id');
   const token = readSearchParam(resolvedSearchParams, 'token');
 
@@ -56,34 +50,25 @@ export default async function Join({
     redirect(contactPath);
   }
 
-  if (!firstName || !lastName || !farmName || !email || !phone) {
-    redirect(contactPath);
-  }
-
   const parsedApplicationId = Number.parseInt(applicationId, 10);
 
   if (!Number.isFinite(parsedApplicationId)) {
     return (
-      <ApprovedApplicantGate
-        email={email}
-        reason="invalid-link"
-        token={token}
-      />
+      <ApprovedApplicantGate reason="invalid-link" token={token} email="" />
     );
   }
 
-  const validatedApplication = await validatePlatformAccessSignupToken(
-    parsedApplicationId,
-    token,
-    email
-  );
+  const signupContext = await resolveSignupContext(parsedApplicationId, token);
 
-  if (!validatedApplication) {
-    const alreadyCompleted = await isPlatformAccessSignupAlreadyCompleted(
-      parsedApplicationId,
-      token,
-      email
-    );
+  if (!signupContext) {
+    const legacyEmail = readSearchParam(resolvedSearchParams, 'email');
+    const alreadyCompleted = legacyEmail
+      ? await isFormSubmissionSignupAlreadyCompleted(
+          parsedApplicationId,
+          token,
+          legacyEmail
+        )
+      : false;
 
     if (alreadyCompleted) {
       redirect('/apply');
@@ -91,7 +76,7 @@ export default async function Join({
 
     return (
       <ApprovedApplicantGate
-        email={email}
+        email={legacyEmail}
         reason="invalid-link"
         applicationId={parsedApplicationId}
         token={token}
@@ -101,10 +86,13 @@ export default async function Join({
 
   const sessionEmail = await getUserEmail();
 
-  if (sessionEmail && sessionEmail.toLowerCase() !== email.toLowerCase()) {
+  if (
+    sessionEmail &&
+    sessionEmail.toLowerCase() !== signupContext.email.toLowerCase()
+  ) {
     return (
       <ApprovedApplicantGate
-        email={email}
+        email={signupContext.email}
         reason="email-mismatch"
         sessionEmail={sessionEmail}
         applicationId={parsedApplicationId}
@@ -113,5 +101,18 @@ export default async function Join({
     );
   }
 
-  return <SignupForm isApprovedApplicantSignup />;
+  return (
+    <SignupForm
+      isApprovedApplicantSignup
+      prefill={{
+        firstName: signupContext.prefill.firstName ?? '',
+        lastName: signupContext.prefill.lastName ?? '',
+        farmName: signupContext.prefill.farmName ?? '',
+        email: signupContext.email,
+        phone: signupContext.prefill.phone ?? '',
+        applicationId: String(signupContext.applicationId),
+        token: signupContext.token,
+      }}
+    />
+  );
 }
