@@ -5,6 +5,7 @@ import { NextRequest } from 'next/server';
 
 /** A list of routes that all users need to be able to access. These should be treated as internationalized routes. See the `isAllUserRoute` function for more information. */
 const allUserRoutesIntl = [
+  'contact',
   'privacy',
   'accessibility',
   'news',

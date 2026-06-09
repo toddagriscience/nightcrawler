@@ -115,6 +115,29 @@ describe('I18n Middleware', () => {
       expect(result).toBeInstanceOf(NextResponse);
     });
 
+    it('should rewrite /contact to the locale contact page when unauthenticated', () => {
+      const mockRequest = {
+        nextUrl: {
+          pathname: '/contact',
+          clone: vi.fn().mockReturnValue({
+            pathname: '/contact',
+          }),
+        },
+        cookies: {
+          get: vi.fn().mockReturnValue(undefined),
+        },
+        headers: {
+          get: vi.fn().mockReturnValue('en'),
+        },
+      } as unknown as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      expect(result).toBeDefined();
+      expect(result).toBeInstanceOf(NextResponse);
+      expect(mockRequest.nextUrl.clone).toHaveBeenCalled();
+    });
+
     it('should redirect non-locale routes to /en/{path} when unauthenticated', () => {
       const mockRequest = {
         nextUrl: {

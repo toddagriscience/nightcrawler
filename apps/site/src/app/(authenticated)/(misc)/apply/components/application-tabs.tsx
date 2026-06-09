@@ -42,10 +42,7 @@ export const ApplicationContext = createContext({
   nextTabAfterColleagues: 'bank-information' as TabTypes,
 });
 
-/**
- * Slim post-signup onboarding: colleagues, bank, terms.
- * Legacy General Business and Farm tabs are archived — see `components/archived/README.md`.
- */
+/** Slim post-signup onboarding: colleagues, bank, terms. */
 export default function ApplicationTabs({
   farmInfo,
   allUsers,

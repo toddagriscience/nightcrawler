@@ -3,7 +3,7 @@
 import MiscAuthenticatedShell from './components/misc-authenticated-shell';
 
 /**
- * Layout for authenticated misc routes. Hides the platform header on `/apply`.
+ * Layout for authenticated misc routes with the platform header.
  *
  * @param props.children - Nested misc route content
  */

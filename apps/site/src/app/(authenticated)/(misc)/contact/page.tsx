@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Button } from '@/components/ui/button';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { BiArrowBack } from 'react-icons/bi';
@@ -9,8 +8,6 @@ import ContactLinksSection from './components/contact-links-section';
 
 /** Authenticated support tools page. */
 export default async function ContactPage() {
-  await requirePlatformOnboardingComplete();
-
   return (
     <main className="mx-auto w-full">
       <div className="border-b border-[#D9D9D9]">

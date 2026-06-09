@@ -13,6 +13,12 @@ function mockNextRequest(pathname: string): Partial<NextRequest> {
 }
 
 describe('isAllUserRoute', () => {
+  it('returns true for /en/contact', async () => {
+    const req = mockNextRequest('/en/contact');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(true);
+  });
+
   it('returns true for /en/privacy', async () => {
     const req = mockNextRequest('/en/privacy');
     const result = await isAllUserRoute(req as NextRequest);

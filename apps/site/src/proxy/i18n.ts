@@ -63,6 +63,20 @@ export function handleI18nMiddleware(
       return response;
     }
 
+    // Public contact form lives under `/[locale]/contact`; serve it at `/contact` without redirecting.
+    if (splitPathnames.length === 2 && splitPathnames[1] === 'contact') {
+      const preferredLocale =
+        request.cookies?.get('NEXT_LOCALE')?.value ||
+        request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
+        'en';
+      const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
+        ? preferredLocale
+        : 'en';
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/contact`;
+      return NextResponse.rewrite(url);
+    }
+
     // For paths without locale (like /about, /no-page-here),
     // redirect using NEXT_LOCALE cookie if set, else default to en
     const preferredLocale =
