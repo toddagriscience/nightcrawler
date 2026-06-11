@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NavLinks } from '@/components/common/authenticated-header/nav-links';
+import { OrderNavLink } from '@/components/common/authenticated-header/components/order-nav-link';
 import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
 import { Button } from '@/components/ui';
 import {
@@ -141,28 +141,29 @@ export default async function DashboardPage({
           {farmName}
         </h1>
         <div className="flex flex-row items-center gap-6">
-          {canEdit ? (
-            <AddWidgetDropdown
-              managementZoneId={selectedZone.id}
-              availableWidgets={availableWidgets}
-            >
-              <Button
-                size="sm"
-                variant="default"
-                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
-  focus-visible:ring-offset-transparent!"
-              >
-                Add widget
-              </Button>
-            </AddWidgetDropdown>
-          ) : null}
-          <NavLinks />
+          <OrderNavLink />
         </div>
       </header>
 
       {/* Body — content */}
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto">
+          {canEdit ? (
+            <div className="flex justify-end px-3 pt-3">
+              <AddWidgetDropdown
+                managementZoneId={selectedZone.id}
+                availableWidgets={availableWidgets}
+              >
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+                >
+                  Add widget
+                </Button>
+              </AddWidgetDropdown>
+            </div>
+          ) : null}
           <CurrentTab currentTab={selectedTab} />
         </main>
       </div>
