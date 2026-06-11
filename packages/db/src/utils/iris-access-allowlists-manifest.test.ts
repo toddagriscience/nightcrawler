@@ -6,7 +6,7 @@ import {
   isPrefixedFarmInfoJsonbAnswerKey,
 } from './iris-access-allowlists-manifest';
 
-describe('isPrefixedFarmInfoJsonbAnswerKey', () => {
+describe('prefixed farm info JSONB answer keys', () => {
   it('accepts checkbox keys that prefix a JSONB column', () => {
     expect(isPrefixedFarmInfoJsonbAnswerKey('alternateFarming_no')).toBe(true);
     expect(

@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildFormSubmissionHydrationPreview } from './preview-form-submission-hydration';
 
-describe('buildFormSubmissionHydrationPreview', () => {
+describe('form submission hydration preview', () => {
   it('includes submit rows and signup hydration rows for iris-access', () => {
     const preview = buildFormSubmissionHydrationPreview({
       formSlug: 'iris-access',
