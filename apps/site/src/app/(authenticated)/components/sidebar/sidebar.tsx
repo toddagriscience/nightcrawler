@@ -1,30 +1,23 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import Link from 'next/link';
 import SidebarSectionLabel from './sidebar-section-label';
 import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
 import { Icon } from '@/components/common/icon/icon';
-import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { getManagementZones } from '@/app/(authenticated)/(accounts)/account/db';
 import SidebarSearchButton from './sidebar-search-button';
 import NewZoneButton from './new-zone-button';
 import ZoneItem from './zone-item';
+import SidebarCollapseToggle from './sidebar-collapse-toggle';
 
 export default async function Sidebar() {
-  const user = await getAuthenticatedInfo();
   const zones = await getManagementZones();
 
   return (
-    <aside className="w-[280px] shrink-0 border-r border-[var(--border)] bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
-      {/* Brand */}
-      <div className="px-4 py-5 border-b border-[var(--border)]">
-        <Link
-          href="/"
-          className="text-foreground font-bold text-base tracking-wide wordmark"
-        >
-          TODD
-        </Link>
+    <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
+      {/* Collapse control */}
+      <div className="flex items-center justify-end px-2 pt-2">
+        <SidebarCollapseToggle />
       </div>
 
       {/* Nav */}
@@ -43,19 +36,18 @@ export default async function Sidebar() {
         >
           Orders
         </SidebarNavItem>
-        <SidebarNavItem
-          href="/account"
-          icon={<Icon src="/icons/settings.svg" className="size-4" />}
-        >
-          Account
-        </SidebarNavItem>
 
         {/* Management zones */}
         {zones.length > 0 && (
           <>
-            <SidebarSectionLabel>Zones</SidebarSectionLabel>
-            {zones.map((zone) => (
-              <ZoneItem key={zone.id} id={zone.id} name={zone.name ?? ''} />
+            <SidebarSectionLabel>Management Zones</SidebarSectionLabel>
+            {zones.map((zone, index) => (
+              <ZoneItem
+                key={zone.id}
+                index={index}
+                id={zone.id}
+                name={zone.name ?? ''}
+              />
             ))}
           </>
         )}
@@ -66,8 +58,8 @@ export default async function Sidebar() {
         </div>
       </nav>
 
-      {/* User footer */}
-      <SidebarUserFooter email={user.email} />
+      {/* Account footer */}
+      <SidebarUserFooter />
     </aside>
   );
 }

@@ -5,16 +5,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Icon } from '@/components/common/icon/icon';
 import { deleteManagementZone } from '@/app/(authenticated)/(accounts)/account/(with-shell)/management-zones/[zone]/actions';
 
 interface ZoneItemProps {
   id: number;
   name: string;
+  /** Zero-based position; rendered as a 1-based keyboard badge. */
+  index: number;
   isActive?: boolean;
 }
 
-export default function ZoneItem({ id, name, isActive }: ZoneItemProps) {
+export default function ZoneItem({ id, name, index, isActive }: ZoneItemProps) {
   const router = useRouter();
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -51,13 +52,20 @@ export default function ZoneItem({ id, name, isActive }: ZoneItemProps) {
   }
 
   return (
-    <div className="group flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-sm text-muted-foreground hover:bg-accent hover:text-foreground">
+    <div className="group flex items-center gap-2 px-3 py-1.5 text-sm cursor-pointer transition-colors text-foreground/70 hover:text-foreground">
       <Link
         href={`/?zone=${id}`}
         className="flex-1 flex items-center gap-2 min-w-0"
       >
-        <Icon src="/icons/map-pin.svg" className="size-4 shrink-0 opacity-60" />
-        <span className="truncate">{name}</span>
+        {name ? (
+          <span className="size-2 shrink-0 rounded-full bg-green-500" />
+        ) : (
+          <span className="size-2 shrink-0" />
+        )}
+        <span className="min-w-0 flex-1 truncate">{name}</span>
+        <kbd className="shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px] text-foreground/40">
+          {index + 1}
+        </kbd>
       </Link>
       <button
         onClick={(e) => {
@@ -65,7 +73,7 @@ export default function ZoneItem({ id, name, isActive }: ZoneItemProps) {
           e.stopPropagation();
           setShowConfirm(true);
         }}
-        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-500 transition-all p-0.5"
+        className="opacity-0 group-hover:opacity-100 text-foreground/40 hover:text-red-500 transition-all p-0.5"
         aria-label={`Delete ${name}`}
       >
         <svg

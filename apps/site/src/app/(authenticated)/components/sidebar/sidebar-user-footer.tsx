@@ -1,27 +1,24 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Button } from '@/components/ui/button';
-import { sidebarLogout } from './sidebar-actions';
-import { BiLogOut } from 'react-icons/bi';
+import SidebarNavItem from './sidebar-nav-item';
+import { Icon } from '@/components/common/icon/icon';
 
-interface SidebarUserFooterProps {
-  email: string;
-}
-
-export default function SidebarUserFooter({ email }: SidebarUserFooterProps) {
+/**
+ * Sidebar footer — renders the Account navigation entry pinned to the bottom
+ * of the sidebar.
+ *
+ * @returns {React.ReactNode} - The sidebar account footer
+ */
+export default function SidebarUserFooter() {
   return (
-    <div className="border-t border-[var(--border)] px-4 py-4">
-      <div className="text-xs text-muted-foreground mb-2 truncate">{email}</div>
-      <form action={sidebarLogout}>
-        <Button
-          type="submit"
-          variant="ghost"
-          className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground h-8 px-2"
-        >
-          <BiLogOut className="size-4" />
-          Log out
-        </Button>
-      </form>
+    <div className="border-t border-[#D9D9D9]/30 px-3 py-3">
+      <SidebarNavItem
+        href="/account"
+        prefixMatch
+        icon={<Icon src="/icons/settings.svg" className="size-4" />}
+      >
+        Account
+      </SidebarNavItem>
     </div>
   );
 }

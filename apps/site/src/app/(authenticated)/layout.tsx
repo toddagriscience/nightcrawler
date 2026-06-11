@@ -10,6 +10,8 @@ import '../globals.css';
 import ApplicationReviewBanner from './components/application-review-banner';
 import AuthErrorFallback from './components/auth-error-fallback';
 import SidebarClient from './components/sidebar/sidebar-client';
+import Sidebar from './components/sidebar/sidebar';
+import { SidebarCollapseProvider } from './components/sidebar/sidebar-collapse-context';
 
 /**
  * Checks whether the current viewer has accepted the account agreement.
@@ -63,13 +65,17 @@ export default function AuthenticatedLayout({
       >
         <Suspense>
           <ViewerAgreementGate>
-            <div className="flex">
-              <SidebarClient />
-              <div className="flex-1 min-w-0 px-6 py-6">
-                <DesktopGate />
-                {children}
+            <SidebarCollapseProvider>
+              <div className="flex">
+                <SidebarClient>
+                  <Sidebar />
+                </SidebarClient>
+                <div className="flex-1 min-w-0 px-6 py-6">
+                  <DesktopGate />
+                  {children}
+                </div>
               </div>
-            </div>
+            </SidebarCollapseProvider>
           </ViewerAgreementGate>
         </Suspense>
       </body>
