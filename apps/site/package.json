@@ -74,7 +74,7 @@
     "glob": "13.0.6",
     "intersection-observer-polyfill": "^0.1.0",
     "jsdom": "^28.1.0",
-    "lucide-react": "^0.575.0",
+    "lucide-react": "^1.17.0",
     "newrelic": "^13.20.0",
     "next": "16.3.0-canary.37",
     "next-intl": "^4.9.0",
