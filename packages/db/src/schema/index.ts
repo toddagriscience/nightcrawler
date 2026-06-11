@@ -25,3 +25,4 @@ export {
   platformAccessApplication,
   platformAccessApplicationStatusEnum,
 } from './platform-access-application';
+export { reminder, reminderTypeEnum } from './reminder';
