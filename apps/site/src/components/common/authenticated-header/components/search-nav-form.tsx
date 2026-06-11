@@ -11,7 +11,8 @@
  *   from each category (no embeddings).
  * - Typing debounces for one second before fetching results ranked by
  *   cosine similarity, with a skeleton shown during the wait.
- * - Submitting navigates to the full `/search` results page.
+ * - Submitting returns to the dashboard; full-page search results were
+ *   retired in favor of the sidebar search modal.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -27,8 +28,9 @@ import type { DropdownResults } from './types';
 const DEBOUNCE_MS = 1_000;
 
 /**
- * Navbar search form that combines a traditional `GET /search` submit
- * with a live dropdown preview powered by cached server actions.
+ * Navbar search form with a live dropdown preview powered by cached server
+ * actions. Submitting returns to the dashboard since the dedicated search
+ * results page was retired in favor of the sidebar search modal.
  *
  * @returns Interactive search input with dropdown suggestions
  */
@@ -157,19 +159,16 @@ export function SearchNavForm() {
   }
 
   /**
-   * Navigates to the full search page on form submit.
+   * Navigates to the dashboard on form submit. Full-page search results were
+   * retired in favor of the sidebar search modal; the live dropdown above
+   * remains the primary way to jump to a result.
    *
    * @param event - The form submission event
    */
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsOpen(false);
-    const trimmed = query.trim();
-    if (trimmed) {
-      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
-    } else {
-      router.push('/search');
-    }
+    router.push('/');
   }
 
   return (
