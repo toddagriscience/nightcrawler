@@ -146,26 +146,26 @@ export default async function DashboardPage({
       </header>
 
       {/* Body — content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto">
-          {canEdit ? (
-            <div className="flex justify-end px-3 pt-3">
-              <AddWidgetDropdown
-                managementZoneId={selectedZone.id}
-                availableWidgets={availableWidgets}
-              >
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
-                >
-                  Add widget
-                </Button>
-              </AddWidgetDropdown>
-            </div>
-          ) : null}
           <CurrentTab currentTab={selectedTab} />
         </main>
+        {canEdit ? (
+          <div className="absolute bottom-4 right-4 z-10">
+            <AddWidgetDropdown
+              managementZoneId={selectedZone.id}
+              availableWidgets={availableWidgets}
+            >
+              <Button
+                size="sm"
+                variant="default"
+                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
+              >
+                Add widget
+              </Button>
+            </AddWidgetDropdown>
+          </div>
+        ) : null}
       </div>
     </div>
   );
