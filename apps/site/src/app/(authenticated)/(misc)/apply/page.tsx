@@ -94,7 +94,6 @@ export default async function Apply() {
         }}
         currentUser={currentUser}
         allUsers={allUsers}
-        internalApplication={{ farmId }}
         farmSubscription={subscription ?? null}
         invitedUserVerificationStatus={invitedUserVerificationStatus}
         canSubmitApplication={canSubmitApplication}

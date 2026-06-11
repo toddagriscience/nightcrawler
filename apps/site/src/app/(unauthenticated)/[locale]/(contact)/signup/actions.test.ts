@@ -51,6 +51,7 @@ vi.mock('@nightcrawler/db/queries', async (importOriginal) => {
   return {
     ...actual,
     validateFormSubmissionSignupToken: vi.fn(),
+    resolveSignupContext: vi.fn().mockResolvedValue(null),
     completeFormSubmissionSignup: vi.fn().mockResolvedValue(undefined),
   };
 });

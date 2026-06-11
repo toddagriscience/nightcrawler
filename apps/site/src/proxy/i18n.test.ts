@@ -63,9 +63,16 @@ const { MockNextResponse } = vi.hoisted(() => {
 
   const next = vi.fn(() => new MockNextResponse());
 
+  const rewrite = vi.fn((url: URL | string) => {
+    const res = new MockNextResponse();
+    res.headersSet('x-middleware-rewrite', String(url));
+    return res;
+  });
+
   Object.assign(MockNextResponse, {
     redirect,
     next,
+    rewrite,
   });
 
   return { MockNextResponse };

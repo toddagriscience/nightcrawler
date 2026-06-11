@@ -63,7 +63,7 @@ export function handleI18nMiddleware(
     }
 
     // Public contact form lives under `/[locale]/contact`; serve it at `/contact` without redirecting.
-    if (splitPathnames.length === 2 && splitPathnames[1] === 'contact') {
+    if (splitPathnames.length === 1 && splitPathnames[0] === 'contact') {
       const preferredLocale =
         request.cookies?.get('NEXT_LOCALE')?.value ||
         request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||

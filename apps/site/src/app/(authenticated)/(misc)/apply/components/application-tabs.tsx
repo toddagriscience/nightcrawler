@@ -46,7 +46,7 @@ export const ApplicationContext = createContext({
 export default function ApplicationTabs({
   farmInfo,
   allUsers,
-  internalApplication,
+  internalApplication = {} as FarmInfoInternalApplicationSelect,
   farmSubscription,
   currentUser,
   invitedUserVerificationStatus,
@@ -55,7 +55,7 @@ export default function ApplicationTabs({
   farmInfo: GeneralBusinessInformationUpdate;
   allUsers: UserSelect[];
   currentUser: UserSelect;
-  internalApplication: FarmInfoInternalApplicationSelect;
+  internalApplication?: FarmInfoInternalApplicationSelect;
   farmSubscription: FarmSubscriptionSelect | null;
   invitedUserVerificationStatus: VerificationStatus[];
   canSubmitApplication: boolean;
