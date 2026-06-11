@@ -147,7 +147,7 @@ describe('handleAuthRouting', () => {
     expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
-  it('redirects unauthenticated users from a protected route to "/en"', async () => {
+  it('allows unauthenticated users through at "/" so marketing homepage is served', async () => {
     const mockRequest = makeMockRequest('https://example.com/');
 
     (createServerClient as Mock).mockReturnValue(
@@ -156,8 +156,20 @@ describe('handleAuthRouting', () => {
 
     const result = await handleAuthRouting(mockRequest);
 
+    expect(result).toBeNull();
+  });
+
+  it('redirects unauthenticated users from other protected routes to "/"', async () => {
+    const mockRequest = makeMockRequest('https://example.com/account/settings');
+
+    (createServerClient as Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+
+    const result = await handleAuthRouting(mockRequest);
+
     expect(result).toBeInstanceOf(NextResponse);
-    expect(result?.headers.get('location')).toBe('https://example.com/en');
+    expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
   it('allows unauthenticated users on a non-protected marketing route', async () => {

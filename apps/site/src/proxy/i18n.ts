@@ -34,7 +34,7 @@ export function handleI18nMiddleware(
   const { pathname } = request.nextUrl;
 
   if (!isAuthenticated) {
-    // For root path, use intl middleware (it will redirect / to /en)
+    // For root path, let intl middleware serve it as the default locale
     if (pathname === '/') {
       return intlMiddleware(request);
     }
@@ -51,9 +51,11 @@ export function handleI18nMiddleware(
       );
     }
 
-    // For paths that already have locale, let them through normally
+    // For paths that already have a locale prefix, let intl middleware handle
+    // them — it will redirect /en/... to /... (default locale needs no prefix)
+    // and pass /es/... through unchanged.
     if (SUPPORTED_LOCALES.includes(splitPathnames[1] as Locale)) {
-      return NextResponse.next();
+      return intlMiddleware(request);
     }
 
     // Unauth routes, such as `/login`
@@ -63,8 +65,10 @@ export function handleI18nMiddleware(
       return response;
     }
 
-    // For paths without locale (like /about, /no-page-here),
-    // redirect using NEXT_LOCALE cookie if set, else default to en
+    // For paths without locale (like /about), detect preferred locale and
+    // redirect non-default locales to /{locale}/path. For the default locale
+    // (en), delegate to intl middleware which rewrites internally without
+    // adding a /en/ prefix to the URL.
     const preferredLocale =
       request.cookies?.get('NEXT_LOCALE')?.value ||
       request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
@@ -72,6 +76,9 @@ export function handleI18nMiddleware(
     const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
       ? preferredLocale
       : 'en';
+    if (locale === 'en') {
+      return intlMiddleware(request);
+    }
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(url);

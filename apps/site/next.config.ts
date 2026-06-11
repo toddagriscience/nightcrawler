@@ -160,24 +160,52 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
+      // Redirect legacy /en/* URLs — English is now served without a locale prefix
       {
-        source: '/:locale(en|es)/who-we-are/:path*',
-        destination: '/:locale/about/:path*',
+        source: '/en',
+        destination: '/',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/who-we-are',
-        destination: '/:locale/about',
+        source: '/en/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
+      // Legacy slug redirects for English
+      {
+        source: '/who-we-are/:path*',
+        destination: '/about/:path*',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/what-we-do',
-        destination: '/:locale/research',
+        source: '/who-we-are',
+        destination: '/about',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/support',
-        destination: '/:locale/contact',
+        source: '/what-we-do',
+        destination: '/research',
+        permanent: true,
+      },
+      // Legacy slug redirects for Spanish
+      {
+        source: '/es/who-we-are/:path*',
+        destination: '/es/about/:path*',
+        permanent: true,
+      },
+      {
+        source: '/es/who-we-are',
+        destination: '/es/about',
+        permanent: true,
+      },
+      {
+        source: '/es/what-we-do',
+        destination: '/es/research',
+        permanent: true,
+      },
+      {
+        source: '/es/support',
+        destination: '/es/contact',
         permanent: true,
       },
       {

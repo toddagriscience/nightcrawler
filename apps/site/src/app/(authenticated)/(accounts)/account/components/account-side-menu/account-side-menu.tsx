@@ -24,7 +24,7 @@ export default function AccountSideMenu() {
     const result = await logout();
 
     if (!result?.error) {
-      router.push('/en');
+      router.push('/');
     }
   };
 
