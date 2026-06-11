@@ -13,6 +13,7 @@ export const SANITY_FORM_FIELD_TYPES = [
   'select',
   'yesNo',
   'checkbox',
+  'checkboxGroup',
 ] as const;
 
 /** Sanity form field type union. */
@@ -20,6 +21,27 @@ export type SanityFormFieldType = (typeof SANITY_FORM_FIELD_TYPES)[number];
 
 /** Field width within a section grid. */
 export type SanityFormFieldWidth = 'full' | 'half';
+
+/** CMS metadata hint for platform-access hydration destinations. */
+export type SanityFormFieldStorageTarget =
+  | 'answers_only'
+  | 'prefill'
+  | 'farm'
+  | 'farm_location'
+  | 'farm_certificate'
+  | 'farm_info_internal_application'
+  | 'advisor_notes'
+  | 'retention_consent';
+
+/** One checkbox option inside a `checkboxGroup` field. */
+export interface SanityFormCheckboxOption {
+  /** Stable answer key stored in Postgres */
+  key: string;
+  /** Display label beside the checkbox */
+  label: string;
+  /** Optional supporting copy below the option label */
+  helpText?: string;
+}
 
 /** One field row from a Sanity `form` document. */
 export interface SanityFormField {
@@ -39,6 +61,10 @@ export interface SanityFormField {
   helpText?: string;
   /** Options for `select` fields */
   options?: string[];
+  /** Options for `checkboxGroup` fields — each key is stored flat in answers JSON */
+  checkboxOptions?: SanityFormCheckboxOption[];
+  /** Optional Postgres destination hint for platform-access forms */
+  storageTarget?: SanityFormFieldStorageTarget;
 }
 
 /** One grouped section from a Sanity `form` document. */

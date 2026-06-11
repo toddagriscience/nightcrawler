@@ -107,6 +107,63 @@ export function FormFieldRenderer({
     );
   }
 
+  if (field.type === 'checkboxGroup') {
+    const options = field.checkboxOptions ?? [];
+
+    return (
+      <FieldSet className="flex flex-col gap-3">
+        <FieldLabel>
+          {field.label}
+          {requiredMark}
+        </FieldLabel>
+        {field.helpText ? (
+          <FieldDescription>{field.helpText}</FieldDescription>
+        ) : null}
+        <div className="flex flex-col gap-4">
+          {options.map((option) => (
+            <Controller
+              key={option.key}
+              name={option.key}
+              control={control}
+              render={({ field: controllerField }) => (
+                <label
+                  htmlFor={option.key}
+                  className="flex cursor-pointer items-start gap-3"
+                >
+                  <Checkbox
+                    id={option.key}
+                    className={FORM_CHECKBOX_CLASS}
+                    checked={controllerField.value === true}
+                    onCheckedChange={(checked) =>
+                      controllerField.onChange(checked === true)
+                    }
+                  />
+                  <div className="space-y-1">
+                    <FieldLabel htmlFor={option.key} className="cursor-pointer">
+                      {option.label}
+                    </FieldLabel>
+                    {option.helpText ? (
+                      <FieldDescription>{option.helpText}</FieldDescription>
+                    ) : null}
+                  </div>
+                </label>
+              )}
+            />
+          ))}
+        </div>
+        {options[0] ? (
+          <ErrorMessage
+            errors={errors}
+            name={options[0].key}
+            render={({ message }) => (
+              <FormErrorMessage errorMessage={message} />
+            )}
+          />
+        ) : null}
+      </FieldSet>
+    );
+  }
+
   if (field.type === 'checkbox') {
     return (
       <FieldSet className="flex flex-col gap-3">

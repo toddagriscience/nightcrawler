@@ -6,16 +6,15 @@ import { parseSafeRedirectNext } from './parse-safe-redirect-next';
 describe('parseSafeRedirectNext', () => {
   const origin = 'https://toddagriscience.com';
 
-  it('splits pathname and query for incoming onboarding paths', () => {
+  it('splits pathname and query for signup onboarding paths', () => {
     const params = new URLSearchParams({
-      first_name: 'Jane',
       application_id: '1',
       token: 'abc',
     });
-    const next = `/incoming?${params.toString()}`;
+    const next = `/en/signup?${params.toString()}`;
     const result = parseSafeRedirectNext(next, origin);
 
-    expect(result.pathname).toBe('/incoming');
+    expect(result.pathname).toBe('/en/signup');
     expect(result.search).toBe(`?${params.toString()}`);
   });
 
@@ -27,11 +26,11 @@ describe('parseSafeRedirectNext', () => {
   });
 
   it('preserves encoded query values', () => {
-    const params = new URLSearchParams({ email: 'jane@farm.com' });
-    const next = `/incoming?${params.toString()}`;
+    const params = new URLSearchParams({ token: 'abc-def' });
+    const next = `/en/signup?${params.toString()}`;
     const result = parseSafeRedirectNext(next, origin);
 
-    expect(result.pathname).toBe('/incoming');
-    expect(result.search).toBe('?email=jane%40farm.com');
+    expect(result.pathname).toBe('/en/signup');
+    expect(result.search).toBe('?token=abc-def');
   });
 });

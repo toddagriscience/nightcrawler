@@ -27,18 +27,6 @@ export default function specialRedirect(
     );
   }
 
-  if (pathname === '/incoming') {
-    const signupUrl = new URL('/en/signup', request.url);
-    signupUrl.search = request.nextUrl.search;
-    return NextResponse.redirect(signupUrl);
-  }
-
-  if (isLocale && segments.length === 2 && segments[1] === 'incoming') {
-    const signupUrl = new URL(`/${locale0}/signup`, request.url);
-    signupUrl.search = request.nextUrl.search;
-    return NextResponse.redirect(signupUrl);
-  }
-
   if (
     segments.length === 3 &&
     isLocale &&

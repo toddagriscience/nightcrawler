@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { buildSignupUrl } from '@/lib/platform-access/build-incoming-signup-url';
+import { buildSignupUrl } from '@/lib/platform-access/build-signup-url';
 import { notFound } from 'next/navigation';
 import {
   getFarmAdvisorProfileNotes,

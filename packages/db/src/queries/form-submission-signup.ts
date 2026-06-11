@@ -161,6 +161,31 @@ export const validatePlatformAccessSignupToken =
   validateFormSubmissionSignupToken;
 
 /**
+ * Returns whether signup already finished for a matching application id + token.
+ *
+ * @param submissionId - Form submission id
+ * @param token - Signup token from the onboarding link
+ */
+export async function isFormSubmissionSignupLinkConsumed(
+  submissionId: number,
+  token: string
+): Promise<boolean> {
+  const normalizedToken = token.trim();
+
+  if (!normalizedToken || !Number.isFinite(submissionId)) {
+    return false;
+  }
+
+  const [submission] = await db
+    .select({ signedUpAt: formSubmission.signedUpAt })
+    .from(formSubmission)
+    .where(activePlatformAccessSignupFilters(submissionId, normalizedToken))
+    .limit(1);
+
+  return Boolean(submission?.signedUpAt);
+}
+
+/**
  * Returns whether an approved applicant already finished signup with this link.
  *
  * @param submissionId - Form submission id

@@ -42,6 +42,7 @@ const LAST_NAME_KEYS = [
 ];
 
 const FARM_NAME_KEYS = [
+  'informalName',
   'farmName',
   'farm_name',
   'farm',
@@ -193,7 +194,8 @@ export function enrichStoredAnswersWithSignupPrefill(
     }
 
     if (
-      /(farm|business|company|organization).?name$/i.test(field.name) &&
+      (/(farm|business|company|organization).?name$/i.test(field.name) ||
+        /^informalName$/i.test(field.name)) &&
       !enriched.farmName
     ) {
       enriched.farmName = value;
@@ -266,39 +268,4 @@ export function buildSignupUrl(
   }
 ): string {
   return new URL(buildSignupPath(options), baseUrl).toString();
-}
-
-/**
- * @deprecated Use {@link buildSignupPath}. Kept for transitional imports.
- */
-export function buildIncomingSignupPath(
-  answers: Record<string, unknown>,
-  options?: { applicationId?: number; signupToken?: string }
-): string | null {
-  if (!options?.applicationId || !options.signupToken) {
-    return null;
-  }
-
-  if (!extractApplicantPrefillFromAnswers(answers).email) {
-    return null;
-  }
-
-  return buildSignupPath({
-    applicationId: options.applicationId,
-    signupToken: options.signupToken,
-  });
-}
-
-/**
- * @deprecated Use {@link buildSignupUrl}. Kept for transitional imports.
- */
-export function buildIncomingSignupUrl(
-  baseUrl: string,
-  answers: Record<string, unknown>,
-  options?: { applicationId?: number; signupToken?: string }
-): string | null {
-  const path = buildIncomingSignupPath(answers, options);
-  if (!path) return null;
-
-  return new URL(path, baseUrl).toString();
 }

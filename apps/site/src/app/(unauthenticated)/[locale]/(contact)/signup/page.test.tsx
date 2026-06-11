@@ -10,15 +10,6 @@ import SignupForm from './components/signup-form';
 
 global.ResizeObserver = ResizeObserver;
 
-const mockGet = vi.fn();
-
-vi.mock('next/navigation', () => ({
-  useSearchParams: () => ({
-    get: mockGet,
-  }),
-  usePathname: () => '/signup',
-}));
-
 vi.mock('@/lib/utils/actions', () => ({
   formatActionResponseErrors: vi.fn(),
 }));
@@ -47,25 +38,23 @@ vi.mock('framer-motion', () => {
 });
 
 describe('SignupForm', () => {
-  const validParams: Record<string, string> = {
-    first_name: 'John',
-    last_name: 'Doe',
-    farm_name: 'Green Acres',
+  const prefill = {
+    firstName: 'John',
+    lastName: 'Doe',
+    farmName: 'Green Acres',
     email: 'john@example.com',
-    phone: '5551234567',
-    application_id: '42',
+    phone: '+15551234567',
+    applicationId: '42',
     token: 'test-signup-token',
   };
 
   beforeEach(() => {
-    mockGet.mockClear();
+    vi.clearAllMocks();
   });
 
-  describe('form loading with search params', () => {
-    it('renders the approved-applicant password form when all params are present', () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      render(<SignupForm isApprovedApplicantSignup />);
+  describe('approved-applicant password form', () => {
+    it('renders when server prefill is provided', () => {
+      render(<SignupForm prefill={prefill} />);
 
       expect(screen.getByText('Create your password')).toBeInTheDocument();
       expect(
@@ -75,24 +64,23 @@ describe('SignupForm', () => {
       expect(screen.getByText('Continue')).toBeInTheDocument();
     });
 
-    it('includes hidden fields with pre-filled values from search params', () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
-
-      const { container } = render(<SignupForm isApprovedApplicantSignup />);
+    it('includes hidden fields with server prefill values', () => {
+      const { container } = render(<SignupForm prefill={prefill} />);
 
       expect(container.querySelector('input[name="firstName"]')).toHaveValue(
         'John'
       );
-      expect(container.querySelector('input[name="applicationId"]')).toBeNull();
+      expect(container.querySelector('input[name="farmName"]')).toHaveValue(
+        'Green Acres'
+      );
     });
 
     it('shows errors when signup action fails', async () => {
-      mockGet.mockImplementation((key: string) => validParams[key] || null);
       vi.mocked(signUp).mockRejectedValue(new Error('Invalid link'));
       vi.mocked(formatActionResponseErrors).mockReturnValue(['Invalid link']);
 
       const user = userEvent.setup();
-      render(<SignupForm isApprovedApplicantSignup />);
+      render(<SignupForm prefill={prefill} />);
 
       const validPassword = 'P@ssword1';
       await user.type(

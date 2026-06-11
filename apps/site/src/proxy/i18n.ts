@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /** Routes that are uninternationalized and only accessible to the public */
 const unauthUnintlRoutes = [
-  'incoming',
   'auth',
   'externship-terms',
   // Only for go.toddagriscience.com

@@ -28,13 +28,13 @@ export async function resolveAuthConfirmRedirectTarget(input: {
   );
 
   if (Number.isFinite(parsedApplicationId) && input.signupTokenParam?.trim()) {
-    const incomingPath = await resolveSignupPathForSignupToken(
+    const signupPath = await resolveSignupPathForSignupToken(
       parsedApplicationId,
       input.signupTokenParam
     );
 
-    if (incomingPath) {
-      return parseSafeRedirectNext(incomingPath, input.origin);
+    if (signupPath) {
+      return parseSafeRedirectNext(signupPath, input.origin);
     }
   }
 

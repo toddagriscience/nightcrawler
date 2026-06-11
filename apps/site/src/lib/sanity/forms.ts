@@ -14,7 +14,13 @@ const GROQ_FORM_FIELD = `
   required,
   placeholder,
   helpText,
-  options
+  options,
+  checkboxOptions[] {
+    key,
+    label,
+    helpText
+  },
+  storageTarget
 `;
 
 /** GROQ projection for public form documents. */

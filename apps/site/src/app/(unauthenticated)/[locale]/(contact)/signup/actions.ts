@@ -8,13 +8,17 @@ import {
   setPassword,
 } from '@/lib/auth-server';
 import { sendApprovedApplicantInvite } from '@nightcrawler/db/utils/send-approved-applicant-invite';
-import { buildSignupUrl } from '@nightcrawler/db/utils/extract-applicant-prefill';
+import {
+  type ApplicantPrefill,
+  buildSignupUrl,
+} from '@nightcrawler/db/utils/extract-applicant-prefill';
 import { formSubmission } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
 import { farm, user, standardValues } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import {
   completeFormSubmissionSignup,
+  resolveSignupContext,
   validateFormSubmissionSignupToken,
 } from '@nightcrawler/db/queries';
 import logger from '@/lib/logger';
@@ -267,6 +271,25 @@ export async function resendApprovedApplicantActivationEmail(input: {
 }
 
 /**
+ * Reads a trimmed string from form data.
+ *
+ * @param value - Raw form entry
+ */
+function readFormString(value: FormDataEntryValue | null): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+/**
+ * Prefers a submitted value and falls back to stored application prefill.
+ *
+ * @param formValue - Value from the signup form
+ * @param prefillValue - Value from the approved application answers
+ */
+function coalescePrefill(formValue: string, prefillValue?: string): string {
+  return formValue || prefillValue?.trim() || '';
+}
+
+/**
  * Completes approved-applicant signup (platform access forms only).
  *
  * @param _ - The initial state (unneeded in this function)
@@ -276,15 +299,46 @@ export async function signUp(
   _: unknown,
   formData: FormData
 ): Promise<ActionResponse> {
+  const applicationIdRaw = formData.get('applicationId')?.toString();
+  const tokenRaw = formData.get('token')?.toString();
+  let applicationPrefill: ApplicantPrefill | undefined;
+
+  if (applicationIdRaw && tokenRaw) {
+    const parsedApplicationId = Number.parseInt(applicationIdRaw, 10);
+
+    if (Number.isFinite(parsedApplicationId)) {
+      const signupContext = await resolveSignupContext(
+        parsedApplicationId,
+        tokenRaw
+      );
+      applicationPrefill = signupContext?.prefill;
+    }
+  }
+
   const rawData = {
-    firstName: formData.get('firstName'),
-    lastName: formData.get('lastName'),
-    farmName: formData.get('farmName'),
-    email: formData.get('email'),
-    phone: formData.get('phone'),
+    firstName: coalescePrefill(
+      readFormString(formData.get('firstName')),
+      applicationPrefill?.firstName
+    ),
+    lastName: coalescePrefill(
+      readFormString(formData.get('lastName')),
+      applicationPrefill?.lastName
+    ),
+    farmName: coalescePrefill(
+      readFormString(formData.get('farmName')),
+      applicationPrefill?.farmName
+    ),
+    email: coalescePrefill(
+      readFormString(formData.get('email')),
+      applicationPrefill?.email
+    ),
+    phone: coalescePrefill(
+      readFormString(formData.get('phone')),
+      applicationPrefill?.phone
+    ),
     password: formData.get('password'),
-    applicationId: formData.get('applicationId')?.toString(),
-    token: formData.get('token')?.toString(),
+    applicationId: applicationIdRaw,
+    token: tokenRaw,
   };
 
   const validated = signUpSchema.safeParse(rawData);

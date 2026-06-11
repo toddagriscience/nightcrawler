@@ -1,12 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-export const dynamic = 'force-dynamic';
-
 import { getUserEmail } from '@/lib/auth-server';
+import { formSubmission } from '@nightcrawler/db/schema';
+import { db } from '@nightcrawler/db/schema/connection';
 import {
-  isFormSubmissionSignupAlreadyCompleted,
+  isFormSubmissionSignupLinkConsumed,
   resolveSignupContext,
 } from '@nightcrawler/db/queries';
+import { extractApplicantPrefillFromAnswers } from '@nightcrawler/db/utils/extract-applicant-prefill';
+import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import ApprovedApplicantGate from './components/approved-applicant-gate';
 import SignupForm from './components/signup-form';
@@ -27,6 +29,31 @@ function readSearchParam(params: SignupPageSearchParams, key: string): string {
   }
 
   return value ?? '';
+}
+
+/**
+ * Reads the applicant email stored on a submission for resend flows.
+ *
+ * @param applicationId - Form submission id from the signup link
+ */
+async function readStoredApplicantEmail(
+  applicationId: number
+): Promise<string> {
+  const [submission] = await db
+    .select({ answers: formSubmission.answers })
+    .from(formSubmission)
+    .where(eq(formSubmission.id, applicationId))
+    .limit(1);
+
+  if (!submission) {
+    return '';
+  }
+
+  return (
+    extractApplicantPrefillFromAnswers(
+      (submission.answers ?? {}) as Record<string, unknown>
+    ).email ?? ''
+  );
 }
 
 /** Password step for approved platform-access applicants.
@@ -61,22 +88,20 @@ export default async function Join({
   const signupContext = await resolveSignupContext(parsedApplicationId, token);
 
   if (!signupContext) {
-    const legacyEmail = readSearchParam(resolvedSearchParams, 'email');
-    const alreadyCompleted = legacyEmail
-      ? await isFormSubmissionSignupAlreadyCompleted(
-          parsedApplicationId,
-          token,
-          legacyEmail
-        )
-      : false;
+    const linkConsumed = await isFormSubmissionSignupLinkConsumed(
+      parsedApplicationId,
+      token
+    );
 
-    if (alreadyCompleted) {
+    if (linkConsumed) {
       redirect('/apply');
     }
 
+    const applicantEmail = await readStoredApplicantEmail(parsedApplicationId);
+
     return (
       <ApprovedApplicantGate
-        email={legacyEmail}
+        email={applicantEmail}
         reason="invalid-link"
         applicationId={parsedApplicationId}
         token={token}
@@ -103,7 +128,6 @@ export default async function Join({
 
   return (
     <SignupForm
-      isApprovedApplicantSignup
       prefill={{
         firstName: signupContext.prefill.firstName ?? '',
         lastName: signupContext.prefill.lastName ?? '',

@@ -101,6 +101,11 @@ export const ADVISOR_NOTE_FIELD_LABELS: Record<string, string> = {
   operationalNotes: 'Operational notes',
   diseaseManagementNotes: 'Disease management',
   alignmentNotes: 'Alignment notes',
+  additionalPointsOfContact: 'Additional points of contact',
+  cultivationPracticesNotes: 'Soil health / cultivation practices',
+  pestControlNotes: 'Pest control',
+  offFarmProductsNotes: 'Off-farm products and amendments',
+  nearContaminationNotes: 'Near contamination sources',
 };
 
 /** UI-only keys not persisted to farm tables. */

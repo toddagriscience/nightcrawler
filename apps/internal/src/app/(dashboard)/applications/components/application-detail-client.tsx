@@ -22,6 +22,7 @@ import {
   rejectPlatformAccessApplication,
   resendPlatformAccessApplicationInvite,
 } from '../actions';
+import ApplicationAnswersPanel from './application-answers-panel';
 import { FormSlugBadge } from './form-slug-badge';
 import FarmAdvisorProfileNotes from './farm-advisor-profile-notes';
 
@@ -41,19 +42,6 @@ export interface ApplicationDetailClientProps {
   signupUrl: string | null;
   /** Advisor notes when the application is linked to a farm */
   farmAdvisorProfileNotes: string | null;
-}
-
-/**
- * Formats one stored answer value for display.
- *
- * @param value - Raw answer value
- */
-function formatAnswerValue(value: unknown): string {
-  if (typeof value === 'boolean') {
-    return value ? 'Yes' : 'No';
-  }
-
-  return String(value ?? '');
 }
 
 /**
@@ -226,21 +214,10 @@ export default function ApplicationDetailClient({
         ) : null}
       </div>
 
-      <div className="space-y-3 rounded-md border p-4">
-        <h2 className="text-sm font-medium">Answers</h2>
-        {Object.keys(answers).length === 0 ? (
-          <p className="text-sm text-muted-foreground">No answers stored.</p>
-        ) : (
-          Object.entries(answers).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-3 gap-2 text-sm">
-              <div className="font-medium">{key}</div>
-              <div className="col-span-2 break-words">
-                {formatAnswerValue(value)}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      <ApplicationAnswersPanel
+        formSlug={application.formSlug}
+        answers={answers}
+      />
 
       {application.farmId && farmAdvisorProfileNotes !== null ? (
         <FarmAdvisorProfileNotes
