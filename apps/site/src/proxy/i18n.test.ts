@@ -20,8 +20,22 @@ vi.mock('next-intl/middleware', () => {
 const { MockNextResponse } = vi.hoisted(() => {
   class MockNextResponse {
     private headers = new Headers();
-    private cookies: string[] = [];
+    private _rawSetCookies: string[] = [];
+    private _cookieMap = new Map<string, string>();
     status?: number;
+
+    // Mirrors the ResponseCookies interface used in Next.js middleware
+    cookies = {
+      set: (name: string, value: string, options?: { path?: string }) => {
+        this._cookieMap.set(name, value);
+        const pathStr = options?.path ? `; Path=${options.path}` : '';
+        this._rawSetCookies.push(`${name}=${value}${pathStr}`);
+      },
+      get: (name: string) => {
+        const val = this._cookieMap.get(name);
+        return val !== undefined ? { name, value: val } : undefined;
+      },
+    };
 
     constructor(body?: object, init?: ResponseInit) {
       this.status = init?.status;
@@ -47,12 +61,12 @@ const { MockNextResponse } = vi.hoisted(() => {
 
     /** required by Next middleware */
     getSetCookie(): string[] {
-      return this.cookies;
+      return this._rawSetCookies;
     }
 
     /** test helper */
     _pushSetCookie(value: string) {
-      this.cookies.push(value);
+      this._rawSetCookies.push(value);
     }
   }
 
@@ -183,6 +197,30 @@ describe('I18n Middleware', () => {
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
       expect(result.headers.get('x-intl-processed')).toBe('1');
+    });
+
+    it('should set NEXT_LOCALE=en cookie on /en/* redirect to prevent Accept-Language override', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/en/about' },
+      } as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error getSetCookie is a mock-only method not on NextResponse
+      const setCookies: string[] = result.getSetCookie();
+      expect(setCookies.some((c) => c.startsWith('NEXT_LOCALE=en'))).toBe(true);
+    });
+
+    it('should not set NEXT_LOCALE cookie for non-default locale paths like /es/*', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/es/about' },
+      } as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error getSetCookie is a mock-only method not on NextResponse
+      const setCookies: string[] = result.getSetCookie();
+      expect(setCookies.every((c) => !c.startsWith('NEXT_LOCALE='))).toBe(true);
     });
   });
 

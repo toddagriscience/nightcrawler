@@ -52,10 +52,18 @@ export function handleI18nMiddleware(
     }
 
     // For paths that already have a locale prefix, let intl middleware handle
-    // them — it will redirect /en/... to /... (default locale needs no prefix)
-    // and pass /es/... through unchanged.
+    // them. /es/... is passed through unchanged. For /en/... (default locale
+    // with an unnecessary prefix), intl middleware redirects to /... but does
+    // not persist the locale via cookie — so we pin NEXT_LOCALE=en on the
+    // redirect response to prevent the subsequent locale-detection pass from
+    // re-routing the user to /es/... based on Accept-Language.
     if (SUPPORTED_LOCALES.includes(splitPathnames[1] as Locale)) {
-      return intlMiddleware(request);
+      const explicitLocale = splitPathnames[1] as Locale;
+      const response = intlMiddleware(request) as NextResponse;
+      if (explicitLocale === routing.defaultLocale) {
+        response.cookies.set('NEXT_LOCALE', explicitLocale, { path: '/' });
+      }
+      return response;
     }
 
     // Unauth routes, such as `/login`

@@ -160,17 +160,6 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
-      // Redirect legacy /en/* URLs — English is now served without a locale prefix
-      {
-        source: '/en',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/en/:path*',
-        destination: '/:path*',
-        permanent: true,
-      },
       // Legacy slug redirects for English
       {
         source: '/who-we-are/:path*',
