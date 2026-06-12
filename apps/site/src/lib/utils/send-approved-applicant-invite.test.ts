@@ -17,8 +17,7 @@ describe('sendApprovedApplicantInvite', () => {
   const baseInput = {
     email: 'applicant@example.com',
     firstName: 'Alex',
-    onboardingUrl:
-      'https://app.example.com/en/signup?application_id=1&token=abc',
+    onboardingUrl: 'https://app.example.com/signup?application_id=1&token=abc',
     projectId: 'test-project',
     secretKey: 'test-secret',
   };
@@ -75,6 +74,6 @@ describe('sendApprovedApplicantInvite', () => {
 
     expect(result.sent).toBe(false);
     expect(result.error).toContain('Rate limit exceeded');
-    expect(result.error).toContain('/en/signup**');
+    expect(result.error).toContain('/signup**');
   });
 });

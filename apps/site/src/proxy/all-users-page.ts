@@ -10,7 +10,6 @@ const allUserRoutesIntl = [
   'accessibility',
   'news',
   'terms',
-  'signup',
 ];
 
 /** Handles routes that all users need access to. An "all users" page is one that all users need to be able to access, whether authenticated or not. Due to the nature of auth routing in Nightcrawler (authenticated users are redirected away from anything localized, unauthenticated users are redirected away from anything un-localized), these routes need to be handled manually. You can find a list of these routes in the `allUserRoutes` constant. */

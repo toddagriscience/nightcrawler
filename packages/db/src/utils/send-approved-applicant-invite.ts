@@ -79,14 +79,14 @@ export async function sendApprovedApplicantInvite(input: {
 
     return {
       sent: false,
-      error: `${retryResult.error.message} Also add ${new URL(redirectTo).origin}/en/signup** to Supabase → Authentication → URL Configuration → Redirect URLs. See docs/supabase-auth-emails.md.`,
+      error: `${retryResult.error.message} Also add ${new URL(redirectTo).origin}/signup** to Supabase → Authentication → URL Configuration → Redirect URLs. See docs/supabase-auth-emails.md.`,
     };
   }
 
   const redirectOrigin = new URL(redirectTo).origin;
   const combinedMessage = initialMessage.includes('redirect')
     ? initialResult.error.message
-    : `${initialResult.error.message} If this mentions redirect URLs, add ${redirectOrigin}/en/signup** in Supabase → Authentication → URL Configuration. See docs/supabase-auth-emails.md.`;
+    : `${initialResult.error.message} If this mentions redirect URLs, add ${redirectOrigin}/signup** in Supabase → Authentication → URL Configuration. See docs/supabase-auth-emails.md.`;
 
   return { sent: false, error: combinedMessage };
 }

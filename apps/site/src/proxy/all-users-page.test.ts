@@ -43,24 +43,6 @@ describe('isAllUserRoute', () => {
     expect(result).toBe(true);
   });
 
-  it('returns true for /en/signup', async () => {
-    const req = mockNextRequest('/en/signup');
-    const result = await isAllUserRoute(req as NextRequest);
-    expect(result).toBe(true);
-  });
-
-  it('returns true for /es/signup', async () => {
-    const req = mockNextRequest('/es/signup');
-    const result = await isAllUserRoute(req as NextRequest);
-    expect(result).toBe(true);
-  });
-
-  it('returns false for non-internationalized /signup', async () => {
-    const req = mockNextRequest('/signup');
-    const result = await isAllUserRoute(req as NextRequest);
-    expect(result).toBe(false);
-  });
-
   it('returns false for root path', async () => {
     const req = mockNextRequest('/');
     const result = await isAllUserRoute(req as NextRequest);

@@ -56,19 +56,17 @@ async function readStoredApplicantEmail(
   );
 }
 
-/** Password step for approved platform-access applicants.
+/**
+ * Password step for approved platform-access applicants.
  *
- * @param props - Page props including locale and search params
+ * @param props - Page props including search params from the approval email link
  */
 export default async function Join({
-  params,
   searchParams,
 }: {
-  params: Promise<{ locale: string }>;
   searchParams: Promise<SignupPageSearchParams>;
 }) {
-  const { locale } = await params;
-  const contactPath = `/${locale}/contact`;
+  const contactPath = '/contact';
   const resolvedSearchParams = await searchParams;
   const applicationId = readSearchParam(resolvedSearchParams, 'application_id');
   const token = readSearchParam(resolvedSearchParams, 'token');

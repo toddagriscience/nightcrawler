@@ -237,20 +237,20 @@ export function getMissingApplicantEmailMessage(
 }
 
 /**
- * Builds a localized signup path for an approved platform-access submission.
+ * Builds a signup path for an approved platform-access submission.
  *
- * @param options - Submission id, signup token, and optional locale
+ * @param options - Submission id and signup token
  */
 export function buildSignupPath(options: {
   applicationId: number;
   signupToken: string;
+  /** @deprecated Locale is ignored; signup is not internationalized. */
   locale?: string;
 }): string {
   const params = new URLSearchParams();
   params.set('application_id', String(options.applicationId));
   params.set('token', options.signupToken);
-  const locale = options.locale ?? 'en';
-  return `/${locale}/signup?${params.toString()}`;
+  return `/signup?${params.toString()}`;
 }
 
 /**

@@ -5,7 +5,7 @@ import { parseSafeRedirectNext } from '@/lib/utils/parse-safe-redirect-next';
 
 /** Resolved redirect target after auth confirm OTP verification. */
 export interface AuthConfirmRedirectTarget {
-  /** Path only (e.g. `/en/signup`) */
+  /** Path only (e.g. `/signup`) */
   pathname: string;
   /** Query string including leading `?`, or empty string */
   search: string;

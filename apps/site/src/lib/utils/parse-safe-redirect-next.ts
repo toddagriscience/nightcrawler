@@ -2,7 +2,7 @@
 
 /** Parsed pathname and search for a safe internal redirect target. */
 export interface SafeRedirectNext {
-  /** Path only (e.g. `/en/signup`) */
+  /** Path only (e.g. `/signup`) */
   pathname: string;
   /** Query string including leading `?`, or empty string */
   search: string;
@@ -11,7 +11,7 @@ export interface SafeRedirectNext {
 /**
  * Parses a validated internal `next` redirect into pathname and search components.
  *
- * @param next - Relative path, optionally with query (e.g. `/en/signup?token=abc`)
+ * @param next - Relative path, optionally with query (e.g. `/signup?token=abc`)
  * @param origin - Site origin used to parse relative URLs
  */
 export function parseSafeRedirectNext(

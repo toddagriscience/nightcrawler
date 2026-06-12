@@ -17,7 +17,7 @@ describe('auth confirm redirect resolution', () => {
       token: 'abc',
     });
     vi.mocked(resolveSignupPathForSignupToken).mockResolvedValue(
-      `/en/signup?${signupParams.toString()}`
+      `/signup?${signupParams.toString()}`
     );
 
     const result = await resolveAuthConfirmRedirectTarget({
@@ -27,7 +27,7 @@ describe('auth confirm redirect resolution', () => {
       origin: 'http://localhost:3000',
     });
 
-    expect(result.pathname).toBe('/en/signup');
+    expect(result.pathname).toBe('/signup');
     expect(result.search).toContain('application_id=6');
   });
 
