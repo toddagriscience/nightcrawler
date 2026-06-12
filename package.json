@@ -81,7 +81,8 @@
     "dompurify": "3.3.2",
     "undici": "^7.24.0",
     "vite": "^7.3.2",
-    "protobufjs": "^7.5.8"
+    "protobufjs": "^7.5.8",
+    "@grpc/grpc-js": "^1.14.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
