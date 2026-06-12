@@ -29,14 +29,14 @@ export default function SidebarClient({ children }: SidebarClientProps) {
       {/* Desktop: width-animated collapsing panel + expand button when closed */}
       <div className="hidden md:flex">
         <div
-          className={`sticky top-0 h-screen overflow-hidden transition-[width] duration-300 ease-in-out ${
+          className={`h-screen overflow-hidden transition-[width] duration-300 ease-in-out ${
             collapsed ? 'w-0' : 'w-[280px]'
           }`}
         >
           {children}
         </div>
         {collapsed ? (
-          <div className="sticky top-0 flex h-screen flex-col items-center border-r border-[#D9D9D9]/30 px-2 pt-2">
+          <div className="flex h-screen flex-col items-center border-r border-[#D9D9D9]/30 px-2 pt-2">
             <SidebarCollapseToggle />
           </div>
         ) : null}
