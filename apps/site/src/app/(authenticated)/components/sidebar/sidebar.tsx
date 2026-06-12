@@ -1,18 +1,23 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import SidebarSectionLabel from './sidebar-section-label';
 import SidebarNavItem from './sidebar-nav-item';
 import SidebarUserFooter from './sidebar-user-footer';
 import SidebarSearchButton from './sidebar-search-button';
 import SidebarCollapseToggle from './sidebar-collapse-toggle';
+import ZoneItem from './zone-item';
+import { getManagementZones } from '@/app/(authenticated)/(accounts)/account/db';
 import { LuBell, LuShoppingCart } from 'react-icons/lu';
 
 /**
- * Authenticated sidebar — brand-area collapse control, primary nav links, and
- * the account footer.
+ * Authenticated sidebar — collapse control, primary nav links, the read-only
+ * management-zones list, and the account footer.
  *
  * @returns {React.ReactNode} - The sidebar navigation
  */
-export default function Sidebar() {
+export default async function Sidebar() {
+  const zones = await getManagementZones();
+
   return (
     <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
       {/* Collapse control */}
@@ -33,6 +38,21 @@ export default function Sidebar() {
         >
           Orders
         </SidebarNavItem>
+
+        {/* Management zones (read-only list) */}
+        {zones.length > 0 && (
+          <>
+            <SidebarSectionLabel>Management Zones</SidebarSectionLabel>
+            {zones.map((zone, index) => (
+              <ZoneItem
+                key={zone.id}
+                index={index}
+                id={zone.id}
+                name={zone.name ?? ''}
+              />
+            ))}
+          </>
+        )}
       </nav>
 
       {/* Account footer */}
