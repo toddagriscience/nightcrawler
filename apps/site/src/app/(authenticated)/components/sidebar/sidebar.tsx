@@ -19,7 +19,7 @@ export default async function Sidebar() {
   const zones = await getManagementZones();
 
   return (
-    <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen sticky top-0 overflow-y-auto">
+    <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen overflow-y-auto">
       {/* Collapse control */}
       <div className="flex items-center justify-end px-2 pt-2">
         <SidebarCollapseToggle />

@@ -29,7 +29,7 @@ export default function SidebarClient({ children }: SidebarClientProps) {
       {/* Desktop: width-animated collapsing panel + expand button when closed */}
       <div className="hidden md:flex">
         <div
-          className={`overflow-hidden transition-[width] duration-300 ease-in-out ${
+          className={`sticky top-0 h-screen overflow-hidden transition-[width] duration-300 ease-in-out ${
             collapsed ? 'w-0' : 'w-[280px]'
           }`}
         >
