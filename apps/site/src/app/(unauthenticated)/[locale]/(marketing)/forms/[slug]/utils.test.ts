@@ -48,7 +48,7 @@ describe('buildFormDefaultValues', () => {
   });
 });
 
-describe('buildFormAnswersSchema', () => {
+describe('form answers schema', () => {
   it('accepts optional checkboxGroup answers with flat boolean keys', () => {
     const schema = buildFormAnswersSchema([certificationsGroup]);
     const result = schema.safeParse({
