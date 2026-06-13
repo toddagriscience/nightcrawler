@@ -19,7 +19,11 @@ const config: StorybookConfig = {
   docs: {
     defaultName: 'Documentation',
   },
-  staticDirs: [{ from: '../public/fonts', to: '/fonts' }, '../public'],
+  // `../public` is served at the root, so `public/fonts` is already available
+  // at `/fonts`. Listing `../public/fonts` separately overlaps that copy and
+  // makes node:fs/cp race on mkdir (intermittent EEXIST on icons/fonts during
+  // build-storybook), so only the parent dir is listed.
+  staticDirs: ['../public'],
   viteFinal: async (config) => {
     const rootDir = path.resolve(__dirname, '..');
     // Add support for local fonts and path aliases matching tsconfig
