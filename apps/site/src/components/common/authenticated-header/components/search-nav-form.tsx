@@ -11,7 +11,7 @@
  *   from each category (no embeddings).
  * - Typing debounces for one second before fetching results ranked by
  *   cosine similarity, with a skeleton shown during the wait.
- * - Submitting navigates to the full `/search` results page.
+ * - Submitting opens the slide-in results panel with the results.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useSearchPanel } from '@/app/(authenticated)/components/search-panel/search-panel-context';
 import { fetchDropdownItems } from './actions';
 import { SearchDropdown } from './search-dropdown';
 import type { DropdownResults } from './types';
@@ -33,7 +34,7 @@ const DEBOUNCE_MS = 1_000;
  * @returns Interactive search input with dropdown suggestions
  */
 export function SearchNavForm() {
-  const router = useRouter();
+  const { runSearch } = useSearchPanel();
 
   /** Whether the dropdown panel is visible. */
   const [isOpen, setIsOpen] = useState(false);
@@ -166,9 +167,7 @@ export function SearchNavForm() {
     setIsOpen(false);
     const trimmed = query.trim();
     if (trimmed) {
-      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
-    } else {
-      router.push('/search');
+      runSearch(trimmed);
     }
   }
 
