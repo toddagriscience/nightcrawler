@@ -21,6 +21,7 @@
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
+    "test": "node ../../apps/site/node_modules/vitest/vitest.mjs run --config vitest.config.mjs",
     "db:local:up": "docker compose up -d postgres-local",
     "db:local:down": "docker compose down",
     "db:local:wipe": "tsx scripts/wipe-local-db.ts",

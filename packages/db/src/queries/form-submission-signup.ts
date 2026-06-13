@@ -8,6 +8,7 @@ import {
   extractApplicantPrefillFromAnswers,
 } from '../utils/extract-applicant-prefill';
 import { hydrateFarmFromFormSubmission } from '../utils/hydrate-farm-from-form-submission';
+import { logger } from '../utils/logger';
 import { and, eq, isNull } from 'drizzle-orm';
 
 /** Result of validating an approved platform-access signup token. */
@@ -232,6 +233,9 @@ export const isPlatformAccessSignupAlreadyCompleted =
 /**
  * Marks an approved platform-access submission as fully signed up and hydrates farm tables.
  *
+ * Signup succeeds even when hydration fails (bad answer types); only the winning concurrent
+ * caller hydrates after atomically consuming the signup token via `signedUpAt`.
+ *
  * @param submissionId - Form submission id
  * @param farmId - Farm created during signup
  */
@@ -256,7 +260,11 @@ export async function completeFormSubmissionSignup(
     )
     .limit(1);
 
-  await db
+  if (!submission) {
+    return;
+  }
+
+  const [consumed] = await db
     .update(formSubmission)
     .set({
       signedUpAt: new Date(),
@@ -269,18 +277,26 @@ export async function completeFormSubmissionSignup(
         eq(formSubmission.status, 'approved'),
         isNull(formSubmission.signedUpAt)
       )
-    );
+    )
+    .returning({ id: formSubmission.id });
 
-  if (!submission) {
+  if (!consumed) {
     return;
   }
 
   const answers = (submission.answers ?? {}) as Record<string, unknown>;
 
-  await hydrateFarmFromFormSubmission(farmId, {
-    formSlug: submission.formSlug,
-    answers,
-  });
+  try {
+    await hydrateFarmFromFormSubmission(farmId, {
+      formSlug: submission.formSlug,
+      answers,
+    });
+  } catch (error) {
+    logger.error(
+      'Farm hydration failed after signup; account created without hydrated farm data',
+      { submissionId, farmId, error }
+    );
+  }
 }
 
 /** @deprecated Use {@link completeFormSubmissionSignup}. */
