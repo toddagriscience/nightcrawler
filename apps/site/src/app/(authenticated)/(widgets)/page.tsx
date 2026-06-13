@@ -15,9 +15,8 @@ import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
-import ZoneSidebar from '../components/zone-sidebar/zone-sidebar';
+import { getAccountShellData } from '../(accounts)/account/db';
 import CurrentTab from '../components/tabs/current-tab';
 import { NamedTab } from '../components/tabs/types';
 
@@ -48,6 +47,7 @@ export default async function DashboardPage({
 }) {
   const currentUser = await getAuthenticatedInfo();
   const canEdit = currentUser.role === 'Admin';
+  const { farmName } = await getAccountShellData();
 
   // Fetch ALL management zones for the farm (oldest first)
   const allManagementZones = await db
@@ -139,7 +139,9 @@ export default async function DashboardPage({
         className="flex w-full items-center justify-between px-3 pt-3 pb-2"
         role="banner"
       >
-        <ToddHeader className="flex scale-90 flex-row items-center" />
+        <h1 className="text-foreground truncate text-lg font-medium">
+          {farmName}
+        </h1>
         <div className="flex flex-row items-center gap-6">
           <SearchNavForm />
           {canEdit ? (
@@ -161,13 +163,8 @@ export default async function DashboardPage({
         </div>
       </header>
 
-      {/* Body — sidebar + content */}
+      {/* Body — content */}
       <div className="flex flex-1 overflow-hidden">
-        <ZoneSidebar
-          managementZones={allManagementZones}
-          canEdit={canEdit}
-          userId={String(currentUser.id)}
-        />
         <main className="flex-1 overflow-auto">
           <CurrentTab currentTab={selectedTab} />
         </main>
