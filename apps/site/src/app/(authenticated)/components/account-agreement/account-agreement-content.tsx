@@ -21,10 +21,10 @@ export default function AccountAgreementContent() {
           </Link>
         </li>
         <li className="underline">
-          <Link href={'/en/terms'}>Terms of Use</Link>
+          <Link href={'/terms'}>Terms of Use</Link>
         </li>
         <li className="underline">
-          <Link href={'/en/privacy'}>Privacy Policy</Link>
+          <Link href={'/privacy'}>Privacy Policy</Link>
         </li>
       </ul>
 

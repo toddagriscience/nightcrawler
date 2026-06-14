@@ -34,7 +34,7 @@ export function handleI18nMiddleware(
   const { pathname } = request.nextUrl;
 
   if (!isAuthenticated) {
-    // For root path, use intl middleware (it will redirect / to /en)
+    // For root path, let intl middleware serve it as the default locale
     if (pathname === '/') {
       return intlMiddleware(request);
     }
@@ -51,9 +51,19 @@ export function handleI18nMiddleware(
       );
     }
 
-    // For paths that already have locale, let them through normally
+    // For paths that already have a locale prefix, let intl middleware handle
+    // them. /es/... is passed through unchanged. For /en/... (default locale
+    // with an unnecessary prefix), intl middleware redirects to /... but does
+    // not persist the locale via cookie — so we pin NEXT_LOCALE=en on the
+    // redirect response to prevent the subsequent locale-detection pass from
+    // re-routing the user to /es/... based on Accept-Language.
     if (SUPPORTED_LOCALES.includes(splitPathnames[1] as Locale)) {
-      return NextResponse.next();
+      const explicitLocale = splitPathnames[1] as Locale;
+      const response = intlMiddleware(request) as NextResponse;
+      if (explicitLocale === routing.defaultLocale) {
+        response.cookies.set('NEXT_LOCALE', explicitLocale, { path: '/' });
+      }
+      return response;
     }
 
     // Unauth routes, such as `/login`
@@ -63,8 +73,10 @@ export function handleI18nMiddleware(
       return response;
     }
 
-    // For paths without locale (like /about, /no-page-here),
-    // redirect using NEXT_LOCALE cookie if set, else default to en
+    // For paths without locale (like /about), detect preferred locale and
+    // redirect non-default locales to /{locale}/path. For the default locale
+    // (en), delegate to intl middleware which rewrites internally without
+    // adding a /en/ prefix to the URL.
     const preferredLocale =
       request.cookies?.get('NEXT_LOCALE')?.value ||
       request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
@@ -72,6 +84,9 @@ export function handleI18nMiddleware(
     const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
       ? preferredLocale
       : 'en';
+    if (locale === 'en') {
+      return intlMiddleware(request);
+    }
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(url);
