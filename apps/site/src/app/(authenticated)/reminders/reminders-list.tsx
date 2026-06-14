@@ -41,10 +41,10 @@ function groupReminders(reminders: Reminder[]): {
   upcoming.sort((a, b) => {
     const dateA = a.dueDate
       ? new Date(a.dueDate)
-      : (parseSeasonalLabel(a.seasonalLabel!) ?? new Date(9999, 11, 31));
+      : (parseSeasonalLabel(a.seasonalLabel ?? '') ?? new Date(9999, 11, 31));
     const dateB = b.dueDate
       ? new Date(b.dueDate)
-      : (parseSeasonalLabel(b.seasonalLabel!) ?? new Date(9999, 11, 31));
+      : (parseSeasonalLabel(b.seasonalLabel ?? '') ?? new Date(9999, 11, 31));
     return dateA.getTime() - dateB.getTime();
   });
 

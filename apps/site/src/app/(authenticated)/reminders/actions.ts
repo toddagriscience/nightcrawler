@@ -2,7 +2,7 @@
 
 'use server';
 
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@nightcrawler/db/schema/connection';
 import { reminder } from '@nightcrawler/db/schema/reminder';
 import { logger } from '@/lib/logger';
@@ -28,13 +28,26 @@ export async function updateReminder(formData: FormData): Promise<void> {
   const id = Number(idStr);
   const actionStr = String(action);
 
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error('Invalid reminder id');
+  }
+
+  const currentUser = await getAuthenticatedInfo();
+
   if (actionStr === 'dismiss') {
-    await db.delete(reminder).where(eq(reminder.id, id));
+    await db
+      .delete(reminder)
+      .where(and(eq(reminder.id, id), eq(reminder.userId, currentUser.id)));
+    revalidatePath('/reminders');
     return;
   }
 
   if (actionStr === 'mark_read') {
-    await db.update(reminder).set({ read: true }).where(eq(reminder.id, id));
+    await db
+      .update(reminder)
+      .set({ read: true })
+      .where(and(eq(reminder.id, id), eq(reminder.userId, currentUser.id)));
+    revalidatePath('/reminders');
     return;
   }
 
@@ -97,7 +110,7 @@ export async function updateReminderById(
   input: UpdateReminderInput
 ): Promise<ActionResponse> {
   try {
-    await getAuthenticatedInfo();
+    const currentUser = await getAuthenticatedInfo();
 
     if (!Number.isInteger(id) || id <= 0) {
       throwActionError('Invalid reminder id');
@@ -135,7 +148,10 @@ export async function updateReminderById(
       updateData.seasonalLabel = input.seasonalLabel?.trim() ?? null;
     }
 
-    await db.update(reminder).set(updateData).where(eq(reminder.id, id));
+    await db
+      .update(reminder)
+      .set(updateData)
+      .where(and(eq(reminder.id, id), eq(reminder.userId, currentUser.id)));
 
     revalidatePath('/reminders');
 
@@ -157,11 +173,15 @@ export async function updateReminderById(
  */
 export async function deleteReminder(id: number): Promise<ActionResponse> {
   try {
+    const currentUser = await getAuthenticatedInfo();
+
     if (!Number.isInteger(id) || id <= 0) {
       throwActionError('Invalid reminder id');
     }
 
-    await db.delete(reminder).where(eq(reminder.id, id));
+    await db
+      .delete(reminder)
+      .where(and(eq(reminder.id, id), eq(reminder.userId, currentUser.id)));
 
     revalidatePath('/reminders');
 
@@ -183,11 +203,16 @@ export async function deleteReminder(id: number): Promise<ActionResponse> {
  */
 export async function markReminderRead(id: number): Promise<ActionResponse> {
   try {
+    const currentUser = await getAuthenticatedInfo();
+
     if (!Number.isInteger(id) || id <= 0) {
       throwActionError('Invalid reminder id');
     }
 
-    await db.update(reminder).set({ read: true }).where(eq(reminder.id, id));
+    await db
+      .update(reminder)
+      .set({ read: true })
+      .where(and(eq(reminder.id, id), eq(reminder.userId, currentUser.id)));
 
     revalidatePath('/reminders');
 
