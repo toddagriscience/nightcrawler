@@ -74,7 +74,7 @@ const Footer = () => {
 
   const currentYear = new Date().getFullYear();
 
-  const pathname = usePathname() || '/en';
+  const pathname = usePathname() || '/';
   const [langOpen, setLangOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
 

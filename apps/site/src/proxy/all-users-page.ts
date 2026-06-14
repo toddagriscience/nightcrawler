@@ -21,5 +21,7 @@ export default async function isAllUserRoute(request: NextRequest) {
     return allUserRoutesIntl.includes(unIntlRoute);
   }
 
-  return false;
+  // Unprefixed paths serve the default locale (en) under localePrefix: 'as-needed'
+  const unIntlRoute = pathname.split('/')[1];
+  return allUserRoutesIntl.includes(unIntlRoute);
 }

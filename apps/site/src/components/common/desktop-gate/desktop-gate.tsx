@@ -44,7 +44,7 @@ export default function DesktopGate({
     const result = await logout();
 
     if (!result?.error) {
-      router.push('/en');
+      router.push('/');
     }
   };
 

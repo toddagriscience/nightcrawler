@@ -43,6 +43,30 @@ describe('isAllUserRoute', () => {
     expect(result).toBe(true);
   });
 
+  it('returns true for unprefixed /contact (default locale)', async () => {
+    const req = mockNextRequest('/contact');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(true);
+  });
+
+  it('returns true for unprefixed /privacy (default locale)', async () => {
+    const req = mockNextRequest('/privacy');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(true);
+  });
+
+  it('returns false for unprefixed /signup', async () => {
+    const req = mockNextRequest('/signup');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(false);
+  });
+
+  it('returns false for unprefixed unrelated routes', async () => {
+    const req = mockNextRequest('/other-page');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(false);
+  });
+
   it('returns false for root path', async () => {
     const req = mockNextRequest('/');
     const result = await isAllUserRoute(req as NextRequest);

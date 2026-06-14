@@ -24,8 +24,16 @@ describe('specialRedirect', () => {
     );
   });
 
-  it('redirects locale externship route to Google form', () => {
+  it('redirects locale-prefixed externship route to Google form', () => {
     const response = specialRedirect(makeRequest('/en/careers/externship'));
+    expect(response).not.toBeNull();
+    expect(response?.headers.get('location')).toContain(
+      'docs.google.com/forms'
+    );
+  });
+
+  it('redirects unprefixed /careers/externship to Google form', () => {
+    const response = specialRedirect(makeRequest('/careers/externship'));
     expect(response).not.toBeNull();
     expect(response?.headers.get('location')).toContain(
       'docs.google.com/forms'

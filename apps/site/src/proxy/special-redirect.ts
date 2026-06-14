@@ -17,9 +17,6 @@ export default function specialRedirect(
 ): NextResponse | null {
   const pathname = request.nextUrl.pathname.replace(/\/+$/, '') || '/';
   const segments = pathname.split('/').filter(Boolean);
-  const locale0 = segments[0];
-  const isLocale =
-    locale0 !== undefined && SUPPORTED_LOCALES.includes(locale0 as Locale);
 
   if (pathname === '/iris') {
     return NextResponse.redirect(
@@ -27,12 +24,22 @@ export default function specialRedirect(
     );
   }
 
-  if (
+  const locale0 = segments[0];
+  const isLocale =
+    locale0 !== undefined && SUPPORTED_LOCALES.includes(locale0 as Locale);
+
+  const isPrefixedExternship =
     segments.length === 3 &&
     isLocale &&
     segments[1] === 'careers' &&
-    segments[2] === 'externship'
-  ) {
+    segments[2] === 'externship';
+
+  const isUnprefixedExternship =
+    segments.length === 2 &&
+    segments[0] === 'careers' &&
+    segments[1] === 'externship';
+
+  if (isPrefixedExternship || isUnprefixedExternship) {
     return NextResponse.redirect(
       // eslint-disable-next-line no-secrets/no-secrets
       'https://docs.google.com/forms/d/e/1FAIpQLSfi8yeNdjHuJCrO1sPSUhh8uCICsA6KGevRM-Mk9iND-aYkBQ/viewform'
