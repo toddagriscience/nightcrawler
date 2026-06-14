@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import SidebarNavItem from './sidebar-nav-item';
-import { Icon } from '@/components/common/icon/icon';
+import { LuSettings } from 'react-icons/lu';
 
 /**
  * Sidebar footer — renders the Account navigation entry pinned to the bottom
@@ -15,7 +15,7 @@ export default function SidebarUserFooter() {
       <SidebarNavItem
         href="/account"
         prefixMatch
-        icon={<Icon src="/icons/settings.svg" className="size-4" />}
+        icon={<LuSettings className="size-4" />}
       >
         Account
       </SidebarNavItem>

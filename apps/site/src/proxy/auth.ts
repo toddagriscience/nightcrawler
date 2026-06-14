@@ -65,7 +65,15 @@ export async function handleAuthRouting(
       return supabaseResponse;
     }
 
-    return NextResponse.redirect(new URL('/en', request.url));
+    // With localePrefix: 'as-needed', the marketing homepage lives at /.
+    // Returning null lets unauthenticated users fall through to the intl
+    // middleware which serves the marketing page. Any other protected route
+    // (e.g. /account/*) redirects to / where they'll see the marketing page.
+    if (pathname === '/') {
+      return null;
+    }
+
+    return NextResponse.redirect(new URL('/', request.url));
   } else {
     if (isAuthenticated) {
       if (isRouteInternationalized(pathname)) {

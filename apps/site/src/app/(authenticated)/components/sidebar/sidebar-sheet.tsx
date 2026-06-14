@@ -4,7 +4,7 @@
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { LuMenu } from 'react-icons/lu';
 import type { ReactNode } from 'react';
 
 interface SidebarSheetProps {
@@ -21,7 +21,7 @@ export function SidebarSheet({ children }: SidebarSheetProps) {
           className="m-2"
           aria-label="Open navigation menu"
         >
-          <Menu className="size-5" />
+          <LuMenu className="size-5" />
         </Button>
       </SheetTrigger>
       <SheetContent

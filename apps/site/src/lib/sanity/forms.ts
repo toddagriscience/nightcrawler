@@ -14,7 +14,13 @@ const GROQ_FORM_FIELD = `
   required,
   placeholder,
   helpText,
-  options
+  options,
+  checkboxOptions[] {
+    key,
+    label,
+    helpText
+  },
+  storageTarget
 `;
 
 /** GROQ projection for public form documents. */
@@ -38,7 +44,8 @@ const GROQ_FORM_BODY = `
     helpText,
     required
   },
-  footerText
+  footerText,
+  workflowType
 `;
 
 /** One hour ISR for CMS form definitions. */

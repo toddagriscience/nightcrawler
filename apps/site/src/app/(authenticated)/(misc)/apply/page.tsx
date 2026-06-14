@@ -1,18 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import {
-  accountAgreementAcceptance,
-  farm,
-  farmCertificate,
-  farmInfoInternalApplication,
-  farmLocation,
-  farmSubscription,
-  user,
-} from '@nightcrawler/db/schema';
+import { farm, farmSubscription, user } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import logger from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { hasCompletedPlatformOnboarding } from '@/lib/utils/platform-onboarding';
 import { and, eq, ne } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import ApplicationTabs from './components/application-tabs';
@@ -23,19 +16,12 @@ import { isApplicationReadyForSubmission } from './db';
  * @returns {JSX.Element} - The application page*/
 export default async function Apply() {
   const currentUser = await getAuthenticatedInfo();
-  const [hasApplied] = await db
-    .select({ userId: accountAgreementAcceptance.userId })
-    .from(accountAgreementAcceptance)
-    .where(eq(accountAgreementAcceptance.userId, currentUser.id))
-    .limit(1);
 
   const farmId = currentUser.farmId;
-  const [farmInfo] = await db
-    .select()
+  const [farmRecord] = await db
+    .select({ id: farm.id, informalName: farm.informalName })
     .from(farm)
     .where(eq(farm.id, farmId))
-    .fullJoin(farmLocation, eq(farmLocation.farmId, farmId))
-    .fullJoin(farmCertificate, eq(farmCertificate.farmId, farmId))
     .limit(1);
 
   // All users EXCEPT the current user
@@ -82,12 +68,6 @@ export default async function Apply() {
     })
   );
 
-  const [internalApplication] = await db
-    .select()
-    .from(farmInfoInternalApplication)
-    .where(eq(farmInfoInternalApplication.farmId, farmId))
-    .limit(1);
-
   const [subscription] = await db
     .select()
     .from(farmSubscription)
@@ -96,11 +76,12 @@ export default async function Apply() {
 
   const canSubmitApplication = await isApplicationReadyForSubmission(farmId);
 
-  if (currentUser.approved) {
-    redirect('/');
-  }
+  const onboardingComplete = await hasCompletedPlatformOnboarding(
+    currentUser.id,
+    currentUser.approved
+  );
 
-  if (hasApplied) {
+  if (onboardingComplete) {
     redirect('/');
   }
 
@@ -108,13 +89,11 @@ export default async function Apply() {
     <div className="mx-auto mb-8 w-[90vw] max-w-[550px]">
       <ApplicationTabs
         farmInfo={{
-          ...farmInfo.farm,
-          ...farmInfo.farm_location,
-          ...farmInfo.farm_certificate,
+          farmId,
+          informalName: farmRecord?.informalName ?? undefined,
         }}
         currentUser={currentUser}
         allUsers={allUsers}
-        internalApplication={internalApplication}
         farmSubscription={subscription ?? null}
         invitedUserVerificationStatus={invitedUserVerificationStatus}
         canSubmitApplication={canSubmitApplication}

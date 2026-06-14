@@ -2,6 +2,7 @@
 
 import {DocumentIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {validateFormFieldStorageTarget} from '../lib/form-field-storage-validation'
 
 /** Whitelisted public form field types rendered by `/forms/[slug]`. */
 const FORM_FIELD_TYPES = [
@@ -13,7 +14,32 @@ const FORM_FIELD_TYPES = [
   {title: 'Select', value: 'select'},
   {title: 'Yes / No', value: 'yesNo'},
   {title: 'Checkbox', value: 'checkbox'},
+  {title: 'Checkbox group', value: 'checkboxGroup'},
 ] as const
+
+/** Postgres table names (or special targets) shown for platform-access forms only. */
+const FORM_FIELD_STORAGE_TARGETS = [
+  {title: 'answers only — stays in form_submissions.answers', value: 'answers_only'},
+  {title: 'signup prefill — user row at /signup', value: 'prefill'},
+  {title: 'farm', value: 'farm'},
+  {title: 'farm_location', value: 'farm_location'},
+  {title: 'farm_certificate', value: 'farm_certificate'},
+  {title: 'farm_info_internal_application', value: 'farm_info_internal_application'},
+  {title: 'farm.advisor_profile_notes', value: 'advisor_notes'},
+] as const
+
+/** Validates camelCase field and checkbox option keys. */
+function validateFieldKey(value: string | undefined): true | string {
+  if (!value) {
+    return 'Key is required.'
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+    return 'Use camelCase without spaces (e.g. hasGAP).'
+  }
+
+  return true
+}
 
 /** Shared CMS field row used inside form sections. */
 const formFieldMember = defineArrayMember({
@@ -92,6 +118,108 @@ const formFieldMember = defineArrayMember({
             : 'Add at least one option for select fields.'
         }),
     }),
+    defineField({
+      name: 'checkboxOptions',
+      title: 'Checkbox options',
+      type: 'array',
+      description:
+        'Each option key is stored flat in answers JSON (e.g. hasGAP, hasOrganic). The group name is not stored.',
+      hidden: ({parent}) => parent?.type !== 'checkboxGroup',
+      of: [
+        defineArrayMember({
+          name: 'formCheckboxOption',
+          title: 'Checkbox option',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'key',
+              title: 'Storage key',
+              type: 'string',
+              validation: (rule) => rule.required().custom((value) => validateFieldKey(value)),
+            }),
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'helpText',
+              title: 'Help text',
+              type: 'string',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'label',
+              subtitle: 'key',
+            },
+          },
+        }),
+      ],
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {type?: string} | undefined
+          if (parent?.type !== 'checkboxGroup') return true
+
+          if (!Array.isArray(value) || value.length === 0) {
+            return 'Add at least one checkbox option.'
+          }
+
+          const keys = value
+            .map((option) => (option as {key?: string} | undefined)?.key)
+            .filter((key): key is string => typeof key === 'string' && key.length > 0)
+
+          const uniqueKeys = new Set(keys)
+          if (uniqueKeys.size !== keys.length) {
+            return 'Checkbox option keys must be unique within the group.'
+          }
+
+          return true
+        }),
+    }),
+    defineField({
+      name: 'storageTarget',
+      title: 'Storage target',
+      type: 'string',
+      description:
+        'Postgres table this field lands in after signup hydration. Studio validates your field key against iris-access-field-map.ts. The dropdown does not change runtime behavior — answer keys must still match the code allowlist.',
+      options: {
+        list: [...FORM_FIELD_STORAGE_TARGETS],
+        layout: 'dropdown',
+      },
+      initialValue: 'answers_only',
+      hidden: ({document}) => document?.workflowType !== 'platform_access',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const document = context.document as {workflowType?: string} | undefined
+          if (document?.workflowType !== 'platform_access') return true
+
+          const parent = context.parent as
+            | {
+                name?: string
+                type?: string
+                storageTarget?: string
+                checkboxOptions?: {key?: string}[]
+              }
+            | undefined
+
+          return validateFormFieldStorageTarget({
+            name: parent?.name,
+            type: parent?.type,
+            storageTarget: (value ?? 'answers_only') as
+              | 'answers_only'
+              | 'prefill'
+              | 'farm'
+              | 'farm_location'
+              | 'farm_certificate'
+              | 'farm_info_internal_application'
+              | 'advisor_notes'
+              | 'retention_consent',
+            checkboxOptions: parent?.checkboxOptions,
+          })
+        }),
+    }),
   ],
   preview: {
     select: {
@@ -137,6 +265,22 @@ export default defineType({
       },
       validation: (rule) => rule.required(),
       description: 'Public URL: /forms/[slug].',
+    }),
+    defineField({
+      name: 'workflowType',
+      title: 'Submission workflow',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Generic (store answers only)', value: 'generic'},
+          {title: 'Platform access (review + signup + farm setup)', value: 'platform_access'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'generic',
+      validation: (rule) => rule.required(),
+      description:
+        'Generic: JSON storage only. Platform access: Internal Applications review, magic-link signup, and farm table hydration.',
     }),
     defineField({
       name: 'description',

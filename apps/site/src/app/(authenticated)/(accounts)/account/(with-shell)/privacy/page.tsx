@@ -26,7 +26,7 @@ export default function AccountPrivacyPage() {
           label="Privacy Policy"
           value={<BiChevronRight className="size-6" />}
           valueClassName="text-foreground"
-          href="/en/privacy"
+          href="/privacy"
         />
       </div>
     </AccountInfo>

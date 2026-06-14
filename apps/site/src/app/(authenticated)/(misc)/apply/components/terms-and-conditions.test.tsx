@@ -42,7 +42,7 @@ const mockContextValue = {
   setCurrentTab: () => {},
   canSubmitApplication: true,
   canEditFarm: true,
-  nextTabAfterColleagues: 'farm' as TabTypes,
+  nextTabAfterColleagues: 'bank-information' as TabTypes,
 };
 
 /** Renders the component inside ApplicationContext. Provider for tests. */

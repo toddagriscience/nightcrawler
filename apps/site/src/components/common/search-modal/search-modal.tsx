@@ -3,7 +3,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Icon } from '@/components/common/icon/icon';
+import {
+  LuBookOpen,
+  LuSearch,
+  LuShoppingCart,
+  LuSprout,
+  LuX,
+} from 'react-icons/lu';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { getSearchModalData } from '@/app/(authenticated)/actions/search-modal';
@@ -101,10 +107,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <div className="relative z-[9999] w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl flex flex-col max-h-[80vh]">
         {/* Header */}
         <div className="flex items-center gap-3 px-5 py-4 border-b">
-          <Icon
-            src="/icons/search.svg"
-            className="size-5 text-muted-foreground shrink-0"
-          />
+          <LuSearch className="size-5 text-muted-foreground shrink-0" />
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -113,7 +116,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             autoFocus
           />
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <Icon src="/icons/x.svg" className="size-4" />
+            <LuX className="size-4" />
           </Button>
         </div>
 
@@ -128,7 +131,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <Icon src="/icons/book-open.svg" className="size-4" />
+            <LuBookOpen className="size-4" />
             Browse IMPs
           </button>
           <button
@@ -140,7 +143,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <Icon src="/icons/sprout.svg" className="size-4" />
+            <LuSprout className="size-4" />
             Browse Seeds
           </button>
         </div>
@@ -250,7 +253,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {cartItems.size > 0 && (
           <div className="px-5 py-3 border-t bg-stone-50 flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Icon src="/icons/shopping-cart.svg" className="size-4" />
+              <LuShoppingCart className="size-4" />
               {cartItems.size} item{cartItems.size !== 1 ? 's' : ''} added to
               order
             </div>

@@ -1,23 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { OrderNavLink } from '@/components/common/authenticated-header/components/order-nav-link';
+import { NavLinks } from '@/components/common/authenticated-header/nav-links';
 import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
 import { Button } from '@/components/ui';
-import {
-  accountAgreementAcceptance,
-  managementZone,
-  widget,
-  widgetEnum,
-} from '@nightcrawler/db/schema';
+import { managementZone, widget, widgetEnum } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { getAccountShellData } from '../(accounts)/account/db';
 import CurrentTab from '../components/tabs/current-tab';
 import { NamedTab } from '../components/tabs/types';
+import SearchFloatingButton from './components/search-floating-button';
 
 // -- Commented out: tab-based imports (kept for future use) ---
 //import PlatformTabContent from '../components/tabs/tab-content';
@@ -44,6 +40,7 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  await requirePlatformOnboardingComplete();
   const currentUser = await getAuthenticatedInfo();
   const canEdit = currentUser.role === 'Admin';
   const { farmName } = await getAccountShellData();
@@ -55,18 +52,8 @@ export default async function DashboardPage({
     .where(eq(managementZone.farmId, currentUser.farmId))
     .orderBy(asc(managementZone.createdAt));
 
-  // No zones at all — check if user has applied, or show empty state
+  // No zones at all — show empty state for onboarded farms without zones yet
   if (allManagementZones.length === 0) {
-    const [hasApplied] = await db
-      .select({ userId: accountAgreementAcceptance.userId })
-      .from(accountAgreementAcceptance)
-      .where(eq(accountAgreementAcceptance.userId, currentUser.id))
-      .limit(1);
-
-    if (!hasApplied) {
-      redirect('/apply');
-    }
-
     return (
       <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center px-6 text-center">
         <div className="max-w-2xl space-y-4">
@@ -131,7 +118,7 @@ export default async function DashboardPage({
   );
 
   return (
-    <div className="flex h-[calc(100vh-3rem)] flex-col">
+    <div className="flex h-screen flex-col">
       {/* Header — full width, same as before */}
       <header
         className="flex w-full items-center justify-between px-3 pt-3 pb-2"
@@ -141,34 +128,33 @@ export default async function DashboardPage({
           {farmName}
         </h1>
         <div className="flex flex-row items-center gap-6">
-          <OrderNavLink />
+          {canEdit ? (
+            <AddWidgetDropdown
+              managementZoneId={selectedZone.id}
+              availableWidgets={availableWidgets}
+            >
+              <Button
+                size="sm"
+                variant="default"
+                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
+  focus-visible:ring-offset-transparent!"
+              >
+                Add widget
+              </Button>
+            </AddWidgetDropdown>
+          ) : null}
+          <NavLinks />
         </div>
       </header>
 
       {/* Body — content */}
       <div className="flex flex-1 overflow-hidden">
-        <main className="relative flex-1 overflow-hidden">
-          <div className="absolute inset-0 overflow-auto">
-            <CurrentTab currentTab={selectedTab} />
-          </div>
-          {canEdit ? (
-            <div className="absolute bottom-4 right-4 z-10">
-              <AddWidgetDropdown
-                managementZoneId={selectedZone.id}
-                availableWidgets={availableWidgets}
-              >
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent! focus-visible:ring-offset-transparent!"
-                >
-                  Add widget
-                </Button>
-              </AddWidgetDropdown>
-            </div>
-          ) : null}
+        <main className="flex-1 overflow-auto">
+          <CurrentTab currentTab={selectedTab} />
         </main>
       </div>
+
+      <SearchFloatingButton />
     </div>
   );
 }

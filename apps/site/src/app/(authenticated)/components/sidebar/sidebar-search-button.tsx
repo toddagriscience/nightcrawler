@@ -3,9 +3,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Icon } from '@/components/common/icon/icon';
-import { Portal } from '@/components/common/portal';
+import { LuSearch } from 'react-icons/lu';
 import SidebarNavItem from './sidebar-nav-item';
+import { Portal } from '@/components/common/portal';
 import { SearchModal } from '@/components/common/search-modal/search-modal';
 
 /**
@@ -23,7 +23,7 @@ export default function SidebarSearchButton() {
   return (
     <>
       <SidebarNavItem
-        icon={<Icon src="/icons/search.svg" className="size-4" />}
+        icon={<LuSearch className="size-4" />}
         onClick={() => setIsOpen(true)}
       >
         Search
