@@ -39,9 +39,7 @@ describe('Sidebar', () => {
   it('renders the primary nav links', async () => {
     await renderSidebar();
     // Search is a modal trigger (button), not a route link.
-    expect(
-      screen.getByRole('button', { name: /Search/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Reminders/i })).toHaveAttribute(
       'href',
       '/reminders'
