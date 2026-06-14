@@ -155,8 +155,9 @@ describe('updateReminder (FormData action)', () => {
   });
 
   it('rejects an invalid (non-integer) id without touching the db', async () => {
-    await expect(updateReminder(makeFormData('not-a-number', 'dismiss')))
-      .rejects.toThrow();
+    await expect(
+      updateReminder(makeFormData('not-a-number', 'dismiss'))
+    ).rejects.toThrow();
     expect(mockDelete).not.toHaveBeenCalled();
     expect(mockUpdate).not.toHaveBeenCalled();
   });
