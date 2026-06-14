@@ -2,15 +2,12 @@
 
 'use client';
 
-import { Icon } from '@/components/common/icon/icon';
+import { LuSearch } from 'react-icons/lu';
 import SidebarNavItem from './sidebar-nav-item';
 
 export default function SidebarSearchButton() {
   return (
-    <SidebarNavItem
-      href="/search"
-      icon={<Icon src="/icons/search.svg" className="size-4" />}
-    >
+    <SidebarNavItem href="/search" icon={<LuSearch className="size-4" />}>
       Search
     </SidebarNavItem>
   );

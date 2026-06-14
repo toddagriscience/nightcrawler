@@ -16,8 +16,6 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import { normalizePhoneForUrl } from '@nightcrawler/db/utils/normalize-phone';
-import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
@@ -48,29 +46,37 @@ type SignUpFormData = {
   confirmPassword: string;
 };
 
+/** Server-provided prefill for approved-applicant signup. */
+export interface ApprovedApplicantSignupPrefill {
+  firstName: string;
+  lastName: string;
+  farmName: string;
+  email: string;
+  phone: string;
+  applicationId: string;
+  token: string;
+}
+
 /** Props for the password step of signup. */
 interface SignupFormProps {
-  /** Whether this signup came from an approved platform-access application */
-  isApprovedApplicantSignup: boolean;
+  /** Server-loaded prefill for approved-applicant signup */
+  prefill: ApprovedApplicantSignupPrefill;
 }
 
 /**
- * Password form for cold contact signups and approved-applicant onboarding.
+ * Password form for approved-applicant onboarding.
  *
- * @param props - Signup mode flags
+ * @param props - Server-loaded application prefill
  */
-export default function SignupForm({
-  isApprovedApplicantSignup,
-}: SignupFormProps) {
-  const searchParams = useSearchParams();
+export default function SignupForm({ prefill }: SignupFormProps) {
   const [actionErrors, setActionErrors] = useState<string[]>([]);
   const { register, handleSubmit, formState } = useForm<SignUpFormData>({
     defaultValues: {
-      firstName: searchParams.get('first_name') ?? '',
-      lastName: searchParams.get('last_name') ?? '',
-      farmName: searchParams.get('farm_name') ?? '',
-      email: searchParams.get('email') ?? '',
-      phone: normalizePhoneForUrl(searchParams.get('phone') ?? ''),
+      firstName: prefill.firstName,
+      lastName: prefill.lastName,
+      farmName: prefill.farmName,
+      email: prefill.email,
+      phone: prefill.phone,
       password: '',
       confirmPassword: '',
     },
@@ -83,9 +89,9 @@ export default function SignupForm({
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
 
-  const email = searchParams.get('email') ?? '';
-  const applicationId = searchParams.get('application_id') ?? '';
-  const token = searchParams.get('token') ?? '';
+  const email = prefill.email;
+  const applicationId = prefill.applicationId;
+  const token = prefill.token;
 
   const errors = actionErrors.length > 0 ? actionErrors : null;
 
@@ -98,8 +104,8 @@ export default function SignupForm({
     formData.set('email', data.email);
     formData.set('phone', data.phone);
     formData.set('password', data.password);
-    if (applicationId) formData.set('applicationId', applicationId);
-    if (token) formData.set('token', token);
+    formData.set('applicationId', applicationId);
+    formData.set('token', token);
 
     try {
       await signUp(null, formData);

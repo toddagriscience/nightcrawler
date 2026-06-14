@@ -13,11 +13,15 @@
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
     "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
-    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts"
+    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts",
+    "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts",
+    "./utils/iris-access-allowlists-manifest": "./src/utils/iris-access-allowlists-manifest.ts",
+    "./utils/preview-form-submission-hydration": "./src/utils/preview-form-submission-hydration.ts"
   },
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
+    "test": "node ../../apps/site/node_modules/vitest/vitest.mjs run --config vitest.config.mjs",
     "db:local:up": "docker compose up -d postgres-local",
     "db:local:down": "docker compose down",
     "db:local:wipe": "tsx scripts/wipe-local-db.ts",

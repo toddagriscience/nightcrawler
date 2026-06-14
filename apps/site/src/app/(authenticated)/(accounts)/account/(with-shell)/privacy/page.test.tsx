@@ -16,6 +16,6 @@ describe('AccountPrivacyPage', () => {
     ).toHaveAttribute('href', '/contact');
     expect(
       screen.getByRole('link', { name: /Privacy Policy/i })
-    ).toHaveAttribute('href', '/en/privacy');
+    ).toHaveAttribute('href', '/privacy');
   });
 });

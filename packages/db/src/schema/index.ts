@@ -13,6 +13,7 @@ export { knowledgeArticle } from './knowledge';
 export { managementZone } from './management-zone';
 export { mineral, mineralTypes } from './mineral';
 export { oxidationRate } from './oxidation-rate';
+export { reminder, reminderTypeEnum } from './reminder';
 export { solubility } from './solubility';
 export { user, accountAgreementAcceptance, userRoleEnum } from './user';
 export { tab } from './tab';
@@ -22,7 +23,9 @@ export { seedProduct } from './seed-product';
 export { seedOrderCheckout } from './seed-order-checkout';
 export { internalAccount } from './internal-account';
 export {
+  formSubmission,
+  formSubmissionStatusEnum,
+  formSubmissionWorkflowTypeEnum,
   platformAccessApplication,
   platformAccessApplicationStatusEnum,
-} from './platform-access-application';
-export { reminder, reminderTypeEnum } from './reminder';
+} from './form-submission';

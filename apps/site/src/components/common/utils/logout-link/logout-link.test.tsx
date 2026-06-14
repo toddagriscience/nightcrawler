@@ -35,6 +35,6 @@ describe('LogoutLink', () => {
     await user.click(screen.getByRole('button', { name: 'Log out' }));
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith('/en');
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 });

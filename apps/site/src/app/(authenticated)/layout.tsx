@@ -7,7 +7,6 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
-import ApplicationReviewBanner from './components/application-review-banner';
 import AuthErrorFallback from './components/auth-error-fallback';
 import SidebarClient from './components/sidebar/sidebar-client';
 import Sidebar from './components/sidebar/sidebar';
@@ -38,12 +37,7 @@ async function ViewerAgreementGate({
     }
   }
 
-  return (
-    <>
-      <ApplicationReviewBanner />
-      {children}
-    </>
-  );
+  return children;
 }
 
 /**
@@ -66,11 +60,11 @@ export default function AuthenticatedLayout({
         <Suspense>
           <ViewerAgreementGate>
             <SidebarCollapseProvider>
-              <div className="flex">
+              <div className="flex h-screen overflow-hidden">
                 <SidebarClient>
                   <Sidebar />
                 </SidebarClient>
-                <div className="flex-1 min-w-0 px-6 py-6">
+                <div className="flex-1 min-w-0 overflow-y-auto px-6 py-6">
                   <DesktopGate />
                   {children}
                 </div>
