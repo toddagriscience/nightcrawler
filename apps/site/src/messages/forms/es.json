@@ -6,6 +6,7 @@
     "defaultSuccessMessage": "Gracias. Nuestro equipo revisará su solicitud y se comunicará por correo electrónico.",
     "retentionTitle": "Retención de datos",
     "retentionLabel": "Pueden conservar mi información para referencia futura si mi solicitud no es aprobada.",
-    "retentionDescription": "Si no marca esta casilla, su información se eliminará después de tomar una decisión."
+    "retentionDescription": "Si no marca esta casilla, su información se eliminará después de tomar una decisión.",
+    "selectPlaceholder": "Seleccione una opción"
   }
 }

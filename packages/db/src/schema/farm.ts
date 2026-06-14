@@ -7,6 +7,7 @@ import {
   pgTable,
   point,
   serial,
+  text,
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -27,6 +28,8 @@ export const farm = pgTable('farm', {
   approved: boolean('approved').default(false),
   /** The Stripe customer ID associated with this farm's billing account */
   stripeCustomerId: varchar({ length: 255 }),
+  /** Markdown-style farm profile maintained by client advisors for alignment and Iris context */
+  advisorProfileNotes: text(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()
     .notNull()

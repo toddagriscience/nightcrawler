@@ -6,6 +6,7 @@
     "defaultSuccessMessage": "Thank you. Our team will review your request and follow up by email.",
     "retentionTitle": "Data retention",
     "retentionLabel": "You may keep my information on file for future reference if my application is not approved.",
-    "retentionDescription": "If unchecked, your information will be deleted after a decision is made."
+    "retentionDescription": "If unchecked, your information will be deleted after a decision is made.",
+    "selectPlaceholder": "Select an option"
   }
 }

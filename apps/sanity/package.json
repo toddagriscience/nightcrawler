@@ -20,6 +20,7 @@
     "undici": "^7.24.0"
   },
   "dependencies": {
+    "@nightcrawler/db": "workspace:*",
     "@sanity/icons": "^3.7.4",
     "@sanity/vision": "^5.20.0",
     "date-fns": "^4.1.0",

@@ -2,4 +2,4 @@
 
 export * from './create-farm-default-settings';
 export * from './get-standard-values';
-export * from './platform-access-signup';
+export * from './form-submission-signup';

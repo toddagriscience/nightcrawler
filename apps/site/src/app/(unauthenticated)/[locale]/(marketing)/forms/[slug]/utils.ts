@@ -70,7 +70,7 @@ export function resolveFormSections(form: SanityForm): SanityFormSection[] {
 }
 
 /**
- * Flattens section fields for validation and persistence.
+ * Flattens section fields for rendering and persistence metadata.
  *
  * @param sections - CMS form sections
  */
@@ -78,6 +78,34 @@ export function flattenFormFields(
   sections: SanityFormSection[]
 ): SanityFormField[] {
   return sections.flatMap((section) => section.fields ?? []);
+}
+
+/**
+ * Expands `checkboxGroup` fields into per-option virtual boolean fields for validation.
+ *
+ * @param fields - CMS field rows
+ */
+export function expandFormFields(fields: SanityFormField[]): SanityFormField[] {
+  const expanded: SanityFormField[] = [];
+
+  for (const field of fields) {
+    if (field.type === 'checkboxGroup') {
+      for (const option of field.checkboxOptions ?? []) {
+        expanded.push({
+          name: option.key,
+          label: option.label,
+          type: 'checkbox',
+          helpText: option.helpText,
+          required: false,
+        });
+      }
+      continue;
+    }
+
+    expanded.push(field);
+  }
+
+  return expanded;
 }
 
 /**
@@ -114,9 +142,10 @@ export function buildFormAnswersSchema(
   fields: SanityFormField[],
   footerCheckboxes: SanityFormFooterCheckbox[] = []
 ) {
+  const expandedFields = expandFormFields(fields);
   const shape: Record<string, z.ZodTypeAny> = {};
 
-  for (const field of fields) {
+  for (const field of expandedFields) {
     if (!isSupportedFormFieldType(field.type)) {
       continue;
     }
@@ -130,7 +159,34 @@ export function buildFormAnswersSchema(
 
   shape[FORM_HONEYPOT_FIELD] = z.literal('').optional();
 
-  return z.object(shape);
+  const baseSchema = z.object(shape);
+  const requiredCheckboxGroups = fields.filter(
+    (field) => field.type === 'checkboxGroup' && field.required
+  );
+
+  if (requiredCheckboxGroups.length === 0) {
+    return baseSchema;
+  }
+
+  return baseSchema.superRefine((values, context) => {
+    for (const group of requiredCheckboxGroups) {
+      const options = group.checkboxOptions ?? [];
+      const hasSelection = options.some(
+        (option) => values[option.key] === true
+      );
+
+      if (hasSelection) {
+        continue;
+      }
+
+      const firstKey = options[0]?.key ?? group.name;
+      context.addIssue({
+        code: 'custom',
+        message: `${group.label} requires at least one selection.`,
+        path: [firstKey],
+      });
+    }
+  });
 }
 
 /**
@@ -214,6 +270,10 @@ function buildFieldSchema(field: SanityFormField): z.ZodTypeAny {
     return z.union([z.literal(''), z.url()]).optional();
   }
 
+  if (field.type === 'checkbox') {
+    return z.boolean().optional();
+  }
+
   return schema.optional();
 }
 
@@ -232,6 +292,13 @@ export function buildFormDefaultValues(
   };
 
   for (const field of fields) {
+    if (field.type === 'checkboxGroup') {
+      for (const option of field.checkboxOptions ?? []) {
+        defaults[option.key] = false;
+      }
+      continue;
+    }
+
     switch (field.type) {
       case 'checkbox':
         defaults[field.name] = false;
@@ -285,7 +352,6 @@ export function buildStoredFormAnswers(
 }
 
 export {
-  buildIncomingSignupUrl,
   extractApplicantPrefillFromAnswers,
   extractApplicantPrefillFromAnswers as extractSignupPrefillFromAnswers,
 } from '@nightcrawler/db/utils/extract-applicant-prefill';
