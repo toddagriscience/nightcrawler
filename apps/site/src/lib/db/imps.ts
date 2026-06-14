@@ -15,6 +15,7 @@ export async function getAllImps() {
       id: integratedManagementPlan.id,
       title: integratedManagementPlan.title,
       slug: integratedManagementPlan.slug,
+      content: integratedManagementPlan.content,
       category: integratedManagementPlan.category,
       source: integratedManagementPlan.source,
       updated: integratedManagementPlan.updated,

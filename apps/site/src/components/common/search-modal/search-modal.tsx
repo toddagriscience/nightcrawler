@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   LuBookOpen,
   LuSearch,
@@ -42,6 +42,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [seeds, setSeeds] = useState<any[]>([]);
   const [cartItems, setCartItems] = useState<Set<string>>(new Set());
   const [expandedImp, setExpandedImp] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +52,21 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         setSeeds(seeds);
       });
     }
+  }, [isOpen]);
+
+  // Focus management: when the modal opens, remember the element that had
+  // focus and move focus into the search input; when it closes (Escape,
+  // backdrop click, or unmount), restore focus to that element.
+  useEffect(() => {
+    if (!isOpen) return;
+    previouslyFocusedRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    inputRef.current?.focus();
+    return () => {
+      previouslyFocusedRef.current?.focus();
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -109,11 +126,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="flex items-center gap-3 px-5 py-4 border-b">
           <LuSearch className="size-5 text-muted-foreground shrink-0" />
           <Input
+            ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search IMPs and seeds..."
             className="flex-1 border-0 shadow-none text-base focus:ring-0"
-            autoFocus
           />
           <Button variant="ghost" size="icon" onClick={onClose}>
             <LuX className="size-4" />

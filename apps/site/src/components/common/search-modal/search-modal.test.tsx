@@ -66,6 +66,40 @@ describe('SearchModal', () => {
     expect(screen.getByText(/1 item/i)).toBeInTheDocument();
   });
 
+  it('shows the IMP content preview when a result is expanded', async () => {
+    render(<SearchModal isOpen onClose={() => {}} />);
+    const title = await screen.findByText('Soil Health Plan');
+
+    // Preview content is hidden until the IMP row is expanded.
+    expect(screen.queryByText('long content')).not.toBeInTheDocument();
+
+    fireEvent.click(title);
+
+    expect(screen.getByText('long content')).toBeInTheDocument();
+  });
+
+  it('focuses the input on open and restores focus to the trigger on close', async () => {
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
+    expect(document.activeElement).toBe(trigger);
+
+    const onClose = vi.fn();
+    const { rerender } = render(<SearchModal isOpen onClose={onClose} />);
+    await screen.findByText('Soil Health Plan');
+
+    // Opening the modal moves focus into the search input.
+    expect(document.activeElement).toBe(
+      screen.getByPlaceholderText(/Search IMPs and seeds/i)
+    );
+
+    // Closing the modal restores focus to the previously focused trigger.
+    rerender(<SearchModal isOpen={false} onClose={onClose} />);
+    expect(document.activeElement).toBe(trigger);
+
+    document.body.removeChild(trigger);
+  });
+
   it('closes on Escape and on backdrop click', async () => {
     const onClose = vi.fn();
     const { container } = render(<SearchModal isOpen onClose={onClose} />);
