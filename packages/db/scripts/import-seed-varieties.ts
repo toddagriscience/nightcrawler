@@ -39,7 +39,7 @@ const host = process.env.LOCAL_DATABASE_HOST ?? '';
 if (!['localhost', '127.0.0.1'].includes(host)) {
   throw new Error(
     `Refusing to run: LOCAL_DATABASE_HOST is "${host}", expected localhost. ` +
-    'This importer only runs against the local Docker DB.'
+      'This importer only runs against the local Docker DB.'
   );
 }
 const databaseUrl =
@@ -161,9 +161,14 @@ function classify(rows: string[][]) {
 
     if (cells.every((c) => c === '')) continue;
 
-    const hasDetail = [perOz, perLb, perPlant, inventory, lastProduced, location].some(
-      (c) => c !== ''
-    );
+    const hasDetail = [
+      perOz,
+      perLb,
+      perPlant,
+      inventory,
+      lastProduced,
+      location,
+    ].some((c) => c !== '');
     const numericCode = isNumericCode(col0);
 
     // Derive a candidate name + description:
@@ -208,7 +213,8 @@ function classify(rows: string[][]) {
       continue;
     }
 
-    const name = candidateName || `${current.name}${col0 ? ` ${col0}` : ''}`.trim();
+    const name =
+      candidateName || `${current.name}${col0 ? ` ${col0}` : ''}`.trim();
     current.varieties.push({
       name: cap(name || `${current.name} variety`, 200),
       description,
@@ -258,14 +264,15 @@ async function main() {
     back_order: 0,
     reference: 0,
   };
-  for (const c of crops) for (const v of c.varieties) statusCounts[v.status] += 1;
+  for (const c of crops)
+    for (const v of c.varieties) statusCounts[v.status] += 1;
 
   console.log(`\nParsed ${CSV_PATH}`);
   console.log(`  Crops:     ${crops.length}`);
   console.log(`  Varieties: ${varietyCount}`);
   console.log(
     `  Status:    available=${statusCounts.available} ` +
-    `back_order=${statusCounts.back_order} reference=${statusCounts.reference}`
+      `back_order=${statusCounts.back_order} reference=${statusCounts.reference}`
   );
   console.log(`  Orphan/unclassified rows: ${orphans.length}`);
   console.log(`  Skipped note/preamble rows: ${notes.length}`);
@@ -279,19 +286,21 @@ async function main() {
   for (const c of crops.slice(0, 3)) {
     console.log(
       `    [crop] ${c.name} (${c.varieties.length} varieties) — ` +
-      `${c.description.slice(0, 60)}...`
+        `${c.description.slice(0, 60)}...`
     );
     for (const v of c.varieties.slice(0, 3)) {
       console.log(
         `        [variety] ${v.name} | ${v.status} | ` +
-        `oz=${v.pricePerOzCents} lb=${v.pricePerLbCents} plant=${v.pricePerPlantCents} ` +
-        `| inv="${v.inventoryNote ?? ''}"`
+          `oz=${v.pricePerOzCents} lb=${v.pricePerLbCents} plant=${v.pricePerPlantCents} ` +
+          `| inv="${v.inventoryNote ?? ''}"`
       );
     }
   }
 
   if (!COMMIT) {
-    console.log('\nDry run only. Re-run with --commit to write to the local DB.\n');
+    console.log(
+      '\nDry run only. Re-run with --commit to write to the local DB.\n'
+    );
     return;
   }
 
@@ -335,7 +344,11 @@ async function main() {
       }
       await db
         .update(seedCrop)
-        .set({ name: crop.name, description: crop.description, sourceContentHash: cropHash })
+        .set({
+          name: crop.name,
+          description: crop.description,
+          sourceContentHash: cropHash,
+        })
         .where(eq(seedCrop.id, cropId));
     } else {
       const [k] = await db
@@ -389,14 +402,19 @@ async function main() {
             .where(eq(knowledgeArticle.id, existingV.knowledgeArticleId));
           embeddings += 1;
         }
-        await db.update(seedVariety).set(fields).where(eq(seedVariety.id, existingV.id));
+        await db
+          .update(seedVariety)
+          .set(fields)
+          .where(eq(seedVariety.id, existingV.id));
       } else {
         const [k] = await db
           .insert(knowledgeArticle)
           .values({ embedding: await embed(vText) })
           .returning({ id: knowledgeArticle.id });
         embeddings += 1;
-        await db.insert(seedVariety).values({ knowledgeArticleId: k.id, slug: vSlug, ...fields });
+        await db
+          .insert(seedVariety)
+          .values({ knowledgeArticleId: k.id, slug: vSlug, ...fields });
       }
       varietiesWritten += 1;
     }
@@ -404,7 +422,7 @@ async function main() {
 
   console.log(
     `\nCommitted: ${cropsWritten} crops, ${varietiesWritten} varieties, ` +
-    `${embeddings} embeddings generated.\n`
+      `${embeddings} embeddings generated.\n`
   );
 }
 
