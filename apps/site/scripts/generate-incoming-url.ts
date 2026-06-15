@@ -1,5 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+/**
+ * ARCHIVED — local dev helper only; not used by production onboarding.
+ *
+ * Legacy PII-in-query URL generator from before platform-access signup moved to
+ * `application_id` + `token` links. Kept for manual local experiments only.
+ */
+
 import readline from 'readline';
 
 const BASE_URL = 'http://localhost:3000/incoming';

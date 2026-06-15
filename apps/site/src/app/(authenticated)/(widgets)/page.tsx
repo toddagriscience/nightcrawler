@@ -3,18 +3,13 @@
 import { NavLinks } from '@/components/common/authenticated-header/nav-links';
 import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
 import { Button } from '@/components/ui';
-import {
-  accountAgreementAcceptance,
-  managementZone,
-  widget,
-  widgetEnum,
-} from '@nightcrawler/db/schema';
+import { managementZone, widget, widgetEnum } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 import { getAccountShellData } from '../(accounts)/account/db';
 import CurrentTab from '../components/tabs/current-tab';
@@ -45,6 +40,7 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  await requirePlatformOnboardingComplete();
   const currentUser = await getAuthenticatedInfo();
   const canEdit = currentUser.role === 'Admin';
   const { farmName } = await getAccountShellData();
@@ -56,18 +52,8 @@ export default async function DashboardPage({
     .where(eq(managementZone.farmId, currentUser.farmId))
     .orderBy(asc(managementZone.createdAt));
 
-  // No zones at all — check if user has applied, or show empty state
+  // No zones at all — show empty state for onboarded farms without zones yet
   if (allManagementZones.length === 0) {
-    const [hasApplied] = await db
-      .select({ userId: accountAgreementAcceptance.userId })
-      .from(accountAgreementAcceptance)
-      .where(eq(accountAgreementAcceptance.userId, currentUser.id))
-      .limit(1);
-
-    if (!hasApplied) {
-      redirect('/apply');
-    }
-
     return (
       <div className="flex min-h-[calc(100vh-8rem)] flex-col items-center justify-center px-6 text-center">
         <div className="max-w-2xl space-y-4">

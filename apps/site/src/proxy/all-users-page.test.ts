@@ -13,6 +13,12 @@ function mockNextRequest(pathname: string): Partial<NextRequest> {
 }
 
 describe('isAllUserRoute', () => {
+  it('returns true for /en/contact', async () => {
+    const req = mockNextRequest('/en/contact');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(true);
+  });
+
   it('returns true for /en/privacy', async () => {
     const req = mockNextRequest('/en/privacy');
     const result = await isAllUserRoute(req as NextRequest);
@@ -37,20 +43,8 @@ describe('isAllUserRoute', () => {
     expect(result).toBe(true);
   });
 
-  it('returns true for /en/signup', async () => {
-    const req = mockNextRequest('/en/signup');
-    const result = await isAllUserRoute(req as NextRequest);
-    expect(result).toBe(true);
-  });
-
-  it('returns true for /es/signup', async () => {
-    const req = mockNextRequest('/es/signup');
-    const result = await isAllUserRoute(req as NextRequest);
-    expect(result).toBe(true);
-  });
-
-  it('returns true for unprefixed /signup (default locale)', async () => {
-    const req = mockNextRequest('/signup');
+  it('returns true for unprefixed /contact (default locale)', async () => {
+    const req = mockNextRequest('/contact');
     const result = await isAllUserRoute(req as NextRequest);
     expect(result).toBe(true);
   });
@@ -59,6 +53,12 @@ describe('isAllUserRoute', () => {
     const req = mockNextRequest('/privacy');
     const result = await isAllUserRoute(req as NextRequest);
     expect(result).toBe(true);
+  });
+
+  it('returns false for unprefixed /signup', async () => {
+    const req = mockNextRequest('/signup');
+    const result = await isAllUserRoute(req as NextRequest);
+    expect(result).toBe(false);
   });
 
   it('returns false for unprefixed unrelated routes', async () => {

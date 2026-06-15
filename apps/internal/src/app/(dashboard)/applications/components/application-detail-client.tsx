@@ -22,7 +22,9 @@ import {
   rejectPlatformAccessApplication,
   resendPlatformAccessApplicationInvite,
 } from '../actions';
+import ApplicationAnswersPanel from './application-answers-panel';
 import { FormSlugBadge } from './form-slug-badge';
+import FarmAdvisorProfileNotes from './farm-advisor-profile-notes';
 
 /** One platform access application row. */
 export type ApplicationRow = NonNullable<
@@ -38,19 +40,8 @@ export interface ApplicationDetailClientProps {
   application: ApplicationRow;
   /** Pre-built signup URL when already approved */
   signupUrl: string | null;
-}
-
-/**
- * Formats one stored answer value for display.
- *
- * @param value - Raw answer value
- */
-function formatAnswerValue(value: unknown): string {
-  if (typeof value === 'boolean') {
-    return value ? 'Yes' : 'No';
-  }
-
-  return String(value ?? '');
+  /** Advisor notes when the application is linked to a farm */
+  farmAdvisorProfileNotes: string | null;
 }
 
 /**
@@ -61,6 +52,7 @@ function formatAnswerValue(value: unknown): string {
 export default function ApplicationDetailClient({
   application: initialApplication,
   signupUrl: initialSignupUrl,
+  farmAdvisorProfileNotes,
 }: ApplicationDetailClientProps) {
   const router = useRouter();
   const [application, setApplication] =
@@ -222,28 +214,24 @@ export default function ApplicationDetailClient({
         ) : null}
       </div>
 
-      <div className="space-y-3 rounded-md border p-4">
-        <h2 className="text-sm font-medium">Answers</h2>
-        {Object.keys(answers).length === 0 ? (
-          <p className="text-sm text-muted-foreground">No answers stored.</p>
-        ) : (
-          Object.entries(answers).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-3 gap-2 text-sm">
-              <div className="font-medium">{key}</div>
-              <div className="col-span-2 break-words">
-                {formatAnswerValue(value)}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      <ApplicationAnswersPanel
+        formSlug={application.formSlug}
+        answers={answers}
+      />
+
+      {application.farmId && farmAdvisorProfileNotes !== null ? (
+        <FarmAdvisorProfileNotes
+          farmId={application.farmId}
+          initialNotes={farmAdvisorProfileNotes}
+        />
+      ) : null}
 
       {signupUrl ? (
         <div className="rounded-md border p-4 text-sm break-all">
           <p className="font-medium mb-2">Onboarding link (fallback)</p>
           <p className="text-muted-foreground mb-2">
-            Same link as the approval email. Applicant confirms details at
-            /incoming, then sets a password to finish account setup.
+            Same link as the approval email. Applicant sets a password at signup
+            to finish account setup.
           </p>
           <p>{signupUrl}</p>
           <div className="mt-3 flex flex-wrap gap-2">

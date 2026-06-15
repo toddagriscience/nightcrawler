@@ -9,7 +9,7 @@ import {
   UserSelect,
 } from '@/lib/types/db';
 import dynamic from 'next/dynamic';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import {
   GeneralBusinessInformationUpdate,
   TabTypes,
@@ -17,11 +17,17 @@ import {
 } from '../types';
 import BankInformation from './bank-information';
 import Colleagues from './colleagues';
-import Farm from './farm';
-import GeneralBusinessInformation from './general-business-information';
+
 const TermsAndConditions = dynamic(() => import('./terms-and-conditions'), {
   ssr: false,
 });
+
+/** Slim onboarding tabs shown to new clients after signup. */
+export const SLIM_ONBOARDING_TABS = [
+  'colleagues',
+  'bank-information',
+  'terms',
+] as const satisfies readonly TabTypes[];
 
 export const ApplicationContext = createContext({
   farmInfo: {} as GeneralBusinessInformationUpdate,
@@ -33,14 +39,14 @@ export const ApplicationContext = createContext({
   setCurrentTab: (_tab: TabTypes) => {},
   canSubmitApplication: false,
   canEditFarm: false,
-  nextTabAfterColleagues: 'farm' as TabTypes,
+  nextTabAfterColleagues: 'bank-information' as TabTypes,
 });
 
-/** The tabs for the application */
+/** Slim post-signup onboarding: colleagues, bank, terms. */
 export default function ApplicationTabs({
   farmInfo,
   allUsers,
-  internalApplication,
+  internalApplication = {} as FarmInfoInternalApplicationSelect,
   farmSubscription,
   currentUser,
   invitedUserVerificationStatus,
@@ -49,25 +55,18 @@ export default function ApplicationTabs({
   farmInfo: GeneralBusinessInformationUpdate;
   allUsers: UserSelect[];
   currentUser: UserSelect;
-  internalApplication: FarmInfoInternalApplicationSelect;
+  internalApplication?: FarmInfoInternalApplicationSelect;
   farmSubscription: FarmSubscriptionSelect | null;
   invitedUserVerificationStatus: VerificationStatus[];
   canSubmitApplication: boolean;
 }) {
-  const [currentTab, setCurrentTab] = useState<TabTypes>('general');
   const hasBankSetup = ['bank_setup_complete', 'active', 'trialing'].includes(
     farmSubscription?.status ?? ''
   );
+  const [currentTab, setCurrentTab] = useState<TabTypes>(() =>
+    hasBankSetup ? 'terms' : 'colleagues'
+  );
   const canEditFarm = currentUser.role === 'Admin';
-
-  useEffect(() => {
-    async function helper() {
-      if (hasBankSetup) {
-        setCurrentTab('terms');
-      }
-    }
-    helper();
-  }, [setCurrentTab, hasBankSetup]);
 
   return (
     <ApplicationContext.Provider
@@ -81,28 +80,22 @@ export default function ApplicationTabs({
         setCurrentTab,
         canSubmitApplication,
         canEditFarm,
-        nextTabAfterColleagues: 'farm',
+        nextTabAfterColleagues: 'bank-information',
       }}
     >
-      <Tabs defaultValue="general" value={currentTab}>
+      <Tabs defaultValue="colleagues" value={currentTab}>
         {!canEditFarm && (
           <p className="mt-6 rounded-md border border-amber-400/60 bg-amber-50 p-3 text-sm text-amber-800">
-            Your account is read only. Only administrators can edit farm
-            information or submit the application.
+            Your account is read only. Only administrators can invite colleagues
+            or complete onboarding.
           </p>
         )}
         <TabsList className="flex h-auto flex-wrap items-center justify-start gap-3 bg-transparent max-md:mt-6">
-          <TabsTrigger onClick={() => setCurrentTab('general')} value="general">
-            General Business Information
-          </TabsTrigger>
           <TabsTrigger
             onClick={() => setCurrentTab('colleagues')}
             value="colleagues"
           >
             Colleagues
-          </TabsTrigger>
-          <TabsTrigger onClick={() => setCurrentTab('farm')} value="farm">
-            Farm Information
           </TabsTrigger>
           <TabsTrigger
             onClick={() => setCurrentTab('bank-information')}
@@ -115,16 +108,8 @@ export default function ApplicationTabs({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general">
-          <GeneralBusinessInformation />
-        </TabsContent>
-
         <TabsContent value="colleagues">
           <Colleagues />
-        </TabsContent>
-
-        <TabsContent value="farm">
-          <Farm />
         </TabsContent>
 
         <TabsContent value="bank-information">

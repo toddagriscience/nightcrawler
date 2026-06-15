@@ -212,7 +212,7 @@ export async function submitApplication(): Promise<ActionResponse> {
     const canSubmit = await isApplicationReadyForSubmission(farmId);
     if (!canSubmit) {
       throwActionError(
-        'Please complete General Business Information, Farm Information, and Bank Information before submitting.'
+        'Please complete Bank Information before accepting the terms.'
       );
     }
 
