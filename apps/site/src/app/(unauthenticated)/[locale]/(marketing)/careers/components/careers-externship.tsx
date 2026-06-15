@@ -115,6 +115,7 @@ export function CareersExternship() {
             <Disclaimer
               translationLoc="careers.disclaimers"
               disclaimerCount={5}
+              linkHref="/contact"
             />
           </div>
         </main>
