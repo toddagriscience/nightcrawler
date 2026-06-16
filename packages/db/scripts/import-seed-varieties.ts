@@ -20,7 +20,7 @@ import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
+import { eq, inArray, notInArray } from 'drizzle-orm';
 import { knowledgeArticle, seedCrop, seedVariety } from '../src/schema';
 import { getEmbedding } from '../src/utils/get-embedding';
 
@@ -419,10 +419,38 @@ async function main() {
       varietiesWritten += 1;
     }
   }
+  // ---- prune stale rows (the sheet is the source of truth) ----------------
+  // Any crop/variety whose slug this run did NOT produce was removed or
+  // renamed in the sheet, so drop it. Deleting the knowledge_article row
+  // cascades to its seed_crop / seed_variety child via the FK.
+  let pruned = 0;
+  const keptSlugs = Array.from(usedSlugs);
+  if (keptSlugs.length > 0) {
+    // Guard: an empty kept-set would match everything and wipe the tables.
+    const staleVarieties = await db
+      .select({ kId: seedVariety.knowledgeArticleId })
+      .from(seedVariety)
+      .where(notInArray(seedVariety.slug, keptSlugs));
+    const staleCrops = await db
+      .select({ kId: seedCrop.knowledgeArticleId })
+      .from(seedCrop)
+      .where(notInArray(seedCrop.slug, keptSlugs));
+
+    const staleKnowledgeIds = [
+      ...staleVarieties.map((r) => r.kId),
+      ...staleCrops.map((r) => r.kId),
+    ];
+    if (staleKnowledgeIds.length > 0) {
+      await db
+        .delete(knowledgeArticle)
+        .where(inArray(knowledgeArticle.id, staleKnowledgeIds));
+      pruned = staleKnowledgeIds.length;
+    }
+  }
 
   console.log(
     `\nCommitted: ${cropsWritten} crops, ${varietiesWritten} varieties, ` +
-      `${embeddings} embeddings generated.\n`
+      `${embeddings} embeddings generated, ${pruned} stale rows pruned.\n`
   );
 }
 
