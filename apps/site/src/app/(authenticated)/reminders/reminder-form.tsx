@@ -59,6 +59,11 @@ export function ReminderForm({
   const [seasonalLabel, setSeasonalLabel] = useState(
     initialData?.seasonalLabel ?? ''
   );
+  const [dueDate, setDueDate] = useState(
+    initialData?.dueDate
+      ? new Date(initialData.dueDate).toISOString().split('T')[0]
+      : ''
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const parsedDate = seasonalLabel ? parseSeasonalLabel(seasonalLabel) : null;
@@ -74,7 +79,13 @@ export function ReminderForm({
     const body = formData.get('body') as string;
     const type = formData.get('type') as ReminderType;
     const dueDateStr = formData.get('dueDate') as string;
-    const seasonalLabelVal = formData.get('seasonalLabel') as string;
+    let seasonalLabelVal = formData.get('seasonalLabel') as string;
+
+    // Mutual exclusion guard: an exact date and a seasonal label must never both
+    // be stored. If both are somehow present, keep only the exact date.
+    if (seasonalLabelVal && dueDateStr) {
+      seasonalLabelVal = '';
+    }
 
     try {
       if (mode === 'edit' && initialData) {
@@ -82,7 +93,7 @@ export function ReminderForm({
           title,
           body,
           type,
-          dueDate: dueDateStr ? new Date(dueDateStr) : null,
+          dueDate: dueDateStr ? new Date(dueDateStr + 'T00:00:00') : null,
           seasonalLabel: seasonalLabelVal || null,
         });
       } else {
@@ -90,7 +101,7 @@ export function ReminderForm({
           title,
           body,
           type,
-          dueDate: dueDateStr ? new Date(dueDateStr) : null,
+          dueDate: dueDateStr ? new Date(dueDateStr + 'T00:00:00') : null,
           seasonalLabel: seasonalLabelVal || null,
         });
       }
@@ -150,6 +161,7 @@ export function ReminderForm({
           name="seasonalLabel"
           value={seasonalLabel}
           onChange={(e) => setSeasonalLabel(e.target.value)}
+          disabled={dueDate !== ''}
           placeholder="e.g., mid March, early spring, 6 months from now"
         />
         <p className="text-xs text-[var(--color-muted-foreground)]">
@@ -173,11 +185,9 @@ export function ReminderForm({
           id="dueDate"
           name="dueDate"
           type="date"
-          defaultValue={
-            initialData?.dueDate
-              ? new Date(initialData.dueDate).toISOString().split('T')[0]
-              : ''
-          }
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          disabled={seasonalLabel !== ''}
         />
       </div>
 

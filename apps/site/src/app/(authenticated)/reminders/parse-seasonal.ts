@@ -55,11 +55,11 @@ export function parseSeasonalLabel(
 
   // Season to approximate month mappings
   const seasonMap: Record<string, number> = {
-    spring: 3, // March 1
-    summer: 6, // June 1
-    fall: 9, // September 1
-    autumn: 9,
-    winter: 12, // December 1
+    spring: 2, // March
+    summer: 5, // June
+    fall: 8, // September
+    autumn: 8,
+    winter: 11, // December
   };
 
   // Helper to get the next occurrence of a month after referenceDate

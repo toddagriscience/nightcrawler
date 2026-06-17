@@ -31,7 +31,22 @@ describe('parseSeasonalLabel', () => {
   });
 
   it('parses "early [season]" using the season month', () => {
-    expect(ymd(parseSeasonalLabel('early spring', REF))).toEqual([2026, 3, 1]);
+    // early spring → March (month 2), the 1st.
+    expect(ymd(parseSeasonalLabel('early spring', REF))).toEqual([2026, 2, 1]);
+  });
+
+  it('parses "early summer" to June', () => {
+    expect(ymd(parseSeasonalLabel('early summer', REF))).toEqual([2026, 5, 1]);
+  });
+
+  it('parses "early fall" to September', () => {
+    expect(ymd(parseSeasonalLabel('early fall', REF))).toEqual([2026, 8, 1]);
+  });
+
+  it('parses "early winter" to December of the reference year (no overflow)', () => {
+    // Regression guard: winter must map to December (month 11) of REF's year,
+    // NOT overflow into January of the next year.
+    expect(ymd(parseSeasonalLabel('early winter', REF))).toEqual([2026, 11, 1]);
   });
 
   it('parses "late [month]" to the 15th', () => {
