@@ -15,16 +15,29 @@ const imps = [
 ];
 const seeds = [
   {
-    id: 's1',
+    id: 1,
     name: 'Crimson Clover',
+    slug: 'crimson-clover',
     description: 'cover crop',
+    stock: 8,
     priceInCents: 500,
     unit: 'lb',
+    imageUrl: null,
   },
 ];
 
+const { mockAddItem } = vi.hoisted(() => ({ mockAddItem: vi.fn() }));
+
 vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
   getSearchModalData: vi.fn(async () => ({ imps, seeds })),
+}));
+
+vi.mock('@/lib/order/hooks', () => ({
+  useOrder: () => ({
+    order: { items: [], updatedAt: null },
+    itemCount: 0,
+    addItem: mockAddItem,
+  }),
 }));
 
 describe('SearchModal', () => {
@@ -54,16 +67,29 @@ describe('SearchModal', () => {
     expect(screen.getByText('No IMPs found')).toBeInTheDocument();
   });
 
-  it('switches to the Seeds tab and adds a seed to the order', async () => {
+  it('switches to the Seeds tab and adds a seed to the real cart', async () => {
+    mockAddItem.mockClear();
     render(<SearchModal isOpen onClose={() => {}} />);
     await screen.findByText('Soil Health Plan');
 
     fireEvent.click(screen.getByRole('button', { name: /Browse Seeds/i }));
-    expect(screen.getByText('Crimson Clover')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByText('Crimson Clover')).toBeInTheDocument()
+    );
 
     fireEvent.click(screen.getByRole('button', { name: /Add to order/i }));
-    expect(screen.getByRole('button', { name: /Added/i })).toBeInTheDocument();
-    expect(screen.getByText(/1 item/i)).toBeInTheDocument();
+
+    expect(mockAddItem).toHaveBeenCalledTimes(1);
+    expect(mockAddItem).toHaveBeenCalledWith({
+      seedProductId: 1,
+      slug: 'crimson-clover',
+      name: 'Crimson Clover',
+      description: 'cover crop',
+      stock: 8,
+      imageUrl: null,
+      unit: 'lb',
+      priceInCents: 500,
+    });
   });
 
   it('shows the IMP content preview when a result is expanded', async () => {

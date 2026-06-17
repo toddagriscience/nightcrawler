@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { getSearchModalData } from '@/app/(authenticated)/actions/search-modal';
 import { formatPrice } from '@/lib/order/utils';
+import { useOrder } from '@/lib/order/hooks';
 import Link from 'next/link';
 
 type Tab = 'imps' | 'seeds';
@@ -40,10 +41,10 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [activeTab, setActiveTab] = useState<Tab>('imps');
   const [imps, setImps] = useState<any[]>([]);
   const [seeds, setSeeds] = useState<any[]>([]);
-  const [cartItems, setCartItems] = useState<Set<string>>(new Set());
   const [expandedImp, setExpandedImp] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const { order, itemCount, addItem } = useOrder();
 
   useEffect(() => {
     if (isOpen) {
@@ -96,16 +97,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       s.name.toLowerCase().includes(query.toLowerCase()) ||
       s.description?.toLowerCase().includes(query.toLowerCase())
   );
-
-  function toggleCartItem(id: string) {
-    setCartItems((prev) => {
-      const updated = new Set(prev);
-      // eslint-disable-next-line drizzle/enforce-delete-with-where -- Set.delete, not a Drizzle query
-      if (updated.has(id)) updated.delete(id);
-      else updated.add(id);
-      return updated;
-    });
-  }
 
   return (
     <div
@@ -227,52 +218,65 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   No seeds found
                 </p>
               ) : (
-                filteredSeeds.map((seed) => (
-                  <div
-                    key={seed.id}
-                    className="rounded-xl border border-stone-200 overflow-hidden"
-                  >
-                    <div className="p-3">
-                      <p className="font-medium text-foreground text-sm truncate">
-                        {seed.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                        {seed.description}
-                      </p>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs font-semibold text-foreground">
-                          {formatPrice(seed.priceInCents)}
-                          <span className="text-xs text-muted-foreground font-normal">
-                            /{seed.unit}
+                filteredSeeds.map((seed) => {
+                  const added = order.items.some((i) => i.slug === seed.slug);
+                  return (
+                    <div
+                      key={seed.id}
+                      className="rounded-xl border border-stone-200 overflow-hidden"
+                    >
+                      <div className="p-3">
+                        <p className="font-medium text-foreground text-sm truncate">
+                          {seed.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                          {seed.description}
+                        </p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-xs font-semibold text-foreground">
+                            {formatPrice(seed.priceInCents)}
+                            <span className="text-xs text-muted-foreground font-normal">
+                              /{seed.unit}
+                            </span>
                           </span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleCartItem(seed.id)}
-                          className={`text-xs px-2 py-1 rounded-full transition-colors ${
-                            cartItems.has(seed.id)
-                              ? 'bg-foreground text-white'
-                              : 'bg-stone-100 text-foreground hover:bg-stone-200'
-                          }`}
-                        >
-                          {cartItems.has(seed.id) ? 'Added' : 'Add to order'}
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              addItem({
+                                seedProductId: seed.id,
+                                slug: seed.slug,
+                                name: seed.name,
+                                description: seed.description ?? '',
+                                stock: seed.stock,
+                                imageUrl: seed.imageUrl,
+                                unit: seed.unit,
+                                priceInCents: seed.priceInCents,
+                              })
+                            }
+                            className={`text-xs px-2 py-1 rounded-full transition-colors ${
+                              added
+                                ? 'bg-foreground text-white'
+                                : 'bg-stone-100 text-foreground hover:bg-stone-200'
+                            }`}
+                          >
+                            {added ? 'Added' : 'Add to order'}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}
         </div>
 
         {/* Footer with cart summary */}
-        {cartItems.size > 0 && (
+        {itemCount > 0 && (
           <div className="px-5 py-3 border-t bg-stone-50 flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <LuShoppingCart className="size-4" />
-              {cartItems.size} item{cartItems.size !== 1 ? 's' : ''} added to
-              order
+              {itemCount} item{itemCount !== 1 ? 's' : ''} added to order
             </div>
             <Link
               href="/order"
