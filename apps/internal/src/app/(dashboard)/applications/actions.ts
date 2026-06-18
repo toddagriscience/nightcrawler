@@ -3,34 +3,23 @@
 'use server';
 
 import { db } from '@nightcrawler/db';
-import {
-  farm,
-  internalAccount,
-  platformAccessApplication,
-} from '@nightcrawler/db/schema';
-import { createClient } from '@/lib/supabase/server';
+import { farm, platformAccessApplication } from '@nightcrawler/db/schema';
 import { issueApprovedApplicantSignupAccess } from '@/lib/platform-access/issue-approved-applicant-signup';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
- * Resolves the active internal account for the current Supabase session.
+ * Resolves the active internal account id for the current session, or `null`
+ * when the caller is not an internal member. Delegates to
+ * {@link requireInternalAccount} so the account lookup lives in one place.
  */
 async function getReviewerAccountId(): Promise<number | null> {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
-  const email = data?.claims?.email as string | undefined;
-  if (!email) return null;
-
-  const [account] = await db
-    .select({ id: internalAccount.id })
-    .from(internalAccount)
-    .where(
-      and(eq(internalAccount.email, email), eq(internalAccount.isActive, true))
-    )
-    .limit(1);
-
-  return account?.id ?? null;
+  try {
+    return (await requireInternalAccount()).id;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -39,6 +28,7 @@ async function getReviewerAccountId(): Promise<number | null> {
  * @param id - Application row id
  */
 export async function getPlatformAccessApplicationById(id: number) {
+  await requireInternalAccount();
   try {
     const [application] = await db
       .select()
@@ -75,6 +65,7 @@ export interface PlatformAccessApplicationListFilters {
 export async function getPlatformAccessApplications(
   filters?: PlatformAccessApplicationListFilters
 ) {
+  await requireInternalAccount();
   try {
     const conditions = [
       isNull(platformAccessApplication.deletedAt),
@@ -104,6 +95,7 @@ export async function getPlatformAccessApplications(
  * @param id - Application row id
  */
 export async function approvePlatformAccessApplication(id: number) {
+  await requireInternalAccount();
   try {
     const reviewerId = await getReviewerAccountId();
     const [existing] = await db
@@ -158,6 +150,7 @@ export async function approvePlatformAccessApplication(id: number) {
  * @param id - Application row id
  */
 export async function resendPlatformAccessApplicationInvite(id: number) {
+  await requireInternalAccount();
   try {
     return await issueApprovedApplicantSignupAccess(id);
   } catch (error) {
@@ -177,6 +170,7 @@ export async function resendPlatformAccessApplicationInvite(id: number) {
  * @param id - Application row id
  */
 export async function rejectPlatformAccessApplication(id: number) {
+  await requireInternalAccount();
   try {
     const reviewerId = await getReviewerAccountId();
     const [existing] = await db
@@ -216,6 +210,7 @@ export async function rejectPlatformAccessApplication(id: number) {
 export async function getFarmAdvisorProfileNotes(
   farmId: number
 ): Promise<string> {
+  await requireInternalAccount();
   try {
     const [row] = await db
       .select({ advisorProfileNotes: farm.advisorProfileNotes })
@@ -240,6 +235,7 @@ export async function updateFarmAdvisorProfileNotes(
   farmId: number,
   notes: string
 ): Promise<{ success: boolean; error?: string }> {
+  await requireInternalAccount();
   try {
     const reviewerId = await getReviewerAccountId();
     if (!reviewerId) {
