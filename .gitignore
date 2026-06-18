@@ -36,6 +36,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# variety inventory CSV exports (the Google Sheet is the master copy)
+packages/db/data/
+
 # vercel
 **/.vercel
 
