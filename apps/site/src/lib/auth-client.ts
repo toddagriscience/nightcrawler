@@ -3,7 +3,6 @@
 'use client';
 
 import { AuthError } from '@supabase/supabase-js';
-import { redirect } from 'next/navigation';
 import logger from './logger';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
@@ -90,7 +89,8 @@ export async function logout(): Promise<AuthResponse> {
     };
   }
 
-  redirect('/');
+  window.location.replace('/');
+  return { data: {}, responseType: AuthResponseTypes.Logout };
 }
 
 /**

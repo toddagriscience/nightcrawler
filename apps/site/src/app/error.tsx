@@ -18,6 +18,25 @@ export default function Error({
   error: Error;
   reset: () => void;
 }) {
+  // ChunkLoadError fires when the browser fetches a JS chunk that no longer
+  // exists after a new deployment. Reload once to pick up fresh chunks.
+  // The sessionStorage flag prevents an infinite reload loop if the error persists.
+  if (
+    error.name === 'ChunkLoadError' ||
+    error.message?.includes('Loading chunk')
+  ) {
+    try {
+      if (!sessionStorage.getItem('chunk-reload-attempted')) {
+        sessionStorage.setItem('chunk-reload-attempted', '1');
+        window.location.reload();
+        return null;
+      }
+      sessionStorage.removeItem('chunk-reload-attempted');
+    } catch {
+      // sessionStorage unavailable — fall through to error UI
+    }
+  }
+
   return (
     <div className="mx-auto flex min-h-[calc(100vh-64px)] w-[90vw] max-w-[500px] flex-col items-center justify-center gap-4">
       <h1 className="text-3xl">There was an error with authentication</h1>
