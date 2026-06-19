@@ -12,13 +12,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 import { getAccountShellData } from '../(accounts)/account/db';
-import CurrentTab from '../components/tabs/current-tab';
-import { NamedTab } from '../components/tabs/types';
+import CurrentTab from '../../components/tabs/current-tab';
+import { NamedTab } from '../../components/tabs/types';
 
 // -- Commented out: tab-based imports (kept for future use) ---
-//import PlatformTabContent from '../components/tabs/tab-content';
-//import PlatformTabs from '../components/tabs/tabs';
-//import { getTablessManagementZones } from '../components/tabs/utils';
+//import PlatformTabContent from '../../components/tabs/tab-content';
+//import PlatformTabs from '../../components/tabs/tabs';
+//import { getTablessManagementZones } from '../../components/tabs/utils';
 //import { getSelectedTab, getSelectedTabHash } from './utils';
 //import { tab } from '@nightcrawler/db/schema/tab';
 
