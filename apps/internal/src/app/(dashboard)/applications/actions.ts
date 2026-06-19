@@ -10,19 +10,6 @@ import logger from '@/lib/logger';
 import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
- * Resolves the active internal account id for the current session, or `null`
- * when the caller is not an internal member. Delegates to
- * {@link requireInternalAccount} so the account lookup lives in one place.
- */
-async function getReviewerAccountId(): Promise<number | null> {
-  try {
-    return (await requireInternalAccount()).id;
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Fetches one platform access application by id.
  *
  * @param id - Application row id
@@ -95,9 +82,8 @@ export async function getPlatformAccessApplications(
  * @param id - Application row id
  */
 export async function approvePlatformAccessApplication(id: number) {
-  await requireInternalAccount();
+  const { id: reviewerId } = await requireInternalAccount();
   try {
-    const reviewerId = await getReviewerAccountId();
     const [existing] = await db
       .select()
       .from(platformAccessApplication)
@@ -170,9 +156,8 @@ export async function resendPlatformAccessApplicationInvite(id: number) {
  * @param id - Application row id
  */
 export async function rejectPlatformAccessApplication(id: number) {
-  await requireInternalAccount();
+  const { id: reviewerId } = await requireInternalAccount();
   try {
-    const reviewerId = await getReviewerAccountId();
     const [existing] = await db
       .select()
       .from(platformAccessApplication)
@@ -237,11 +222,6 @@ export async function updateFarmAdvisorProfileNotes(
 ): Promise<{ success: boolean; error?: string }> {
   await requireInternalAccount();
   try {
-    const reviewerId = await getReviewerAccountId();
-    if (!reviewerId) {
-      return { success: false, error: 'Not authorized.' };
-    }
-
     if (!Number.isFinite(farmId)) {
       return { success: false, error: 'Invalid farm id.' };
     }
