@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 import { BiArrowBack } from 'react-icons/bi';
-import ToddHeader from '../../../../../../components/common/wordmark/todd-wordmark';
+import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 
 interface AccountHeaderProps {
   farmName: string;
