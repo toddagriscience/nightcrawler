@@ -1,4 +1,5 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
+
 'use client';
 
 import Link from 'next/link';
