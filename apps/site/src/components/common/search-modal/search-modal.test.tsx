@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SearchModal } from './search-modal';
 
 const imps = [
@@ -26,10 +26,13 @@ const seeds = [
   },
 ];
 
-const { mockAddItem } = vi.hoisted(() => ({ mockAddItem: vi.fn() }));
+const { mockAddItem, mockGetSearchModalData } = vi.hoisted(() => ({
+  mockAddItem: vi.fn(),
+  mockGetSearchModalData: vi.fn(),
+}));
 
 vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
-  getSearchModalData: vi.fn(async () => ({ imps, seeds })),
+  getSearchModalData: mockGetSearchModalData,
 }));
 
 vi.mock('@/lib/order/hooks', () => ({
@@ -41,6 +44,12 @@ vi.mock('@/lib/order/hooks', () => ({
 }));
 
 describe('SearchModal', () => {
+  beforeEach(() => {
+    mockGetSearchModalData.mockReset();
+    mockGetSearchModalData.mockResolvedValue({ imps, seeds });
+    document.body.style.overflow = '';
+  });
+
   it('renders nothing when closed', () => {
     const { container } = render(
       <SearchModal isOpen={false} onClose={() => {}} />
@@ -139,5 +148,82 @@ describe('SearchModal', () => {
     expect(backdrop).not.toBeNull();
     fireEvent.click(backdrop!);
     expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
+  it('shows an error message when loading the data rejects', async () => {
+    mockGetSearchModalData.mockRejectedValue(new Error('boom'));
+
+    render(<SearchModal isOpen onClose={() => {}} />);
+
+    expect(
+      await screen.findByText(/Something went wrong loading results/i)
+    ).toBeInTheDocument();
+    // Result lists are not shown alongside the error.
+    expect(screen.queryByText('Soil Health Plan')).not.toBeInTheDocument();
+  });
+
+  it('ignores a stale response that resolves after close', async () => {
+    let resolveData: (value: {
+      imps: typeof imps;
+      seeds: typeof seeds;
+    }) => void;
+    mockGetSearchModalData.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveData = resolve;
+        })
+    );
+
+    const { rerender } = render(<SearchModal isOpen onClose={() => {}} />);
+    // Close before the in-flight request resolves.
+    rerender(<SearchModal isOpen={false} onClose={() => {}} />);
+    // Now the original request resolves with stale data.
+    resolveData!({ imps, seeds });
+
+    await waitFor(() => Promise.resolve());
+
+    // Reopen with no data source so we can observe that the stale result was
+    // never committed (the lists would otherwise render the IMP).
+    mockGetSearchModalData.mockResolvedValue({ imps: [], seeds: [] });
+    rerender(<SearchModal isOpen onClose={() => {}} />);
+
+    await waitFor(() =>
+      expect(screen.getByText('No IMPs found')).toBeInTheDocument()
+    );
+    expect(screen.queryByText('Soil Health Plan')).not.toBeInTheDocument();
+  });
+
+  it('traps Tab focus within the modal', async () => {
+    render(<SearchModal isOpen onClose={() => {}} />);
+    await screen.findByText('Soil Health Plan');
+
+    const focusable = Array.from(
+      screen
+        .getByRole('dialog')
+        .querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    // Tab from the last element wraps to the first.
+    last.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(first);
+
+    // Shift+Tab from the first element wraps to the last.
+    first.focus();
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it('restores body scroll when unmounted while open', async () => {
+    const { unmount } = render(<SearchModal isOpen onClose={() => {}} />);
+    await screen.findByText('Soil Health Plan');
+    expect(document.body.style.overflow).toBe('hidden');
+
+    unmount();
+    expect(document.body.style.overflow).toBe('');
   });
 });

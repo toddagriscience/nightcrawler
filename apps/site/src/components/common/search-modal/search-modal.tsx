@@ -41,18 +41,32 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [activeTab, setActiveTab] = useState<Tab>('imps');
   const [imps, setImps] = useState<any[]>([]);
   const [seeds, setSeeds] = useState<any[]>([]);
+  const [loadError, setLoadError] = useState(false);
   const [expandedImp, setExpandedImp] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const { order, itemCount, addItem } = useOrder();
 
   useEffect(() => {
-    if (isOpen) {
-      getSearchModalData().then(({ imps, seeds }) => {
+    if (!isOpen) return;
+    // Track whether this effect run is still current so a request that
+    // resolves after the modal is closed/reopened cannot set stale data.
+    let cancelled = false;
+    setLoadError(false);
+    getSearchModalData()
+      .then(({ imps, seeds }) => {
+        if (cancelled) return;
         setImps(imps);
         setSeeds(seeds);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLoadError(true);
       });
-    }
+    return () => {
+      cancelled = true;
+    };
   }, [isOpen]);
 
   // Focus management: when the modal opens, remember the element that had
@@ -70,17 +84,53 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     };
   }, [isOpen]);
 
+  // Lock body scroll while open. Kept in its own effect with an
+  // unconditional cleanup so the page is never left scroll-locked if the
+  // component unmounts or errors while open.
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
     };
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    }
+  }, [isOpen]);
+
+  // Keyboard handling: Escape closes the modal, Tab/Shift+Tab keeps focus
+  // trapped within the modal's focusable elements (WCAG 2.1 AA).
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const modal = modalRef.current;
+      if (!modal) return;
+
+      const focusable = modal.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey) {
+        if (active === first || !modal.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !modal.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
   }, [isOpen, onClose]);
 
@@ -112,7 +162,10 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative z-[9999] w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl flex flex-col max-h-[80vh]">
+      <div
+        ref={modalRef}
+        className="relative z-[9999] w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl flex flex-col max-h-[80vh]"
+      >
         {/* Header */}
         <div className="flex items-center gap-3 px-5 py-4 border-b">
           <LuSearch className="size-5 text-muted-foreground shrink-0" />
@@ -158,7 +211,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-5">
-          {activeTab === 'imps' && (
+          {loadError && (
+            <p role="alert" className="text-center text-sm text-red-600 py-8">
+              Something went wrong loading results. Please try again.
+            </p>
+          )}
+          {!loadError && activeTab === 'imps' && (
             <div className="space-y-3">
               {filteredImps.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">
@@ -211,7 +269,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </div>
           )}
 
-          {activeTab === 'seeds' && (
+          {!loadError && activeTab === 'seeds' && (
             <div className="grid grid-cols-2 gap-3">
               {filteredSeeds.length === 0 ? (
                 <p className="col-span-2 text-center text-muted-foreground py-8">
