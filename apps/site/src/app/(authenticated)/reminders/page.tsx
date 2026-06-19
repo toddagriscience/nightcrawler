@@ -16,11 +16,14 @@ export default async function RemindersPage() {
   const reminders = await getReminders();
 
   return (
-    <div className="max-w-2xl">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[var(--color-foreground)]">
-          Reminders
-        </h1>
+    <div className="mx-auto max-w-2xl">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Reminders</h1>
+          <p className="mt-2 text-foreground/70">
+            Keep track of seasonal tasks and important dates.
+          </p>
+        </div>
         <CreateReminderDialog />
       </div>
 
