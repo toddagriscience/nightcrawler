@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import SidebarClient from '../components/sidebar/sidebar-client';
 import Sidebar from '../components/sidebar/sidebar';
 import { SidebarCollapseProvider } from '../components/sidebar/sidebar-collapse-context';
@@ -11,14 +12,21 @@ import { SidebarCollapseProvider } from '../components/sidebar/sidebar-collapse-
  * routes (onboarding, reset-password) never receive the sidebar markup, so there
  * is no client-side hydration flash.
  *
+ * The platform-onboarding gate runs here, BEFORE the sidebar is rendered, so a
+ * user who has not finished onboarding is redirected to `/apply` without the
+ * sidebar ever painting. (Pre-onboarding surfaces — `/apply`, reset-password —
+ * live in the sibling `(chromeless)` group and are never gated here.)
+ *
  * @param {React.ReactNode} children - Nested route content
  * @returns {React.ReactNode} - The sidebar shell
  */
-export default function ShellLayout({
+export default async function ShellLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requirePlatformOnboardingComplete();
+
   return (
     <SidebarCollapseProvider>
       <div className="flex h-screen overflow-hidden">
