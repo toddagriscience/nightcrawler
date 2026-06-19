@@ -74,12 +74,16 @@ export async function createReminder(
       throwActionError('Type is required');
     }
 
+    // Body is optional. Trim it and treat whitespace-only input as an
+    // intentional empty string (no notes), mirroring how `title` is trimmed.
+    const body = input.body?.trim() ?? '';
+
     const [newReminder] = await db
       .insert(reminder)
       .values({
         userId: currentUser.id,
         title: input.title.trim(),
-        body: input.body?.trim() ?? '',
+        body,
         type: input.type as ReminderType,
         dueDate: input.dueDate ?? null,
         seasonalLabel: input.seasonalLabel?.trim() ?? null,
@@ -133,6 +137,9 @@ export async function updateReminderById(
     }
 
     if (input.body !== undefined) {
+      // Body is optional. Trim it and treat whitespace-only input as an
+      // intentional empty string (no notes), mirroring the create path and
+      // how `title` is trimmed above.
       updateData.body = input.body.trim();
     }
 

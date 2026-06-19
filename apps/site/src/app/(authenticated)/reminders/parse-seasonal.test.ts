@@ -71,6 +71,22 @@ describe('parseSeasonalLabel', () => {
     ]);
   });
 
+  it('rolls "end of season" to next year when Dec 31 has already passed', () => {
+    // Reference date is late December (Dec 20 2026); Dec 31 2026 is still
+    // ahead, so it must stay in 2026.
+    const lateDec = new Date(2026, 11, 20);
+    expect(ymd(parseSeasonalLabel('end of season', lateDec))).toEqual([
+      2026, 11, 31,
+    ]);
+
+    // Reference date is exactly Dec 31 2026: it is not in the past, so it
+    // resolves to that same day rather than rolling forward.
+    const onDec31 = new Date(2026, 11, 31);
+    expect(ymd(parseSeasonalLabel('end of season', onDec31))).toEqual([
+      2026, 11, 31,
+    ]);
+  });
+
   it('parses "end of [month]" to the last day of that month', () => {
     expect(ymd(parseSeasonalLabel('end of March', REF))).toEqual([2026, 2, 31]);
   });

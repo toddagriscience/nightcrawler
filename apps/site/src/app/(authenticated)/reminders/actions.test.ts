@@ -33,10 +33,15 @@ vi.mock('@/lib/logger', () => ({
 // Capture the WHERE condition passed to each mutation's terminal builder.
 const capturedWhere: { value: unknown } = { value: undefined };
 
-const { mockDelete, mockUpdate } = vi.hoisted(() => {
+// Capture the values passed to update().set(...) and insert().values(...).
+const capturedUpdateData: { value: unknown } = { value: undefined };
+const capturedInsertValues: { value: unknown } = { value: undefined };
+
+const { mockDelete, mockUpdate, mockInsert } = vi.hoisted(() => {
   return {
     mockDelete: vi.fn(),
     mockUpdate: vi.fn(),
+    mockInsert: vi.fn(),
   };
 });
 
@@ -45,11 +50,13 @@ vi.mock('@nightcrawler/db/schema/connection', () => {
     db: {
       delete: mockDelete,
       update: mockUpdate,
+      insert: mockInsert,
     },
   };
 });
 
 import {
+  createReminder,
   deleteReminder,
   markReminderRead,
   updateReminder,
@@ -105,6 +112,8 @@ function expectOwnerScopedWhere(captured: unknown, id: number) {
 beforeEach(() => {
   vi.clearAllMocks();
   capturedWhere.value = undefined;
+  capturedUpdateData.value = undefined;
+  capturedInsertValues.value = undefined;
   mockGetAuthenticatedInfo.mockResolvedValue({ id: CURRENT_USER_ID });
 
   // delete().where(cond)
@@ -117,12 +126,25 @@ beforeEach(() => {
 
   // update().set(data).where(cond)
   mockUpdate.mockReturnValue({
-    set: () => ({
-      where: (cond: unknown) => {
-        capturedWhere.value = cond;
-        return Promise.resolve(undefined);
-      },
-    }),
+    set: (data: unknown) => {
+      capturedUpdateData.value = data;
+      return {
+        where: (cond: unknown) => {
+          capturedWhere.value = cond;
+          return Promise.resolve(undefined);
+        },
+      };
+    },
+  });
+
+  // insert().values(data).returning(...)
+  mockInsert.mockReturnValue({
+    values: (data: unknown) => {
+      capturedInsertValues.value = data;
+      return {
+        returning: () => Promise.resolve([{ id: 1 }]),
+      };
+    },
   });
 });
 
@@ -190,5 +212,68 @@ describe('markReminderRead', () => {
     expect(mockGetAuthenticatedInfo).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledTimes(1);
     expectOwnerScopedWhere(capturedWhere.value, 15);
+  });
+});
+
+describe('reminder body normalization', () => {
+  it('createReminder trims surrounding whitespace from the body', async () => {
+    await createReminder({
+      title: 'Plant corn',
+      body: '  apply fertilizer  ',
+      type: 'planting',
+    });
+
+    expect(mockInsert).toHaveBeenCalledTimes(1);
+    expect((capturedInsertValues.value as { body: string }).body).toBe(
+      'apply fertilizer'
+    );
+  });
+
+  it('createReminder normalizes a whitespace-only body to an empty string', async () => {
+    await createReminder({
+      title: 'Plant corn',
+      body: '   \n\t  ',
+      type: 'planting',
+    });
+
+    expect(mockInsert).toHaveBeenCalledTimes(1);
+    expect((capturedInsertValues.value as { body: string }).body).toBe('');
+  });
+
+  it('createReminder defaults an undefined body to an empty string', async () => {
+    await createReminder({
+      title: 'Plant corn',
+      // @ts-expect-error exercising the optional/undefined body path
+      body: undefined,
+      type: 'planting',
+    });
+
+    expect(mockInsert).toHaveBeenCalledTimes(1);
+    expect((capturedInsertValues.value as { body: string }).body).toBe('');
+  });
+
+  it('updateReminderById trims the body when provided', async () => {
+    await updateReminderById(21, { body: '  updated notes  ' });
+
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect((capturedUpdateData.value as { body: string }).body).toBe(
+      'updated notes'
+    );
+  });
+
+  it('updateReminderById normalizes a whitespace-only body to an empty string', async () => {
+    await updateReminderById(22, { body: '   ' });
+
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect((capturedUpdateData.value as { body: string }).body).toBe('');
+  });
+
+  it('updateReminderById leaves body untouched when it is omitted', async () => {
+    await updateReminderById(23, { title: 'Only title' });
+
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect(
+      capturedUpdateData.value as Record<string, unknown>
+    ).not.toHaveProperty('body');
   });
 });

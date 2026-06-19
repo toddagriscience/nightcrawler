@@ -136,9 +136,11 @@ export function parseSeasonalLabel(
   }
 
   // Pattern: "end of season" → December 31
+  // Roll forward to next year if Dec 31 has already passed (mirrors
+  // getNextMonthOccurrence), so a late-December reference never returns a date
+  // in the past.
   if (normalized.includes('end') && normalized.includes('season')) {
-    const thisYear = referenceDate.getFullYear();
-    return new Date(thisYear, 11, 31); // December 31
+    return getNextMonthOccurrence(11, 31); // December 31
   }
 
   // Pattern: "end of [month]" → last day of that month
