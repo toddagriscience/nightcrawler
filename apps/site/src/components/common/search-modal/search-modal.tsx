@@ -53,10 +53,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     // Track whether this effect run is still current so a request that
     // resolves after the modal is closed/reopened cannot set stale data.
     let cancelled = false;
-    setLoadError(false);
     getSearchModalData()
       .then(({ imps, seeds }) => {
         if (cancelled) return;
+        // Clear any stale error from a previous failed load on a fresh,
+        // successful open so the result lists render correctly.
+        setLoadError(false);
         setImps(imps);
         setSeeds(seeds);
       })
