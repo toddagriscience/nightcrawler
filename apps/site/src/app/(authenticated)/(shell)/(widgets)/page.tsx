@@ -6,7 +6,6 @@ import { Button } from '@/components/ui';
 import { managementZone, widget, widgetEnum } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -40,7 +39,6 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  await requirePlatformOnboardingComplete();
   const currentUser = await getAuthenticatedInfo();
   const canEdit = currentUser.role === 'Admin';
   const { farmName } = await getAccountShellData();

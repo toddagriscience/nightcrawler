@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HiArrowLongLeft } from 'react-icons/hi2';
 import { Button } from '@/components/ui/button';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { formatPrice } from '@/lib/order/utils';
 import { getSeedProductBySlug } from './utils';
 import { SeedOrderForm } from './components/seed-order-form';
@@ -18,8 +17,6 @@ export default async function ProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await requirePlatformOnboardingComplete();
-
   const { slug } = await params;
   const product = await getSeedProductBySlug(slug);
 
