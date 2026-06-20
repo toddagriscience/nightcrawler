@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { integratedManagementPlan } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all IMPs, optionally filtered by search query.
@@ -13,6 +14,7 @@ import logger from '@/lib/logger';
  * @returns Array of IMP records
  */
 export async function getImps(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -61,6 +63,7 @@ export async function createImp(data: {
   initialized: string;
   updated?: string;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .insert(integratedManagementPlan)
@@ -112,6 +115,7 @@ export async function updateImp(
     updated?: string;
   }
 ) {
+  await requireInternalAccount();
   try {
     const updateData: Record<string, unknown> = { ...data };
     if (data.updated) updateData.updated = new Date(data.updated);
@@ -133,6 +137,7 @@ export async function updateImp(
  * @returns True if deleted successfully
  */
 export async function deleteImp(id: number) {
+  await requireInternalAccount();
   try {
     await db
       .delete(integratedManagementPlan)

@@ -25,6 +25,7 @@ import {
 import ApplicationAnswersPanel from './application-answers-panel';
 import { FormSlugBadge } from './form-slug-badge';
 import FarmAdvisorProfileNotes from './farm-advisor-profile-notes';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** One platform access application row. */
 export type ApplicationRow = NonNullable<
@@ -100,6 +101,8 @@ export default function ApplicationDetailClient({
 
       setConfirmAction(null);
       showInviteEmailResult(result, 'Application approved.');
+    } catch {
+      notifyActionError();
     } finally {
       setLoading(false);
     }
@@ -112,6 +115,8 @@ export default function ApplicationDetailClient({
         application.id
       );
       showInviteEmailResult(result, 'Invite resent.');
+    } catch {
+      notifyActionError();
     } finally {
       setLoading(false);
     }
@@ -129,6 +134,8 @@ export default function ApplicationDetailClient({
       setConfirmAction(null);
       toast.success('Application rejected.');
       router.push('/applications');
+    } catch {
+      notifyActionError();
     } finally {
       setLoading(false);
     }

@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/dialog';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import { getUsers, createUser, updateUser, deleteUser } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Form data for user CRUD */
 interface UserFormData {
@@ -64,7 +65,11 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
   } = useForm<UserFormData>();
 
   const load = useCallback(async (search?: string) => {
-    setUsers(await getUsers(search));
+    try {
+      setUsers(await getUsers(search));
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -106,27 +111,35 @@ export default function UsersClient({ initialUsers }: UsersClientProps) {
       phone: data.phone || undefined,
       job: data.job || undefined,
     };
-    if (editing) {
-      const result = await updateUser(editing.id, payload);
-      result
-        ? toast.success('User updated.')
-        : toast.error('Failed to update user.');
-    } else {
-      const result = await createUser(payload);
-      result
-        ? toast.success('User created.')
-        : toast.error('Failed to create user.');
+    try {
+      if (editing) {
+        const result = await updateUser(editing.id, payload);
+        result
+          ? toast.success('User updated.')
+          : toast.error('Failed to update user.');
+      } else {
+        const result = await createUser(payload);
+        result
+          ? toast.success('User created.')
+          : toast.error('Failed to create user.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this user?')) return;
-    (await deleteUser(id))
-      ? toast.success('User deleted.')
-      : toast.error('Failed to delete user.');
-    load();
+    try {
+      (await deleteUser(id))
+        ? toast.success('User deleted.')
+        : toast.error('Failed to delete user.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (
