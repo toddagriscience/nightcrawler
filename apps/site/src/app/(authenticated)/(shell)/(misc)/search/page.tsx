@@ -2,7 +2,6 @@
 
 import { searchKnowledge } from '@/lib/ai/search';
 import { logger } from '@/lib/logger';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { SearchClient } from './search-client';
 
 /**
@@ -15,8 +14,6 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string | string[] }>;
 }) {
-  await requirePlatformOnboardingComplete();
-
   const params = await searchParams;
   const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q;
   const query = rawQuery?.trim() ?? '';

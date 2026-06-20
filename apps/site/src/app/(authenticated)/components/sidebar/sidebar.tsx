@@ -6,7 +6,7 @@ import SidebarUserFooter from './sidebar-user-footer';
 import SidebarSearchButton from './sidebar-search-button';
 import SidebarCollapseToggle from './sidebar-collapse-toggle';
 import ZoneItem from './zone-item';
-import { getManagementZones } from '@/app/(authenticated)/(accounts)/account/db';
+import { getManagementZones } from '@/app/(authenticated)/(shell)/(accounts)/account/db';
 import { LuBell, LuShoppingCart } from 'react-icons/lu';
 
 /**
