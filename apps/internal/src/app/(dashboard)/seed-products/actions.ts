@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { seedProduct } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all seed products, optionally filtered by search query.
@@ -13,6 +14,7 @@ import logger from '@/lib/logger';
  * @returns Array of seed product records
  */
 export async function getSeedProducts(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -39,6 +41,7 @@ export async function getSeedProducts(search?: string) {
  * @returns The seed product or null
  */
 export async function getSeedProductBySlug(slug: string) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .select()
@@ -68,6 +71,7 @@ export async function createSeedProduct(data: {
   advisorContactUrl?: string;
   relatedIntegratedManagementPlanId?: number;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db.insert(seedProduct).values(data).returning();
     return result;
@@ -97,6 +101,7 @@ export async function updateSeedProduct(
     relatedIntegratedManagementPlanId?: number;
   }
 ) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .update(seedProduct)
@@ -116,6 +121,7 @@ export async function updateSeedProduct(
  * @returns True if deleted successfully
  */
 export async function deleteSeedProduct(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(seedProduct).where(eq(seedProduct.id, id));
     return true;

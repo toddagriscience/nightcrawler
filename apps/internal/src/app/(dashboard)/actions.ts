@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { internalAccount } from '@nightcrawler/db/schema';
 import { eq, ilike, or, sql } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all internal accounts, optionally filtering by search query.
@@ -13,6 +14,7 @@ import logger from '@/lib/logger';
  * @returns Array of internal account records
  */
 export async function getInternalAccounts(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -46,6 +48,7 @@ export async function createInternalAccount(data: {
   title?: string;
   isActive?: boolean;
 }) {
+  await requireInternalAccount();
   try {
     const [account] = await db.insert(internalAccount).values(data).returning();
     return account;
@@ -71,6 +74,7 @@ export async function updateInternalAccount(
     isActive?: boolean;
   }
 ) {
+  await requireInternalAccount();
   try {
     const [account] = await db
       .update(internalAccount)
@@ -90,6 +94,7 @@ export async function updateInternalAccount(
  * @returns True if deleted successfully
  */
 export async function deleteInternalAccount(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(internalAccount).where(eq(internalAccount.id, id));
     return true;
