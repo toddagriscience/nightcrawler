@@ -68,6 +68,7 @@ export function VarietyBrowse({ groups }: { groups: BrowseCropGroup[] }) {
         <input
           type="search"
           value={query}
+          aria-label="Search varieties"
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search varieties…"
           className="mt-5 w-full rounded-lg border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm outline-none transition-colors focus:border-stone-300 focus:bg-white"
@@ -79,6 +80,7 @@ export function VarietyBrowse({ groups }: { groups: BrowseCropGroup[] }) {
           <button
             key={f.value}
             type="button"
+            aria-pressed={status === f.value}
             onClick={() => setStatus(f.value)}
             className={`rounded-full border px-3 py-1 text-sm transition-colors ${
               status === f.value
@@ -100,6 +102,7 @@ export function VarietyBrowse({ groups }: { groups: BrowseCropGroup[] }) {
             <button
               key={v}
               type="button"
+              aria-pressed={view === v}
               onClick={() => setView(v)}
               className={`px-3.5 py-1.5 text-sm capitalize transition-colors ${
                 view === v

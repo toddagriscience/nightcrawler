@@ -32,10 +32,12 @@ export function statusMeta(status: VarietyStatus): {
 
 /** Lowest available unit price, formatted as "from $4.00 / oz", or null. */
 export function priceFromLabel(variety: {
+  status: VarietyStatus;
   pricePerOzCents: number | null;
   pricePerLbCents: number | null;
   pricePerPlantCents: number | null;
 }): string | null {
+  if (variety.status === 'reference') return null;
   const options = [
     { cents: variety.pricePerOzCents, unit: 'oz' },
     { cents: variety.pricePerLbCents, unit: 'lb' },
