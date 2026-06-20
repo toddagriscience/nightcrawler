@@ -26,10 +26,13 @@ const seeds = [
   },
 ];
 
-const { mockAddItem, mockGetSearchModalData } = vi.hoisted(() => ({
-  mockAddItem: vi.fn(),
-  mockGetSearchModalData: vi.fn(),
-}));
+const { mockAddItem, mockRemoveItem, mockGetSearchModalData, mockOrderItems } =
+  vi.hoisted(() => ({
+    mockAddItem: vi.fn(),
+    mockRemoveItem: vi.fn(),
+    mockGetSearchModalData: vi.fn(),
+    mockOrderItems: [] as { slug: string }[],
+  }));
 
 vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
   getSearchModalData: mockGetSearchModalData,
@@ -37,9 +40,10 @@ vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
 
 vi.mock('@/lib/order/hooks', () => ({
   useOrder: () => ({
-    order: { items: [], updatedAt: null },
-    itemCount: 0,
+    order: { items: mockOrderItems, updatedAt: null },
+    itemCount: mockOrderItems.length,
     addItem: mockAddItem,
+    removeItem: mockRemoveItem,
   }),
 }));
 
@@ -47,6 +51,7 @@ describe('SearchModal', () => {
   beforeEach(() => {
     mockGetSearchModalData.mockReset();
     mockGetSearchModalData.mockResolvedValue({ imps, seeds });
+    mockOrderItems.length = 0;
     document.body.style.overflow = '';
   });
 
@@ -68,7 +73,7 @@ describe('SearchModal', () => {
     render(<SearchModal isOpen onClose={() => {}} />);
     await screen.findByText('Soil Health Plan');
 
-    fireEvent.change(screen.getByPlaceholderText(/Search IMPs and seeds/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Search IMPs/i), {
       target: { value: 'nonexistent' },
     });
 
@@ -125,7 +130,7 @@ describe('SearchModal', () => {
 
     // Opening the modal moves focus into the search input.
     expect(document.activeElement).toBe(
-      screen.getByPlaceholderText(/Search IMPs and seeds/i)
+      screen.getByPlaceholderText(/Search IMPs/i)
     );
 
     // Closing the modal restores focus to the previously focused trigger.
@@ -144,7 +149,7 @@ describe('SearchModal', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
 
     // Backdrop is the first absolute-inset overlay inside the dialog.
-    const backdrop = container.querySelector('.bg-black\\/60');
+    const backdrop = container.querySelector('.bg-black\\/20');
     expect(backdrop).not.toBeNull();
     fireEvent.click(backdrop!);
     expect(onClose).toHaveBeenCalledTimes(2);
@@ -193,6 +198,49 @@ describe('SearchModal', () => {
     expect(screen.queryByText('Soil Health Plan')).not.toBeInTheDocument();
   });
 
+  it('uses a tab-specific placeholder and leaves the page scrollable', async () => {
+    render(<SearchModal isOpen onClose={() => {}} />);
+    await screen.findByText('Soil Health Plan');
+
+    // IMPs is the default tab, so the placeholder scopes to IMPs only.
+    expect(screen.getByPlaceholderText('Search IMPs...')).toBeInTheDocument();
+
+    // The modal no longer locks body scroll, so the page behind can scroll.
+    expect(document.body.style.overflow).toBe('');
+
+    // Switching to the Seeds tab updates the placeholder to scope to seeds.
+    fireEvent.click(screen.getByRole('button', { name: /Browse Seeds/i }));
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText('Search seeds...')).toBeInTheDocument()
+    );
+  });
+
+  it('toggles a seed between add and remove in the cart', async () => {
+    mockAddItem.mockClear();
+    mockRemoveItem.mockClear();
+    // Start with the seed already in the order so the button is in the
+    // "Added" state and should remove on click.
+    mockOrderItems.length = 0;
+    mockOrderItems.push({ slug: 'crimson-clover' });
+
+    render(<SearchModal isOpen onClose={() => {}} />);
+    await screen.findByText('Soil Health Plan');
+
+    fireEvent.click(screen.getByRole('button', { name: /Browse Seeds/i }));
+    await waitFor(() =>
+      expect(screen.getByText('Crimson Clover')).toBeInTheDocument()
+    );
+
+    // The toggle button reflects the added state and removes on click.
+    const toggle = screen.getByRole('button', { name: /Added|Remove/i });
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(toggle);
+
+    expect(mockRemoveItem).toHaveBeenCalledTimes(1);
+    expect(mockRemoveItem).toHaveBeenCalledWith('crimson-clover');
+    expect(mockAddItem).not.toHaveBeenCalled();
+  });
+
   it('traps Tab focus within the modal', async () => {
     render(<SearchModal isOpen onClose={() => {}} />);
     await screen.findByText('Soil Health Plan');
@@ -216,14 +264,5 @@ describe('SearchModal', () => {
     first.focus();
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
     expect(document.activeElement).toBe(last);
-  });
-
-  it('restores body scroll when unmounted while open', async () => {
-    const { unmount } = render(<SearchModal isOpen onClose={() => {}} />);
-    await screen.findByText('Soil Health Plan');
-    expect(document.body.style.overflow).toBe('hidden');
-
-    unmount();
-    expect(document.body.style.overflow).toBe('');
   });
 });

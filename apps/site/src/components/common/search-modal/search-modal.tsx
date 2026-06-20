@@ -19,6 +19,10 @@ import Link from 'next/link';
 
 type Tab = 'imps' | 'seeds';
 
+type SearchModalData = Awaited<ReturnType<typeof getSearchModalData>>;
+type Imp = SearchModalData['imps'][number];
+type Seed = SearchModalData['seeds'][number];
+
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -29,7 +33,8 @@ interface SearchModalProps {
  *
  * Loads all IMPs and seeds via a server action when opened, filters them
  * client-side as the user types, supports an add-to-order toggle for seeds,
- * closes on Escape or backdrop click, and locks body scroll while open.
+ * and closes on Escape or backdrop click. The page behind the modal stays
+ * scrollable while it is open.
  *
  * @param props - Component props.
  * @param props.isOpen - Whether the modal is currently visible.
@@ -39,14 +44,14 @@ interface SearchModalProps {
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('imps');
-  const [imps, setImps] = useState<any[]>([]);
-  const [seeds, setSeeds] = useState<any[]>([]);
+  const [imps, setImps] = useState<Imp[]>([]);
+  const [seeds, setSeeds] = useState<Seed[]>([]);
   const [loadError, setLoadError] = useState(false);
   const [expandedImp, setExpandedImp] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const { order, itemCount, addItem } = useOrder();
+  const { order, itemCount, addItem, removeItem } = useOrder();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -83,17 +88,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     inputRef.current?.focus();
     return () => {
       previouslyFocusedRef.current?.focus();
-    };
-  }, [isOpen]);
-
-  // Lock body scroll while open. Kept in its own effect with an
-  // unconditional cleanup so the page is never left scroll-locked if the
-  // component unmounts or errors while open.
-  useEffect(() => {
-    if (!isOpen) return;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -159,7 +153,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 z-[9998] bg-black/60"
+        className="absolute inset-0 z-[9998] bg-black/20"
         onClick={onClose}
       />
 
@@ -175,7 +169,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search IMPs and seeds..."
+            placeholder={
+              activeTab === 'imps' ? 'Search IMPs...' : 'Search seeds...'
+            }
             className="flex-1 border-0 shadow-none text-base focus:ring-0"
           />
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -301,25 +297,39 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           </span>
                           <button
                             type="button"
+                            aria-pressed={added}
                             onClick={() =>
-                              addItem({
-                                seedProductId: seed.id,
-                                slug: seed.slug,
-                                name: seed.name,
-                                description: seed.description ?? '',
-                                stock: seed.stock,
-                                imageUrl: seed.imageUrl,
-                                unit: seed.unit,
-                                priceInCents: seed.priceInCents,
-                              })
-                            }
-                            className={`text-xs px-2 py-1 rounded-full transition-colors ${
                               added
-                                ? 'bg-foreground text-white'
+                                ? removeItem(seed.slug)
+                                : addItem({
+                                    seedProductId: seed.id,
+                                    slug: seed.slug,
+                                    name: seed.name,
+                                    description: seed.description ?? '',
+                                    stock: seed.stock,
+                                    imageUrl: seed.imageUrl,
+                                    unit: seed.unit,
+                                    priceInCents: seed.priceInCents,
+                                  })
+                            }
+                            className={`group text-xs px-2 py-1 rounded-full transition-colors ${
+                              added
+                                ? 'bg-foreground text-white hover:bg-red-600'
                                 : 'bg-stone-100 text-foreground hover:bg-stone-200'
                             }`}
                           >
-                            {added ? 'Added' : 'Add to order'}
+                            {added ? (
+                              <>
+                                <span className="group-hover:hidden">
+                                  Added ✓
+                                </span>
+                                <span className="hidden group-hover:inline">
+                                  Remove
+                                </span>
+                              </>
+                            ) : (
+                              'Add to order'
+                            )}
                           </button>
                         </div>
                       </div>

@@ -13,7 +13,6 @@ import Link from 'next/link';
 import { getAccountShellData } from '../(accounts)/account/db';
 import CurrentTab from '../components/tabs/current-tab';
 import { NamedTab } from '../components/tabs/types';
-import SearchFloatingButton from './components/search-floating-button';
 
 // -- Commented out: tab-based imports (kept for future use) ---
 //import PlatformTabContent from '../components/tabs/tab-content';
@@ -153,8 +152,6 @@ export default async function DashboardPage({
           <CurrentTab currentTab={selectedTab} />
         </main>
       </div>
-
-      <SearchFloatingButton />
     </div>
   );
 }
