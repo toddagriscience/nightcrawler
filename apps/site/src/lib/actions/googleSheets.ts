@@ -2,6 +2,8 @@
 
 'use server';
 
+import logger from '@/lib/logger';
+
 /**
  * Posts form data to a Google Apps Script endpoint as JSON, e.g.
  * `{"email": "test@example.com"}`.
@@ -61,7 +63,7 @@ async function submitToGoogleSheets(
 
     return { success: true };
   } catch (error) {
-    console.error('Submission error:', error);
+    logger.error('Submission error:', error);
     throw new Error(
       error instanceof Error ? error.message : 'An unknown error occurred'
     );
