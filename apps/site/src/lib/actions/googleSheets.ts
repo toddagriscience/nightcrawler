@@ -2,13 +2,17 @@
 
 'use server';
 
-/** Submits data to a Google Sheets URL via a `FormData` object. For context, any Google Sheet will be expecting a POST request (handled by this action) with JSON-ified data like so:
+/**
+ * Posts form data to a Google Apps Script endpoint as JSON, e.g.
+ * `{"email": "test@example.com"}`.
  *
- * {"email": "test@example.com"}
- *
- * The `FormData` interface can handle this appropriately.
- * */
-export async function submitToGoogleSheets(
+ * Intentionally NOT exported: in a `'use server'` module every export becomes a
+ * directly-callable server action, so exporting a function that takes a
+ * caller-supplied URL would let any client drive a server-side `fetch()` to an
+ * arbitrary destination (SSRF). The target URL must therefore come from a
+ * trusted, env-bound wrapper below — never from the caller.
+ */
+async function submitToGoogleSheets(
   formData: FormData | Object,
   googleScriptUrl: string
 ) {
@@ -64,9 +68,22 @@ export async function submitToGoogleSheets(
   }
 }
 
+/**
+ * Server action: submits a contact-page inquiry to the contact Google Sheet.
+ *
+ * The destination is bound to `CONTACT_GOOGLE_SCRIPT_URL` on the server, so the
+ * caller cannot control where the request is sent (prevents SSRF). Throws if
+ * the environment variable is not configured.
+ *
+ * @param formData - Submitted contact form payload
+ */
 export async function submitContactToSheets(formData: FormData | Object) {
-  return submitToGoogleSheets(
-    formData,
-    process.env.CONTACT_GOOGLE_SCRIPT_URL || ''
-  );
+  const googleScriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
+  if (!googleScriptUrl) {
+    throw new Error(
+      'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
+    );
+  }
+
+  return submitToGoogleSheets(formData, googleScriptUrl);
 }

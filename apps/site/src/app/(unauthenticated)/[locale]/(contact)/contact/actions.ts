@@ -2,7 +2,7 @@
 
 'use server';
 
-import { submitToGoogleSheets } from '@/lib/actions/googleSheets';
+import { submitContactToSheets } from '@/lib/actions/googleSheets';
 import logger from '@/lib/logger';
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
@@ -41,15 +41,8 @@ export async function submitPublicInquiry(
     throwActionError(z.treeifyError(validated.error));
   }
 
-  const scriptUrl = process.env.CONTACT_GOOGLE_SCRIPT_URL;
-  if (!scriptUrl) {
-    throwActionError(
-      'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
-    );
-  }
-
   try {
-    await submitToGoogleSheets(formData, scriptUrl);
+    await submitContactToSheets(formData);
     return { data: null };
   } catch (err) {
     logger.error('Public inquiry submission error:', err);
