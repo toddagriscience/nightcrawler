@@ -12,8 +12,8 @@ import { getVarietyBySlug } from './utils';
  * @returns {Promise<Metadata>} Metadata for the requested variety detail page.
  */
 export async function generateMetadata({
-                                         params,
-                                       }: {
+  params,
+}: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
