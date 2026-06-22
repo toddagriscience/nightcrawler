@@ -35,6 +35,7 @@ import {
   updateWidget,
   deleteWidget,
 } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Widget type options */
 const WIDGET_TYPES = [
@@ -113,7 +114,11 @@ function TabsTab({ initialData }: { initialData: any[] }) {
   } = useForm<TabFormData>();
 
   const load = useCallback(async () => {
-    setTabs(await getTabs());
+    try {
+      setTabs(await getTabs());
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -122,23 +127,31 @@ function TabsTab({ initialData }: { initialData: any[] }) {
   };
 
   const onSubmit = async (data: TabFormData) => {
-    const result = await createTab({
-      user: Number(data.user),
-      managementZone: Number(data.managementZone),
-    });
-    result
-      ? toast.success('Tab created.')
-      : toast.error('Failed to create tab.');
-    setDialogOpen(false);
-    load();
+    try {
+      const result = await createTab({
+        user: Number(data.user),
+        managementZone: Number(data.managementZone),
+      });
+      result
+        ? toast.success('Tab created.')
+        : toast.error('Failed to create tab.');
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this tab?')) return;
-    (await deleteTab(id))
-      ? toast.success('Tab deleted.')
-      : toast.error('Failed to delete tab.');
-    load();
+    try {
+      (await deleteTab(id))
+        ? toast.success('Tab deleted.')
+        : toast.error('Failed to delete tab.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (
@@ -259,7 +272,11 @@ function WidgetsTab({ initialData }: { initialData: any[] }) {
   } = useForm<WidgetFormData>();
 
   const load = useCallback(async () => {
-    setWidgets(await getWidgets());
+    try {
+      setWidgets(await getWidgets());
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -293,35 +310,43 @@ function WidgetsTab({ initialData }: { initialData: any[] }) {
       y: Number(data.metadataY),
     };
 
-    if (editing) {
-      const result = await updateWidget(editing.id, {
-        managementZone: Number(data.managementZone),
-        name: data.name as (typeof WIDGET_TYPES)[number],
-        widgetMetadata,
-      });
-      result
-        ? toast.success('Widget updated.')
-        : toast.error('Failed to update widget.');
-    } else {
-      const result = await createWidget({
-        managementZone: Number(data.managementZone),
-        name: data.name as (typeof WIDGET_TYPES)[number],
-        widgetMetadata,
-      });
-      result
-        ? toast.success('Widget created.')
-        : toast.error('Failed to create widget.');
+    try {
+      if (editing) {
+        const result = await updateWidget(editing.id, {
+          managementZone: Number(data.managementZone),
+          name: data.name as (typeof WIDGET_TYPES)[number],
+          widgetMetadata,
+        });
+        result
+          ? toast.success('Widget updated.')
+          : toast.error('Failed to update widget.');
+      } else {
+        const result = await createWidget({
+          managementZone: Number(data.managementZone),
+          name: data.name as (typeof WIDGET_TYPES)[number],
+          widgetMetadata,
+        });
+        result
+          ? toast.success('Widget created.')
+          : toast.error('Failed to create widget.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this widget?')) return;
-    (await deleteWidget(id))
-      ? toast.success('Widget deleted.')
-      : toast.error('Failed to delete widget.');
-    load();
+    try {
+      (await deleteWidget(id))
+        ? toast.success('Widget deleted.')
+        : toast.error('Failed to delete widget.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (

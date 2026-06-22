@@ -38,7 +38,7 @@ export default function MobileNav({ menuItems, authLinks }: NavLayoutProps) {
     <div className="block lg:hidden">
       {/* Logo at top of the page */}
       <div className="relative flex px-8 py-5">
-        <ToddHeader />
+        <ToddHeader localeAware />
       </div>
 
       {/* Fixed bottom bar holds the hamburger trigger and the auth links */}

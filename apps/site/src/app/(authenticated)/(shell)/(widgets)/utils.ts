@@ -1,8 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { TabSelect } from '@/lib/types/db';
-import { getTabHash } from '../components/tabs/utils';
-import { NamedTab } from '../components/tabs/types';
+import { getTabHash } from '../../components/tabs/utils';
+import { NamedTab } from '../../components/tabs/types';
 
 /** Returns the hash (given by getTabHash()) of the currently selected tab. */
 export async function getSelectedTabHash(

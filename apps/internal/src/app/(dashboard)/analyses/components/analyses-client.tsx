@@ -33,6 +33,7 @@ import {
   updateAnalysis,
   deleteAnalysis,
 } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Mineral type options */
 const MINERAL_TYPES = [
@@ -114,8 +115,12 @@ export default function AnalysesClient({
   });
 
   const loadAnalyses = useCallback(async (search?: string) => {
-    const data = await getAnalyses(search);
-    setAnalyses(data as AnalysisRecord[]);
+    try {
+      const data = await getAnalyses(search);
+      setAnalyses(data as AnalysisRecord[]);
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreateDialog = () => {
@@ -145,51 +150,59 @@ export default function AnalysesClient({
   };
 
   const onSubmit = async (data: AnalysisFormData) => {
-    if (editingAnalysis) {
-      const result = await updateAnalysis(editingAnalysis.id, {
-        analysisDate: data.analysisDate,
-        summary: data.summary,
-        macroActionableInfo: data.macroActionableInfo,
-      });
-      if (result) {
-        toast.success('Analysis updated successfully.');
+    try {
+      if (editingAnalysis) {
+        const result = await updateAnalysis(editingAnalysis.id, {
+          analysisDate: data.analysisDate,
+          summary: data.summary,
+          macroActionableInfo: data.macroActionableInfo,
+        });
+        if (result) {
+          toast.success('Analysis updated successfully.');
+        } else {
+          toast.error('Failed to update analysis.');
+          return;
+        }
       } else {
-        toast.error('Failed to update analysis.');
-        return;
+        const result = await createAnalysis({
+          id: data.id,
+          managementZone: Number(data.managementZone),
+          analysisDate: data.analysisDate,
+          summary: data.summary || undefined,
+          macroActionableInfo: data.macroActionableInfo || undefined,
+          minerals: data.minerals.map((m) => ({
+            name: m.name as (typeof MINERAL_TYPES)[number],
+            realValue: Number(m.realValue),
+            units: m.units as 'ppm' | '%',
+            actionableInfo: m.actionableInfo || undefined,
+          })),
+        });
+        if (result) {
+          toast.success('Analysis created successfully.');
+        } else {
+          toast.error('Failed to create analysis.');
+          return;
+        }
       }
-    } else {
-      const result = await createAnalysis({
-        id: data.id,
-        managementZone: Number(data.managementZone),
-        analysisDate: data.analysisDate,
-        summary: data.summary || undefined,
-        macroActionableInfo: data.macroActionableInfo || undefined,
-        minerals: data.minerals.map((m) => ({
-          name: m.name as (typeof MINERAL_TYPES)[number],
-          realValue: Number(m.realValue),
-          units: m.units as 'ppm' | '%',
-          actionableInfo: m.actionableInfo || undefined,
-        })),
-      });
-      if (result) {
-        toast.success('Analysis created successfully.');
-      } else {
-        toast.error('Failed to create analysis.');
-        return;
-      }
+      setDialogOpen(false);
+      loadAnalyses();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    loadAnalyses();
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this analysis?')) return;
-    const success = await deleteAnalysis(id);
-    if (success) {
-      toast.success('Analysis deleted successfully.');
-      loadAnalyses();
-    } else {
-      toast.error('Failed to delete analysis.');
+    try {
+      const success = await deleteAnalysis(id);
+      if (success) {
+        toast.success('Analysis deleted successfully.');
+        loadAnalyses();
+      } else {
+        toast.error('Failed to delete analysis.');
+      }
+    } catch {
+      notifyActionError();
     }
   };
 

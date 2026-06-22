@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { db } from '@nightcrawler/db/schema/connection';
 import { integratedManagementPlanNote } from '@nightcrawler/db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -17,7 +16,6 @@ export default async function ImpPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await requirePlatformOnboardingComplete();
   const currentUser = await getAuthenticatedInfo();
 
   const { slug } = await params;

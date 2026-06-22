@@ -104,7 +104,7 @@ const Footer = () => {
     <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
-          <ToddHeader className="md:text-4xl lg:text-5xl" />
+          <ToddHeader className="md:text-4xl lg:text-5xl" localeAware />
           <div className="flex flex-row gap-32 max-md:mt-8 md:ml-auto">
             <div className="flex flex-col gap-4">
               {siteLinks.slice(0, 4).map((val) => (

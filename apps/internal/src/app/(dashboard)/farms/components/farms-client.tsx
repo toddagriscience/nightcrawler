@@ -40,6 +40,7 @@ import {
   updateStandardValues,
   getFarmSubscriptions,
 } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Props for the farms client component */
 interface FarmsClientProps {
@@ -121,7 +122,11 @@ function FarmsTab({ initialData }: { initialData: any[] }) {
   } = useForm<FarmFormData>();
 
   const load = useCallback(async (search?: string) => {
-    setFarms(await getFarms(search));
+    try {
+      setFarms(await getFarms(search));
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -156,27 +161,35 @@ function FarmsTab({ initialData }: { initialData: any[] }) {
       managementStartDate: data.managementStartDate || undefined,
       stripeCustomerId: data.stripeCustomerId || undefined,
     };
-    if (editing) {
-      const result = await updateFarm(editing.id, payload);
-      result
-        ? toast.success('Farm updated.')
-        : toast.error('Failed to update farm.');
-    } else {
-      const result = await createFarm(payload);
-      result
-        ? toast.success('Farm created.')
-        : toast.error('Failed to create farm.');
+    try {
+      if (editing) {
+        const result = await updateFarm(editing.id, payload);
+        result
+          ? toast.success('Farm updated.')
+          : toast.error('Failed to update farm.');
+      } else {
+        const result = await createFarm(payload);
+        result
+          ? toast.success('Farm created.')
+          : toast.error('Failed to create farm.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this farm?')) return;
-    (await deleteFarm(id))
-      ? toast.success('Farm deleted.')
-      : toast.error('Failed to delete farm.');
-    load();
+    try {
+      (await deleteFarm(id))
+        ? toast.success('Farm deleted.')
+        : toast.error('Failed to delete farm.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (
@@ -339,7 +352,11 @@ function ZonesTab({ initialData }: { initialData: any[] }) {
   } = useForm<ZoneFormData>();
 
   const load = useCallback(async (search?: string) => {
-    setZones(await getManagementZones(search));
+    try {
+      setZones(await getManagementZones(search));
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -376,27 +393,35 @@ function ZonesTab({ initialData }: { initialData: any[] }) {
       farmId: Number(data.farmId),
       npkLastUsed: data.npkLastUsed || undefined,
     };
-    if (editing) {
-      const result = await updateManagementZone(editing.id, payload);
-      result
-        ? toast.success('Zone updated.')
-        : toast.error('Failed to update zone.');
-    } else {
-      const result = await createManagementZone(payload);
-      result
-        ? toast.success('Zone created.')
-        : toast.error('Failed to create zone.');
+    try {
+      if (editing) {
+        const result = await updateManagementZone(editing.id, payload);
+        result
+          ? toast.success('Zone updated.')
+          : toast.error('Failed to update zone.');
+      } else {
+        const result = await createManagementZone(payload);
+        result
+          ? toast.success('Zone created.')
+          : toast.error('Failed to create zone.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this management zone?')) return;
-    (await deleteManagementZone(id))
-      ? toast.success('Zone deleted.')
-      : toast.error('Failed to delete zone.');
-    load();
+    try {
+      (await deleteManagementZone(id))
+        ? toast.success('Zone deleted.')
+        : toast.error('Failed to delete zone.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (
@@ -585,7 +610,11 @@ function StandardValuesTab({ initialData }: { initialData: any[] }) {
   } = useForm<Record<string, number>>();
 
   const load = useCallback(async () => {
-    setValues(await getStandardValues());
+    try {
+      setValues(await getStandardValues());
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openEdit = (record: any) => {
@@ -604,12 +633,16 @@ function StandardValuesTab({ initialData }: { initialData: any[] }) {
     for (const key of STANDARD_VALUE_FIELDS) {
       numericData[key] = Number(data[key]);
     }
-    const result = await updateStandardValues(editing.id, numericData);
-    result
-      ? toast.success('Standard values updated.')
-      : toast.error('Failed to update standard values.');
-    setDialogOpen(false);
-    load();
+    try {
+      const result = await updateStandardValues(editing.id, numericData);
+      result
+        ? toast.success('Standard values updated.')
+        : toast.error('Failed to update standard values.');
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (

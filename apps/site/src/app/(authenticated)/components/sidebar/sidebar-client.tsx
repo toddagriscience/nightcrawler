@@ -18,6 +18,10 @@ interface SidebarClientProps {
  * small expand button appears once the panel is collapsed.
  * Mobile: wraps the sidebar in a Sheet overlay triggered by a hamburger icon.
  *
+ * Visibility per route is decided on the server: this wrapper only renders for
+ * routes under the `(shell)` layout, so there is no client-side route check
+ * (and no hydration flash on chrome-less routes).
+ *
  * @param {ReactNode} children - The server-rendered sidebar contents
  * @returns {React.ReactNode} - The responsive sidebar wrapper
  */

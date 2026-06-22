@@ -6,18 +6,17 @@ import { Button } from '@/components/ui';
 import { managementZone, widget, widgetEnum } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAccountShellData } from '../(accounts)/account/db';
-import CurrentTab from '../components/tabs/current-tab';
-import { NamedTab } from '../components/tabs/types';
+import CurrentTab from '../../components/tabs/current-tab';
+import { NamedTab } from '../../components/tabs/types';
 
 // -- Commented out: tab-based imports (kept for future use) ---
-//import PlatformTabContent from '../components/tabs/tab-content';
-//import PlatformTabs from '../components/tabs/tabs';
-//import { getTablessManagementZones } from '../components/tabs/utils';
+//import PlatformTabContent from '../../components/tabs/tab-content';
+//import PlatformTabs from '../../components/tabs/tabs';
+//import { getTablessManagementZones } from '../../components/tabs/utils';
 //import { getSelectedTab, getSelectedTabHash } from './utils';
 //import { tab } from '@nightcrawler/db/schema/tab';
 
@@ -39,7 +38,6 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  await requirePlatformOnboardingComplete();
   const currentUser = await getAuthenticatedInfo();
   const canEdit = currentUser.role === 'Admin';
   const { farmName } = await getAccountShellData();
