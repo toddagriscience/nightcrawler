@@ -29,7 +29,7 @@ export default function DesktopNav({ menuItems, authLinks }: NavLayoutProps) {
     <div className="hidden lg:block">
       <NavigationMenu>
         <div className="grid w-full grid-cols-[auto_auto_1fr] items-center px-8 py-5">
-          <ToddHeader />
+          <ToddHeader localeAware />
           <NavigationMenuList className="ml-[1rem]">
             {menuItems.map((item) => (
               <DesktopMenuItem key={item.title} item={item} />

@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { user } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all users, optionally filtered by search query.
@@ -13,6 +14,7 @@ import logger from '@/lib/logger';
  * @returns Array of user records
  */
 export async function getUsers(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -50,6 +52,7 @@ export async function createUser(data: {
   didOwnAndControlParcel?: boolean;
   didManageAndControl?: boolean;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .insert(user)
@@ -92,6 +95,7 @@ export async function updateUser(
     didManageAndControl?: boolean;
   }
 ) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .update(user)
@@ -111,6 +115,7 @@ export async function updateUser(
  * @returns True if deleted successfully
  */
 export async function deleteUser(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(user).where(eq(user.id, id));
     return true;

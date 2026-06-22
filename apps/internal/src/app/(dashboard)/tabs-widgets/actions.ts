@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { tab, widget } from '@nightcrawler/db/schema';
 import { eq } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 // ──────────────────────────── TABS ────────────────────────────
 
@@ -14,6 +15,7 @@ import logger from '@/lib/logger';
  * @returns Array of tab records
  */
 export async function getTabs() {
+  await requireInternalAccount();
   try {
     return await db.select().from(tab).orderBy(tab.id);
   } catch (error) {
@@ -31,6 +33,7 @@ export async function createTab(data: {
   user: number;
   managementZone: number;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db.insert(tab).values(data).returning();
     return result;
@@ -46,6 +49,7 @@ export async function createTab(data: {
  * @returns True if deleted successfully
  */
 export async function deleteTab(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(tab).where(eq(tab.id, id));
     return true;
@@ -62,6 +66,7 @@ export async function deleteTab(id: number) {
  * @returns Array of widget records
  */
 export async function getWidgets() {
+  await requireInternalAccount();
   try {
     return await db.select().from(widget).orderBy(widget.id);
   } catch (error) {
@@ -93,6 +98,7 @@ export async function createWidget(data: {
     | 'Insights';
   widgetMetadata: { i: string; x: number; y: number };
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db.insert(widget).values(data).returning();
     return result;
@@ -129,6 +135,7 @@ export async function updateWidget(
     widgetMetadata?: { i: string; x: number; y: number };
   }
 ) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .update(widget)
@@ -148,6 +155,7 @@ export async function updateWidget(
  * @returns True if deleted successfully
  */
 export async function deleteWidget(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(widget).where(eq(widget.id, id));
     return true;

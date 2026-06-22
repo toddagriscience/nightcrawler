@@ -33,6 +33,7 @@ import {
   updateInternalAccount,
   deleteInternalAccount,
 } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Shape of an internal account record */
 interface InternalAccountRecord {
@@ -81,8 +82,12 @@ export default function InternalAccountsClient({
   } = useForm<AccountFormData>();
 
   const loadAccounts = useCallback(async (search?: string) => {
-    const data = await getInternalAccounts(search);
-    setAccounts(data as InternalAccountRecord[]);
+    try {
+      const data = await getInternalAccounts(search);
+      setAccounts(data as InternalAccountRecord[]);
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreateDialog = () => {
@@ -110,35 +115,43 @@ export default function InternalAccountsClient({
   };
 
   const onSubmit = async (data: AccountFormData) => {
-    if (editingAccount) {
-      const result = await updateInternalAccount(editingAccount.id, data);
-      if (result) {
-        toast.success('Account updated successfully.');
+    try {
+      if (editingAccount) {
+        const result = await updateInternalAccount(editingAccount.id, data);
+        if (result) {
+          toast.success('Account updated successfully.');
+        } else {
+          toast.error('Failed to update account.');
+          return;
+        }
       } else {
-        toast.error('Failed to update account.');
-        return;
+        const result = await createInternalAccount(data);
+        if (result) {
+          toast.success('Account created successfully.');
+        } else {
+          toast.error('Failed to create account.');
+          return;
+        }
       }
-    } else {
-      const result = await createInternalAccount(data);
-      if (result) {
-        toast.success('Account created successfully.');
-      } else {
-        toast.error('Failed to create account.');
-        return;
-      }
+      setDialogOpen(false);
+      loadAccounts();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    loadAccounts();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this account?')) return;
-    const success = await deleteInternalAccount(id);
-    if (success) {
-      toast.success('Account deleted successfully.');
-      loadAccounts();
-    } else {
-      toast.error('Failed to delete account.');
+    try {
+      const success = await deleteInternalAccount(id);
+      if (success) {
+        toast.success('Account deleted successfully.');
+        loadAccounts();
+      } else {
+        toast.error('Failed to delete account.');
+      }
+    } catch {
+      notifyActionError();
     }
   };
 

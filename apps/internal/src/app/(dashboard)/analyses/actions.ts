@@ -6,6 +6,7 @@ import { db } from '@nightcrawler/db';
 import { analysis, mineral } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all analyses, optionally filtered by search query.
@@ -13,6 +14,7 @@ import logger from '@/lib/logger';
  * @returns Array of analysis records
  */
 export async function getAnalyses(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -39,6 +41,7 @@ export async function getAnalyses(search?: string) {
  * @returns Array of mineral records
  */
 export async function getMineralsForAnalysis(analysisId: string) {
+  await requireInternalAccount();
   try {
     return await db
       .select()
@@ -79,6 +82,7 @@ export async function createAnalysis(data: {
     actionableInfo?: string;
   }>;
 }) {
+  await requireInternalAccount();
   try {
     const [newAnalysis] = await db
       .insert(analysis)
@@ -124,6 +128,7 @@ export async function updateAnalysis(
     macroActionableInfo?: string;
   }
 ) {
+  await requireInternalAccount();
   try {
     const updateData: Record<string, unknown> = {};
     if (data.analysisDate)
@@ -150,6 +155,7 @@ export async function updateAnalysis(
  * @returns True if deleted successfully
  */
 export async function deleteAnalysis(id: string) {
+  await requireInternalAccount();
   try {
     await db.delete(analysis).where(eq(analysis.id, id));
     return true;

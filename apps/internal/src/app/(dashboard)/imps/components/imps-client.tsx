@@ -31,6 +31,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Pencil, Trash2, Plus, Eye } from 'lucide-react';
 import { getImps, createImp, updateImp, deleteImp } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** IMP categories */
 const IMP_CATEGORIES = [
@@ -86,7 +87,11 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
   const contentValue = useWatch({ control, name: 'content' });
 
   const load = useCallback(async (search?: string) => {
-    setImps(await getImps(search));
+    try {
+      setImps(await getImps(search));
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -136,49 +141,57 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
   };
 
   const onSubmit = async (data: ImpFormData) => {
-    if (editing) {
-      const result = await updateImp(editing.id, {
-        title: data.title,
-        slug: data.slug,
-        content: data.content,
-        category: data.category as (typeof IMP_CATEGORIES)[number],
-        source: data.source || undefined,
-        managementZone: Number(data.managementZone) || undefined,
-        analysis: data.analysis || undefined,
-        plan: data.plan || undefined,
-        updated: data.updated || new Date().toISOString().split('T')[0],
-      });
-      result
-        ? toast.success('IMP updated.')
-        : toast.error('Failed to update IMP.');
-    } else {
-      const result = await createImp({
-        knowledgeArticleId: Number(data.knowledgeArticleId),
-        title: data.title,
-        slug: data.slug,
-        content: data.content,
-        category: data.category as (typeof IMP_CATEGORIES)[number],
-        source: data.source || undefined,
-        managementZone: Number(data.managementZone) || undefined,
-        analysis: data.analysis || undefined,
-        plan: data.plan || undefined,
-        initialized: data.initialized,
-        updated: data.updated || undefined,
-      });
-      result
-        ? toast.success('IMP created.')
-        : toast.error('Failed to create IMP.');
+    try {
+      if (editing) {
+        const result = await updateImp(editing.id, {
+          title: data.title,
+          slug: data.slug,
+          content: data.content,
+          category: data.category as (typeof IMP_CATEGORIES)[number],
+          source: data.source || undefined,
+          managementZone: Number(data.managementZone) || undefined,
+          analysis: data.analysis || undefined,
+          plan: data.plan || undefined,
+          updated: data.updated || new Date().toISOString().split('T')[0],
+        });
+        result
+          ? toast.success('IMP updated.')
+          : toast.error('Failed to update IMP.');
+      } else {
+        const result = await createImp({
+          knowledgeArticleId: Number(data.knowledgeArticleId),
+          title: data.title,
+          slug: data.slug,
+          content: data.content,
+          category: data.category as (typeof IMP_CATEGORIES)[number],
+          source: data.source || undefined,
+          managementZone: Number(data.managementZone) || undefined,
+          analysis: data.analysis || undefined,
+          plan: data.plan || undefined,
+          initialized: data.initialized,
+          updated: data.updated || undefined,
+        });
+        result
+          ? toast.success('IMP created.')
+          : toast.error('Failed to create IMP.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this IMP?')) return;
-    (await deleteImp(id))
-      ? toast.success('IMP deleted.')
-      : toast.error('Failed to delete IMP.');
-    load();
+    try {
+      (await deleteImp(id))
+        ? toast.success('IMP deleted.')
+        : toast.error('Failed to delete IMP.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (

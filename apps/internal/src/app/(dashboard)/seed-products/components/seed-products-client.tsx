@@ -34,6 +34,7 @@ import {
   updateSeedProduct,
   deleteSeedProduct,
 } from '../actions';
+import { notifyActionError } from '@/lib/notify-action-error';
 
 /** Form data for seed product CRUD */
 interface SeedProductFormData {
@@ -73,7 +74,11 @@ export default function SeedProductsClient({
   } = useForm<SeedProductFormData>();
 
   const load = useCallback(async (search?: string) => {
-    setProducts(await getSeedProducts(search));
+    try {
+      setProducts(await getSeedProducts(search));
+    } catch {
+      notifyActionError();
+    }
   }, []);
 
   const openCreate = () => {
@@ -122,27 +127,35 @@ export default function SeedProductsClient({
       relatedIntegratedManagementPlanId:
         Number(data.relatedIntegratedManagementPlanId) || undefined,
     };
-    if (editing) {
-      const result = await updateSeedProduct(editing.id, payload);
-      result
-        ? toast.success('Product updated.')
-        : toast.error('Failed to update product.');
-    } else {
-      const result = await createSeedProduct(payload);
-      result
-        ? toast.success('Product created.')
-        : toast.error('Failed to create product.');
+    try {
+      if (editing) {
+        const result = await updateSeedProduct(editing.id, payload);
+        result
+          ? toast.success('Product updated.')
+          : toast.error('Failed to update product.');
+      } else {
+        const result = await createSeedProduct(payload);
+        result
+          ? toast.success('Product created.')
+          : toast.error('Failed to create product.');
+      }
+      setDialogOpen(false);
+      load();
+    } catch {
+      notifyActionError();
     }
-    setDialogOpen(false);
-    load();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this seed product?')) return;
-    (await deleteSeedProduct(id))
-      ? toast.success('Product deleted.')
-      : toast.error('Failed to delete product.');
-    load();
+    try {
+      (await deleteSeedProduct(id))
+        ? toast.success('Product deleted.')
+        : toast.error('Failed to delete product.');
+      load();
+    } catch {
+      notifyActionError();
+    }
   };
 
   return (

@@ -11,6 +11,7 @@ import {
 } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
 import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 // ──────────────────────────── FARMS ────────────────────────────
 
@@ -20,6 +21,7 @@ import logger from '@/lib/logger';
  * @returns Array of farm records
  */
 export async function getFarms(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -53,6 +55,7 @@ export async function createFarm(data: {
   approved?: boolean;
   stripeCustomerId?: string;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .insert(farm)
@@ -89,6 +92,7 @@ export async function updateFarm(
     stripeCustomerId?: string;
   }
 ) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .update(farm)
@@ -108,6 +112,7 @@ export async function updateFarm(
  * @returns True if deleted successfully
  */
 export async function deleteFarm(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(farm).where(eq(farm.id, id));
     return true;
@@ -125,6 +130,7 @@ export async function deleteFarm(id: number) {
  * @returns Array of management zone records
  */
 export async function getManagementZones(search?: string) {
+  await requireInternalAccount();
   try {
     if (search) {
       return await db
@@ -153,6 +159,7 @@ export async function createManagementZone(data: {
   irrigation?: boolean;
   waterConservation?: boolean;
 }) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .insert(managementZone)
@@ -189,6 +196,7 @@ export async function updateManagementZone(
     waterConservation?: boolean;
   }
 ) {
+  await requireInternalAccount();
   try {
     const updateData: Record<string, unknown> = { ...data };
     if (data.npkLastUsed) updateData.npkLastUsed = new Date(data.npkLastUsed);
@@ -210,6 +218,7 @@ export async function updateManagementZone(
  * @returns True if deleted successfully
  */
 export async function deleteManagementZone(id: number) {
+  await requireInternalAccount();
   try {
     await db.delete(managementZone).where(eq(managementZone.id, id));
     return true;
@@ -226,6 +235,7 @@ export async function deleteManagementZone(id: number) {
  * @returns Array of standard value records
  */
 export async function getStandardValues() {
+  await requireInternalAccount();
   try {
     return await db.select().from(standardValues).orderBy(standardValues.id);
   } catch (error) {
@@ -244,6 +254,7 @@ export async function updateStandardValues(
   id: number,
   data: Record<string, number>
 ) {
+  await requireInternalAccount();
   try {
     const [result] = await db
       .update(standardValues)
@@ -264,6 +275,7 @@ export async function updateStandardValues(
  * @returns Array of subscription records
  */
 export async function getFarmSubscriptions() {
+  await requireInternalAccount();
   try {
     return await db
       .select()

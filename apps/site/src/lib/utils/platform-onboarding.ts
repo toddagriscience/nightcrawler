@@ -4,20 +4,6 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { redirect } from 'next/navigation';
 import { hasAcceptedAccountAgreement } from './account-agreement';
 
-/** Path prefixes reachable before platform onboarding is complete. */
-export const PRE_ONBOARDING_PATH_PREFIXES = ['/apply', '/accept'] as const;
-
-/**
- * Returns whether a pathname is allowed while onboarding is incomplete.
- *
- * @param pathname - Request pathname (no query string)
- */
-export function isPreOnboardingPath(pathname: string): boolean {
-  return PRE_ONBOARDING_PATH_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-  );
-}
-
 /**
  * Returns whether the farm/user has finished post-signup onboarding (`/apply`).
  *

@@ -6,7 +6,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import AccountHeader from '../components/account-header/account-header';
 import AccountSideMenu from '../components/account-side-menu/account-side-menu';
 import { getAccountShellData } from '../db';
-import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboarding';
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +22,6 @@ export const metadata: Metadata = {
  * @returns The account shell with header and side menu
  */
 async function AccountShell({ children }: { children: React.ReactNode }) {
-  await requirePlatformOnboardingComplete();
   const accountShellData = await getAccountShellData();
 
   return (
