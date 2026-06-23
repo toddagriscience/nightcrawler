@@ -163,6 +163,63 @@ describe('createRateLimiter', () => {
       expect(await check('1.2.3.4')).toEqual({ success: true });
       expect(mocks.loggerError).toHaveBeenCalledTimes(1);
     });
+
+    it('under a ~100 requests/second burst from one IP, allows only the configured limit and blocks the rest', async () => {
+      // Stateful fake mirroring a sliding window: the first `LIMIT` hits from an
+      // identifier within the window succeed; every subsequent hit is blocked.
+      const LIMIT = 5;
+      const counts = new Map<string, number>();
+      mocks.limit.mockImplementation(async (id: string) => {
+        const next = (counts.get(id) ?? 0) + 1;
+        counts.set(id, next);
+        return { success: next <= LIMIT };
+      });
+
+      const { createRateLimiter } = await importFresh();
+      const check = createRateLimiter({
+        requests: LIMIT,
+        window: '60 s',
+        prefix: 'burst',
+      });
+
+      // Fire 100 concurrent requests in the same second from the same IP.
+      const REQUESTS = 100;
+      const results = await Promise.all(
+        Array.from({ length: REQUESTS }, () => check('1.2.3.4'))
+      );
+      const allowed = results.filter((r) => r.success).length;
+      const blocked = results.filter((r) => !r.success).length;
+
+      expect(allowed).toBe(LIMIT);
+      expect(blocked).toBe(REQUESTS - LIMIT);
+      expect(mocks.limit).toHaveBeenCalledTimes(REQUESTS);
+    });
+
+    it('gives each distinct IP its own budget under a burst', async () => {
+      const LIMIT = 5;
+      const counts = new Map<string, number>();
+      mocks.limit.mockImplementation(async (id: string) => {
+        const next = (counts.get(id) ?? 0) + 1;
+        counts.set(id, next);
+        return { success: next <= LIMIT };
+      });
+
+      const { createRateLimiter } = await importFresh();
+      const check = createRateLimiter({
+        requests: LIMIT,
+        window: '60 s',
+        prefix: 'burst',
+      });
+
+      // 100 requests split across 10 IPs → each IP stays under its own limit.
+      const results = await Promise.all(
+        Array.from({ length: 100 }, (_, i) => check(`10.0.0.${i % 10}`))
+      );
+
+      // 10 IPs × 5 allowed each = 50 allowed, 50 blocked.
+      expect(results.filter((r) => r.success).length).toBe(50);
+      expect(results.filter((r) => !r.success).length).toBe(50);
+    });
   });
 });
 
