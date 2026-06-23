@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+// @vitest-environment node
+
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -20,7 +22,6 @@ describe('robots.txt', () => {
       '/partner',
       '/cdn-cgi/',
       '/_next/',
-      'data=route',
       '/apple-app-site-association',
       'careers/externship',
     ];
@@ -28,6 +29,12 @@ describe('robots.txt', () => {
     for (const route of internalRoutes) {
       expect(robots).not.toContain(route);
     }
+  });
+
+  it('keeps the RSC data-route crawl-hygiene disallow', () => {
+    // Not an internal/admin path — a query-param rule (like the ?ls= ones) that
+    // keeps crawlers off Next.js RSC payloads. Out of scope for #938 removal.
+    expect(robots).toContain('Disallow: /en-us*data=route*');
   });
 
   it('keeps bad-bot full-site blocks intact', () => {

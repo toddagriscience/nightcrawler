@@ -9,18 +9,21 @@ Allow: /
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /en-us*data=route*
 
 User-agent: AhrefsBot
 Crawl-delay: 10
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /en-us*data=route*
 
 User-agent: AhrefsSiteAudit
 Crawl-delay: 10
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /en-us*data=route*
 
 User-agent: AliyunSpider
 Disallow: /
@@ -37,6 +40,7 @@ Allow: /*?llm=true
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /en-us*data=route*
 
 User-agent: CCBot
 Disallow: /
@@ -47,6 +51,7 @@ Allow: /*?llm=true
 Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
+Disallow: /en-us*data=route*
 
 User-agent: Huawei
 Disallow: /
