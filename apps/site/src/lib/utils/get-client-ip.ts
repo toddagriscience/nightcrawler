@@ -11,6 +11,12 @@ const UNKNOWN_CLIENT_IP = 'unknown';
  * client. Accepts a `Headers` object so callers can pass the result of
  * `await headers()` and so it is trivially unit-testable.
  *
+ * Trust note: `x-forwarded-for` is client-supplied and only trustworthy because
+ * the hosting proxy (Vercel) sets it. Used here as a rate-limit key for
+ * defense-in-depth — not for auth — and the limiter fails open, so a spoofed
+ * header cannot deny service to legitimate users. Do not rely on this value for
+ * any security-critical decision without a trusted-proxy guarantee.
+ *
  * @param headerList - Request headers to read from.
  * @returns The trimmed client IP, or `'unknown'` when unavailable.
  */

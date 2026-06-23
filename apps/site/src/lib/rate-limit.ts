@@ -51,14 +51,12 @@ let redisResolved = false;
 /** Ensures the "rate limiting disabled" warning is logged at most once. */
 let warnedMissingEnv = false;
 
-/** Per-prefix limiter cache so each limiter is constructed only once. */
-const limiterCache = new Map<string, Ratelimit>();
-
 /**
  * Lazily resolves the shared Upstash Redis client.
  *
- * Returns `null` when the Upstash environment variables are absent, signalling
- * callers to fail open. A one-time warning is logged in that case.
+ * Returns `null` when the Upstash environment variables are absent, or if
+ * constructing the client throws — in both cases callers fail open. The
+ * resolution runs once and the result (client or `null`) is cached.
  *
  * @returns The shared Redis client, or `null` when rate limiting is disabled.
  */
@@ -82,7 +80,15 @@ function getRedis(): Redis | null {
     return null;
   }
 
-  redisClient = Redis.fromEnv();
+  try {
+    redisClient = Redis.fromEnv();
+  } catch (error) {
+    logger.error(
+      '[rate-limit] Failed to initialize Upstash Redis; failing open.',
+      error
+    );
+    redisClient = null;
+  }
   return redisClient;
 }
 
@@ -90,27 +96,28 @@ function getRedis(): Redis | null {
  * Builds a reusable rate-limit checker for the given configuration.
  *
  * The returned function checks one identifier (typically a client IP) against a
- * sliding window. Limiters are cached per `prefix` and share one Redis client.
- * Fails open when Upstash is unconfigured or when the Redis call throws.
+ * sliding window. Each call to this factory owns its own limiter (built lazily
+ * on first use, after the shared Redis client resolves); all limiters share one
+ * Redis client. Fails open when Upstash is unconfigured or the Redis call throws.
  *
  * @param config - Requests, window, and key prefix for this limiter.
  * @returns A checker resolving `{ success }` for a given identifier.
  */
 export function createRateLimiter(config: RateLimitConfig): RateLimitCheck {
+  let limiter: Ratelimit | null = null;
+
   return async (identifier: string) => {
     const redis = getRedis();
     if (!redis) {
       return { success: true };
     }
 
-    let limiter = limiterCache.get(config.prefix);
     if (!limiter) {
       limiter = new Ratelimit({
         redis,
         limiter: Ratelimit.slidingWindow(config.requests, config.window),
         prefix: config.prefix,
       });
-      limiterCache.set(config.prefix, limiter);
     }
 
     try {
