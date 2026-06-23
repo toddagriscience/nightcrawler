@@ -4,6 +4,7 @@
 
 import { submitContactToSheets } from '@/lib/actions/googleSheets';
 import logger from '@/lib/logger';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
 import z from 'zod';
@@ -30,6 +31,8 @@ function getString(formData: FormData, key: string): string {
 export async function submitPublicInquiry(
   formData: FormData
 ): Promise<ActionResponse> {
+  await enforceRateLimit();
+
   const raw = {
     name: getString(formData, 'name'),
     lastKnownEmail: getString(formData, 'lastKnownEmail'),
