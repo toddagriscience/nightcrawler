@@ -3,6 +3,7 @@
 import { Link } from '@/i18n/config';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import {
+  ARTICLE_INDEX_TOPIC_TYPES,
   type ArticleContentType,
   type SanityArticle,
 } from '@/lib/sanity/article-types';
@@ -23,14 +24,11 @@ const PAGE_SIZE = 9;
 /**
  * Content-type filter tabs / topic routes, in render order. Only types with at
  * least one article appear. `news` is intentionally not a topic but is still
- * labelled on rows.
+ * labelled on rows. Sourced from {@link ARTICLE_INDEX_TOPIC_TYPES} so the query
+ * and the tabs/routes never drift.
  */
-export const ARTICLE_INDEX_TOPICS: ArticleContentType[] = [
-  'research',
-  'story',
-  'product-release',
-  'press',
-];
+export const ARTICLE_INDEX_TOPICS: readonly ArticleContentType[] =
+  ARTICLE_INDEX_TOPIC_TYPES;
 
 /** Maps a `contentType` to its `articleIndex.tabs.*` translation key. */
 const CONTENT_TYPE_TAB_KEY: Record<ArticleContentType, string> = {
@@ -68,6 +66,19 @@ export function topicTabKey(type: ArticleContentType): string {
 /** An article's effective content type (`news` is the Sanity default). */
 function contentTypeOf(article: SanityArticle): ArticleContentType {
   return article.contentType ?? 'news';
+}
+
+/**
+ * Listing summary to display, or `null` when blank or a placeholder (`n/a`).
+ * Editors sometimes set `n/a` on link-only rows; those should show no subtitle.
+ *
+ * @param summary - Raw `summary` field from Sanity
+ * @returns Trimmed summary, or `null` when nothing meaningful to show
+ */
+function displaySummary(summary: string | undefined): string | null {
+  const trimmed = summary?.trim();
+  if (!trimmed || trimmed.toLowerCase() === 'n/a') return null;
+  return trimmed;
 }
 
 /** Props for {@link ArticleIndex}. */
@@ -229,6 +240,7 @@ export function ArticleIndex({
           <ul className="mt-8">
             {visibleItems.map((article) => {
               const safeHref = toSafeHref(getArticleCardHref(article));
+              const summary = displaySummary(article.summary);
               const rowInner = (
                 <div className="flex flex-col gap-2 py-7 transition-opacity hover:opacity-70 md:flex-row md:gap-10">
                   <div className="flex gap-3 text-[14px] leading-7 md:w-[280px] md:shrink-0 md:flex-col md:gap-0">
@@ -246,9 +258,9 @@ export function ArticleIndex({
                     <h2 className="text-[18px] font-normal leading-[26px] text-black">
                       {article.title}
                     </h2>
-                    {article.summary ? (
+                    {summary ? (
                       <p className="mt-2 text-[14px] font-normal leading-[27px] text-black">
-                        {article.summary}
+                        {summary}
                       </p>
                     ) : null}
                   </div>

@@ -14,6 +14,19 @@ export const ARTICLE_CONTENT_TYPES = [
 /** Type for `news.contentType`. */
 export type ArticleContentType = (typeof ARTICLE_CONTENT_TYPES)[number];
 
+/**
+ * Content types surfaced as topics on the research index (`/research/index`
+ * and `/research/index/[topic]`). `news` is intentionally excluded — it is
+ * never a research topic. Single source of truth for the research-index query
+ * and the topic tab/route list.
+ */
+export const ARTICLE_INDEX_TOPIC_TYPES = [
+  'research',
+  'story',
+  'product-release',
+  'press',
+] as const satisfies readonly ArticleContentType[];
+
 /** Allowed collection keys for parent pages (`/news`, `/careers`, future `/research`, etc.). */
 export const ARTICLE_COLLECTIONS = [
   ...ARTICLE_CONTENT_TYPES,

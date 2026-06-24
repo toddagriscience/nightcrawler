@@ -3,6 +3,7 @@
 import { client } from '@/lib/sanity/client';
 import { logger } from '@/lib/logger';
 import type { ArticleCollection } from '@/lib/sanity/article-types';
+import { ARTICLE_INDEX_TOPIC_TYPES } from '@/lib/sanity/article-types';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { FilteredResponseQueryOptions } from 'next-sanity';
 
@@ -187,6 +188,38 @@ export async function getArticlesByCollection(
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
     logger.error('Sanity getArticlesByCollection failed', error);
+    return [];
+  }
+}
+
+/**
+ * Articles for the research index (`/research/index` and `/research/index/[topic]`).
+ *
+ * Returns every `news` document whose `contentType` is a research topic
+ * ({@link ARTICLE_INDEX_TOPIC_TYPES}: research, story, product-release, press)
+ * or that is cross-listed into the `research` collection. This is broader than
+ * `getArticlesByCollection('research')` so the Story / Product Release / Press
+ * tabs populate without each article needing the `research` collection tag.
+ *
+ * @param options - Optional Sanity fetch options
+ * @returns Article list sorted by date descending
+ */
+export async function getResearchIndexArticles(
+  options?: FilteredResponseQueryOptions
+): Promise<SanityArticle[]> {
+  try {
+    const query = `*[_type == "news" && (
+      coalesce(contentType, "news") in $types ||
+      "research" in coalesce(collections, [])
+    )] | order(date desc) ${GROQ_NEWS_ONLY}`;
+    const articles = await client.fetch<SanityArticle[]>(
+      query,
+      { types: [...ARTICLE_INDEX_TOPIC_TYPES] },
+      options ?? defaultListingOptions
+    );
+    return Array.isArray(articles) ? articles : [];
+  } catch (error) {
+    logger.error('Sanity getResearchIndexArticles failed', error);
     return [];
   }
 }

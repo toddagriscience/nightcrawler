@@ -6,7 +6,7 @@ import {
   isArticleIndexTopic,
   topicTabKey,
 } from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
-import { getArticlesByCollection } from '@/lib/sanity/articles';
+import { getResearchIndexArticles } from '@/lib/sanity/articles';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -62,7 +62,7 @@ export default async function ResearchTopicPage({
   if (!isArticleIndexTopic(topic)) notFound();
 
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getArticlesByCollection('research');
+  const articles = await getResearchIndexArticles();
 
   return (
     <ArticleIndex

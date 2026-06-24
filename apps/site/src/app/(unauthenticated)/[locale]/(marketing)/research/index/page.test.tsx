@@ -9,15 +9,15 @@ import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ResearchIndexPage from './page';
 
-const { getArticlesByCollectionMock } = vi.hoisted(() => ({
-  getArticlesByCollectionMock: vi.fn(),
+const { getResearchIndexArticlesMock } = vi.hoisted(() => ({
+  getResearchIndexArticlesMock: vi.fn(),
 }));
 
 vi.mock('@/lib/sanity/articles', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sanity/articles')>();
   return {
     ...actual,
-    getArticlesByCollection: getArticlesByCollectionMock,
+    getResearchIndexArticles: getResearchIndexArticlesMock,
   };
 });
 
@@ -68,11 +68,11 @@ function renderPage(searchParams: { count?: string } = {}) {
 
 describe('ResearchIndexPage', () => {
   beforeEach(() => {
-    getArticlesByCollectionMock.mockReset();
+    getResearchIndexArticlesMock.mockReset();
   });
 
   it('renders the heading and the first page of articles', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
     expect(
@@ -80,11 +80,11 @@ describe('ResearchIndexPage', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Research Row 1')).toBeInTheDocument();
     expect(screen.getByText('Research Row 9')).toBeInTheDocument();
-    expect(getArticlesByCollectionMock).toHaveBeenCalledWith('research');
+    expect(getResearchIndexArticlesMock).toHaveBeenCalled();
   });
 
   it('renders only content-type tabs that have articles, with path-based hrefs', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
     expect(screen.getByRole('link', { name: 'All' })).toHaveAttribute(
@@ -109,7 +109,7 @@ describe('ResearchIndexPage', () => {
   });
 
   it('links each row to its article detail route', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
     const row = screen.getByText('Research Row 1').closest('a');
@@ -120,7 +120,7 @@ describe('ResearchIndexPage', () => {
   });
 
   it('shows View more and hides overflow rows by default', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
     expect(screen.getByRole('link', { name: 'View more' })).toHaveAttribute(
@@ -131,7 +131,7 @@ describe('ResearchIndexPage', () => {
   });
 
   it('reveals all rows when count covers the remainder', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage({ count: '20' }));
 
     expect(screen.getByText('Release Row One')).toBeInTheDocument();
@@ -141,14 +141,14 @@ describe('ResearchIndexPage', () => {
   });
 
   it('shows empty-state copy when there are no articles', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce([]);
+    getResearchIndexArticlesMock.mockResolvedValueOnce([]);
     renderWithNextIntl(await renderPage());
 
     expect(screen.getByText('No entries yet.')).toBeInTheDocument();
   });
 
   it('never renders a javascript: href from a malicious offSiteUrl', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce([
+    getResearchIndexArticlesMock.mockResolvedValueOnce([
       article('evil-1', 'Evil Row', 'research', '2026-04-21', {
         offSiteUrl: 'javascript:alert(document.cookie)',
       }),

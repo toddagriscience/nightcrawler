@@ -95,6 +95,18 @@ describe('ArticleIndex', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it('hides placeholder "n/a" summaries', async () => {
+    renderWithNextIntl(
+      await render({
+        articles: [
+          { ...ITEMS[0], _id: 'na', title: 'No Summary Row', summary: 'n/a' },
+        ],
+      })
+    );
+    expect(screen.getByText('No Summary Row')).toBeInTheDocument();
+    expect(screen.queryByText('n/a')).not.toBeInTheDocument();
+  });
+
   it('drops dangerous hrefs entirely', async () => {
     const { container } = renderWithNextIntl(
       await render({

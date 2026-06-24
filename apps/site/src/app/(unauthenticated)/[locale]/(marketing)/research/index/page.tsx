@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { ArticleIndex } from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
-import { getArticlesByCollection } from '@/lib/sanity/articles';
+import { getResearchIndexArticles } from '@/lib/sanity/articles';
 import { getTranslations } from 'next-intl/server';
 
 /**
@@ -26,7 +26,7 @@ export default async function ResearchIndexPage({
   const { locale } = await params;
   const { count } = await searchParams;
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getArticlesByCollection('research');
+  const articles = await getResearchIndexArticles();
 
   return (
     <ArticleIndex

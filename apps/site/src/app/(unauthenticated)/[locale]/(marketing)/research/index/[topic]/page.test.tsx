@@ -10,15 +10,15 @@ import { notFound } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ResearchTopicPage from './page';
 
-const { getArticlesByCollectionMock } = vi.hoisted(() => ({
-  getArticlesByCollectionMock: vi.fn(),
+const { getResearchIndexArticlesMock } = vi.hoisted(() => ({
+  getResearchIndexArticlesMock: vi.fn(),
 }));
 
 vi.mock('@/lib/sanity/articles', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sanity/articles')>();
   return {
     ...actual,
-    getArticlesByCollection: getArticlesByCollectionMock,
+    getResearchIndexArticles: getResearchIndexArticlesMock,
   };
 });
 
@@ -54,12 +54,12 @@ function renderPage(topic: string, count?: string) {
 
 describe('ResearchTopicPage', () => {
   beforeEach(() => {
-    getArticlesByCollectionMock.mockReset();
+    getResearchIndexArticlesMock.mockReset();
     vi.mocked(notFound).mockClear();
   });
 
   it('renders only the active topic and marks its tab current', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage('story'));
 
     expect(screen.getByText('Story Row One')).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('ResearchTopicPage', () => {
   });
 
   it('still renders the full tab bar from the whole collection', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
+    getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage('story'));
 
     expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('ResearchTopicPage', () => {
   });
 
   it('calls notFound for an unknown topic segment', async () => {
-    getArticlesByCollectionMock.mockResolvedValue([]);
+    getResearchIndexArticlesMock.mockResolvedValue([]);
     // The harness mocks `notFound` as a no-op, so execution may continue;
     // the contract under test is simply that the guard fires.
     await renderPage('bogus').catch(() => undefined);
