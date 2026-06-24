@@ -3,11 +3,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/auth-client';
 import ToddHeader from '../../components/common/wordmark/todd-wordmark';
+import Link from 'next/link';
 
 /**
- * Page to handle authentication errors when logging in to the platform.
+ * Error UI for authenticated routes when rendering fails.
+ *
+ * @returns {JSX.Element} Recovery screen with home and status links
  */
 export default function Error() {
   return (
@@ -21,21 +23,35 @@ export default function Error() {
       </header>
       <div className="flex h-[calc(100vh-150px)] flex-col items-center text-center justify-center gap-10">
         <h1 className="md:text-3xl text-2xl font-thin">
-          Something went wrong. <br /> Please log out and try again.
+          Something went wrong. <br /> Please return home and try again.
         </h1>
         <p className="md:text-base text-sm text-foreground/80">
           If you continue to experience issues, please contact support.
         </p>
-        <Button
-          variant="outline"
-          className="bg-foreground rounded-full w-[154px] text-background hover:bg-foreground/80 hover:text-background"
-          size="default"
-          onClick={() => {
-            logout();
-          }}
-        >
-          Log out
-        </Button>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <Button
+            variant="outline"
+            className="bg-foreground w-[154px] rounded-full text-background hover:bg-foreground/80 hover:text-background"
+            size="default"
+            asChild
+          >
+            <Link href="/home">Home</Link>
+          </Button>
+          <Button
+            variant="outline"
+            className="w-[154px] rounded-full"
+            size="default"
+            asChild
+          >
+            <a
+              href="https://status.toddagriscience.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Status
+            </a>
+          </Button>
+        </div>
       </div>
     </>
   );

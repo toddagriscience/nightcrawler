@@ -1,31 +1,24 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import AuthErrorPage from './error';
 
-const mockLogout = vi.fn(() => Promise.resolve());
-const mockRedirect = vi.fn();
-
-vi.mock('@/lib/auth-client', () => ({
-  logout: () => mockLogout(),
-}));
-
-vi.mock('next/navigation', () => ({
-  redirect: (path: string) => mockRedirect(path),
-}));
-
 describe('AuthErrorPage', () => {
-  it('logs out when the button is clicked', async () => {
-    const user = userEvent.setup();
+  it('links to /home', () => {
     render(<AuthErrorPage />);
 
-    await user.click(screen.getByRole('button', { name: /log out/i }));
+    const home = screen.getByRole('link', { name: /^home$/i });
+    expect(home).toHaveAttribute('href', '/home');
+  });
 
-    await waitFor(() => {
-      expect(mockLogout).toHaveBeenCalledTimes(1);
-    });
-    expect(mockRedirect).not.toHaveBeenCalled();
+  it('links Status to the public status page', () => {
+    render(<AuthErrorPage />);
+
+    const status = screen.getByRole('link', { name: /^status$/i });
+    expect(status).toHaveAttribute(
+      'href',
+      'https://status.toddagriscience.com'
+    );
   });
 });
