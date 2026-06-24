@@ -1,4 +1,25 @@
 {
+  "researchIndex": {
+    "title": "Investigación",
+    "tabs": {
+      "all": "Todo",
+      "news": "Noticias",
+      "research": "Investigación",
+      "story": "Historia",
+      "productRelease": "Lanzamiento de Producto",
+      "press": "Prensa"
+    },
+    "controls": {
+      "filterNav": "Filtrar investigación por categoría",
+      "filter": "Filtrar",
+      "sort": "Ordenar",
+      "gridView": "Vista de cuadrícula",
+      "listView": "Vista de lista"
+    },
+    "viewMore": "Ver más",
+    "empty": "Aún no hay entradas de {category}.",
+    "emptyAll": "Aún no hay entradas."
+  },
   "whatWeDo": {
     "title": "Apoyamos las granjas más importantes del mundo",
     "subtitle": "Nuestra investigación revela insights que otros no han imaginado y nos movemos rápidamente para regenerar el suelo. Trabajamos con granjas que han demostrado un compromiso con prácticas de gestión ecológica y socialmente responsables y han forjado conexiones emocionales profundas con sus consumidores objetivo.",
