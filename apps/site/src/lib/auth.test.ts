@@ -50,10 +50,12 @@ vitest.mock('./supabase/server', async (importActual) => {
   };
 });
 
-const mockRedirect = vitest.fn();
-vitest.mock('next/navigation', () => ({
-  redirect: (path: string) => mockRedirect(path),
-}));
+const mockLocationReplace = vitest.fn();
+Object.defineProperty(window, 'location', {
+  value: { replace: mockLocationReplace },
+  writable: true,
+  configurable: true,
+});
 
 describe('login', () => {
   beforeEach(() => {
@@ -104,16 +106,16 @@ describe('logout', () => {
     });
   });
 
-  it('logs out when authenticated and redirects', async () => {
+  it('logs out when authenticated and navigates to root', async () => {
     mockSignOut.mockResolvedValue({ error: null });
 
     await logout();
 
     expect(mockSignOut).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).toHaveBeenCalledWith('/');
+    expect(mockLocationReplace).toHaveBeenCalledWith('/');
   });
 
-  it('does not log out when not authenticated, but still redirects', async () => {
+  it('does not call signOut when not authenticated, but still navigates to root', async () => {
     mockGetUser.mockResolvedValue({
       data: { user: null },
     });
@@ -121,23 +123,26 @@ describe('logout', () => {
     await logout();
 
     expect(mockSignOut).not.toHaveBeenCalled();
+    expect(mockLocationReplace).toHaveBeenCalledWith('/');
   });
 
-  it('logs warning on Supabase signOut error but still redirects', async () => {
+  it('returns AuthError on Supabase signOut error and does not navigate', async () => {
     const fakeError = new AuthError('signout failed');
 
     mockSignOut.mockResolvedValue({ error: fakeError });
 
-    await logout();
+    const result = await logout();
 
     expect(mockSignOut).toHaveBeenCalled();
+    expect(result?.error).toBeInstanceOf(AuthError);
+    expect(mockLocationReplace).not.toHaveBeenCalled();
   });
 
-  it('returns AuthError when an exception is thrown and does not redirect', async () => {
+  it('returns AuthError when an exception is thrown and does not navigate', async () => {
     const result = await logout();
 
     expect(result?.error).toBeInstanceOf(AuthError);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    expect(mockLocationReplace).not.toHaveBeenCalled();
   });
 });
 
