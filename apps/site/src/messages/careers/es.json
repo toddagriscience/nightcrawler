@@ -53,14 +53,14 @@
           "heading": "Residencia Todd",
           "body": "Nuestros programas de talento emergente ofrecen la oportunidad de generar un impacto directo en Todd y contribuir al recorrido de crecimiento de Todd. Damos la bienvenida a personas curiosas y con impulso en una etapa temprana de su trayectoria profesional.",
           "cta": "Saber más →",
-          "ctaHref": "/careers/index",
+          "ctaHref": "/careers/search",
           "imageAlt": "Dos compañeros de Todd conversando en una sala luminosa"
         },
         "talent": {
           "heading": "Talento emergente",
           "body": "Damos la bienvenida a personas curiosas y con impulso, en una etapa temprana de su trayectoria profesional, para generar un impacto directo en Todd y contribuir al propio recorrido de crecimiento de Todd.",
           "cta": "Saber más →",
-          "ctaHref": "/careers/index",
+          "ctaHref": "/careers/search",
           "imageAlt": "Personas en etapa inicial colaborando en una oficina moderna"
         }
       },
@@ -80,7 +80,7 @@
       "footerCta": {
         "heading": "Da forma al futuro de la agricultura",
         "cta": "Ver carreras →",
-        "ctaHref": "/careers/index"
+        "ctaHref": "/careers/search"
       }
     },
     "jobPosting": {

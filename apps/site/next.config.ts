@@ -185,7 +185,7 @@ const nextConfig: NextConfig = {
         destination: '/contact',
         permanent: true,
       },
-      // `/careers/index` is a real route (`careers/index/page.tsx`); do not add a redirect to `/careers`.
+      // `/careers/search` is a real route (`careers/search/page.tsx`); do not add a redirect to `/careers`.
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',
