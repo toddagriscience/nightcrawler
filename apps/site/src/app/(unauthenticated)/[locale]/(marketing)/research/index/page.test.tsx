@@ -26,7 +26,8 @@ function article(
   id: string,
   title: string,
   contentType: ArticleContentType,
-  date: string
+  date: string,
+  extra: Partial<SanityArticle> = {}
 ): SanityArticle {
   return {
     _id: id,
@@ -36,6 +37,7 @@ function article(
     contentType,
     date,
     summary: '',
+    ...extra,
   };
 }
 
@@ -57,7 +59,7 @@ const RELEASE_ITEM = article(
 );
 const ALL_ITEMS = [...RESEARCH_ITEMS, STORY_ITEM, RELEASE_ITEM];
 
-function renderPage(searchParams: { category?: string; count?: string } = {}) {
+function renderPage(searchParams: { count?: string } = {}) {
   return ResearchIndexPage({
     params: Promise.resolve({ locale: 'en' }),
     searchParams: Promise.resolve(searchParams),
@@ -81,13 +83,22 @@ describe('ResearchIndexPage', () => {
     expect(getArticlesByCollectionMock).toHaveBeenCalledWith('research');
   });
 
-  it('renders only content-type tabs that have articles', async () => {
+  it('renders only content-type tabs that have articles, with path-based hrefs', async () => {
     getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
-    expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Research' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Story' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'All' })).toHaveAttribute(
+      'href',
+      '/research/index'
+    );
+    expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute(
+      'href',
+      '/research/index/research'
+    );
+    expect(screen.getByRole('link', { name: 'Story' })).toHaveAttribute(
+      'href',
+      '/research/index/story'
+    );
     expect(
       screen.getByRole('link', { name: 'Product Release' })
     ).toBeInTheDocument();
@@ -112,7 +123,10 @@ describe('ResearchIndexPage', () => {
     getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
     renderWithNextIntl(await renderPage());
 
-    expect(screen.getByRole('link', { name: 'View more' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'View more' })).toHaveAttribute(
+      'href',
+      '/research/index?count=11'
+    );
     expect(screen.queryByText('Release Row One')).not.toBeInTheDocument();
   });
 
@@ -126,18 +140,24 @@ describe('ResearchIndexPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('filters rows by the active category', async () => {
-    getArticlesByCollectionMock.mockResolvedValueOnce(ALL_ITEMS);
-    renderWithNextIntl(await renderPage({ category: 'story' }));
-
-    expect(screen.getByText('Story Row One')).toBeInTheDocument();
-    expect(screen.queryByText('Research Row 1')).not.toBeInTheDocument();
-  });
-
   it('shows empty-state copy when there are no articles', async () => {
     getArticlesByCollectionMock.mockResolvedValueOnce([]);
     renderWithNextIntl(await renderPage());
 
     expect(screen.getByText('No entries yet.')).toBeInTheDocument();
+  });
+
+  it('never renders a javascript: href from a malicious offSiteUrl', async () => {
+    getArticlesByCollectionMock.mockResolvedValueOnce([
+      article('evil-1', 'Evil Row', 'research', '2026-04-21', {
+        offSiteUrl: 'javascript:alert(document.cookie)',
+      }),
+    ]);
+    const { container } = renderWithNextIntl(await renderPage());
+
+    // Row is still shown, but not as a link.
+    expect(screen.getByText('Evil Row')).toBeInTheDocument();
+    expect(screen.getByText('Evil Row').closest('a')).toBeNull();
+    expect(container.querySelector('a[href^="javascript:" i]')).toBeNull();
   });
 });

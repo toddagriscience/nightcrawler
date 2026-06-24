@@ -1,25 +1,4 @@
 {
-  "researchIndex": {
-    "title": "Research",
-    "tabs": {
-      "all": "All",
-      "news": "News",
-      "research": "Research",
-      "story": "Story",
-      "productRelease": "Product Release",
-      "press": "Press"
-    },
-    "controls": {
-      "filterNav": "Filter research by category",
-      "filter": "Filter",
-      "sort": "Sort",
-      "gridView": "Grid view",
-      "listView": "List view"
-    },
-    "viewMore": "View more",
-    "empty": "No {category} entries yet.",
-    "emptyAll": "No entries yet."
-  },
   "whatWeDo": {
     "title": "We support the world's most important farms",
     "subtitle": "Our research reveals insights unimagined by others and move swiftly to regenerate soil. We work with farms who have displayed a commitment to ecologically and socially responsible management practices and forged deep emotional connections with their target consumers.",

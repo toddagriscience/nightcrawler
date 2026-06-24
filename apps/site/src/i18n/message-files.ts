@@ -13,6 +13,7 @@ export const messageFiles = [
   'homepage',
   'about',
   'research',
+  'articleIndex',
   'investors',
   'governance',
   'disclosures',

@@ -1,0 +1,26 @@
+{
+  "articleIndex": {
+    "titles": {
+      "research": "Investigación",
+      "news": "Sala de prensa"
+    },
+    "tabs": {
+      "all": "Todo",
+      "news": "Noticias",
+      "research": "Investigación",
+      "story": "Historia",
+      "productRelease": "Lanzamiento de Producto",
+      "press": "Prensa"
+    },
+    "controls": {
+      "filterNav": "Filtrar por categoría",
+      "filter": "Filtrar",
+      "sort": "Ordenar",
+      "gridView": "Vista de cuadrícula",
+      "listView": "Vista de lista"
+    },
+    "viewMore": "Ver más",
+    "empty": "Aún no hay entradas de {category}.",
+    "emptyAll": "Aún no hay entradas."
+  }
+}
