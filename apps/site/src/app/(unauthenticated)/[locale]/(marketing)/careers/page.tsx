@@ -3,7 +3,7 @@
 import { CareersLanding } from './components/careers-landing';
 
 /**
- * Careers hub at `/careers`: company story and values; open roles live at `/careers/index`.
+ * Careers hub at `/careers`: company story and values; open roles live at `/careers/search`.
  *
  * @param params - Route params including locale
  */

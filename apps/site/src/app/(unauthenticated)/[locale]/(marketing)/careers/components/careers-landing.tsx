@@ -168,7 +168,7 @@ export async function CareersLanding({
       title: t('landing.hero.title'),
       subtitle: t('landing.hero.subtitle'),
       valuesLinkLabel: t('landing.hero.viewCareersCta'),
-      valuesAnchorHref: '/careers/index',
+      valuesAnchorHref: '/careers/search',
     },
     bridgeStatement: t('landing.bridgeStatement'),
     valuesBlock: {

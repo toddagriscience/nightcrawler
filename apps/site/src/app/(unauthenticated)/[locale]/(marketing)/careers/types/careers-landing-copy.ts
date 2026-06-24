@@ -16,7 +16,7 @@ export interface CareersLandingHeroCopy {
   subtitle: string;
   /** Outline pill label (e.g. “View careers” → listings) */
   valuesLinkLabel: string;
-  /** Pill destination (`/careers/index`, etc.) */
+  /** Pill destination (`/careers/search`, etc.) */
   valuesAnchorHref: string;
 }
 
