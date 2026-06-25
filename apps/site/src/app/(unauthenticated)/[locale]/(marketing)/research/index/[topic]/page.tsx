@@ -67,6 +67,7 @@ export default async function ResearchTopicPage({
   return (
     <ArticleIndex
       articles={articles}
+      topics={ARTICLE_INDEX_TOPICS}
       activeTopic={topic}
       basePath="/research/index"
       title={t('titles.research')}
