@@ -130,6 +130,6 @@ describe('Homepage', () => {
     const exploreResearchLink = screen.getByRole('link', {
       name: 'sectionContent.explore.button',
     });
-    expect(exploreResearchLink).toHaveAttribute('href', '/research');
+    expect(exploreResearchLink).toHaveAttribute('href', '/research/index');
   });
 });

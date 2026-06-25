@@ -18,8 +18,8 @@ describe('useMenuItems - Research dropdown', () => {
     expect(research).toBeDefined();
     expect(research?.url).toBe('/research');
     expect(research?.items).toEqual([
+      { title: 'Research Index', url: '/research/index' },
       { title: 'Research Overview', url: '/research' },
-      { title: 'Articles', url: '/research/index' },
     ]);
   });
 
@@ -36,8 +36,8 @@ describe('Research dropdown rendering', () => {
     title: 'Research',
     url: '/research',
     items: [
+      { title: 'Research Index', url: '/research/index' },
       { title: 'Research Overview', url: '/research' },
-      { title: 'Articles', url: '/research/index' },
     ],
   };
 
@@ -53,10 +53,10 @@ describe('Research dropdown rendering', () => {
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
+    const index = screen.getByRole('link', { name: 'Research Index' });
+    expect(index).toHaveAttribute('href', '/research/index');
+
     const overview = screen.getByRole('link', { name: 'Research Overview' });
     expect(overview).toHaveAttribute('href', '/research');
-
-    const articles = screen.getByRole('link', { name: 'Articles' });
-    expect(articles).toHaveAttribute('href', '/research/index');
   });
 });
