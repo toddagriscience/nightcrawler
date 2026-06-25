@@ -6,16 +6,11 @@
     },
     "tabs": {
       "all": "All",
-      "researchPublication": "Publication",
-      "researchConclusion": "Conclusion",
-      "researchMilestone": "Milestone",
-      "researchRelease": "Release",
-      "newsPublication": "Publication",
-      "newsMilestone": "Milestone",
-      "newsRelease": "Release",
-      "newsCompany": "Company",
-      "newsResearch": "Research",
-      "newsGlobalAffairs": "Global affairs"
+      "news": "News",
+      "research": "Research",
+      "story": "Story",
+      "productRelease": "Product Release",
+      "press": "Press"
     },
     "controls": {
       "filterNav": "Filter by category",

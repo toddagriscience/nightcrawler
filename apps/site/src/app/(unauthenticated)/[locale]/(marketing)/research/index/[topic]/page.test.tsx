@@ -41,18 +41,8 @@ function article(
 }
 
 const ALL_ITEMS: SanityArticle[] = [
-  article(
-    'research-1',
-    'Research Row One',
-    'research-publication',
-    '2026-04-20'
-  ),
-  article(
-    'conclusion-1',
-    'Conclusion Row One',
-    'research-conclusion',
-    '2026-03-10'
-  ),
+  article('research-1', 'Research Row One', 'research', '2026-04-20'),
+  article('story-1', 'Story Row One', 'story', '2026-03-10'),
 ];
 
 function renderPage(topic: string, count?: string) {
@@ -70,23 +60,21 @@ describe('ResearchTopicPage', () => {
 
   it('renders only the active topic and marks its tab current', async () => {
     getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
-    renderWithNextIntl(await renderPage('research-conclusion'));
+    renderWithNextIntl(await renderPage('story'));
 
-    expect(screen.getByText('Conclusion Row One')).toBeInTheDocument();
+    expect(screen.getByText('Story Row One')).toBeInTheDocument();
     expect(screen.queryByText('Research Row One')).not.toBeInTheDocument();
 
-    const conclusionTab = screen.getByRole('link', { name: 'Conclusion' });
-    expect(conclusionTab).toHaveAttribute('aria-current', 'true');
+    const storyTab = screen.getByRole('link', { name: 'Story' });
+    expect(storyTab).toHaveAttribute('aria-current', 'true');
   });
 
   it('still renders the full tab bar from the whole collection', async () => {
     getResearchIndexArticlesMock.mockResolvedValueOnce(ALL_ITEMS);
-    renderWithNextIntl(await renderPage('research-conclusion'));
+    renderWithNextIntl(await renderPage('story'));
 
     expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: 'Publication' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Research' })).toBeInTheDocument();
   });
 
   it('calls notFound for an unknown topic segment', async () => {

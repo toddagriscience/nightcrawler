@@ -1,28 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import {
-  ArticleIndex,
-  type ArticleIndexProps,
-} from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
-import {
-  NEWS_TOPIC_TYPES,
-  type ArticleContentType,
-} from '@/lib/sanity/article-types';
-import { getNewsIndexArticles } from '@/lib/sanity/articles';
+import { ArticleIndex } from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
+import { getArticlesByCollection } from '@/lib/sanity/articles';
 import { getTranslations } from 'next-intl/server';
 
 /**
- * Newsroom listing (`/{locale}/news`) — the news taxonomy rendered with the
+ * Newsroom listing (`/{locale}/news`) — the news collection rendered with the
  * shared {@link ArticleIndex} template (same look as `/research/index`).
  *
- * Topic tabs use `?topic=` query params instead of path segments because the
- * `/news/[slug]` legacy article route owns the dynamic segment. The active
- * topic comes from `searchParams.topic` (validated against
- * {@link NEWS_TOPIC_TYPES}; unknown → `all`).
+ * Topic tabs are disabled because the `/news/[slug]` legacy article route owns
+ * the dynamic segment, so per-topic paths would collide.
  *
  * @param props - Page props
  * @param props.params - Route params (`locale` selects the translation locale)
- * @param props.searchParams - Search params (`count` reveals rows; `topic` filters)
+ * @param props.searchParams - Search params (`count` reveals additional rows)
  * @returns {Promise<JSX.Element>} The newsroom listing page
  */
 export default async function News({
@@ -30,29 +21,22 @@ export default async function News({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ count?: string; topic?: string }>;
+  searchParams: Promise<{ count?: string }>;
 }) {
   const { locale } = await params;
-  const { count, topic } = await searchParams;
+  const { count } = await searchParams;
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getNewsIndexArticles();
-
-  const activeTopic: ArticleIndexProps['activeTopic'] =
-    topic && (NEWS_TOPIC_TYPES as readonly string[]).includes(topic)
-      ? (topic as ArticleContentType)
-      : 'all';
+  const articles = await getArticlesByCollection('news');
 
   return (
     <ArticleIndex
       articles={articles}
-      topics={NEWS_TOPIC_TYPES}
-      activeTopic={activeTopic}
+      activeTopic="all"
       basePath="/news"
       title={t('titles.news')}
       t={t}
       countParam={count}
-      topicHrefMode="query"
-      showTopicTabs
+      showTopicTabs={false}
     />
   );
 }

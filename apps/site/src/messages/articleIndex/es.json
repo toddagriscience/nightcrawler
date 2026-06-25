@@ -5,17 +5,12 @@
       "news": "Sala de prensa"
     },
     "tabs": {
-      "all": "Todos",
-      "researchPublication": "Publicación",
-      "researchConclusion": "Conclusión",
-      "researchMilestone": "Hito",
-      "researchRelease": "Lanzamiento",
-      "newsPublication": "Publicación",
-      "newsMilestone": "Hito",
-      "newsRelease": "Lanzamiento",
-      "newsCompany": "Empresa",
-      "newsResearch": "Investigación",
-      "newsGlobalAffairs": "Asuntos globales"
+      "all": "Todo",
+      "news": "Noticias",
+      "research": "Investigación",
+      "story": "Historia",
+      "productRelease": "Lanzamiento de Producto",
+      "press": "Prensa"
     },
     "controls": {
       "filterNav": "Filtrar por categoría",

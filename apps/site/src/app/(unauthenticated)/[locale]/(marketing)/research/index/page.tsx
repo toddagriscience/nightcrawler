@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { ArticleIndex } from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
-import { ARTICLE_INDEX_TOPIC_TYPES } from '@/lib/sanity/article-types';
 import { getResearchIndexArticles } from '@/lib/sanity/articles';
 import { getTranslations } from 'next-intl/server';
 
@@ -32,7 +31,6 @@ export default async function ResearchIndexPage({
   return (
     <ArticleIndex
       articles={articles}
-      topics={ARTICLE_INDEX_TOPIC_TYPES}
       activeTopic="all"
       basePath="/research/index"
       title={t('titles.research')}

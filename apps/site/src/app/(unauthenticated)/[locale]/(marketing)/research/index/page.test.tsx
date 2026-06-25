@@ -41,28 +41,23 @@ function article(
   };
 }
 
-// 9 publication rows (R1..R9) fill the first page; conclusion + release fall to page two.
+// 9 research rows (R1..R9) fill the first page; story + release fall to page two.
 const RESEARCH_ITEMS: SanityArticle[] = Array.from({ length: 9 }, (_, index) =>
   article(
     `research-${index + 1}`,
     `Research Row ${index + 1}`,
-    'research-publication',
+    'research',
     `2026-04-${String(20 - index).padStart(2, '0')}`
   )
 );
-const CONCLUSION_ITEM = article(
-  'conclusion-1',
-  'Conclusion Row One',
-  'research-conclusion',
-  '2026-03-10'
-);
+const STORY_ITEM = article('story-1', 'Story Row One', 'story', '2026-03-10');
 const RELEASE_ITEM = article(
   'release-1',
   'Release Row One',
-  'research-release',
+  'product-release',
   '2026-03-05'
 );
-const ALL_ITEMS = [...RESEARCH_ITEMS, CONCLUSION_ITEM, RELEASE_ITEM];
+const ALL_ITEMS = [...RESEARCH_ITEMS, STORY_ITEM, RELEASE_ITEM];
 
 function renderPage(searchParams: { count?: string } = {}) {
   return ResearchIndexPage({
@@ -96,18 +91,20 @@ describe('ResearchIndexPage', () => {
       'href',
       '/research/index'
     );
-    expect(screen.getByRole('link', { name: 'Publication' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute(
       'href',
-      '/research/index/research-publication'
+      '/research/index/research'
     );
-    expect(screen.getByRole('link', { name: 'Conclusion' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Story' })).toHaveAttribute(
       'href',
-      '/research/index/research-conclusion'
+      '/research/index/story'
     );
-    expect(screen.getByRole('link', { name: 'Release' })).toBeInTheDocument();
-    // No `research-milestone` articles → no Milestone tab.
     expect(
-      screen.queryByRole('link', { name: 'Milestone' })
+      screen.getByRole('link', { name: 'Product Release' })
+    ).toBeInTheDocument();
+    // No `press` articles → no Press tab.
+    expect(
+      screen.queryByRole('link', { name: 'Press' })
     ).not.toBeInTheDocument();
   });
 
@@ -152,7 +149,7 @@ describe('ResearchIndexPage', () => {
 
   it('never renders a javascript: href from a malicious offSiteUrl', async () => {
     getResearchIndexArticlesMock.mockResolvedValueOnce([
-      article('evil-1', 'Evil Row', 'research-publication', '2026-04-21', {
+      article('evil-1', 'Evil Row', 'research', '2026-04-21', {
         offSiteUrl: 'javascript:alert(document.cookie)',
       }),
     ]);
