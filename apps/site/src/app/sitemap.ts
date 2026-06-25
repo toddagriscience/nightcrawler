@@ -50,7 +50,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '/',
     '/careers',
-    '/careers/index',
+    '/careers/search',
     '/about',
     '/research',
     '/news',
@@ -74,7 +74,10 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
         continue;
       }
 
-      const url = `${baseUrl}/${locale}${page}`;
+      const url =
+        locale === routing.defaultLocale
+          ? `${baseUrl}${page}`
+          : `${baseUrl}/${locale}${page}`;
 
       sitemapEntries.push({
         url,
@@ -111,7 +114,10 @@ function articleListToIndexSitemapEntries(
 
       const lastModified =
         article._updatedAt !== undefined ? article._updatedAt : new Date();
-      const url = `${baseUrl}/${locale}/index/${slug}`;
+      const url =
+        locale === routing.defaultLocale
+          ? `${baseUrl}/index/${slug}`
+          : `${baseUrl}/${locale}/index/${slug}`;
 
       sitemapEntries.push({
         url,
@@ -147,7 +153,10 @@ function articleListToCareersPostingSitemapEntries(
 
       const lastModified =
         article._updatedAt !== undefined ? article._updatedAt : new Date();
-      const url = `${baseUrl}/${locale}/careers/${slug}`;
+      const url =
+        locale === routing.defaultLocale
+          ? `${baseUrl}/careers/${slug}`
+          : `${baseUrl}/${locale}/careers/${slug}`;
 
       sitemapEntries.push({
         url,
@@ -198,14 +207,16 @@ async function getSanityCareersArticleCareersRouteSitemap(): Promise<MetadataRou
 function getSupportedLanguages(page: string): Languages<string> {
   const languages: { [key: string]: string } = {};
   routing.locales.forEach((loc) => {
-    // Ensure proper path separator - page might already start with '/' or be empty
     const cleanPage = page.startsWith('/') ? page : `/${page}`;
-    languages[loc] = `${baseUrl}/${loc}${cleanPage}`;
+    languages[loc] =
+      loc === routing.defaultLocale
+        ? `${baseUrl}${cleanPage}`
+        : `${baseUrl}/${loc}${cleanPage}`;
   });
 
   // Add x-default for better international SEO
-  languages['x-default'] =
-    `${baseUrl}/${routing.defaultLocale}${page.startsWith('/') ? page : `/${page}`}`;
+  const cleanPage = page.startsWith('/') ? page : `/${page}`;
+  languages['x-default'] = `${baseUrl}${cleanPage}`;
 
   return languages;
 }

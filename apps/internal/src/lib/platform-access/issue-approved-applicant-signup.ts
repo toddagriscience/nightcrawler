@@ -1,15 +1,12 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { db } from '@nightcrawler/db';
-import { platformAccessApplication } from '@nightcrawler/db/schema';
 import {
+  buildSignupUrl,
   extractApplicantPrefillFromAnswers,
   getMissingApplicantEmailMessage,
 } from '@nightcrawler/db/utils/extract-applicant-prefill';
-import {
-  buildIncomingSignupPath,
-  buildIncomingSignupUrl,
-} from '@/lib/platform-access/build-incoming-signup-url';
+import { formSubmission } from '@nightcrawler/db/schema';
 import {
   sendApprovedApplicantInvite,
   type SendApprovedApplicantInviteResult,
@@ -31,7 +28,7 @@ function getSiteBaseUrl(): string {
 
 /** Result of issuing a fresh signup token and optional invite email. */
 export interface IssueApprovedApplicantSignupResult {
-  application: typeof platformAccessApplication.$inferSelect | null;
+  application: typeof formSubmission.$inferSelect | null;
   signupUrl: string | null;
   emailSent: boolean;
   emailError?: string;
@@ -48,8 +45,8 @@ export async function issueApprovedApplicantSignupAccess(
 ): Promise<IssueApprovedApplicantSignupResult> {
   const [existing] = await db
     .select()
-    .from(platformAccessApplication)
-    .where(eq(platformAccessApplication.id, id))
+    .from(formSubmission)
+    .where(eq(formSubmission.id, id))
     .limit(1);
 
   if (!existing) {
@@ -58,6 +55,15 @@ export async function issueApprovedApplicantSignupAccess(
       signupUrl: null,
       emailSent: false,
       emailError: 'Application not found.',
+    };
+  }
+
+  if (existing.workflowType !== 'platform_access') {
+    return {
+      application: existing,
+      signupUrl: null,
+      emailSent: false,
+      emailError: 'This submission is not a platform access workflow.',
     };
   }
 
@@ -83,12 +89,12 @@ export async function issueApprovedApplicantSignupAccess(
   const signupTokenExpiresAt = new Date(Date.now() + SIGNUP_TOKEN_TTL_MS);
 
   const [application] = await db
-    .update(platformAccessApplication)
+    .update(formSubmission)
     .set({
       signupToken,
       signupTokenExpiresAt,
     })
-    .where(eq(platformAccessApplication.id, id))
+    .where(eq(formSubmission.id, id))
     .returning();
 
   if (!application) {
@@ -102,7 +108,7 @@ export async function issueApprovedApplicantSignupAccess(
 
   const answers = (application.answers ?? {}) as Record<string, unknown>;
   const prefill = extractApplicantPrefillFromAnswers(answers);
-  const signupUrl = buildIncomingSignupUrl(getSiteBaseUrl(), answers, {
+  const signupUrl = buildSignupUrl(getSiteBaseUrl(), {
     applicationId: application.id,
     signupToken,
   });
@@ -116,31 +122,26 @@ export async function issueApprovedApplicantSignupAccess(
     };
   }
 
-  const incomingPath = buildIncomingSignupPath(answers, {
-    applicationId: application.id,
-    signupToken,
-  });
-
-  if (!incomingPath) {
+  if (!signupUrl) {
     return {
       application,
-      signupUrl,
+      signupUrl: null,
       emailSent: false,
-      emailError: 'Could not build signup link from application answers.',
+      emailError: 'Could not build onboarding URL from application answers.',
     };
   }
 
   const inviteResult = await sendApprovedApplicantInvite({
     email: prefill.email,
     firstName: prefill.firstName,
-    incomingPath,
+    onboardingUrl: signupUrl,
   });
 
   if (inviteResult.sent) {
     const [updatedApplication] = await db
-      .update(platformAccessApplication)
+      .update(formSubmission)
       .set({ inviteSentAt: new Date() })
-      .where(eq(platformAccessApplication.id, id))
+      .where(eq(formSubmission.id, id))
       .returning();
 
     return {

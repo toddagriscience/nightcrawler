@@ -3,34 +3,11 @@
 'use server';
 
 import { db } from '@nightcrawler/db';
-import {
-  internalAccount,
-  platformAccessApplication,
-} from '@nightcrawler/db/schema';
-import { createClient } from '@/lib/supabase/server';
+import { farm, platformAccessApplication } from '@nightcrawler/db/schema';
 import { issueApprovedApplicantSignupAccess } from '@/lib/platform-access/issue-approved-applicant-signup';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 import logger from '@/lib/logger';
-
-/**
- * Resolves the active internal account for the current Supabase session.
- */
-async function getReviewerAccountId(): Promise<number | null> {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
-  const email = data?.claims?.email as string | undefined;
-  if (!email) return null;
-
-  const [account] = await db
-    .select({ id: internalAccount.id })
-    .from(internalAccount)
-    .where(
-      and(eq(internalAccount.email, email), eq(internalAccount.isActive, true))
-    )
-    .limit(1);
-
-  return account?.id ?? null;
-}
+import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches one platform access application by id.
@@ -38,6 +15,7 @@ async function getReviewerAccountId(): Promise<number | null> {
  * @param id - Application row id
  */
 export async function getPlatformAccessApplicationById(id: number) {
+  await requireInternalAccount();
   try {
     const [application] = await db
       .select()
@@ -45,6 +23,7 @@ export async function getPlatformAccessApplicationById(id: number) {
       .where(
         and(
           eq(platformAccessApplication.id, id),
+          eq(platformAccessApplication.workflowType, 'platform_access'),
           isNull(platformAccessApplication.deletedAt)
         )
       )
@@ -73,8 +52,12 @@ export interface PlatformAccessApplicationListFilters {
 export async function getPlatformAccessApplications(
   filters?: PlatformAccessApplicationListFilters
 ) {
+  await requireInternalAccount();
   try {
-    const conditions = [isNull(platformAccessApplication.deletedAt)];
+    const conditions = [
+      isNull(platformAccessApplication.deletedAt),
+      eq(platformAccessApplication.workflowType, 'platform_access'),
+    ];
     if (filters?.status) {
       conditions.push(eq(platformAccessApplication.status, filters.status));
     }
@@ -99,8 +82,8 @@ export async function getPlatformAccessApplications(
  * @param id - Application row id
  */
 export async function approvePlatformAccessApplication(id: number) {
+  const { id: reviewerId } = await requireInternalAccount();
   try {
-    const reviewerId = await getReviewerAccountId();
     const [existing] = await db
       .select()
       .from(platformAccessApplication)
@@ -153,6 +136,7 @@ export async function approvePlatformAccessApplication(id: number) {
  * @param id - Application row id
  */
 export async function resendPlatformAccessApplicationInvite(id: number) {
+  await requireInternalAccount();
   try {
     return await issueApprovedApplicantSignupAccess(id);
   } catch (error) {
@@ -172,8 +156,8 @@ export async function resendPlatformAccessApplicationInvite(id: number) {
  * @param id - Application row id
  */
 export async function rejectPlatformAccessApplication(id: number) {
+  const { id: reviewerId } = await requireInternalAccount();
   try {
-    const reviewerId = await getReviewerAccountId();
     const [existing] = await db
       .select()
       .from(platformAccessApplication)
@@ -200,5 +184,56 @@ export async function rejectPlatformAccessApplication(id: number) {
   } catch (error) {
     logger.error('Failed to reject platform access application:', error);
     return null;
+  }
+}
+
+/**
+ * Loads advisor-maintained farm profile notes for a linked farm.
+ *
+ * @param farmId - Farm id from an approved application
+ */
+export async function getFarmAdvisorProfileNotes(
+  farmId: number
+): Promise<string> {
+  await requireInternalAccount();
+  try {
+    const [row] = await db
+      .select({ advisorProfileNotes: farm.advisorProfileNotes })
+      .from(farm)
+      .where(eq(farm.id, farmId))
+      .limit(1);
+
+    return row?.advisorProfileNotes ?? '';
+  } catch (error) {
+    logger.error('Failed to load farm advisor profile notes:', error);
+    return '';
+  }
+}
+
+/**
+ * Saves advisor-maintained farm profile notes.
+ *
+ * @param farmId - Farm id to update
+ * @param notes - Markdown-style profile content
+ */
+export async function updateFarmAdvisorProfileNotes(
+  farmId: number,
+  notes: string
+): Promise<{ success: boolean; error?: string }> {
+  await requireInternalAccount();
+  try {
+    if (!Number.isFinite(farmId)) {
+      return { success: false, error: 'Invalid farm id.' };
+    }
+
+    await db
+      .update(farm)
+      .set({ advisorProfileNotes: notes })
+      .where(eq(farm.id, farmId));
+
+    return { success: true };
+  } catch (error) {
+    logger.error('Failed to update farm advisor profile notes:', error);
+    return { success: false, error: 'Failed to save notes.' };
   }
 }

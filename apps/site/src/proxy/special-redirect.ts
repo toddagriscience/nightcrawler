@@ -8,7 +8,7 @@ import type { Locale } from 'next-intl';
  * Early routing tweaks before auth/i18n.
  *
  * Careers hub and job listings live under `app/(unauthenticated)/[locale]/(marketing)/careers/` as
- * normal routes (`/careers` and `/careers/index`); no rewrite is applied here.
+ * normal routes (`/careers` and `/careers/search`); no rewrite is applied here.
  *
  * @param request - Incoming request
  */
@@ -28,12 +28,18 @@ export default function specialRedirect(
   const isLocale =
     locale0 !== undefined && SUPPORTED_LOCALES.includes(locale0 as Locale);
 
-  if (
+  const isPrefixedExternship =
     segments.length === 3 &&
     isLocale &&
     segments[1] === 'careers' &&
-    segments[2] === 'externship'
-  ) {
+    segments[2] === 'externship';
+
+  const isUnprefixedExternship =
+    segments.length === 2 &&
+    segments[0] === 'careers' &&
+    segments[1] === 'externship';
+
+  if (isPrefixedExternship || isUnprefixedExternship) {
     return NextResponse.redirect(
       // eslint-disable-next-line no-secrets/no-secrets
       'https://docs.google.com/forms/d/e/1FAIpQLSfi8yeNdjHuJCrO1sPSUhh8uCICsA6KGevRM-Mk9iND-aYkBQ/viewform'

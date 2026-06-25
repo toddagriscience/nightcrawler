@@ -2,9 +2,12 @@
 
 export const dynamic = 'force-dynamic';
 
-import { buildIncomingSignupUrl } from '@/lib/platform-access/build-incoming-signup-url';
+import { buildSignupUrl } from '@/lib/platform-access/build-signup-url';
 import { notFound } from 'next/navigation';
-import { getPlatformAccessApplicationById } from '../actions';
+import {
+  getFarmAdvisorProfileNotes,
+  getPlatformAccessApplicationById,
+} from '../actions';
 import ApplicationDetailClient from '../components/application-detail-client';
 
 /** Base URL for generated signup links. */
@@ -39,18 +42,24 @@ export default async function ApplicationDetailPage({
   }
 
   const signupUrl =
-    application.status === 'approved'
-      ? buildIncomingSignupUrl(
-          getSiteBaseUrl(),
-          (application.answers ?? {}) as Record<string, unknown>,
-          {
-            applicationId: application.id,
-            signupToken: application.signupToken ?? undefined,
-          }
-        )
+    application.status === 'approved' &&
+    !application.signedUpAt &&
+    application.signupToken
+      ? buildSignupUrl(getSiteBaseUrl(), {
+          applicationId: application.id,
+          signupToken: application.signupToken,
+        })
       : null;
 
+  const farmAdvisorProfileNotes = application.farmId
+    ? await getFarmAdvisorProfileNotes(application.farmId)
+    : null;
+
   return (
-    <ApplicationDetailClient application={application} signupUrl={signupUrl} />
+    <ApplicationDetailClient
+      application={application}
+      signupUrl={signupUrl}
+      farmAdvisorProfileNotes={farmAdvisorProfileNotes}
+    />
   );
 }

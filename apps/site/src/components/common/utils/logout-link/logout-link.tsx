@@ -25,7 +25,7 @@ export default function LogoutLink({
     const result = await logout();
     // If logout doesn't redirect automatically, manually redirect
     if (!result?.error) {
-      router.push('/en');
+      router.push('/');
     }
   };
 

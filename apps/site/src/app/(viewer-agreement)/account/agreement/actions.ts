@@ -2,7 +2,7 @@
 
 'use server';
 
-import termsAndConditionsVersion from '@/app/(authenticated)/(misc)/apply/terms-and-conditions-version';
+import termsAndConditionsVersion from '@/app/(authenticated)/(chromeless)/(with-header)/apply/terms-and-conditions-version';
 import { ActionResponse } from '@/lib/types/action-response';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { throwActionError } from '@/lib/utils/actions';

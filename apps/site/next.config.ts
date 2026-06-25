@@ -160,24 +160,41 @@ const nextConfig: NextConfig = {
 
   redirects() {
     return [
+      // Legacy slug redirects for English
       {
-        source: '/:locale(en|es)/who-we-are/:path*',
-        destination: '/:locale/about/:path*',
+        source: '/who-we-are/:path*',
+        destination: '/about/:path*',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/who-we-are',
-        destination: '/:locale/about',
+        source: '/who-we-are',
+        destination: '/about',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/what-we-do',
-        destination: '/:locale/research',
+        source: '/what-we-do',
+        destination: '/research',
+        permanent: true,
+      },
+      // Legacy slug redirects for Spanish
+      {
+        source: '/es/who-we-are/:path*',
+        destination: '/es/about/:path*',
         permanent: true,
       },
       {
-        source: '/:locale(en|es)/support',
-        destination: '/:locale/contact',
+        source: '/es/who-we-are',
+        destination: '/es/about',
+        permanent: true,
+      },
+      {
+        source: '/es/what-we-do',
+        destination: '/es/research',
+        permanent: true,
+      },
+      {
+        source: '/es/support',
+        destination: '/es/contact',
         permanent: true,
       },
       {
@@ -185,7 +202,7 @@ const nextConfig: NextConfig = {
         destination: '/contact',
         permanent: true,
       },
-      // `/careers/index` is a real route (`careers/index/page.tsx`); do not add a redirect to `/careers`.
+      // `/careers/search` is a real route (`careers/search/page.tsx`); do not add a redirect to `/careers`.
       // Handles requests to go.toddagriscience.com/invite
       {
         source: '/invite',

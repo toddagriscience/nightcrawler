@@ -3,8 +3,9 @@
 'use server';
 
 import { getFormBySlug } from '@/lib/sanity/forms';
+import type { SanityFormWorkflowType } from '@/lib/sanity/form-types';
 import { db } from '@nightcrawler/db';
-import { platformAccessApplication } from '@nightcrawler/db/schema';
+import { formSubmission } from '@nightcrawler/db/schema';
 import { logger } from '@/lib/logger';
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';
@@ -20,8 +21,8 @@ import {
 } from './utils';
 import { enrichStoredAnswersWithSignupPrefill } from '@nightcrawler/db/utils/extract-applicant-prefill';
 
-/** Payload accepted by {@link submitPlatformAccessApplication}. */
-export interface SubmitPlatformAccessApplicationInput {
+/** Payload accepted by {@link submitFormSubmission}. */
+export interface SubmitFormSubmissionInput {
   /** Sanity form slug */
   formSlug: string;
   /** Raw form values keyed by field name */
@@ -31,18 +32,30 @@ export interface SubmitPlatformAccessApplicationInput {
 }
 
 /**
- * Validates and persists a CMS-driven access request submission.
+ * Resolves the workflow type from Sanity, defaulting legacy forms to generic.
+ *
+ * @param workflowType - CMS workflow type when present
+ */
+function resolveWorkflowType(
+  workflowType: SanityFormWorkflowType | undefined
+): SanityFormWorkflowType {
+  return workflowType ?? 'generic';
+}
+
+/**
+ * Validates and persists a CMS-driven form submission.
  *
  * @param input - Form slug and field answers
  */
-export async function submitPlatformAccessApplication(
-  input: SubmitPlatformAccessApplicationInput
+export async function submitFormSubmission(
+  input: SubmitFormSubmissionInput
 ): Promise<ActionResponse> {
   const form = await getFormBySlug(input.formSlug, { cache: 'no-store' });
   if (!form) {
     throwActionError('This form is not available.');
   }
 
+  const workflowType = resolveWorkflowType(form.workflowType);
   const sections = resolveFormSections(form);
   const footerCheckboxes = resolveFormFooterCheckboxes(form);
   const schema = buildFormAnswersSchema(
@@ -56,7 +69,7 @@ export async function submitPlatformAccessApplication(
 
   const honeypot = validated.data[FORM_HONEYPOT_FIELD];
   if (typeof honeypot === 'string' && honeypot.length > 0) {
-    logger.warn('Platform access form honeypot triggered', {
+    logger.warn('Form submission honeypot triggered', {
       formSlug: input.formSlug,
     });
     return { data: { id: null } };
@@ -73,18 +86,26 @@ export async function submitPlatformAccessApplication(
 
   try {
     const [row] = await db
-      .insert(platformAccessApplication)
+      .insert(formSubmission)
       .values({
         formSlug: input.formSlug,
+        workflowType,
+        status: workflowType === 'platform_access' ? 'pending' : null,
         answers: storedAnswers,
         retentionConsent,
         sourceArticleSlug: input.sourceArticleSlug ?? null,
       })
-      .returning({ id: platformAccessApplication.id });
+      .returning({ id: formSubmission.id });
 
     return { data: { id: row?.id ?? null } };
   } catch (error) {
-    logger.error('Platform access application submission failed', error);
+    logger.error('Form submission failed', error);
     throwActionError('Unable to submit your request. Please try again.');
   }
 }
+
+/** @deprecated Use {@link submitFormSubmission}. */
+export const submitPlatformAccessApplication = submitFormSubmission;
+
+/** @deprecated Use {@link SubmitFormSubmissionInput}. */
+export type SubmitPlatformAccessApplicationInput = SubmitFormSubmissionInput;

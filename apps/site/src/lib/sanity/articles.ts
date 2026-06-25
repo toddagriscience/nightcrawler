@@ -114,7 +114,7 @@ export function isSitemapArticle(article: SanityArticle): boolean {
 }
 
 /**
- * Whether the document counts as careers content for `/careers/index`, `/careers/[slug]`, and the careers sitemap slice.
+ * Whether the document counts as careers content for `/careers/search`, `/careers/[slug]`, and the careers sitemap slice.
  *
  * @param article - Document classification from Sanity
  * @returns True when the row is a standalone `career` job posting

@@ -7,20 +7,35 @@ import { NextResponse, NextRequest } from 'next/server.js';
 
 // Dear reader: to be frank with you, I have no idea why or how this file works. Best of luck.
 // Mock next-intl/middleware
+// createMiddleware is a factory — it must return the middleware function, not be the middleware itself.
 vi.mock('next-intl/middleware', () => {
   const mockIntlMiddleware = vi.fn(() => {
     const response = NextResponse.next();
     response.headers.set('x-intl-processed', '1');
     return response;
   });
-  return { default: mockIntlMiddleware };
+  return { default: vi.fn(() => mockIntlMiddleware) };
 });
 
 const { MockNextResponse } = vi.hoisted(() => {
   class MockNextResponse {
     private headers = new Headers();
-    private cookies: string[] = [];
+    private _rawSetCookies: string[] = [];
+    private _cookieMap = new Map<string, string>();
     status?: number;
+
+    // Mirrors the ResponseCookies interface used in Next.js middleware
+    cookies = {
+      set: (name: string, value: string, options?: { path?: string }) => {
+        this._cookieMap.set(name, value);
+        const pathStr = options?.path ? `; Path=${options.path}` : '';
+        this._rawSetCookies.push(`${name}=${value}${pathStr}`);
+      },
+      get: (name: string) => {
+        const val = this._cookieMap.get(name);
+        return val !== undefined ? { name, value: val } : undefined;
+      },
+    };
 
     constructor(body?: object, init?: ResponseInit) {
       this.status = init?.status;
@@ -46,12 +61,12 @@ const { MockNextResponse } = vi.hoisted(() => {
 
     /** required by Next middleware */
     getSetCookie(): string[] {
-      return this.cookies;
+      return this._rawSetCookies;
     }
 
     /** test helper */
     _pushSetCookie(value: string) {
-      this.cookies.push(value);
+      this._rawSetCookies.push(value);
     }
   }
 
@@ -63,9 +78,16 @@ const { MockNextResponse } = vi.hoisted(() => {
 
   const next = vi.fn(() => new MockNextResponse());
 
+  const rewrite = vi.fn((url: URL | string) => {
+    const res = new MockNextResponse();
+    res.headersSet('x-middleware-rewrite', String(url));
+    return res;
+  });
+
   Object.assign(MockNextResponse, {
     redirect,
     next,
+    rewrite,
   });
 
   return { MockNextResponse };
@@ -115,33 +137,29 @@ describe('I18n Middleware', () => {
       expect(result).toBeInstanceOf(NextResponse);
     });
 
-    it('should redirect non-locale routes to /en/{path} when unauthenticated', () => {
+    it('should delegate to intl middleware for default locale (en) unprefixed paths', () => {
       const mockRequest = {
         nextUrl: {
           pathname: '/about',
-          clone: vi.fn().mockReturnValue({
-            pathname: '/about',
-          }),
+          clone: vi.fn().mockReturnValue({ pathname: '/about' }),
         },
+        cookies: { get: vi.fn().mockReturnValue(undefined) },
+        headers: { get: vi.fn().mockReturnValue(null) },
       } as unknown as NextRequest;
 
       const result = handleI18nMiddleware(mockRequest, false);
 
-      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
-      expect(vi.mocked(MockNextResponse.redirect)).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
-      expect(result.headers.get('location')).toStrictEqual({
-        pathname: '/en/about',
-      });
+      expect(result.headers.get('x-intl-processed')).toBe('1');
     });
 
     it('should not redirect unauth uninternationalized routes', async () => {
       const mockRequest = {
         nextUrl: {
-          pathname: '/incoming',
+          pathname: '/auth',
           clone: vi.fn().mockReturnValue({
-            pathname: '/incoming',
+            pathname: '/auth',
           }),
         },
       } as unknown as NextRequest;
@@ -152,16 +170,16 @@ describe('I18n Middleware', () => {
       expect(vi.mocked(MockNextResponse.next)).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
-      expect(result.headers.get('testing-location')).toBe('/incoming');
+      expect(result.headers.get('testing-location')).toBe('/auth');
     });
 
     it('should redirect unauth internationalized routes', async () => {
       const mockRequest = {
-        url: 'http://localhost:3000/es/incoming',
+        url: 'http://localhost:3000/es/auth',
         nextUrl: {
-          pathname: '/es/incoming',
+          pathname: '/es/auth',
           clone: vi.fn().mockReturnValue({
-            pathname: '/es/incoming',
+            pathname: '/es/auth',
           }),
         },
       } as unknown as NextRequest;
@@ -173,20 +191,43 @@ describe('I18n Middleware', () => {
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
       // @ts-expect-error Caused for some reason, probably due to the mock
-      expect(result.headers.get('location').pathname).toBe('/incoming');
+      expect(result.headers.get('location').pathname).toBe('/auth');
     });
 
-    it('should return next() for locale routes when unauthenticated', () => {
+    it('should delegate to intl middleware for locale-prefixed routes when unauthenticated', () => {
       const mockRequest = {
         nextUrl: { pathname: '/en/about' },
       } as NextRequest;
 
       const result = handleI18nMiddleware(mockRequest, false);
 
-      // @ts-expect-error Caused by the Object.assign in MockNextResponse. See top of file for more info.
-      expect(MockNextResponse.next).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(NextResponse);
+      expect(result.headers.get('x-intl-processed')).toBe('1');
+    });
+
+    it('should set NEXT_LOCALE=en cookie on /en/* redirect to prevent Accept-Language override', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/en/about' },
+      } as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error getSetCookie is a mock-only method not on NextResponse
+      const setCookies: string[] = result.getSetCookie();
+      expect(setCookies.some((c) => c.startsWith('NEXT_LOCALE=en'))).toBe(true);
+    });
+
+    it('should not set NEXT_LOCALE cookie for non-default locale paths like /es/*', () => {
+      const mockRequest = {
+        nextUrl: { pathname: '/es/about' },
+      } as NextRequest;
+
+      const result = handleI18nMiddleware(mockRequest, false);
+
+      // @ts-expect-error getSetCookie is a mock-only method not on NextResponse
+      const setCookies: string[] = result.getSetCookie();
+      expect(setCookies.every((c) => !c.startsWith('NEXT_LOCALE='))).toBe(true);
     });
   });
 

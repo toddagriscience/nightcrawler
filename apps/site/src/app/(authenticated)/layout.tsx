@@ -7,7 +7,6 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
-import ApplicationReviewBanner from './components/application-review-banner';
 import AuthErrorFallback from './components/auth-error-fallback';
 
 /**
@@ -35,12 +34,7 @@ async function ViewerAgreementGate({
     }
   }
 
-  return (
-    <>
-      <ApplicationReviewBanner />
-      {children}
-    </>
-  );
+  return children;
 }
 
 /**
@@ -61,9 +55,11 @@ export default function AuthenticatedLayout({
         className={`${fontVariables} authenticated-root bg-background-platform min-h-screen`}
       >
         <Suspense>
-          <ViewerAgreementGate>{children}</ViewerAgreementGate>
+          <ViewerAgreementGate>
+            <DesktopGate />
+            {children}
+          </ViewerAgreementGate>
         </Suspense>
-        <DesktopGate />
       </body>
     </html>
   );

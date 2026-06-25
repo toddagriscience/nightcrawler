@@ -12,11 +12,16 @@
     "./types": "./src/types/index.ts",
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
-    "./utils/normalize-phone": "./src/utils/normalize-phone.ts"
+    "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
+    "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts",
+    "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts",
+    "./utils/iris-access-allowlists-manifest": "./src/utils/iris-access-allowlists-manifest.ts",
+    "./utils/preview-form-submission-hydration": "./src/utils/preview-form-submission-hydration.ts"
   },
   "scripts": {
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
+    "test": "node ../../apps/site/node_modules/vitest/vitest.mjs run --config vitest.config.mjs",
     "db:local:up": "docker compose up -d postgres-local",
     "db:local:down": "docker compose down",
     "db:local:wipe": "tsx scripts/wipe-local-db.ts",
@@ -25,6 +30,7 @@
     "db:create-admin-farm-user": "tsx scripts/create-admin-farm-user.ts",
     "db:seed-knowledge": "tsx scripts/seed-knowledge.ts",
     "db:add-seed-product": "tsx scripts/add-seed-product.ts",
+    "db:import-varieties": "tsx scripts/import-seed-varieties.ts",
     "db:local:init": "bun run db:local:migrate && bun run db:local:seed",
     "db:local:reset": "bun run db:local:wipe && bun run db:local:init"
   },
