@@ -1,7 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import enMessages from '@/messages/articleIndex/en.json';
-import type { SanityArticle } from '@/lib/sanity/article-types';
+import {
+  NEWS_TOPIC_TYPES,
+  RESEARCH_CONTENT_TYPES,
+  type SanityArticle,
+} from '@/lib/sanity/article-types';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, expect, it } from 'vitest';
@@ -37,7 +41,7 @@ const ITEMS: SanityArticle[] = [
     _type: 'news',
     title: 'Research Row',
     slug: { current: 'research-row' },
-    contentType: 'research',
+    contentType: 'research-publication',
     date: '2026-04-20',
     summary: 'Summary',
   },
@@ -46,6 +50,7 @@ const ITEMS: SanityArticle[] = [
 function render(overrides: Partial<ArticleIndexProps> = {}) {
   return ArticleIndex({
     articles: ITEMS,
+    topics: RESEARCH_CONTENT_TYPES,
     activeTopic: 'all',
     basePath: '/research/index',
     title: 'Research',
@@ -55,10 +60,11 @@ function render(overrides: Partial<ArticleIndexProps> = {}) {
 }
 
 describe('isArticleIndexTopic', () => {
-  it('accepts known topics and rejects others', () => {
-    expect(isArticleIndexTopic('research')).toBe(true);
-    expect(isArticleIndexTopic('product-release')).toBe(true);
-    expect(isArticleIndexTopic('news')).toBe(false); // news is never a topic
+  it('accepts research topics and rejects others', () => {
+    expect(isArticleIndexTopic('research-publication')).toBe(true);
+    expect(isArticleIndexTopic('research-release')).toBe(true);
+    expect(isArticleIndexTopic('news-company')).toBe(false); // news taxonomy is not a research topic
+    expect(isArticleIndexTopic('research')).toBe(false); // legacy value is not a valid topic id
     expect(isArticleIndexTopic('bogus')).toBe(false);
   });
 });
@@ -67,7 +73,48 @@ describe('ArticleIndex', () => {
   it('renders the topic tab bar by default', async () => {
     renderWithNextIntl(await render());
     expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Research' })).toBeInTheDocument();
+    // research-publication → "Publication" tab.
+    expect(
+      screen.getByRole('link', { name: 'Publication' })
+    ).toBeInTheDocument();
+  });
+
+  it('normalizes legacy contentType values onto the new taxonomy', async () => {
+    renderWithNextIntl(
+      await render({
+        // Simulate a legacy stored value that predates the namespaced taxonomy.
+        articles: [
+          {
+            ...ITEMS[0],
+            contentType:
+              'research' as unknown as (typeof ITEMS)[0]['contentType'],
+          },
+        ],
+      })
+    );
+    // Legacy `research` normalizes to research-publication → "Publication" tab present.
+    expect(
+      screen.getByRole('link', { name: 'Publication' })
+    ).toBeInTheDocument();
+  });
+
+  it('uses query-param hrefs in query mode (news taxonomy)', async () => {
+    renderWithNextIntl(
+      await render({
+        topics: NEWS_TOPIC_TYPES,
+        topicHrefMode: 'query',
+        basePath: '/news',
+        articles: [{ ...ITEMS[0], _id: 'n1', contentType: 'news-company' }],
+      })
+    );
+    expect(screen.getByRole('link', { name: 'All' })).toHaveAttribute(
+      'href',
+      '/news'
+    );
+    expect(screen.getByRole('link', { name: 'Company' })).toHaveAttribute(
+      'href',
+      '/news?topic=news-company'
+    );
   });
 
   it('hides the tab bar when showTopicTabs is false', async () => {
