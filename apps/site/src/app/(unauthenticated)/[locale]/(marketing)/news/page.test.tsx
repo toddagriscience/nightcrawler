@@ -1,141 +1,106 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import type { SanityArticle } from '@/lib/sanity/article-types';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import News from './page';
 
-const { items } = vi.hoisted(() => {
-  return {
-    items: [
-      {
-        title: 'New AI Model Sets Performance Record',
-        isDark: false,
-        source: 'TechCrunch',
-        date: 'November 20, 2024',
-        summary:
-          'A breakthrough AI model has surpassed previous benchmarks, signaling a major shift in machine learning research.',
-        link: 'https://example.com/news/new-ai-model-sets-record',
-        slug: { current: 'new-ai' },
-        thumbnail: {
-          url: 'https://example.com/markets.jpg',
-          alt: 'Stock market graph',
-        },
-      },
-      {
-        thumbnail: {
-          url: 'https://example.com/markets.jpg',
-          alt: 'Stock market graph',
-        },
-        title: 'Local Startup Raises $12M in Funding',
-        source: 'Bloomberg',
-        date: 'November 18, 2024',
-        summary:
-          'A fast-growing local startup secured new funding to expand its platform and hire additional engineers.',
-        link: 'https://bloomberg.com/startup-raises-12m',
-        slug: { current: 'breakthrough' },
-      },
-      {
-        title: 'Breakthrough in Renewable Energy Tech',
-        isDark: false,
-        image: {
-          url: 'https://example.com/renewables.jpg',
-          alt: 'Solar panels on landscape',
-        },
-        source: 'Wired',
-        date: 'October 2, 2024',
-        summary:
-          'Researchers unveiled a new renewable energy system that drastically improves efficiency and reduces waste.',
-        link: 'https://example.com/news/renewable-energy-breakthrough',
-        slug: { current: 'local-startup' },
-        thumbnail: {
-          url: 'https://example.com/markets.jpg',
-          alt: 'Stock market graph',
-        },
-      },
-      {
-        title: 'New Security Protocol Announced',
-        isDark: false,
-        image: {
-          url: 'https://example.com/security.jpg',
-          alt: 'Digital security illustration',
-        },
-        source: 'The Verge',
-        date: 'September 15, 2024',
-        summary:
-          'A new security protocol aims to make online communication significantly safer for consumers and businesses.',
-        slug: { current: 'new-security' },
-        thumbnail: {
-          url: 'https://example.com/markets.jpg',
-          alt: 'Stock market graph',
-        },
-      },
-      {
-        title: 'Global Markets Show Strong Growth',
-        isDark: false,
-        thumbnail: {
-          url: 'https://example.com/markets.jpg',
-          alt: 'Stock market graph',
-        },
-        source: 'Reuters',
-        date: 'September 1, 2024',
-        summary:
-          'Despite ongoing global challenges, markets have shown resilience with steady upward growth.',
-        link: 'https://example.com/news/global-markets-growth',
-        slug: { current: 'global-markets' },
-      },
-    ],
-  };
-});
-
-// Mock embla-carousel-react
-vi.mock('embla-carousel-react', () => {
-  const mockEmblaApi = {
-    scrollSnapList: vi.fn(() => [0, 1, 2]),
-    selectedScrollSnap: vi.fn(() => 0),
-    scrollPrev: vi.fn(),
-    scrollNext: vi.fn(),
-    scrollTo: vi.fn(),
-    on: vi.fn(),
-    off: vi.fn(),
-    canScrollPrev: vi.fn(() => true),
-    canScrollNext: vi.fn(() => true),
-  };
-
-  return {
-    __esModule: true,
-    default: vi.fn(() => [
-      vi.fn(), // emblaRef
-      mockEmblaApi, // emblaApi
-    ]),
-  };
-});
-
-vi.mock('@/lib/sanity/articles', () => ({
-  getArticlesByCollection: vi.fn().mockResolvedValue(items),
-  getFeaturedArticles: vi.fn().mockResolvedValue(items.slice(0, 2)),
-  isCareerArticle: vi.fn(() => false),
+const { getNewsIndexArticlesMock } = vi.hoisted(() => ({
+  getNewsIndexArticlesMock: vi.fn(),
 }));
 
-const builder = {
-  width: vi.fn().mockReturnThis(),
-  height: vi.fn().mockReturnThis(),
-  src: vi.fn().mockReturnValue('mocked-url'),
-  url: vi.fn().mockReturnValue('https://google.com/test.png'),
-};
-
-vi.mock('@/lib/sanity/utils', () => {
+vi.mock('@/lib/sanity/articles', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/sanity/articles')>();
   return {
-    urlFor: vi.fn(() => builder),
+    ...actual,
+    getNewsIndexArticles: getNewsIndexArticlesMock,
   };
 });
 
+const NEWS_ITEMS: SanityArticle[] = [
+  {
+    _id: 'news-1',
+    _type: 'news',
+    title: 'New AI Model Sets Performance Record',
+    slug: { current: 'new-ai' },
+    contentType: 'news-company',
+    date: '2024-11-20',
+    summary: 'A breakthrough AI model has surpassed previous benchmarks.',
+  },
+  {
+    _id: 'news-2',
+    _type: 'news',
+    title: 'Global Trade Policy Shifts',
+    slug: { current: 'global-trade' },
+    contentType: 'news-global-affairs',
+    date: '2024-11-18',
+    summary: 'New affairs across global markets.',
+  },
+];
+
+function renderPage(searchParams: { count?: string; topic?: string } = {}) {
+  return News({
+    params: Promise.resolve({ locale: 'en' }),
+    searchParams: Promise.resolve(searchParams),
+  });
+}
+
 describe('News Page', () => {
-  it('renders without exploding', async () => {
-    renderWithNextIntl(await News());
+  beforeEach(() => {
+    getNewsIndexArticlesMock.mockReset();
+  });
 
-    expect(screen.getByText('Newsroom')).toBeInTheDocument();
+  it('renders the newsroom listing from the news taxonomy', async () => {
+    getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
+    renderWithNextIntl(await renderPage());
 
-    expect(screen.getByText('Latest News')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Newsroom' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('New AI Model Sets Performance Record')
+    ).toBeInTheDocument();
+    expect(getNewsIndexArticlesMock).toHaveBeenCalled();
+  });
+
+  it('renders query-param topic tabs for present news types', async () => {
+    getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
+    renderWithNextIntl(await renderPage());
+
+    expect(screen.getByRole('link', { name: 'All' })).toHaveAttribute(
+      'href',
+      '/news'
+    );
+    expect(screen.getByRole('link', { name: 'Company' })).toHaveAttribute(
+      'href',
+      '/news?topic=news-company'
+    );
+    expect(
+      screen.getByRole('link', { name: 'Global affairs' })
+    ).toHaveAttribute('href', '/news?topic=news-global-affairs');
+  });
+
+  it('filters rows by the topic search param', async () => {
+    getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
+    renderWithNextIntl(await renderPage({ topic: 'news-global-affairs' }));
+
+    expect(screen.getByText('Global Trade Policy Shifts')).toBeInTheDocument();
+    expect(
+      screen.queryByText('New AI Model Sets Performance Record')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Global affairs' })
+    ).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('ignores an unknown topic search param (shows all)', async () => {
+    getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
+    renderWithNextIntl(await renderPage({ topic: 'bogus' }));
+
+    expect(
+      screen.getByText('New AI Model Sets Performance Record')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Global Trade Policy Shifts')).toBeInTheDocument();
   });
 });

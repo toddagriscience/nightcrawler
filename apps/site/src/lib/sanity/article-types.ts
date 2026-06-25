@@ -2,19 +2,94 @@
 
 import type { PortableTextBlock } from '@portabletext/types';
 
-/** Primary article content types for `news` documents in Sanity. */
+/**
+ * Research taxonomy content types (namespaced), in render order. Drives the
+ * `/research/index` topic tabs and routes. Independent of {@link NEWS_CONTENT_TYPES}.
+ */
+export const RESEARCH_CONTENT_TYPES = [
+  'research-publication',
+  'research-conclusion',
+  'research-milestone',
+  'research-release',
+] as const;
+
+/**
+ * News taxonomy content types (namespaced), in render order. Drives the `/news`
+ * query-param topic tabs. Independent of {@link RESEARCH_CONTENT_TYPES}.
+ */
+export const NEWS_CONTENT_TYPES = [
+  'news-publication',
+  'news-milestone',
+  'news-release',
+  'news-company',
+  'news-research',
+  'news-global-affairs',
+] as const;
+
+/**
+ * Every valid `news.contentType` value across both taxonomies. The two
+ * taxonomies are namespaced (`research-*` vs `news-*`) and never overlap.
+ */
 export const ARTICLE_CONTENT_TYPES = [
-  'news',
-  'research',
-  'story',
-  'product-release',
-  'press',
+  ...RESEARCH_CONTENT_TYPES,
+  ...NEWS_CONTENT_TYPES,
 ] as const;
 
 /** Type for `news.contentType`. */
 export type ArticleContentType = (typeof ARTICLE_CONTENT_TYPES)[number];
 
-/** Allowed collection keys for parent pages (`/news`, `/careers`, future `/research`, etc.). */
+/**
+ * Content types surfaced as topics on the research index (`/research/index`
+ * and `/research/index/[topic]`). Alias of {@link RESEARCH_CONTENT_TYPES} —
+ * single source of truth for the research-index query and the topic tab/route list.
+ */
+export const ARTICLE_INDEX_TOPIC_TYPES = RESEARCH_CONTENT_TYPES;
+
+/**
+ * Topic types for the news index (`/news`) query-param tabs. Alias of
+ * {@link NEWS_CONTENT_TYPES} so the GROQ query and the tab bar never drift.
+ */
+export const NEWS_TOPIC_TYPES = NEWS_CONTENT_TYPES;
+
+/**
+ * Legacy (pre-namespacing) stored `contentType` strings mapped to their new
+ * namespaced equivalents. Existing Sanity documents keep their old stored
+ * string; values are normalized at read time via {@link normalizeContentType}.
+ *
+ * Consequence: legacy `research` rows stay on the research index under
+ * Publication; the other legacy types resolve into the News taxonomy.
+ */
+export const LEGACY_CONTENT_TYPE_MAP: Record<string, ArticleContentType> = {
+  press: 'news-publication',
+  news: 'news-company',
+  research: 'research-publication',
+  'product-release': 'news-release',
+  story: 'news-company',
+};
+
+/**
+ * Normalizes a raw stored `contentType` to a valid {@link ArticleContentType}.
+ *
+ * Returns the value unchanged when it is already a namespaced type; otherwise
+ * falls back to {@link LEGACY_CONTENT_TYPE_MAP} for legacy strings; unknown
+ * values default to `news-company`.
+ *
+ * @param raw - Raw `contentType` string from Sanity (legacy, namespaced, or unknown)
+ * @returns The normalized namespaced content type
+ */
+export function normalizeContentType(
+  raw: string | undefined | null
+): ArticleContentType {
+  if (raw && (ARTICLE_CONTENT_TYPES as readonly string[]).includes(raw)) {
+    return raw as ArticleContentType;
+  }
+  if (raw && raw in LEGACY_CONTENT_TYPE_MAP) {
+    return LEGACY_CONTENT_TYPE_MAP[raw];
+  }
+  return 'news-company';
+}
+
+/** Allowed collection keys for parent pages (`/news`, `/careers`, `/research`, etc.). */
 export const ARTICLE_COLLECTIONS = [
   ...ARTICLE_CONTENT_TYPES,
   /** Standalone `career` job postings (`/careers/[slug]`). */
@@ -84,7 +159,7 @@ export interface SanityArticle {
   isFeatured?: boolean;
   source?: string;
   subscripts?: SanityArticleSubscript[];
-  /** Primary category for routing (defaults to `news` when missing). */
+  /** Primary category for routing; legacy/unknown values normalize to `news-company`. */
   contentType?: ArticleContentType;
   /** Secondary parent pages where this article may appear. */
   collections?: ArticleCollection[];

@@ -242,7 +242,27 @@ const articleCtasField = defineField({
           title: 'Link',
           type: 'string',
           description: 'Internal path (/forms/iris-access) or absolute URL for this button.',
-          validation: (rule) => rule.required().min(1),
+          validation: (rule) =>
+            rule
+              .required()
+              .min(1)
+              .custom((value) => {
+                if (typeof value !== 'string') return true
+                const trimmed = value.trim()
+                if (trimmed === '') return true // `required` reports empties
+                const lower = trimmed.toLowerCase()
+                if (
+                  lower.startsWith('javascript:') ||
+                  lower.startsWith('data:') ||
+                  lower.startsWith('vbscript:')
+                ) {
+                  return 'Links cannot use javascript:, data:, or vbscript: schemes.'
+                }
+                if (trimmed.startsWith('//')) {
+                  return 'Use an absolute https:// URL or a root-relative /path.'
+                }
+                return true
+              }),
         }),
         defineField({
           name: 'placement',

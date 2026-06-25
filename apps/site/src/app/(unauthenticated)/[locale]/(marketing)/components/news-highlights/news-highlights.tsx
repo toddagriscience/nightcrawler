@@ -29,7 +29,7 @@ export default function NewsHighlights() {
 
   useEffect(() => {
     async function getNews() {
-      const news = await loadArticlesForHighlights('news');
+      const news = await loadArticlesForHighlights();
       setAllNews(news);
       setIsLoading(false);
     }
