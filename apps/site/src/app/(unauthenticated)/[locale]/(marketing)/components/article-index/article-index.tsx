@@ -4,6 +4,7 @@ import { Link } from '@/i18n/config';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import {
   ARTICLE_INDEX_TOPIC_TYPES,
+  normalizeContentType,
   type ArticleContentType,
   type SanityArticle,
 } from '@/lib/sanity/article-types';
@@ -18,38 +19,45 @@ export type ArticleIndexTranslate = (
   values?: Record<string, string | number>
 ) => string;
 
+/** How an active topic is encoded in tab/"View more" links. */
+export type ArticleIndexTopicHrefMode = 'path' | 'query';
+
 /** How many rows are visible initially and revealed per "View more" click. */
 const PAGE_SIZE = 9;
 
 /**
- * Content-type filter tabs / topic routes, in render order. Only types with at
- * least one article appear. `news` is intentionally not a topic but is still
- * labelled on rows. Sourced from {@link ARTICLE_INDEX_TOPIC_TYPES} so the query
- * and the tabs/routes never drift.
+ * Research-index topic content types, in render order. Alias of
+ * {@link ARTICLE_INDEX_TOPIC_TYPES} so the research routes and the tab/route
+ * list never drift; the news index passes {@link NEWS_TOPIC_TYPES} instead.
  */
 export const ARTICLE_INDEX_TOPICS: readonly ArticleContentType[] =
   ARTICLE_INDEX_TOPIC_TYPES;
 
-/** Maps a `contentType` to its `articleIndex.tabs.*` translation key. */
+/** Maps a namespaced `contentType` to its `articleIndex.tabs.*` translation key. */
 const CONTENT_TYPE_TAB_KEY: Record<ArticleContentType, string> = {
-  news: 'news',
-  research: 'research',
-  story: 'story',
-  'product-release': 'productRelease',
-  press: 'press',
+  'research-publication': 'researchPublication',
+  'research-conclusion': 'researchConclusion',
+  'research-milestone': 'researchMilestone',
+  'research-release': 'researchRelease',
+  'news-publication': 'newsPublication',
+  'news-milestone': 'newsMilestone',
+  'news-release': 'newsRelease',
+  'news-company': 'newsCompany',
+  'news-research': 'newsResearch',
+  'news-global-affairs': 'newsGlobalAffairs',
 };
 
 /**
  * Type guard for a `/research/index/[topic]` segment: true when `value` is a
- * valid topic content type (excludes `news`, which is never a topic route).
+ * valid research topic content type ({@link ARTICLE_INDEX_TOPIC_TYPES}).
  *
  * @param value - Raw route segment
- * @returns Whether `value` is a renderable topic
+ * @returns Whether `value` is a renderable research topic
  */
 export function isArticleIndexTopic(
   value: string
 ): value is ArticleContentType {
-  return (ARTICLE_INDEX_TOPICS as string[]).includes(value);
+  return (ARTICLE_INDEX_TOPICS as readonly string[]).includes(value);
 }
 
 /**
@@ -63,9 +71,9 @@ export function topicTabKey(type: ArticleContentType): string {
   return CONTENT_TYPE_TAB_KEY[type];
 }
 
-/** An article's effective content type (`news` is the Sanity default). */
+/** An article's effective content type, with legacy values normalized. */
 function contentTypeOf(article: SanityArticle): ArticleContentType {
-  return article.contentType ?? 'news';
+  return normalizeContentType(article.contentType);
 }
 
 /**
@@ -85,7 +93,9 @@ function displaySummary(summary: string | undefined): string | null {
 export interface ArticleIndexProps {
   /** Full collection set; topic tabs are derived from this so the bar is stable across topic pages. */
   articles: SanityArticle[];
-  /** Active topic, or `'all'`. Supplied by the route (param or default). */
+  /** Topic content types this surface offers as tabs (e.g. research vs news taxonomy), in render order. */
+  topics: readonly ArticleContentType[];
+  /** Active topic, or `'all'`. Supplied by the route (param, search param, or default). */
   activeTopic: ArticleContentType | 'all';
   /** Locale-relative base for tab and "View more" links (e.g. `/research/index`, `/news`). */
   basePath: string;
@@ -97,33 +107,44 @@ export interface ArticleIndexProps {
   countParam?: string;
   /** Render the topic tab bar. Disable on surfaces whose dynamic segment is taken (e.g. `/news/[slug]`). */
   showTopicTabs?: boolean;
+  /**
+   * How the active topic is encoded: `'path'` uses `${basePath}/${type}`
+   * segments (research routes); `'query'` uses `${basePath}?topic=${type}`
+   * (news, whose dynamic segment is owned by `/news/[slug]`). Defaults to `'path'`.
+   */
+  topicHrefMode?: ArticleIndexTopicHrefMode;
 }
 
 /**
  * OpenAI-style article listing template shared by `/research/index`,
  * `/research/index/[topic]`, and `/news`.
  *
- * Server-renders a heading, an optional content-type tab bar (path-based topic
- * links), a Filter/Sort/grid-list toolbar, and a divided list of rows that link
- * to each article's detail route. The active topic and revealed count are driven
- * by the route (`[topic]` segment + `?count=`) so filtering and pagination stay
- * server-rendered and shareable. All CMS-authored hrefs are sanitized with
- * {@link toSafeHref} so dangerous schemes never reach an anchor.
+ * Server-renders a heading, an optional content-type tab bar, a Filter/Sort/
+ * grid-list toolbar, and a divided list of rows that link to each article's
+ * detail route. Tabs are derived from the `topics` prop (research vs news
+ * taxonomy) and encoded per `topicHrefMode` — `'path'` segments for the research
+ * routes or `?topic=` query params for `/news` (whose dynamic segment is owned
+ * by `/news/[slug]`). The active topic and revealed count are driven by the
+ * route so filtering and pagination stay server-rendered and shareable. All
+ * CMS-authored hrefs are sanitized with {@link toSafeHref} so dangerous schemes
+ * never reach an anchor.
  *
  * @param props - {@link ArticleIndexProps}
  * @returns {JSX.Element} The listing page body
  */
 export function ArticleIndex({
   articles,
+  topics,
   activeTopic,
   basePath,
   title,
   t,
   countParam,
   showTopicTabs = true,
+  topicHrefMode = 'path',
 }: ArticleIndexProps) {
-  // Tabs: 'all' + each content type present in the full set (fixed order).
-  const presentTypes = ARTICLE_INDEX_TOPICS.filter((type) =>
+  // Tabs: 'all' + each offered topic present in the full set (fixed order).
+  const presentTypes = topics.filter((type) =>
     articles.some((article) => contentTypeOf(article) === type)
   );
 
@@ -143,14 +164,31 @@ export function ArticleIndex({
   const hasMore = visibleCount < filteredItems.length;
   const nextCount = Math.min(visibleCount + PAGE_SIZE, filteredItems.length);
 
-  const topicSegment = activeTopic === 'all' ? '' : `/${activeTopic}`;
-  const viewMoreHref = `${basePath}${topicSegment}?count=${nextCount}`;
+  /** Link for a tab ('all' → base; otherwise path segment or `?topic=` per mode). */
+  const topicHref = (topic: ArticleContentType | 'all'): string => {
+    if (topic === 'all') return basePath;
+    return topicHrefMode === 'query'
+      ? `${basePath}?topic=${topic}`
+      : `${basePath}/${topic}`;
+  };
+
+  // "View more" preserves the active topic alongside the revealed count.
+  let viewMoreHref: string;
+  if (topicHrefMode === 'query') {
+    viewMoreHref =
+      activeTopic === 'all'
+        ? `${basePath}?count=${nextCount}`
+        : `${basePath}?topic=${activeTopic}&count=${nextCount}`;
+  } else {
+    const topicSegment = activeTopic === 'all' ? '' : `/${activeTopic}`;
+    viewMoreHref = `${basePath}${topicSegment}?count=${nextCount}`;
+  }
 
   const tabs: Array<{ key: string; href: string; label: string }> = [
-    { key: 'all', href: basePath, label: t('tabs.all') },
+    { key: 'all', href: topicHref('all'), label: t('tabs.all') },
     ...presentTypes.map((type) => ({
       key: type,
-      href: `${basePath}/${type}`,
+      href: topicHref(type),
       label: t(`tabs.${CONTENT_TYPE_TAB_KEY[type]}`),
     })),
   ];

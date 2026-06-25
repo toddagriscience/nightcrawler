@@ -3,7 +3,10 @@
 import { client } from '@/lib/sanity/client';
 import { logger } from '@/lib/logger';
 import type { ArticleCollection } from '@/lib/sanity/article-types';
-import { ARTICLE_INDEX_TOPIC_TYPES } from '@/lib/sanity/article-types';
+import {
+  ARTICLE_INDEX_TOPIC_TYPES,
+  NEWS_TOPIC_TYPES,
+} from '@/lib/sanity/article-types';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { FilteredResponseQueryOptions } from 'next-sanity';
 
@@ -195,11 +198,11 @@ export async function getArticlesByCollection(
 /**
  * Articles for the research index (`/research/index` and `/research/index/[topic]`).
  *
- * Returns every `news` document whose `contentType` is a research topic
- * ({@link ARTICLE_INDEX_TOPIC_TYPES}: research, story, product-release, press)
- * or that is cross-listed into the `research` collection. This is broader than
- * `getArticlesByCollection('research')` so the Story / Product Release / Press
- * tabs populate without each article needing the `research` collection tag.
+ * Returns every `news` document whose stored `contentType` is a research topic
+ * ({@link ARTICLE_INDEX_TOPIC_TYPES}) or the legacy `research` value (kept so
+ * existing rows still surface under the Publication tab after normalization), or
+ * that is cross-listed into the `research` collection. Stored values are
+ * normalized to the namespaced taxonomy at render time.
  *
  * @param options - Optional Sanity fetch options
  * @returns Article list sorted by date descending
@@ -214,12 +217,52 @@ export async function getResearchIndexArticles(
     )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
-      { types: [...ARTICLE_INDEX_TOPIC_TYPES] },
+      { types: [...ARTICLE_INDEX_TOPIC_TYPES, 'research'] },
       options ?? defaultListingOptions
     );
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
     logger.error('Sanity getResearchIndexArticles failed', error);
+    return [];
+  }
+}
+
+/**
+ * Articles for the news index (`/news`).
+ *
+ * Returns every `news` document whose stored `contentType` is a news topic
+ * ({@link NEWS_TOPIC_TYPES}) or a legacy value that normalizes into the News
+ * taxonomy (`news`, `press`, `product-release`, `story`), or that is
+ * cross-listed into the `news` collection. Stored values are normalized to the
+ * namespaced taxonomy at render time.
+ *
+ * @param options - Optional Sanity fetch options
+ * @returns Article list sorted by date descending
+ */
+export async function getNewsIndexArticles(
+  options?: FilteredResponseQueryOptions
+): Promise<SanityArticle[]> {
+  try {
+    const query = `*[_type == "news" && (
+      coalesce(contentType, "news") in $types ||
+      "news" in coalesce(collections, [])
+    )] | order(date desc) ${GROQ_NEWS_ONLY}`;
+    const articles = await client.fetch<SanityArticle[]>(
+      query,
+      {
+        types: [
+          ...NEWS_TOPIC_TYPES,
+          'news',
+          'press',
+          'product-release',
+          'story',
+        ],
+      },
+      options ?? defaultListingOptions
+    );
+    return Array.isArray(articles) ? articles : [];
+  } catch (error) {
+    logger.error('Sanity getNewsIndexArticles failed', error);
     return [];
   }
 }
