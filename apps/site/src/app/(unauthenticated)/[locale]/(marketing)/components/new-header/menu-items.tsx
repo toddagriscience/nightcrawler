@@ -20,7 +20,14 @@ export function useMenuItems({
   const t = useTranslations('header');
 
   const defaultMenu: MenuItem[] = [
-    { title: t('navigation.research'), url: '/research' },
+    {
+      title: t('navigation.research'),
+      url: '/research',
+      items: [
+        { title: t('research.researchOverview.title'), url: '/research' },
+        { title: t('research.articles.title'), url: '/research/index' },
+      ],
+    },
     { title: t('navigation.products'), url: '/index/introducing-iris' },
     {
       title: t('navigation.company'),

@@ -23,6 +23,10 @@
       "researchOverview": {
         "title": "Resumen de investigación",
         "description": "Conoce más sobre nuestros esfuerzos de investigación y desarrollo"
+      },
+      "articles": {
+        "title": "Artículos",
+        "description": "Explore nuestras publicaciones, hitos y lanzamientos de investigación"
       }
     },
     "products": {
