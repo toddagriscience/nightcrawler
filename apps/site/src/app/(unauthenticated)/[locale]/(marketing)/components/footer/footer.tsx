@@ -42,7 +42,7 @@ const Footer = () => {
       href: '/accessibility',
       label: t('links.accessibility'),
     },
-    { href: '/disclosures', label: t('links.disclosures') },
+    { href: '/legal', label: t('links.legal') },
     {
       href: 'https://toddagriscience.safebase.us/',
       label: t('links.vulnReporting'),
