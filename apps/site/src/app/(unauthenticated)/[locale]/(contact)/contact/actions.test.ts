@@ -3,12 +3,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
-  submitToGoogleSheets: vi.fn(),
+  submitContactToSheets: vi.fn(),
   loggerError: vi.fn(),
 }));
 
 vi.mock('@/lib/actions/googleSheets', () => ({
-  submitToGoogleSheets: mocks.submitToGoogleSheets,
+  submitContactToSheets: mocks.submitContactToSheets,
 }));
 
 vi.mock('@/lib/logger', () => ({
@@ -33,13 +33,11 @@ function makeFormData(fields: Record<string, string | undefined>) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  delete process.env.CONTACT_GOOGLE_SCRIPT_URL;
 });
 
 describe('submitPublicInquiry', () => {
-  it('returns success and submits to Google Sheets when inputs are valid', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-    mocks.submitToGoogleSheets.mockResolvedValueOnce(undefined);
+  it('returns success and submits to the contact sheet when inputs are valid', async () => {
+    mocks.submitContactToSheets.mockResolvedValueOnce(undefined);
 
     const fd = makeFormData({
       name: 'Inban',
@@ -50,29 +48,25 @@ describe('submitPublicInquiry', () => {
     const result = await submitPublicInquiry(fd);
 
     expect(result).toEqual({ data: null });
-    expect(mocks.submitToGoogleSheets).toHaveBeenCalledTimes(1);
+    expect(mocks.submitContactToSheets).toHaveBeenCalledTimes(1);
 
-    const [submittedFormData, url] = mocks.submitToGoogleSheets.mock.calls[0];
-    expect(url).toBe('https://example.com/script');
+    // The action forwards only the form data — never a URL (URL is bound
+    // server-side in the wrapper, so the caller can't control the target).
+    const [submittedFormData] = mocks.submitContactToSheets.mock.calls[0];
     expect(submittedFormData).toBeInstanceOf(FormData);
-
     expect(submittedFormData.get('name')).toBe('Inban');
     expect(submittedFormData.get('lastKnownEmail')).toBe('inban@example.com');
     expect(submittedFormData.get('response')).toBe('Hello!');
   });
 
   it('throws an error when required fields are missing', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-
     const fd = makeFormData({});
     await expect(submitPublicInquiry(fd)).rejects.toThrow('Name is required.');
 
-    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
+    expect(mocks.submitContactToSheets).not.toHaveBeenCalled();
   });
 
   it('throws validation error if email is provided but invalid', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-
     const fd = makeFormData({
       name: 'Inban',
       lastKnownEmail: 'not-an-email',
@@ -83,12 +77,10 @@ describe('submitPublicInquiry', () => {
       'Please enter a valid email.'
     );
 
-    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
+    expect(mocks.submitContactToSheets).not.toHaveBeenCalled();
   });
 
   it('throws validation error if response is over 1500 chars', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-
     const fd = makeFormData({
       name: 'Inban',
       lastKnownEmail: 'inban@example.com',
@@ -99,25 +91,11 @@ describe('submitPublicInquiry', () => {
       'Response is too long (max 1500 characters).'
     );
 
-    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
+    expect(mocks.submitContactToSheets).not.toHaveBeenCalled();
   });
 
-  it('throws config error if CONTACT_GOOGLE_SCRIPT_URL is missing', async () => {
-    const fd = makeFormData({
-      name: 'Inban',
-      lastKnownEmail: 'inban@example.com',
-      response: 'Hello!',
-    });
-
-    await expect(submitPublicInquiry(fd)).rejects.toThrow(
-      'Server configuration error: Missing CONTACT_GOOGLE_SCRIPT_URL'
-    );
-    expect(mocks.submitToGoogleSheets).not.toHaveBeenCalled();
-  });
-
-  it('throws error when submitToGoogleSheets throws, and logs it', async () => {
-    process.env.CONTACT_GOOGLE_SCRIPT_URL = 'https://example.com/script';
-    mocks.submitToGoogleSheets.mockRejectedValueOnce(
+  it('surfaces and logs an error when the submission fails', async () => {
+    mocks.submitContactToSheets.mockRejectedValueOnce(
       new Error('Sheets is down')
     );
 

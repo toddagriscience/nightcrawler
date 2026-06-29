@@ -123,6 +123,9 @@ vitest.mock('next/navigation', () => ({
     refresh: vitest.fn(),
   })),
   useSearchParams: vitest.fn(() => new URLSearchParams()),
+  notFound: vitest.fn(),
+  redirect: vitest.fn(),
+  permanentRedirect: vitest.fn(),
 }));
 
 /**

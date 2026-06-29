@@ -1,0 +1,31 @@
+{
+  "articleIndex": {
+    "titles": {
+      "research": "Investigación",
+      "news": "Sala de prensa"
+    },
+    "tabs": {
+      "all": "Todos",
+      "researchPublication": "Publicación",
+      "researchConclusion": "Conclusión",
+      "researchMilestone": "Hito",
+      "researchRelease": "Lanzamiento",
+      "newsPublication": "Publicación",
+      "newsMilestone": "Hito",
+      "newsRelease": "Lanzamiento",
+      "newsCompany": "Empresa",
+      "newsResearch": "Investigación",
+      "newsGlobalAffairs": "Asuntos globales"
+    },
+    "controls": {
+      "filterNav": "Filtrar por categoría",
+      "filter": "Filtrar",
+      "sort": "Ordenar",
+      "gridView": "Vista de cuadrícula",
+      "listView": "Vista de lista"
+    },
+    "viewMore": "Ver más",
+    "empty": "Aún no hay entradas de {category}.",
+    "emptyAll": "Aún no hay entradas."
+  }
+}

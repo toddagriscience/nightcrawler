@@ -2,18 +2,15 @@
 
 'use server';
 
-import { getArticlesByCollection } from '@/lib/sanity/articles';
-import type { ArticleCollection } from '@/lib/sanity/article-types';
+import { getNewsIndexArticles } from '@/lib/sanity/articles';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 
 /**
- * Loads articles for the home/news highlights carousel (client-invoked server action).
+ * Loads articles for the home/news highlights carousel (client-invoked server
+ * action). Returns the news taxonomy; the caller filters to featured rows.
  *
- * @param collection - Preferred collection slice (defaults to `news`)
- * @returns Article documents
+ * @returns Article documents from the news taxonomy
  */
-export async function loadArticlesForHighlights(
-  collection: ArticleCollection = 'news'
-): Promise<SanityArticle[]> {
-  return getArticlesByCollection(collection);
+export async function loadArticlesForHighlights(): Promise<SanityArticle[]> {
+  return getNewsIndexArticles();
 }

@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 /**
- * Metadata for **`/{locale}/careers/index`** (job listings index).
+ * Metadata for **`/{locale}/careers/search`** (job listings index).
  *
  * @param params - Route params with locale
  */
@@ -27,7 +27,7 @@ export async function generateMetadata({
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${env.baseUrl}/${locale}/careers/index`,
+      url: `${env.baseUrl}/${locale}/careers/search`,
       siteName: siteConfig.name,
       locale: locale,
       type: 'website',
@@ -52,7 +52,7 @@ export async function generateMetadata({
 }
 
 /**
- * Passthrough layout for the careers **`/index`** subtree.
+ * Passthrough layout for the careers **`/search`** subtree.
  *
  * @param props - Layout children slot
  */

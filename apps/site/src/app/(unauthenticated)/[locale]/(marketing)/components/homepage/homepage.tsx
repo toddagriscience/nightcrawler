@@ -47,7 +47,9 @@ export default function Homepage() {
           className="rounded-full border-[0.75px] border-[#848484] text-sm w-[168px] h-[47px]"
           size="lg"
         >
-          <Link href="/research">{t('sectionContent.explore.button')}</Link>
+          <Link href="/research/index">
+            {t('sectionContent.explore.button')}
+          </Link>
         </Button>
       </div>
     </section>
