@@ -1,0 +1,31 @@
+{
+  "articleIndex": {
+    "titles": {
+      "research": "Research",
+      "news": "Newsroom"
+    },
+    "tabs": {
+      "all": "All",
+      "researchPublication": "Publication",
+      "researchConclusion": "Conclusion",
+      "researchMilestone": "Milestone",
+      "researchRelease": "Release",
+      "newsPublication": "Publication",
+      "newsMilestone": "Milestone",
+      "newsRelease": "Release",
+      "newsCompany": "Company",
+      "newsResearch": "Research",
+      "newsGlobalAffairs": "Global affairs"
+    },
+    "controls": {
+      "filterNav": "Filter by category",
+      "filter": "Filter",
+      "sort": "Sort",
+      "gridView": "Grid view",
+      "listView": "List view"
+    },
+    "viewMore": "View more",
+    "empty": "No {category} entries yet.",
+    "emptyAll": "No entries yet."
+  }
+}

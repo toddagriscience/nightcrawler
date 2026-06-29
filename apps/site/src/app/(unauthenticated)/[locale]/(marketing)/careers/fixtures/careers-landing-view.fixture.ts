@@ -9,7 +9,7 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
     title: 'Build the future',
     subtitle: 'Team subtitle.',
     valuesLinkLabel: 'View careers',
-    valuesAnchorHref: '/careers/index',
+    valuesAnchorHref: '/careers/search',
   },
   bridgeStatement: 'Bridge line.',
   valuesBlock: {
@@ -44,7 +44,7 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
     heading: 'Residency',
     body: 'Body.',
     ctaLabel: 'Learn more →',
-    ctaHref: '/careers/index',
+    ctaHref: '/careers/search',
     imageSrc: '/marketing/careers-1.webp',
     imageAlt: '',
   },
@@ -52,7 +52,7 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
     heading: 'Talent',
     body: 'Body.',
     ctaLabel: 'Learn more →',
-    ctaHref: '/careers/index',
+    ctaHref: '/careers/search',
     imageSrc: '/marketing/who-we-are-img.jpg',
     imageAlt: '',
   },
@@ -66,5 +66,5 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
   ],
   footerHeading: 'Footer headline',
   footerCtaLabel: 'View careers →',
-  footerCtaHref: '/careers/index',
+  footerCtaHref: '/careers/search',
 };

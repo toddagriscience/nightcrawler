@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Link from 'next/link';
+import { ApplyLogoutLink } from './components/apply-logout-link';
 import { OrderNavLink } from './components/order-nav-link';
 
 /** Reusable navigation links component.
@@ -27,6 +28,7 @@ export async function NavLinks() {
             {link.label}
           </Link>
         ))}
+        <ApplyLogoutLink />
       </div>
     </nav>
   );

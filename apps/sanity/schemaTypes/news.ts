@@ -17,14 +17,23 @@ export default defineType({
       name: 'contentType',
       title: 'Content type',
       type: 'string',
-      initialValue: 'news',
+      initialValue: 'news-company',
       options: {
+        // Titles are namespaced (`Research · …` / `News · …`) so the research and
+        // news taxonomies stay distinguishable in Studio — several labels
+        // (Publication, Milestone, Release) otherwise collide. The stored `value`
+        // is already namespaced, so titles are display-only (no data impact).
         list: [
-          {title: 'News', value: 'news'},
-          {title: 'Research', value: 'research'},
-          {title: 'Story', value: 'story'},
-          {title: 'Product release', value: 'product-release'},
-          {title: 'Press', value: 'press'},
+          {title: 'Research · Publication', value: 'research-publication'},
+          {title: 'Research · Conclusion', value: 'research-conclusion'},
+          {title: 'Research · Milestone', value: 'research-milestone'},
+          {title: 'Research · Release', value: 'research-release'},
+          {title: 'News · Publication', value: 'news-publication'},
+          {title: 'News · Milestone', value: 'news-milestone'},
+          {title: 'News · Release', value: 'news-release'},
+          {title: 'News · Company', value: 'news-company'},
+          {title: 'News · Research', value: 'news-research'},
+          {title: 'News · Global affairs', value: 'news-global-affairs'},
         ],
         layout: 'radio',
       },
@@ -38,11 +47,16 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: [
-          {title: 'News', value: 'news'},
-          {title: 'Research', value: 'research'},
-          {title: 'Story', value: 'story'},
-          {title: 'Product release', value: 'product-release'},
-          {title: 'Press', value: 'press'},
+          {title: 'Research · Publication', value: 'research-publication'},
+          {title: 'Research · Conclusion', value: 'research-conclusion'},
+          {title: 'Research · Milestone', value: 'research-milestone'},
+          {title: 'Research · Release', value: 'research-release'},
+          {title: 'News · Publication', value: 'news-publication'},
+          {title: 'News · Milestone', value: 'news-milestone'},
+          {title: 'News · Release', value: 'news-release'},
+          {title: 'News · Company', value: 'news-company'},
+          {title: 'News · Research', value: 'news-research'},
+          {title: 'News · Global affairs', value: 'news-global-affairs'},
         ],
         layout: 'tags',
       },
@@ -55,11 +69,16 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          {title: 'News', value: 'news'},
-          {title: 'Research', value: 'research'},
-          {title: 'Story', value: 'story'},
-          {title: 'Product release', value: 'product-release'},
-          {title: 'Press', value: 'press'},
+          {title: 'Research · Publication', value: 'research-publication'},
+          {title: 'Research · Conclusion', value: 'research-conclusion'},
+          {title: 'Research · Milestone', value: 'research-milestone'},
+          {title: 'Research · Release', value: 'research-release'},
+          {title: 'News · Publication', value: 'news-publication'},
+          {title: 'News · Milestone', value: 'news-milestone'},
+          {title: 'News · Release', value: 'news-release'},
+          {title: 'News · Company', value: 'news-company'},
+          {title: 'News · Research', value: 'news-research'},
+          {title: 'News · Global affairs', value: 'news-global-affairs'},
         ],
       },
       description:

@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Link } from '@/i18n/config';
+import { isOutboundHref, toSafeHref } from '@/lib/sanity/safe-href';
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
@@ -28,21 +29,26 @@ export function MarketingPillLink({
   className = '',
 }: MarketingPillLinkProps) {
   const combined = cn(MARKETING_PILL_LINK_CLASSNAME, className);
-  const external = /^https?:\/\//i.test(href) || href.startsWith('mailto:');
+  const safeHref = toSafeHref(href);
 
-  if (href.startsWith('#')) {
+  // Unsafe/empty destination — render the label without a link.
+  if (safeHref === null) {
+    return <span className={combined}>{children}</span>;
+  }
+
+  if (safeHref.startsWith('#')) {
     return (
-      <a className={combined} href={href}>
+      <a className={combined} href={safeHref}>
         {children}
       </a>
     );
   }
 
-  if (external) {
+  if (isOutboundHref(safeHref)) {
     return (
       <a
         className={combined}
-        href={href}
+        href={safeHref}
         rel="noopener noreferrer"
         target="_blank"
       >
@@ -52,7 +58,7 @@ export function MarketingPillLink({
   }
 
   return (
-    <Link className={combined} href={href}>
+    <Link className={combined} href={safeHref}>
       {children}
     </Link>
   );

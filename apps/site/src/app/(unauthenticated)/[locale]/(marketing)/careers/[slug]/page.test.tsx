@@ -117,7 +117,7 @@ describe('/careers/[slug] postings', () => {
       title: 'News piece',
       slug: { current: 'press-hit' },
       summary: '',
-      contentType: 'news' as const,
+      contentType: 'news-company' as const,
     });
     isCareerArticleMock.mockReturnValueOnce(false);
 
