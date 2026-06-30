@@ -1,24 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { NavLinks } from '@/components/common/authenticated-header/nav-links';
-import AddWidgetDropdown from '@/components/common/widgets/add-widget-dropdown';
-import { Button } from '@/components/ui';
-import { managementZone, widget, widgetEnum } from '@nightcrawler/db/schema';
+import { managementZone } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAccountShellData } from '../(accounts)/account/db';
-import CurrentTab from '../../components/tabs/current-tab';
-import { NamedTab } from '../../components/tabs/types';
-
-// -- Commented out: tab-based imports (kept for future use) ---
-//import PlatformTabContent from '../../components/tabs/tab-content';
-//import PlatformTabs from '../../components/tabs/tabs';
-//import { getTablessManagementZones } from '../../components/tabs/utils';
-//import { getSelectedTab, getSelectedTabHash } from './utils';
-//import { tab } from '@nightcrawler/db/schema/tab';
+import ZoneTemplate from './components/zone-template';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -29,7 +19,8 @@ export const metadata: Metadata = {
 
 /**
  * Dashboard page - served at "/" route for authenticated users.
- * Shows a left sidebar listing all management zones and the selected zone's content.
+ * Shows a left sidebar listing all management zones and the selected zone's
+ * template (info, mineral IMPs, observations, search).
  *
  * @returns {React.ReactNode} - The dashboard page component
  */
@@ -39,7 +30,6 @@ export default async function DashboardPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const currentUser = await getAuthenticatedInfo();
-  const canEdit = currentUser.role === 'Admin';
   const { farmName } = await getAccountShellData();
 
   // Fetch ALL management zones for the farm (oldest first)
@@ -58,7 +48,7 @@ export default async function DashboardPage({
             Your platform is ready when you are
           </h1>
           <p className="text-foreground/75 text-lg font-light">
-            There are no management zones or dashboard tabs on this account yet.
+            There are no management zones on this account yet.
             <br />
             You can keep exploring the platform while we finish setting things
             up.
@@ -95,28 +85,8 @@ export default async function DashboardPage({
     allManagementZones.find((z) => String(z.id) === zoneParam) ||
     allManagementZones[0];
 
-  // Build a NamedTab-compatible object for CurrentTab (it expects this shape)
-  const selectedTab: NamedTab = {
-    id: selectedZone.id,
-    user: currentUser.id,
-    managementZone: selectedZone.id,
-    name: selectedZone.name,
-  };
-
-  // Fetch widgets for the selected zone (for the Add Widget dropdown)
-  const widgets = await db
-    .select()
-    .from(widget)
-    .where(eq(widget.managementZone, selectedZone.id));
-  const allWidgetTypes = widgetEnum.enumValues;
-  const existingWidgetNames = new Set(widgets.map((w) => w.name));
-  const availableWidgets = allWidgetTypes.filter(
-    (widgetType) => !existingWidgetNames.has(widgetType)
-  );
-
   return (
     <div className="flex h-screen flex-col">
-      {/* Header — full width, same as before */}
       <header
         className="flex w-full items-center justify-between px-3 pt-3 pb-2"
         role="banner"
@@ -125,29 +95,16 @@ export default async function DashboardPage({
           {farmName}
         </h1>
         <div className="flex flex-row items-center gap-6">
-          {canEdit ? (
-            <AddWidgetDropdown
-              managementZoneId={selectedZone.id}
-              availableWidgets={availableWidgets}
-            >
-              <Button
-                size="sm"
-                variant="default"
-                className="h-[34px] w-[96px] hover:cursor-pointer hover:shadow-sm bg-[#D9D9D9]/32 text-foreground border-none focus-visible:ring-transparent!
-  focus-visible:ring-offset-transparent!"
-              >
-                Add widget
-              </Button>
-            </AddWidgetDropdown>
-          ) : null}
           <NavLinks />
         </div>
       </header>
 
-      {/* Body — content */}
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto">
-          <CurrentTab currentTab={selectedTab} />
+          <ZoneTemplate
+            zoneId={selectedZone.id}
+            zoneName={selectedZone.name ?? 'Unnamed zone'}
+          />
         </main>
       </div>
     </div>
