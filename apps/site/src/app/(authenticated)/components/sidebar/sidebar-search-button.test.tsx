@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import SidebarSearchButton from './sidebar-search-button';
 
@@ -8,18 +8,20 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }));
 
+vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
+  getSearchModalData: vi.fn(async () => ({ imps: [], seeds: [] })),
+}));
+
 describe('SidebarSearchButton', () => {
-  it('renders a Search link pointing at /search', () => {
+  it('renders a Search button and no modal initially', () => {
     render(<SidebarSearchButton />);
-    const link = screen.getByRole('link', { name: /Search/i });
-    expect(link).toHaveAttribute('href', '/search');
+    expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('renders an icon (react-icons svg, no on-disk image)', () => {
-    const { container } = render(<SidebarSearchButton />);
-    const svg = container.querySelector('svg');
-    expect(svg).toBeInTheDocument();
-    // The legacy <Icon> wrapper rendered an <img>; ensure it is gone.
-    expect(container.querySelector('img')).not.toBeInTheDocument();
+  it('opens the search modal when the Search button is clicked', () => {
+    render(<SidebarSearchButton />);
+    fireEvent.click(screen.getByRole('button', { name: /Search/i }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 });

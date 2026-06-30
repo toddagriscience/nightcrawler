@@ -9,7 +9,6 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 import { getAccountShellData } from '../(accounts)/account/db';
 import CurrentTab from '../../components/tabs/current-tab';
 import { NamedTab } from '../../components/tabs/types';
@@ -70,7 +69,6 @@ export default async function DashboardPage({
           >
             {(
               [
-                { href: '/search', label: 'Search knowledge base' },
                 { href: '/order', label: 'Orders' },
                 { href: '/contact', label: 'Contact' },
                 { href: '/account', label: 'Account' },
@@ -127,7 +125,6 @@ export default async function DashboardPage({
           {farmName}
         </h1>
         <div className="flex flex-row items-center gap-6">
-          <SearchNavForm />
           {canEdit ? (
             <AddWidgetDropdown
               managementZoneId={selectedZone.id}

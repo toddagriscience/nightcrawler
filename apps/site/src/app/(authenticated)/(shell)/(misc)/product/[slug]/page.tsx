@@ -28,11 +28,11 @@ export default async function ProductPage({
     <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
       <div className="mb-6">
         <Link
-          href="/search"
+          href="/"
           className="inline-flex items-center gap-2 text-sm font-light text-foreground/70 transition-colors hover:text-foreground"
         >
           <HiArrowLongLeft className="size-5" />
-          Back to search
+          Back to dashboard
         </Link>
       </div>
 
