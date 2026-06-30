@@ -64,6 +64,7 @@ const FOUR_LOWS_THRESHOLDS = {
  * (uppercase alphanumeric, 13 chars total).
  */
 function generateAnalysisId(): string {
+  // eslint-disable-next-line no-secrets/no-secrets
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const seg = (n: number) =>
     Array.from(
@@ -827,8 +828,8 @@ async function main() {
 
     if (fourLows) {
       console.log(
-        `  ⚠  FOUR LOWS DETECTED — Ca/Mg/Na/K all below threshold. ' +
-          'Restore soil biology before mineral amendments.`
+        `  ⚠  FOUR LOWS DETECTED — Ca/Mg/Na/K all below threshold. ` +
+          `Restore soil biology before mineral amendments.`
       );
     }
 
