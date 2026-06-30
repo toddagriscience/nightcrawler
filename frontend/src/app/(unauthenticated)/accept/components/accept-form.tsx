@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserSelect } from '@/lib/types/db';
@@ -30,7 +30,7 @@ export default function AcceptForm({
     handleSubmit,
     getValues,
     trigger,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<AcceptInvite>({
     resolver: zodResolver(acceptInviteSchema),
@@ -45,6 +45,9 @@ export default function AcceptForm({
       confirmPassword: '',
     },
   });
+
+  const password = useWatch({ control, name: 'password' });
+  const confirmPassword = useWatch({ control, name: 'confirmPassword' });
 
   async function onSubmit() {
     await trigger();
@@ -231,8 +234,8 @@ export default function AcceptForm({
             </Field>
           </div>
           <PasswordChecklist
-            password={watch('password')}
-            confirmationPassword={watch('confirmPassword')}
+            password={password}
+            confirmationPassword={confirmPassword}
           />
           <SubmitButton
             buttonText="Accept Invitation"
