@@ -15,7 +15,7 @@ export interface SearchResult {
   /** Human-readable category or grouping label */
   category: string;
   /** Which route family this result belongs to */
-  resultType: 'imp' | 'seed';
+  resultType: 'imp' | 'seed' | 'general-imp';
   /** Similarity score used for result ranking */
   similarity: number;
   /** Remaining units in stock for a seed result */

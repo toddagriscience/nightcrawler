@@ -70,8 +70,8 @@ describe('Sidebar', () => {
       'href',
       '/?zone=2'
     );
-    expect(screen.getByText('1 ⌘')).toBeInTheDocument();
-    expect(screen.getByText('2 ⌘')).toBeInTheDocument();
+    expect(screen.getByText('Alt 1')).toBeInTheDocument();
+    expect(screen.getByText('Alt 2')).toBeInTheDocument();
   });
 
   it('does not render add or delete zone controls', async () => {

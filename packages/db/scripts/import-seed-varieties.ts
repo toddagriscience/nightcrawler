@@ -18,88 +18,23 @@
 
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, inArray, notInArray } from 'drizzle-orm';
 import { knowledgeArticle, seedCrop, seedVariety } from '../src/schema';
-import { getEmbedding } from '../src/utils/get-embedding';
-
-const EMBEDDING_DIMENSIONS = 3072;
+import {
+  embed,
+  getArg,
+  hash,
+  parseCsv,
+  requireLocalDatabaseUrl,
+  slugify,
+} from './lib/importer-lib';
 
 // ---- CLI args -------------------------------------------------------------
-function getArg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i === -1 ? undefined : process.argv[i + 1];
-}
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/variety-inventory.csv';
 
-// ---- localhost safety guard ----------------------------------------------
-const host = process.env.LOCAL_DATABASE_HOST ?? '';
-if (!['localhost', '127.0.0.1'].includes(host)) {
-  throw new Error(
-    `Refusing to run: LOCAL_DATABASE_HOST is "${host}", expected localhost. ` +
-      'This importer only runs against the local Docker DB.'
-  );
-}
-const databaseUrl =
-  `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER ?? 'postgres')}` +
-  `:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}` +
-  `@${host}:${process.env.LOCAL_DATABASE_PORT ?? '5432'}` +
-  `/${process.env.LOCAL_DATABASE_DATABASE ?? 'postgres'}`;
-
-// ---- minimal RFC-4180 CSV parser (quotes, commas, embedded newlines) -----
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = '';
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          field += '"';
-          i += 1;
-        } else {
-          inQuotes = false;
-        }
-      } else {
-        field += c;
-      }
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ',') {
-      row.push(field);
-      field = '';
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i += 1;
-      row.push(field);
-      field = '';
-      rows.push(row);
-      row = [];
-    } else {
-      field += c;
-    }
-  }
-  if (field.length > 0 || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
-  return rows;
-}
-
 // ---- small helpers --------------------------------------------------------
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
 function isNumericCode(s: string): boolean {
   return /^\d+$/.test(s.trim());
 }
@@ -230,28 +165,6 @@ function classify(rows: string[][]) {
   return { crops, orphans, notes };
 }
 
-// ---- embeddings -----------------------------------------------------------
-function deterministicEmbedding(seedText: string): number[] {
-  let seed = 0;
-  for (let i = 0; i < seedText.length; i += 1) {
-    seed = (seed * 31 + seedText.charCodeAt(i)) >>> 0;
-  }
-  const values = new Array<number>(EMBEDDING_DIMENSIONS);
-  let state = seed || 1;
-  for (let i = 0; i < EMBEDDING_DIMENSIONS; i += 1) {
-    state = (1664525 * state + 1013904223) >>> 0;
-    values[i] = state / 0xffffffff;
-  }
-  return values;
-}
-async function embed(text: string): Promise<number[]> {
-  if (!process.env.OPENAI_EMBEDDINGS_KEY) return deterministicEmbedding(text);
-  return getEmbedding(text);
-}
-function hash(text: string): string {
-  return createHash('sha256').update(text).digest('hex');
-}
-
 // ---- main -----------------------------------------------------------------
 async function main() {
   const csv = readFileSync(CSV_PATH, 'utf8');
@@ -304,7 +217,7 @@ async function main() {
     return;
   }
 
-  const db = drizzle(databaseUrl, { casing: 'snake_case' });
+  const db = drizzle(requireLocalDatabaseUrl(), { casing: 'snake_case' });
   const usedSlugs = new Set<string>();
   const uniqueSlug = (base: string): string => {
     let s = base || 'item';

@@ -10,6 +10,7 @@
 
 import { logger } from '@/lib/logger';
 import {
+  generalImp,
   integratedManagementPlan,
   knowledgeArticle,
   seedProduct,
@@ -35,6 +36,24 @@ interface ImpSearchRow {
   /** Optional source attribution. */
   source: string | null;
   /** IMP category label. */
+  category: string;
+  /** Computed semantic-search similarity. */
+  similarity: number;
+}
+
+/** Typed general-IMP search row returned by the Drizzle query. */
+interface GeneralImpSearchRow {
+  /** General-IMP database identifier. */
+  id: number;
+  /** General-IMP title shown in search. */
+  title: string;
+  /** General-IMP slug used for routing. */
+  slug: string;
+  /** General-IMP content preview text. */
+  content: string;
+  /** Optional source attribution. */
+  source: string | null;
+  /** General-IMP category label (first tag). */
   category: string;
   /** Computed semantic-search similarity. */
   similarity: number;
@@ -79,7 +98,7 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
     /** Shared pgvector similarity expression for normalized knowledge rows. */
     const knowledgeSimilarity = sql<number>`1 - (${knowledgeArticle.embedding} <=> ${embeddingVector}::vector)`;
 
-    const [impResults, seedResults] = await Promise.all([
+    const [impResults, generalImpResults, seedResults] = await Promise.all([
       db
         .select({
           id: integratedManagementPlan.id,
@@ -94,6 +113,24 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
         .innerJoin(
           knowledgeArticle,
           eq(knowledgeArticle.id, integratedManagementPlan.knowledgeArticleId)
+        )
+        .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
+        .orderBy(desc(knowledgeSimilarity))
+        .limit(MAX_RESULTS),
+      db
+        .select({
+          id: generalImp.id,
+          title: sql<string>`coalesce(${generalImp.title}, 'Integrated Management Practice')`,
+          slug: generalImp.slug,
+          content: generalImp.content,
+          source: sql<string | null>`null`,
+          category: sql<string>`coalesce(${generalImp.tags}[1], 'general')`,
+          similarity: knowledgeSimilarity,
+        })
+        .from(generalImp)
+        .innerJoin(
+          knowledgeArticle,
+          eq(knowledgeArticle.id, generalImp.knowledgeArticleId)
         )
         .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
         .orderBy(desc(knowledgeSimilarity))
@@ -139,6 +176,19 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
         source: result.source,
         category: result.category,
         resultType: 'imp',
+        similarity: result.similarity,
+        stock: null,
+        priceInCents: null,
+        unit: null,
+      })),
+      ...generalImpResults.map<SearchResult>((result: GeneralImpSearchRow) => ({
+        id: result.id,
+        title: result.title,
+        slug: result.slug,
+        content: result.content,
+        source: result.source,
+        category: result.category,
+        resultType: 'general-imp',
         similarity: result.similarity,
         stock: null,
         priceInCents: null,

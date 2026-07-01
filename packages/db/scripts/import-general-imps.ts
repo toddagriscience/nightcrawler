@@ -19,89 +19,23 @@
 
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, inArray, notInArray } from 'drizzle-orm';
 import { generalImp, knowledgeArticle } from '../src/schema';
-import { getEmbedding } from '../src/utils/get-embedding';
-
-const EMBEDDING_DIMENSIONS = 3072;
+import {
+  embed,
+  getArg,
+  hash,
+  parseCsv,
+  requireLocalDatabaseUrl,
+  slugify,
+} from './lib/importer-lib';
 
 // ---- CLI args -------------------------------------------------------------
-function getArg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i === -1 ? undefined : process.argv[i + 1];
-}
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/general-imps.csv';
 
-// ---- localhost safety guard ----------------------------------------------
-const host = process.env.LOCAL_DATABASE_HOST ?? '';
-if (!['localhost', '127.0.0.1'].includes(host)) {
-  throw new Error(
-    `Refusing to run: LOCAL_DATABASE_HOST is "${host}", expected localhost. ` +
-      'This importer only runs against the local Docker DB.'
-  );
-}
-const databaseUrl =
-  `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER ?? 'postgres')}` +
-  `:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}` +
-  `@${host}:${process.env.LOCAL_DATABASE_PORT ?? '5432'}` +
-  `/${process.env.LOCAL_DATABASE_DATABASE ?? 'postgres'}`;
-
-// ---- minimal RFC-4180 CSV parser (quotes, commas, embedded newlines) -----
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = '';
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          field += '"';
-          i += 1;
-        } else {
-          inQuotes = false;
-        }
-      } else {
-        field += c;
-      }
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ',') {
-      row.push(field);
-      field = '';
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i += 1;
-      row.push(field);
-      field = '';
-      rows.push(row);
-      row = [];
-    } else {
-      field += c;
-    }
-  }
-  if (field.length > 0 || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
-  return rows;
-}
-
 // ---- helpers --------------------------------------------------------------
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
 /** Strip the single quotes the sheet wraps concept titles in, e.g. 'Copper'. */
 function cleanTitle(s: string): string {
   return s.replace(/^['"]+|['"]+$/g, '').trim();
@@ -124,10 +58,12 @@ function classify(rows: string[][]): ParsedImp[] {
     const title = cleanTitle(cells[3] ?? '');
     const body = cells[4] ?? '';
 
-    // Skip blank separator rows and the header row.
+    // Skip blank separator rows.
     if (!body) continue;
+    // Skip the header row: its Category cell reads "Category" and its Body cell
+    // reads "Body" (match either so a reworded header still gets dropped).
     if (
-      category.toLowerCase() === 'category' &&
+      category.toLowerCase() === 'category' ||
       body.toLowerCase() === 'body'
     ) {
       continue;
@@ -146,27 +82,7 @@ function classify(rows: string[][]): ParsedImp[] {
   return imps;
 }
 
-// ---- embeddings -----------------------------------------------------------
-function deterministicEmbedding(seedText: string): number[] {
-  let seed = 0;
-  for (let i = 0; i < seedText.length; i += 1) {
-    seed = (seed * 31 + seedText.charCodeAt(i)) >>> 0;
-  }
-  const values = new Array<number>(EMBEDDING_DIMENSIONS);
-  let state = seed || 1;
-  for (let i = 0; i < EMBEDDING_DIMENSIONS; i += 1) {
-    state = (1664525 * state + 1013904223) >>> 0;
-    values[i] = state / 0xffffffff;
-  }
-  return values;
-}
-async function embed(text: string): Promise<number[]> {
-  if (!process.env.OPENAI_EMBEDDINGS_KEY) return deterministicEmbedding(text);
-  return getEmbedding(text);
-}
-function hash(text: string): string {
-  return createHash('sha256').update(text).digest('hex');
-}
+/** Text embedded and fingerprinted for change-detection on re-import. */
 function embedText(imp: ParsedImp): string {
   return [imp.title ?? '', imp.tags.join(' '), imp.content]
     .filter(Boolean)
@@ -198,13 +114,25 @@ async function main() {
     return;
   }
 
-  const db = drizzle(databaseUrl, { casing: 'snake_case' });
+  const db = drizzle(requireLocalDatabaseUrl(), { casing: 'snake_case' });
+
+  // Slug is the stable identity used to match a sheet row to its existing DB
+  // row on re-import. When two rows produce the same base slug we disambiguate
+  // with a hash of the row's own content, so a given practice keeps the same
+  // slug regardless of where it sits in the sheet (an order-based -2/-3 suffix
+  // would reshuffle identities whenever a same-named row is inserted above).
   const usedSlugs = new Set<string>();
-  const uniqueSlug = (base: string): string => {
-    let s = base || 'imp';
+  const stableSlug = (base: string, seed: string): string => {
+    const root = base || 'imp';
+    if (!usedSlugs.has(root)) {
+      usedSlugs.add(root);
+      return root;
+    }
+    const suffix = hash(seed).slice(0, 8);
+    let s = `${root}-${suffix}`;
     let n = 2;
     while (usedSlugs.has(s)) {
-      s = `${base}-${n}`;
+      s = `${root}-${suffix}-${n}`;
       n += 1;
     }
     usedSlugs.add(s);
@@ -215,8 +143,11 @@ async function main() {
   let embeddings = 0;
 
   for (const imp of imps) {
-    const slug = uniqueSlug(slugify(imp.title ?? imp.tags[0] ?? 'imp'));
     const embedInput = embedText(imp);
+    const slug = stableSlug(
+      slugify(imp.title ?? imp.tags[0] ?? 'imp'),
+      embedInput
+    );
     const contentHash = hash(embedInput);
     const fields = {
       title: imp.title,
@@ -232,27 +163,37 @@ async function main() {
       .where(eq(generalImp.slug, slug))
       .limit(1);
 
+    // Wrap the knowledge_article + general_imp writes in a single transaction
+    // so a mid-row failure can't leave an orphan knowledge_article row (the
+    // prune step only reaches knowledge rows still owned by a general_imp).
     if (existing) {
-      if (existing.sourceContentHash !== contentHash) {
-        await db
-          .update(knowledgeArticle)
-          .set({ embedding: await embed(embedInput) })
-          .where(eq(knowledgeArticle.id, existing.knowledgeArticleId));
-        embeddings += 1;
-      }
-      await db
-        .update(generalImp)
-        .set(fields)
-        .where(eq(generalImp.id, existing.id));
+      const needsReembed = existing.sourceContentHash !== contentHash;
+      const embedding = needsReembed ? await embed(embedInput) : null;
+      await db.transaction(async (tx) => {
+        if (embedding) {
+          await tx
+            .update(knowledgeArticle)
+            .set({ embedding })
+            .where(eq(knowledgeArticle.id, existing.knowledgeArticleId));
+        }
+        await tx
+          .update(generalImp)
+          .set(fields)
+          .where(eq(generalImp.id, existing.id));
+      });
+      if (needsReembed) embeddings += 1;
     } else {
-      const [k] = await db
-        .insert(knowledgeArticle)
-        .values({ embedding: await embed(embedInput) })
-        .returning({ id: knowledgeArticle.id });
+      const embedding = await embed(embedInput);
+      await db.transaction(async (tx) => {
+        const [k] = await tx
+          .insert(knowledgeArticle)
+          .values({ embedding })
+          .returning({ id: knowledgeArticle.id });
+        await tx
+          .insert(generalImp)
+          .values({ knowledgeArticleId: k.id, slug, ...fields });
+      });
       embeddings += 1;
-      await db
-        .insert(generalImp)
-        .values({ knowledgeArticleId: k.id, slug, ...fields });
     }
     written += 1;
   }

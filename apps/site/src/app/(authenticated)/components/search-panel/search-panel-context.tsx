@@ -6,7 +6,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import type { ReactNode } from 'react';
@@ -16,8 +18,6 @@ import type { SearchResult } from '@/lib/ai/types';
 interface SearchPanelValue {
   /** Whether the right-side results panel is expanded. */
   open: boolean;
-  /** Whether the results panel is collapsed while retaining the last query/results. */
-  collapsed: boolean;
   /** Whether the command-palette search popup is open. */
   modalOpen: boolean;
   /** Active inference-search query shown in the results panel. */
@@ -26,6 +26,8 @@ interface SearchPanelValue {
   results: SearchResult[];
   /** Whether a search request is in flight. */
   isSearching: boolean;
+  /** Whether the most recent search failed. */
+  searchError: boolean;
   /** Opens the command-palette popup (sidebar Search action). */
   openModal: () => void;
   /** Closes the command-palette popup. */
@@ -39,10 +41,6 @@ interface SearchPanelValue {
    * prior query/results.
    */
   submitSearch: (query: string) => void;
-  /** Marks the search request as finished and stores results. */
-  setSearchResults: (query: string, results: SearchResult[]) => void;
-  /** Marks the search request as in-flight. */
-  setSearching: (searching: boolean) => void;
 }
 
 const SearchPanelContext = createContext<SearchPanelValue | null>(null);
@@ -50,84 +48,97 @@ const SearchPanelContext = createContext<SearchPanelValue | null>(null);
 /**
  * Provides global state for the search popup and right-side results panel.
  *
+ * The inference request runs here, in the always-mounted provider, rather than
+ * in the panel body: collapsing the panel unmounts the body, so running the
+ * request there left `isSearching` stuck true and re-fired a duplicate request
+ * on re-expand, and a failed search's error was lost on unmount.
+ *
  * @param {ReactNode} children - Subtree that can read/toggle search UI state
  * @returns {React.ReactNode} - The provider
  */
 export function SearchPanelProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeQuery, setActiveQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(false);
+
+  // Bumped on every submit so a slow in-flight response can't overwrite the
+  // results of a newer query.
+  const requestIdRef = useRef(0);
 
   const openModal = useCallback(() => setModalOpen(true), []);
   const closeModal = useCallback(() => setModalOpen(false), []);
 
-  const expandPanel = useCallback(() => {
-    setCollapsed(false);
-    setOpen(true);
-  }, []);
-
-  const collapsePanel = useCallback(() => {
-    setCollapsed(true);
-    setOpen(false);
-  }, []);
+  const expandPanel = useCallback(() => setOpen(true), []);
+  const collapsePanel = useCallback(() => setOpen(false), []);
 
   const submitSearch = useCallback((query: string) => {
     const trimmed = query.trim();
     if (!trimmed) return;
     setActiveQuery(trimmed);
     setResults([]);
-    setCollapsed(false);
+    setSearchError(false);
     setOpen(true);
     setModalOpen(false);
     setIsSearching(true);
   }, []);
 
-  const setSearchResults = useCallback(
-    (query: string, nextResults: SearchResult[]) => {
-      setActiveQuery(query);
-      setResults(nextResults);
-      setIsSearching(false);
-    },
-    []
-  );
+  // Run the inference search whenever a new query is submitted. Keyed on
+  // isSearching (set true by submitSearch) so re-submitting the same query
+  // still re-runs; the requestId guard drops stale/out-of-order responses.
+  useEffect(() => {
+    if (!activeQuery || !isSearching) return;
 
-  const setSearching = useCallback((searching: boolean) => {
-    setIsSearching(searching);
-  }, []);
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+
+    // Loaded lazily so this widely-imported client context does not statically
+    // pull the server action's module graph (and its eager OpenAI client) into
+    // every consumer's bundle/test import chain.
+    import('@/app/(authenticated)/actions/inference-search')
+      .then(({ runInferenceSearch }) => runInferenceSearch(activeQuery))
+      .then((nextResults) => {
+        if (requestId !== requestIdRef.current) return;
+        setResults(nextResults);
+        setSearchError(false);
+        setIsSearching(false);
+      })
+      .catch(() => {
+        if (requestId !== requestIdRef.current) return;
+        setResults([]);
+        setSearchError(true);
+        setIsSearching(false);
+      });
+  }, [activeQuery, isSearching]);
 
   const value = useMemo(
     () => ({
       open,
-      collapsed,
       modalOpen,
       activeQuery,
       results,
       isSearching,
+      searchError,
       openModal,
       closeModal,
       expandPanel,
       collapsePanel,
       submitSearch,
-      setSearchResults,
-      setSearching,
     }),
     [
       open,
-      collapsed,
       modalOpen,
       activeQuery,
       results,
       isSearching,
+      searchError,
       openModal,
       closeModal,
       expandPanel,
       collapsePanel,
       submitSearch,
-      setSearchResults,
-      setSearching,
     ]
   );
 

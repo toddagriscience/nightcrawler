@@ -8,16 +8,27 @@
  * results for the active query and exposes a follow-up input at the bottom.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { BiDockLeft, BiUpArrowAlt } from 'react-icons/bi';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { runInferenceSearch } from '@/app/(authenticated)/actions/inference-search';
 import { formatPrice } from '@/lib/order/utils';
 import { useOrder } from '@/lib/order/hooks';
 import Link from 'next/link';
 import type { SearchResult } from '@/lib/ai/types';
 import { useSearchPanel } from './search-panel-context';
+
+/** Builds the detail-page href for a search result by its result type. */
+function resultHref(result: SearchResult): string {
+  switch (result.resultType) {
+    case 'seed':
+      return `/product/${result.slug}`;
+    case 'general-imp':
+      return `/imp/general/${result.slug}`;
+    default:
+      return `/imp/${result.slug}`;
+  }
+}
 
 /**
  * Renders the inference search results panel body.
@@ -26,42 +37,17 @@ import { useSearchPanel } from './search-panel-context';
  */
 export function SearchPanelBody() {
   const {
-    open,
     activeQuery,
     results,
     isSearching,
+    searchError,
     collapsePanel,
     submitSearch,
-    setSearchResults,
-    setSearching,
   } = useSearchPanel();
   const [followUp, setFollowUp] = useState('');
   const [clearedForQuery, setClearedForQuery] = useState(activeQuery);
-  const [loadError, setLoadError] = useState(false);
   const followUpRef = useRef<HTMLInputElement | null>(null);
   const { order, addItem, removeItem } = useOrder();
-
-  // Run inference search whenever the active query changes while the panel is open.
-  useEffect(() => {
-    if (!open || !activeQuery || !isSearching) return;
-
-    let cancelled = false;
-    runInferenceSearch(activeQuery)
-      .then((nextResults) => {
-        if (cancelled) return;
-        setLoadError(false);
-        setSearchResults(activeQuery, nextResults);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setLoadError(true);
-        setSearching(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, activeQuery, isSearching, setSearchResults, setSearching]);
 
   if (activeQuery !== clearedForQuery) {
     setClearedForQuery(activeQuery);
@@ -108,19 +94,22 @@ export function SearchPanelBody() {
           <p className="text-muted-foreground text-sm">Searching…</p>
         )}
 
-        {loadError && !isSearching && (
+        {searchError && !isSearching && (
           <p role="alert" className="text-sm text-red-600">
             Something went wrong loading results. Please try again.
           </p>
         )}
 
-        {!isSearching && !loadError && results.length === 0 && activeQuery && (
-          <p className="text-muted-foreground text-sm">
-            No matching IMPs or products found. Try rephrasing your question.
-          </p>
-        )}
+        {!isSearching &&
+          !searchError &&
+          results.length === 0 &&
+          activeQuery && (
+            <p className="text-muted-foreground text-sm">
+              No matching IMPs or products found. Try rephrasing your question.
+            </p>
+          )}
 
-        {!isSearching && !loadError && results.length > 0 && (
+        {!isSearching && !searchError && results.length > 0 && (
           <div className="space-y-6">
             {results.map((result) => {
               const key = resultKey(result);
@@ -142,11 +131,7 @@ export function SearchPanelBody() {
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
                     <Link
-                      href={
-                        isSeed
-                          ? `/product/${result.slug}`
-                          : `/imp/${result.slug}`
-                      }
+                      href={resultHref(result)}
                       className="text-foreground text-xs font-medium underline underline-offset-2 hover:opacity-70"
                       onClick={collapsePanel}
                     >
