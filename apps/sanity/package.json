@@ -22,7 +22,7 @@
   "dependencies": {
     "@nightcrawler/db": "workspace:*",
     "@sanity/icons": "^3.7.4",
-    "@sanity/vision": "^5.20.0",
+    "@sanity/vision": "^6.3.0",
     "date-fns": "^4.1.0",
     "react": "^19.1",
     "react-dom": "^19.1",
