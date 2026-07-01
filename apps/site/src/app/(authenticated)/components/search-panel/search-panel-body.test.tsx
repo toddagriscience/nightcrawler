@@ -1,45 +1,38 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SearchPanelBody } from './search-panel-body';
 import { SearchPanelProvider, useSearchPanel } from './search-panel-context';
 
-const getSearchModalData = vi.fn();
+const runInferenceSearch = vi.fn();
 
-vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
-  getSearchModalData: () => getSearchModalData(),
+vi.mock('@/app/(authenticated)/actions/inference-search', () => ({
+  runInferenceSearch: (query: string) => runInferenceSearch(query),
 }));
 
-const sampleImps = [
+const sampleResults = [
   {
     id: 1,
     title: 'Tomato Blight Control',
-    category: 'Disease',
-    content: 'Manage blight with resistant varieties and rotation.',
     slug: 'tomato-blight',
+    content: 'Manage blight with resistant varieties and rotation.',
+    source: null,
+    category: 'Disease',
+    resultType: 'imp' as const,
+    similarity: 0.9,
+    stock: null,
+    priceInCents: null,
+    unit: null,
   },
 ];
 
-const sampleSeeds = [
-  {
-    id: 10,
-    name: 'Roma Tomato',
-    description: 'Classic paste tomato',
-    slug: 'roma-tomato',
-    priceInCents: 500,
-    unit: 'packet',
-    stock: 20,
-    imageUrl: null,
-  },
-];
-
-/** Opens the panel on mount so the body loads its data. */
-function AutoOpen() {
-  const { openPanel } = useSearchPanel();
+/** Submits a search on mount so the body loads its data. */
+function AutoSearch() {
+  const { submitSearch } = useSearchPanel();
   return (
-    <button type="button" onClick={() => openPanel()}>
-      open-panel
+    <button type="button" onClick={() => submitSearch('tomato blight')}>
+      run-search
     </button>
   );
 }
@@ -47,17 +40,14 @@ function AutoOpen() {
 function renderBody() {
   return render(
     <SearchPanelProvider>
-      <AutoOpen />
+      <AutoSearch />
       <SearchPanelBody />
     </SearchPanelProvider>
   );
 }
 
 beforeEach(() => {
-  getSearchModalData.mockResolvedValue({
-    imps: sampleImps,
-    seeds: sampleSeeds,
-  });
+  runInferenceSearch.mockResolvedValue(sampleResults);
 });
 
 afterEach(() => {
@@ -66,32 +56,38 @@ afterEach(() => {
 });
 
 describe('SearchPanelBody', () => {
-  it('loads and lists IMPs when the panel opens', async () => {
+  it('loads and lists inference search results', async () => {
     renderBody();
-    fireEvent.click(screen.getByRole('button', { name: 'open-panel' }));
+    fireEvent.click(screen.getByRole('button', { name: 'run-search' }));
+
     expect(
       await screen.findByText('Tomato Blight Control')
     ).toBeInTheDocument();
+    expect(runInferenceSearch).toHaveBeenCalledWith('tomato blight');
   });
 
-  it('filters results as the user types', async () => {
+  it('submits a follow-up question from the bottom search bar', async () => {
     renderBody();
-    fireEvent.click(screen.getByRole('button', { name: 'open-panel' }));
+    fireEvent.click(screen.getByRole('button', { name: 'run-search' }));
     await screen.findByText('Tomato Blight Control');
 
-    fireEvent.change(screen.getByPlaceholderText(/Search IMPs/i), {
-      target: { value: 'nonsense-query' },
+    runInferenceSearch.mockResolvedValueOnce([
+      {
+        ...sampleResults[0],
+        id: 2,
+        title: 'Soil pH Management',
+        slug: 'soil-ph',
+      },
+    ]);
+
+    fireEvent.change(
+      screen.getByRole('textbox', { name: /Follow-up question/i }),
+      { target: { value: 'soil pH' } }
+    );
+    fireEvent.click(screen.getByRole('button', { name: /^Search$/i }));
+
+    await waitFor(() => {
+      expect(runInferenceSearch).toHaveBeenCalledWith('soil pH');
     });
-    expect(screen.queryByText('Tomato Blight Control')).not.toBeInTheDocument();
-    expect(screen.getByText(/No IMPs found/i)).toBeInTheDocument();
-  });
-
-  it('switches to the seeds tab and lists seed products', async () => {
-    renderBody();
-    fireEvent.click(screen.getByRole('button', { name: 'open-panel' }));
-    await screen.findByText('Tomato Blight Control');
-
-    fireEvent.click(screen.getByRole('button', { name: /Browse Seeds/i }));
-    expect(await screen.findByText('Roma Tomato')).toBeInTheDocument();
   });
 });

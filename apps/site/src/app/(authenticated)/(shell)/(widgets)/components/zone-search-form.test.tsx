@@ -8,12 +8,12 @@ import {
   useSearchPanel,
 } from '@/app/(authenticated)/components/search-panel/search-panel-context';
 
-/** Exposes the panel's open state and seeded query for assertions. */
+/** Exposes the panel's open state and active query for assertions. */
 function PanelState() {
-  const { open, initialQuery } = useSearchPanel();
+  const { open, activeQuery, isSearching } = useSearchPanel();
   return (
     <span data-testid="state">
-      {String(open)}:{initialQuery}
+      {String(open)}:{activeQuery}:{String(isSearching)}
     </span>
   );
 }
@@ -28,15 +28,15 @@ function renderForm() {
 }
 
 describe('ZoneSearchForm', () => {
-  it('opens the search panel seeded with the trimmed query on submit', () => {
+  it('opens the search panel and submits the trimmed query', () => {
     renderForm();
-    expect(screen.getByTestId('state')).toHaveTextContent('false:');
+    expect(screen.getByTestId('state')).toHaveTextContent('false::false');
 
     fireEvent.change(screen.getByRole('searchbox'), {
       target: { value: '  soil pH  ' },
     });
     fireEvent.click(screen.getByRole('button', { name: /Ask/i }));
 
-    expect(screen.getByTestId('state')).toHaveTextContent('true:soil pH');
+    expect(screen.getByTestId('state')).toHaveTextContent('true:soil pH:true');
   });
 });

@@ -7,19 +7,15 @@ import SidebarNavItem from './sidebar-nav-item';
 import { useSearchPanel } from '../search-panel/search-panel-context';
 
 /**
- * Sidebar entry that toggles the right-side search panel.
- *
- * Renders a `SidebarNavItem` button (not a link) wired to the shell-level
- * search panel state, so opening search pushes the page content aside rather
- * than covering it.
+ * Sidebar entry that opens the command-palette search popup.
  *
  * @returns The search nav item rendered as a button.
  */
 export default function SidebarSearchButton() {
-  const { toggle } = useSearchPanel();
+  const { openModal } = useSearchPanel();
 
   return (
-    <SidebarNavItem icon={<LuSearch className="size-4" />} onClick={toggle}>
+    <SidebarNavItem icon={<LuSearch className="size-4" />} onClick={openModal}>
       Search
     </SidebarNavItem>
   );

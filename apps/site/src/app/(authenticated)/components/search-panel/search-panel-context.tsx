@@ -10,50 +10,125 @@ import {
   useState,
 } from 'react';
 import type { ReactNode } from 'react';
+import type { SearchResult } from '@/lib/ai/types';
 
 /** Shape of the search-panel context value. */
 interface SearchPanelValue {
-  /** Whether the right-side search panel is currently open. */
+  /** Whether the right-side results panel is expanded. */
   open: boolean;
-  /** Query to seed the panel input with on the next open (consumed by the body). */
-  initialQuery: string;
-  /** Opens the panel, optionally seeding the search input with a query. */
-  openPanel: (query?: string) => void;
-  /** Closes the panel. */
-  closePanel: () => void;
-  /** Toggles the panel open/closed. */
-  toggle: () => void;
+  /** Whether the results panel is collapsed while retaining the last query/results. */
+  collapsed: boolean;
+  /** Whether the command-palette search popup is open. */
+  modalOpen: boolean;
+  /** Active inference-search query shown in the results panel. */
+  activeQuery: string;
+  /** Results for the active query. */
+  results: SearchResult[];
+  /** Whether a search request is in flight. */
+  isSearching: boolean;
+  /** Opens the command-palette popup (sidebar Search action). */
+  openModal: () => void;
+  /** Closes the command-palette popup. */
+  closeModal: () => void;
+  /** Expands a collapsed results panel without changing the active search. */
+  expandPanel: () => void;
+  /** Collapses the results panel while keeping the active search. */
+  collapsePanel: () => void;
+  /**
+   * Runs a new inference search, opens the results panel, and replaces any
+   * prior query/results.
+   */
+  submitSearch: (query: string) => void;
+  /** Marks the search request as finished and stores results. */
+  setSearchResults: (query: string, results: SearchResult[]) => void;
+  /** Marks the search request as in-flight. */
+  setSearching: (searching: boolean) => void;
 }
 
 const SearchPanelContext = createContext<SearchPanelValue | null>(null);
 
 /**
- * Provides the global open state for the right-side search panel.
+ * Provides global state for the search popup and right-side results panel.
  *
- * Unlike the sidebar collapse state, this is intentionally NOT persisted — the
- * panel should always start closed on a fresh load. Wrap the authenticated shell
- * layout with this provider.
- *
- * @param {ReactNode} children - Subtree that can read/toggle the panel state
+ * @param {ReactNode} children - Subtree that can read/toggle search UI state
  * @returns {React.ReactNode} - The provider
  */
 export function SearchPanelProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [initialQuery, setInitialQuery] = useState('');
+  const [collapsed, setCollapsed] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeQuery, setActiveQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const openPanel = useCallback((query = '') => {
-    setInitialQuery(query);
+  const openModal = useCallback(() => setModalOpen(true), []);
+  const closeModal = useCallback(() => setModalOpen(false), []);
+
+  const expandPanel = useCallback(() => {
+    setCollapsed(false);
     setOpen(true);
   }, []);
-  const closePanel = useCallback(() => setOpen(false), []);
-  const toggle = useCallback(() => {
-    setInitialQuery('');
-    setOpen((current) => !current);
+
+  const collapsePanel = useCallback(() => {
+    setCollapsed(true);
+    setOpen(false);
+  }, []);
+
+  const submitSearch = useCallback((query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setActiveQuery(trimmed);
+    setResults([]);
+    setCollapsed(false);
+    setOpen(true);
+    setModalOpen(false);
+    setIsSearching(true);
+  }, []);
+
+  const setSearchResults = useCallback(
+    (query: string, nextResults: SearchResult[]) => {
+      setActiveQuery(query);
+      setResults(nextResults);
+      setIsSearching(false);
+    },
+    []
+  );
+
+  const setSearching = useCallback((searching: boolean) => {
+    setIsSearching(searching);
   }, []);
 
   const value = useMemo(
-    () => ({ open, initialQuery, openPanel, closePanel, toggle }),
-    [open, initialQuery, openPanel, closePanel, toggle]
+    () => ({
+      open,
+      collapsed,
+      modalOpen,
+      activeQuery,
+      results,
+      isSearching,
+      openModal,
+      closeModal,
+      expandPanel,
+      collapsePanel,
+      submitSearch,
+      setSearchResults,
+      setSearching,
+    }),
+    [
+      open,
+      collapsed,
+      modalOpen,
+      activeQuery,
+      results,
+      isSearching,
+      openModal,
+      closeModal,
+      expandPanel,
+      collapsePanel,
+      submitSearch,
+      setSearchResults,
+      setSearching,
+    ]
   );
 
   return (
@@ -67,7 +142,7 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
  * Reads the global search-panel state. Must be used within a
  * {@link SearchPanelProvider}.
  *
- * @returns {SearchPanelValue} - Current open state and open/close/toggle actions
+ * @returns {SearchPanelValue} - Current search UI state and actions
  */
 export function useSearchPanel(): SearchPanelValue {
   const context = useContext(SearchPanelContext);

@@ -14,9 +14,7 @@ const LEAD_ADVISOR_PLACEHOLDER = 'Not assigned';
 /** Shared vertical spacing for each stacked section. */
 const SECTION_CLASS = 'py-6';
 
-/** Small uppercase, letter-spaced section label. */
-const LABEL_CLASS =
-  'text-xs font-medium uppercase tracking-wider text-foreground/40';
+const HEADING_CLASS = 'text-sm font-medium text-foreground';
 
 function addMonths(date: Date, months: number): Date {
   const next = new Date(date);
@@ -34,10 +32,9 @@ function formatDate(date: Date | null): string {
 }
 
 /**
- * Per-management-zone template. Renders four stacked sections separated by
- * divider lines: zone info, mineral IMPs (placeholder until the analysis
- * tables are wired), client observations (shell only for now), and a search
- * form that submits to the knowledge-base search page.
+ * Per-management-zone template. Renders stacked sections separated by divider
+ * lines: zone info, mineral IMPs placeholder, client observations (shell only
+ * for now), and a search form that opens the inference search panel.
  *
  * @param {object} props - Component props.
  * @param {number} props.zoneId - Selected management zone id.
@@ -86,15 +83,15 @@ export default async function ZoneTemplate({
 
       {/* Mineral IMPs — placeholder until analysis tables are wired */}
       <section className={SECTION_CLASS}>
-        <p className={LABEL_CLASS}>Mineral IMPs</p>
-        <p className="text-foreground/50 mt-4 text-sm italic">
-          Info not currently available
+        <p className={HEADING_CLASS}>Mineral IMPs</p>
+        <p className="text-foreground/60 mt-4 text-sm">
+          Information temporarily not available
         </p>
       </section>
 
       {/* Observations — shell only for now */}
       <section className={SECTION_CLASS}>
-        <p className={LABEL_CLASS}>Zone observations</p>
+        <p className={HEADING_CLASS}>Observations</p>
         <button
           type="button"
           disabled
@@ -106,8 +103,8 @@ export default async function ZoneTemplate({
 
       {/* Search — opens the right-side search panel seeded with the query */}
       <section className={SECTION_CLASS}>
-        <label htmlFor="zone-search" className={LABEL_CLASS}>
-          Ask about this zone or search your farm records
+        <label htmlFor="zone-search" className={HEADING_CLASS}>
+          Ask about this zone
         </label>
         <ZoneSearchForm />
       </section>

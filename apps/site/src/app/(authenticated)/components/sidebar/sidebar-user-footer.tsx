@@ -1,7 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import SidebarNavItem from './sidebar-nav-item';
-import { LuMail, LuSettings } from 'react-icons/lu';
+import IrisIcon from './iris-icon';
+import { LuSettings } from 'react-icons/lu';
 
 /**
  * Sidebar footer — renders the Contact and Account navigation entries pinned to
@@ -12,7 +13,7 @@ import { LuMail, LuSettings } from 'react-icons/lu';
 export default function SidebarUserFooter() {
   return (
     <div className="border-t border-[#D9D9D9]/30 px-3 py-3">
-      <SidebarNavItem href="/contact" icon={<LuMail className="size-4" />}>
+      <SidebarNavItem href="/contact" icon={<IrisIcon />}>
         Contact
       </SidebarNavItem>
       <SidebarNavItem

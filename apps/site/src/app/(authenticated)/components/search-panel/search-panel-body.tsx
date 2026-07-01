@@ -4,253 +4,167 @@
 
 /**
  * @fileoverview
- * Inner content of the right-side search panel: a browse-and-search surface for
- * IMPs and seed products with an add-to-order toggle. Loads all IMPs/seeds when
- * the panel opens and filters them client-side as the user types. Unlike the
- * former modal, this is non-modal — it does not trap focus or block the page.
+ * Inner content of the right-side inference search panel. Loads semantic search
+ * results for the active query and exposes a follow-up input at the bottom.
  */
 
-import { useState, useEffect, useRef } from 'react';
-import {
-  LuBookOpen,
-  LuSearch,
-  LuShoppingCart,
-  LuSprout,
-  LuX,
-} from 'react-icons/lu';
+import { useEffect, useRef, useState } from 'react';
+import { LuChevronLeft, LuSearch } from 'react-icons/lu';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { getSearchModalData } from '@/app/(authenticated)/actions/search-modal';
+import { runInferenceSearch } from '@/app/(authenticated)/actions/inference-search';
 import { formatPrice } from '@/lib/order/utils';
 import { useOrder } from '@/lib/order/hooks';
 import Link from 'next/link';
+import type { SearchResult } from '@/lib/ai/types';
 import { useSearchPanel } from './search-panel-context';
 
-type Tab = 'imps' | 'seeds';
-
-type SearchPanelData = Awaited<ReturnType<typeof getSearchModalData>>;
-type Imp = SearchPanelData['imps'][number];
-type Seed = SearchPanelData['seeds'][number];
-
 /**
- * Renders the search panel body. Reads open/close state from
- * {@link useSearchPanel}; the surrounding {@link SearchPanel} owns positioning.
+ * Renders the inference search results panel body.
  *
- * @returns The browse-and-search UI
+ * @returns The search results UI
  */
 export function SearchPanelBody() {
-  const { open, initialQuery, closePanel } = useSearchPanel();
-  const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<Tab>('imps');
-  const [imps, setImps] = useState<Imp[]>([]);
-  const [seeds, setSeeds] = useState<Seed[]>([]);
+  const {
+    open,
+    activeQuery,
+    results,
+    isSearching,
+    collapsePanel,
+    submitSearch,
+    setSearchResults,
+    setSearching,
+  } = useSearchPanel();
+  const [followUp, setFollowUp] = useState('');
+  const [clearedForQuery, setClearedForQuery] = useState(activeQuery);
   const [loadError, setLoadError] = useState(false);
-  const [expandedImp, setExpandedImp] = useState<number | null>(null);
-  const [seeded, setSeeded] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const { order, itemCount, addItem, removeItem } = useOrder();
+  const followUpRef = useRef<HTMLInputElement | null>(null);
+  const { order, addItem, removeItem } = useOrder();
 
-  // Seed the input with the incoming query once per open, during render (the
-  // sanctioned alternative to a setState-in-effect). Reset when the panel closes
-  // so the next open reseeds.
-  if (open && !seeded) {
-    setSeeded(true);
-    setQuery(initialQuery);
-  } else if (!open && seeded) {
-    setSeeded(false);
-  }
-
-  // Load all IMPs/seeds each time the panel opens.
+  // Run inference search whenever the active query changes while the panel is open.
   useEffect(() => {
-    if (!open) return;
-    // Track whether this run is still current so a request that resolves after
-    // the panel is closed/reopened cannot set stale data.
+    if (!open || !activeQuery || !isSearching) return;
+
     let cancelled = false;
-    getSearchModalData()
-      .then(({ imps, seeds }) => {
+    runInferenceSearch(activeQuery)
+      .then((nextResults) => {
         if (cancelled) return;
         setLoadError(false);
-        setImps(imps);
-        setSeeds(seeds);
+        setSearchResults(activeQuery, nextResults);
       })
       .catch(() => {
         if (cancelled) return;
         setLoadError(true);
+        setSearching(false);
       });
+
     return () => {
       cancelled = true;
     };
-  }, [open]);
+  }, [open, activeQuery, isSearching, setSearchResults, setSearching]);
 
-  // Focus the search input when the panel opens.
-  useEffect(() => {
-    if (open) {
-      inputRef.current?.focus();
-    }
-  }, [open]);
+  if (activeQuery !== clearedForQuery) {
+    setClearedForQuery(activeQuery);
+    setFollowUp('');
+  }
 
-  // Escape closes the panel (non-trapping — the page stays interactive).
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closePanel();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, closePanel]);
+  function handleFollowUpSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    const trimmed = followUp.trim();
+    if (!trimmed) return;
+    setFollowUp('');
+    submitSearch(trimmed);
+  }
 
-  const filteredImps = imps.filter(
-    (imp) =>
-      imp.title.toLowerCase().includes(query.toLowerCase()) ||
-      imp.category.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const filteredSeeds = seeds.filter(
-    (s) =>
-      s.name.toLowerCase().includes(query.toLowerCase()) ||
-      s.description?.toLowerCase().includes(query.toLowerCase())
-  );
+  function resultKey(result: SearchResult) {
+    return `${result.resultType}-${result.id}`;
+  }
 
   return (
     <div className="flex h-full flex-col bg-white">
       {/* Header */}
       <div className="flex items-center gap-3 border-b px-5 py-4">
-        <LuSearch className="text-muted-foreground size-5 shrink-0" />
-        <Input
-          ref={inputRef}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={
-            activeTab === 'imps' ? 'Search IMPs...' : 'Search seeds...'
-          }
-          className="flex-1 border-0 text-base shadow-none focus:ring-0"
+        <LuSearch
+          className="text-muted-foreground size-5 shrink-0"
+          aria-hidden
         />
+        <p className="text-foreground min-w-0 flex-1 text-sm font-medium">
+          Search
+        </p>
         <Button
           variant="ghost"
           size="icon"
-          onClick={closePanel}
-          aria-label="Close search"
+          onClick={collapsePanel}
+          aria-label="Collapse search results"
         >
-          <LuX className="size-4" />
+          <LuChevronLeft className="size-4" />
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b bg-stone-50 px-5 py-2">
-        <button
-          type="button"
-          onClick={() => setActiveTab('imps')}
-          className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
-            activeTab === 'imps'
-              ? 'bg-white text-foreground shadow-sm'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <LuBookOpen className="size-4" />
-          Browse IMPs
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('seeds')}
-          className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
-            activeTab === 'seeds'
-              ? 'bg-white text-foreground shadow-sm'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <LuSprout className="size-4" />
-          Browse Seeds
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-5">
-        {loadError && (
-          <p role="alert" className="py-8 text-center text-sm text-red-600">
-            Something went wrong loading results. Please try again.
-          </p>
-        )}
-        {!loadError && activeTab === 'imps' && (
-          <div className="space-y-3">
-            {filteredImps.length === 0 ? (
-              <p className="text-muted-foreground py-8 text-center">
-                No IMPs found
-              </p>
-            ) : (
-              filteredImps.map((imp) => (
-                <div
-                  key={imp.id}
-                  className="overflow-hidden rounded-xl border border-stone-200"
-                >
-                  <div
-                    className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-stone-50"
-                    onClick={() =>
-                      setExpandedImp(expandedImp === imp.id ? null : imp.id)
-                    }
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-foreground text-sm font-medium">
-                        {imp.title}
-                      </p>
-                      <p className="text-muted-foreground mt-0.5 text-xs">
-                        {imp.category}
-                      </p>
-                    </div>
-                    <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                      IMP
-                    </span>
-                  </div>
-                  {expandedImp === imp.id && (
-                    <div className="border-t bg-stone-50 px-4 pb-4">
-                      <p className="text-muted-foreground mt-3 line-clamp-3 text-sm">
-                        {imp.content?.slice(0, 300)}
-                        {imp.content?.length > 300 ? '...' : ''}
-                      </p>
-                      <div className="mt-3 flex gap-2">
-                        <Link
-                          href={`/imp/${imp.slug}`}
-                          className="text-foreground text-xs underline underline-offset-2 hover:opacity-70"
-                          onClick={closePanel}
-                        >
-                          View full IMP
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
+      {/* Results */}
+      <div className="flex-1 overflow-y-auto px-5 py-6">
+        {activeQuery && (
+          <div className="mb-6 flex justify-end">
+            <p className="bg-stone-100 text-foreground max-w-[90%] rounded-2xl rounded-tr-md px-4 py-3 text-sm leading-relaxed">
+              {activeQuery}
+            </p>
           </div>
         )}
 
-        {!loadError && activeTab === 'seeds' && (
-          <div className="grid grid-cols-2 gap-3">
-            {filteredSeeds.length === 0 ? (
-              <p className="text-muted-foreground col-span-2 py-8 text-center">
-                No seeds found
-              </p>
-            ) : (
-              filteredSeeds.map((seed) => {
-                const added = order.items.some((i) => i.slug === seed.slug);
-                return (
-                  <div
-                    key={seed.id}
-                    className="overflow-hidden rounded-xl border border-stone-200"
-                  >
-                    <div className="p-3">
-                      <p className="text-foreground truncate text-sm font-medium">
-                        {seed.name}
-                      </p>
-                      <p className="text-muted-foreground mt-0.5 line-clamp-2 text-xs">
-                        {seed.description}
-                      </p>
-                      <div className="mt-2 flex items-center justify-between">
+        {isSearching && (
+          <p className="text-muted-foreground text-sm">Searching…</p>
+        )}
+
+        {loadError && !isSearching && (
+          <p role="alert" className="text-sm text-red-600">
+            Something went wrong loading results. Please try again.
+          </p>
+        )}
+
+        {!isSearching && !loadError && results.length === 0 && activeQuery && (
+          <p className="text-muted-foreground text-sm">
+            No matching IMPs or products found. Try rephrasing your question.
+          </p>
+        )}
+
+        {!isSearching && !loadError && results.length > 0 && (
+          <div className="space-y-6">
+            {results.map((result) => {
+              const key = resultKey(result);
+              const isSeed = result.resultType === 'seed';
+              const added =
+                isSeed && order.items.some((item) => item.slug === result.slug);
+
+              return (
+                <article
+                  key={key}
+                  className="border-foreground/20 border-l-[3px] pl-4"
+                >
+                  <h3 className="text-sm font-semibold text-[#C45A1A]">
+                    {result.title}
+                  </h3>
+                  <p className="text-foreground/80 mt-2 text-sm leading-relaxed">
+                    {result.content?.slice(0, 320)}
+                    {(result.content?.length ?? 0) > 320 ? '…' : ''}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <Link
+                      href={
+                        isSeed
+                          ? `/product/${result.slug}`
+                          : `/imp/${result.slug}`
+                      }
+                      className="text-foreground text-xs font-medium underline underline-offset-2 hover:opacity-70"
+                      onClick={collapsePanel}
+                    >
+                      {isSeed ? 'View product' : 'View full IMP'}
+                    </Link>
+                    {isSeed && result.priceInCents != null && result.unit && (
+                      <>
                         <span className="text-foreground text-xs font-semibold">
-                          {formatPrice(seed.priceInCents)}
-                          <span className="text-muted-foreground text-xs font-normal">
-                            /{seed.unit}
+                          {formatPrice(result.priceInCents)}
+                          <span className="text-muted-foreground font-normal">
+                            /{result.unit}
                           </span>
                         </span>
                         <button
@@ -258,16 +172,16 @@ export function SearchPanelBody() {
                           aria-pressed={added}
                           onClick={() =>
                             added
-                              ? removeItem(seed.slug)
+                              ? removeItem(result.slug)
                               : addItem({
-                                  seedProductId: seed.id,
-                                  slug: seed.slug,
-                                  name: seed.name,
-                                  description: seed.description ?? '',
-                                  stock: seed.stock,
-                                  imageUrl: seed.imageUrl,
-                                  unit: seed.unit,
-                                  priceInCents: seed.priceInCents,
+                                  seedProductId: result.id,
+                                  slug: result.slug,
+                                  name: result.title,
+                                  description: result.content ?? '',
+                                  stock: result.stock ?? 0,
+                                  imageUrl: null,
+                                  unit: result.unit ?? 'unit',
+                                  priceInCents: result.priceInCents ?? 0,
                                 })
                           }
                           className={`group rounded-full px-2 py-1 text-xs transition-colors ${
@@ -289,32 +203,42 @@ export function SearchPanelBody() {
                             'Add to order'
                           )}
                         </button>
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </div>
-                );
-              })
-            )}
+                </article>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Footer with cart summary */}
-      {itemCount > 0 && (
-        <div className="flex items-center justify-between border-t bg-stone-50 px-5 py-3">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
-            <LuShoppingCart className="size-4" />
-            {itemCount} item{itemCount !== 1 ? 's' : ''} added to order
-          </div>
-          <Link
-            href="/order"
-            onClick={closePanel}
-            className="text-foreground text-sm font-medium underline underline-offset-2 hover:opacity-70"
-          >
-            View order
-          </Link>
-        </div>
-      )}
+      {/* Follow-up search */}
+      <form
+        onSubmit={handleFollowUpSubmit}
+        className="flex items-center gap-2 border-t bg-stone-50 px-4 py-3"
+      >
+        <LuSearch
+          className="text-muted-foreground size-4 shrink-0"
+          aria-hidden
+        />
+        <Input
+          ref={followUpRef}
+          value={followUp}
+          onChange={(event) => setFollowUp(event.target.value)}
+          placeholder="Ask a follow-up question…"
+          className="flex-1 border-0 bg-transparent text-sm shadow-none focus-visible:ring-0"
+          aria-label="Follow-up question"
+        />
+        <Button
+          type="submit"
+          size="sm"
+          variant="secondary"
+          disabled={!followUp.trim()}
+        >
+          Search
+        </Button>
+      </form>
     </div>
   );
 }

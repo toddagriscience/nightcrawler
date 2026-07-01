@@ -6,13 +6,13 @@ import { useState } from 'react';
 import { useSearchPanel } from '@/app/(authenticated)/components/search-panel/search-panel-context';
 
 /**
- * Zone-scoped search form. Opens the right-side search panel seeded with the
- * typed query instead of navigating away, keeping the zone context on screen.
+ * Zone-scoped search form. Opens the right-side search panel and runs an
+ * inference search for the typed query, keeping the zone context on screen.
  *
  * @returns The search input and submit button
  */
 export function ZoneSearchForm() {
-  const { openPanel } = useSearchPanel();
+  const { submitSearch } = useSearchPanel();
   const [query, setQuery] = useState('');
 
   return (
@@ -21,7 +21,9 @@ export function ZoneSearchForm() {
       className="mt-4 flex gap-2"
       onSubmit={(event) => {
         event.preventDefault();
-        openPanel(query.trim());
+        const trimmed = query.trim();
+        if (!trimmed) return;
+        submitSearch(trimmed);
       }}
     >
       <input
