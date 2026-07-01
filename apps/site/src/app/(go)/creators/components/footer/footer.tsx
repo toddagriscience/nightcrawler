@@ -20,7 +20,7 @@ const GoFooter = async () => {
     { href: '/terms', label: 'Terms & Conditions' },
     { href: '/privacy', label: 'Privacy Policy' },
     { href: '/accessibility', label: 'Accessibility' },
-    { href: '/disclosures', label: 'Disclosures' },
+    { href: '/legal', label: 'Legal' },
     {
       href: 'https://toddagriscience.safebase.us/',
       label: 'Vulnerability Reporting',

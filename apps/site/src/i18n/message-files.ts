@@ -16,7 +16,6 @@ export const messageFiles = [
   'articleIndex',
   'investors',
   'governance',
-  'disclosures',
   'accessibility',
   'privacy',
   'terms',
