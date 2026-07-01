@@ -35,7 +35,7 @@ jobs:
       DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install PostgreSQL 18 client
         run: |
