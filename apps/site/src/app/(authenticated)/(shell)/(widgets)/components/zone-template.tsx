@@ -81,10 +81,9 @@ export default async function ZoneTemplate({
         </div>
       </section>
 
-      {/* Mineral IMPs — placeholder until analysis tables are wired */}
+      {/* Mineral IMPs placeholder until analysis tables are wired */}
       <section className={SECTION_CLASS}>
-        <p className={HEADING_CLASS}>Mineral IMPs</p>
-        <p className="text-foreground/60 mt-4 text-sm">
+        <p className="text-foreground/60 text-sm">
           Information temporarily not available
         </p>
       </section>
