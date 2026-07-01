@@ -1,9 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import AuthenticatedHeader from '@/components/common/authenticated-header/authenticated-header';
-
 /**
- * Renders authenticated misc routes with the platform header (Contact, Account, etc.).
+ * Renders authenticated misc routes. Navigation is provided by the global
+ * sidebar in the authenticated layout, so no per-route header is added here.
  *
  * @param props.children - Nested misc route content
  */
@@ -12,10 +11,5 @@ export default function MiscAuthenticatedShell({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <AuthenticatedHeader />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
