@@ -46,8 +46,19 @@ export function SearchPanelBody() {
   const [seeds, setSeeds] = useState<Seed[]>([]);
   const [loadError, setLoadError] = useState(false);
   const [expandedImp, setExpandedImp] = useState<number | null>(null);
+  const [seeded, setSeeded] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { order, itemCount, addItem, removeItem } = useOrder();
+
+  // Seed the input with the incoming query once per open, during render (the
+  // sanctioned alternative to a setState-in-effect). Reset when the panel closes
+  // so the next open reseeds.
+  if (open && !seeded) {
+    setSeeded(true);
+    setQuery(initialQuery);
+  } else if (!open && seeded) {
+    setSeeded(false);
+  }
 
   // Load all IMPs/seeds each time the panel opens.
   useEffect(() => {
@@ -71,13 +82,12 @@ export function SearchPanelBody() {
     };
   }, [open]);
 
-  // Seed the input with any incoming query and focus it when the panel opens.
+  // Focus the search input when the panel opens.
   useEffect(() => {
     if (open) {
-      setQuery(initialQuery);
       inputRef.current?.focus();
     }
-  }, [open, initialQuery]);
+  }, [open]);
 
   // Escape closes the panel (non-trapping — the page stays interactive).
   useEffect(() => {
