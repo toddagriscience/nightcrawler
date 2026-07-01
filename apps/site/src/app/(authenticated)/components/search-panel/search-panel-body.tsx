@@ -9,7 +9,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { LuChevronLeft, LuSearch } from 'react-icons/lu';
+import { LuChevronLeft } from 'react-icons/lu';
+import { BiUpArrowAlt } from 'react-icons/bi';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { runInferenceSearch } from '@/app/(authenticated)/actions/inference-search';
@@ -83,14 +84,7 @@ export function SearchPanelBody() {
   return (
     <div className="flex h-full flex-col bg-white">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b px-5 py-4">
-        <LuSearch
-          className="text-muted-foreground size-5 shrink-0"
-          aria-hidden
-        />
-        <p className="text-foreground min-w-0 flex-1 text-sm font-medium">
-          Search
-        </p>
+      <div className="flex items-center justify-end px-5 py-4">
         <Button
           variant="ghost"
           size="icon"
@@ -105,7 +99,7 @@ export function SearchPanelBody() {
       <div className="flex-1 overflow-y-auto px-5 py-6">
         {activeQuery && (
           <div className="mb-6 flex justify-end">
-            <p className="bg-stone-100 text-foreground max-w-[90%] rounded-2xl rounded-tr-md px-4 py-3 text-sm leading-relaxed">
+            <p className="bg-stone-100 text-foreground max-w-[90%] rounded-[3px] px-4 py-3 text-sm leading-relaxed">
               {activeQuery}
             </p>
           </div>
@@ -214,30 +208,25 @@ export function SearchPanelBody() {
       </div>
 
       {/* Follow-up search */}
-      <form
-        onSubmit={handleFollowUpSubmit}
-        className="flex items-center gap-2 border-t bg-stone-50 px-4 py-3"
-      >
-        <LuSearch
-          className="text-muted-foreground size-4 shrink-0"
-          aria-hidden
-        />
-        <Input
-          ref={followUpRef}
-          value={followUp}
-          onChange={(event) => setFollowUp(event.target.value)}
-          placeholder="Ask a follow-up question…"
-          className="flex-1 border-0 bg-transparent text-sm shadow-none focus-visible:ring-0"
-          aria-label="Follow-up question"
-        />
-        <Button
-          type="submit"
-          size="sm"
-          variant="secondary"
-          disabled={!followUp.trim()}
-        >
-          Search
-        </Button>
+      <form onSubmit={handleFollowUpSubmit} className="px-4 py-3">
+        <div className="flex items-center gap-2 rounded-xl border border-[#D9D9D9]/60 bg-white py-2 pr-2 pl-4">
+          <Input
+            ref={followUpRef}
+            value={followUp}
+            onChange={(event) => setFollowUp(event.target.value)}
+            placeholder="Ask a follow up question..."
+            className="flex-1 border-0 bg-transparent text-sm shadow-none focus-visible:ring-0"
+            aria-label="Follow-up question"
+          />
+          <button
+            type="submit"
+            disabled={!followUp.trim()}
+            aria-label="Submit follow-up question"
+            className="text-foreground flex size-8 shrink-0 items-center justify-center rounded-md bg-stone-100 transition-colors hover:bg-stone-200 disabled:opacity-40"
+          >
+            <BiUpArrowAlt className="size-5" />
+          </button>
+        </div>
       </form>
     </div>
   );

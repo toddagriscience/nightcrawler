@@ -84,7 +84,9 @@ describe('SearchPanelBody', () => {
       screen.getByRole('textbox', { name: /Follow-up question/i }),
       { target: { value: 'soil pH' } }
     );
-    fireEvent.click(screen.getByRole('button', { name: /^Search$/i }));
+    fireEvent.click(
+      screen.getByRole('button', { name: /Submit follow-up question/i })
+    );
 
     await waitFor(() => {
       expect(runInferenceSearch).toHaveBeenCalledWith('soil pH');
