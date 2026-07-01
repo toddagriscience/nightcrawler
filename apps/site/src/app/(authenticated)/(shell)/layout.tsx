@@ -6,6 +6,7 @@ import Sidebar from '../components/sidebar/sidebar';
 import { SidebarCollapseProvider } from '../components/sidebar/sidebar-collapse-context';
 import { SearchPanelProvider } from '../components/search-panel/search-panel-context';
 import { SearchPanel } from '../components/search-panel/search-panel';
+import { SearchPopup } from '../components/search-panel/search-popup';
 
 /**
  * Layout for authenticated routes that render the platform sidebar.
@@ -40,6 +41,7 @@ export default async function ShellLayout({
             {children}
           </div>
           <SearchPanel />
+          <SearchPopup />
         </div>
       </SearchPanelProvider>
     </SidebarCollapseProvider>

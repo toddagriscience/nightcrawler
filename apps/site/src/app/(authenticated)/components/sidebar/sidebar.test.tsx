@@ -8,6 +8,7 @@ import { SearchPanelProvider } from '../search-panel/search-panel-context';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 
 const getManagementZones = vi.fn(async () => [
@@ -18,10 +19,6 @@ const getManagementZones = vi.fn(async () => [
 vi.mock('@/app/(authenticated)/(shell)/(accounts)/account/db', () => ({
   getManagementZones: () => getManagementZones(),
   getAccountShellData: async () => ({ farmName: 'Green Acres' }),
-}));
-
-vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
-  getSearchModalData: vi.fn(async () => ({ imps: [], seeds: [] })),
 }));
 
 // Sidebar is an async server component, so resolve it before handing the
@@ -53,14 +50,13 @@ describe('Sidebar', () => {
       'href',
       '/reminders'
     );
-    expect(screen.getByRole('link', { name: /Orders/i })).toHaveAttribute(
-      'href',
-      '/order'
-    );
     expect(screen.getByRole('link', { name: /Account/i })).toHaveAttribute(
       'href',
       '/account'
     );
+    expect(
+      screen.queryByRole('link', { name: /Orders/i })
+    ).not.toBeInTheDocument();
   });
 
   it('lists the management zones (read-only)', async () => {
@@ -74,6 +70,8 @@ describe('Sidebar', () => {
       'href',
       '/?zone=2'
     );
+    expect(screen.getByText('1 ⌘')).toBeInTheDocument();
+    expect(screen.getByText('2 ⌘')).toBeInTheDocument();
   });
 
   it('does not render add or delete zone controls', async () => {
