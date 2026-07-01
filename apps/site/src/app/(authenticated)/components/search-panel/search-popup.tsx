@@ -3,7 +3,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { LuSearch, LuSparkles } from 'react-icons/lu';
+import { LuSearch } from 'react-icons/lu';
+import IrisIcon from '../sidebar/iris-icon';
 import { useSearchPanel } from './search-panel-context';
 
 /**
@@ -97,10 +98,9 @@ export function SearchPopup() {
                 }}
                 className="hover:bg-accent flex w-full items-start gap-3 px-4 py-3 text-left transition-colors"
               >
-                <LuSparkles
-                  className="text-muted-foreground mt-0.5 size-4 shrink-0"
-                  aria-hidden
-                />
+                <span className="mt-0.5 shrink-0">
+                  <IrisIcon />
+                </span>
                 <div className="min-w-0">
                   <p className="text-foreground truncate text-sm font-medium">
                     &ldquo;{trimmed}&rdquo;
