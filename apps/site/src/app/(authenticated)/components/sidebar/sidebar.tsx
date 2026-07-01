@@ -6,7 +6,10 @@ import SidebarUserFooter from './sidebar-user-footer';
 import SidebarSearchButton from './sidebar-search-button';
 import SidebarCollapseToggle from './sidebar-collapse-toggle';
 import ZoneItem from './zone-item';
-import { getManagementZones } from '@/app/(authenticated)/(shell)/(accounts)/account/db';
+import {
+  getAccountShellData,
+  getManagementZones,
+} from '@/app/(authenticated)/(shell)/(accounts)/account/db';
 import { LuBell, LuShoppingCart } from 'react-icons/lu';
 
 /**
@@ -16,12 +19,19 @@ import { LuBell, LuShoppingCart } from 'react-icons/lu';
  * @returns {React.ReactNode} - The sidebar navigation
  */
 export default async function Sidebar() {
-  const zones = await getManagementZones();
+  const [zones, { farmName }] = await Promise.all([
+    getManagementZones(),
+    getAccountShellData(),
+  ]);
 
   return (
     <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen overflow-y-auto">
-      {/* Collapse control */}
-      <div className="flex items-center justify-end px-2 pt-2">
+      {/* Farm name + collapse control — title's left edge aligns with the nav
+          item icons (row px-3 + inner px-3, matching SidebarNavItem's px-3). */}
+      <div className="flex items-center justify-between gap-2 px-3 pt-2">
+        <span className="text-foreground min-w-0 flex-1 truncate px-3 text-sm font-medium">
+          {farmName}
+        </span>
         <SidebarCollapseToggle />
       </div>
 

@@ -1,13 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { NavLinks } from '@/components/common/authenticated-header/nav-links';
 import { managementZone } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAccountShellData } from '../(accounts)/account/db';
 import ZoneTemplate from './components/zone-template';
 
 /**
@@ -30,7 +28,6 @@ export default async function DashboardPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const currentUser = await getAuthenticatedInfo();
-  const { farmName } = await getAccountShellData();
 
   // Fetch ALL management zones for the farm (oldest first)
   const allManagementZones = await db
@@ -87,18 +84,6 @@ export default async function DashboardPage({
 
   return (
     <div className="flex h-screen flex-col">
-      <header
-        className="flex w-full items-center justify-between px-3 pt-3 pb-2"
-        role="banner"
-      >
-        <h1 className="text-foreground truncate text-lg font-medium">
-          {farmName}
-        </h1>
-        <div className="flex flex-row items-center gap-6">
-          <NavLinks />
-        </div>
-      </header>
-
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto">
           <ZoneTemplate

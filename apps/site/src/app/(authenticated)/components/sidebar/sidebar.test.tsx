@@ -17,6 +17,7 @@ const getManagementZones = vi.fn(async () => [
 
 vi.mock('@/app/(authenticated)/(shell)/(accounts)/account/db', () => ({
   getManagementZones: () => getManagementZones(),
+  getAccountShellData: async () => ({ farmName: 'Green Acres' }),
 }));
 
 vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
@@ -39,6 +40,11 @@ afterEach(() => {
 });
 
 describe('Sidebar', () => {
+  it('shows the farm name at the top', async () => {
+    await renderSidebar();
+    expect(screen.getByText('Green Acres')).toBeInTheDocument();
+  });
+
   it('renders the primary nav links', async () => {
     await renderSidebar();
     // Search is a modal trigger (button), not a route link.
