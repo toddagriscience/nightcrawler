@@ -65,7 +65,7 @@ export async function getAccountUsersData(): Promise<{
     ) ?? farmUsers.find((farmUser) => farmUser.id !== currentUser.id);
 
   const principalContact = {
-    name: toDisplayName(
+    firstName: toDisplayName(
       principalOperator?.firstName,
       principalOperator?.lastName
     ),
@@ -97,6 +97,10 @@ export async function getAccountFarmData(): Promise<{
     .leftJoin(farmLocation, eq(farmLocation.farmId, farm.id))
     .where(eq(farm.id, currentUser.farmId))
     .limit(1);
+
+  if (!farmRecord) {
+    throw new Error('Farm not found');
+  }
 
   return { farm: farmRecord.farm, location: farmRecord.farm_location };
 }
