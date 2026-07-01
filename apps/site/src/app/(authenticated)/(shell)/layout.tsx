@@ -4,6 +4,8 @@ import { requirePlatformOnboardingComplete } from '@/lib/utils/platform-onboardi
 import SidebarClient from '../components/sidebar/sidebar-client';
 import Sidebar from '../components/sidebar/sidebar';
 import { SidebarCollapseProvider } from '../components/sidebar/sidebar-collapse-context';
+import { SearchPanelProvider } from '../components/search-panel/search-panel-context';
+import { SearchPanel } from '../components/search-panel/search-panel';
 
 /**
  * Layout for authenticated routes that render the platform sidebar.
@@ -29,14 +31,17 @@ export default async function ShellLayout({
 
   return (
     <SidebarCollapseProvider>
-      <div className="flex h-screen overflow-hidden">
-        <SidebarClient>
-          <Sidebar />
-        </SidebarClient>
-        <div className="flex-1 min-w-0 overflow-y-auto px-6 py-6">
-          {children}
+      <SearchPanelProvider>
+        <div className="flex h-screen overflow-hidden">
+          <SidebarClient>
+            <Sidebar />
+          </SidebarClient>
+          <div className="flex-1 min-w-0 overflow-y-auto px-6 py-6">
+            {children}
+          </div>
+          <SearchPanel />
         </div>
-      </div>
+      </SearchPanelProvider>
     </SidebarCollapseProvider>
   );
 }

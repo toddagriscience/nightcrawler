@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import Sidebar from './sidebar';
 import { SidebarCollapseProvider } from './sidebar-collapse-context';
+import { SearchPanelProvider } from '../search-panel/search-panel-context';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
@@ -26,7 +27,9 @@ vi.mock('@/app/(authenticated)/actions/search-modal', () => ({
 // element tree to render().
 async function renderSidebar() {
   return render(
-    <SidebarCollapseProvider>{await Sidebar()}</SidebarCollapseProvider>
+    <SidebarCollapseProvider>
+      <SearchPanelProvider>{await Sidebar()}</SearchPanelProvider>
+    </SidebarCollapseProvider>
   );
 }
 

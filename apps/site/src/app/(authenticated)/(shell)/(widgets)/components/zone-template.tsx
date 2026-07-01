@@ -3,6 +3,7 @@
 import { analysis } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { desc, eq } from 'drizzle-orm';
+import { ZoneSearchForm } from './zone-search-form';
 
 /** Months between a soil sample and the next scheduled one. */
 const TEST_PERIOD_MONTHS = 6;
@@ -103,31 +104,12 @@ export default async function ZoneTemplate({
         </button>
       </section>
 
-      {/* Search — submits to the knowledge-base search page */}
+      {/* Search — opens the right-side search panel seeded with the query */}
       <section className={SECTION_CLASS}>
         <label htmlFor="zone-search" className={LABEL_CLASS}>
           Ask about this zone or search your farm records
         </label>
-        <form
-          action="/search"
-          method="get"
-          role="search"
-          className="mt-4 flex gap-2"
-        >
-          <input
-            id="zone-search"
-            name="q"
-            type="search"
-            placeholder="e.g. What does this mean for my tomatoes?"
-            className="border-foreground/15 text-foreground flex-1 rounded-md border bg-transparent px-3 py-2 text-sm"
-          />
-          <button
-            type="submit"
-            className="border-foreground/15 text-foreground hover:bg-foreground/5 rounded-md border px-5 py-2 text-sm"
-          >
-            Ask
-          </button>
-        </form>
+        <ZoneSearchForm />
       </section>
     </div>
   );
