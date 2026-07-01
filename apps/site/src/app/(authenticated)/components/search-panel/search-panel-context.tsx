@@ -15,8 +15,10 @@ import type { ReactNode } from 'react';
 interface SearchPanelValue {
   /** Whether the right-side search panel is currently open. */
   open: boolean;
-  /** Opens the panel. */
-  openPanel: () => void;
+  /** Query to seed the panel input with on the next open (consumed by the body). */
+  initialQuery: string;
+  /** Opens the panel, optionally seeding the search input with a query. */
+  openPanel: (query?: string) => void;
   /** Closes the panel. */
   closePanel: () => void;
   /** Toggles the panel open/closed. */
@@ -37,14 +39,21 @@ const SearchPanelContext = createContext<SearchPanelValue | null>(null);
  */
 export function SearchPanelProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [initialQuery, setInitialQuery] = useState('');
 
-  const openPanel = useCallback(() => setOpen(true), []);
+  const openPanel = useCallback((query = '') => {
+    setInitialQuery(query);
+    setOpen(true);
+  }, []);
   const closePanel = useCallback(() => setOpen(false), []);
-  const toggle = useCallback(() => setOpen((current) => !current), []);
+  const toggle = useCallback(() => {
+    setInitialQuery('');
+    setOpen((current) => !current);
+  }, []);
 
   const value = useMemo(
-    () => ({ open, openPanel, closePanel, toggle }),
-    [open, openPanel, closePanel, toggle]
+    () => ({ open, initialQuery, openPanel, closePanel, toggle }),
+    [open, initialQuery, openPanel, closePanel, toggle]
   );
 
   return (

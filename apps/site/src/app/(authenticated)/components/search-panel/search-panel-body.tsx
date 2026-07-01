@@ -39,7 +39,7 @@ type Seed = SearchPanelData['seeds'][number];
  * @returns The browse-and-search UI
  */
 export function SearchPanelBody() {
-  const { open, closePanel } = useSearchPanel();
+  const { open, initialQuery, closePanel } = useSearchPanel();
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('imps');
   const [imps, setImps] = useState<Imp[]>([]);
@@ -71,12 +71,13 @@ export function SearchPanelBody() {
     };
   }, [open]);
 
-  // Focus the search input when the panel opens.
+  // Seed the input with any incoming query and focus it when the panel opens.
   useEffect(() => {
     if (open) {
+      setQuery(initialQuery);
       inputRef.current?.focus();
     }
-  }, [open]);
+  }, [open, initialQuery]);
 
   // Escape closes the panel (non-trapping — the page stays interactive).
   useEffect(() => {

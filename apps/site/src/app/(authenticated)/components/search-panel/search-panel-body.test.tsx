@@ -38,7 +38,7 @@ const sampleSeeds = [
 function AutoOpen() {
   const { openPanel } = useSearchPanel();
   return (
-    <button type="button" onClick={openPanel}>
+    <button type="button" onClick={() => openPanel()}>
       open-panel
     </button>
   );
