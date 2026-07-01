@@ -9,8 +9,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { LuChevronLeft } from 'react-icons/lu';
-import { BiUpArrowAlt } from 'react-icons/bi';
+import { BiDockLeft, BiUpArrowAlt } from 'react-icons/bi';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { runInferenceSearch } from '@/app/(authenticated)/actions/inference-search';
@@ -91,7 +90,7 @@ export function SearchPanelBody() {
           onClick={collapsePanel}
           aria-label="Collapse search results"
         >
-          <LuChevronLeft className="size-4" />
+          <BiDockLeft className="size-4" />
         </Button>
       </div>
 

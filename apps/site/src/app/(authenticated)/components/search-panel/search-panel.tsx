@@ -11,7 +11,7 @@
  *   shifting content is impractical on narrow screens.
  */
 
-import { LuChevronLeft, LuSearch } from 'react-icons/lu';
+import { BiDockRight } from 'react-icons/bi';
 import { useSearchPanel } from './search-panel-context';
 import { SearchPanelBody } from './search-panel-body';
 
@@ -44,10 +44,9 @@ export function SearchPanel() {
           type="button"
           onClick={expandPanel}
           aria-label="Expand search results"
-          className="border-border bg-background hover:bg-accent fixed top-1/2 right-0 z-50 flex -translate-y-1/2 items-center gap-1 rounded-l-md border border-r-0 px-2 py-3 shadow-md transition-colors"
+          className="text-foreground/60 hover:text-foreground fixed top-4 right-4 z-50 flex items-center justify-center transition-colors"
         >
-          <LuSearch className="size-4" aria-hidden />
-          <LuChevronLeft className="size-3 rotate-180" aria-hidden />
+          <BiDockRight className="size-3.5" aria-hidden />
         </button>
       )}
 
