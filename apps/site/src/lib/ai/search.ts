@@ -84,7 +84,29 @@ interface SeedSearchRow {
 }
 
 /**
- * Searches both IMP articles and seed products for a matching query.
+ * Awaits a single knowledge-source query, degrading to an empty result set
+ * (and a logged error) if that one source fails. One unavailable table or a
+ * lagging migration must not take down the whole assistant — the other sources
+ * still return their matches.
+ *
+ * @param label - Source name for the log line
+ * @param query - The Drizzle query to run
+ * @returns The rows, or [] if the query throws
+ */
+async function runSource<T>(
+  label: string,
+  query: PromiseLike<T[]>
+): Promise<T[]> {
+  try {
+    return await query;
+  } catch (error) {
+    logger.error(`[Search] ${label} source failed:`, error);
+    return [];
+  }
+}
+
+/**
+ * Searches IMP articles, general IMPs, and seed products for a matching query.
  * Returns mixed results sorted by relevance, or an empty array
  * if nothing is similar enough (which triggers the "contact advisor" message).
  *
@@ -99,72 +121,81 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
     const knowledgeSimilarity = sql<number>`1 - (${knowledgeArticle.embedding} <=> ${embeddingVector}::vector)`;
 
     const [impResults, generalImpResults, seedResults] = await Promise.all([
-      db
-        .select({
-          id: integratedManagementPlan.id,
-          title: integratedManagementPlan.title,
-          slug: integratedManagementPlan.slug,
-          content: integratedManagementPlan.content,
-          source: integratedManagementPlan.source,
-          category: sql<string>`${integratedManagementPlan.category}::text`,
-          similarity: knowledgeSimilarity,
-        })
-        .from(integratedManagementPlan)
-        .innerJoin(
-          knowledgeArticle,
-          eq(knowledgeArticle.id, integratedManagementPlan.knowledgeArticleId)
-        )
-        .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
-        .orderBy(desc(knowledgeSimilarity))
-        .limit(MAX_RESULTS),
-      db
-        .select({
-          id: generalImp.id,
-          title: sql<string>`coalesce(${generalImp.title}, 'Integrated Management Practice')`,
-          slug: generalImp.slug,
-          content: generalImp.content,
-          source: sql<string | null>`null`,
-          category: sql<string>`coalesce(${generalImp.tags}[1], 'general')`,
-          similarity: knowledgeSimilarity,
-        })
-        .from(generalImp)
-        .innerJoin(
-          knowledgeArticle,
-          eq(knowledgeArticle.id, generalImp.knowledgeArticleId)
-        )
-        .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
-        .orderBy(desc(knowledgeSimilarity))
-        .limit(MAX_RESULTS),
-      db
-        .select({
-          id: seedProduct.id,
-          title: seedProduct.name,
-          slug: seedProduct.slug,
-          content: seedProduct.description,
-          source: sql<
-            string | null
-          >`coalesce(${integratedManagementPlan.source}, 'Todd Seed Catalog')`,
-          category: sql<string>`'seed products'`,
-          similarity: knowledgeSimilarity,
-          stock: seedProduct.stock,
-          priceInCents: seedProduct.priceInCents,
-          unit: seedProduct.unit,
-        })
-        .from(seedProduct)
-        .innerJoin(
-          knowledgeArticle,
-          eq(knowledgeArticle.id, seedProduct.knowledgeArticleId)
-        )
-        .leftJoin(
-          integratedManagementPlan,
-          eq(
-            integratedManagementPlan.id,
-            seedProduct.relatedIntegratedManagementPlanId
+      runSource(
+        'imp',
+        db
+          .select({
+            id: integratedManagementPlan.id,
+            title: integratedManagementPlan.title,
+            slug: integratedManagementPlan.slug,
+            content: integratedManagementPlan.content,
+            source: integratedManagementPlan.source,
+            category: sql<string>`${integratedManagementPlan.category}::text`,
+            similarity: knowledgeSimilarity,
+          })
+          .from(integratedManagementPlan)
+          .innerJoin(
+            knowledgeArticle,
+            eq(knowledgeArticle.id, integratedManagementPlan.knowledgeArticleId)
           )
-        )
-        .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
-        .orderBy(desc(knowledgeSimilarity))
-        .limit(MAX_RESULTS),
+          .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
+          .orderBy(desc(knowledgeSimilarity))
+          .limit(MAX_RESULTS)
+      ),
+      runSource(
+        'general-imp',
+        db
+          .select({
+            id: generalImp.id,
+            title: sql<string>`coalesce(${generalImp.title}, 'Integrated Management Practice')`,
+            slug: generalImp.slug,
+            content: generalImp.content,
+            source: sql<string | null>`null`,
+            category: sql<string>`coalesce(${generalImp.tags}[1], 'general')`,
+            similarity: knowledgeSimilarity,
+          })
+          .from(generalImp)
+          .innerJoin(
+            knowledgeArticle,
+            eq(knowledgeArticle.id, generalImp.knowledgeArticleId)
+          )
+          .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
+          .orderBy(desc(knowledgeSimilarity))
+          .limit(MAX_RESULTS)
+      ),
+      runSource(
+        'seed',
+        db
+          .select({
+            id: seedProduct.id,
+            title: seedProduct.name,
+            slug: seedProduct.slug,
+            content: seedProduct.description,
+            source: sql<
+              string | null
+            >`coalesce(${integratedManagementPlan.source}, 'Todd Seed Catalog')`,
+            category: sql<string>`'seed products'`,
+            similarity: knowledgeSimilarity,
+            stock: seedProduct.stock,
+            priceInCents: seedProduct.priceInCents,
+            unit: seedProduct.unit,
+          })
+          .from(seedProduct)
+          .innerJoin(
+            knowledgeArticle,
+            eq(knowledgeArticle.id, seedProduct.knowledgeArticleId)
+          )
+          .leftJoin(
+            integratedManagementPlan,
+            eq(
+              integratedManagementPlan.id,
+              seedProduct.relatedIntegratedManagementPlanId
+            )
+          )
+          .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
+          .orderBy(desc(knowledgeSimilarity))
+          .limit(MAX_RESULTS)
+      ),
     ]);
 
     return [
