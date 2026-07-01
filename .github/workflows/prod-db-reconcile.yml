@@ -1,0 +1,126 @@
+name: Prod DB Reconcile (Apply Pending Migrations)
+
+# One-off, manually triggered reconciliation for production.
+#
+# Background: the release workflow uses `drizzle-kit push`, which crashes on
+# drizzle-kit's interactive enum resolver in CI (no TTY) yet exits 0 -> the
+# "Push to production" step reports success while applying nothing. As a result
+# prod silently drifted behind `main` (frozen at the 1.1.9 schema).
+#
+# This workflow applies the committed migration `.sql` files (0010-0013) that
+# prod is missing, verbatim, in a single all-or-nothing transaction. It defaults
+# to `verify` (read-only) so you can confirm real prod state before any writes.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'verify = read-only state check; apply = run pending migrations in one transaction'
+        required: true
+        default: verify
+        type: choice
+        options:
+          - verify
+          - apply
+
+jobs:
+  reconcile:
+    name: Reconcile production schema (${{ inputs.mode }})
+    runs-on: ubuntu-latest
+    env:
+      PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
+      PROD_DATABASE_PORT: ${{ secrets.PROD_DATABASE_PORT }}
+      PROD_DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
+      PROD_DATABASE_PASSWORD: ${{ secrets.PROD_DATABASE_PASSWORD }}
+      PROD_DATABASE_DATABASE: ${{ secrets.PROD_DATABASE_DATABASE }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /tmp/pgdg.asc
+          gpg --dearmor --batch --yes -o /tmp/apt.postgresql.org.gpg /tmp/pgdg.asc
+          sudo mv /tmp/apt.postgresql.org.gpg /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+          /usr/lib/postgresql/18/bin/psql --version
+
+      - name: Write prod CA certificate
+        run: |
+          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
+          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
+
+      - name: Verify current production schema state
+        id: verify
+        working-directory: ./packages/db
+        run: |
+          set -euo pipefail
+          PSQL=/usr/lib/postgresql/18/bin/psql
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem"
+
+          echo "Checking which migrations are present on production..."
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+            select
+              exists (select 1 from information_schema.columns
+                      where table_name='farm' and column_name='advisor_profile_notes') as has_0010,
+              (to_regclass('public.form_submissions') is not null)                     as has_0011,
+              (to_regclass('public.seed_variety') is not null)                         as has_0012,
+              (to_regclass('public.reminder') is not null)                             as has_0013,
+              (to_regclass('public.platform_access_application') is not null)          as pre_0011_table_present;
+          "
+
+          has_0010=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select exists (select 1 from information_schema.columns where table_name='farm' and column_name='advisor_profile_notes');")
+          has_0011=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.form_submissions') is not null);")
+          has_0012=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.seed_variety') is not null);")
+          has_0013=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.reminder') is not null);")
+
+          {
+            echo "has_0010=$has_0010"
+            echo "has_0011=$has_0011"
+            echo "has_0012=$has_0012"
+            echo "has_0013=$has_0013"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Apply pending migrations (single transaction)
+        if: ${{ inputs.mode == 'apply' }}
+        working-directory: ./packages/db
+        run: |
+          set -euo pipefail
+          PSQL=/usr/lib/postgresql/18/bin/psql
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem"
+
+          declare -a FILES=()
+          [ "${{ steps.verify.outputs.has_0010 }}" = "t" ] || FILES+=("drizzle/0010_add-farm-advisor-profile-notes.sql")
+          [ "${{ steps.verify.outputs.has_0011 }}" = "t" ] || FILES+=("drizzle/0011_rename-form-submissions.sql")
+          [ "${{ steps.verify.outputs.has_0012 }}" = "t" ] || FILES+=("drizzle/0012_variety-inventory.sql")
+          [ "${{ steps.verify.outputs.has_0013 }}" = "t" ] || FILES+=("drizzle/0013_add-reminder.sql")
+
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "Production is already up to date. Nothing to apply."
+            exit 0
+          fi
+
+          echo "Applying the following migrations in a single transaction:"
+          printf ' - %s\n' "${FILES[@]}"
+
+          declare -a ARGS=()
+          for f in "${FILES[@]}"; do ARGS+=(-f "$f"); done
+
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" \
+            --single-transaction \
+            -v ON_ERROR_STOP=1 \
+            "${ARGS[@]}"
+
+          echo "Migrations applied. Re-verifying..."
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+            select
+              exists (select 1 from information_schema.columns
+                      where table_name='farm' and column_name='advisor_profile_notes') as has_0010,
+              (to_regclass('public.form_submissions') is not null)                     as has_0011,
+              (to_regclass('public.seed_variety') is not null)                         as has_0012,
+              (to_regclass('public.reminder') is not null)                             as has_0013;
+          "

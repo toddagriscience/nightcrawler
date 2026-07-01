@@ -1,25 +1,45 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import SidebarSearchButton from './sidebar-search-button';
+import {
+  SearchPanelProvider,
+  useSearchPanel,
+} from '../search-panel/search-panel-context';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }));
 
+/** Renders the modal's open state so the button can be asserted. */
+function ModalState() {
+  const { modalOpen } = useSearchPanel();
+  return <span data-testid="modal-open">{String(modalOpen)}</span>;
+}
+
+function renderButton() {
+  return render(
+    <SearchPanelProvider>
+      <SidebarSearchButton />
+      <ModalState />
+    </SearchPanelProvider>
+  );
+}
+
 describe('SidebarSearchButton', () => {
-  it('renders a Search link pointing at /search', () => {
-    render(<SidebarSearchButton />);
-    const link = screen.getByRole('link', { name: /Search/i });
-    expect(link).toHaveAttribute('href', '/search');
+  it('renders a Search button (not a link)', () => {
+    renderButton();
+    expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /Search/i })
+    ).not.toBeInTheDocument();
   });
 
-  it('renders an icon (react-icons svg, no on-disk image)', () => {
-    const { container } = render(<SidebarSearchButton />);
-    const svg = container.querySelector('svg');
-    expect(svg).toBeInTheDocument();
-    // The legacy <Icon> wrapper rendered an <img>; ensure it is gone.
-    expect(container.querySelector('img')).not.toBeInTheDocument();
+  it('opens the search popup when clicked', () => {
+    renderButton();
+    expect(screen.getByTestId('modal-open')).toHaveTextContent('false');
+    fireEvent.click(screen.getByRole('button', { name: /Search/i }));
+    expect(screen.getByTestId('modal-open')).toHaveTextContent('true');
   });
 });
