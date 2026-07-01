@@ -28,7 +28,7 @@ export default async function Sidebar() {
     <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen overflow-y-auto">
       {/* Farm name + collapse control */}
       <div className="flex items-center justify-between gap-2 px-3 pt-2">
-        <span className="text-foreground truncate text-sm font-medium">
+        <span className="text-foreground truncate pl-3 text-sm font-medium">
           {farmName}
         </span>
         <SidebarCollapseToggle />
