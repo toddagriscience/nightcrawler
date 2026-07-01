@@ -26,15 +26,12 @@ export default async function Sidebar() {
 
   return (
     <aside className="w-[280px] shrink-0 border-r border-[#D9D9D9]/30 bg-[var(--background)] flex flex-col h-screen overflow-y-auto">
-      {/* Farm name + collapse control — title aligns with the nav item labels
-          (empty icon-sized spacer mirrors SidebarNavItem's icon + gap). */}
+      {/* Farm name + collapse control — title's left edge aligns with the nav
+          item icons (row px-3 + inner px-3, matching SidebarNavItem's px-3). */}
       <div className="flex items-center justify-between gap-2 px-3 pt-2">
-        <div className="flex min-w-0 flex-1 items-center gap-2.5 px-3">
-          <span className="size-4 shrink-0" aria-hidden="true" />
-          <span className="text-foreground truncate text-sm font-medium">
-            {farmName}
-          </span>
-        </div>
+        <span className="text-foreground min-w-0 flex-1 truncate px-3 text-sm font-medium">
+          {farmName}
+        </span>
         <SidebarCollapseToggle />
       </div>
 
