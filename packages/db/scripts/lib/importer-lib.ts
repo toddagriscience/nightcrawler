@@ -46,15 +46,19 @@ export function requireLocalDatabaseUrl(): string {
 
 /** Minimal RFC-4180 CSV parser (quotes, commas, embedded newlines). */
 export function parseCsv(text: string): string[][] {
+  // Normalize CRLF (and lone CR) to LF up front so quoted multi-line cells
+  // hash identically whether the sheet was exported on Windows or elsewhere;
+  // otherwise a stray \r inside a cell triggers a needless re-embed.
+  const input = text.replace(/\r\n?/g, '\n');
   const rows: string[][] = [];
   let row: string[] = [];
   let field = '';
   let inQuotes = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
+  for (let i = 0; i < input.length; i += 1) {
+    const c = input[i];
     if (inQuotes) {
       if (c === '"') {
-        if (text[i + 1] === '"') {
+        if (input[i + 1] === '"') {
           field += '"';
           i += 1;
         } else {
@@ -68,8 +72,7 @@ export function parseCsv(text: string): string[][] {
     } else if (c === ',') {
       row.push(field);
       field = '';
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i += 1;
+    } else if (c === '\n') {
       row.push(field);
       field = '';
       rows.push(row);

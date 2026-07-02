@@ -167,6 +167,10 @@ function classify(rows: string[][]) {
 
 // ---- main -----------------------------------------------------------------
 async function main() {
+  // Validate the DB target up front so a misconfigured environment fails fast
+  // on dry runs too, not only once --commit is passed.
+  const databaseUrl = requireLocalDatabaseUrl();
+
   const csv = readFileSync(CSV_PATH, 'utf8');
   const rows = parseCsv(csv);
   const { crops, orphans, notes } = classify(rows);
@@ -217,7 +221,7 @@ async function main() {
     return;
   }
 
-  const db = drizzle(requireLocalDatabaseUrl(), { casing: 'snake_case' });
+  const db = drizzle(databaseUrl, { casing: 'snake_case' });
   const usedSlugs = new Set<string>();
   const uniqueSlug = (base: string): string => {
     let s = base || 'item';

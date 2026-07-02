@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { LuSearch } from 'react-icons/lu';
 import IrisIcon from '../sidebar/iris-icon';
 import { useSearchPanel } from './search-panel-context';
+import { resultHref } from './search-display';
 import {
   searchImps,
   type ImpHit,
@@ -24,6 +25,10 @@ export function SearchPopup() {
   const [query, setQuery] = useState('');
   const [hits, setHits] = useState<ImpHit[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // Bumped on every fired request so a slow, older response can't overwrite
+  // the hits of a newer query (same pattern as search-panel-context).
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
     if (!modalOpen) return;
@@ -45,12 +50,22 @@ export function SearchPopup() {
     const q = query.trim();
     const timer = setTimeout(() => {
       if (!q) {
+        // Invalidate any in-flight request so it can't repopulate stale hits.
+        requestIdRef.current += 1;
         setHits([]);
         return;
       }
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
       searchImps(q)
-        .then(setHits)
-        .catch(() => setHits([]));
+        .then((nextHits) => {
+          if (requestId !== requestIdRef.current) return;
+          setHits(nextHits);
+        })
+        .catch(() => {
+          if (requestId !== requestIdRef.current) return;
+          setHits([]);
+        });
     }, 200);
     return () => clearTimeout(timer);
   }, [query]);
@@ -118,7 +133,10 @@ export function SearchPopup() {
             {hits.map((hit) => (
               <li key={hit.id} role="option" aria-selected={false}>
                 <Link
-                  href={`/imp/general/${hit.slug}`}
+                  href={resultHref({
+                    resultType: 'general-imp',
+                    slug: hit.slug,
+                  })}
                   onClick={handleClose}
                   className="hover:bg-accent flex w-full items-start gap-3 px-4 py-3 text-left transition-colors"
                 >

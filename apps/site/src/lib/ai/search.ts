@@ -33,10 +33,6 @@ interface ImpSearchRow {
   slug: string;
   /** IMP content preview text. */
   content: string;
-  /** Optional source attribution. */
-  source: string | null;
-  /** IMP category label. */
-  category: string;
   /** Computed semantic-search similarity. */
   similarity: number;
 }
@@ -51,10 +47,6 @@ interface GeneralImpSearchRow {
   slug: string;
   /** General-IMP content preview text. */
   content: string;
-  /** Optional source attribution. */
-  source: string | null;
-  /** General-IMP category label (first tag). */
-  category: string;
   /** Computed semantic-search similarity. */
   similarity: number;
 }
@@ -69,10 +61,6 @@ interface SeedSearchRow {
   slug: string;
   /** Seed-product description preview text. */
   content: string;
-  /** Optional source attribution. */
-  source: string | null;
-  /** Seed-product category label. */
-  category: string;
   /** Computed semantic-search similarity. */
   similarity: number;
   /** Remaining stock for the seed product. */
@@ -84,24 +72,25 @@ interface SeedSearchRow {
 }
 
 /**
- * Awaits a single knowledge-source query, degrading to an empty result set
+ * Awaits a single knowledge-source query, degrading to a null result set
  * (and a logged error) if that one source fails. One unavailable table or a
  * lagging migration must not take down the whole assistant — the other sources
- * still return their matches.
+ * still return their matches. Returning null (instead of []) lets the caller
+ * tell a failed source apart from a genuinely empty one.
  *
  * @param label - Source name for the log line
  * @param query - The Drizzle query to run
- * @returns The rows, or [] if the query throws
+ * @returns The rows, or null if the query throws
  */
 async function runSource<T>(
   label: string,
   query: PromiseLike<T[]>
-): Promise<T[]> {
+): Promise<T[] | null> {
   try {
     return await query;
   } catch (error) {
     logger.error(`[Search] ${label} source failed:`, error);
-    return [];
+    return null;
   }
 }
 
@@ -120,7 +109,7 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
     /** Shared pgvector similarity expression for normalized knowledge rows. */
     const knowledgeSimilarity = sql<number>`1 - (${knowledgeArticle.embedding} <=> ${embeddingVector}::vector)`;
 
-    const [impResults, generalImpResults, seedResults] = await Promise.all([
+    const [impRows, generalImpRows, seedRows] = await Promise.all([
       runSource(
         'imp',
         db
@@ -129,8 +118,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
             title: integratedManagementPlan.title,
             slug: integratedManagementPlan.slug,
             content: integratedManagementPlan.content,
-            source: integratedManagementPlan.source,
-            category: sql<string>`${integratedManagementPlan.category}::text`,
             similarity: knowledgeSimilarity,
           })
           .from(integratedManagementPlan)
@@ -150,8 +137,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
             title: sql<string>`coalesce(${generalImp.title}, 'Integrated Management Practice')`,
             slug: generalImp.slug,
             content: generalImp.content,
-            source: sql<string | null>`null`,
-            category: sql<string>`coalesce(${generalImp.tags}[1], 'general')`,
             similarity: knowledgeSimilarity,
           })
           .from(generalImp)
@@ -171,10 +156,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
             title: seedProduct.name,
             slug: seedProduct.slug,
             content: seedProduct.description,
-            source: sql<
-              string | null
-            >`coalesce(${integratedManagementPlan.source}, 'Todd Seed Catalog')`,
-            category: sql<string>`'seed products'`,
             similarity: knowledgeSimilarity,
             stock: seedProduct.stock,
             priceInCents: seedProduct.priceInCents,
@@ -185,18 +166,19 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
             knowledgeArticle,
             eq(knowledgeArticle.id, seedProduct.knowledgeArticleId)
           )
-          .leftJoin(
-            integratedManagementPlan,
-            eq(
-              integratedManagementPlan.id,
-              seedProduct.relatedIntegratedManagementPlanId
-            )
-          )
           .where(gt(knowledgeSimilarity, SIMILARITY_THRESHOLD))
           .orderBy(desc(knowledgeSimilarity))
           .limit(MAX_RESULTS)
       ),
     ]);
+
+    if (impRows === null && generalImpRows === null && seedRows === null) {
+      throw new Error('All search sources failed');
+    }
+
+    const impResults = impRows ?? [];
+    const generalImpResults = generalImpRows ?? [];
+    const seedResults = seedRows ?? [];
 
     return [
       ...impResults.map<SearchResult>((result: ImpSearchRow) => ({
@@ -204,8 +186,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
         title: result.title,
         slug: result.slug,
         content: result.content,
-        source: result.source,
-        category: result.category,
         resultType: 'imp',
         similarity: result.similarity,
         stock: null,
@@ -217,8 +197,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
         title: result.title,
         slug: result.slug,
         content: result.content,
-        source: result.source,
-        category: result.category,
         resultType: 'general-imp',
         similarity: result.similarity,
         stock: null,
@@ -230,8 +208,6 @@ export async function searchKnowledge(query: string): Promise<SearchResult[]> {
         title: result.title,
         slug: result.slug,
         content: result.content,
-        source: result.source,
-        category: result.category,
         resultType: 'seed',
         similarity: result.similarity,
         stock: result.stock,

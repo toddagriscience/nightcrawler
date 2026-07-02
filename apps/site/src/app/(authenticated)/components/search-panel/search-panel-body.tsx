@@ -17,18 +17,7 @@ import { useOrder } from '@/lib/order/hooks';
 import Link from 'next/link';
 import type { SearchResult } from '@/lib/ai/types';
 import { useSearchPanel } from './search-panel-context';
-
-/** Builds the detail-page href for a search result by its result type. */
-function resultHref(result: SearchResult): string {
-  switch (result.resultType) {
-    case 'seed':
-      return `/product/${result.slug}`;
-    case 'general-imp':
-      return `/imp/general/${result.slug}`;
-    default:
-      return `/imp/${result.slug}`;
-  }
-}
+import { previewText, resultHref } from './search-display';
 
 /**
  * Renders the inference search results panel body.
@@ -126,8 +115,7 @@ export function SearchPanelBody() {
                     {result.title}
                   </h3>
                   <p className="text-foreground/80 mt-2 text-sm leading-relaxed">
-                    {result.content?.slice(0, 320)}
-                    {(result.content?.length ?? 0) > 320 ? '…' : ''}
+                    {previewText(result.content, 320)}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
                     <Link

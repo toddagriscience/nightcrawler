@@ -65,33 +65,112 @@ jobs:
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem"
+          # sslmode=verify-full also validates the server certificate's hostname
+          # against PROD_DATABASE_HOST (verify-ca only validates the CA chain).
+          # If the provider's certificate cannot match the hostname, downgrading
+          # back to verify-ca requires explicit justification.
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
 
-          echo "Checking which migrations are present on production..."
-          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
-            select
-              exists (select 1 from information_schema.columns
-                      where table_name='farm' and column_name='advisor_profile_notes') as has_0010,
-              (to_regclass('public.form_submissions') is not null)                     as has_0011,
-              (to_regclass('public.seed_variety') is not null)                         as has_0012,
-              (to_regclass('public.reminder') is not null)                             as has_0013,
-              (to_regclass('public.general_imp') is not null)                          as has_0014,
-              (to_regclass('public.platform_access_application') is not null)          as pre_0011_table_present;
-          "
+          probe() {
+            PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -tAc "$1"
+          }
+          has_table()  { probe "select (to_regclass('public.$1') is not null);"; }
+          has_enum()   { probe "select exists (select 1 from pg_type t join pg_namespace n on n.oid = t.typnamespace where n.nspname = 'public' and t.typtype = 'e' and t.typname = '$1');"; }
+          has_column() { probe "select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '$1' and column_name = '$2');"; }
+          # Postgres truncates identifiers to 63 bytes, so compare constraint
+          # names against left(name, 63) — 0011's reviewed_by FK name is longer.
+          has_fk()     { probe "select exists (select 1 from pg_constraint c join pg_namespace n on n.oid = c.connamespace where n.nspname = 'public' and c.contype = 'f' and c.conname = left('$1', 63));"; }
 
-          has_0010=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select exists (select 1 from information_schema.columns where table_name='farm' and column_name='advisor_profile_notes');")
-          has_0011=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.form_submissions') is not null);")
-          has_0012=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.seed_variety') is not null);")
-          has_0013=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.reminder') is not null);")
-          has_0014=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.general_imp') is not null);")
-          pre_0011=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "select (to_regclass('public.platform_access_application') is not null);")
+          # classify <migration> <object=t|f>... -> sets $state to "applied"
+          # (all objects present) or "missing" (none present). A partial mix
+          # means a half-applied migration: skipping it would ledger unapplied
+          # DDL and re-applying it would fail, so hard-fail for manual repair.
+          state=""
+          classify() {
+            local mig="$1"; shift
+            local present=() missing=() pair
+            for pair in "$@"; do
+              if [ "${pair#*=}" = "t" ]; then present+=("${pair%%=*}"); else missing+=("${pair%%=*}"); fi
+            done
+            if [ ${#missing[@]} -eq 0 ]; then
+              state="applied"
+            elif [ ${#present[@]} -eq 0 ]; then
+              state="missing"
+            else
+              echo "::error::Migration $mig is PARTIALLY applied — present: ${present[*]}; missing: ${missing[*]}. Refusing to skip or re-apply; repair production manually."
+              exit 1
+            fi
+            echo "$mig: $state (present: ${present[*]:-none}; missing: ${missing[*]:-none})"
+          }
+
+          echo "Probing every object created by each pending migration..."
+
+          # 0010: farm.advisor_profile_notes column
+          c0=$(has_column farm advisor_profile_notes)
+          classify 0010 \
+            "column:farm.advisor_profile_notes=$c0"
+          state_0010="$state"
+
+          # 0011: enum rename + new enum + table rename + new column + 2 FK renames
+          e1=$(has_enum form_submission_status)
+          e2=$(has_enum form_submission_workflow_type)
+          t1=$(has_table form_submissions)
+          c1=$(has_column form_submissions workflow_type)
+          f1=$(has_fk form_submissions_reviewed_by_internal_account_id_internal_account_id_fk)
+          f2=$(has_fk form_submissions_farm_id_farm_id_fk)
+          classify 0011 \
+            "enum:form_submission_status=$e1" \
+            "enum:form_submission_workflow_type=$e2" \
+            "table:form_submissions=$t1" \
+            "column:form_submissions.workflow_type=$c1" \
+            "fk:form_submissions_reviewed_by_internal_account_id_internal_account_id_fk=$f1" \
+            "fk:form_submissions_farm_id_farm_id_fk=$f2"
+          state_0011="$state"
+
+          # 0012: seed_variety_status enum + seed_crop/seed_variety tables + 3 FKs
+          e1=$(has_enum seed_variety_status)
+          t1=$(has_table seed_crop)
+          t2=$(has_table seed_variety)
+          f1=$(has_fk seed_crop_knowledge_article_id_knowledge_article_id_fk)
+          f2=$(has_fk seed_variety_knowledge_article_id_knowledge_article_id_fk)
+          f3=$(has_fk seed_variety_seed_crop_id_seed_crop_id_fk)
+          classify 0012 \
+            "enum:seed_variety_status=$e1" \
+            "table:seed_crop=$t1" \
+            "table:seed_variety=$t2" \
+            "fk:seed_crop_knowledge_article_id_knowledge_article_id_fk=$f1" \
+            "fk:seed_variety_knowledge_article_id_knowledge_article_id_fk=$f2" \
+            "fk:seed_variety_seed_crop_id_seed_crop_id_fk=$f3"
+          state_0012="$state"
+
+          # 0013: reminder_type enum + reminder table + 1 FK
+          e1=$(has_enum reminder_type)
+          t1=$(has_table reminder)
+          f1=$(has_fk reminder_user_id_user_id_fk)
+          classify 0013 \
+            "enum:reminder_type=$e1" \
+            "table:reminder=$t1" \
+            "fk:reminder_user_id_user_id_fk=$f1"
+          state_0013="$state"
+
+          # 0014: general_imp table + 1 FK
+          t1=$(has_table general_imp)
+          f1=$(has_fk general_imp_knowledge_article_id_knowledge_article_id_fk)
+          classify 0014 \
+            "table:general_imp=$t1" \
+            "fk:general_imp_knowledge_article_id_knowledge_article_id_fk=$f1"
+          state_0014="$state"
+
+          # Pre-0011 table (rename source) — consumed by the apply step's 0011 guard.
+          pre_0011=$(has_table platform_access_application)
+          echo "pre-0011 table platform_access_application present: $pre_0011"
 
           {
-            echo "has_0010=$has_0010"
-            echo "has_0011=$has_0011"
-            echo "has_0012=$has_0012"
-            echo "has_0013=$has_0013"
-            echo "has_0014=$has_0014"
+            echo "state_0010=$state_0010"
+            echo "state_0011=$state_0011"
+            echo "state_0012=$state_0012"
+            echo "state_0013=$state_0013"
+            echo "state_0014=$state_0014"
             echo "pre_0011=$pre_0011"
           } >> "$GITHUB_OUTPUT"
 
@@ -101,15 +180,20 @@ jobs:
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem"
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
 
           declare -a FILES=()
-          [ "${{ steps.verify.outputs.has_0010 }}" = "t" ] || FILES+=("drizzle/0010_add-farm-advisor-profile-notes.sql")
+          [ "${{ steps.verify.outputs.state_0010 }}" = "applied" ] || FILES+=("drizzle/0010_add-farm-advisor-profile-notes.sql")
 
           # 0011 is a rename, not a create: only safe when the OLD table still
           # exists and the NEW one does not. Any other combination is an anomaly
           # we refuse to guess at.
-          if [ "${{ steps.verify.outputs.has_0011 }}" != "t" ]; then
+          if [ "${{ steps.verify.outputs.state_0011 }}" = "applied" ]; then
+            if [ "${{ steps.verify.outputs.pre_0011 }}" = "t" ]; then
+              echo "::error::Both form_submissions and platform_access_application exist — ambiguous state, cannot tell which table is canonical. Inspect manually."
+              exit 1
+            fi
+          else
             if [ "${{ steps.verify.outputs.pre_0011 }}" = "t" ]; then
               FILES+=("drizzle/0011_rename-form-submissions.sql")
             else
@@ -118,9 +202,9 @@ jobs:
             fi
           fi
 
-          [ "${{ steps.verify.outputs.has_0012 }}" = "t" ] || FILES+=("drizzle/0012_variety-inventory.sql")
-          [ "${{ steps.verify.outputs.has_0013 }}" = "t" ] || FILES+=("drizzle/0013_add-reminder.sql")
-          [ "${{ steps.verify.outputs.has_0014 }}" = "t" ] || FILES+=("drizzle/0014_general-imp.sql")
+          [ "${{ steps.verify.outputs.state_0012 }}" = "applied" ] || FILES+=("drizzle/0012_variety-inventory.sql")
+          [ "${{ steps.verify.outputs.state_0013 }}" = "applied" ] || FILES+=("drizzle/0013_add-reminder.sql")
+          [ "${{ steps.verify.outputs.state_0014 }}" = "applied" ] || FILES+=("drizzle/0014_general-imp.sql")
 
           if [ ${#FILES[@]} -eq 0 ]; then
             echo "Schema is already up to date. Nothing to apply."
@@ -154,7 +238,7 @@ jobs:
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem"
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
 
           # Only rebuild the ledger once the schema is fully at 0014, otherwise
           # the ledger would claim migrations that are not actually applied.
@@ -169,8 +253,8 @@ jobs:
           ")
 
           if [ "$all_present" != "t" ]; then
-            echo "::warning::Schema is not fully at 0014 — skipping ledger rebuild."
-            exit 0
+            echo "::error::Schema is not fully at 0014 — refusing to rebuild the ledger. Inspect production manually."
+            exit 1
           fi
 
           # Rewrite drizzle.__drizzle_migrations to match the committed journal
@@ -183,7 +267,7 @@ jobs:
             create table if not exists drizzle.__drizzle_migrations (
               id serial primary key, hash text not null, created_at bigint
             );
-            truncate drizzle.__drizzle_migrations;
+            truncate drizzle.__drizzle_migrations restart identity;
             insert into drizzle.__drizzle_migrations (hash, created_at) values
               ('975001fad5a72b6f1f43c5c8395d6f59eec01ddf936af94a3369055b6320b5d2',1772158369112),
               ('5122ab423af507bc15381676e426fff720cc84c4b6aab3b2d75df2ec3d92fdd4',1772419343026),

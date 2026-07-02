@@ -45,6 +45,9 @@ interface SearchPanelValue {
 
 const SearchPanelContext = createContext<SearchPanelValue | null>(null);
 
+/** How long a semantic search may run before it is treated as failed. */
+const SEARCH_TIMEOUT_MS = 30_000;
+
 /**
  * Provides global state for the search popup and right-side results panel.
  *
@@ -94,23 +97,43 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
 
+    // Surface an error if the request hangs so the panel never shows
+    // "Searching…" forever. Bumping the requestId also drops the eventual
+    // (late) response.
+    const timeoutId = setTimeout(() => {
+      if (requestId !== requestIdRef.current) return;
+      requestIdRef.current += 1;
+      setResults([]);
+      setSearchError(true);
+      setIsSearching(false);
+    }, SEARCH_TIMEOUT_MS);
+
     // Loaded lazily so this widely-imported client context does not statically
     // pull the server action's module graph (and its eager OpenAI client) into
     // every consumer's bundle/test import chain.
     import('@/app/(authenticated)/actions/inference-search')
       .then(({ runInferenceSearch }) => runInferenceSearch(activeQuery))
       .then((nextResults) => {
+        clearTimeout(timeoutId);
         if (requestId !== requestIdRef.current) return;
         setResults(nextResults);
         setSearchError(false);
         setIsSearching(false);
       })
       .catch(() => {
+        clearTimeout(timeoutId);
         if (requestId !== requestIdRef.current) return;
         setResults([]);
         setSearchError(true);
         setIsSearching(false);
       });
+
+    return () => {
+      clearTimeout(timeoutId);
+      // Invalidate the in-flight request so a promise that resolves after
+      // unmount (or after this effect re-runs) applies no state.
+      requestIdRef.current += 1;
+    };
   }, [activeQuery, isSearching]);
 
   const value = useMemo(

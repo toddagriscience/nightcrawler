@@ -91,6 +91,10 @@ function embedText(imp: ParsedImp): string {
 
 // ---- main -----------------------------------------------------------------
 async function main() {
+  // Validate the DB target up front so a misconfigured environment fails fast
+  // on dry runs too, not only once --commit is passed.
+  const databaseUrl = requireLocalDatabaseUrl();
+
   const csv = readFileSync(CSV_PATH, 'utf8');
   const rows = parseCsv(csv);
   const imps = classify(rows);
@@ -114,25 +118,34 @@ async function main() {
     return;
   }
 
-  const db = drizzle(requireLocalDatabaseUrl(), { casing: 'snake_case' });
+  const db = drizzle(databaseUrl, { casing: 'snake_case' });
 
   // Slug is the stable identity used to match a sheet row to its existing DB
-  // row on re-import. When two rows produce the same base slug we disambiguate
-  // with a hash of the row's own content, so a given practice keeps the same
-  // slug regardless of where it sits in the sheet (an order-based -2/-3 suffix
-  // would reshuffle identities whenever a same-named row is inserted above).
+  // row on re-import, so it must not depend on row order. First pass counts
+  // how often each base slug occurs across the whole sheet; a base slug that
+  // occurs once is used bare, while EVERY row sharing a duplicated base slug
+  // gets a suffix hashed from its own content (no first-row "winner" claims
+  // the bare slug, so reordering rows can never swap DB identities). The
+  // -2/-3 fallback only fires for the pathological case of duplicated rows
+  // with identical content (and therefore identical hashes).
+  const baseSlugOf = (imp: ParsedImp): string =>
+    slugify(imp.title ?? imp.tags[0] ?? 'imp') || 'imp';
+  const baseSlugCounts = new Map<string, number>();
+  for (const imp of imps) {
+    const base = baseSlugOf(imp);
+    baseSlugCounts.set(base, (baseSlugCounts.get(base) ?? 0) + 1);
+  }
   const usedSlugs = new Set<string>();
   const stableSlug = (base: string, seed: string): string => {
-    const root = base || 'imp';
-    if (!usedSlugs.has(root)) {
-      usedSlugs.add(root);
-      return root;
+    if ((baseSlugCounts.get(base) ?? 0) <= 1) {
+      usedSlugs.add(base);
+      return base;
     }
     const suffix = hash(seed).slice(0, 8);
-    let s = `${root}-${suffix}`;
+    let s = `${base}-${suffix}`;
     let n = 2;
     while (usedSlugs.has(s)) {
-      s = `${root}-${suffix}-${n}`;
+      s = `${base}-${suffix}-${n}`;
       n += 1;
     }
     usedSlugs.add(s);
@@ -144,10 +157,7 @@ async function main() {
 
   for (const imp of imps) {
     const embedInput = embedText(imp);
-    const slug = stableSlug(
-      slugify(imp.title ?? imp.tags[0] ?? 'imp'),
-      embedInput
-    );
+    const slug = stableSlug(baseSlugOf(imp), embedInput);
     const contentHash = hash(embedInput);
     const fields = {
       title: imp.title,

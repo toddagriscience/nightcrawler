@@ -5,6 +5,10 @@
 import { generalImp } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import {
+  impDisplayTitle,
+  previewText,
+} from '@/app/(authenticated)/components/search-panel/search-display';
 import { ilike, or, sql } from 'drizzle-orm';
 
 const MAX_RESULTS = 8;
@@ -24,7 +28,10 @@ export async function searchImps(query: string): Promise<ImpHit[]> {
   await getAuthenticatedInfo();
   const q = query.trim();
   if (q.length === 0) return [];
-  const pattern = `%${q}%`;
+  // Escape ILIKE wildcards (backslash is Postgres's default escape char) so
+  // user input like "%" or "_" matches literally instead of over-matching.
+  const escaped = q.replace(/[\\%_]/g, '\\$&');
+  const pattern = `%${escaped}%`;
 
   const rows = await db
     .select({
@@ -48,8 +55,8 @@ export async function searchImps(query: string): Promise<ImpHit[]> {
 
   return rows.map((r) => ({
     id: r.id,
-    title: r.title ?? r.tags[0] ?? 'Management practice',
+    title: impDisplayTitle(r.title, r.tags),
     slug: r.slug,
-    snippet: r.content.slice(0, 120),
+    snippet: previewText(r.content, 120),
   }));
 }
