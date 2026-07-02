@@ -28,7 +28,7 @@ import {
 import { and, eq } from 'drizzle-orm';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as xlsx from 'xlsx';
+import ExcelJS from 'exceljs';
 
 // ---------------------------------------------------------------------------
 // Conversion constants
@@ -259,21 +259,20 @@ function detectPpmFromUnitsRow(
  *  1. Sheet whose name contains "soil test" (raw or converted)
  *  2. First sheet
  */
-function pickSheet(wb: xlsx.WorkBook, override?: string): string {
+function pickSheet(sheetNames: string[], override?: string): string {
   if (override) {
-    if (!wb.SheetNames.includes(override)) {
+    if (!sheetNames.includes(override)) {
       throw new Error(
-        `Sheet "${override}" not found. Available: ${wb.SheetNames.join(', ')}`
+        `Sheet "${override}" not found. Available: ${sheetNames.join(', ')}`
       );
     }
     return override;
   }
 
-  for (const name of wb.SheetNames) {
-    const lower = name.toLowerCase();
-    if (lower.includes('soil test')) return name;
+  for (const name of sheetNames) {
+    if (name.toLowerCase().includes('soil test')) return name;
   }
-  return wb.SheetNames[0];
+  return sheetNames[0];
 }
 
 /**
@@ -284,15 +283,30 @@ function pickSheet(wb: xlsx.WorkBook, override?: string): string {
  * "pH" and at least 2 other known column headers. It also checks the units
  * row (if present) to decide whether Ca/Mg/Na need meq/l → PPM conversion.
  */
-function parseFile(filePath: string, sheetOverride?: string): ParseResult {
-  const workbook = xlsx.readFile(filePath, { type: 'file', raw: false });
-  const sheetName = pickSheet(workbook, sheetOverride);
+async function parseFile(
+  filePath: string,
+  sheetOverride?: string
+): Promise<ParseResult> {
+  const wb = new ExcelJS.Workbook();
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === '.csv') {
+    await wb.csv.readFile(filePath);
+  } else {
+    await wb.xlsx.readFile(filePath);
+  }
+  const sheetNames = wb.worksheets.map((ws) => ws.name);
+  const sheetName = pickSheet(sheetNames, sheetOverride);
   console.log(`Using sheet: "${sheetName}"`);
 
-  const sheet = workbook.Sheets[sheetName];
-  const rows: unknown[][] = xlsx.utils.sheet_to_json(sheet, {
-    header: 1,
-    defval: '',
+  const ws = wb.getWorksheet(sheetName)!;
+  const colCount = ws.columnCount;
+  const rows: unknown[][] = [];
+  ws.eachRow({ includeEmpty: true }, (row) => {
+    const cells: unknown[] = [];
+    for (let i = 1; i <= colCount; i++) {
+      cells.push(row.getCell(i).value ?? '');
+    }
+    rows.push(cells);
   });
 
   // --- Locate the header row ---
@@ -764,7 +778,7 @@ async function main() {
   console.log(`Date    : ${dateStr}`);
   console.log(`Dry run : ${dryRun}\n`);
 
-  const { rows, alreadyPpm } = parseFile(filePath, sheetOverride);
+  const { rows, alreadyPpm } = await parseFile(filePath, sheetOverride);
   console.log(
     `Found ${rows.length} data rows (values ${alreadyPpm ? 'already in PPM' : 'in meq/l — will convert'})\n`
   );
