@@ -3,19 +3,26 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { LuSearch } from 'react-icons/lu';
 import IrisIcon from '../sidebar/iris-icon';
 import { useSearchPanel } from './search-panel-context';
+import {
+  searchImps,
+  type ImpHit,
+} from '@/app/(authenticated)/actions/search-imps';
 
 /**
- * Command-palette search popup. Opens from the sidebar Search action; pressing
- * Enter submits the query and opens the right-side inference results panel.
+ * Command-palette search popup. Keyword IMP matches appear as the user types
+ * (each links to its detail page); the Navigation Assistant row runs the
+ * semantic/inference search.
  *
  * @returns The search popup overlay, or null when closed
  */
 export function SearchPopup() {
   const { modalOpen, closeModal, submitSearch } = useSearchPanel();
   const [query, setQuery] = useState('');
+  const [hits, setHits] = useState<ImpHit[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -32,6 +39,22 @@ export function SearchPopup() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [modalOpen, closeModal]);
 
+  // Debounced keyword search over IMPs as the user types. All setState happens
+  // inside the timeout (async), never synchronously in the effect body.
+  useEffect(() => {
+    const q = query.trim();
+    const timer = setTimeout(() => {
+      if (!q) {
+        setHits([]);
+        return;
+      }
+      searchImps(q)
+        .then(setHits)
+        .catch(() => setHits([]));
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [query]);
+
   if (!modalOpen) return null;
 
   const trimmed = query.trim();
@@ -39,6 +62,7 @@ export function SearchPopup() {
 
   function handleClose() {
     setQuery('');
+    setHits([]);
     closeModal();
   }
 
@@ -60,6 +84,7 @@ export function SearchPopup() {
             event.preventDefault();
             if (trimmed) {
               setQuery('');
+              setHits([]);
               submitSearch(trimmed);
             }
           }}
@@ -89,11 +114,36 @@ export function SearchPopup() {
 
         {showSuggestion && (
           <ul className="max-h-80 overflow-y-auto py-1" role="listbox">
-            <li role="option" aria-selected>
+            {/* Keyword IMP matches → detail page */}
+            {hits.map((hit) => (
+              <li key={hit.id} role="option" aria-selected={false}>
+                <Link
+                  href={`/imp/general/${hit.slug}`}
+                  onClick={handleClose}
+                  className="hover:bg-accent flex w-full items-start gap-3 px-4 py-3 text-left transition-colors"
+                >
+                  <span className="text-muted-foreground mt-0.5 shrink-0">
+                    <LuSearch className="size-4" aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-foreground truncate text-sm font-medium">
+                      {hit.title}
+                    </p>
+                    <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                      {hit.snippet}
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+
+            {/* Navigation Assistant (semantic / inference) */}
+            <li role="option" aria-selected={hits.length === 0}>
               <button
                 type="button"
                 onClick={() => {
                   setQuery('');
+                  setHits([]);
                   submitSearch(trimmed);
                 }}
                 className="hover:bg-accent flex w-full items-start gap-3 px-4 py-3 text-left transition-colors"
