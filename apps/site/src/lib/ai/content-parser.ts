@@ -287,26 +287,44 @@ export async function parseExcelContent(
     throw new Error(`File not found: ${resolved}`);
   }
 
-  // xlsx is a CJS module — import dynamically for ESM compat
-  const xlsx = await import('xlsx');
-  const workbook = xlsx.readFile(resolved, { type: 'file', raw: false });
+  const ExcelJS = (await import('exceljs')).default;
+  const wb = new ExcelJS.Workbook();
+  const ext = path.extname(resolved).toLowerCase();
+  if (ext === '.csv') {
+    await wb.csv.readFile(resolved);
+  } else {
+    await wb.xlsx.readFile(resolved);
+  }
+  const sheetNames = wb.worksheets.map((ws) => ws.name);
 
   // Pick the requested sheet, or fall back to first sheet
   const targetSheet =
-    sheetName && workbook.SheetNames.includes(sheetName)
-      ? sheetName
-      : workbook.SheetNames[0];
+    sheetName && sheetNames.includes(sheetName) ? sheetName : sheetNames[0];
 
-  const sheet = workbook.Sheets[targetSheet];
-  const rows: Record<string, unknown>[] = xlsx.utils.sheet_to_json(sheet, {
-    defval: '',
+  const ws = wb.getWorksheet(targetSheet)!;
+  const colCount = ws.columnCount;
+  const allRows: unknown[][] = [];
+  ws.eachRow({ includeEmpty: true }, (row) => {
+    const cells: unknown[] = [];
+    for (let i = 1; i <= colCount; i++) {
+      cells.push(row.getCell(i).value ?? '');
+    }
+    allRows.push(cells);
+  });
+  const headers =
+    allRows.length > 0 ? allRows[0].map((h) => String(h ?? '')) : [];
+  const rows: Record<string, unknown>[] = allRows.slice(1).map((row) => {
+    const obj: Record<string, unknown> = {};
+    headers.forEach((h, i) => {
+      obj[h] = (row as unknown[])[i] ?? '';
+    });
+    return obj;
   });
 
   if (rows.length === 0) {
     return ['*Empty sheet — no content found.*'];
   }
 
-  const headers = Object.keys(rows[0]);
   const headersLower = headers.map((h) => h.toLowerCase().trim());
 
   // Detect IMP-style sheets (Category/Trigger/Body columns)
