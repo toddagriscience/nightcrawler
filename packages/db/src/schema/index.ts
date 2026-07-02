@@ -11,7 +11,7 @@ export { integratedManagementPlanNote } from './integrated-management-plan-note'
 export { farmInfoInternalApplication } from './internal-application';
 export { knowledgeArticle } from './knowledge';
 export { managementZone } from './management-zone';
-export { mineral, mineralTypes } from './mineral';
+export { mineral, mineralTag, mineralTypes, units } from './mineral';
 export { oxidationRate } from './oxidation-rate';
 export { reminder, reminderTypeEnum } from './reminder';
 export { solubility } from './solubility';
