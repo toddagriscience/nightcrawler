@@ -3,10 +3,10 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contact | Todd',
+  title: 'Support Tools | Todd',
 };
 
-export default function ContactLayout({
+export default function SupportToolsLayout({
   children,
 }: {
   children: React.ReactNode;
