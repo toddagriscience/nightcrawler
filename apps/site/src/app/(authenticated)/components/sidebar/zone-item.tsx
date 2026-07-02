@@ -25,7 +25,7 @@ export default function ZoneItem({ id, name, index }: ZoneItemProps) {
       >
         <span className="min-w-0 flex-1 truncate">{name}</span>
         <kbd className="text-foreground/40 shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px]">
-          {index + 1} ⌘
+          Alt {index + 1}
         </kbd>
       </Link>
     </div>
