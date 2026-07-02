@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
+  boolean,
   numeric,
   pgEnum,
   pgTable,
@@ -23,9 +24,15 @@ export const mineralTypes = pgEnum('mineral_types', [
   'Zinc',
   'Iron',
   'OrganicMatter',
+  'Manganese',
+  'Copper',
+  'Boron',
 ]);
 
-export const units = pgEnum('units', ['ppm', '%']);
+export const units = pgEnum('units', ['ppm', '%', 'dimensionless']);
+
+/** Tag indicating whether a mineral reading is Low, Med (optimal), or High. */
+export const mineralTag = pgEnum('mineral_tag', ['Low', 'Med', 'High']);
 
 /** A table that describes a single mineral and its values for a given analysis. */
 export const mineral = pgTable('mineral', {
@@ -39,8 +46,14 @@ export const mineral = pgTable('mineral', {
   name: mineralTypes().notNull(),
   /** The real value of the mineral (see the unit field for units) */
   realValue: numeric({ precision: 9, scale: 4 }).notNull().$type<number>(),
+  /** The ideal value from Vincent's Data Framework (same units as realValue) */
+  idealValue: numeric({ precision: 9, scale: 4 }).$type<number>(),
   /** The unit which this mineral is being measured in. Almost always PPM */
   units: units().notNull(),
+  /** Low / Med / High tag based on lab reference ranges */
+  tag: mineralTag(),
+  /** True when Ca, Mg, Na, and K are all simultaneously below Four Lows thresholds */
+  fourLows: boolean(),
   /** Actionable information or recommendation associated with this mineral reading. */
   actionableInfo: text(),
   createdAt: timestamp().notNull().defaultNow(),
