@@ -24,7 +24,9 @@ import { resolveRemoteDbConfig } from './lib/db-target';
 async function main() {
   const env = getArg('env');
   if (env !== 'staging' && env !== 'prod') {
-    throw new Error('Usage: tsx scripts/migrate-remote-db.ts --env staging|prod');
+    throw new Error(
+      'Usage: tsx scripts/migrate-remote-db.ts --env staging|prod'
+    );
   }
 
   // No CREATE EXTENSION here (unlike migrate-local-db.ts): staging/prod

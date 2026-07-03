@@ -16,7 +16,8 @@ export default defineConfig({
     database: process.env.STAGING_DATABASE_DATABASE!,
     ssl: {
       // Fall back to the shared cert — CI historically only sets DATABASE_PEM_CERT.
-      ca: process.env.STAGING_DATABASE_PEM_CERT ?? process.env.DATABASE_PEM_CERT!,
+      ca:
+        process.env.STAGING_DATABASE_PEM_CERT ?? process.env.DATABASE_PEM_CERT!,
       rejectUnauthorized: false,
     },
   },
