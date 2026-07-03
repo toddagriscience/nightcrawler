@@ -31,6 +31,7 @@
     "db:seed-knowledge": "tsx scripts/seed-knowledge.ts",
     "db:add-seed-product": "tsx scripts/add-seed-product.ts",
     "db:import-varieties": "tsx scripts/import-seed-varieties.ts",
+    "db:import-imps": "tsx scripts/import-general-imps.ts",
     "db:local:init": "bun run db:local:migrate && bun run db:local:seed",
     "db:local:reset": "bun run db:local:wipe && bun run db:local:init"
   },

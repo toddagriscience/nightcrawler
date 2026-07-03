@@ -9,13 +9,13 @@ import {
   BiSolidUserMinus,
 } from 'react-icons/bi';
 
-interface ContactLinkItem {
+interface SupportLinkItem {
   label: string;
   href: string;
   icon: React.ReactNode;
 }
 
-const contactLinkItems: ContactLinkItem[] = [
+const supportLinkItems: SupportLinkItem[] = [
   {
     label: 'Training request',
     href: 'mailto:service.us@toddagriscience.com',
@@ -38,10 +38,10 @@ const contactLinkItems: ContactLinkItem[] = [
   },
 ];
 
-export default function ContactLinksSection() {
+export default function SupportLinksSection() {
   return (
     <section className="mt-10 border-t border-[#D9D9D9]">
-      {contactLinkItems.map((item) => (
+      {supportLinkItems.map((item) => (
         <Link
           href={item.href}
           className="group flex w-full items-center min-h-11 justify-between border-b border-[#D9D9D9] px-0.5 py-2 transition-opacity hover:opacity-70"

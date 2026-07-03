@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { BiArrowBack } from 'react-icons/bi';
-import ContactLinksSection from './components/contact-links-section';
+import SupportLinksSection from './components/support-links-section';
 
 /** Authenticated support tools page. */
-export default async function ContactPage() {
+export default async function SupportToolsPage() {
   return (
     <main className="mx-auto w-full">
       <div className="border-b border-[#D9D9D9]">
@@ -52,7 +52,7 @@ export default async function ContactPage() {
           </Button>
         </div>
 
-        <ContactLinksSection />
+        <SupportLinksSection />
       </section>
     </main>
   );

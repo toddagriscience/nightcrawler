@@ -13,7 +13,7 @@ describe('ZoneItem', () => {
 
   it('renders a 1-based keyboard badge from the zero-based index', () => {
     render(<ZoneItem id={7} name="North Field" index={2} />);
-    expect(screen.getByText('3 ⌘')).toBeInTheDocument();
+    expect(screen.getByText('Alt 3')).toBeInTheDocument();
   });
 
   it('does not render a status indicator dot', () => {

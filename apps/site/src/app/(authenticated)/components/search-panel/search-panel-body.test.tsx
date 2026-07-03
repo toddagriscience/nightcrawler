@@ -17,8 +17,6 @@ const sampleResults = [
     title: 'Tomato Blight Control',
     slug: 'tomato-blight',
     content: 'Manage blight with resistant varieties and rotation.',
-    source: null,
-    category: 'Disease',
     resultType: 'imp' as const,
     similarity: 0.9,
     stock: null,

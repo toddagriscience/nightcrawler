@@ -22,11 +22,12 @@ import { SearchPanelBody } from './search-panel-body';
  * @returns The search panel, mobile backdrop, and collapsed expand affordance
  */
 export function SearchPanel() {
-  const { open, collapsed, activeQuery, expandPanel, collapsePanel } =
-    useSearchPanel();
+  const { open, activeQuery, expandPanel, collapsePanel } = useSearchPanel();
 
   const showPanel = open;
-  const showCollapsedTab = collapsed && activeQuery.length > 0;
+  // A collapsed panel is simply one that is closed but still has a query to
+  // restore; deriving this avoids a second boolean kept in sync with `open`.
+  const showCollapsedTab = !open && activeQuery.length > 0;
 
   return (
     <>
