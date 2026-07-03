@@ -9,7 +9,8 @@
  *
  * Supported formats:
  *  - Images (JPG, PNG, WEBP, GIF) → vision AI extracts text/tables
- *  - PDFs → text extraction, with vision AI fallback for scanned pages
+ *  - PDFs → text extraction (scanned/image-only PDFs are not OCR'd; the parser
+ *    returns any extracted text plus a note advising per-page image conversion)
  *  - Excel/Spreadsheets → reads cells and formats as markdown
  *  - Plain text → pass-through with minimal formatting
  */
@@ -19,9 +20,25 @@ import * as path from 'node:path';
 import OpenAI from 'openai';
 import type { ChatCompletionContentPart } from 'openai/resources/chat/completions';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_EMBEDDINGS_KEY ?? 'NOTAKEY',
-});
+/**
+ * Lazily constructs the OpenAI client so that the Excel/CSV/text parsing paths
+ * (which never call the API) don't require a key, and so a missing key fails
+ * with a clear, actionable message instead of an opaque 401 at request time.
+ */
+let openaiClient: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  const apiKey = process.env.OPENAI_EMBEDDINGS_KEY;
+  if (!apiKey) {
+    throw new Error(
+      'OPENAI_EMBEDDINGS_KEY is not set — it is required to parse images and ' +
+        'scanned PDFs via vision AI. Set it in your environment and retry.'
+    );
+  }
+  if (!openaiClient) {
+    openaiClient = new OpenAI({ apiKey });
+  }
+  return openaiClient;
+}
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -87,7 +104,7 @@ Rules:
     },
   ];
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: VISION_MODEL,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -158,9 +175,11 @@ export async function parseImage(imagePath: string): Promise<string> {
 /**
  * Parses a PDF file and converts it to markdown.
  *
- * For text-based PDFs, extracts text directly using pdf-parse. For scanned
- * PDFs (pages with very little extractable text), falls back to vision AI
- * on a per-page basis.
+ * For text-based PDFs, extracts text directly using pdf-parse. Scanned or
+ * image-only PDFs (little to no extractable text) are NOT OCR'd here — the
+ * function returns whatever text was extracted (if any) plus a note advising
+ * the caller to convert individual pages to images and run them through the
+ * image parser.
  *
  * @param pdfPath - Absolute or relative path to the PDF file
  * @returns Markdown string of the full PDF content
@@ -350,7 +369,7 @@ export async function parseExcelContent(
  * Converts IMP-style spreadsheet rows (Category/Trigger/Body) into individual
  * markdown documents.
  */
-function parseImpSheet(
+export function parseImpSheet(
   rows: Record<string, unknown>[],
   headers: string[]
 ): string[] {
@@ -403,7 +422,7 @@ function parseImpSheet(
 /**
  * Converts a generic array of row objects into a markdown table.
  */
-function convertToMarkdownTable(
+export function convertToMarkdownTable(
   rows: Record<string, unknown>[],
   headers: string[]
 ): string {

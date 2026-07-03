@@ -343,15 +343,25 @@ async function parseFile(
   let dataStartIdx = headerRowIdx + 1;
   let alreadyPpm = false;
 
-  if (dataStartIdx < rows.length) {
-    const candidateUnits = rows[dataStartIdx] as unknown[];
-    if (isUnitsRow(candidateUnits)) {
-      alreadyPpm = detectPpmFromUnitsRow(candidateUnits, colMap);
-      console.log(
-        `Units row at index ${dataStartIdx} — Ca/Mg/Na already PPM: ${alreadyPpm}`
-      );
-      dataStartIdx++; // skip the units row
-    }
+  const candidateUnits =
+    dataStartIdx < rows.length ? (rows[dataStartIdx] as unknown[]) : null;
+
+  if (candidateUnits && isUnitsRow(candidateUnits)) {
+    alreadyPpm = detectPpmFromUnitsRow(candidateUnits, colMap);
+    console.log(
+      `Units row at index ${dataStartIdx} — Ca/Mg/Na already PPM: ${alreadyPpm}`
+    );
+    dataStartIdx++; // skip the units row
+  } else {
+    // No units row means we fall back to the default assumption (meq/l) and
+    // convert Ca/Mg/Na to PPM. If the sheet is actually already in PPM, those
+    // three values would be silently over-scaled (~20×/12×/23×). Warn loudly so
+    // the operator can verify the source (or add a units row) before writing.
+    console.warn(
+      '  ⚠  No units row detected — assuming Ca/Mg/Na are in meq/l and will be ' +
+        'converted to PPM. If this sheet is ALREADY in PPM, the written values ' +
+        'will be over-scaled. Re-check the source or run with --dry-run first.'
+    );
   }
 
   // --- Parse data rows ---
@@ -744,9 +754,17 @@ async function main() {
       case '--zone-id':
         fixedZoneId = parseInt(args[++i], 10);
         break;
-      case '--date':
-        analysisDate = new Date(args[++i]);
+      case '--date': {
+        const rawDate = args[++i];
+        analysisDate = new Date(rawDate);
+        if (isNaN(analysisDate.getTime())) {
+          console.error(
+            `Invalid --date value: "${rawDate}". Expected YYYY-MM-DD.`
+          );
+          process.exit(1);
+        }
         break;
+      }
       case '--sheet':
         sheetOverride = args[++i];
         break;
