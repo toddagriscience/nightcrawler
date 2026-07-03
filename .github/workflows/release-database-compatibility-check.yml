@@ -1,3 +1,5 @@
+# NOTE: vercel-deploy-on-release.yml triggers on this workflow's display name
+# via `workflow_run`. Renaming `name:` below silently stops prod deploys.
 name: Release Database Compatibility Check And Push
 
 on:
@@ -75,11 +77,16 @@ jobs:
             "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
             --file=/tmp/prod-db.sql
 
-      - name: Validate release schema against cloned production DB
-        id: push-check
+      # The clone carries prod's drizzle ledger (pg_dump copies
+      # drizzle.__drizzle_migrations), so replaying the ledger-based migrator
+      # here is a true dry-run of exactly what the prod step will apply.
+      # drizzle-kit push is banned in CI: its interactive enum resolver aborts
+      # without a TTY while still exiting 0, which is how prod silently drifted.
+      - name: Validate release migrations against cloned production DB
+        id: migrate-check
         working-directory: ./packages/db
-        run: bunx drizzle-kit push --config=drizzle-local.config.ts
+        run: bun run db:local:migrate
 
-      - name: Push to production
+      - name: Migrate production
         working-directory: ./packages/db
-        run: bunx drizzle-kit push --config=drizzle-prod.config.ts
+        run: bunx tsx scripts/migrate-remote-db.ts --env prod

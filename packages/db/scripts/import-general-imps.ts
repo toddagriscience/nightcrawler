@@ -11,29 +11,31 @@
  *      packages/db/data/general-imps.csv
  *   2. Dry run (writes nothing):   tsx scripts/import-general-imps.ts
  *   3. Commit to local DB:         tsx scripts/import-general-imps.ts --commit
+ *   4. Remote (staging/prod):      tsx scripts/import-general-imps.ts --env staging
+ *                                  ... --env staging --commit --confirm staging
  *
  * Flags:
- *   --file <path>   CSV path (default: data/general-imps.csv)
- *   --commit        Actually write to the local DB (otherwise dry-run)
+ *   --file <path>    CSV path (default: data/general-imps.csv)
+ *   --env <name>     Target DB: local (default), staging, prod
+ *   --commit         Actually write to the target DB (otherwise dry-run)
+ *   --confirm <name> Required for remote --commit; must repeat the --env value.
+ *                    Remote commits also require OPENAI_EMBEDDINGS_KEY.
  */
 
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, inArray, notInArray } from 'drizzle-orm';
 import { generalImp, knowledgeArticle } from '../src/schema';
-import {
-  embed,
-  getArg,
-  hash,
-  parseCsv,
-  requireLocalDatabaseUrl,
-  slugify,
-} from './lib/importer-lib';
+import { createTargetDb, resolveImporterTarget } from './lib/db-target';
+import { embed, getArg, hash, parseCsv, slugify } from './lib/importer-lib';
 
 // ---- CLI args -------------------------------------------------------------
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/general-imps.csv';
+
+// A committed run replacing the whole mirror must never proceed from a
+// truncated/garbled CSV export — the prune step would wipe the real rows.
+const MIN_IMPS = 5;
 
 // ---- helpers --------------------------------------------------------------
 /** Strip the single quotes the sheet wraps concept titles in, e.g. 'Copper'. */
@@ -93,13 +95,13 @@ function embedText(imp: ParsedImp): string {
 async function main() {
   // Validate the DB target up front so a misconfigured environment fails fast
   // on dry runs too, not only once --commit is passed.
-  const databaseUrl = requireLocalDatabaseUrl();
+  const target = resolveImporterTarget();
 
   const csv = readFileSync(CSV_PATH, 'utf8');
   const rows = parseCsv(csv);
   const imps = classify(rows);
 
-  console.log(`\nParsed ${CSV_PATH}`);
+  console.log(`\nParsed ${CSV_PATH} (target: ${target.env})`);
   console.log(`  IMPs:         ${imps.length}`);
   console.log(`  With trigger: ${imps.filter((i) => i.triggerRaw).length}`);
   console.log(`  With title:   ${imps.filter((i) => i.title).length}`);
@@ -113,12 +115,20 @@ async function main() {
 
   if (!COMMIT) {
     console.log(
-      '\nDry run only. Re-run with --commit to write to the local DB.\n'
+      `\nDry run only. Re-run with --commit to write to the ${target.env} DB` +
+        (target.env === 'local' ? '.\n' : ` (plus --confirm ${target.env}).\n`)
     );
     return;
   }
 
-  const db = drizzle(databaseUrl, { casing: 'snake_case' });
+  if (imps.length < MIN_IMPS) {
+    throw new Error(
+      `Only ${imps.length} IMPs parsed (< ${MIN_IMPS}) — the CSV looks ` +
+        'truncated or malformed. Refusing to commit and prune.'
+    );
+  }
+
+  const db = createTargetDb(target);
 
   // Slug is the stable identity used to match a sheet row to its existing DB
   // row on re-import, so it must not depend on row order. First pass counts
@@ -213,20 +223,24 @@ async function main() {
   const keptSlugs = Array.from(usedSlugs);
   if (keptSlugs.length > 0) {
     const stale = await db
-      .select({ kId: generalImp.knowledgeArticleId })
+      .select({ kId: generalImp.knowledgeArticleId, slug: generalImp.slug })
       .from(generalImp)
       .where(notInArray(generalImp.slug, keptSlugs));
-    const staleIds = stale.map((r) => r.kId);
-    if (staleIds.length > 0) {
-      await db
-        .delete(knowledgeArticle)
-        .where(inArray(knowledgeArticle.id, staleIds));
-      pruned = staleIds.length;
+    if (stale.length > 0) {
+      console.log(`\nPruning ${stale.length} stale row(s) from ${target.env}:`);
+      for (const r of stale) console.log(`  - ${r.slug}`);
+      await db.delete(knowledgeArticle).where(
+        inArray(
+          knowledgeArticle.id,
+          stale.map((r) => r.kId)
+        )
+      );
+      pruned = stale.length;
     }
   }
 
   console.log(
-    `\nCommitted: ${written} IMPs, ${embeddings} embeddings, ` +
+    `\nCommitted to ${target.env}: ${written} IMPs, ${embeddings} embeddings, ` +
       `${pruned} stale rows pruned.\n`
   );
 }

@@ -10,29 +10,32 @@
  *      save to packages/db/data/variety-inventory.csv
  *   2. Dry run (writes nothing):   tsx scripts/import-seed-varieties.ts
  *   3. Commit to local DB:         tsx scripts/import-seed-varieties.ts --commit
+ *   4. Remote (staging/prod):      tsx scripts/import-seed-varieties.ts --env staging
+ *                                  ... --env staging --commit --confirm staging
  *
  * Flags:
- *   --file <path>   CSV path (default: data/variety-inventory.csv)
- *   --commit        Actually write to the local DB (otherwise dry-run)
+ *   --file <path>    CSV path (default: data/variety-inventory.csv)
+ *   --env <name>     Target DB: local (default), staging, prod
+ *   --commit         Actually write to the target DB (otherwise dry-run)
+ *   --confirm <name> Required for remote --commit; must repeat the --env value.
+ *                    Remote commits also require OPENAI_EMBEDDINGS_KEY.
  */
 
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, inArray, notInArray } from 'drizzle-orm';
 import { knowledgeArticle, seedCrop, seedVariety } from '../src/schema';
-import {
-  embed,
-  getArg,
-  hash,
-  parseCsv,
-  requireLocalDatabaseUrl,
-  slugify,
-} from './lib/importer-lib';
+import { createTargetDb, resolveImporterTarget } from './lib/db-target';
+import { embed, getArg, hash, parseCsv, slugify } from './lib/importer-lib';
 
 // ---- CLI args -------------------------------------------------------------
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/variety-inventory.csv';
+
+// A committed run replacing the whole mirror must never proceed from a
+// truncated/garbled CSV export — the prune step would wipe the real rows.
+// The real sheet holds ~90 crops / ~940 varieties.
+const MIN_VARIETIES = 50;
 
 // ---- small helpers --------------------------------------------------------
 function isNumericCode(s: string): boolean {
@@ -169,7 +172,7 @@ function classify(rows: string[][]) {
 async function main() {
   // Validate the DB target up front so a misconfigured environment fails fast
   // on dry runs too, not only once --commit is passed.
-  const databaseUrl = requireLocalDatabaseUrl();
+  const target = resolveImporterTarget();
 
   const csv = readFileSync(CSV_PATH, 'utf8');
   const rows = parseCsv(csv);
@@ -184,7 +187,7 @@ async function main() {
   for (const c of crops)
     for (const v of c.varieties) statusCounts[v.status] += 1;
 
-  console.log(`\nParsed ${CSV_PATH}`);
+  console.log(`\nParsed ${CSV_PATH} (target: ${target.env})`);
   console.log(`  Crops:     ${crops.length}`);
   console.log(`  Varieties: ${varietyCount}`);
   console.log(
@@ -216,12 +219,21 @@ async function main() {
 
   if (!COMMIT) {
     console.log(
-      '\nDry run only. Re-run with --commit to write to the local DB.\n'
+      `\nDry run only. Re-run with --commit to write to the ${target.env} DB` +
+        (target.env === 'local' ? '.\n' : ` (plus --confirm ${target.env}).\n`)
     );
     return;
   }
 
-  const db = drizzle(databaseUrl, { casing: 'snake_case' });
+  if (crops.length === 0 || varietyCount < MIN_VARIETIES) {
+    throw new Error(
+      `Only ${crops.length} crops / ${varietyCount} varieties parsed ` +
+        `(need >= 1 crop and >= ${MIN_VARIETIES} varieties) — the CSV looks ` +
+        'truncated or malformed. Refusing to commit and prune.'
+    );
+  }
+
+  const db = createTargetDb(target);
   const usedSlugs = new Set<string>();
   const uniqueSlug = (base: string): string => {
     let s = base || 'item';
@@ -345,29 +357,32 @@ async function main() {
   if (keptSlugs.length > 0) {
     // Guard: an empty kept-set would match everything and wipe the tables.
     const staleVarieties = await db
-      .select({ kId: seedVariety.knowledgeArticleId })
+      .select({ kId: seedVariety.knowledgeArticleId, slug: seedVariety.slug })
       .from(seedVariety)
       .where(notInArray(seedVariety.slug, keptSlugs));
     const staleCrops = await db
-      .select({ kId: seedCrop.knowledgeArticleId })
+      .select({ kId: seedCrop.knowledgeArticleId, slug: seedCrop.slug })
       .from(seedCrop)
       .where(notInArray(seedCrop.slug, keptSlugs));
 
-    const staleKnowledgeIds = [
-      ...staleVarieties.map((r) => r.kId),
-      ...staleCrops.map((r) => r.kId),
-    ];
-    if (staleKnowledgeIds.length > 0) {
-      await db
-        .delete(knowledgeArticle)
-        .where(inArray(knowledgeArticle.id, staleKnowledgeIds));
-      pruned = staleKnowledgeIds.length;
+    const stale = [...staleVarieties, ...staleCrops];
+    if (stale.length > 0) {
+      console.log(`\nPruning ${stale.length} stale row(s) from ${target.env}:`);
+      for (const r of stale) console.log(`  - ${r.slug}`);
+      await db.delete(knowledgeArticle).where(
+        inArray(
+          knowledgeArticle.id,
+          stale.map((r) => r.kId)
+        )
+      );
+      pruned = stale.length;
     }
   }
 
   console.log(
-    `\nCommitted: ${cropsWritten} crops, ${varietiesWritten} varieties, ` +
-      `${embeddings} embeddings generated, ${pruned} stale rows pruned.\n`
+    `\nCommitted to ${target.env}: ${cropsWritten} crops, ` +
+      `${varietiesWritten} varieties, ${embeddings} embeddings generated, ` +
+      `${pruned} stale rows pruned.\n`
   );
 }
 
