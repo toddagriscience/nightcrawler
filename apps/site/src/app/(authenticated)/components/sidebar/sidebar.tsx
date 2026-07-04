@@ -10,7 +10,7 @@ import ZoneKeyboardNav from './zone-keyboard-nav';
 import {
   getAccountShellData,
   getManagementZones,
-} from '@/app/(authenticated)/(shell)/(accounts)/account/db';
+} from '@/app/(authenticated)/(no-sidebar)/account/db';
 import { BiTimeFive } from 'react-icons/bi';
 
 /**
