@@ -58,7 +58,7 @@ export default function AccountSideMenu() {
           href="/contact"
           className="flex w-fit items-center gap-2 text-sm font-normal text-foreground/70 hover:text-foreground"
         >
-          <span className="text-sm font-normal">Help</span>
+          Help
           <BiHelpCircle className="size-5" />
         </Link>
 
@@ -67,7 +67,7 @@ export default function AccountSideMenu() {
           onClick={handleLogout}
           className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
         >
-          <span className="text-sm font-normal">Log out</span>
+          Log out
           <BiLogOut className="size-5" />
         </Button>
       </div>
