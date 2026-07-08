@@ -107,9 +107,18 @@ export function resolveImporterTarget(): ImporterTarget {
   return { env, connection: resolveRemoteDbConfig(env) };
 }
 
-/** Opens a drizzle handle for a resolved importer target. */
+/**
+ * Opens a drizzle handle for a resolved importer target, plus a `close()` that
+ * ends the underlying pool. Callers MUST await close() (e.g. in a finally),
+ * otherwise the pooled connections keep the Node process alive until the DB's
+ * idle timeout — remote importer runs would appear to hang after finishing.
+ */
 export function createTargetDb(target: ImporterTarget) {
-  return typeof target.connection === 'string'
-    ? drizzle(target.connection, { casing: 'snake_case' })
-    : drizzle(new Pool(target.connection), { casing: 'snake_case' });
+  if (typeof target.connection === 'string') {
+    const db = drizzle(target.connection, { casing: 'snake_case' });
+    return { db, close: () => db.$client.end() };
+  }
+  const pool = new Pool(target.connection);
+  const db = drizzle(pool, { casing: 'snake_case' });
+  return { db, close: () => pool.end() };
 }

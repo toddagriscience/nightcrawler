@@ -129,11 +129,24 @@ jobs:
           # this workflow handles. If it is missing we are pointed at a wrong
           # or empty database and must not proceed (an apply run would rebuild
           # a ledger full of claims about schema that does not exist).
-          baseline=$(has_table knowledge_article)
-          if [ "$baseline" != "t" ]; then
-            echo "::error::Baseline table knowledge_article is missing — wrong or empty database? Refusing to continue."
-            exit 1
-          fi
+           baseline=$(has_table knowledge_article)
+            if [ "$baseline" != "t" ]; then
+              echo "::error::Baseline table knowledge_article is missing — wrong or empty database? Refusing to continue."
+              exit 1
+            fi
+
+            # This break-glass workflow only knows how to verify + apply migrations
+            # through 0014 (the probes and the apply FILES list are hardcoded). The
+            # ledger rebuild, by contrast, writes a row for EVERY journal entry — so
+            # if a newer migration has landed, rebuilding would stamp it "applied"
+            # without this workflow ever verifying it, reintroducing the exact
+            # silent drift this workflow exists to fix. Refuse until it is extended.
+            KNOWN_HEAD="0014_general-imp"
+            JOURNAL_HEAD=$(jq -r '.entries[-1].tag' drizzle/meta/_journal.json)
+            if [ "$JOURNAL_HEAD" != "$KNOWN_HEAD" ]; then
+              echo "::error::Journal head '$JOURNAL_HEAD' is beyond '$KNOWN_HEAD' — extend the verify/apply steps in this workflow before reconciling."
+              exit 1
+            fi
 
           # classify <migration> <object=t|f>... -> sets $state to "applied"
           # (all objects present) or "missing" (none present). A partial mix
@@ -318,19 +331,23 @@ jobs:
           # migrations never require editing this workflow. The drizzle migrator
           # gates on created_at (`when > max(created_at)`), so after this it
           # sees the journal head and runs nothing.
-          echo "Rebuilding drizzle migration ledger from meta/_journal.json..."
-          VALUES=$(
-            jq -r '.entries[] | [.tag, (.when|tostring)] | @tsv' drizzle/meta/_journal.json \
-            | while IFS=$'\t' read -r tag when; do
-                hash=$(sha256sum "drizzle/${tag}.sql" | cut -d' ' -f1)
-                printf "('%s',%s),\n" "$hash" "$when"
-              done \
-            | sed '$ s/,$//'
-          )
-          if [ -z "$VALUES" ]; then
-            echo "::error::No journal entries found — refusing to truncate the ledger."
-            exit 1
-          fi
+           echo "Rebuilding drizzle migration ledger from meta/_journal.json..."
+            # Loop in the MAIN shell (process substitution, not a pipe) so an
+            # `exit 1` here actually aborts the step, and check every file + hash so
+            # a missing or unreadable .sql can never silently write an empty hash.
+            declare -a ROWS=()
+            while IFS=$'\t' read -r tag when; do
+              sql="drizzle/${tag}.sql"
+              [ -f "$sql" ] || { echo "::error::Journal references $sql but the file is missing — refusing to rebuild the ledger."; exit 1; }
+              hash=$(sha256sum "$sql" | cut -d' ' -f1)
+              [ -n "$hash" ] || { echo "::error::Failed to hash $sql — refusing to write an empty ledger hash."; exit 1; }
+              ROWS+=("('$hash',$when)")
+            done < <(jq -r '.entries[] | [.tag, (.when|tostring)] | @tsv' drizzle/meta/_journal.json)
+            if [ ${#ROWS[@]} -eq 0 ]; then
+              echo "::error::No journal entries found — refusing to truncate the ledger."
+              exit 1
+            fi
+            VALUES=$(IFS=,; echo "${ROWS[*]}")
 
           PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" --single-transaction -v ON_ERROR_STOP=1 -c "
             create schema if not exists drizzle;
