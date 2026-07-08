@@ -10,12 +10,8 @@ export interface SearchResult {
   slug: string;
   /** Preview text shown on the search result card */
   content: string;
-  /** Optional source attribution for the result */
-  source: string | null;
-  /** Human-readable category or grouping label */
-  category: string;
   /** Which route family this result belongs to */
-  resultType: 'imp' | 'seed';
+  resultType: 'imp' | 'seed' | 'general-imp';
   /** Similarity score used for result ranking */
   similarity: number;
   /** Remaining units in stock for a seed result */

@@ -191,7 +191,7 @@ export function OrderClient() {
                 Continue
               </Button>
               <Button asChild variant="outline">
-                <Link href="/search">Browse products</Link>
+                <Link href="/">Browse products</Link>
               </Button>
             </div>
           </section>
@@ -233,7 +233,7 @@ export function OrderClient() {
             order.
           </p>
           <Button asChild variant="brand" className="mt-6">
-            <Link href="/search">Browse products</Link>
+            <Link href="/">Browse products</Link>
           </Button>
         </div>
       ) : (

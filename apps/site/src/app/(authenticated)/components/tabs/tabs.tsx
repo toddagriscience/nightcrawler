@@ -18,7 +18,6 @@ import TabCloseButton from './components/tab-close-button';
 import NewTabDropdown from './new-tab-dropdown';
 import { NamedTab } from './types';
 import { getTabHash } from './utils';
-import { SearchNavForm } from '@/components/common/authenticated-header/components/search-nav-form';
 
 const maxTabs = 8;
 
@@ -154,7 +153,6 @@ export default function PlatformTabs({
           )}
         </TabsList>
         <div className="flex flex-row items-center gap-6 border-none">
-          <SearchNavForm />
           {addWidgetDropdown}
           {header}
         </div>

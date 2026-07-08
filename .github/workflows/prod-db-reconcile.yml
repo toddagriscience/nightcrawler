@@ -1,0 +1,293 @@
+name: Prod DB Reconcile (Apply Pending Migrations)
+
+# One-off, manually triggered reconciliation for production.
+#
+# Background: the release workflow uses `drizzle-kit push`, which crashes on
+# drizzle-kit's interactive enum resolver in CI (no TTY) yet exits 0 -> the
+# "Push to production" step reports success while applying nothing. As a result
+# prod silently drifted behind `main` (frozen at the 1.1.9 schema).
+#
+# This workflow applies the committed migration `.sql` files (0010-0014) that
+# prod is missing, verbatim, in a single all-or-nothing transaction, then
+# rebuilds the drizzle migration ledger so future `drizzle-kit migrate` runs are
+# consistent. It defaults to `verify` (read-only) so you can confirm real prod
+# state before any writes.
+#
+# Targets prod via the PROD_DATABASE_* secrets. For staging, run the manual
+# psql path (see packages/db/drizzle/*.sql) or add a staging-secret variant.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'verify = read-only state check; apply = run pending migrations + rebuild ledger'
+        required: true
+        default: verify
+        type: choice
+        options:
+          - verify
+          - apply
+
+jobs:
+  reconcile:
+    name: Reconcile production schema (${{ inputs.mode }})
+    runs-on: ubuntu-latest
+    env:
+      PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
+      PROD_DATABASE_PORT: ${{ secrets.PROD_DATABASE_PORT }}
+      PROD_DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
+      PROD_DATABASE_PASSWORD: ${{ secrets.PROD_DATABASE_PASSWORD }}
+      PROD_DATABASE_DATABASE: ${{ secrets.PROD_DATABASE_DATABASE }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /tmp/pgdg.asc
+          gpg --dearmor --batch --yes -o /tmp/apt.postgresql.org.gpg /tmp/pgdg.asc
+          sudo mv /tmp/apt.postgresql.org.gpg /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+          /usr/lib/postgresql/18/bin/psql --version
+
+      - name: Write prod CA certificate
+        run: |
+          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
+          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
+
+      - name: Verify current production schema state
+        id: verify
+        working-directory: ./packages/db
+        run: |
+          set -euo pipefail
+          PSQL=/usr/lib/postgresql/18/bin/psql
+          # sslmode=verify-full also validates the server certificate's hostname
+          # against PROD_DATABASE_HOST (verify-ca only validates the CA chain).
+          # If the provider's certificate cannot match the hostname, downgrading
+          # back to verify-ca requires explicit justification.
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+
+          probe() {
+            PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -tAc "$1"
+          }
+          has_table()  { probe "select (to_regclass('public.$1') is not null);"; }
+          has_enum()   { probe "select exists (select 1 from pg_type t join pg_namespace n on n.oid = t.typnamespace where n.nspname = 'public' and t.typtype = 'e' and t.typname = '$1');"; }
+          has_column() { probe "select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '$1' and column_name = '$2');"; }
+          # Postgres truncates identifiers to 63 bytes, so compare constraint
+          # names against left(name, 63) — 0011's reviewed_by FK name is longer.
+          has_fk()     { probe "select exists (select 1 from pg_constraint c join pg_namespace n on n.oid = c.connamespace where n.nspname = 'public' and c.contype = 'f' and c.conname = left('$1', 63));"; }
+
+          # classify <migration> <object=t|f>... -> sets $state to "applied"
+          # (all objects present) or "missing" (none present). A partial mix
+          # means a half-applied migration: skipping it would ledger unapplied
+          # DDL and re-applying it would fail, so hard-fail for manual repair.
+          state=""
+          classify() {
+            local mig="$1"; shift
+            local present=() missing=() pair
+            for pair in "$@"; do
+              if [ "${pair#*=}" = "t" ]; then present+=("${pair%%=*}"); else missing+=("${pair%%=*}"); fi
+            done
+            if [ ${#missing[@]} -eq 0 ]; then
+              state="applied"
+            elif [ ${#present[@]} -eq 0 ]; then
+              state="missing"
+            else
+              echo "::error::Migration $mig is PARTIALLY applied — present: ${present[*]}; missing: ${missing[*]}. Refusing to skip or re-apply; repair production manually."
+              exit 1
+            fi
+            echo "$mig: $state (present: ${present[*]:-none}; missing: ${missing[*]:-none})"
+          }
+
+          echo "Probing every object created by each pending migration..."
+
+          # 0010: farm.advisor_profile_notes column
+          c0=$(has_column farm advisor_profile_notes)
+          classify 0010 \
+            "column:farm.advisor_profile_notes=$c0"
+          state_0010="$state"
+
+          # 0011: enum rename + new enum + table rename + new column + 2 FK renames
+          e1=$(has_enum form_submission_status)
+          e2=$(has_enum form_submission_workflow_type)
+          t1=$(has_table form_submissions)
+          c1=$(has_column form_submissions workflow_type)
+          f1=$(has_fk form_submissions_reviewed_by_internal_account_id_internal_account_id_fk)
+          f2=$(has_fk form_submissions_farm_id_farm_id_fk)
+          classify 0011 \
+            "enum:form_submission_status=$e1" \
+            "enum:form_submission_workflow_type=$e2" \
+            "table:form_submissions=$t1" \
+            "column:form_submissions.workflow_type=$c1" \
+            "fk:form_submissions_reviewed_by_internal_account_id_internal_account_id_fk=$f1" \
+            "fk:form_submissions_farm_id_farm_id_fk=$f2"
+          state_0011="$state"
+
+          # 0012: seed_variety_status enum + seed_crop/seed_variety tables + 3 FKs
+          e1=$(has_enum seed_variety_status)
+          t1=$(has_table seed_crop)
+          t2=$(has_table seed_variety)
+          f1=$(has_fk seed_crop_knowledge_article_id_knowledge_article_id_fk)
+          f2=$(has_fk seed_variety_knowledge_article_id_knowledge_article_id_fk)
+          f3=$(has_fk seed_variety_seed_crop_id_seed_crop_id_fk)
+          classify 0012 \
+            "enum:seed_variety_status=$e1" \
+            "table:seed_crop=$t1" \
+            "table:seed_variety=$t2" \
+            "fk:seed_crop_knowledge_article_id_knowledge_article_id_fk=$f1" \
+            "fk:seed_variety_knowledge_article_id_knowledge_article_id_fk=$f2" \
+            "fk:seed_variety_seed_crop_id_seed_crop_id_fk=$f3"
+          state_0012="$state"
+
+          # 0013: reminder_type enum + reminder table + 1 FK
+          e1=$(has_enum reminder_type)
+          t1=$(has_table reminder)
+          f1=$(has_fk reminder_user_id_user_id_fk)
+          classify 0013 \
+            "enum:reminder_type=$e1" \
+            "table:reminder=$t1" \
+            "fk:reminder_user_id_user_id_fk=$f1"
+          state_0013="$state"
+
+          # 0014: general_imp table + 1 FK
+          t1=$(has_table general_imp)
+          f1=$(has_fk general_imp_knowledge_article_id_knowledge_article_id_fk)
+          classify 0014 \
+            "table:general_imp=$t1" \
+            "fk:general_imp_knowledge_article_id_knowledge_article_id_fk=$f1"
+          state_0014="$state"
+
+          # Pre-0011 table (rename source) — consumed by the apply step's 0011 guard.
+          pre_0011=$(has_table platform_access_application)
+          echo "pre-0011 table platform_access_application present: $pre_0011"
+
+          {
+            echo "state_0010=$state_0010"
+            echo "state_0011=$state_0011"
+            echo "state_0012=$state_0012"
+            echo "state_0013=$state_0013"
+            echo "state_0014=$state_0014"
+            echo "pre_0011=$pre_0011"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Apply pending migrations (single transaction)
+        if: ${{ inputs.mode == 'apply' }}
+        working-directory: ./packages/db
+        run: |
+          set -euo pipefail
+          PSQL=/usr/lib/postgresql/18/bin/psql
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+
+          declare -a FILES=()
+          [ "${{ steps.verify.outputs.state_0010 }}" = "applied" ] || FILES+=("drizzle/0010_add-farm-advisor-profile-notes.sql")
+
+          # 0011 is a rename, not a create: only safe when the OLD table still
+          # exists and the NEW one does not. Any other combination is an anomaly
+          # we refuse to guess at.
+          if [ "${{ steps.verify.outputs.state_0011 }}" = "applied" ]; then
+            if [ "${{ steps.verify.outputs.pre_0011 }}" = "t" ]; then
+              echo "::error::Both form_submissions and platform_access_application exist — ambiguous state, cannot tell which table is canonical. Inspect manually."
+              exit 1
+            fi
+          else
+            if [ "${{ steps.verify.outputs.pre_0011 }}" = "t" ]; then
+              FILES+=("drizzle/0011_rename-form-submissions.sql")
+            else
+              echo "::error::0011 not applied but platform_access_application is missing — cannot rename safely. Inspect manually."
+              exit 1
+            fi
+          fi
+
+          [ "${{ steps.verify.outputs.state_0012 }}" = "applied" ] || FILES+=("drizzle/0012_variety-inventory.sql")
+          [ "${{ steps.verify.outputs.state_0013 }}" = "applied" ] || FILES+=("drizzle/0013_add-reminder.sql")
+          [ "${{ steps.verify.outputs.state_0014 }}" = "applied" ] || FILES+=("drizzle/0014_general-imp.sql")
+
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "Schema is already up to date. Nothing to apply."
+          else
+            echo "Applying the following migrations in a single transaction:"
+            printf ' - %s\n' "${FILES[@]}"
+
+            declare -a ARGS=()
+            for f in "${FILES[@]}"; do ARGS+=(-f "$f"); done
+
+            PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" \
+              --single-transaction \
+              -v ON_ERROR_STOP=1 \
+              "${ARGS[@]}"
+          fi
+
+          echo "Re-verifying post-apply state..."
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+            select
+              exists (select 1 from information_schema.columns
+                      where table_name='farm' and column_name='advisor_profile_notes') as has_0010,
+              (to_regclass('public.form_submissions') is not null)                     as has_0011,
+              (to_regclass('public.seed_variety') is not null)                         as has_0012,
+              (to_regclass('public.reminder') is not null)                             as has_0013,
+              (to_regclass('public.general_imp') is not null)                          as has_0014;
+          "
+
+      - name: Rebuild drizzle migration ledger
+        if: ${{ inputs.mode == 'apply' }}
+        working-directory: ./packages/db
+        run: |
+          set -euo pipefail
+          PSQL=/usr/lib/postgresql/18/bin/psql
+          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+
+          # Only rebuild the ledger once the schema is fully at 0014, otherwise
+          # the ledger would claim migrations that are not actually applied.
+          all_present=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "
+            select
+              (exists (select 1 from information_schema.columns
+                       where table_name='farm' and column_name='advisor_profile_notes'))
+              and (to_regclass('public.form_submissions') is not null)
+              and (to_regclass('public.seed_variety')    is not null)
+              and (to_regclass('public.reminder')        is not null)
+              and (to_regclass('public.general_imp')     is not null);
+          ")
+
+          if [ "$all_present" != "t" ]; then
+            echo "::error::Schema is not fully at 0014 — refusing to rebuild the ledger. Inspect production manually."
+            exit 1
+          fi
+
+          # Rewrite drizzle.__drizzle_migrations to match the committed journal
+          # exactly: (hash = sha256 of each drizzle/*.sql, created_at = the
+          # entry's `when` from meta/_journal.json). After this, drizzle-kit
+          # migrate sees max(created_at) = 0014 and runs nothing.
+          echo "Rebuilding drizzle migration ledger..."
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" --single-transaction -v ON_ERROR_STOP=1 -c "
+            create schema if not exists drizzle;
+            create table if not exists drizzle.__drizzle_migrations (
+              id serial primary key, hash text not null, created_at bigint
+            );
+            truncate drizzle.__drizzle_migrations restart identity;
+            insert into drizzle.__drizzle_migrations (hash, created_at) values
+              ('975001fad5a72b6f1f43c5c8395d6f59eec01ddf936af94a3369055b6320b5d2',1772158369112),
+              ('5122ab423af507bc15381676e426fff720cc84c4b6aab3b2d75df2ec3d92fdd4',1772419343026),
+              ('d95f61fb84052d7b5f2b7ba4d2445f968736f00c674b4b261ad7443122565fd9',1772647120414),
+              ('4c718e922e8a98fd4fbc547601573e8fecbdeae287e9708ccc149c9fa3ccc9b6',1772652027714),
+              ('6a3bfa23e83ab8c44317e24c9c2fb10530a4d7aca63d39b813d00af21cc384d8',1773609705183),
+              ('8c22c468dd0133a85aae187903de71ff6807c9ef2b33eaedd13cc7c9ac9b9407',1773866423805),
+              ('a992c16783efa7f20cfe480a2e572cf2f8a4715be02a4173cea17d7208fd1285',1774049121695),
+              ('89687c693499aef5c4bd06d901895ce4293f68efdb3d54b517540ae5d9a1ac4d',1774461530048),
+              ('5ecafcb2c53b16f46904b00a2f628a45beedfee3e4dd72ef28252742972beab2',1774461530049),
+              ('6459ea25b35f78653612aa2980f13ea1c56104f5beab74fe041cfadac54e534a',1774461530050),
+              ('6d5f2f2b26c96897ac38772ffae5c509cc356b3b384d81fd6c79aa95860540b4',1774461530051),
+              ('ba2c3a746915605d227f9d3c47308ad6138b84258d3f18d22549366f557a3505',1774461530052),
+              ('14c40e9e42e755c184009241686870f94232b75b7440c247243219ca6c030c79',1781913600000),
+              ('22d21f78f5484b45a788cd34115676ef41367742ccb27105b8a1bcde776b8251',1782000000000),
+              ('39e249b43e5ef87a3a5056d066f1cb0ab9259cec8fa7f055691de83fb74cad8e',1782885722357);
+          "
+
+          echo "Ledger rebuilt. Current ledger:"
+          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+            select id, left(hash, 12) as hash12, created_at
+            from drizzle.__drizzle_migrations order by id;
+          "

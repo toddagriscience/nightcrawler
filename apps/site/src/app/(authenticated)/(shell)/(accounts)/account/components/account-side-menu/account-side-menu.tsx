@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BiLogOut } from 'react-icons/bi';
+import { BiHelpCircle, BiLogOut } from 'react-icons/bi';
 
 const sideMenuItems = [
   { href: '/account', label: 'Farm information' },
@@ -53,13 +53,21 @@ export default function AccountSideMenu() {
         </nav>
       </div>
 
-      <div className="mt-17.5 border-t border-[#D9D9D9] pt-4">
+      <div className="mt-17.5 space-y-3 border-t border-[#D9D9D9] pt-4">
+        <Link
+          href="/contact"
+          className="flex w-fit items-center gap-2 text-sm font-normal text-foreground/70 hover:text-foreground"
+        >
+          Help
+          <BiHelpCircle className="size-5" />
+        </Link>
+
         <Button
           type="button"
           onClick={handleLogout}
           className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
         >
-          <span className="text-sm font-normal">Log out</span>
+          Log out
           <BiLogOut className="size-5" />
         </Button>
       </div>

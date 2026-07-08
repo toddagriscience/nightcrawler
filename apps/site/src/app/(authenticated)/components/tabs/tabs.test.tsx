@@ -16,13 +16,6 @@ vi.mock('@/components/common/wordmark/todd-wordmark', () => ({
   default: () => <div>Todd</div>,
 }));
 
-vi.mock(
-  '@/components/common/authenticated-header/components/search-nav-form',
-  () => ({
-    SearchNavForm: () => <div>Search</div>,
-  })
-);
-
 vi.mock('./new-tab-dropdown', () => ({
   default: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
