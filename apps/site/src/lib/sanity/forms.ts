@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { client } from '@/lib/sanity/client';
+import { client, defaultSanityFetchOptions } from '@/lib/sanity/client';
 import { logger } from '@/lib/logger';
 import type { SanityForm } from '@/lib/sanity/form-types';
 import { FilteredResponseQueryOptions } from 'next-sanity';
@@ -48,9 +48,6 @@ const GROQ_FORM_BODY = `
   workflowType
 `;
 
-/** One hour ISR for CMS form definitions. */
-const FORM_REVALIDATE = 60 * 60;
-
 /**
  * Fetches a published Sanity form definition by slug.
  *
@@ -67,7 +64,7 @@ export async function getFormBySlug(
     const form = await client.fetch<SanityForm | null>(
       query,
       { slug },
-      options ?? { next: { revalidate: FORM_REVALIDATE } }
+      options ?? defaultSanityFetchOptions
     );
     return form ?? null;
   } catch (error) {
