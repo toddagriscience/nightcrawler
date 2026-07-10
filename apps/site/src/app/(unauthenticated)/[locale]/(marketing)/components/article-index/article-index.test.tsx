@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import enMessages from '@/messages/articleIndex/en.json';
+import enMessages from '@/messages/article-index/en.json';
 import {
   NEWS_TOPIC_TYPES,
   RESEARCH_CONTENT_TYPES,

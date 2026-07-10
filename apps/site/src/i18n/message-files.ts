@@ -13,7 +13,7 @@ export const messageFiles = [
   'homepage',
   'about',
   'research',
-  'articleIndex',
+  'article-index',
   'investors',
   'governance',
   'disclosures',
@@ -21,6 +21,6 @@ export const messageFiles = [
   'privacy',
   'terms',
   'careers',
-  'cookiePreferences',
+  'cookie-preferences',
   'forms',
 ];
