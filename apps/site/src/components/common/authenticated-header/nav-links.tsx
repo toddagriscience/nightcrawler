@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { hasCompletedPlatformOnboarding } from '@/lib/utils/platform-onboarding';
 import Link from 'next/link';
 import { ApplyLogoutLink } from './components/apply-logout-link';
 import { OrderNavLink } from './components/order-nav-link';
@@ -12,14 +14,27 @@ import { OrderNavLink } from './components/order-nav-link';
  * @returns {JSX.Element} - The navigation links
  */
 export async function NavLinks() {
+  let onboardingComplete = false;
+  try {
+    const currentUser = await getAuthenticatedInfo();
+    onboardingComplete = await hasCompletedPlatformOnboarding(
+      currentUser.id,
+      currentUser.approved
+    );
+  } catch {
+    onboardingComplete = false;
+  }
+
+  const links = [
+    { href: '/contact', label: 'Contact' },
+    ...(onboardingComplete ? [{ href: '/account', label: 'Account' }] : []),
+  ];
+
   return (
     <nav className="flex items-center gap-4">
       <div className="flex items-center gap-6">
         <OrderNavLink />
-        {[
-          { href: '/contact', label: 'Contact' },
-          { href: '/account', label: 'Account' },
-        ].map((link) => (
+        {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
