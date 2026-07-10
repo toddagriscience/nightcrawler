@@ -55,9 +55,8 @@ describe('isRouteProtected', () => {
       expect(isRouteProtected('/account/a/b/c/d/e/f')).toBe(true);
     });
 
-    it('should return false for /account without trailing path', () => {
-      // /account/* should not match /account
-      expect(isRouteProtected('/account')).toBe(false);
+    it('should return true for /account without trailing path', () => {
+      expect(isRouteProtected('/account')).toBe(true);
     });
 
     it('should return false for similar but different paths', () => {

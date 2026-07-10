@@ -3,7 +3,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { Skeleton } from '@/components/ui/skeleton';
-import AccountHeader from '../components/account-header/account-header';
 import AccountSideMenu from '../components/account-side-menu/account-side-menu';
 import { getAccountShellData } from '../db';
 
@@ -19,16 +18,20 @@ export const metadata: Metadata = {
  * inside the Suspense boundary so the layout can still be prerendered.
  *
  * @param props.children - Nested account page content
- * @returns The account shell with header and side menu
+ * @returns The account shell with side menu
  */
 async function AccountShell({ children }: { children: React.ReactNode }) {
   const accountShellData = await getAccountShellData();
 
   return (
     <div className="pb-14">
-      <AccountHeader farmName={accountShellData.farmName} />
       <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
-        <AccountSideMenu />
+        <AccountSideMenu
+          farmName={accountShellData.farmName}
+          contactName={accountShellData.contactName}
+          contactEmail={accountShellData.contactEmail}
+          contactPhone={accountShellData.contactPhone}
+        />
         <main className="min-w-0 flex-1">{children}</main>
       </div>
     </div>
@@ -43,12 +46,6 @@ async function AccountShell({ children }: { children: React.ReactNode }) {
 function AccountShellFallback() {
   return (
     <div className="pb-14">
-      <div className="border-b border-[#D9D9D9]">
-        <div className="mx-auto mt-16 mb-10 flex w-full max-w-[1300px] items-center gap-22 px-5">
-          <Skeleton className="h-6 w-16 bg-foreground/15" />
-          <Skeleton className="h-9 w-48 bg-foreground/15" />
-        </div>
-      </div>
       <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
         <div className="mt-1 w-[190px] shrink-0">
           <Skeleton className="h-40 w-full bg-foreground/15" />

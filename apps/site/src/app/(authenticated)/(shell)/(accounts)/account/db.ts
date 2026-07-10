@@ -17,7 +17,12 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
-export async function getAccountShellData(): Promise<{ farmName: string }> {
+export async function getAccountShellData(): Promise<{
+  farmName: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+}> {
   const currentUser = await getAuthenticatedInfo();
 
   const [farmRecord] = await db
@@ -34,6 +39,9 @@ export async function getAccountShellData(): Promise<{ farmName: string }> {
 
   return {
     farmName: informalName !== NOT_SET ? informalName : businessName,
+    contactName: toDisplayName(currentUser.firstName, currentUser.lastName),
+    contactEmail: toDisplayValue(currentUser.email),
+    contactPhone: toDisplayValue(currentUser.phone),
   };
 }
 

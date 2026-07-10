@@ -21,7 +21,6 @@ import {
   knowledgeArticle,
   seedProduct,
 } from '../src/schema';
-import { getEmbedding } from '../src/utils/get-embedding';
 
 const DEFAULT_SEED_ADMIN_EMAIL = 'example@testmail.com';
 
@@ -151,6 +150,8 @@ async function createEmbedding(text: string): Promise<number[]> {
   if (!process.env.OPENAI_EMBEDDINGS_KEY) {
     return createDeterministicEmbedding(text);
   }
+
+  const { getEmbedding } = await import('../src/utils/get-embedding');
 
   return getEmbedding(text);
 }
