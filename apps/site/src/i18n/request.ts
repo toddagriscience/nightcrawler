@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { logger } from '@/lib/logger';
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './config';
 import { messageFiles } from './message-files';
@@ -22,12 +23,14 @@ export async function loadMessages(
       Object.assign(messages, fileMessages);
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
-        console.warn(
+        logger.warn(
           `Warning: Could not load message file ${file}/${locale}.json`,
           error
         );
       } else {
-        console.warn(
+        // logger.warn is suppressed outside development; a missing message
+        // file must stay visible in production, so it routes through error.
+        logger.error(
           `Warning: Could not load message file ${file}/${locale}.json`
         );
       }
