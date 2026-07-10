@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import DesktopNav from './desktop-nav';
 import { useMenuItems } from './menu-items';
 import MobileNav from './mobile-nav';
-import { NewHeaderProps } from './types';
+import { HeaderProps } from './types';
 
 /**
  * Marketing site header with full-width click-to-open dropdowns on desktop and a
@@ -21,11 +21,11 @@ import { NewHeaderProps } from './types';
  * @param props - Optional menu items and auth links to override defaults.
  * @returns The redesigned marketing header.
  */
-export default function NewHeader({
+export default function Header({
   menu,
   auth,
   className,
-}: NewHeaderProps): React.ReactNode {
+}: HeaderProps): React.ReactNode {
   const { menuItems, authLinks } = useMenuItems({ menu, auth });
 
   return (
