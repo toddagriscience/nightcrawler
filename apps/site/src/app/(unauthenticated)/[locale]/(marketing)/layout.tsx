@@ -2,7 +2,7 @@
 
 import { siteConfig } from '@/lib/metadata';
 import { Metadata } from 'next';
-import { Footer, NewHeader } from './components';
+import { Footer, Header } from './components';
 
 export const metadata: Metadata = {
   title: { default: 'Marketing', template: `%s | ${siteConfig.name}` },
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <NewHeader />
+      <Header />
       {children}
       <Footer />
     </>

@@ -274,7 +274,7 @@ However, husky/workflows will handle the majority of code validation/testing for
   1.  A custom script: cleans up documents that contain a starting file comment, preparing them so they are not overriden by the plugin
   2.  Run `eslint-plugin-license-header`: adds a copyright statement to the beginning of each file written by a Todd organization member
 
-For all tests on the frontend, please utilize `jest` and not `vitest`. If you are a full stack developer, this may be confusing due to the use of `vitest` on the backend. Please disregard this to the best of your ability. This is due to different design choices, among other things.
+All tests use `vitest`, in both `apps/site` (with React Testing Library) and `packages/db`. Jest is not a dependency of any workspace. Note that `@testing-library/jest-dom` is only a matcher library — its name is historical and it works with Vitest.
 
 - **Unit tests**: Required for all new components and utilities
 - **Storybook stories**: Required for all UI components

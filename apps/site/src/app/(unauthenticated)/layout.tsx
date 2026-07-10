@@ -2,7 +2,7 @@
 
 import { ThemeReset } from '@/components/common';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { ThemeProvider } from '@/context/theme/theme-context';
 import { fontVariables } from '@/lib/fonts';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';

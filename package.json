@@ -16,6 +16,7 @@
     "eslint-plugin-license-header": "^0.9.0",
     "espree": "^11.2.0",
     "husky": "^9.1.7",
+    "knip": "^6.25.0",
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.4",
     "turbo": "^2.9.18"
@@ -28,6 +29,7 @@
     "dev:sanity": "bun run --filter @nightcrawler/sanity dev",
     "dev:internal": "bun run --filter @nightcrawler/internal dev",
     "lint": "turbo run lint",
+    "knip": "knip",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",

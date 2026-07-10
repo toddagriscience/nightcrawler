@@ -5,7 +5,7 @@
 import { motion, MotionValue, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
-import useWindowWidth from '@/lib/hooks/useWindowWidth';
+import useWindowWidth from '@/lib/hooks/use-window-width';
 
 interface CompetenciesSectionProps {
   t: (key: string) => string;

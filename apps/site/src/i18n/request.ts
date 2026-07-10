@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { logger } from '@/lib/logger';
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './config';
 import { messageFiles } from './message-files';
@@ -21,16 +22,10 @@ export async function loadMessages(
         .default;
       Object.assign(messages, fileMessages);
     } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(
-          `Warning: Could not load message file ${file}/${locale}.json`,
-          error
-        );
-      } else {
-        console.warn(
-          `Warning: Could not load message file ${file}/${locale}.json`
-        );
-      }
+      // Message JSON is bundled at build time, so a missing file is a
+      // development concern rather than a live-request event. logger.warn is
+      // already development-gated.
+      logger.warn(`Could not load message file ${file}/${locale}.json`, error);
     }
   });
 

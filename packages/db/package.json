@@ -40,7 +40,6 @@
     "@supabase/supabase-js": "^2.97.0",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.2",
-    "drizzle-seed": "^0.3.1",
     "openai": "^6.25.0",
     "pg": "^8.19.0",
     "react-grid-layout": "^2.2.2"

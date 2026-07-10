@@ -5,7 +5,7 @@ import Footer from './footer';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../../../../.storybook/utils/storybookControls';
+} from '../../../../../../../.storybook/utils/storybook-controls';
 
 const meta: Meta<typeof Footer> = {
   title: 'UI/Footer',

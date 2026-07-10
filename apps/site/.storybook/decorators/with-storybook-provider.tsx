@@ -2,7 +2,7 @@ import { Decorator } from '@storybook/react';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
 import '../../src/app/globals.css';
-import { ThemeProvider } from '../../src/context/theme/ThemeContext';
+import { ThemeProvider } from '../../src/context/theme/theme-context';
 import { routing } from '../../src/i18n/config';
 import { messageFiles } from '../../src/i18n/message-files';
 

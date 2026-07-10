@@ -1,19 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { useTranslations } from 'next-intl';
-import { AuthLinks, MenuItem, NewHeaderProps } from './types';
+import { AuthLinks, MenuItem, HeaderProps } from './types';
 
 /**
  * Builds the default menu structure and auth links for the marketing header,
  * preferring caller-provided overrides when supplied.
  *
- * @param overrides - Optional `menu` and `auth` overrides from `NewHeaderProps`.
+ * @param overrides - Optional `menu` and `auth` overrides from `HeaderProps`.
  * @returns Resolved `menuItems` and `authLinks` for the desktop and mobile layouts.
  */
 export function useMenuItems({
   menu,
   auth,
-}: Pick<NewHeaderProps, 'menu' | 'auth'>): {
+}: Pick<HeaderProps, 'menu' | 'auth'>): {
   menuItems: MenuItem[];
   authLinks: AuthLinks;
 } {

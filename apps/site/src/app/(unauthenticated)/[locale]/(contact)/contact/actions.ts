@@ -2,7 +2,7 @@
 
 'use server';
 
-import { submitContactToSheets } from '@/lib/actions/googleSheets';
+import { submitContactToSheets } from '@/lib/actions/google-sheets';
 import logger from '@/lib/logger';
 import type { ActionResponse } from '@/lib/types/action-response';
 import { throwActionError } from '@/lib/utils/actions';

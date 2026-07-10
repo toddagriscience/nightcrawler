@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useCookiePreferences } from '@/lib/hooks/useCookiePreferences';
+import { useCookiePreferences } from '@/lib/hooks/use-cookie-preferences';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/config';
 import { Switch } from '@/components/ui/switch';

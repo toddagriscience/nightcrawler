@@ -22,7 +22,7 @@ export interface AuthLinks {
 }
 
 /** Public props for the marketing header. */
-export interface NewHeaderProps {
+export interface HeaderProps {
   className?: string;
   menu?: MenuItem[];
   auth?: AuthLinks;

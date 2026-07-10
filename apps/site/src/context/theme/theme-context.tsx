@@ -9,7 +9,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { ThemeContextType, ThemeProviderProps } from './types/ThemeContext';
+import { ThemeContextType, ThemeProviderProps } from './types/theme-context';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
