@@ -16,7 +16,6 @@
         "scripts/**/*.{ts,mjs}",
         ".storybook/**/*.{ts,tsx}"
       ],
-      "ignore": ["**/imp/**/components/types.ts"],
       "ignoreDependencies": ["newrelic", "tw-animate-css"]
     },
     "apps/internal": {
