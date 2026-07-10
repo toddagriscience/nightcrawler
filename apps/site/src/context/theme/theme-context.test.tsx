@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen, act } from '@testing-library/react';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { ThemeProvider, useTheme } from './theme-context';
 import '@testing-library/jest-dom';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 

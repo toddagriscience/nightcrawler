@@ -66,7 +66,7 @@ vi.mock('@/lib/supabase/server', async (importActual) => {
   };
 });
 
-vi.mock('@/lib/actions/googleSheets', () => ({
+vi.mock('@/lib/actions/google-sheets', () => ({
   submitToGoogleSheets: mockSubmitToGoogleSheets,
 }));
 

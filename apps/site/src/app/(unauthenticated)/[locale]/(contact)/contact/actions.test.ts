@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   loggerError: vi.fn(),
 }));
 
-vi.mock('@/lib/actions/googleSheets', () => ({
+vi.mock('@/lib/actions/google-sheets', () => ({
   submitContactToSheets: mocks.submitContactToSheets,
 }));
 

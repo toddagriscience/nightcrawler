@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".storybook/utils/storybookControls.ts",
+    ".storybook/utils/storybook-controls.ts",
     ".next/dev/types/**/*.ts",
     "./public/*"
   ],
