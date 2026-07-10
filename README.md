@@ -4,13 +4,15 @@ This is the main repository for both the marketing site and dashboard for [todda
 
 ## Documentation
 
-Due to this repository being a monorepo, documentation for each workspace is contained in the respective `README.md` file. Additionally, you can refer to [Colossus](https://github.com/toddagriscience/colossus), our repository specifically for documentation, or the `.github` folder for more information.
+Repo-wide conventions — naming, architecture, logging, commit and PR workflow — live in [`AGENTS.md`](AGENTS.md), which is the single source of truth. Workspace `README.md` files cover setup and commands for that workspace only.
+
+Additionally, you can refer to [Colossus](https://github.com/toddagriscience/colossus), our repository specifically for documentation, or the `.github` folder for more information.
 
 ## Quick Start
 
 ### Prerequisites
 
-- **Node.js**: 18.0.0 or higher
+- **Node.js**: 20.20.1 (see `.nvmrc`)
 - **Bun**: Latest stable version
 
 ### Setup
@@ -37,6 +39,7 @@ Due to this repository being a monorepo, documentation for each workspace is con
 4. **Choose the workspace you need**
 
 - `apps/site` contains the Next.js marketing site and customer platform.
+- `apps/internal` contains the Next.js internal dashboard for client advisors.
 - `apps/sanity` contains the Sanity Studio.
 - `packages/db` contains the shared database schema, queries, migrations, and local DB tooling.
 
@@ -49,7 +52,9 @@ Copy any required environment variables from `apps/site/env.example` to `apps/si
 6. **Start development server**
 
    ```bash
-   bun run dev:site
+   bun run dev:site      # marketing site + platform, port 3000
+   bun run dev:internal  # internal dashboard, port 3100
+   bun run dev:sanity    # Sanity Studio
    ```
 
 7. **Open in browser**
@@ -76,5 +81,13 @@ Copy any required environment variables from `apps/site/env.example` to `apps/si
 Run the full validation pipeline to ensure everything works:
 
 ```bash
-bun validate
+bun run validate
+```
+
+This runs `format:check` → `type-check` → `lint` → `test` → `build` across every workspace.
+
+To check for dead code and unused dependencies:
+
+```bash
+bun run knip
 ```
