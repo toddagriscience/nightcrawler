@@ -22,18 +22,10 @@ export async function loadMessages(
         .default;
       Object.assign(messages, fileMessages);
     } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
-        logger.warn(
-          `Warning: Could not load message file ${file}/${locale}.json`,
-          error
-        );
-      } else {
-        // logger.warn is suppressed outside development; a missing message
-        // file must stay visible in production, so it routes through error.
-        logger.error(
-          `Warning: Could not load message file ${file}/${locale}.json`
-        );
-      }
+      // Message JSON is bundled at build time, so a missing file is a
+      // development concern rather than a live-request event. logger.warn is
+      // already development-gated.
+      logger.warn(`Could not load message file ${file}/${locale}.json`, error);
     }
   });
 
