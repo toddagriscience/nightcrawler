@@ -34,7 +34,6 @@ const organizationStructuredData: WithContext<Organization> = {
   url: 'https://toddagriscience.com',
   sameAs: [
     'https://www.toddagriscience.com',
-    'https://toddagriculture.com',
     'https://www.linkedin.com/company/toddagriscience',
     'https://x.com/toddagriscience',
   ],
@@ -46,7 +45,7 @@ const organizationStructuredData: WithContext<Organization> = {
     '@type': 'Person',
     name: 'Vincent Todd',
   },
-  foundingDate: '2018-06-01',
+  foundingDate: '2018',
   foundingLocation: {
     '@type': 'Place',
     address: {

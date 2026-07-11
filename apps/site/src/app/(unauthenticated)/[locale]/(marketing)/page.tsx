@@ -10,7 +10,7 @@ import Homepage from './components/homepage/homepage';
 export const metadata: Metadata = {
   metadataBase: new URL('https://toddagriscience.com'),
   title: {
-    absolute: 'Todd | Global Leader in Sustainable Agriculture',
+    absolute: 'Todd | Sustainable Agriculture',
   },
   description:
     'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     canonical: 'https://toddagriscience.com/',
   },
   openGraph: {
-    title: 'Todd | Global Leader in Sustainable Agriculture',
+    title: 'Todd | Sustainable Agriculture',
     description:
       'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
     url: 'https://toddagriscience.com/',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     site: '@ToddAgriscience',
-    title: 'Todd | Global Leader in Sustainable Agriculture',
+    title: 'Todd | Sustainable Agriculture',
     description:
       'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
     images: ['https://www.toddagriscience.com/opengraph-image.png'],

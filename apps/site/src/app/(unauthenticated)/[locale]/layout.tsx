@@ -41,7 +41,7 @@ export async function generateMetadata({
       ]),
     },
     openGraph: {
-      title: 'Todd | Global Leader in Sustainable Agriculture',
+      title: 'Todd | Sustainable Agriculture',
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
       siteName: siteConfig.name,
@@ -60,7 +60,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       site: '@ToddAgriscience',
-      title: 'Todd | Global Leader in Sustainable Agriculture',
+      title: 'Todd | Sustainable Agriculture',
       description: t('description'),
       images: ['/opengraph-image.png'],
     },
