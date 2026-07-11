@@ -59,12 +59,8 @@
           "name": "analysis_management_zone_management_zone_id_fk",
           "tableFrom": "analysis",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -161,12 +157,8 @@
           "name": "farm_subscription_farm_id_farm_id_fk",
           "tableFrom": "farm_subscription",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -176,9 +168,7 @@
         "farm_subscription_stripeSubscriptionId_unique": {
           "name": "farm_subscription_stripeSubscriptionId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "stripe_subscription_id"
-          ]
+          "columns": ["stripe_subscription_id"]
         }
       },
       "policies": {},
@@ -371,12 +361,8 @@
           "name": "farm_certificate_farm_id_farm_id_fk",
           "tableFrom": "farm_certificate",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set default",
           "onUpdate": "no action"
         }
@@ -473,12 +459,8 @@
           "name": "farm_location_farm_id_farm_id_fk",
           "tableFrom": "farm_location",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set default",
           "onUpdate": "no action"
         }
@@ -607,12 +589,8 @@
           "name": "form_submissions_reviewed_by_internal_account_id_internal_account_id_fk",
           "tableFrom": "form_submissions",
           "tableTo": "internal_account",
-          "columnsFrom": [
-            "reviewed_by_internal_account_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reviewed_by_internal_account_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -620,12 +598,8 @@
           "name": "form_submissions_farm_id_farm_id_fk",
           "tableFrom": "form_submissions",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -710,12 +684,8 @@
           "name": "general_imp_knowledge_article_id_knowledge_article_id_fk",
           "tableFrom": "general_imp",
           "tableTo": "knowledge_article",
-          "columnsFrom": [
-            "knowledge_article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["knowledge_article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -725,16 +695,12 @@
         "general_imp_slug_unique": {
           "name": "general_imp_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         },
         "general_imp_knowledgeArticleId_unique": {
           "name": "general_imp_knowledgeArticleId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "knowledge_article_id"
-          ]
+          "columns": ["knowledge_article_id"]
         }
       },
       "policies": {},
@@ -803,12 +769,8 @@
           "name": "account_agreement_acceptance_user_id_user_id_fk",
           "tableFrom": "account_agreement_acceptance",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1042,12 +1004,8 @@
           "name": "farm_info_internal_application_farm_id_farm_id_fk",
           "tableFrom": "farm_info_internal_application",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1156,12 +1114,8 @@
           "name": "integrated_management_plan_knowledge_article_id_knowledge_article_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "knowledge_article",
-          "columnsFrom": [
-            "knowledge_article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["knowledge_article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1169,12 +1123,8 @@
           "name": "integrated_management_plan_management_zone_management_zone_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1182,12 +1132,8 @@
           "name": "integrated_management_plan_analysis_analysis_id_fk",
           "tableFrom": "integrated_management_plan",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1197,16 +1143,12 @@
         "integrated_management_plan_knowledgeArticleId_unique": {
           "name": "integrated_management_plan_knowledgeArticleId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "knowledge_article_id"
-          ]
+          "columns": ["knowledge_article_id"]
         },
         "integrated_management_plan_slug_unique": {
           "name": "integrated_management_plan_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -1262,12 +1204,8 @@
           "name": "integrated_management_plan_note_integrated_management_plan_id_integrated_management_plan_id_fk",
           "tableFrom": "integrated_management_plan_note",
           "tableTo": "integrated_management_plan",
-          "columnsFrom": [
-            "integrated_management_plan_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integrated_management_plan_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1275,12 +1213,8 @@
           "name": "integrated_management_plan_note_user_id_user_id_fk",
           "tableFrom": "integrated_management_plan_note",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1290,10 +1224,7 @@
         "integrated_management_plan_note_integratedManagementPlanId_userId_unique": {
           "name": "integrated_management_plan_note_integratedManagementPlanId_userId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "integrated_management_plan_id",
-            "user_id"
-          ]
+          "columns": ["integrated_management_plan_id", "user_id"]
         }
       },
       "policies": {},
@@ -1363,9 +1294,7 @@
         "internal_account_email_unique": {
           "name": "internal_account_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1490,12 +1419,8 @@
           "name": "management_zone_farm_id_farm_id_fk",
           "tableFrom": "management_zone",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1588,12 +1513,8 @@
           "name": "mineral_analysis_id_analysis_id_fk",
           "tableFrom": "mineral",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1678,12 +1599,8 @@
           "name": "oxidation_rate_analysis_id_analysis_id_fk",
           "tableFrom": "oxidation_rate",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1768,12 +1685,8 @@
           "name": "reminder_user_id_user_id_fk",
           "tableFrom": "reminder",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1845,12 +1758,8 @@
           "name": "seed_crop_knowledge_article_id_knowledge_article_id_fk",
           "tableFrom": "seed_crop",
           "tableTo": "knowledge_article",
-          "columnsFrom": [
-            "knowledge_article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["knowledge_article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1860,16 +1769,12 @@
         "seed_crop_slug_unique": {
           "name": "seed_crop_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         },
         "seed_crop_knowledgeArticleId_unique": {
           "name": "seed_crop_knowledgeArticleId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "knowledge_article_id"
-          ]
+          "columns": ["knowledge_article_id"]
         }
       },
       "policies": {},
@@ -1955,12 +1860,8 @@
           "name": "seed_order_checkout_farm_id_farm_id_fk",
           "tableFrom": "seed_order_checkout",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1968,12 +1869,8 @@
           "name": "seed_order_checkout_user_id_user_id_fk",
           "tableFrom": "seed_order_checkout",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1983,16 +1880,12 @@
         "seed_order_checkout_stripeCheckoutSessionId_unique": {
           "name": "seed_order_checkout_stripeCheckoutSessionId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "stripe_checkout_session_id"
-          ]
+          "columns": ["stripe_checkout_session_id"]
         },
         "seed_order_checkout_stripePaymentIntentId_unique": {
           "name": "seed_order_checkout_stripePaymentIntentId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "stripe_payment_intent_id"
-          ]
+          "columns": ["stripe_payment_intent_id"]
         }
       },
       "policies": {},
@@ -2093,12 +1986,8 @@
           "name": "seed_product_knowledge_article_id_knowledge_article_id_fk",
           "tableFrom": "seed_product",
           "tableTo": "knowledge_article",
-          "columnsFrom": [
-            "knowledge_article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["knowledge_article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2106,12 +1995,8 @@
           "name": "seed_product_related_integrated_management_plan_id_integrated_management_plan_id_fk",
           "tableFrom": "seed_product",
           "tableTo": "integrated_management_plan",
-          "columnsFrom": [
-            "related_integrated_management_plan_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["related_integrated_management_plan_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2121,16 +2006,12 @@
         "seed_product_slug_unique": {
           "name": "seed_product_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         },
         "seed_product_knowledgeArticleId_unique": {
           "name": "seed_product_knowledgeArticleId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "knowledge_article_id"
-          ]
+          "columns": ["knowledge_article_id"]
         }
       },
       "policies": {},
@@ -2248,12 +2129,8 @@
           "name": "seed_variety_knowledge_article_id_knowledge_article_id_fk",
           "tableFrom": "seed_variety",
           "tableTo": "knowledge_article",
-          "columnsFrom": [
-            "knowledge_article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["knowledge_article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2261,12 +2138,8 @@
           "name": "seed_variety_seed_crop_id_seed_crop_id_fk",
           "tableFrom": "seed_variety",
           "tableTo": "seed_crop",
-          "columnsFrom": [
-            "seed_crop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["seed_crop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2276,16 +2149,12 @@
         "seed_variety_slug_unique": {
           "name": "seed_variety_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         },
         "seed_variety_knowledgeArticleId_unique": {
           "name": "seed_variety_knowledgeArticleId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "knowledge_article_id"
-          ]
+          "columns": ["knowledge_article_id"]
         }
       },
       "policies": {},
@@ -2347,12 +2216,8 @@
           "name": "solubility_analysis_id_analysis_id_fk",
           "tableFrom": "solubility",
           "tableTo": "analysis",
-          "columnsFrom": [
-            "analysis_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["analysis_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2785,12 +2650,8 @@
           "name": "standard_values_farm_id_farm_id_fk",
           "tableFrom": "standard_values",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2800,9 +2661,7 @@
         "standard_values_farmId_unique": {
           "name": "standard_values_farmId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "farm_id"
-          ]
+          "columns": ["farm_id"]
         }
       },
       "policies": {},
@@ -2838,12 +2697,8 @@
           "name": "tab_user_user_id_fk",
           "tableFrom": "tab",
           "tableTo": "user",
-          "columnsFrom": [
-            "user"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2851,12 +2706,8 @@
           "name": "tab_management_zone_management_zone_id_fk",
           "tableFrom": "tab",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2866,10 +2717,7 @@
         "tab_managementZone_user_unique": {
           "name": "tab_managementZone_user_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "management_zone",
-            "user"
-          ]
+          "columns": ["management_zone", "user"]
         }
       },
       "policies": {},
@@ -2962,12 +2810,8 @@
           "name": "user_farm_id_farm_id_fk",
           "tableFrom": "user",
           "tableTo": "farm",
-          "columnsFrom": [
-            "farm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["farm_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2977,9 +2821,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -3022,12 +2864,8 @@
           "name": "widget_management_zone_management_zone_id_fk",
           "tableFrom": "widget",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3037,10 +2875,7 @@
         "widget_managementZone_name_unique": {
           "name": "widget_managementZone_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "management_zone",
-            "name"
-          ]
+          "columns": ["management_zone", "name"]
         }
       },
       "policies": {},
@@ -3114,12 +2949,8 @@
           "name": "crop_management_zone_management_zone_id_fk",
           "tableFrom": "crop",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3191,12 +3022,8 @@
           "name": "fertilizer_management_zone_management_zone_id_fk",
           "tableFrom": "fertilizer",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3274,12 +3101,8 @@
           "name": "livestock_management_zone_management_zone_id_fk",
           "tableFrom": "livestock",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3358,12 +3181,8 @@
           "name": "pest_management_zone_management_zone_id_fk",
           "tableFrom": "pest",
           "tableTo": "management_zone",
-          "columnsFrom": [
-            "management_zone"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["management_zone"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3379,19 +3198,12 @@
     "public.form_submission_status": {
       "name": "form_submission_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "approved",
-        "rejected"
-      ]
+      "values": ["pending", "approved", "rejected"]
     },
     "public.form_submission_workflow_type": {
       "name": "form_submission_workflow_type",
       "schema": "public",
-      "values": [
-        "generic",
-        "platform_access"
-      ]
+      "values": ["generic", "platform_access"]
     },
     "public.knowledge_category": {
       "name": "knowledge_category",
@@ -3409,11 +3221,7 @@
     "public.mineral_tag": {
       "name": "mineral_tag",
       "schema": "public",
-      "values": [
-        "Low",
-        "Med",
-        "High"
-      ]
+      "values": ["Low", "Med", "High"]
     },
     "public.mineral_types": {
       "name": "mineral_types",
@@ -3451,28 +3259,17 @@
     "public.seed_variety_status": {
       "name": "seed_variety_status",
       "schema": "public",
-      "values": [
-        "available",
-        "back_order",
-        "reference"
-      ]
+      "values": ["available", "back_order", "reference"]
     },
     "public.units": {
       "name": "units",
       "schema": "public",
-      "values": [
-        "ppm",
-        "%",
-        "dimensionless"
-      ]
+      "values": ["ppm", "%", "dimensionless"]
     },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "Admin",
-        "Viewer"
-      ]
+      "values": ["Admin", "Viewer"]
     },
     "public.widgets": {
       "name": "widgets",
@@ -3496,20 +3293,12 @@
     "public.pest_type": {
       "name": "pest_type",
       "schema": "public",
-      "values": [
-        "Insect",
-        "Disease"
-      ]
+      "values": ["Insect", "Disease"]
     },
     "public.oxidation_rate_tag": {
       "name": "oxidation_rate_tag",
       "schema": "public",
-      "values": [
-        "Slow",
-        "Mixed",
-        "Ideal",
-        "High"
-      ]
+      "values": ["Slow", "Mixed", "Ideal", "High"]
     }
   },
   "schemas": {},
