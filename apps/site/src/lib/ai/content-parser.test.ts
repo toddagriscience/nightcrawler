@@ -1,7 +1,50 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { describe, expect, it } from 'vitest';
-import { convertToMarkdownTable, parseImpSheet } from './content-parser';
+import {
+  convertToMarkdownTable,
+  excelCellToString,
+  parseImpSheet,
+} from './content-parser';
+
+describe('excelCellToString', () => {
+  it('passes primitives through', () => {
+    expect(excelCellToString('hello')).toBe('hello');
+    expect(excelCellToString(42)).toBe('42');
+    expect(excelCellToString(0)).toBe('0');
+    expect(excelCellToString(true)).toBe('true');
+  });
+
+  it('treats null, undefined, and unknown shapes as empty', () => {
+    expect(excelCellToString(null)).toBe('');
+    expect(excelCellToString(undefined)).toBe('');
+    expect(excelCellToString({})).toBe('');
+  });
+
+  it('keeps the computed result of a formula cell instead of dropping it', () => {
+    expect(excelCellToString({ formula: 'A1+B1', result: 42 })).toBe('42');
+    expect(excelCellToString({ sharedFormula: 'A1', result: 3.5 })).toBe('3.5');
+  });
+
+  it('flattens rich text into its concatenated runs', () => {
+    expect(
+      excelCellToString({ richText: [{ text: 'Low' }, { text: ' Ca' }] })
+    ).toBe('Low Ca');
+  });
+
+  it('unwraps hyperlink and error cells to their text', () => {
+    expect(
+      excelCellToString({ text: 'lab report', hyperlink: 'https://x.test' })
+    ).toBe('lab report');
+    expect(excelCellToString({ error: '#DIV/0!' })).toBe('#DIV/0!');
+  });
+
+  it('renders dates as ISO calendar dates', () => {
+    expect(excelCellToString(new Date('2026-07-11T12:00:00Z'))).toBe(
+      '2026-07-11'
+    );
+  });
+});
 
 describe('convertToMarkdownTable', () => {
   it('renders a header row, separator, and data rows', () => {

@@ -285,6 +285,43 @@ function titleCase(str: string): string {
 // ---------------------------------------------------------------------------
 
 /**
+ * Normalizes an ExcelJS cell value to a primitive string.
+ *
+ * ExcelJS returns objects for formula, rich-text, hyperlink, and error cells.
+ * A bare `String(value)` on those yields `"[object Object]"` and silently
+ * drops the real content (e.g. a formula cell's numeric result), so each shape
+ * is unwrapped to the text a reader would see in the spreadsheet.
+ *
+ * @param value - Raw `cell.value` from ExcelJS
+ * @returns The cell's textual content, or an empty string when blank
+ */
+export function excelCellToString(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (typeof value === 'object') {
+    const obj = value as Record<string, unknown>;
+    if (Array.isArray(obj.richText)) {
+      return obj.richText
+        .map((part) =>
+          excelCellToString((part as Record<string, unknown>).text)
+        )
+        .join('');
+    }
+    if ('formula' in obj || 'sharedFormula' in obj) {
+      return excelCellToString(obj.result);
+    }
+    if ('text' in obj) return excelCellToString(obj.text);
+    if ('error' in obj) return excelCellToString(obj.error);
+    if ('hyperlink' in obj) return excelCellToString(obj.hyperlink);
+  }
+  return '';
+}
+
+/**
  * Parses an Excel file and converts a specified sheet's content to an array
  * of markdown strings (one per logical section or row).
  *
@@ -326,7 +363,7 @@ export async function parseExcelContent(
   ws.eachRow({ includeEmpty: true }, (row) => {
     const cells: unknown[] = [];
     for (let i = 1; i <= colCount; i++) {
-      cells.push(row.getCell(i).value ?? '');
+      cells.push(excelCellToString(row.getCell(i).value));
     }
     allRows.push(cells);
   });
