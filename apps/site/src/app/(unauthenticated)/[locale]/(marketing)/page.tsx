@@ -8,26 +8,24 @@ import Homepage from './components/homepage/homepage';
  * Homepage metadata for SEO and social media
  */
 export const metadata: Metadata = {
-  metadataBase: new URL('https://toddagriscience.com'),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    absolute: 'Todd | Sustainable Agriculture',
+    absolute: siteConfig.homeTitle,
   },
-  description:
-    'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
+  description: siteConfig.description,
   alternates: {
-    canonical: 'https://toddagriscience.com/',
+    canonical: `${siteConfig.url}/`,
   },
   openGraph: {
-    title: 'Todd | Sustainable Agriculture',
-    description:
-      'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
-    url: 'https://toddagriscience.com/',
+    title: siteConfig.homeTitle,
+    description: siteConfig.description,
+    url: `${siteConfig.url}/`,
     siteName: siteConfig.name,
     locale: 'en',
     type: 'website',
     images: [
       {
-        url: 'https://www.toddagriscience.com/opengraph-image.png',
+        url: siteConfig.ogImage,
         width: 1300,
         height: 740,
         type: 'image/png',
@@ -37,11 +35,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@ToddAgriscience',
-    title: 'Todd | Sustainable Agriculture',
-    description:
-      'Todd combines deep experience in regenerative agriculture, farm management and engaging consumers.',
-    images: ['https://www.toddagriscience.com/opengraph-image.png'],
+    site: siteConfig.social.twitter,
+    title: siteConfig.homeTitle,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
   },
 };
 

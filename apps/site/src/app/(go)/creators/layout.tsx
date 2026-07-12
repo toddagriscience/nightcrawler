@@ -29,7 +29,7 @@ export async function generateMetadata({}: {}): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@ToddAgriscience',
+      site: siteConfig.social.twitter,
       title: 'Todd Creator Program',
       description: 'Help us make a impact on society.',
       images: ['/creator-opengraph-image.png'],
