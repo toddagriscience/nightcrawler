@@ -3,18 +3,13 @@
 'use client';
 
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import SocialLinks from '@/components/common/social-links/social-links';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6';
 
 /**
  * Footer component
@@ -46,29 +41,6 @@ const Footer = () => {
     {
       href: 'https://toddagriscience.safebase.us/',
       label: t('links.vulnReporting'),
-    },
-  ];
-
-  const socialMediaIcons = [
-    {
-      icon: <FaInstagram aria-hidden="true" />,
-      href: 'https://www.instagram.com/toddagriscience/',
-      ariaLabel: 'Visit our Instagram page',
-    },
-    {
-      icon: <FaLinkedinIn aria-hidden="true" />,
-      href: 'https://www.linkedin.com/company/toddagriscience/',
-      ariaLabel: 'Visit our LinkedIn page',
-    },
-    {
-      icon: <FaXTwitter aria-hidden="true" />,
-      href: 'https://x.com/toddagriscience',
-      ariaLabel: 'Visit our X (Twitter) page',
-    },
-    {
-      icon: <FaYoutube aria-hidden="true" />,
-      href: 'https://www.youtube.com/@toddagriscience',
-      ariaLabel: 'Visit our YouTube channel',
     },
   ];
 
@@ -211,13 +183,7 @@ const Footer = () => {
             }
           />
         </div>
-        <div className="flex flex-row flex-wrap gap-6">
-          {socialMediaIcons.map((val) => (
-            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
-              {val.icon}
-            </Link>
-          ))}
-        </div>
+        <SocialLinks platforms={['instagram', 'linkedin', 'x', 'youtube']} />
       </div>
     </footer>
   );
