@@ -4,12 +4,19 @@
  * Cleanup: remove the 9 analyses from the first parser run (farm_id=2)
  * and their child mineral + solubility rows.
  *
+ * Deletes are destructive and irreversible, so this script inspects and
+ * reports by default. Pass `--confirm` to actually delete.
+ *
  * Usage:
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/cleanup-first-run.ts
+ *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/cleanup-first-run.ts           # dry run
+ *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/cleanup-first-run.ts --confirm # delete
  */
 
 import { db } from '@nightcrawler/db/schema/connection';
 import { sql } from 'drizzle-orm';
+
+/** Whether the caller explicitly opted into destructive deletes. */
+const CONFIRMED = process.argv.includes('--confirm');
 
 /** Subquery that selects all analysis IDs belonging to farm_id=2 */
 const FARM2_IDS = sql`(
@@ -77,6 +84,16 @@ async function main() {
   }
 
   // 4. Delete: children first, then analyses
+  if (!CONFIRMED) {
+    console.log(
+      '\n═══════════════════════════════════════════════════════════'
+    );
+    console.log('  DRY RUN — nothing deleted');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('\nRe-run with --confirm to delete the rows listed above.');
+    process.exit(0);
+  }
+
   console.log('\n═══════════════════════════════════════════════════════════');
   console.log('  DELETING');
   console.log('═══════════════════════════════════════════════════════════\n');
