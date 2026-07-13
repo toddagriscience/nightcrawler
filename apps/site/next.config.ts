@@ -8,6 +8,34 @@ const withNextIntl = createNextIntlPlugin();
 const seedImageBaseUrl = process.env.NEXT_PUBLIC_SEED_IMAGE_BASE_URL?.trim();
 /** Parsed URL for externally hosted seed product imagery. */
 const seedImageUrl = seedImageBaseUrl ? new URL(seedImageBaseUrl) : null;
+/** Whether the app is running under `next dev`. */
+const isDev = process.env.NODE_ENV === 'development';
+
+/**
+ * Builds the `script-src` CSP directive.
+ *
+ * `'unsafe-eval'` is included only in development, where React relies on `eval`
+ * to reconstruct server-side error stacks for richer debugging. Neither Next.js
+ * nor React need it in production, and leaving it on would let injected markup
+ * execute arbitrary code via `eval`/`new Function` — defeating much of the XSS
+ * protection CSP is meant to provide. We therefore drop it from the production
+ * policy. See https://github.com/toddagriscience/nightcrawler/issues/934.
+ *
+ * `'unsafe-inline'` is retained for now: removing it requires per-request nonces
+ * (or hashes), which conflict with this app's `cacheComponents` (PPR) rendering.
+ *
+ * @param dev - Whether the app is running in development mode
+ * @returns The space-delimited `script-src` source list
+ */
+export function buildScriptSrc(dev: boolean): string {
+  return [
+    "'self'",
+    "'unsafe-inline'",
+    ...(dev ? ["'unsafe-eval'"] : []),
+    'https://*.posthog.com',
+    'https://js.stripe.com',
+  ].join(' ');
+}
 
 // Enhanced security headers configuration for privacy and data leak prevention
 const securityHeaders = [
@@ -71,7 +99,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'", // Only allow resources from same origin
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.posthog.com https://js.stripe.com",
+      `script-src ${buildScriptSrc(isDev)}`,
       "style-src 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Allow Stripe-hosted styles used by Elements
       "style-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Explicitly allow stylesheet elements used by Stripe iframes and Elements
       "style-src-attr 'unsafe-inline'", // Allow inline style attributes required by third-party embeds

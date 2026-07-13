@@ -43,8 +43,23 @@ export async function getAnalyses(search?: string) {
 export async function getMineralsForAnalysis(analysisId: string) {
   await requireInternalAccount();
   try {
+    // Explicit column list rather than `select()`: the mineral schema now
+    // declares idealValue/tag/fourLows, but those columns may not exist in a
+    // given environment yet (migrations are generated/applied separately by the
+    // backend team). A bare `select()` would emit `SELECT ... ideal_value, tag,
+    // four_lows ...` and fail with "column does not exist" against a DB that is
+    // behind the schema. Select only the always-present columns.
     return await db
-      .select()
+      .select({
+        id: mineral.id,
+        analysisId: mineral.analysisId,
+        name: mineral.name,
+        realValue: mineral.realValue,
+        units: mineral.units,
+        actionableInfo: mineral.actionableInfo,
+        createdAt: mineral.createdAt,
+        updatedAt: mineral.updatedAt,
+      })
       .from(mineral)
       .where(eq(mineral.analysisId, analysisId));
   } catch (error) {

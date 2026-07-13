@@ -31,6 +31,8 @@ jobs:
       STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
       STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
       DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      # Falls back to the shared cert when no staging-specific secret exists.
+      STAGING_DATABASE_PEM_CERT: ${{ secrets.STAGING_DATABASE_PEM_CERT || secrets.DATABASE_PEM_CERT }}
       LOCAL_DATABASE_HOST: 127.0.0.1
       LOCAL_DATABASE_PORT: 5432
       LOCAL_DATABASE_USER: postgres
@@ -77,12 +79,16 @@ jobs:
             "host=$LOCAL_DATABASE_HOST port=$LOCAL_DATABASE_PORT user=$LOCAL_DATABASE_USER dbname=$LOCAL_DATABASE_DATABASE sslmode=disable" \
             --file=/tmp/staging-db.sql
 
-      - name: Validate PR schema against cloned staging DB
-        id: push-check
+      # The clone carries staging's drizzle ledger (pg_dump copies
+      # drizzle.__drizzle_migrations), so replaying the ledger-based migrator
+      # here is a true dry-run of exactly what the staging step will apply.
+      # drizzle-kit push is banned in CI: its interactive enum resolver aborts
+      # without a TTY while still exiting 0, which is how prod silently drifted.
+      - name: Validate migrations against cloned staging DB
+        id: migrate-check
         working-directory: ./packages/db
-        run: bunx drizzle-kit push --config=drizzle-local.config.ts
+        run: bun run db:local:migrate
 
-        # we are using push instead of generate -> migrate because drizzle-kit is scuffed at the moment when it comes to making enums for some reason
-      - name: Push to staging if successful
+      - name: Migrate staging
         working-directory: ./packages/db
-        run: bunx drizzle-kit push --config=drizzle-staging.config.ts
+        run: bunx tsx scripts/migrate-remote-db.ts --env staging
