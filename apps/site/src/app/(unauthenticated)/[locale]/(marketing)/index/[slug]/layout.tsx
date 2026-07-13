@@ -19,9 +19,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const article = await getArticleBySlug(slug, {
-    next: { revalidate: 60 * 60 },
-  });
+  const article = await getArticleBySlug(slug);
   if (article === undefined || article === null) {
     return {};
   }
