@@ -9,12 +9,14 @@ import type { Metadata, Viewport } from 'next';
 const siteConfig = {
   name: 'Todd',
   title: 'Todd',
+  /** Full homepage/manifest title — the single source; do not hardcode elsewhere. */
+  homeTitle: 'Todd | Sustainable Agriculture',
   description:
     'Todd Agriscience is a first-generation generative agriculture firm.',
-  url: 'https://www.toddagriscience.com',
-  ogImage: 'https://www.toddagriscience.com/opengraph-image.png',
-  twitterImage: 'https://www.toddagriscience.com/opengraph-image.png',
-  linkedinImage: 'https://www.toddagriscience.com/opengraph-image.png',
+  url: 'https://toddagriscience.com',
+  ogImage: 'https://toddagriscience.com/opengraph-image.png',
+  twitterImage: 'https://toddagriscience.com/opengraph-image.png',
+  linkedinImage: 'https://toddagriscience.com/opengraph-image.png',
   themeColor: '#FDFDFB',
   social: {
     twitter: '@toddagriscience',
@@ -77,7 +79,7 @@ export const defaultMetadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
 };
 
 /**

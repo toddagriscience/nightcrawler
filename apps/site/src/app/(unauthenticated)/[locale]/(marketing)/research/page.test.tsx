@@ -30,7 +30,7 @@ describe('WhatWeDoPage', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Our research reveals insights unimagined by others and move swiftly to regenerate soil. We work with farms who have displayed a commitment to ecologically and socially responsible management practices and forged deep emotional connections with their target consumers.'
+        'Our research reveals insights unimagined by others and moves swiftly to regenerate soil. We work with farms who have displayed a commitment to ecologically and socially responsible management practices and forged deep emotional connections with their target consumers.'
       )
     ).toBeInTheDocument();
   });
