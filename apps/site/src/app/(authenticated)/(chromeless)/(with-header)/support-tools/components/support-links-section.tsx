@@ -32,8 +32,8 @@ const supportLinkItems: SupportLinkItem[] = [
     icon: <BiSolidUserMinus className="size-6" />,
   },
   {
-    label: 'Disclosures',
-    href: '/disclosures',
+    label: 'Legal',
+    href: '/legal',
     icon: <BiSolidInfoCircle className="size-6" />,
   },
 ];
