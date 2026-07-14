@@ -20,12 +20,34 @@ import { HiOutlineMail } from 'react-icons/hi';
  * @param {string} title - The title of the article.
  * @returns {JSX.Element} - The buttons, wrapped with a fragment
  * */
+/**
+ * Appends UTM campaign params to a share URL so social referrals are
+ * attributable in analytics. Returns the URL-encoded, tagged string.
+ *
+ * @param rawUrl - The page URL being shared
+ * @param source - The platform the share originates from (e.g. `linkedin`)
+ * @returns URL-encoded share URL with utm_source/medium/campaign appended
+ */
+function taggedShareUrl(rawUrl: string, source: string): string {
+  if (!rawUrl) {
+    return '';
+  }
+  try {
+    const u = new URL(rawUrl);
+    u.searchParams.set('utm_source', source);
+    u.searchParams.set('utm_medium', 'social');
+    u.searchParams.set('utm_campaign', 'article-share');
+    return encodeURIComponent(u.toString());
+  } catch {
+    return encodeURIComponent(rawUrl);
+  }
+}
+
 export default function ShareArticleButtons({ title }: { title: string }) {
   const [isFbCopied, setIsFbCopied] = useState(false);
   const [isFbTooltipOpen, setIsFbTooltipOpen] = useState(false);
 
   const shareUrl = useCurrentUrl();
-  const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
   function copyToClipboard() {
@@ -39,13 +61,13 @@ export default function ShareArticleButtons({ title }: { title: string }) {
   return (
     <>
       <IconWrapper
-        link={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+        link={`https://twitter.com/intent/tweet?url=${taggedShareUrl(shareUrl, 'x')}&text=${encodedTitle}`}
       >
         <FaXTwitter className="text-foreground/80" />
       </IconWrapper>
 
       <IconWrapper
-        link={`https://www.linkedin.com/feed?shareActive&mini=true&text=${encodedUrl}`}
+        link={`https://www.linkedin.com/sharing/share-offsite/?url=${taggedShareUrl(shareUrl, 'linkedin')}`}
       >
         <FaLinkedinIn className="text-foreground/80" />
       </IconWrapper>
@@ -80,7 +102,9 @@ export default function ShareArticleButtons({ title }: { title: string }) {
         </Tooltip>
       </div>
 
-      <IconWrapper link={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}>
+      <IconWrapper
+        link={`mailto:?subject=${encodedTitle}&body=${taggedShareUrl(shareUrl, 'email')}`}
+      >
         <HiOutlineMail className="text-foreground/80" />
       </IconWrapper>
     </>
