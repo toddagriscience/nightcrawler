@@ -16,7 +16,7 @@ const getManagementZones = vi.fn(async () => [
   { id: 2, name: 'South Field' },
 ]);
 
-vi.mock('@/app/(authenticated)/(shell)/(accounts)/account/db', () => ({
+vi.mock('@/app/(authenticated)/(accounts)/account/db', () => ({
   getManagementZones: () => getManagementZones(),
   getAccountShellData: async () => ({ farmName: 'Green Acres' }),
 }));

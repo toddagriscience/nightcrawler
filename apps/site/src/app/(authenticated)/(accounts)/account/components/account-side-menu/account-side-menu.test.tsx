@@ -24,13 +24,6 @@ vi.mock('next/navigation', async () => {
   };
 });
 
-const accountSideMenuProps = {
-  farmName: 'Blue River Farm',
-  contactName: 'Jane Farmer',
-  contactEmail: 'jane@example.com',
-  contactPhone: '555-123-4567',
-};
-
 describe('AccountSideMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,17 +31,8 @@ describe('AccountSideMenu', () => {
     mockLogout.mockResolvedValue({ error: null });
   });
 
-  it('displays the farm and contact information', () => {
-    render(<AccountSideMenu {...accountSideMenuProps} />);
-
-    expect(screen.getByText('Blue River Farm')).toBeInTheDocument();
-    expect(screen.getByText('Jane Farmer')).toBeInTheDocument();
-    expect(screen.getByText('jane@example.com')).toBeInTheDocument();
-    expect(screen.getByText('555-123-4567')).toBeInTheDocument();
-  });
-
   it('marks the active account section', () => {
-    render(<AccountSideMenu {...accountSideMenuProps} />);
+    render(<AccountSideMenu />);
 
     expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute(
       'aria-current',
@@ -58,7 +42,7 @@ describe('AccountSideMenu', () => {
 
   it('calls logout flow when clicking log out', async () => {
     const user = userEvent.setup();
-    render(<AccountSideMenu {...accountSideMenuProps} />);
+    render(<AccountSideMenu />);
 
     await user.click(screen.getByRole('button', { name: 'Log out' }));
 

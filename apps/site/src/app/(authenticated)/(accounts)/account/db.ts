@@ -19,9 +19,6 @@ import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{
   farmName: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
 }> {
   const currentUser = await getAuthenticatedInfo();
 
@@ -39,9 +36,6 @@ export async function getAccountShellData(): Promise<{
 
   return {
     farmName: informalName !== NOT_SET ? informalName : businessName,
-    contactName: toDisplayName(currentUser.firstName, currentUser.lastName),
-    contactEmail: toDisplayValue(currentUser.email),
-    contactPhone: toDisplayValue(currentUser.phone),
   };
 }
 
