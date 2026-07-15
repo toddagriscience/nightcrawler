@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   submitContactToSheets: vi.fn(),
   loggerError: vi.fn(),
+  enforceRateLimit: vi.fn(),
 }));
 
 vi.mock('@/lib/actions/googleSheets', () => ({
@@ -13,6 +14,10 @@ vi.mock('@/lib/actions/googleSheets', () => ({
 
 vi.mock('@/lib/logger', () => ({
   default: { error: mocks.loggerError },
+}));
+
+vi.mock('@/lib/rate-limit', () => ({
+  enforceRateLimit: mocks.enforceRateLimit,
 }));
 
 import { submitPublicInquiry } from './actions';
@@ -33,9 +38,27 @@ function makeFormData(fields: Record<string, string | undefined>) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.enforceRateLimit.mockResolvedValue(undefined);
 });
 
 describe('submitPublicInquiry', () => {
+  it('throws and skips submission when rate limited', async () => {
+    mocks.enforceRateLimit.mockRejectedValueOnce(
+      new Error('Too many requests. Please try again shortly.')
+    );
+
+    const fd = makeFormData({
+      name: 'Inban',
+      lastKnownEmail: 'inban@example.com',
+      response: 'Hello!',
+    });
+
+    await expect(submitPublicInquiry(fd)).rejects.toThrow(
+      'Too many requests. Please try again shortly.'
+    );
+    expect(mocks.submitContactToSheets).not.toHaveBeenCalled();
+  });
+
   it('returns success and submits to the contact sheet when inputs are valid', async () => {
     mocks.submitContactToSheets.mockResolvedValueOnce(undefined);
 
