@@ -6,7 +6,6 @@ import CookiePreferencesModal from '@/components/common/cookie-preferences-modal
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
 import { useLocale, useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
@@ -72,11 +71,18 @@ const Footer = () => {
     },
   ];
 
+  const footerColumns = [
+    [siteLinks[0], siteLinks[1], siteLinks[2], siteLinks[3]],
+    [siteLinks[4], legalLinks[0], legalLinks[1], legalLinks[2]],
+    [legalLinks[3], legalLinks[4]],
+  ];
+
   const currentYear = new Date().getFullYear();
 
   const pathname = usePathname() || '/';
   const [langOpen, setLangOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
+  const currentLanguageLabel = locale === 'es' ? 'Español' : 'English';
 
   const trimPath = (p: string) => p.replace(/\/+$/, '') || '/';
 
@@ -106,57 +112,53 @@ const Footer = () => {
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
           <ToddHeader className="md:text-4xl lg:text-5xl" localeAware />
           <div className="flex flex-row gap-32 max-md:mt-8 md:ml-auto">
-            <div className="flex flex-col gap-4">
-              {siteLinks.slice(0, 4).map((val) => (
-                <Link
-                  key={val.href}
-                  href={val.href}
-                  locale={locale}
-                  className="text-base md:text-base"
-                >
-                  <span className="link text-underline-left text-underline-left-black text-black">
-                    {val.label}
-                  </span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              {siteLinks.slice(4, 8).map((val) => (
-                <Link
-                  key={val.href}
-                  href={val.href}
-                  locale={locale}
-                  className="text-base md:text-base"
-                >
-                  <span className="link text-underline-left text-underline-left-black text-black">
-                    {val.label}
-                  </span>
-                </Link>
-              ))}
-            </div>
+            {footerColumns.map((column, index) => (
+              <div key={index} className="flex flex-col gap-4">
+                {column.map((val) => (
+                  <Link
+                    key={val.href}
+                    href={val.href}
+                    locale={locale}
+                    className="text-base md:text-base"
+                  >
+                    <span className="link text-underline-left text-underline-left-black text-black">
+                      {val.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      <div className="mt-8 flex flex-col gap-10">
-        <div className="flex flex-row gap-4">
+      <div className="mt-8 flex flex-col gap-6 border-t border-foreground/10 pt-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:gap-10">
+          <p>Todd Agriscience © 2018-{currentYear}</p>
+          <CookiePreferencesModal
+            trigger={
+              <span className="underline underline-offset-4">
+                {tCookiePreferences('manageCookies')}
+              </span>
+            }
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-6 md:justify-end">
+          {socialMediaIcons.map((val) => (
+            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
+              {val.icon}
+            </Link>
+          ))}
           <div className="relative inline-flex">
             <button
               type="button"
               aria-haspopup="menu"
               aria-expanded={langOpen}
               onClick={() => setLangOpen(!langOpen)}
-              className="flex flex-row items-center gap-4 cursor-pointer focus:outline-none focus:ring-0"
+              className="flex flex-row items-center gap-3 cursor-pointer focus:outline-none focus:ring-0 md:gap-6"
               aria-label="Change language"
             >
-              <Image
-                src="/united_states_flag.svg"
-                alt=""
-                width={50}
-                height={50}
-                className="h-6 w-6"
-              />
-              <span>{t('location')}</span>
+              <span className="font-normal">{currentLanguageLabel}</span>
+              <span className="text-foreground/50">{t('location')}</span>
             </button>
 
             {langOpen && (
@@ -169,7 +171,7 @@ const Footer = () => {
                 />
                 <div
                   role="menu"
-                  className="absolute left-0 bottom-full mb-2 w-full rounded bg-white p-1 text-black shadow-lg z-20"
+                  className="absolute right-0 bottom-full mb-2 w-40 rounded bg-white p-1 text-black shadow-lg z-20"
                 >
                   <button
                     onClick={() => handleLocaleChange('en')}
@@ -189,34 +191,6 @@ const Footer = () => {
               </>
             )}
           </div>
-        </div>
-        <p>© Todd Agriscience {currentYear}</p>
-        <div className="flex flex-col flex-wrap gap-6 items-start md:flex-row">
-          {legalLinks.map((val) => (
-            <Link key={val.href} href={val.href} locale={locale}>
-              {val.label}
-            </Link>
-          ))}
-          <CookiePreferencesModal
-            trigger={
-              <div className="flex items-center gap-2">
-                <span>{tCookiePreferences('managePreferences')}</span>
-                <Image
-                  alt=""
-                  src={'/privacyoptions.svg'}
-                  width={29}
-                  height={14}
-                />
-              </div>
-            }
-          />
-        </div>
-        <div className="flex flex-row flex-wrap gap-6">
-          {socialMediaIcons.map((val) => (
-            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
-              {val.icon}
-            </Link>
-          ))}
         </div>
       </div>
     </footer>
