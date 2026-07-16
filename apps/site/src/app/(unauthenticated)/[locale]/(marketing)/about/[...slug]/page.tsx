@@ -4,10 +4,44 @@ import { Button } from '@/components/common';
 import SanityBodyText from '@/components/sanity/governance-profile/sanity-body-text';
 import SanityImage from '@/components/sanity/governance-profile/sanity-image';
 import SanityQuote from '@/components/sanity/governance-profile/sanity-quote';
+import { createMetadata } from '@/lib/metadata';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
+import type { Metadata } from 'next';
 import { PortableText, PortableTextReactComponents } from 'next-sanity';
 import { notFound } from 'next/navigation';
+
+/**
+ * SEO metadata for governance profile pages — title/description from the profile document.
+ *
+ * @param {Promise<{ slug: string | string[] }>} params - The slug of the profile
+ * @returns {Promise<Metadata>} - Page metadata (empty when the profile is missing)
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string | string[] }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const resolvedSlug = Array.isArray(slug) ? slug[0] : slug;
+  const profile = await sanityQuery(
+    'governance-profiles',
+    { slug: resolvedSlug },
+    { next: { revalidate: 0 } },
+    0
+  );
+  if (!profile || typeof profile.name !== 'string') {
+    return {};
+  }
+  return createMetadata({
+    title: profile.name,
+    description:
+      typeof profile.title === 'string' && profile.title.length > 0
+        ? `${profile.name} — ${profile.title} at Todd Agriscience.`
+        : `${profile.name} at Todd Agriscience.`,
+    path: `/about/${resolvedSlug}`,
+  });
+}
 
 /**
  * A governance profile page, rendered with Sanity CMS.
