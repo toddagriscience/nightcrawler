@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
 
@@ -38,12 +38,12 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Wait for status checks to complete
-        uses: lewagon/wait-on-check-action@v1.8.0
+        uses: lewagon/wait-on-check-action@eb1f8d8fb8af5d2d3c1978a3fae7ef38eaa587e8 # v1.8.0
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           check-regexp: '^(Code Quality Checks|Unit Tests|Build Application|Security Audit)$'
