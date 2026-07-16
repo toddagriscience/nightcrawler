@@ -32,7 +32,7 @@ export async function generateMetadata({
       template: `%s | ${siteConfig.name}`,
     },
     description: t('description'),
-    metadataBase: new URL('https://toddagriscience.com'),
+    metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical: `${env.baseUrl}/${locale}`,
       languages: Object.fromEntries([
@@ -41,7 +41,7 @@ export async function generateMetadata({
       ]),
     },
     openGraph: {
-      title: 'Todd | Global Leader in Sustainable Agriculture',
+      title: siteConfig.homeTitle,
       description: t('description'),
       url: `${env.baseUrl}/${locale}`,
       siteName: siteConfig.name,
@@ -59,8 +59,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@ToddAgriscience',
-      title: 'Todd | Global Leader in Sustainable Agriculture',
+      site: siteConfig.social.twitter,
+      title: siteConfig.homeTitle,
       description: t('description'),
       images: ['/opengraph-image.png'],
     },

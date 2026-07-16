@@ -3,6 +3,7 @@
 import { logger } from '@/lib/logger';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { eq } from 'drizzle-orm';
+import { cache } from 'react';
 import { getUserEmail } from '../auth-server';
 import { farm, user } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
@@ -11,42 +12,47 @@ import { db } from '@nightcrawler/db/schema/connection';
  * Gets the authenticated user's information. Throws an error if the user
  * is not authenticated, not found, or not associated with a farm.
  *
+ * Wrapped in React's `cache()` so repeated calls within the same server
+ * request resolve once instead of issuing duplicate DB queries.
+ *
  * At the moment, this simply returns all of the user's information for sake of type simplicity. This should be optimized in the future.
  *
  * @returns The authenticated user's information with non-null farmId
  * @throws {Error} - If user is not authenticated, not found, or not associated with a farm
  */
-export async function getAuthenticatedInfo(): Promise<AuthenticatedInfo> {
-  const email = await getUserEmail();
+export const getAuthenticatedInfo = cache(
+  async (): Promise<AuthenticatedInfo> => {
+    const email = await getUserEmail();
 
-  if (!email) {
-    throw new Error("No email registered with this user's account");
+    if (!email) {
+      throw new Error("No email registered with this user's account");
+    }
+
+    const [row] = await db
+      .select({ user, farmApproved: farm.approved })
+      .from(user)
+      .leftJoin(farm, eq(farm.id, user.farmId))
+      .where(eq(user.email, email))
+      .limit(1)
+      .catch((error) => {
+        logger.error('Error querying for current user', { error, email });
+        throw error;
+      });
+
+    if (!row) {
+      throw new Error('User not found');
+    }
+
+    const currentUser = row.user;
+
+    if (!currentUser.farmId) {
+      throw new Error('User is not associated with a farm');
+    }
+
+    return {
+      ...currentUser,
+      farmId: currentUser.farmId,
+      approved: row.farmApproved ?? false,
+    };
   }
-
-  const [row] = await db
-    .select({ user, farmApproved: farm.approved })
-    .from(user)
-    .leftJoin(farm, eq(farm.id, user.farmId))
-    .where(eq(user.email, email))
-    .limit(1)
-    .catch((error) => {
-      logger.error('Error querying for current user', { error, email });
-      throw error;
-    });
-
-  if (!row) {
-    throw new Error('User not found');
-  }
-
-  const currentUser = row.user;
-
-  if (!currentUser.farmId) {
-    throw new Error('User is not associated with a farm');
-  }
-
-  return {
-    ...currentUser,
-    farmId: currentUser.farmId,
-    approved: row.farmApproved ?? false,
-  };
-}
+);

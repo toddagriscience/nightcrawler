@@ -60,10 +60,6 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
     '/accessibility',
     '/investors',
     '/investors/esg',
-    '/investors/governance/vincent-todd',
-    '/investors/governance/lawrence-wilson',
-    '/investors/governance/brandy-beem',
-    '/testing',
   ];
   const excludedPages = ['/login', '/admin', '/api', '/_next', '/cdn-cgi'];
 

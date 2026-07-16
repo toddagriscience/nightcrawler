@@ -230,6 +230,17 @@ const nextConfig: NextConfig = {
         destination: '/contact',
         permanent: true,
       },
+      // `/disclosures` was removed as a duplicate of `/legal`; redirect old URLs.
+      {
+        source: '/disclosures',
+        destination: '/legal',
+        permanent: true,
+      },
+      {
+        source: '/es/disclosures',
+        destination: '/es/legal',
+        permanent: true,
+      },
       // `/careers/search` is a real route (`careers/search/page.tsx`); do not add a redirect to `/careers`.
       // Handles requests to go.toddagriscience.com/invite
       {

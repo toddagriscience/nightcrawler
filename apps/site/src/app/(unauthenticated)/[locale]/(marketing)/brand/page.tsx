@@ -11,7 +11,7 @@ import HowToUseWordmark from './components/how-to-use-wordmark/how-to-use-wordma
 import WordmarkImage from './components/wordmark-image/wordmark-image';
 
 const TERMS_OF_USE = 'Terms of Use';
-const BRAND_EMAIL = 'brand@todd.com';
+const BRAND_EMAIL = 'brand@toddagriscience.com';
 
 /**
  * Linkifies "Terms of Use" and email addresses in the usage-terms paragraph.
@@ -38,7 +38,7 @@ function renderUsageTermsParagraph(body: string, index: number): ReactNode {
   );
 }
 
-/** Replaces `brand@todd.com` with a `mailto:` link. Returns the string unchanged if absent. */
+/** Replaces `brand@toddagriscience.com` with a `mailto:` link. Returns the string unchanged if absent. */
 function linkifyEmail(text: string): ReactNode {
   const idx = text.indexOf(BRAND_EMAIL);
   if (idx === -1) {

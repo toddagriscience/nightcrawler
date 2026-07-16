@@ -34,19 +34,17 @@ const organizationStructuredData: WithContext<Organization> = {
   url: 'https://toddagriscience.com',
   sameAs: [
     'https://www.toddagriscience.com',
-    'https://toddagriculture.com',
     'https://www.linkedin.com/company/toddagriscience',
     'https://x.com/toddagriscience',
   ],
   logo: 'https://toddagriscience.com/icon.png',
   name: 'Todd',
-  description:
-    'Todd is the frontier research lab dedicated to building foundation technology and crop genetics for sustainable agriculture.',
+  description: siteConfig.description,
   founder: {
     '@type': 'Person',
     name: 'Vincent Todd',
   },
-  foundingDate: '2018-06-01',
+  foundingDate: '2018',
   foundingLocation: {
     '@type': 'Place',
     address: {
