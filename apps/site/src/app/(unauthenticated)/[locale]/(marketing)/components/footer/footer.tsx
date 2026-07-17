@@ -24,30 +24,6 @@ const Footer = () => {
   const t = useTranslations('footer');
   const tCookiePreferences = useTranslations('cookiePreferences');
 
-  const siteLinks = [
-    { href: '/about', label: t('links.whoWeAre') },
-    { href: '/research', label: t('links.whatWeDo') },
-    { href: '/news', label: t('links.news') },
-    { href: '/careers', label: t('links.careers') },
-    { href: '/contact', label: t('links.contact') },
-    // comment out until we have a foundation page
-    // { href: '/foundation', label: t('links.foundation') },
-  ];
-
-  const legalLinks = [
-    { href: '/terms', label: t('links.terms') },
-    { href: '/privacy', label: t('links.privacy') },
-    {
-      href: '/accessibility',
-      label: t('links.accessibility'),
-    },
-    { href: '/legal', label: t('links.legal') },
-    {
-      href: 'https://toddagriscience.safebase.us/',
-      label: t('links.vulnReporting'),
-    },
-  ];
-
   const socialMediaIcons = [
     {
       icon: <FaInstagram aria-hidden="true" />,
@@ -71,10 +47,25 @@ const Footer = () => {
     },
   ];
 
-  const footerColumns = [
-    [siteLinks[0], siteLinks[1], siteLinks[2], siteLinks[3]],
-    [siteLinks[4], legalLinks[0], legalLinks[1], legalLinks[2]],
-    [legalLinks[3], legalLinks[4]],
+  const footerSections = [
+    {
+      title: t('sections.todd'),
+      links: [
+        { href: '/research', label: t('links.research') },
+        { href: '/about', label: t('links.about') },
+        { href: '/careers', label: t('links.careers') },
+        { href: '/news', label: t('links.news') },
+      ],
+    },
+    {
+      title: t('sections.termsAndPolicies'),
+      links: [
+        { href: '/terms', label: t('links.terms') },
+        { href: '/privacy', label: t('links.privacy') },
+        { href: '/accessibility', label: t('links.accessibility') },
+        { href: '/legal', label: t('links.legal') },
+      ],
+    },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -111,10 +102,13 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
           <ToddHeader className="md:text-4xl lg:text-5xl" localeAware />
-          <div className="flex flex-row gap-32 max-md:mt-8 md:ml-auto">
-            {footerColumns.map((column, index) => (
-              <div key={index} className="flex flex-col gap-4">
-                {column.map((val) => (
+          <div className="grid grid-cols-1 gap-y-8 max-md:mt-8 sm:grid-cols-2 sm:gap-x-16 md:ml-auto md:gap-x-32">
+            {footerSections.map((section) => (
+              <div key={section.title} className="flex flex-col gap-4">
+                <h2 className="text-base font-light text-foreground/50">
+                  {section.title}
+                </h2>
+                {section.links.map((val) => (
                   <Link
                     key={val.href}
                     href={val.href}
@@ -142,7 +136,7 @@ const Footer = () => {
             }
           />
         </div>
-        <div className="flex flex-wrap items-center gap-6 md:justify-end">
+        <div className="flex flex-wrap items-center gap-8 md:justify-end">
           {socialMediaIcons.map((val) => (
             <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
               {val.icon}
