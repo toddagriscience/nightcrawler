@@ -102,7 +102,7 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
           <ToddHeader className="md:text-4xl lg:text-5xl" localeAware />
-          <div className="grid grid-cols-1 gap-y-8 max-md:mt-8 sm:grid-cols-2 sm:gap-x-16 md:ml-auto md:gap-x-32">
+          <div className="grid grid-cols-1 gap-y-8 max-md:mt-8 sm:grid-cols-2 sm:gap-x-16 md:ml-auto md:mr-20 md:gap-x-32">
             {footerSections.map((section) => (
               <div key={section.title} className="flex flex-col gap-4">
                 <h2 className="text-base font-light text-foreground/50">
@@ -113,7 +113,7 @@ const Footer = () => {
                     key={val.href}
                     href={val.href}
                     locale={locale}
-                    className="text-base md:text-base"
+                    className="text-sm font-normal"
                   >
                     <span className="link text-underline-left text-underline-left-black text-black">
                       {val.label}
@@ -125,7 +125,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="mt-8 flex flex-col gap-6 border-t border-foreground/10 pt-6 md:flex-row md:items-center md:justify-between">
+      <div className="-mx-4 mt-8 flex flex-col gap-6 border-t-[1.5px] border-foreground/10 px-4 pt-6 md:-mx-6 md:flex-row md:items-center md:justify-between md:px-6 lg:-mx-12 lg:px-12 xl:-mx-18 xl:px-18">
         <div className="flex flex-col md:flex-row md:items-center md:gap-10">
           <p>Todd Agriscience © 2018-{currentYear}</p>
           <CookiePreferencesModal
