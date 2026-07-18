@@ -1,7 +1,12 @@
 {
   "whatWeDo": {
-    "title": "We support the world's most important farms",
-    "subtitle": "Our research reveals insights unimagined by others and moves swiftly to regenerate soil. We work with farms who have displayed a commitment to ecologically and socially responsible management practices and forged deep emotional connections with their target consumers.",
+    "eyebrow": "Research",
+    "title": "A holistic approach to agriculture",
+    "subtitle": "We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.",
+    "heroImageAlt": "Meadow",
+    "cta": {
+      "researchIndex": "View research index"
+    },
     "approach": {
       "title": "Our Approach",
       "description": "We focus on balancing and remineralizing soil. We aim to guide your farm on a more thoughtful trajectory than one could achieve alone."
