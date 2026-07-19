@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { cn } from '@/lib/utils';
 import { Link } from '@/i18n/config';
+import { cn } from '@/lib/utils';
 import { Button } from '../../ui';
 /**
  * PageHeader component for displaying a page header
@@ -27,7 +27,7 @@ export default function PageHeader({
   const hasButton = button !== undefined;
 
   return (
-    <div className="flex flex-col gap-6.25 justify-center items-center max-w-[910px] my-25 md:my-32 text-center">
+    <div className="flex flex-col gap-6.25 justify-center items-center max-w-[910px] my-25 md:my-4 text-center">
       <span className="text-xs md:text-sm text-foreground">{caption}</span>
       <h1 className="text-[33px] md:text-5xl lg:text-[64px]">{title}</h1>
       <h3 className="text-base md:text[17px]/[28px] w-[80%] sm:w-full">
