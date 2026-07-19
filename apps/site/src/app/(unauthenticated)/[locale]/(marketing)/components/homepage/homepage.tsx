@@ -30,7 +30,7 @@ export default function Homepage() {
       <HeaderImg
         src="/marketing/garden-bed.svg"
         alt={t('pageHeading.title')}
-        wrapperClassName="w-full h-[500px] lg:h-[630px] translate-y-[-59px]"
+        wrapperClassName="w-full h-[500px] lg:h-[630px] translate-y-[-59px] md:my-20"
       />
       <SectionContent
         className="mx-auto w-full text-center [&>h2]:text-[28px]/[41px]"
