@@ -94,7 +94,7 @@ describe('submitPublicInquiry', () => {
     expect(mocks.submitContactToSheets).not.toHaveBeenCalled();
   });
 
-  it('surfaces and logs an error when the submission fails', async () => {
+  it('logs the internal error but surfaces only a generic message when the submission fails', async () => {
     mocks.submitContactToSheets.mockRejectedValueOnce(
       new Error('Sheets is down')
     );
@@ -105,7 +105,19 @@ describe('submitPublicInquiry', () => {
       response: 'Test',
     });
 
-    await expect(submitPublicInquiry(fd)).rejects.toThrow('Sheets is down');
-    expect(mocks.loggerError).toHaveBeenCalledTimes(2);
+    const error = await submitPublicInquiry(fd).catch((e: unknown) => e);
+
+    // The caller sees a generic message, never the raw internal error.
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toBe(
+      'We could not submit your inquiry right now. Please try again later.'
+    );
+    expect((error as Error).message).not.toContain('Sheets is down');
+
+    // The full internal error is still logged server-side for diagnosis.
+    expect(mocks.loggerError).toHaveBeenCalledWith(
+      'Public inquiry submission error:',
+      expect.objectContaining({ message: 'Sheets is down' })
+    );
   });
 });
