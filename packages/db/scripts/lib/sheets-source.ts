@@ -9,6 +9,7 @@ import { GoogleAuth } from 'google-auth-library';
 
 /** Google Sheet file ID for the General IMPs workbook. */
 const GENERAL_IMPS_SPREADSHEET_ID =
+  // eslint-disable-next-line no-secrets/no-secrets -- Sheet resource ID, not a credential; access is gated by the service-account auth below.
   '1CWjHsNkOcv7Dw7qLmWDDUFKlQNsgfx9RNIzSsZhDKGk';
 
 /** Exact IMP tab name, including the source sheet's misspellings. */
@@ -30,12 +31,11 @@ export async function fetchImpSheetRows(): Promise<string[][]> {
   const auth = new GoogleAuth({
     scopes: [GOOGLE_SHEETS_READONLY_SCOPE],
   });
-
   const client = await auth.getClient();
+  const query = new URLSearchParams({ valueRenderOption: 'FORMATTED_VALUE' });
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${GENERAL_IMPS_SPREADSHEET_ID}` +
-    `/values/${encodeURIComponent(GENERAL_IMPS_RANGE)}` +
-    '?valueRenderOption=FORMATTED_VALUE';
+    `/values/${encodeURIComponent(GENERAL_IMPS_RANGE)}?${query}`;
 
   const response = await client.request<{ values?: string[][] }>({ url });
   return response.data.values ?? [];
