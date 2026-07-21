@@ -1,9 +1,6 @@
 name: Sync IMPs to Staging
 
 on:
-  push:
-    branches:
-      - feat/soil-test-parser-v2
   workflow_dispatch:
     inputs:
       dry_run:
