@@ -1,0 +1,52 @@
+name: Sync IMPs to Staging
+
+on:
+  push:
+    branches:
+      - feat/soil-test-parser-v2
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Parse only, do not write'
+        type: boolean
+        default: false
+
+jobs:
+  sync-imps-to-staging:
+    name: Sync General IMPs to Staging
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_EMBEDDINGS_KEY: ${{ secrets.OPENAI_EMBEDDINGS_KEY }}
+      STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
+      STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
+      STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
+      STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+      STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
+      DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      STAGING_DATABASE_PEM_CERT: ${{ secrets.STAGING_DATABASE_PEM_CERT || secrets.DATABASE_PEM_CERT }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/609771777761/locations/global/workloadIdentityPools/github-actions/providers/nightcrawler-github
+          service_account: nightcrawler-sheets@cs-poc-2f95m8o39tibkpwhorfifd3.iam.gserviceaccount.com
+          create_credentials_file: true
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Sync General IMPs
+        working-directory: ./packages/db
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
+            bun run db:import-imps --source sheet --env staging --commit --confirm staging
+          else
+            bun run db:import-imps --source sheet --env staging
+          fi
