@@ -114,7 +114,7 @@ describe('Homepage', () => {
     expect(image).toHaveAttribute('data-alt', 'pageHeading.title');
     expect(image).toHaveAttribute(
       'data-wrapper-class-name',
-      'w-full h-[500px] lg:h-[630px] translate-y-[-59px] md:my-20'
+      'w-full h-[500px] lg:h-[630px] translate-y-[-59px] md:my-30'
     );
 
     const sectionContent = screen.getByTestId('section-content');

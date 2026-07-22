@@ -17,7 +17,7 @@ export default function Homepage() {
   const t = useTranslations('homepage');
 
   return (
-    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto">
+    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:my-30">
       <PageHeader
         title={t('pageHeading.title')}
         subtitle={t('pageHeading.subtitle')}
@@ -30,7 +30,7 @@ export default function Homepage() {
       <HeaderImg
         src="/marketing/garden-bed.svg"
         alt={t('pageHeading.title')}
-        wrapperClassName="w-full h-[500px] lg:h-[630px] translate-y-[-59px] md:my-20"
+        wrapperClassName="w-full h-[500px] lg:h-[630px] translate-y-[-59px] md:my-30"
       />
       <SectionContent
         className="mx-auto w-full text-center [&>h2]:text-[28px]/[41px]"
