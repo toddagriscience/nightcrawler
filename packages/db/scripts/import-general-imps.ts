@@ -28,10 +28,16 @@ import { count, eq, inArray, notInArray } from 'drizzle-orm';
 import { generalImp, knowledgeArticle } from '../src/schema';
 import { createTargetDb, resolveImporterTarget } from './lib/db-target';
 import { embed, getArg, hash, parseCsv, slugify } from './lib/importer-lib';
+import { fetchImpSheetRows } from './lib/sheets-source';
 
 // ---- CLI args -------------------------------------------------------------
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/general-imps.csv';
+const SOURCE = getArg('source') ?? 'csv';
+
+if (!['csv', 'sheet'].includes(SOURCE)) {
+  throw new Error(`Unknown --source "${SOURCE}" - expected csv or sheet.`);
+}
 
 // A committed run replacing the whole mirror must never proceed from a
 // truncated/garbled CSV export — the prune step would wipe the real rows.
@@ -102,11 +108,15 @@ async function main() {
   // on dry runs too, not only once --commit is passed.
   const target = resolveImporterTarget();
 
-  const csv = readFileSync(CSV_PATH, 'utf8');
-  const rows = parseCsv(csv);
+  const rows =
+    SOURCE === 'sheet'
+      ? await fetchImpSheetRows()
+      : parseCsv(readFileSync(CSV_PATH, 'utf8'));
   const imps = classify(rows);
+  const sourceLabel = SOURCE === 'sheet' ? 'Google Sheet' : CSV_PATH;
 
-  console.log(`\nParsed ${CSV_PATH} (target: ${target.env})`);
+  console.log(`\nParsed ${sourceLabel} (target: ${target.env})`);
+
   console.log(`  IMPs:         ${imps.length}`);
   console.log(`  With trigger: ${imps.filter((i) => i.triggerRaw).length}`);
   console.log(`  With title:   ${imps.filter((i) => i.title).length}`);
