@@ -105,7 +105,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 gap-y-8 max-md:mt-8 sm:grid-cols-2 sm:gap-x-16 md:ml-auto md:mr-20 md:gap-x-32">
             {footerSections.map((section) => (
               <div key={section.title} className="flex flex-col gap-4">
-                <h2 className="text-base font-light text-foreground/50">
+                <h2 className="text-[15px] font-light text-foreground/50">
                   {section.title}
                 </h2>
                 {section.links.map((val) => (
@@ -113,7 +113,7 @@ const Footer = () => {
                     key={val.href}
                     href={val.href}
                     locale={locale}
-                    className="text-sm font-normal"
+                    className="text-[15px] font-normal"
                   >
                     <span className="link text-underline-left text-underline-left-black text-black">
                       {val.label}
@@ -126,11 +126,11 @@ const Footer = () => {
         </div>
       </div>
       <div className="-mx-4 mt-8 flex flex-col gap-6 border-t-[1.5px] border-foreground/10 px-4 pt-6 md:-mx-6 md:flex-row md:items-center md:justify-between md:px-6 lg:-mx-12 lg:px-12 xl:-mx-18 xl:px-18">
-        <div className="flex flex-col md:flex-row md:items-center md:gap-10">
+        <div className="flex flex-col text-[15px] md:flex-row md:items-center md:gap-10">
           <p>Todd Agriscience © 2018-{currentYear}</p>
           <CookiePreferencesModal
             trigger={
-              <span className="underline underline-offset-4">
+              <span className="text-[15px] underline underline-offset-4">
                 {tCookiePreferences('manageCookies')}
               </span>
             }
