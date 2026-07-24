@@ -98,14 +98,14 @@ const Footer = () => {
   }, [pendingLocale, pathname]);
 
   return (
-    <footer className="bg-background text-foreground font-light mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
+    <footer className="bg-background text-foreground font-normal mt-8 mb-8 px-4 py-10 sm:mb-0 md:px-6 lg:px-12 xl:px-18">
       <div className="flex flex-col md:flex-row">
         <div className="flex w-full flex-col justify-between md:mb-16 md:flex-row">
           <ToddHeader className="md:text-4xl lg:text-5xl" localeAware />
           <div className="grid grid-cols-1 gap-y-8 max-md:mt-8 sm:grid-cols-2 sm:gap-x-16 md:ml-auto md:mr-20 md:gap-x-32">
             {footerSections.map((section) => (
               <div key={section.title} className="flex flex-col gap-4">
-                <h2 className="text-[15px] font-light text-foreground/50">
+                <h2 className="text-[15px] font-normal text-foreground/50">
                   {section.title}
                 </h2>
                 {section.links.map((val) => (
@@ -126,11 +126,13 @@ const Footer = () => {
         </div>
       </div>
       <div className="-mx-4 mt-8 flex flex-col gap-6 border-t-[1.5px] border-foreground/10 px-4 pt-6 md:-mx-6 md:flex-row md:items-center md:justify-between md:px-6 lg:-mx-12 lg:px-12 xl:-mx-18 xl:px-18">
-        <div className="flex flex-col text-[15px] md:flex-row md:items-center md:gap-10">
-          <p>Todd Agriscience © 2018-{currentYear}</p>
+        <div className="flex flex-col text-[15px] font-normal md:flex-row md:items-center md:gap-10">
+          <p className="text-[15px] font-normal">
+            Todd Agriscience © 2018-{currentYear}
+          </p>
           <CookiePreferencesModal
             trigger={
-              <span className="text-[15px] underline underline-offset-4">
+              <span className="text-[15px] font-normal underline underline-offset-4">
                 {tCookiePreferences('manageCookies')}
               </span>
             }
@@ -148,11 +150,15 @@ const Footer = () => {
               aria-haspopup="menu"
               aria-expanded={langOpen}
               onClick={() => setLangOpen(!langOpen)}
-              className="flex flex-row items-center gap-3 cursor-pointer focus:outline-none focus:ring-0 md:gap-6"
+              className="flex flex-row items-center gap-3 text-[15px] font-normal cursor-pointer focus:outline-none focus:ring-0 md:gap-6"
               aria-label="Change language"
             >
-              <span className="font-normal">{currentLanguageLabel}</span>
-              <span className="text-foreground/50">{t('location')}</span>
+              <span className="text-[15px] font-normal">
+                {currentLanguageLabel}
+              </span>
+              <span className="text-[15px] font-normal text-foreground/50">
+                {t('location')}
+              </span>
             </button>
 
             {langOpen && (
@@ -169,14 +175,14 @@ const Footer = () => {
                 >
                   <button
                     onClick={() => handleLocaleChange('en')}
-                    className="block w-full px-3 py-2 text-left text-sm cursor-pointer hover:bg-gray-100"
+                    className="block w-full px-3 py-2 text-left text-sm font-normal cursor-pointer hover:bg-gray-100"
                     role="menuitem"
                   >
                     English
                   </button>
                   <button
                     onClick={() => handleLocaleChange('es')}
-                    className="block w-full px-3 py-2 text-left text-sm cursor-pointer hover:bg-gray-100"
+                    className="block w-full px-3 py-2 text-left text-sm font-normal cursor-pointer hover:bg-gray-100"
                     role="menuitem"
                   >
                     Español
