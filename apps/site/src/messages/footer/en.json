@@ -5,9 +5,12 @@
     "sections": {
       "todd": "Todd",
       "connect": "Connect",
-      "legal": "Legal"
+      "legal": "Legal",
+      "termsAndPolicies": "Terms & Policies"
     },
     "links": {
+      "about": "About",
+      "research": "Research",
       "whoWeAre": "Who We Are",
       "whatWeDo": "What We Do",
       "news": "News",
@@ -17,8 +20,8 @@
       "sponsorships": "Sponsorships",
       "foundation": "Foundation",
       "accessibility": "Accessibility",
-      "privacy": "Privacy policy",
-      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use",
       "vulnReporting": "Vulnerability reporting",
       "legal": "Legal"
     },

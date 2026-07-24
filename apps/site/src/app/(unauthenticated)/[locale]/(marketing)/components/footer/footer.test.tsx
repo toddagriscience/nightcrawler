@@ -30,6 +30,42 @@ describe('Footer', () => {
     expect(internalLinks.length).toBeGreaterThan(0);
   });
 
+  it('renders footer link groups in the expected order', () => {
+    renderWithNextIntl(<Footer />);
+
+    expect(screen.getByRole('heading', { name: 'Todd' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Terms & Policies' })
+    ).toBeInTheDocument();
+
+    expect(
+      screen
+        .getAllByRole('link')
+        .filter((link) =>
+          [
+            'Research',
+            'About',
+            'Careers',
+            'News',
+            'Terms of Use',
+            'Privacy Policy',
+            'Accessibility',
+            'Legal',
+          ].includes(link.textContent ?? '')
+        )
+        .map((link) => link.textContent)
+    ).toEqual([
+      'Research',
+      'About',
+      'Careers',
+      'News',
+      'Terms of Use',
+      'Privacy Policy',
+      'Accessibility',
+      'Legal',
+    ]);
+  });
+
   it('has social media links with accessible names via aria-label', () => {
     renderWithNextIntl(<Footer />);
 
