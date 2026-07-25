@@ -1,14 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import SocialLinks from '@/components/common/social-links/social-links';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import Link from 'next/link';
-import {
-  FaDiscord,
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6';
 
 /**
  * Custom footer for the Todd go domain
@@ -27,34 +21,6 @@ const GoFooter = async () => {
     },
   ];
 
-  const socialMediaIcons = [
-    {
-      icon: <FaXTwitter aria-hidden="true" size={20} />,
-      href: 'https://x.com/toddagriscience',
-      ariaLabel: 'Visit our X (Twitter) page',
-    },
-    {
-      icon: <FaInstagram aria-hidden="true" size={20} />,
-      href: 'https://www.instagram.com/toddagriscience/',
-      ariaLabel: 'Visit our Instagram page',
-    },
-    {
-      icon: <FaLinkedinIn aria-hidden="true" size={20} />,
-      href: 'https://www.linkedin.com/company/toddagriscience/',
-      ariaLabel: 'Visit our LinkedIn page',
-    },
-    {
-      icon: <FaYoutube aria-hidden="true" size={20} />,
-      href: 'https://www.youtube.com/@toddagriscience',
-      ariaLabel: 'Visit our YouTube channel',
-    },
-    {
-      icon: <FaDiscord aria-hidden="true" size={20} />,
-      href: 'https://discord.gg/rFY3kc4deK ',
-      ariaLabel: 'Join our Discord server',
-    },
-  ];
-
   const currentYear = new Date().getFullYear();
 
   return (
@@ -69,18 +35,10 @@ const GoFooter = async () => {
             </Link>
           ))}
         </div>
-        <div className="flex flex-row flex-wrap gap-6">
-          {socialMediaIcons.map((val) => (
-            <Link
-              key={val.href}
-              href={val.href}
-              target="_blank"
-              aria-label={val.ariaLabel}
-            >
-              {val.icon}
-            </Link>
-          ))}
-        </div>
+        <SocialLinks
+          platforms={['x', 'instagram', 'linkedin', 'youtube', 'discord']}
+          iconSize={20}
+        />
       </div>
     </footer>
   );
