@@ -95,10 +95,8 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
 
   // Title fades IN, holds for a long stretch (so it can't be missed), then
   // fades out while lifting slightly — all finished before the circles appear.
-  //   scroll:  [in-start, in-done, out-start, out-done]
-  // Title fades in quickly, then HOLDS for a long stretch (6% → 36% of the
-  // scroll — nearly a full screen) so there is plenty of time to read it, then
-  // fades out and lifts.
+  // scroll:  [in-start, in-done, out-start, out-done]
+
   // NOTE on the `transform(...)` wrappers below: when useTransform gets plain
   // keyframe arrays on an opacity-only element, framer-motion hands the
   // animation to the browser's ScrollTimeline API, which computes WRONG values

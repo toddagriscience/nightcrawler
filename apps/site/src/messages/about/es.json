@@ -24,6 +24,32 @@
         "Posicionados en la vanguardia de la agricultura sostenible"
       ]
     },
+    "pillars": {
+      "title": "Pilares",
+      "subtitle": "Subtítulo de marcador de posición que describe los cinco pilares que guían nuestro trabajo con las granjas.",
+      "items": {
+        "0": {
+          "heading": "Suelo",
+          "description": "Descripción de marcador de posición para nuestras prácticas de suelo."
+        },
+        "1": {
+          "heading": "Cultivo",
+          "description": "Descripción de marcador de posición para nuestras prácticas de cultivo."
+        },
+        "2": {
+          "heading": "Agua",
+          "description": "Descripción de marcador de posición para nuestras prácticas de agua."
+        },
+        "3": {
+          "heading": "Plagas",
+          "description": "Descripción de marcador de posición para nuestro manejo de plagas."
+        },
+        "4": {
+          "heading": "Cosecha",
+          "description": "Descripción de marcador de posición para nuestras prácticas de cosecha."
+        }
+      }
+    },
     "partners": {
       "title": "Nuestros socios",
       "description": "Tenemos la fortuna de contar con el apoyo de inversores y socios estratégicos que comparten nuestra visión. Su respaldo nos permitirá ampliar nuestro equipo, escalar la empresa y desarrollar la primera generación de granjas generativas."

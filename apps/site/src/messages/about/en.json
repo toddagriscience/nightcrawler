@@ -24,6 +24,32 @@
         "2": "Positioned at the Frontier of Sustainable Agriculture"
       }
     },
+    "pillars": {
+      "title": "Pillars",
+      "subtitle": "Placeholder subtitle describing the five pillars that guide our work with farms.",
+      "items": {
+        "0": {
+          "heading": "Soil",
+          "description": "Placeholder description for our soil practices."
+        },
+        "1": {
+          "heading": "Growing",
+          "description": "Placeholder description for our growing practices."
+        },
+        "2": {
+          "heading": "Water",
+          "description": "Placeholder description for our water practices."
+        },
+        "3": {
+          "heading": "Pests",
+          "description": "Placeholder description for our pest management practices."
+        },
+        "4": {
+          "heading": "Harvest",
+          "description": "Placeholder description for our harvest practices."
+        }
+      }
+    },
     "partners": {
       "title": "Our Partners",
       "description": "We’re fortunate to be supported by investors and industry partners who share our vision. Their backing will help us grow our team, scale our firm, and develop the first generation of generative farms."
