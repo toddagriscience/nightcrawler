@@ -45,7 +45,7 @@ export default function AccountInfo({
           className="text-muted-foreground mb-4 inline-flex items-center gap-2 text-sm hover:opacity-70"
         >
           <BiArrowBack className="size-4" aria-hidden="true" />
-          <span>{backLabel}</span>
+          <span>{backLabel?.trim() || 'Back'}</span>
         </Link>
       ) : null}
       <h2 className="text-foreground text-3xl leading-none">{title}</h2>
