@@ -70,6 +70,29 @@ describe('getAuthRedirectBaseUrl', () => {
     it('falls back to the production origin when nothing is configured', () => {
       expect(getAuthRedirectBaseUrl()).toBe('https://toddagriscience.com');
     });
+
+    it('treats a whitespace-only base URL as unconfigured', () => {
+      process.env.NEXT_PUBLIC_BASE_URL = '   ';
+      process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN = 'toddagriscience.com';
+
+      expect(getAuthRedirectBaseUrl()).toBe('https://toddagriscience.com');
+    });
+
+    it('never returns a scheme-only origin when every variable is blank', () => {
+      process.env.NEXT_PUBLIC_BASE_URL = ' ';
+      process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN = '';
+
+      const result = getAuthRedirectBaseUrl();
+
+      expect(result).toBe('https://toddagriscience.com');
+      expect(() => new URL('/signup', result)).not.toThrow();
+    });
+
+    it('trims surrounding whitespace off a configured base URL', () => {
+      process.env.NEXT_PUBLIC_BASE_URL = '  https://toddagriscience.com  ';
+
+      expect(getAuthRedirectBaseUrl()).toBe('https://toddagriscience.com');
+    });
   });
 
   describe('on preview deployments', () => {
@@ -126,6 +149,25 @@ describe('getAuthRedirectBaseUrl', () => {
       expect(getAuthRedirectBaseUrl()).toBe(
         'https://nightcrawler-git-feat-preview.vercel.app'
       );
+    });
+
+    it('skips a whitespace-only branch URL in favour of the deployment URL', () => {
+      process.env.NEXT_PUBLIC_VERCEL_ENV = 'preview';
+      process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL = '  ';
+      process.env.NEXT_PUBLIC_VERCEL_URL = 'nightcrawler-abc123.vercel.app';
+
+      expect(getAuthRedirectBaseUrl()).toBe(
+        'https://nightcrawler-abc123.vercel.app'
+      );
+    });
+
+    it('falls back to the base URL when every Vercel host is blank', () => {
+      process.env.NEXT_PUBLIC_VERCEL_ENV = 'preview';
+      process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL = ' ';
+      process.env.NEXT_PUBLIC_VERCEL_URL = '';
+      process.env.NEXT_PUBLIC_BASE_URL = 'https://toddagriscience.com';
+
+      expect(getAuthRedirectBaseUrl()).toBe('https://toddagriscience.com');
     });
 
     it('falls back to the base URL when no Vercel host is exposed', () => {

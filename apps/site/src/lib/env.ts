@@ -18,11 +18,26 @@ export const env = {
 } as const;
 
 /**
+ * Reads an environment variable, treating a missing, empty or whitespace-only
+ * value as unconfigured. A stray space in a deployment's settings would
+ * otherwise be truthy and short-circuit the fallback chains below, producing a
+ * malformed origin such as `https://`.
+ *
+ * @param {string | undefined} value - The raw `process.env` value
+ * @returns {string | undefined} - The trimmed value, or undefined when blank
+ */
+function readEnv(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+
+  return trimmed ? trimmed : undefined;
+}
+
+/**
  * Normalizes a host or URL into an absolute origin: adds `https://` when the
  * value is a bare host (Vercel exposes its URLs without a scheme) and strips
  * any trailing slashes so callers can safely append a path.
  *
- * @param {string} value - A bare host (`example.vercel.app`) or a full URL
+ * @param {string} value - A non-blank bare host (`example.vercel.app`) or full URL
  * @returns {string} - An absolute origin with no trailing slash
  */
 function normalizeOrigin(value: string): string {
@@ -49,14 +64,15 @@ function normalizeOrigin(value: string): string {
  */
 export function getAuthRedirectBaseUrl(): string {
   const vercelEnv =
-    process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.VERCEL_ENV;
+    readEnv(process.env.NEXT_PUBLIC_VERCEL_ENV) ??
+    readEnv(process.env.VERCEL_ENV);
 
   if (vercelEnv === 'preview') {
     const previewHost =
-      process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL ||
-      process.env.VERCEL_BRANCH_URL ||
-      process.env.NEXT_PUBLIC_VERCEL_URL ||
-      process.env.VERCEL_URL;
+      readEnv(process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL) ??
+      readEnv(process.env.VERCEL_BRANCH_URL) ??
+      readEnv(process.env.NEXT_PUBLIC_VERCEL_URL) ??
+      readEnv(process.env.VERCEL_URL);
 
     if (previewHost) {
       return normalizeOrigin(previewHost);
@@ -64,8 +80,8 @@ export function getAuthRedirectBaseUrl(): string {
   }
 
   return normalizeOrigin(
-    process.env.NEXT_PUBLIC_BASE_URL ||
-      process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN ||
+    readEnv(process.env.NEXT_PUBLIC_BASE_URL) ??
+      readEnv(process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN) ??
       'https://toddagriscience.com'
   );
 }

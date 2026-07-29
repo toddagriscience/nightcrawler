@@ -377,17 +377,33 @@ describe('inviteUser', () => {
 
 describe('auth emails on Vercel preview deployments', () => {
   const previewBranchUrl = 'nightcrawler-git-feat-preview.vercel.app';
+  const touchedKeys = [
+    'NEXT_PUBLIC_BASE_URL',
+    'NEXT_PUBLIC_VERCEL_ENV',
+    'NEXT_PUBLIC_VERCEL_BRANCH_URL',
+  ] as const;
+  const originalEnv: Partial<Record<(typeof touchedKeys)[number], string>> = {};
 
   beforeEach(() => {
     vitest.clearAllMocks();
+
+    for (const key of touchedKeys) {
+      originalEnv[key] = process.env[key];
+    }
+
     process.env.NEXT_PUBLIC_BASE_URL = 'https://toddagriscience.com';
     process.env.NEXT_PUBLIC_VERCEL_ENV = 'preview';
     process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL = previewBranchUrl;
   });
 
   afterEach(() => {
-    delete process.env.NEXT_PUBLIC_VERCEL_ENV;
-    delete process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+    for (const key of touchedKeys) {
+      if (originalEnv[key] === undefined) {
+        delete process.env[key];
+      } else {
+        process.env[key] = originalEnv[key];
+      }
+    }
   });
 
   it('points the signup confirmation email at the preview deployment', async () => {
