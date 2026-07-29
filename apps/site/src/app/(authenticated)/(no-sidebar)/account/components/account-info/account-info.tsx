@@ -20,7 +20,8 @@ const statusStyles: Record<AccountInfoStatusTone, string> = {
  * @param props.title - Heading rendered at the top of the section
  * @param props.description - Optional italic subtitle below the heading
  * @param props.backHref - Optional parent route; renders a back link when set
- * @param props.backLabel - Visible text for the back link, defaults to `Back`
+ * @param props.backLabel - Visible text for the back link. Falls back to `Back`
+ *   when omitted or blank, so the link always has an accessible name
  * @param props.children - Section body content
  * @returns The account section wrapper
  */

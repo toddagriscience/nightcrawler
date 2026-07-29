@@ -25,6 +25,9 @@ describe('AccountInfo', () => {
       </AccountInfo>
     );
 
+    expect(
+      screen.queryByRole('link', { name: 'Back' })
+    ).not.toBeInTheDocument();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
@@ -45,6 +48,19 @@ describe('AccountInfo', () => {
     expect(
       screen.queryByRole('link', { name: 'Back' })
     ).not.toBeInTheDocument();
+  });
+
+  it('falls back to the default label when backLabel is blank', () => {
+    render(
+      <AccountInfo title="Privacy" backHref="/account" backLabel="   ">
+        <p>content</p>
+      </AccountInfo>
+    );
+
+    expect(screen.getByRole('link', { name: 'Back' })).toHaveAttribute(
+      'href',
+      '/account'
+    );
   });
 
   it('renders the title and optional description', () => {
