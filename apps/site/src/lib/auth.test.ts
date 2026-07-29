@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { AuthError } from '@supabase/supabase-js';
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest';
 import { checkAuthenticated, login, logout } from './auth-client';
 import { getUserEmail, inviteUser, signUpUser } from './auth-server';
 
@@ -370,6 +370,55 @@ describe('inviteUser', () => {
           first_name: 'Alice',
           name: 'Alice',
         },
+      })
+    );
+  });
+});
+
+describe('auth emails on Vercel preview deployments', () => {
+  const previewBranchUrl = 'nightcrawler-git-feat-preview.vercel.app';
+
+  beforeEach(() => {
+    vitest.clearAllMocks();
+    process.env.NEXT_PUBLIC_BASE_URL = 'https://toddagriscience.com';
+    process.env.NEXT_PUBLIC_VERCEL_ENV = 'preview';
+    process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL = previewBranchUrl;
+  });
+
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_VERCEL_ENV;
+    delete process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+  });
+
+  it('points the signup confirmation email at the preview deployment', async () => {
+    mockSignUp.mockResolvedValue({
+      data: { user: { id: 'user-1' } },
+      error: null,
+    });
+
+    await signUpUser('preview@example.com', 'password123', 'Preview');
+
+    expect(mockSignUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          emailRedirectTo: `https://${previewBranchUrl}/auth/confirm?next=/apply`,
+        }),
+      })
+    );
+  });
+
+  it('points the invite email at the preview deployment', async () => {
+    mockInviteUserByEmail.mockResolvedValue({
+      data: { user: { id: 'user-2' } },
+      error: null,
+    });
+
+    await inviteUser('preview@example.com', 'Preview');
+
+    expect(mockInviteUserByEmail).toHaveBeenCalledWith(
+      'preview@example.com',
+      expect.objectContaining({
+        redirectTo: `https://${previewBranchUrl}/auth/accept-invite`,
       })
     );
   });
