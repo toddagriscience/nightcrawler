@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "sanity dev",
     "preview": "sanity preview",
-    "build": "sanity build --yes",
+    "build": "sanity build",
     "type-check": "tsc --noEmit",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy"
