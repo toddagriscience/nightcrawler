@@ -53,14 +53,14 @@ export default function WhoWeArePage() {
                 showArrow={true}
               />
             </div>
-            <div className="flex w-full max-w-[380px] justify-center">
+            <div className="flex w-full max-w-[580px] justify-center">
               <Image
                 src="/marketing/aboutpagefamilyimage.jpg"
                 alt={t('vision.imageAlt')}
                 width={1440}
                 height={1799}
-                sizes="(min-width: 768px) 380px, 100vw"
-                className="h-auto w-full rounded-sm object-cover"
+                sizes="(min-width: 768px) 480px, 100vw"
+                className="h-[320px] w-full rounded-sm object-cover md:h-[580px]"
               />
             </div>
           </div>
