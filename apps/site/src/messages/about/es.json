@@ -1,21 +1,15 @@
 {
   "whoWeAre": {
-    "title": "Quiénes Somos",
-    "intro": {
-      "paragraphs": {
-        "0": "Todd está construyendo mentores hiperinteligentes y plataformas de investigación de IA para la agricultura sostenible. No modelos entrenados únicamente con información pública. No entornos simulados. Datos reales, físicos y propietarios que caracterizan el suelo, generan prácticas accionables y gigabytes de datos que no existen en ningún otro lugar.",
-        "1": "Nuestro enfoque comienza con una tesis de agricultura generativa y de múltiples estrategias, en la que los niveles minerales se monitorean de cerca para ayudar a predecir resultados futuros y construir un valor agrícola superior a largo plazo. Desplegamos recursos específicos por ubicación en granjas de todas partes, desde reconocidas zonas costeras hasta hondonadas montañosas, impulsando un impacto medible y promoviendo un ciclo virtuoso de mejor calidad del suelo y productos más saludables."
-      }
+    "eyebrow": "Empresa",
+    "title": "Acerca de",
+    "subtitle": "Creemos que la agricultura sostenible es la base de un planeta saludable y\ncomunidades prósperas.",
+    "vision": {
+      "title": "Nuestra visión para el futuro\nde la agricultura",
+      "description": "Creemos que la agricultura sostenible es la\nbase de un planeta saludable y\ncomunidades prósperas.",
+      "cta": "Nuestra investigación",
+      "imageAlt": "Familia cultivando un jardín juntos"
     },
-    "culture": {
-      "heading": {
-        "line1": "Impulsados por nuestra Cultura"
-      },
-      "description": "Hemos construido una cultura distintiva que define todo lo que hacemos, ya sea trabajando, socializando o apoyando a nuestras comunidades. Nuestro liderazgo comparte la determinación y la responsabilidad de formar y desarrollar a la próxima generación de líderes.",
-      "cta": {
-        "careers": "Carreras"
-      }
-    },
+    "missionStatement": "Estamos creando granjas generativas, pero también consideraremos cumplida nuestra misión si nuestro trabajo ayuda a otros a lograr este resultado.",
     "competencies": {
       "title": "Todd se diferencia por una combinación de tres competencias clave.",
       "items": [
