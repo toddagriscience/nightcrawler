@@ -101,9 +101,11 @@ vitest.mock('framer-motion', async () => {
     useScroll: vitest.fn(() => ({ scrollYProgress: 0 })),
     useTransform: vitest.fn(() => 0),
     useMotionValueEvent: vitest.fn(),
+    useReducedMotion: vitest.fn(() => false),
     motion: {
       div: MockMotionComponent,
       button: MockMotionComponent,
+      p: MockMotionComponent,
     },
     AnimatePresence: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>

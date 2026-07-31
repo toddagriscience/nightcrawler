@@ -4,14 +4,16 @@
 
 import {
   motion,
+  MotionProps,
   MotionValue,
   transform,
+  useReducedMotion,
   useScroll,
   useTransform,
 } from 'framer-motion';
 import { useRef } from 'react';
 
-import useWindowWidth from '@/lib/hooks/useWindowWidth';
+import useMediaQuery from '@/lib/hooks/useMediaQuery';
 
 interface PillarsSectionProps {
   t: (key: string) => string;
@@ -37,11 +39,23 @@ const REVEAL_STAGGER = 0.05;
 const REVEAL_DURATION = 0.08;
 const ARROW_DIM_OPACITY = 0.35;
 
+// Math.sin/Math.cos are only required to be within an implementation-defined
+// tolerance, so Node and the browser can disagree in the final digits. That
+// makes the generated path strings differ between the server and client render
+// and trips React's hydration attribute check. Rounding to a fixed precision
+// collapses the discrepancy; at a 400-unit viewBox, 3 decimals is far finer
+// than a device pixel.
+const COORD_PRECISION = 3;
+
+function roundCoord(value: number) {
+  return Number(value.toFixed(COORD_PRECISION));
+}
+
 function ringPoint(angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180;
   return {
-    x: RING_CENTER + RING_RADIUS * Math.sin(rad),
-    y: RING_CENTER - RING_RADIUS * Math.cos(rad),
+    x: roundCoord(RING_CENTER + RING_RADIUS * Math.sin(rad)),
+    y: roundCoord(RING_CENTER - RING_RADIUS * Math.cos(rad)),
   };
 }
 
@@ -55,7 +69,7 @@ function arrowGeometry(index: number) {
     // The circle's tangent at angle θ points at θ degrees in SVG space, so
     // rotating the +x-facing chevron by endAngle aims it clockwise along the
     // ring — each arrow points at the tail of the next one.
-    tipTransform: `translate(${to.x} ${to.y}) rotate(${endAngle})`,
+    tipTransform: `translate(${to.x} ${to.y}) rotate(${roundCoord(endAngle)})`,
   };
 }
 
@@ -108,48 +122,71 @@ function PillarRing() {
 }
 
 /**
- * Pillars section with scroll-driven animation, placed between the
- * competencies and partners sections. A ring of five arrows spins around the
- * title as the user scrolls; each of the five pillar descriptions lights up
- * its matching arrow as it is revealed. On lg and smaller, uses a simplified
- * whileInView animation to avoid scroll jitter.
+ * Builds the whileInView entrance props for the static layout, or nothing at
+ * all when the user prefers reduced motion (content just renders in place).
  */
-export default function PillarsSection({ t }: PillarsSectionProps) {
-  const windowWidth = useWindowWidth();
-
-  // Until the real width is known (undefined on the server and first client
-  // render), don't commit to a layout: rendering mobile first and swapping to
-  // desktop after mount destabilizes the scroll-driven animation.
-  if (windowWidth === undefined) {
-    return null;
+function fadeUpProps(reduceMotion: boolean, delay = 0): MotionProps {
+  if (reduceMotion) {
+    return {};
   }
-
-  if (windowWidth < 1024) {
-    return <PillarsSectionMobile t={t} />;
-  }
-
-  return <PillarsSectionDesktop t={t} />;
+  return {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.3 },
+    transition: { duration: 0.5, delay, ease: 'easeOut' },
+  };
 }
 
 /**
- * Simplified layout with whileInView animations.
+ * Pillars section with scroll-driven animation, placed between the
+ * competencies and partners sections. A ring of five arrows spins around the
+ * title as the user scrolls; each of the five pillar descriptions lights up
+ * its matching arrow as it is revealed.
+ *
+ * Static-first: SSR and the hydration render emit the simple stacked layout
+ * (so the copy is always present in the server HTML for crawlers and screen
+ * readers); the scroll-driven desktop variant is a client-side enhancement
+ * applied once matchMedia resolves to >= lg. Users who prefer reduced motion
+ * keep the static layout at every width, with the infinite ring spin and
+ * entrance animations disabled.
  */
-function PillarsSectionMobile({ t }: { t: (key: string) => string }) {
+export default function PillarsSection({ t }: PillarsSectionProps) {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const reduceMotion = useReducedMotion() ?? false;
+
+  if (isDesktop && !reduceMotion) {
+    return <PillarsSectionDesktop t={t} />;
+  }
+
+  return <PillarsSectionMobile t={t} reduceMotion={reduceMotion} />;
+}
+
+/**
+ * Simplified layout with whileInView animations (none when reduced motion,
+ * and the decorative ring holds still instead of spinning).
+ */
+function PillarsSectionMobile({
+  t,
+  reduceMotion = false,
+}: {
+  t: (key: string) => string;
+  reduceMotion?: boolean;
+}) {
+  const spinProps: MotionProps = reduceMotion
+    ? {}
+    : {
+        animate: { rotate: 360 },
+        transition: { repeat: Infinity, duration: 40, ease: 'linear' },
+      };
+
   return (
     <section className="relative w-full py-24 px-6">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        {...fadeUpProps(reduceMotion)}
         className="flex flex-col items-center gap-10"
       >
         <div className="relative flex size-72 items-center justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 40, ease: 'linear' }}
-            className="absolute inset-0"
-          >
+          <motion.div {...spinProps} className="absolute inset-0">
             <PillarRing />
           </motion.div>
           <h2 className="text-3xl font-thin text-center">
@@ -163,14 +200,7 @@ function PillarsSectionMobile({ t }: { t: (key: string) => string }) {
           {PILLAR_INDICES.map((index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: 'easeOut',
-              }}
+              {...fadeUpProps(reduceMotion, index * 0.1)}
               className="flex flex-col items-center gap-2 text-center"
             >
               <h3 className="text-base font-normal text-[#4a3520]">
@@ -224,16 +254,33 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
     scrollYProgress,
     transform([0.18, 0.3], [0, 1])
   );
-  const ringRotate = useTransform(scrollYProgress, [0.2, 0.9], [0, 300]);
+  const ringRotate = useTransform(
+    scrollYProgress,
+    transform([0.2, 0.9], [0, 300])
+  );
 
   // Title + ring cluster shrinks and lifts to make room for the columns.
-  const clusterScale = useTransform(scrollYProgress, [0.48, 0.66], [1, 0.7]);
-  const clusterY = useTransform(scrollYProgress, [0.48, 0.66], [0, -120]);
+  // Wrapped in transform(...) for the same reason as the opacities above:
+  // plain keyframe arrays can be handed to the browser's ScrollTimeline, which
+  // mis-computes them here and makes the shrink jump rather than glide.
+  const clusterScale = useTransform(
+    scrollYProgress,
+    transform([0.48, 0.66], [1, 0.7])
+  );
+  const clusterY = useTransform(
+    scrollYProgress,
+    transform([0.48, 0.66], [0, -120])
+  );
 
   const progressBarHeight = useTransform(
     scrollYProgress,
     [0, 1],
     ['0%', '100%']
+  );
+
+  const progressBarOpacity = useTransform(
+    scrollYProgress,
+    transform([0, 0.08, 0.92, 1], [0, 1, 1, 0])
   );
 
   // Emulate sticky behavior. The section is 5 screens tall (h-[500vh]); the
@@ -243,30 +290,36 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
 
   return (
     <div ref={containerRef} className="relative h-[500vh] w-full">
+      {/* Progress Bar Indicator. Deliberately a sibling of the translated
+          pane below: a transformed element becomes the containing block for
+          its fixed-position descendants, so nesting this inside would make
+          `fixed` resolve against the moving pane instead of the viewport. */}
+      <motion.div
+        style={{ opacity: progressBarOpacity }}
+        className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none z-10"
+      >
+        <motion.div
+          style={{ height: progressBarHeight }}
+          className="w-full bg-black/40 rounded-full"
+        />
+      </motion.div>
+
       <motion.div
         style={{ y: stickyY }}
         className="relative top-0 h-screen w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Progress Bar Indicator */}
-        <motion.div
-          style={{
-            opacity: useTransform(
-              scrollYProgress,
-              transform([0, 0.08, 0.92, 1], [0, 1, 1, 0])
-            ),
-          }}
-          className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none"
-        >
-          <motion.div
-            style={{ height: progressBarHeight }}
-            className="w-full bg-black/40 rounded-full"
-          />
-        </motion.div>
-
         <div className="relative w-full max-w-[1400px] h-[600px] xl:h-[700px]">
-          {/* Title + Ring cluster */}
+          {/* Title + Ring cluster. `willChange: transform` promotes this to its
+              own compositor layer so the glyphs are rasterized once and scaled
+              on the GPU. Without it the browser re-rasterizes thin text at a
+              new fractional scale every frame, which reads as shimmer. */}
           <motion.div
-            style={{ scale: clusterScale, y: clusterY }}
+            style={{
+              scale: clusterScale,
+              y: clusterY,
+              willChange: 'transform',
+              backfaceVisibility: 'hidden',
+            }}
             className="absolute inset-0"
           >
             <motion.div

@@ -43,6 +43,7 @@ export default function SmoothScroll({
 
   useEffect(() => {
     let lenis: Lenis | null = null;
+    let frameId: number | undefined;
 
     const initializeLenis = () => {
       try {
@@ -72,17 +73,24 @@ export default function SmoothScroll({
 
     const startLenis = () => {
       if (lenis) {
+        // Keep the latest frame id so cleanup can cancel the loop. Without
+        // this the raf chain re-schedules itself forever and every remount
+        // leaves another loop running for the life of the page.
         const raf = (time: number) => {
           if (lenis) {
             lenis.raf(time);
           }
-          requestAnimationFrame(raf);
+          frameId = requestAnimationFrame(raf);
         };
-        requestAnimationFrame(raf);
+        frameId = requestAnimationFrame(raf);
       }
     };
 
     const destroyLenis = () => {
+      if (frameId !== undefined) {
+        cancelAnimationFrame(frameId);
+        frameId = undefined;
+      }
       if (lenis) {
         lenis.destroy();
         lenis = null;

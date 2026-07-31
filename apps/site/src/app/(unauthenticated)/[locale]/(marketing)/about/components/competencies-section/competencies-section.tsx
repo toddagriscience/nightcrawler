@@ -4,52 +4,72 @@
 
 import {
   motion,
+  MotionProps,
   MotionValue,
   transform,
+  useReducedMotion,
   useScroll,
   useTransform,
 } from 'framer-motion';
 import { useRef } from 'react';
 
-import useWindowWidth from '@/lib/hooks/useWindowWidth';
+import useMediaQuery from '@/lib/hooks/useMediaQuery';
 
 interface CompetenciesSectionProps {
   t: (key: string) => string;
 }
 
 /**
- * Competencies section with scroll-driven animation
- * Uses framer-motion useScroll to drive animations based on scroll position.
- * On lg and smaller, uses a simplified whileInView animation to avoid scroll jitter.
+ * Builds the whileInView entrance props for the static layout, or nothing at
+ * all when the user prefers reduced motion (content just renders in place).
  */
-export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
-  const windowWidth = useWindowWidth();
-
-  // Until the real width is known (undefined on the server and first client
-  // render), don't commit to a layout: rendering mobile first and swapping to
-  // desktop after mount destabilizes the scroll-driven animation.
-  if (windowWidth === undefined) {
-    return null;
+function fadeUpProps(reduceMotion: boolean, delay = 0): MotionProps {
+  if (reduceMotion) {
+    return {};
   }
-
-  if (windowWidth < 1024) {
-    return <CompetenciesSectionMobile t={t} />;
-  }
-
-  return <CompetenciesSectionDesktop t={t} />;
+  return {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.3 },
+    transition: { duration: 0.5, delay, ease: 'easeOut' },
+  };
 }
 
 /**
- * Simplified layout with whileInView animations.
+ * Competencies section with scroll-driven animation.
+ * Uses framer-motion useScroll to drive animations based on scroll position.
+ *
+ * Static-first: SSR and the hydration render emit the simple stacked layout
+ * (so the copy is always present in the server HTML for crawlers and screen
+ * readers); the scroll-driven desktop variant is a client-side enhancement
+ * applied once matchMedia resolves to >= lg. Users who prefer reduced motion
+ * keep the static layout at every width, with entrance animations disabled.
  */
-function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
+export default function CompetenciesSection({ t }: CompetenciesSectionProps) {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const reduceMotion = useReducedMotion() ?? false;
+
+  if (isDesktop && !reduceMotion) {
+    return <CompetenciesSectionDesktop t={t} />;
+  }
+
+  return <CompetenciesSectionMobile t={t} reduceMotion={reduceMotion} />;
+}
+
+/**
+ * Simplified layout with whileInView animations (none when reduced motion).
+ */
+function CompetenciesSectionMobile({
+  t,
+  reduceMotion = false,
+}: {
+  t: (key: string) => string;
+  reduceMotion?: boolean;
+}) {
   return (
     <section className="relative w-full py-24 px-6">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        {...fadeUpProps(reduceMotion)}
         className="flex flex-col items-center gap-12"
       >
         <h2 className="text-2xl max-w-[300px] leading-tight font-thin text-center">
@@ -59,15 +79,8 @@ function CompetenciesSectionMobile({ t }: { t: (key: string) => string }) {
           {[0, 1, 2].map((index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: 'easeOut',
-              }}
-              className="flex size-48 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 text-center transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10"
+              {...fadeUpProps(reduceMotion, index * 0.1)}
+              className="flex size-48 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 text-center"
             >
               <p className="text-3xl font-thin">{index + 1}</p>
               <p className="text-sm font-thin leading-relaxed">
@@ -129,6 +142,11 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
     ['0%', '100%']
   );
 
+  const progressBarOpacity = useTransform(
+    scrollYProgress,
+    transform([0, 0.1, 0.9, 1], [0, 1, 1, 0])
+  );
+
   // Emulate sticky behavior. The section is 4 screens tall (h-[400vh]); the
   // pinned content must translate (4 - 1) = 3 screens = 300% to stay centered
   // the whole time. (Taller than this — e.g. 500vh — pushes the finish too far
@@ -137,26 +155,24 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
 
   return (
     <div ref={containerRef} className="relative h-[400vh] w-full">
+      {/* Progress Bar Indicator. Deliberately a sibling of the translated
+          pane below: a transformed element becomes the containing block for
+          its fixed-position descendants, so nesting this inside would make
+          `fixed` resolve against the moving pane instead of the viewport. */}
+      <motion.div
+        style={{ opacity: progressBarOpacity }}
+        className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none z-10"
+      >
+        <motion.div
+          style={{ height: progressBarHeight }}
+          className="w-full bg-black/40 rounded-full"
+        />
+      </motion.div>
+
       <motion.div
         style={{ y: stickyY }}
         className="relative top-0 h-screen w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Progress Bar Indicator */}
-        <motion.div
-          style={{
-            opacity: useTransform(
-              scrollYProgress,
-              transform([0, 0.1, 0.9, 1], [0, 1, 1, 0])
-            ),
-          }}
-          className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 h-32 md:h-48 w-1 bg-black/10 rounded-full overflow-hidden pointer-events-none"
-        >
-          <motion.div
-            style={{ height: progressBarHeight }}
-            className="w-full bg-black/40 rounded-full"
-          />
-        </motion.div>
-
         <div className="relative w-full max-w-[1400px] h-[400px] md:h-[600px] flex items-center justify-center">
           {/* Competencies Title */}
           <motion.div
@@ -168,11 +184,15 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
             </h2>
           </motion.div>
 
-          {/* Competencies Circles */}
+          {/* Competencies Circles. `willChange: transform` promotes this to its
+              own compositor layer so the text inside is rasterized once and
+              scaled on the GPU rather than re-rasterized every frame. */}
           <motion.div
             style={{
               opacity: vennOpacity,
               scale: vennScale,
+              willChange: 'transform',
+              backfaceVisibility: 'hidden',
             }}
             className="absolute inset-0"
           >
@@ -233,9 +253,11 @@ function CompetencyCircle({
   const start = trianglePositions[index];
   const end = rowPositions[index];
 
-  // The circles reposition across 62% → 80% of the scroll.
-  const x = useTransform(progress, [0.62, 0.8], [start.x, end.x]);
-  const y = useTransform(progress, [0.62, 0.8], [start.y, end.y]);
+  // The circles reposition across 62% → 80% of the scroll. Wrapped in
+  // transform(...) for the same reason as the opacities: plain keyframe arrays
+  // can be handed to the browser's ScrollTimeline, which mis-computes them here.
+  const x = useTransform(progress, transform([0.62, 0.8], [start.x, end.x]));
+  const y = useTransform(progress, transform([0.62, 0.8], [start.y, end.y]));
 
   // Fade sequencing rule: the text's window must START after the number's
   // window ENDS — if the ranges overlap, both render semi-transparent at once.
@@ -255,7 +277,7 @@ function CompetencyCircle({
       }}
       className="flex items-center justify-center text-center left-1/2"
     >
-      <div className="relative flex size-48 md:size-64 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 md:p-8 transition-[background-color] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-black/10">
+      <div className="relative flex size-48 md:size-64 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 md:p-8">
         {/* Number: absolutely centered ON this circle (parent is `relative`). */}
         <motion.p
           style={{ opacity: numberOpacity }}
