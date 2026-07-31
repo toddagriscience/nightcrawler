@@ -25,14 +25,22 @@ describe('WhatWeDoPage', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: "We support the world's most important farms",
+        name: 'A holistic approach to agriculture',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Our research reveals insights unimagined by others and moves swiftly to regenerate soil. We work with farms who have displayed a commitment to ecologically and socially responsible management practices and forged deep emotional connections with their target consumers.'
+        'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
     ).toBeInTheDocument();
+    expect(screen.getByText('Research')).toBeInTheDocument();
+    expect(screen.getByAltText('Meadow')).toHaveAttribute(
+      'src',
+      '/marketing/meadow-4.webp'
+    );
+    expect(
+      screen.getByRole('link', { name: 'View research index' })
+    ).toHaveAttribute('href', '/research/index');
   });
 
   it('renders approach and strategy sections', () => {
@@ -94,7 +102,7 @@ describe('WhatWeDoPage', () => {
     expect(h1Elements).toHaveLength(1);
 
     expect(h1Elements[0]).toHaveTextContent(
-      "We support the world's most important farms"
+      'A holistic approach to agriculture'
     );
   });
 });
