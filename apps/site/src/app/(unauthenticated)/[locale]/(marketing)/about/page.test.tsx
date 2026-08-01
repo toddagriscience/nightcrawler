@@ -22,6 +22,15 @@ vi.mock('./components/competencies-section/competencies-section', () => ({
   default: () => <div data-testid="competencies-section">Competencies</div>,
 }));
 
+vi.mock(
+  './components/responsibilities-section/responsibilities-section',
+  () => ({
+    default: () => (
+      <div data-testid="responsibilities-section">Responsibilities</div>
+    ),
+  })
+);
+
 describe('WhoWeArePage', () => {
   it('renders exactly one h1 element with the correct title for accessibility', () => {
     renderWithNextIntl(<WhoWeArePage />);
