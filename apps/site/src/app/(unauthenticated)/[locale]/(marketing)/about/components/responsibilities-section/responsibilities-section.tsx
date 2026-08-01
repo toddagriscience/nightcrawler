@@ -15,19 +15,19 @@ import { useRef } from 'react';
 
 import useMediaQuery from '@/lib/hooks/useMediaQuery';
 
-interface PillarsSectionProps {
+interface ResponsibilitiesSectionProps {
   t: (key: string) => string;
 }
 
-const PILLAR_INDICES = [0, 1, 2, 3, 4];
+const RESPONSIBILITY_INDICES = [0, 1, 2, 3, 4];
 
 // Ring geometry, in SVG viewBox units. The ring is five arc segments (one per
-// pillar), each ending in a chevron tip, so the segments read as five arrows
+// responsibility), each ending in a chevron tip, so the segments read as five arrows
 // chasing each other clockwise around one circle.
 const RING_VIEWBOX = 400;
 const RING_CENTER = RING_VIEWBOX / 2;
 const RING_RADIUS = 170;
-const SEGMENT_DEGREES = 360 / PILLAR_INDICES.length;
+const SEGMENT_DEGREES = 360 / RESPONSIBILITY_INDICES.length;
 const SEGMENT_GAP_DEGREES = 18;
 
 // Scroll timing for the reveal phase: column i fades in across
@@ -94,14 +94,14 @@ function ArrowGlyph({ index }: { index: number }) {
   );
 }
 
-function PillarRing() {
+function ResponsibilityRing() {
   return (
     <svg
       viewBox={`0 0 ${RING_VIEWBOX} ${RING_VIEWBOX}`}
       className="size-full"
       aria-hidden="true"
     >
-      {PILLAR_INDICES.map((index) => {
+      {RESPONSIBILITY_INDICES.map((index) => {
         const { arcPath, tipTransform } = arrowGeometry(index);
         return (
           <g key={index}>
@@ -138,9 +138,9 @@ function fadeUpProps(reduceMotion: boolean, delay = 0): MotionProps {
 }
 
 /**
- * Pillars section with scroll-driven animation, placed between the
+ * Responsibilities section with scroll-driven animation, placed between the
  * competencies and partners sections. A ring of five arrows spins around the
- * title as the user scrolls; each of the five pillar descriptions lights up
+ * title as the user scrolls; each of the five responsibility descriptions lights up
  * its matching arrow as it is revealed.
  *
  * Static-first: SSR and the hydration render emit the simple stacked layout
@@ -150,22 +150,24 @@ function fadeUpProps(reduceMotion: boolean, delay = 0): MotionProps {
  * keep the static layout at every width, with the infinite ring spin and
  * entrance animations disabled.
  */
-export default function PillarsSection({ t }: PillarsSectionProps) {
+export default function ResponsibilitiesSection({
+  t,
+}: ResponsibilitiesSectionProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
   const reduceMotion = useReducedMotion() ?? false;
 
   if (isDesktop && !reduceMotion) {
-    return <PillarsSectionDesktop t={t} />;
+    return <ResponsibilitiesSectionDesktop t={t} />;
   }
 
-  return <PillarsSectionMobile t={t} reduceMotion={reduceMotion} />;
+  return <ResponsibilitiesSectionMobile t={t} reduceMotion={reduceMotion} />;
 }
 
 /**
  * Simplified layout with whileInView animations (none when reduced motion,
  * and the decorative ring holds still instead of spinning).
  */
-function PillarsSectionMobile({
+function ResponsibilitiesSectionMobile({
   t,
   reduceMotion = false,
 }: {
@@ -187,27 +189,27 @@ function PillarsSectionMobile({
       >
         <div className="relative flex size-72 items-center justify-center">
           <motion.div {...spinProps} className="absolute inset-0">
-            <PillarRing />
+            <ResponsibilityRing />
           </motion.div>
-          <h2 className="text-3xl font-thin text-center">
-            {t('pillars.title')}
+          <h2 className="text-2xl font-normal text-center">
+            {t('responsibilities.title')}
           </h2>
         </div>
-        <p className="text-sm max-w-[320px] font-thin leading-relaxed text-center">
-          {t('pillars.subtitle')}
+        <p className="text-sm max-w-[320px] font-normal leading-relaxed text-center">
+          {t('responsibilities.subtitle')}
         </p>
         <div className="flex flex-col items-center gap-8 w-full max-w-[400px]">
-          {PILLAR_INDICES.map((index) => (
+          {RESPONSIBILITY_INDICES.map((index) => (
             <motion.div
               key={index}
               {...fadeUpProps(reduceMotion, index * 0.1)}
               className="flex flex-col items-center gap-2 text-center"
             >
-              <h3 className="text-base font-normal text-[#4a3520]">
-                {t(`pillars.items.${index}.heading`)}
+              <h3 className="text-base font-normal leading-snug text-[#4a3520]">
+                {t(`responsibilities.items.${index}.heading`)}
               </h3>
-              <p className="text-sm font-thin leading-relaxed">
-                {t(`pillars.items.${index}.description`)}
+              <p className="text-sm font-normal leading-relaxed">
+                {t(`responsibilities.items.${index}.description`)}
               </p>
             </motion.div>
           ))}
@@ -220,7 +222,7 @@ function PillarsSectionMobile({
 /**
  * Full scroll-driven animation with sticky emulation
  */
-function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
+function ResponsibilitiesSectionDesktop({ t }: { t: (key: string) => string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Track scroll progress within this section
@@ -249,7 +251,7 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
 
   // The ring of arrows fades in around the title once the subtitle is gone,
   // and keeps slowly spinning for the rest of the scroll — including while
-  // the pillar columns below light its arrows up one by one.
+  // the responsibility columns below light its arrows up one by one.
   const ringOpacity = useTransform(
     scrollYProgress,
     transform([0.18, 0.3], [0, 1])
@@ -326,8 +328,10 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
               style={{ opacity: titleOpacity }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <h2 className="text-5xl xl:text-6xl font-thin text-center">
-                {t('pillars.title')}
+              {/* Sized so the longest title ("Responsibilities") stays inside
+                  the ring's inner radius at both breakpoints. */}
+              <h2 className="text-4xl xl:text-5xl font-normal text-center">
+                {t('responsibilities.title')}
               </h2>
             </motion.div>
 
@@ -335,8 +339,8 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
               style={{ opacity: subtitleOpacity }}
               className="absolute inset-x-0 top-[58%] flex justify-center px-6"
             >
-              <p className="text-sm xl:text-base max-w-[360px] font-thin leading-relaxed text-center">
-                {t('pillars.subtitle')}
+              <p className="text-sm xl:text-base max-w-[360px] font-normal leading-relaxed text-center">
+                {t('responsibilities.subtitle')}
               </p>
             </motion.div>
 
@@ -348,8 +352,8 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
               style={{ opacity: ringOpacity, rotate: ringRotate }}
               className="absolute inset-0 m-auto size-[26rem] xl:size-[30rem]"
             >
-              {PILLAR_INDICES.map((index) => (
-                <PillarArrow
+              {RESPONSIBILITY_INDICES.map((index) => (
+                <ResponsibilityArrow
                   key={index}
                   index={index}
                   progress={scrollYProgress}
@@ -358,10 +362,10 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
             </motion.div>
           </motion.div>
 
-          {/* Pillar Columns */}
+          {/* Responsibility Columns */}
           <div className="absolute bottom-0 inset-x-0 grid grid-cols-5 gap-8 px-10 xl:px-16">
-            {PILLAR_INDICES.map((index) => (
-              <PillarColumn
+            {RESPONSIBILITY_INDICES.map((index) => (
+              <ResponsibilityColumn
                 key={index}
                 index={index}
                 progress={scrollYProgress}
@@ -376,10 +380,10 @@ function PillarsSectionDesktop({ t }: { t: (key: string) => string }) {
 }
 
 /**
- * One arrow segment of the ring. Sits dim until its matching pillar column is
+ * One arrow segment of the ring. Sits dim until its matching responsibility column is
  * revealed, then brightens over the same scroll window.
  */
-function PillarArrow({
+function ResponsibilityArrow({
   index,
   progress,
 }: {
@@ -400,10 +404,10 @@ function PillarArrow({
 }
 
 /**
- * Individual pillar column with scroll-driven fade-in, staggered by index and
+ * Individual responsibility column with scroll-driven fade-in, staggered by index and
  * synced to its ring arrow's brighten window.
  */
-function PillarColumn({
+function ResponsibilityColumn({
   index,
   progress,
   t,
@@ -424,11 +428,11 @@ function PillarColumn({
       style={{ opacity, y }}
       className="flex flex-col gap-2 text-left"
     >
-      <h3 className="text-base font-normal text-[#4a3520]">
-        {t(`pillars.items.${index}.heading`)}
+      <h3 className="text-base font-normal leading-snug text-[#4a3520]">
+        {t(`responsibilities.items.${index}.heading`)}
       </h3>
-      <p className="text-sm font-thin leading-relaxed">
-        {t(`pillars.items.${index}.description`)}
+      <p className="text-sm font-normal leading-relaxed">
+        {t(`responsibilities.items.${index}.description`)}
       </p>
     </motion.div>
   );

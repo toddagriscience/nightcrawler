@@ -24,29 +24,29 @@
         "Posicionados en la vanguardia de la agricultura sostenible"
       ]
     },
-    "pillars": {
-      "title": "Pilares",
-      "subtitle": "Subtítulo de marcador de posición que describe los cinco pilares que guían nuestro trabajo con las granjas.",
+    "responsibilities": {
+      "title": "Responsabilidades",
+      "subtitle": "Trabajamos con granjas autosuficientes que valoran la capacidad del equipo de Todd para generar cambios en estas áreas.",
       "items": {
         "0": {
-          "heading": "Suelo",
-          "description": "Descripción de marcador de posición para nuestras prácticas de suelo."
+          "heading": "Selección disciplinada de datos",
+          "description": "Utilizamos marcos analíticos propietarios y capacidades digitales para comprender de manera holística la dinámica de las enfermedades y la mitigación de insectos, lo que permite tomar decisiones responsables de gestión agrícola."
         },
         "1": {
-          "heading": "Cultivo",
-          "description": "Descripción de marcador de posición para nuestras prácticas de cultivo."
+          "heading": "Filosofía de la empresa",
+          "description": "Estamos formando una firma diseñada para emular las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de las personas, las comunidades y la tierra, con el fin de tomar el que creemos es el mejor camino a seguir."
         },
         "2": {
-          "heading": "Agua",
-          "description": "Descripción de marcador de posición para nuestras prácticas de agua."
+          "heading": "Integración agrícola",
+          "description": "Al concentrarnos en un grupo reducido de granjas dentro de nuestras categorías de gestión, nos esforzamos por respaldar objetivos claramente definidos centrados en la responsabilidad, la sostenibilidad y la mejora a largo plazo."
         },
         "3": {
-          "heading": "Plagas",
-          "description": "Descripción de marcador de posición para nuestro manejo de plagas."
+          "heading": "Desarrollo de mercado y conocimiento del consumidor",
+          "description": "Aprovechamos la experiencia emprendedora complementaria de nuestro equipo para explorar canales directos al consumidor, incluidos los programas CSA y otras estrategias de entrada al mercado que fortalecen la conexión con el consumidor y el reconocimiento de la marca."
         },
         "4": {
-          "heading": "Cosecha",
-          "description": "Descripción de marcador de posición para nuestras prácticas de cosecha."
+          "heading": "Participación regulatoria y de políticas",
+          "description": "Supervisamos activamente las obligaciones regulatorias de nuestras granjas y desempeñamos un papel esencial en la formulación e implementación de las políticas que rigen la industria agrícola mundial mediante la rendición de cuentas, posiciones y liderazgo."
         }
       }
     },

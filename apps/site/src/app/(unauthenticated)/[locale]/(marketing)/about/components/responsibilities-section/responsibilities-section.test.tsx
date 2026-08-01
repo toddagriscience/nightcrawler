@@ -5,7 +5,7 @@ import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { useReducedMotion } from 'framer-motion';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import PillarsSection from './pillars-section';
+import ResponsibilitiesSection from './responsibilities-section';
 
 const mockUseMediaQuery = vi.fn();
 
@@ -24,14 +24,20 @@ const t = (key: string) =>
       enMessages.whoWeAre
     ) as string;
 
-const PILLAR_HEADINGS = ['Soil', 'Growing', 'Water', 'Pests', 'Harvest'];
+const RESPONSIBILITY_HEADINGS = [
+  'Disciplined Data Selection',
+  'Company Philosophy',
+  'Farm Integration',
+  'Market Development & Consumer Awareness',
+  'Regulatory & Policy Engagement',
+];
 
 const expectFullContent = () => {
   expect(
-    screen.getByRole('heading', { level: 2, name: 'Pillars' })
+    screen.getByRole('heading', { level: 2, name: 'Responsibilities' })
   ).toBeInTheDocument();
 
-  for (const heading of PILLAR_HEADINGS) {
+  for (const heading of RESPONSIBILITY_HEADINGS) {
     expect(
       screen.getByRole('heading', { level: 3, name: heading })
     ).toBeInTheDocument();
@@ -41,7 +47,7 @@ const expectFullContent = () => {
   expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
 };
 
-describe('PillarsSection', () => {
+describe('ResponsibilitiesSection', () => {
   beforeEach(() => {
     vi.mocked(useReducedMotion).mockReturnValue(false);
   });
@@ -49,32 +55,34 @@ describe('PillarsSection', () => {
   it('renders the static content shell before the media query resolves (SSR)', () => {
     mockUseMediaQuery.mockReturnValue(undefined);
 
-    renderWithNextIntl(<PillarsSection t={t} />);
+    renderWithNextIntl(<ResponsibilitiesSection t={t} />);
 
     // Content must be present even before the breakpoint is known — nothing
     // is withheld from the server HTML.
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Pillars' })
+      screen.getByRole('heading', { level: 2, name: 'Responsibilities' })
     ).toBeInTheDocument();
     expectFullContent();
   });
 
-  it('renders the mobile layout with title, subtitle, and all five pillars', () => {
+  it('renders the mobile layout with title, subtitle, and all five responsibilities', () => {
     mockUseMediaQuery.mockReturnValue(false);
 
-    renderWithNextIntl(<PillarsSection t={t} />);
+    renderWithNextIntl(<ResponsibilitiesSection t={t} />);
 
     expectFullContent();
-    expect(screen.getByText(/Placeholder subtitle/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/self-supporting farms that value the Todd team/i)
+    ).toBeInTheDocument();
   });
 
-  it('renders the desktop layout with title and all five pillars', () => {
+  it('renders the desktop layout with title and all five responsibilities', () => {
     mockUseMediaQuery.mockReturnValue(true);
 
-    renderWithNextIntl(<PillarsSection t={t} />);
+    renderWithNextIntl(<ResponsibilitiesSection t={t} />);
 
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Pillars' })
+      screen.getByRole('heading', { level: 2, name: 'Responsibilities' })
     ).toBeInTheDocument();
     expectFullContent();
   });
@@ -83,7 +91,7 @@ describe('PillarsSection', () => {
     mockUseMediaQuery.mockReturnValue(true);
     vi.mocked(useReducedMotion).mockReturnValue(true);
 
-    const { container } = renderWithNextIntl(<PillarsSection t={t} />);
+    const { container } = renderWithNextIntl(<ResponsibilitiesSection t={t} />);
 
     // The static variant renders a <section> root; the scroll-driven desktop
     // variant renders a plain scroll-track div.
@@ -94,7 +102,7 @@ describe('PillarsSection', () => {
   it('emits ring path coordinates at a fixed precision so SSR and client HTML match', () => {
     mockUseMediaQuery.mockReturnValue(false);
 
-    const { container } = renderWithNextIntl(<PillarsSection t={t} />);
+    const { container } = renderWithNextIntl(<ResponsibilitiesSection t={t} />);
 
     const paths = Array.from(container.querySelectorAll('path'));
     expect(paths.length).toBeGreaterThan(0);

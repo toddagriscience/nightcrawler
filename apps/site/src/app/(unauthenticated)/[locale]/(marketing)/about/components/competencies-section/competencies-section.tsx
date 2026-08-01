@@ -72,7 +72,7 @@ function CompetenciesSectionMobile({
         {...fadeUpProps(reduceMotion)}
         className="flex flex-col items-center gap-12"
       >
-        <h2 className="text-2xl max-w-[300px] leading-tight font-thin text-center">
+        <h2 className="text-2xl max-w-[300px] leading-tight font-normal text-center">
           {t('competencies.title')}
         </h2>
         <div className="flex flex-col items-center gap-8">
@@ -82,8 +82,8 @@ function CompetenciesSectionMobile({
               {...fadeUpProps(reduceMotion, index * 0.1)}
               className="flex size-48 flex-col items-center justify-center rounded-full border-0 bg-[#AB844F]/20 p-6 text-center"
             >
-              <p className="text-3xl font-thin">{index + 1}</p>
-              <p className="text-sm font-thin leading-relaxed">
+              <p className="text-3xl font-normal">{index + 1}</p>
+              <p className="text-sm font-normal leading-relaxed">
                 {t(`competencies.items.${index}`)}
               </p>
             </motion.div>
@@ -179,7 +179,7 @@ function CompetenciesSectionDesktop({ t }: { t: (key: string) => string }) {
             style={{ opacity: titleOpacity, y: titleY }}
             className="absolute inset-0 flex items-center justify-center z-10 px-6 pointer-events-none"
           >
-            <h2 className="text-2xl md:text-4xl lg:text-5xl max-w-[300px] md:max-w-[450px] lg:max-w-[550px] leading-tight font-thin text-center">
+            <h2 className="text-2xl md:text-4xl lg:text-5xl max-w-[300px] md:max-w-[450px] lg:max-w-[550px] leading-tight font-normal text-center">
               {t('competencies.title')}
             </h2>
           </motion.div>
@@ -281,7 +281,7 @@ function CompetencyCircle({
         {/* Number: absolutely centered ON this circle (parent is `relative`). */}
         <motion.p
           style={{ opacity: numberOpacity }}
-          className="absolute inset-0 flex items-center justify-center text-3xl md:text-4xl font-light text-[#4a3520]"
+          className="absolute inset-0 flex items-center justify-center text-3xl md:text-4xl font-normal text-[#4a3520]"
         >
           {index + 1}
         </motion.p>

@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { HiArrowLongRight } from 'react-icons/hi2';
 import CompetenciesSection from './components/competencies-section/competencies-section';
 import Partners from './components/partners';
-import PillarsSection from './components/pillars-section/pillars-section';
+import ResponsibilitiesSection from './components/responsibilities-section/responsibilities-section';
 
 /**
  * About page component (formerly Who We Are)
@@ -91,8 +91,8 @@ export default function WhoWeArePage() {
       </div>
       {/* Competencies Section */}
       <CompetenciesSection t={t} />
-      {/* Pillars Section */}
-      <PillarsSection t={t} />
+      {/* Responsibilities Section */}
+      <ResponsibilitiesSection t={t} />
       <div className="flex flex-col mx-auto max-w-[1200px]">
         {/* Partners Section */}
         <motion.div
