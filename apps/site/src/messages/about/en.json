@@ -24,6 +24,32 @@
         "2": "Positioned at the Frontier of Sustainable Agriculture"
       }
     },
+    "responsibilities": {
+      "title": "Responsibilities",
+      "subtitle": "We work with self-supporting farms that value the Todd team’s ability to affect change in these areas.",
+      "items": {
+        "0": {
+          "heading": "Disciplined Data Selection",
+          "description": "We utilize proprietary analytic frameworks and digital capabilities to understand disease dynamics and insect mitigation holistically, enabling responsible farm management decisions."
+        },
+        "1": {
+          "heading": "Company Philosophy",
+          "description": "We are assembling a firm designed to emulate the consumer bases of our farms, embracing a holistic pace of life that nourishes the natural character of individuals, communities and the earth, in order to take what we believe to be the best path forward."
+        },
+        "2": {
+          "heading": "Farm Integration",
+          "description": "By concentrating on a small group of farms across our categories of management, we strive to support clearly defined goals centered on responsibility, sustainability, and long-term improvement."
+        },
+        "3": {
+          "heading": "Market Development & Consumer Awareness",
+          "description": "We leverage our team’s complementary entrepreneurial experience to explore direct-to-consumer channels, including CSA and other market-entry strategies that strengthen consumer connection and brand awareness."
+        },
+        "4": {
+          "heading": "Regulatory & Policy Engagement",
+          "description": "We actively monitor our farms’ regulatory obligations and play an essential role in the formulation and implementation of policies governing the worldwide agriculture industry through accountability, positions, and leadership."
+        }
+      }
+    },
     "partners": {
       "title": "Our Partners",
       "description": "We’re fortunate to be supported by investors and industry partners who share our vision. Their backing will help us grow our team, scale our firm, and develop the first generation of generative farms."
