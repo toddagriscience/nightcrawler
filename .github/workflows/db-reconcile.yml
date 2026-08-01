@@ -53,7 +53,7 @@ jobs:
       STAGING_DATABASE_PEM_CERT: ${{ secrets.STAGING_DATABASE_PEM_CERT || secrets.DATABASE_PEM_CERT }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6
 
       - name: Install PostgreSQL 18 client
         run: |
