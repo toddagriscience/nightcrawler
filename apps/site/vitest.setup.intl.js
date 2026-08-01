@@ -118,15 +118,22 @@ vitest.mock('./src/i18n/config', () => ({
   })),
 }));
 
-// Mock our environment configuration
-vitest.mock('./src/lib/env', () => ({
-  env: {
-    productionDomain: 'toddagriscience.com',
-    developmentDomain: 'localhost',
-    isDevelopment: true,
-    isProduction: false,
-    defaultLocale: 'en',
-    supportedLocales: ['en', 'es'],
-    baseUrl: 'http://localhost:3000',
-  },
-}));
+// Mock our environment configuration. Only `env` is stubbed: helpers such as
+// `getAuthRedirectBaseUrl` read `process.env` at call time, so tests drive them
+// through the real implementation.
+vitest.mock('./src/lib/env', async (importActual) => {
+  const actual = await importActual();
+
+  return {
+    ...actual,
+    env: {
+      productionDomain: 'toddagriscience.com',
+      developmentDomain: 'localhost',
+      isDevelopment: true,
+      isProduction: false,
+      defaultLocale: 'en',
+      supportedLocales: ['en', 'es'],
+      baseUrl: 'http://localhost:3000',
+    },
+  };
+});

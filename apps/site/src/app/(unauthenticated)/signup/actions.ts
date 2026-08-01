@@ -14,6 +14,7 @@ import {
 } from '@nightcrawler/db/utils/extract-applicant-prefill';
 import { formSubmission } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
+import { getAuthRedirectBaseUrl } from '@/lib/env';
 import { farm, user, standardValues } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import {
@@ -231,11 +232,7 @@ export async function resendApprovedApplicantActivationEmail(input: {
     );
   }
 
-  const baseUrl = (
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    process.env.NEXT_PUBLIC_PRODUCTION_DOMAIN ??
-    'https://toddagriscience.com'
-  ).replace(/\/$/, '');
+  const baseUrl = getAuthRedirectBaseUrl();
 
   const [application] = await db
     .select()
