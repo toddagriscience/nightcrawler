@@ -1,23 +1,29 @@
-name: Prod DB Reconcile (Apply Pending Migrations)
+name: DB Reconcile (Apply Pending Migrations)
 
-# One-off, manually triggered reconciliation for production.
+# Manually triggered, break-glass reconciliation for prod or staging.
 #
-# Background: the release workflow uses `drizzle-kit push`, which crashes on
-# drizzle-kit's interactive enum resolver in CI (no TTY) yet exits 0 -> the
-# "Push to production" step reports success while applying nothing. As a result
-# prod silently drifted behind `main` (frozen at the 1.1.9 schema).
+# Background: the release/main-push workflows used `drizzle-kit push`, which
+# crashes on drizzle-kit's interactive enum resolver in CI (no TTY) yet exits
+# 0 -> the push step reported success while applying nothing, and prod
+# silently drifted behind `main` (frozen at the 1.1.9 schema). Those
+# workflows now run the ledger-based drizzle migrator instead; this workflow
+# exists to bring a drifted database back to a state the migrator understands.
 #
-# This workflow applies the committed migration `.sql` files (0010-0014) that
-# prod is missing, verbatim, in a single all-or-nothing transaction, then
-# rebuilds the drizzle migration ledger so future `drizzle-kit migrate` runs are
-# consistent. It defaults to `verify` (read-only) so you can confirm real prod
-# state before any writes.
-#
-# Targets prod via the PROD_DATABASE_* secrets. For staging, run the manual
-# psql path (see packages/db/drizzle/*.sql) or add a staging-secret variant.
+# It applies the committed migration `.sql` files (0010-0014) the target is
+# missing, verbatim, in a single all-or-nothing transaction, then rebuilds the
+# drizzle migration ledger from meta/_journal.json so future ledger-based
+# migrations run cleanly. It defaults to `verify` (read-only) so you can
+# confirm the real database state before any writes.
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: 'Target database'
+        required: true
+        type: choice
+        options:
+          - staging
+          - prod
       mode:
         description: 'verify = read-only state check; apply = run pending migrations + rebuild ledger'
         required: true
@@ -29,7 +35,7 @@ on:
 
 jobs:
   reconcile:
-    name: Reconcile production schema (${{ inputs.mode }})
+    name: Reconcile ${{ inputs.environment }} schema (${{ inputs.mode }})
     runs-on: ubuntu-latest
     env:
       PROD_DATABASE_HOST: ${{ secrets.PROD_DATABASE_HOST }}
@@ -37,7 +43,14 @@ jobs:
       PROD_DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
       PROD_DATABASE_PASSWORD: ${{ secrets.PROD_DATABASE_PASSWORD }}
       PROD_DATABASE_DATABASE: ${{ secrets.PROD_DATABASE_DATABASE }}
+      STAGING_DATABASE_HOST: ${{ secrets.STAGING_DATABASE_HOST }}
+      STAGING_DATABASE_PORT: ${{ secrets.STAGING_DATABASE_PORT }}
+      STAGING_DATABASE_USER: ${{ secrets.STAGING_DATABASE_USER }}
+      STAGING_DATABASE_PASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+      STAGING_DATABASE_DATABASE: ${{ secrets.STAGING_DATABASE_DATABASE }}
       DATABASE_PEM_CERT: ${{ secrets.DATABASE_PEM_CERT }}
+      # Falls back to the shared cert when no staging-specific secret exists.
+      STAGING_DATABASE_PEM_CERT: ${{ secrets.STAGING_DATABASE_PEM_CERT || secrets.DATABASE_PEM_CERT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -54,25 +67,56 @@ jobs:
           sudo apt-get install -y postgresql-client-18
           /usr/lib/postgresql/18/bin/psql --version
 
-      - name: Write prod CA certificate
+      - name: Select environment and write CA certificate
         run: |
-          printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
-          openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
+          set -euo pipefail
+          case "${{ inputs.environment }}" in
+            prod)
+              {
+                echo "DB_HOST=$PROD_DATABASE_HOST"
+                echo "DB_PORT=$PROD_DATABASE_PORT"
+                echo "DB_USER=$PROD_DATABASE_USER"
+                echo "DB_PASSWORD=$PROD_DATABASE_PASSWORD"
+                echo "DB_DATABASE=$PROD_DATABASE_DATABASE"
+              } >> "$GITHUB_ENV"
+              CA_RAW="$DATABASE_PEM_CERT"
+              ;;
+            staging)
+              {
+                echo "DB_HOST=$STAGING_DATABASE_HOST"
+                echo "DB_PORT=$STAGING_DATABASE_PORT"
+                echo "DB_USER=$STAGING_DATABASE_USER"
+                echo "DB_PASSWORD=$STAGING_DATABASE_PASSWORD"
+                echo "DB_DATABASE=$STAGING_DATABASE_DATABASE"
+              } >> "$GITHUB_ENV"
+              CA_RAW="$STAGING_DATABASE_PEM_CERT"
+              ;;
+            *)
+              echo "::error::Unknown environment '${{ inputs.environment }}'"
+              exit 1
+              ;;
+          esac
+          # Tolerate both secret storage formats: quote-wrapped with escaped
+          # newlines, or a plain multi-line PEM (possibly with CRLF endings).
+          printf '%s\n' "$CA_RAW" \
+            | sed -e '1s/^"//' -e '$s/"$//' -e 's/\\n/\n/g' -e 's/\r$//' \
+            > /tmp/db-ca.pem
+          openssl x509 -in /tmp/db-ca.pem -noout -subject
 
-      - name: Verify current production schema state
+      - name: Verify current schema state
         id: verify
         working-directory: ./packages/db
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
           # sslmode=verify-full also validates the server certificate's hostname
-          # against PROD_DATABASE_HOST (verify-ca only validates the CA chain).
-          # If the provider's certificate cannot match the hostname, downgrading
-          # back to verify-ca requires explicit justification.
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+          # against DB_HOST (verify-ca only validates the CA chain). If the
+          # provider's certificate cannot match the hostname, downgrading back
+          # to verify-ca requires explicit justification.
+          CONN="host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_DATABASE sslmode=verify-full sslrootcert=/tmp/db-ca.pem"
 
           probe() {
-            PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -tAc "$1"
+            PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -tAc "$1"
           }
           has_table()  { probe "select (to_regclass('public.$1') is not null);"; }
           has_enum()   { probe "select exists (select 1 from pg_type t join pg_namespace n on n.oid = t.typnamespace where n.nspname = 'public' and t.typtype = 'e' and t.typname = '$1');"; }
@@ -80,6 +124,29 @@ jobs:
           # Postgres truncates identifiers to 63 bytes, so compare constraint
           # names against left(name, 63) — 0011's reviewed_by FK name is longer.
           has_fk()     { probe "select exists (select 1 from pg_constraint c join pg_namespace n on n.oid = c.connamespace where n.nspname = 'public' and c.contype = 'f' and c.conname = left('$1', 63));"; }
+
+          # Baseline sanity check: knowledge_article predates every migration
+          # this workflow handles. If it is missing we are pointed at a wrong
+          # or empty database and must not proceed (an apply run would rebuild
+          # a ledger full of claims about schema that does not exist).
+           baseline=$(has_table knowledge_article)
+            if [ "$baseline" != "t" ]; then
+              echo "::error::Baseline table knowledge_article is missing — wrong or empty database? Refusing to continue."
+              exit 1
+            fi
+
+            # This break-glass workflow only knows how to verify + apply migrations
+            # through 0014 (the probes and the apply FILES list are hardcoded). The
+            # ledger rebuild, by contrast, writes a row for EVERY journal entry — so
+            # if a newer migration has landed, rebuilding would stamp it "applied"
+            # without this workflow ever verifying it, reintroducing the exact
+            # silent drift this workflow exists to fix. Refuse until it is extended.
+            KNOWN_HEAD="0014_general-imp"
+            JOURNAL_HEAD=$(jq -r '.entries[-1].tag' drizzle/meta/_journal.json)
+            if [ "$JOURNAL_HEAD" != "$KNOWN_HEAD" ]; then
+              echo "::error::Journal head '$JOURNAL_HEAD' is beyond '$KNOWN_HEAD' — extend the verify/apply steps in this workflow before reconciling."
+              exit 1
+            fi
 
           # classify <migration> <object=t|f>... -> sets $state to "applied"
           # (all objects present) or "missing" (none present). A partial mix
@@ -97,7 +164,7 @@ jobs:
             elif [ ${#present[@]} -eq 0 ]; then
               state="missing"
             else
-              echo "::error::Migration $mig is PARTIALLY applied — present: ${present[*]}; missing: ${missing[*]}. Refusing to skip or re-apply; repair production manually."
+              echo "::error::Migration $mig is PARTIALLY applied — present: ${present[*]}; missing: ${missing[*]}. Refusing to skip or re-apply; repair the database manually."
               exit 1
             fi
             echo "$mig: $state (present: ${present[*]:-none}; missing: ${missing[*]:-none})"
@@ -180,7 +247,7 @@ jobs:
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+          CONN="host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_DATABASE sslmode=verify-full sslrootcert=/tmp/db-ca.pem"
 
           declare -a FILES=()
           [ "${{ steps.verify.outputs.state_0010 }}" = "applied" ] || FILES+=("drizzle/0010_add-farm-advisor-profile-notes.sql")
@@ -215,14 +282,14 @@ jobs:
             declare -a ARGS=()
             for f in "${FILES[@]}"; do ARGS+=(-f "$f"); done
 
-            PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" \
+            PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" \
               --single-transaction \
               -v ON_ERROR_STOP=1 \
               "${ARGS[@]}"
           fi
 
           echo "Re-verifying post-apply state..."
-          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+          PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
             select
               exists (select 1 from information_schema.columns
                       where table_name='farm' and column_name='advisor_profile_notes') as has_0010,
@@ -238,11 +305,12 @@ jobs:
         run: |
           set -euo pipefail
           PSQL=/usr/lib/postgresql/18/bin/psql
-          CONN="host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem"
+          CONN="host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_DATABASE sslmode=verify-full sslrootcert=/tmp/db-ca.pem"
 
-          # Only rebuild the ledger once the schema is fully at 0014, otherwise
-          # the ledger would claim migrations that are not actually applied.
-          all_present=$(PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -tAc "
+          # Only rebuild the ledger once the schema is fully at the journal
+          # head, otherwise the ledger would claim migrations that are not
+          # actually applied.
+          all_present=$(PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" -tAc "
             select
               (exists (select 1 from information_schema.columns
                        where table_name='farm' and column_name='advisor_profile_notes'))
@@ -253,41 +321,46 @@ jobs:
           ")
 
           if [ "$all_present" != "t" ]; then
-            echo "::error::Schema is not fully at 0014 — refusing to rebuild the ledger. Inspect production manually."
+            echo "::error::Schema is not fully at the journal head — refusing to rebuild the ledger. Inspect the database manually."
             exit 1
           fi
 
           # Rewrite drizzle.__drizzle_migrations to match the committed journal
-          # exactly: (hash = sha256 of each drizzle/*.sql, created_at = the
-          # entry's `when` from meta/_journal.json). After this, drizzle-kit
-          # migrate sees max(created_at) = 0014 and runs nothing.
-          echo "Rebuilding drizzle migration ledger..."
-          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" --single-transaction -v ON_ERROR_STOP=1 -c "
+          # exactly: (hash = sha256 of each drizzle/<tag>.sql, created_at = the
+          # entry's `when` from meta/_journal.json). Generated at runtime so new
+          # migrations never require editing this workflow. The drizzle migrator
+          # gates on created_at (`when > max(created_at)`), so after this it
+          # sees the journal head and runs nothing.
+           echo "Rebuilding drizzle migration ledger from meta/_journal.json..."
+            # Loop in the MAIN shell (process substitution, not a pipe) so an
+            # `exit 1` here actually aborts the step, and check every file + hash so
+            # a missing or unreadable .sql can never silently write an empty hash.
+            declare -a ROWS=()
+            while IFS=$'\t' read -r tag when; do
+              sql="drizzle/${tag}.sql"
+              [ -f "$sql" ] || { echo "::error::Journal references $sql but the file is missing — refusing to rebuild the ledger."; exit 1; }
+              hash=$(sha256sum "$sql" | cut -d' ' -f1)
+              [ -n "$hash" ] || { echo "::error::Failed to hash $sql — refusing to write an empty ledger hash."; exit 1; }
+              ROWS+=("('$hash',$when)")
+            done < <(jq -r '.entries[] | [.tag, (.when|tostring)] | @tsv' drizzle/meta/_journal.json)
+            if [ ${#ROWS[@]} -eq 0 ]; then
+              echo "::error::No journal entries found — refusing to truncate the ledger."
+              exit 1
+            fi
+            VALUES=$(IFS=,; echo "${ROWS[*]}")
+
+          PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" --single-transaction -v ON_ERROR_STOP=1 -c "
             create schema if not exists drizzle;
             create table if not exists drizzle.__drizzle_migrations (
               id serial primary key, hash text not null, created_at bigint
             );
             truncate drizzle.__drizzle_migrations restart identity;
             insert into drizzle.__drizzle_migrations (hash, created_at) values
-              ('975001fad5a72b6f1f43c5c8395d6f59eec01ddf936af94a3369055b6320b5d2',1772158369112),
-              ('5122ab423af507bc15381676e426fff720cc84c4b6aab3b2d75df2ec3d92fdd4',1772419343026),
-              ('d95f61fb84052d7b5f2b7ba4d2445f968736f00c674b4b261ad7443122565fd9',1772647120414),
-              ('4c718e922e8a98fd4fbc547601573e8fecbdeae287e9708ccc149c9fa3ccc9b6',1772652027714),
-              ('6a3bfa23e83ab8c44317e24c9c2fb10530a4d7aca63d39b813d00af21cc384d8',1773609705183),
-              ('8c22c468dd0133a85aae187903de71ff6807c9ef2b33eaedd13cc7c9ac9b9407',1773866423805),
-              ('a992c16783efa7f20cfe480a2e572cf2f8a4715be02a4173cea17d7208fd1285',1774049121695),
-              ('89687c693499aef5c4bd06d901895ce4293f68efdb3d54b517540ae5d9a1ac4d',1774461530048),
-              ('5ecafcb2c53b16f46904b00a2f628a45beedfee3e4dd72ef28252742972beab2',1774461530049),
-              ('6459ea25b35f78653612aa2980f13ea1c56104f5beab74fe041cfadac54e534a',1774461530050),
-              ('6d5f2f2b26c96897ac38772ffae5c509cc356b3b384d81fd6c79aa95860540b4',1774461530051),
-              ('ba2c3a746915605d227f9d3c47308ad6138b84258d3f18d22549366f557a3505',1774461530052),
-              ('14c40e9e42e755c184009241686870f94232b75b7440c247243219ca6c030c79',1781913600000),
-              ('22d21f78f5484b45a788cd34115676ef41367742ccb27105b8a1bcde776b8251',1782000000000),
-              ('39e249b43e5ef87a3a5056d066f1cb0ab9259cec8fa7f055691de83fb74cad8e',1782885722357);
+            $VALUES;
           "
 
           echo "Ledger rebuilt. Current ledger:"
-          PGPASSWORD="$PROD_DATABASE_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
+          PGPASSWORD="$DB_PASSWORD" $PSQL "$CONN" -v ON_ERROR_STOP=1 -c "
             select id, left(hash, 12) as hash12, created_at
             from drizzle.__drizzle_migrations order by id;
           "

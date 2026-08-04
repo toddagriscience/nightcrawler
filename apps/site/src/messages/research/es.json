@@ -1,14 +1,19 @@
 {
   "whatWeDo": {
-    "title": "Apoyamos las granjas más importantes del mundo",
-    "subtitle": "Nuestra investigación revela insights que otros no han imaginado y nos movemos rápidamente para regenerar el suelo. Trabajamos con granjas que han demostrado un compromiso con prácticas de gestión ecológica y socialmente responsables y han forjado conexiones emocionales profundas con sus consumidores objetivo.",
+    "eyebrow": "Investigación",
+    "title": "Un enfoque holístico de la agricultura",
+    "subtitle": "Creemos que la agricultura sostenible es la base de un planeta sano y comunidades prósperas.",
+    "heroImageAlt": "Pradera",
+    "cta": {
+      "researchIndex": "Ver índice de investigación"
+    },
     "approach": {
       "title": "Nuestra Aproximación",
       "description": "Nos centramos en equilibrar y remineralizar el suelo. Nos proponemos guiar a tu granja en una trayectoria más reflexionada que la que se podría lograr sola."
     },
     "strategy": {
       "title": "Cinco Principios. Una Estrategia.",
-      "description": "Nuestros principios guían cómo creamos valor para nuestros clientes. Todd proporciona un ecosistema holístico desde la gestión del suelo hasta la marketing de productos. Todo para ayudar a las granjas a mejorar la salud del suelo y a implementar soluciones rápidamente."
+      "description": "Nuestros principios guían cómo creamos valor para nuestros clientes. Todd proporciona un ecosistema holístico desde la gestión del suelo hasta el marketing de productos. Todo para ayudar a las granjas a mejorar la salud del suelo y a implementar soluciones rápidamente."
     },
     "principlesAndSustainability": {
       "principles": {
@@ -31,7 +36,7 @@
         },
         "5": {
           "title": "Entrada al Mercado y Concienciación del Consumidor",
-          "description": "Utilizar el equipo de Todd como empresarios explorando el marketing directo al consumidor y CSA."
+          "description": "Aprovechar la experiencia complementaria de nuestro equipo como emprendedores en el marketing directo al consumidor y CSA."
         }
       },
       "redefiningAgriculture": {

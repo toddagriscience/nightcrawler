@@ -1,31 +1,31 @@
 {
   "accessibility": {
-    "title": "Accessibility",
-    "subtitle": "Website Accessibility Statement",
-    "standards": "We are commmitted to ensuring that guests with disabilities have access to our services and products, including those offered through our website, todd.com and mobile applications. As such, we strive to adhere to the Web Content Accessibility Guidelines 2.0 Levels A and AA, a set of guidelines developed by the World Wide Web Consortium and used to ensure that digital content is accssible to everyone. We also work with advocacy groups, accessibility and usability consultants, and guests to make sure that our website and mobile applications function properly.",
+    "title": "Accesibilidad",
+    "subtitle": "Declaración de accesibilidad del sitio web",
+    "standards": "Estamos comprometidos a garantizar que las personas con discapacidades tengan acceso a nuestros servicios y productos, incluidos los que se ofrecen a través de nuestro sitio web, toddagriscience.com, y nuestras aplicaciones móviles. Por ello, nos esforzamos por cumplir con las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.0, niveles A y AA, un conjunto de pautas desarrolladas por el World Wide Web Consortium para garantizar que el contenido digital sea accesible para todos. También trabajamos con grupos de defensa, consultores de accesibilidad y usabilidad, y usuarios para asegurar que nuestro sitio web y nuestras aplicaciones móviles funcionen correctamente.",
     "improvements": {
-      "description": "We are always learning and looking for ways to improve accessibility. Here are some steps we’ve taken to improve access to out website mobile applications.",
+      "description": "Siempre estamos aprendiendo y buscando formas de mejorar la accesibilidad. Estos son algunos de los pasos que hemos tomado para mejorar el acceso a nuestro sitio web y aplicaciones móviles.",
       "textEquivalents": {
-        "title": "Text Equivalents",
-        "content": "We provide alternative text details for appropriate images and other non-text elements."
+        "title": "Equivalentes de texto",
+        "content": "Proporcionamos texto alternativo para las imágenes y otros elementos no textuales cuando corresponde."
       },
       "keyboardAccess": {
-        "title": "Full Keyboard Access",
-        "content": "Our website is built so that it can be accessed using a keyboard."
+        "title": "Acceso completo por teclado",
+        "content": "Nuestro sitio web está construido para que pueda utilizarse con un teclado."
       },
       "siteConsistency": {
-        "title": "Site Consistency",
-        "content": "We are consistent in the way we build our website and mobile applications so that they function the same way every time you interact with them."
+        "title": "Consistencia del sitio",
+        "content": "Somos consistentes en la forma en que construimos nuestro sitio web y nuestras aplicaciones móviles, de modo que funcionen de la misma manera cada vez que interactúas con ellos."
       },
       "siteStructure": {
-        "title": "Site Structure",
-        "content": "We use appropriate headings, lists, paragraphs, style sheets and other formatting features so that guests can easily use the website with assistive technology."
+        "title": "Estructura del sitio",
+        "content": "Utilizamos encabezados, listas, párrafos, hojas de estilo y otras funciones de formato apropiadas para que los usuarios puedan utilizar fácilmente el sitio web con tecnología de asistencia."
       },
       "links": {
-        "title": "Links",
-        "content": "Many links have title attributes which describes the link in greater detail, unless the text of the link already fully describes the target."
+        "title": "Enlaces",
+        "content": "Muchos enlaces tienen atributos de título que describen el enlace con mayor detalle, a menos que el texto del enlace ya describa completamente su destino."
       }
     },
-    "cta": "Please contact us if you have any feedback or questions regarding our website or mobile application."
+    "cta": "Contáctanos si tienes comentarios o preguntas sobre nuestro sitio web o nuestra aplicación móvil."
   }
 }

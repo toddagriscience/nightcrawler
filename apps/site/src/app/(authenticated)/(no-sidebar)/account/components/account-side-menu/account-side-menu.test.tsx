@@ -40,6 +40,15 @@ describe('AccountSideMenu', () => {
     );
   });
 
+  it('renders a help link pointing to the support page', () => {
+    render(<AccountSideMenu />);
+
+    expect(screen.getByRole('link', { name: 'Help' })).toHaveAttribute(
+      'href',
+      '/contact'
+    );
+  });
+
   it('calls logout flow when clicking log out', async () => {
     const user = userEvent.setup();
     render(<AccountSideMenu />);

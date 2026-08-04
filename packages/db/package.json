@@ -26,6 +26,7 @@
     "db:local:down": "docker compose down",
     "db:local:wipe": "tsx scripts/wipe-local-db.ts",
     "db:local:migrate": "tsx scripts/migrate-local-db.ts",
+    "db:migrate:remote": "tsx scripts/migrate-remote-db.ts",
     "db:local:seed": "tsx scripts/seed-local-db.ts",
     "db:create-admin-farm-user": "tsx scripts/create-admin-farm-user.ts",
     "db:seed-knowledge": "tsx scripts/seed-knowledge.ts",
@@ -40,6 +41,7 @@
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.2",
     "drizzle-seed": "^0.3.1",
+    "google-auth-library": "^10.9.0",
     "openai": "^6.25.0",
     "pg": "^8.19.0",
     "react-grid-layout": "^2.2.2"

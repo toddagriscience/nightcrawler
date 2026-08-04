@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createClient as createSupabaseAdminClient } from '@supabase/supabase-js';
+import { getAuthRedirectBaseUrl } from '@/lib/env';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { createClient as createServerClient } from './supabase/server';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
@@ -59,9 +60,7 @@ export async function signUpUser(
   name: string
 ): Promise<object | Error> {
   const supabase = await createServerClient();
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, '') ??
-    'https://toddagriscience.com';
+  const baseUrl = getAuthRedirectBaseUrl();
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -95,7 +94,7 @@ export async function inviteUser(
 ): Promise<object | Error> {
   const supabase = await createServerClient(process.env.SUPABASE_SECRET_KEY);
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
+    redirectTo: `${getAuthRedirectBaseUrl()}/auth/accept-invite`,
     data: {
       // This is for the email template
       first_name: name,
@@ -275,7 +274,7 @@ export async function resendEmailInvite(
     type: 'signup',
     email,
     options: {
-      emailRedirectTo: process.env.NEXT_PUBLIC_BASE_URL + '/auth/accept-invite',
+      emailRedirectTo: `${getAuthRedirectBaseUrl()}/auth/accept-invite`,
     },
   });
 

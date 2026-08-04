@@ -22,9 +22,7 @@ export default async function ArticleIndexPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { slug, locale } = await params;
-  const article = await getArticleBySlug(slug, {
-    next: { revalidate: 60 * 60 },
-  });
+  const article = await getArticleBySlug(slug);
 
   if (article == null) {
     notFound();

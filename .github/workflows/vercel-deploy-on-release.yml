@@ -5,6 +5,9 @@ env:
 
 on:
   workflow_run:
+    # Matched by DISPLAY NAME against release-database-compatibility-check.yml.
+    # If that workflow's `name:` changes without updating this list, prod
+    # deploys silently stop firing.
     workflows:
       - Release Database Compatibility Check And Push
     types:

@@ -3,7 +3,7 @@
 'use client';
 
 import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
-import HeaderImg from '@/components/common/header-img/header-img';
+import PageHeader from '@/components/common/page-header/page-header';
 import {
   Card,
   CardContent,
@@ -75,34 +75,35 @@ export default function WhatWeDoPage() {
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="px-6 pt-16 md:px-10 md:pt-20 lg:pt-24"
         >
-          <HeaderImg
-            src="/marketing/meadow-4.webp"
-            alt="Meadow"
-            overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
-          />
+          <section className="mx-auto flex max-w-[1100px] flex-col items-center">
+            <PageHeader
+              caption={t('eyebrow')}
+              title={t('title')}
+              subtitle={t('subtitle')}
+              button={{
+                text: t('cta.researchIndex'),
+                href: '/research/index',
+              }}
+            />
+            <div className="mt-16 w-full overflow-hidden rounded-sm bg-[#d9d9d9] md:mt-20">
+              <Image
+                src="/marketing/meadow-4.webp"
+                alt={t('heroImageAlt')}
+                width={1000}
+                height={560}
+                priority
+                sizes="(min-width: 1280px) 1000px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 48px)"
+                className="h-[280px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[520px]"
+              />
+            </div>
+          </section>
         </motion.div>
         <main className="flex flex-col mx-auto max-w-[1200px]">
-          {/* Hero Text Section */}
-          <motion.div
-            className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
-            initial={{ opacity: 0.5, y: 34 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.3, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.3 }}
-          >
-            <div className="flex mb-10 flex-col max-w-[800px]">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
-                {t('title')}
-              </h1>
-              <p className="text-sm md:text-normal lg:text-base leading-relaxed font-light max-w-[770px]">
-                {t('subtitle')}
-              </p>
-            </div>
-          </motion.div>
           {/* Our Approach Section */}
 
-          <div className="w-full mb-12 flex flex-col h-fit px-12 md:px-20 lg:px-26 py-8 md:py-10">
+          <div className="w-full mb-12 flex flex-col h-fit px-12 md:px-20 lg:px-26 pt-20 pb-8 md:pt-24 md:pb-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-0 lg:gap-16 max-w-[1100px]">
               <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin md:basis-1/3">
                 {t('approach.title')}

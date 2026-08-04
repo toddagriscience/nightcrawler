@@ -1,14 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-const legalItems = [
-  'Todd App Use Standards',
-  'Todd Business Continuity Plan Summary',
-  'Todd Platform Advisory Agreement',
-  'Todd Platform Disclosure',
-  'Todd Privacy Policy',
-  'Todd Terms of Use',
-  'Todd Third-Party Business Conduct Policy',
-  'Todd User Account Agreement',
+import { Link } from '@/i18n/config';
+
+const legalItems: { label: string; href?: string }[] = [
+  { label: 'Todd App Use Standards' },
+  { label: 'Todd Business Continuity Plan Summary' },
+  { label: 'Todd Platform Advisory Agreement' },
+  { label: 'Todd Platform Disclosure' },
+  { label: 'Todd Privacy Policy', href: '/privacy' },
+  { label: 'Todd Terms of Use', href: '/terms' },
+  { label: 'Todd Third-Party Business Conduct Policy' },
+  { label: 'Todd User Account Agreement' },
 ];
 
 /**
@@ -28,7 +30,18 @@ export default function LegalPage() {
 
           <ul className="lg:ml-[170px] max-w-[385px] flex flex-col gap-[15px] text-[16px] font-normal leading-[18px]">
             {legalItems.map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item.label}>
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="link text-underline-left text-underline-left-black"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  item.label
+                )}
+              </li>
             ))}
           </ul>
         </div>

@@ -21,9 +21,7 @@ export default async function LegacyNewsArticleRedirect({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const article = await getArticleBySlug(slug, {
-    next: { revalidate: 60 * 60 },
-  });
+  const article = await getArticleBySlug(slug);
   if (article === undefined || article === null) {
     notFound();
     return;
