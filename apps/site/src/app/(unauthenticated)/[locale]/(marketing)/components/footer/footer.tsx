@@ -144,22 +144,27 @@ const Footer = () => {
               {val.icon}
             </Link>
           ))}
-          <div className="relative inline-flex">
+          <div className="relative inline-flex items-center gap-3 md:gap-6">
             <button
               type="button"
               aria-haspopup="menu"
               aria-expanded={langOpen}
               onClick={() => setLangOpen(!langOpen)}
-              className="flex flex-row items-center gap-3 text-[15px] font-normal cursor-pointer focus:outline-none focus:ring-0 md:gap-6"
+              className="text-[15px] font-normal cursor-pointer focus:outline-none focus:ring-0"
               aria-label="Change language"
             >
-              <span className="text-[15px] font-normal">
-                {currentLanguageLabel}
-              </span>
-              <span className="text-[15px] font-normal text-foreground/50">
-                {t('location')}
-              </span>
+              {currentLanguageLabel}
             </button>
+
+            {/*
+              Static label, not a control. The site serves a single region and
+              has no region state, detection or switching, so there is nothing
+              to pick yet. Kept visible as a placeholder for the planned
+              multi-country support.
+            */}
+            <span className="text-[15px] font-normal text-foreground/50">
+              {t('location')}
+            </span>
 
             {langOpen && (
               <>
