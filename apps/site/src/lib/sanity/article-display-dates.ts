@@ -12,8 +12,13 @@ export const ARTICLE_DISPLAY_DATE_LOCALE = 'en-GB';
  *
  * English stays on `en-GB` so the day-first ordering already shipped on article surfaces
  * ("1 June 2026") is unchanged.
+ *
+ * Values are `string | undefined` on purpose: the lookup key is a raw `[locale]` route segment,
+ * which can be any string a visitor types. `noUncheckedIndexedAccess` is off in this project, so
+ * spelling the absence out here is what makes the fallback in
+ * {@link resolveArticleDisplayDateLocale} type-checked rather than merely correct at runtime.
  */
-const ARTICLE_DISPLAY_DATE_LOCALES: Record<string, string> = {
+const ARTICLE_DISPLAY_DATE_LOCALES: Record<string, string | undefined> = {
   en: 'en-GB',
   es: 'es-ES',
 };
