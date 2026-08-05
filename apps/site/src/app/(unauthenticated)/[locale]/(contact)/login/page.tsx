@@ -116,7 +116,7 @@ export default function Login() {
                         id="password"
                         data-testid="password"
                         type={showPassword ? 'text' : 'password'}
-                        className="border-1 border-[#848484]/80 pr-10 focus:ring-0!"
+                        className="hide-native-password-reveal border-1 border-[#848484]/80 pr-10 focus:ring-0!"
                         required
                         {...register('password')}
                       />
@@ -127,7 +127,6 @@ export default function Login() {
                         aria-label={
                           showPassword ? 'Hide password' : 'Show password'
                         }
-                        tabIndex={-1}
                       >
                         {showPassword ? (
                           <BiSolidHide className="size-5" aria-hidden />
