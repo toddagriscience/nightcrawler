@@ -45,9 +45,12 @@ export async function submitPublicInquiry(
     await submitContactToSheets(formData);
     return { data: null };
   } catch (err) {
+    // Log the full error server-side for diagnosis, but never forward the raw
+    // message to the client — it can expose internal details (upstream HTTP
+    // status, missing config, stack text). Return a safe, generic message.
     logger.error('Public inquiry submission error:', err);
     throwActionError(
-      err instanceof Error ? err.message : 'An unknown error occurred.'
+      'We could not submit your inquiry right now. Please try again later.'
     );
   }
 }
