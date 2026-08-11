@@ -65,7 +65,8 @@ export default async function BrandPage() {
   const t = await getTranslations('brand');
   const messages = await getMessages();
   const intro = messages.brand?.sectionContent?.intro as
-    { title?: string; text?: Record<string, string> } | undefined;
+    | { title?: string; text?: Record<string, string> }
+    | undefined;
   const logo = messages.brand?.sectionContent?.logo as
     | {
         title?: string;
@@ -76,17 +77,23 @@ export default async function BrandPage() {
     | undefined;
   const brandPartnerships = messages.brand?.sectionContent
     ?.brandPartnerships as
-    { title?: string; text?: Record<string, string> } | undefined;
+    | { title?: string; text?: Record<string, string> }
+    | undefined;
   const pressReleases = messages.brand?.sectionContent?.pressReleases as
-    { title?: string; text?: Record<string, string> } | undefined;
+    | { title?: string; text?: Record<string, string> }
+    | undefined;
   const usageTerms = messages.brand?.sectionContent?.usageTerms as
-    { title?: string; text?: Record<string, string> } | undefined;
+    | { title?: string; text?: Record<string, string> }
+    | undefined;
   const wordmarkDosAndDonts = messages.brand?.wordmarkDosAndDonts as
-    { subtitle?: string; caption?: Record<string, string> } | undefined;
+    | { subtitle?: string; caption?: Record<string, string> }
+    | undefined;
   const partnershipDosAndDonts = messages.brand?.partnershipDosAndDonts as
-    { subtitle?: string; caption?: Record<string, string> } | undefined;
+    | { subtitle?: string; caption?: Record<string, string> }
+    | undefined;
   const languageDosAndDonts = messages.brand?.languageDosAndDonts as
-    { subtitle?: string; text?: string } | undefined;
+    | { subtitle?: string; text?: string }
+    | undefined;
   const howToUseWordmark = messages.brand?.howToUseWordmark as
     | {
         title?: string;

@@ -1,0 +1,29 @@
+{
+  "contactPage": {
+    "title": "Contacto",
+    "hero": {
+      "title": "¿Necesitas Ayuda?",
+      "subtitle": "Estamos aquí para ayudarte con cualquier pregunta sobre Todd o Iris."
+    },
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "forgotEmail": "Último correo electrónico conocido",
+      "message": "Mensaje"
+    },
+    "placeholders": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "forgotEmail": "Último correo electrónico conocido",
+      "message": "¿En qué podemos ayudarte?"
+    },
+    "buttons": {
+      "submit": "Enviar"
+    },
+    "success": {
+      "title": "Mensaje Enviado",
+      "subtitle": "Gracias por contactarnos. Te responderemos pronto.",
+      "cta": "Inicio"
+    }
+  }
+}

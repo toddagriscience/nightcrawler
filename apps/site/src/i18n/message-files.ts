@@ -7,6 +7,7 @@
 export const messageFiles = [
   'brand',
   'common',
+  'contact',
   'header',
   'footer',
   'homepage',

@@ -17,9 +17,7 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
-export async function getAccountShellData(): Promise<{
-  farmName: string;
-}> {
+export async function getAccountShellData(): Promise<{ farmName: string }> {
   const currentUser = await getAuthenticatedInfo();
 
   const [farmRecord] = await db
