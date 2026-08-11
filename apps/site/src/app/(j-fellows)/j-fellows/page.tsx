@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import Image from 'next/image';
+import ToddWordmark from '@public/wordmark.svg';
 
 /**
  * Grotesque stack rather than Neue Haas Unica: the page is carried entirely by
@@ -42,18 +43,37 @@ export default function JFellowsPage() {
       style={{ fontFamily: DISPLAY_STACK }}
       className="flex min-h-screen flex-col bg-white px-7 py-9 text-[#111111] sm:px-12 sm:py-12 lg:px-[7.5%] lg:py-[4.5%]"
     >
-      <header className="flex items-center gap-2.5">
-        <Image
-          src="/j-fellows/j-mark.png"
-          alt=""
-          width={340}
-          height={508}
-          priority
-          className="h-[22px] w-auto sm:h-[26px]"
-        />
-        <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
-          J Fellows
-        </span>
+      <header className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-4">
+        <div className="flex items-center gap-2.5">
+          <Image
+            src="/j-fellows/j-mark.png"
+            alt=""
+            width={340}
+            height={508}
+            priority
+            className="h-[22px] w-auto sm:h-[26px]"
+          />
+          <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
+            J Fellows
+          </span>
+        </div>
+
+        <span aria-hidden="true" className="h-[17px] w-px bg-[#d0d0d0]" />
+
+        <div className="flex items-center gap-2">
+          {/* The logotype spells "Todd", so it carries that half of the name
+              and the text picks up where it leaves off. */}
+          <Image
+            src={ToddWordmark}
+            alt="Todd"
+            className="h-[13px] w-auto"
+            width={76}
+            height={25}
+          />
+          <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
+            Founder Program
+          </span>
+        </div>
       </header>
 
       <div className="flex flex-1 items-center py-10 sm:py-14">

@@ -38,6 +38,14 @@ describe('JFellowsPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('locks the J Fellows wordmark up with the Todd Founder Program', () => {
+    render(<JFellowsPage />);
+    // The logotype spells "Todd", so between the two the lockup reads
+    // "Todd Founder Program" to a screen reader as well as on screen.
+    expect(screen.getByAltText('Todd')).toBeInTheDocument();
+    expect(screen.getByText('Founder Program')).toBeInTheDocument();
+  });
+
   it('names the collaboration with the Todd Founder Program', () => {
     render(<JFellowsPage />);
     expect(
