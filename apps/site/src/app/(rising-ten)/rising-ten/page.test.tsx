@@ -45,21 +45,26 @@ describe('RisingTenPage', () => {
     expect(screen.queryByText(/todd finds/i)).not.toBeInTheDocument();
   });
 
-  it('locks the Rising Ten wordmark up with the Todd Founder Program', () => {
+  it('locks the mark up with the Todd Founder Program', () => {
     render(<RisingTenPage />);
     // The logotype spells "Todd", so between the two the lockup reads
     // "Todd Founder Program" to a screen reader as well as on screen.
-    expect(screen.getByText('Rising Ten')).toBeInTheDocument();
+    expect(screen.getByAltText('Rising Ten')).toBeInTheDocument();
     expect(screen.getByAltText('Todd')).toBeInTheDocument();
     expect(screen.getByText('Founder Program')).toBeInTheDocument();
   });
 
-  it('names the collaboration with the Todd Founder Program', () => {
+  it('leaves the mark unnamed on screen', () => {
+    // Only Todd's half of the lockup is spelled out. The mark is left for the
+    // reader to wonder about, so the name must not appear as visible text.
+    const { container } = render(<RisingTenPage />);
+    expect(container.textContent).not.toMatch(/rising ten/i);
+  });
+
+  it('credits the collaboration without naming itself', () => {
     render(<RisingTenPage />);
     expect(
-      screen.getByText(
-        /a collaboration between rising ten and the todd founder/i
-      )
+      screen.getByText(/in collaboration with the todd founder program/i)
     ).toBeInTheDocument();
   });
 

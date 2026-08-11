@@ -47,9 +47,17 @@ export default function RisingTenPage() {
       className="flex min-h-screen flex-col bg-white px-7 py-9 text-[#111111] sm:px-12 sm:py-12 lg:px-[7.5%] lg:py-[4.5%]"
     >
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-4">
-        <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
-          Rising Ten
-        </span>
+        {/* The mark stands unnamed on purpose — an unexplained letter beside a
+            real program is the invitation. Its alt text carries the name for
+            assistive tech, which cannot read a picture the way an eye can. */}
+        <Image
+          src="/rising-ten/j-mark.png"
+          alt="Rising Ten"
+          width={340}
+          height={508}
+          priority
+          className="h-[26px] w-auto sm:h-[30px]"
+        />
 
         <span aria-hidden="true" className="h-[17px] w-px bg-[#d0d0d0]" />
 
@@ -85,7 +93,9 @@ export default function RisingTenPage() {
       </div>
 
       <footer className="space-y-1.5 text-[15px] text-[#9a9a9a] sm:text-[17px]">
-        <p>A collaboration between Rising Ten and the Todd Founder Program.</p>
+        {/* Unnamed here too: naming it in the footer would give away what the
+            mark deliberately withholds two inches above. */}
+        <p>In collaboration with the Todd Founder Program.</p>
         <a
           href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`}
           className="inline-block transition-colors hover:text-[#111111] focus-visible:rounded-xs focus-visible:text-[#111111] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#111111]"
