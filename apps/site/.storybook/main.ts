@@ -1,4 +1,4 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite';
+import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -13,7 +13,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
   ],
   framework: {
-    name: '@storybook/nextjs-vite',
+    name: '@storybook/react-vite',
     options: {},
   },
   docs: {
@@ -33,16 +33,17 @@ const config: StorybookConfig = {
     // Disable Vite's copy so only the staticDirs copy runs.
     config.publicDir = false;
     // Add support for local fonts and path aliases matching tsconfig
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@/lib': path.resolve(rootDir, 'src/lib'),
-        '@/components': path.resolve(rootDir, 'src/components'),
-        '@/svgs': path.resolve(rootDir, 'src/svgs'),
-        '@/storybook': path.resolve(rootDir, '.storybook'),
-        '@public': path.resolve(rootDir, 'public'),
-      };
-    }
+    config.resolve ??= {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(rootDir, 'src'),
+      '@/storybook': path.resolve(rootDir, '.storybook'),
+      '@public': path.resolve(rootDir, 'public'),
+      'next/font/local': path.resolve(
+        rootDir,
+        '.storybook/mocks/next-font-local.ts',
+      ),
+    };
     return config;
   },
 };

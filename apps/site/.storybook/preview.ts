@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/nextjs-vite';
+import type { Preview } from '@storybook/nextjs';
 import { withFonts } from './decorators/withFonts';
 import { withStorybookProvider } from './decorators/withStorybookProvider';
 import '../src/app/globals.css';
