@@ -18,6 +18,7 @@ import {
   user,
   widget,
 } from '../src/schema';
+import { isLocalDatabaseUrl, remoteDbSslConfig } from '../src/utils/db-ssl';
 
 const DEFAULT_SEED_ADMIN_EMAIL = 'example@testmail.com';
 
@@ -80,13 +81,13 @@ const seededEmail = email;
 
 const pool = new Pool({
   connectionString: localDatabaseUrl,
-  ssl: isLocalDatabaseConfigured
+  // Plaintext only for a database on this machine; anything else must verify.
+  // Checked against the resolved URL rather than `isLocalDatabaseConfigured`,
+  // which is only true of LOCAL_DATABASE_* being *set* — those vars can name a
+  // remote host, and that host must not get an unverified connection.
+  ssl: isLocalDatabaseUrl(localDatabaseUrl)
     ? false
-    : !process.env.NODE_TLS_REJECT_UNAUTHORIZED
-      ? {
-          ca: process.env.DATABASE_PEM_CERT!,
-        }
-      : false,
+    : remoteDbSslConfig(process.env.DATABASE_PEM_CERT),
 });
 
 const db = drizzle(pool, { casing: 'snake_case' });
