@@ -1,10 +1,15 @@
-import type { Preview } from '@storybook/nextjs';
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import type { Preview } from '@storybook/react-vite';
 import { withFonts } from './decorators/withFonts';
+import { withNextNavigation } from './decorators/withNextNavigation';
 import { withStorybookProvider } from './decorators/withStorybookProvider';
 import '../src/app/globals.css';
 
 const preview: Preview = {
-  decorators: [withStorybookProvider, withFonts],
+  // withNextNavigation renders above the story, so the next/navigation mock
+  // holds this story's route by the time a component reads it.
+  decorators: [withNextNavigation, withStorybookProvider, withFonts],
   globalTypes: {
     locale: {
       name: 'Locale',
@@ -16,7 +21,6 @@ const preview: Preview = {
           { value: 'en', title: '🇺🇸 English' },
           { value: 'es', title: '🇪🇸 Español' },
         ],
-        showName: true,
       },
     },
   },
