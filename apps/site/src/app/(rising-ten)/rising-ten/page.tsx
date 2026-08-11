@@ -15,27 +15,30 @@ const DISPLAY_STACK =
 const CONTACT_EMAIL = 'cjxsez@gmail.com';
 
 /** Prefilled subject, so cohort-one mail sorts itself in the inbox. */
-const CONTACT_SUBJECT = 'J Fellows — cohort one';
+const CONTACT_SUBJECT = 'Rising Ten — cohort one';
 
 /**
  * The statement, in reading order. The first line becomes the page's `h1`; the
  * rest are paragraphs set at the same size, so the block reads as one argument
  * rather than a heading with supporting copy.
+ *
+ * Nothing here says how anyone is selected. That omission is deliberate: the
+ * way in is the thing worth writing to ask about.
  */
 const STATEMENT = [
   'Every year a handful of teenagers build something real. Then the world tells them to wait their turn.',
   'We do not teach patience. We forge the ones who refuse to wait.',
-  'Ten fellows. Five months hard enough to break the version of you that walked in.',
+  'Ten. Five months hard enough to break the version of you that walked in.',
   'Cohort one is open. It costs nothing, and almost nobody gets in.',
   'Keep your options open, or find out what you are actually made of. Only one of those is on the table.',
 ];
 
 /**
- * The J Fellows statement page at `/j-fellows`.
+ * The Rising Ten statement page at `/rising-ten`.
  *
- * @returns The J Fellows page
+ * @returns The Rising Ten page
  */
-export default function JFellowsPage() {
+export default function RisingTenPage() {
   const [opening, ...rest] = STATEMENT;
 
   return (
@@ -44,19 +47,9 @@ export default function JFellowsPage() {
       className="flex min-h-screen flex-col bg-white px-7 py-9 text-[#111111] sm:px-12 sm:py-12 lg:px-[7.5%] lg:py-[4.5%]"
     >
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-4">
-        <div className="flex items-center gap-2.5">
-          <Image
-            src="/j-fellows/j-mark.png"
-            alt=""
-            width={340}
-            height={508}
-            priority
-            className="h-[22px] w-auto sm:h-[26px]"
-          />
-          <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
-            J Fellows
-          </span>
-        </div>
+        <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
+          Rising Ten
+        </span>
 
         <span aria-hidden="true" className="h-[17px] w-px bg-[#d0d0d0]" />
 
@@ -92,7 +85,7 @@ export default function JFellowsPage() {
       </div>
 
       <footer className="space-y-1.5 text-[15px] text-[#9a9a9a] sm:text-[17px]">
-        <p>A collaboration between J Fellows and the Todd Founder Program.</p>
+        <p>A collaboration between Rising Ten and the Todd Founder Program.</p>
         <a
           href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`}
           className="inline-block transition-colors hover:text-[#111111] focus-visible:rounded-xs focus-visible:text-[#111111] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#111111]"
