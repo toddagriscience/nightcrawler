@@ -1,50 +1,75 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { renderWithNextIntl, screen, waitFor } from '@/test/test-utils';
-import userEvent from '@testing-library/user-event';
+import type { SanityForm } from '@/lib/sanity/form-types';
+import { getFormBySlug } from '@/lib/sanity/forms';
+import { render, screen } from '@testing-library/react';
+import { notFound } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { describe, expect, test, vitest } from 'vitest';
-import { submitPublicInquiry } from './actions';
-import Contact from './page';
+import Contact, { metadata } from './page';
 
-vitest.mock('./actions', () => ({
-  submitPublicInquiry: vitest.fn(),
+vitest.mock('@/lib/sanity/forms', () => ({
+  getFormBySlug: vitest.fn(),
 }));
 
-describe('Contact page', () => {
-  test('renders the contact form', () => {
-    renderWithNextIntl(<Contact />);
+vitest.mock(
+  '@/app/(unauthenticated)/[locale]/(marketing)/forms/[slug]/components/dynamic-form',
+  () => ({
+    DynamicForm: ({ form }: { form: SanityForm }) => (
+      <div data-testid="dynamic-form">{form.title}</div>
+    ),
+  })
+);
 
-    expect(
-      screen.getByRole('heading', { name: 'Need Help?' })
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText('Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
-    expect(screen.getByLabelText('Message')).toBeInTheDocument();
+vitest.mock('next/navigation', () => ({
+  notFound: vitest.fn(),
+}));
+
+/** Published Sanity form returned for the public contact page. */
+const contactForm: SanityForm = {
+  _id: 'contact-form',
+  title: 'Contact our advisory team',
+  slug: { current: 'contact' },
+  workflowType: 'generic',
+  sections: [
+    {
+      title: 'Contact details',
+      fields: [
+        {
+          name: 'workEmail',
+          label: 'Work email',
+          type: 'email',
+          width: 'half',
+          required: true,
+        },
+      ],
+    },
+  ],
+};
+
+describe('Contact page', () => {
+  test('renders the contact Sanity form', async () => {
+    (getFormBySlug as Mock).mockResolvedValue(contactForm);
+
+    render(await Contact());
+
+    expect(getFormBySlug).toHaveBeenCalledWith('contact', {
+      next: { revalidate: 60 * 60 },
+    });
+    expect(screen.getByTestId('dynamic-form')).toHaveTextContent(
+      'Contact our advisory team'
+    );
   });
 
-  test('submits and shows success state', async () => {
-    const user = userEvent.setup();
-    (submitPublicInquiry as Mock).mockResolvedValue({ data: null });
+  test('delegates to notFound when the contact form is missing', async () => {
+    (getFormBySlug as Mock).mockResolvedValue(null);
 
-    renderWithNextIntl(<Contact />);
+    await Contact();
 
-    await user.type(screen.getByLabelText('Name'), 'Jane Doe');
-    await user.type(screen.getByLabelText('Email Address'), 'jane@example.com');
-    await user.type(screen.getByLabelText('Message'), 'Need help!');
+    expect(notFound).toHaveBeenCalled();
+  });
 
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
-
-    await waitFor(() => {
-      expect(submitPublicInquiry).toHaveBeenCalled();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: 'Message Sent' })
-      ).toBeInTheDocument();
-    });
-
-    expect(screen.getByRole('button', { name: 'Home' })).toBeInTheDocument();
+  test('sets contact page metadata', () => {
+    expect(metadata).toEqual({ title: 'Contact' });
   });
 });
