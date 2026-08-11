@@ -29,13 +29,12 @@ export default function PublicInquiryModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const options: PublicInquiryOption[] = [
-    { label: 'Forgot Email', href: '/contact', intent: 'forgot-email' },
+    { label: 'Forgot Email', href: '/contact' },
     {
       label: 'Forgot Password',
       href: '/forgot-password',
-      intent: 'forgot-password',
     },
-    { label: 'Contact Support', href: '/contact', intent: 'contact-support' },
+    { label: 'Contact Support', href: '/contact' },
   ];
 
   return (
@@ -70,10 +69,7 @@ export default function PublicInquiryModal({
             {options.map((option) => (
               <Link
                 key={option.label}
-                href={{
-                  pathname: option.href,
-                  query: { intent: option.intent },
-                }}
+                href={option.href}
                 className="text-foreground focus-visible:outline-primary flex w-full items-center justify-between px-4 py-4 text-left text-base font-normal transition hover:bg-[var(--background-secondary)]/30 hover:transition-all hover:duration-300 hover:ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
               >
                 {option.label}
