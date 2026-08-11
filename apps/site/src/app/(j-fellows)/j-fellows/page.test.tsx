@@ -15,13 +15,12 @@ describe('JFellowsPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('states the shape of the fellowship', () => {
+  it('states the size and the intensity of the fellowship', () => {
     render(<JFellowsPage />);
     expect(screen.getByText(/ten fellows/i)).toBeInTheDocument();
-    expect(screen.getByText(/five more with us in your ear/i)).toBeVisible();
     expect(
-      screen.getByText(/founders, externs, and interns/i)
-    ).toBeInTheDocument();
+      screen.getByText(/five months hard enough to break the version of you/i)
+    ).toBeVisible();
   });
 
   it('announces the first cohort as open, free, and selective', () => {

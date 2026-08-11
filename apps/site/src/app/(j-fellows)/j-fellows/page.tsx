@@ -24,7 +24,7 @@ const CONTACT_SUBJECT = 'J Fellows — cohort one';
 const STATEMENT = [
   'Every year a handful of teenagers build something real. Then the world tells them to wait their turn.',
   'We do not teach patience. Todd finds them. J Fellows forges them.',
-  'Ten fellows. Five months hard enough to break the version of you that walked in, five more with us in your ear every week, then back into Todd as founders, externs, and interns.',
+  'Ten fellows. Five months hard enough to break the version of you that walked in.',
   'Cohort one is open. It costs nothing, and almost nobody gets in.',
   'Keep your options open, or find out what you are actually made of. Only one of those is on the table.',
 ];
