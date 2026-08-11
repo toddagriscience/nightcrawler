@@ -15,7 +15,7 @@ const DISPLAY_STACK =
 const CONTACT_EMAIL = 'cjxsez@gmail.com';
 
 /** Prefilled subject, so cohort-one mail sorts itself in the inbox. */
-const CONTACT_SUBJECT = 'Rising Ten — cohort one';
+const CONTACT_SUBJECT = 'Ten Rising Stars — cohort one';
 
 /**
  * The statement, in reading order. The first line becomes the page's `h1`; the
@@ -34,11 +34,11 @@ const STATEMENT = [
 ];
 
 /**
- * The Rising Ten statement page at `/rising-ten`.
+ * The Ten Rising Stars statement page at `/ten-rising-stars`.
  *
- * @returns The Rising Ten page
+ * @returns The Ten Rising Stars page
  */
-export default function RisingTenPage() {
+export default function TenRisingStarsPage() {
   const [opening, ...rest] = STATEMENT;
 
   return (
@@ -51,8 +51,8 @@ export default function RisingTenPage() {
             real program is the invitation. Its alt text carries the name for
             assistive tech, which cannot read a picture the way an eye can. */}
         <Image
-          src="/rising-ten/j-mark.png"
-          alt="Rising Ten"
+          src="/ten-rising-stars/j-mark.png"
+          alt="Ten Rising Stars"
           width={340}
           height={508}
           priority

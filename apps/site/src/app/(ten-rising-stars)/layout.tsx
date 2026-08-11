@@ -5,11 +5,11 @@ import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
 
 export const metadata: Metadata = {
-  title: 'Rising Ten',
+  title: 'Ten Rising Stars',
   description:
     'Ten a year, developed hard, with the Todd Founder Program. Cohort one is open.',
   openGraph: {
-    title: 'Rising Ten',
+    title: 'Ten Rising Stars',
     description:
       'Ten a year, developed hard, with the Todd Founder Program. Cohort one is open.',
     type: 'website',
@@ -17,14 +17,14 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout for the Rising Ten statement page.
+ * Root layout for the Ten Rising Stars statement page.
  *
  * Deliberately bare: no header, footer, or smooth-scroll wrapper, because the
  * page is a single full-height statement and anything else would crowd it.
  *
  * @param children - Page content
  */
-export default function RisingTenLayout({
+export default function TenRisingStarsLayout({
   children,
 }: {
   children: React.ReactNode;
