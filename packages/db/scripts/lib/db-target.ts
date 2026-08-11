@@ -12,7 +12,7 @@ import type { PoolConfig } from 'pg';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { getArg, requireLocalDatabaseUrl } from './importer-lib';
-import { remoteDbSslConfig } from '../../src/utils/db-ssl';
+import { remoteDbSslConfig, stagingCaCert } from '../../src/utils/db-ssl';
 
 export type DbEnv = 'local' | 'staging' | 'prod';
 export type RemoteDbEnv = Exclude<DbEnv, 'local'>;
@@ -29,23 +29,26 @@ function requireEnvVar(name: string): string {
  * Builds a node-postgres PoolConfig for staging or prod from the
  * STAGING_DATABASE_* / PROD_DATABASE_* env vars.
  *
- * TLS posture comes from `remoteDbSslConfig`, shared with the app pool and the
- * drizzle-kit configs so all three stay hardened together.
+ * TLS posture and certificate selection both come from `db-ssl`, shared with
+ * the app pool and the drizzle-kit configs so all three stay hardened together
+ * and agree on which certificate staging uses. `remoteDbSslConfig` throws by
+ * name when the certificate is missing, so it needs no `requireEnvVar` here.
  */
 export function resolveRemoteDbConfig(env: RemoteDbEnv): PoolConfig {
   const prefix = env === 'prod' ? 'PROD_DATABASE' : 'STAGING_DATABASE';
   const caRaw =
+    env === 'staging' ? stagingCaCert() : process.env.DATABASE_PEM_CERT;
+  const certVarName =
     env === 'staging'
-      ? (process.env.STAGING_DATABASE_PEM_CERT ??
-        requireEnvVar('DATABASE_PEM_CERT'))
-      : requireEnvVar('DATABASE_PEM_CERT');
+      ? 'STAGING_DATABASE_PEM_CERT (or DATABASE_PEM_CERT)'
+      : 'DATABASE_PEM_CERT';
   return {
     host: requireEnvVar(`${prefix}_HOST`),
     port: Number(requireEnvVar(`${prefix}_PORT`)),
     user: requireEnvVar(`${prefix}_USER`),
     password: requireEnvVar(`${prefix}_PASSWORD`),
     database: requireEnvVar(`${prefix}_DATABASE`),
-    ssl: remoteDbSslConfig(caRaw),
+    ssl: remoteDbSslConfig(caRaw, certVarName),
   };
 }
 
