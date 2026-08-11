@@ -22,10 +22,11 @@ const CONTACT_SUBJECT = 'J Fellows — cohort one';
  * rather than a heading with supporting copy.
  */
 const STATEMENT = [
-  'Ambition shows up early. Almost nobody develops it.',
-  'The Todd Founder Program finds teenage founders with real traction. J Fellows is the part that develops them.',
-  'Ten fellows. Five months of hard development, five more of weekly mentorship, then back into Todd as founders, externs, and interns.',
-  'Applications for the first cohort are open. It is free, and it is brutally selective.',
+  'Every year a handful of teenagers build something real. Then the world tells them to wait their turn.',
+  'We do not teach patience. Todd finds them. J Fellows forges them.',
+  'Ten fellows. Five months hard enough to break the version of you that walked in, five more with us in your ear every week, then back into Todd as founders, externs, and interns.',
+  'Cohort one is open. It costs nothing, and almost nobody gets in.',
+  'Keep your options open, or find out what you are actually made of. Only one of those is on the table.',
 ];
 
 /**
@@ -55,8 +56,14 @@ export default function JFellowsPage() {
         </span>
       </header>
 
-      <div className="flex flex-1 items-center py-14 sm:py-16">
-        <div className="max-w-[880px] space-y-5 text-[22px] leading-[1.18] font-bold tracking-[-0.021em] sm:space-y-6 sm:text-[28px] lg:space-y-7 lg:text-[36px]">
+      <div className="flex flex-1 items-center py-10 sm:py-14">
+        <div
+          // Sized against the viewport's height as well as its width: the
+          // closing line is the whole point, and it has to land on screen
+          // rather than below the fold on a short window.
+          style={{ fontSize: 'clamp(1.25rem, min(2.4vw, 4vh), 2.25rem)' }}
+          className="max-w-[880px] space-y-[0.72em] leading-[1.18] font-bold tracking-[-0.021em]"
+        >
           <h1>{opening}</h1>
           {rest.map((line) => (
             <p key={line}>{line}</p>

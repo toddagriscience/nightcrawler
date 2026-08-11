@@ -10,7 +10,7 @@ describe('JFellowsPage', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /ambition shows up early/i,
+        name: /every year a handful of teenagers build something real/i,
       })
     ).toBeInTheDocument();
   });
@@ -18,19 +18,25 @@ describe('JFellowsPage', () => {
   it('states the shape of the fellowship', () => {
     render(<JFellowsPage />);
     expect(screen.getByText(/ten fellows/i)).toBeInTheDocument();
+    expect(screen.getByText(/five more with us in your ear/i)).toBeVisible();
     expect(
-      screen.getByText(/five more of weekly mentorship/i)
+      screen.getByText(/founders, externs, and interns/i)
     ).toBeInTheDocument();
   });
 
   it('announces the first cohort as open, free, and selective', () => {
     render(<JFellowsPage />);
+    expect(screen.getByText(/cohort one is open/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/applications for the first cohort are open/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/free, and it is brutally selective/i)
+      screen.getByText(/costs nothing, and almost nobody gets in/i)
     ).toBeVisible();
+  });
+
+  it('closes on the choice rather than a call to action', () => {
+    render(<JFellowsPage />);
+    expect(
+      screen.getByText(/only one of those is on the table/i)
+    ).toBeInTheDocument();
   });
 
   it('names the collaboration with the Todd Founder Program', () => {
