@@ -45,18 +45,16 @@ describe('TenRisingStarsPage', () => {
     expect(screen.queryByText(/todd finds/i)).not.toBeInTheDocument();
   });
 
-  it('locks the mark up with the Todd Founder Program', () => {
+  it('locks the two marks together', () => {
     render(<TenRisingStarsPage />);
-    // The logotype spells "Todd", so between the two the lockup reads
-    // "Todd Founder Program" to a screen reader as well as on screen.
+    // Both are images, so alt text is the only name either one has.
     expect(screen.getByAltText('Ten Rising Stars')).toBeInTheDocument();
     expect(screen.getByAltText('Todd')).toBeInTheDocument();
-    expect(screen.getByText('Founder Program')).toBeInTheDocument();
   });
 
   it('leaves the mark unnamed on screen', () => {
-    // Only Todd's half of the lockup is spelled out. The mark is left for the
-    // reader to wonder about, so the name must not appear as visible text.
+    // The mark is left for the reader to wonder about, so the name must not
+    // appear as visible text anywhere on the page.
     const { container } = render(<TenRisingStarsPage />);
     expect(container.textContent).not.toMatch(/ten rising stars/i);
   });

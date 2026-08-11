@@ -61,20 +61,15 @@ export default function TenRisingStarsPage() {
 
         <span aria-hidden="true" className="h-[17px] w-px bg-[#d0d0d0]" />
 
-        <div className="flex items-center gap-2">
-          {/* The logotype spells "Todd", so it carries that half of the name
-              and the text picks up where it leaves off. */}
-          <Image
-            src={ToddWordmark}
-            alt="Todd"
-            className="h-[13px] w-auto"
-            width={76}
-            height={25}
-          />
-          <span className="text-[13px] font-bold tracking-[0.15em] uppercase">
-            Founder Program
-          </span>
-        </div>
+        {/* Two marks, no words. Todd's is the only one a stranger can place,
+            which is what makes the other one worth asking about. */}
+        <Image
+          src={ToddWordmark}
+          alt="Todd"
+          className="h-[16px] w-auto sm:h-[18px]"
+          width={76}
+          height={25}
+        />
       </header>
 
       <div className="flex flex-1 items-center py-10 sm:py-14">
