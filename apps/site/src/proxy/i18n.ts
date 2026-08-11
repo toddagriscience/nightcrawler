@@ -13,6 +13,7 @@ const unauthUnintlRoutes = [
   'invite',
   'creators',
   'signup',
+  'j-fellows',
 ];
 
 /**
