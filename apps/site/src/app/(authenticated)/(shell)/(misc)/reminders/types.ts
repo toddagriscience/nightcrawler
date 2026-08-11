@@ -25,7 +25,8 @@ export type Reminder = {
 
 /** Discriminated union of quick reminder actions performed from a card. */
 export type ReminderAction =
-  { id: number; action: 'dismiss' } | { id: number; action: 'mark_read' };
+  | { id: number; action: 'dismiss' }
+  | { id: number; action: 'mark_read' };
 
 /** Input payload for creating a new reminder. */
 export type CreateReminderInput = {

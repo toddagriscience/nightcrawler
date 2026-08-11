@@ -93,6 +93,10 @@ export type GeneralBusinessInformationUpdate = z.infer<
 >;
 
 export type TabTypes =
-  'general' | 'colleagues' | 'farm' | 'bank-information' | 'terms';
+  | 'general'
+  | 'colleagues'
+  | 'farm'
+  | 'bank-information'
+  | 'terms';
 
 export type VerificationStatus = { email: string; verified: boolean };

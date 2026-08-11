@@ -10,7 +10,8 @@ import { DrizzleQueryError } from 'drizzle-orm';
 export function formatSignupDatabaseError(error: unknown): string {
   if (error instanceof DrizzleQueryError) {
     const pgError = error.cause as
-      { code?: string; constraint?: string } | undefined;
+      | { code?: string; constraint?: string }
+      | undefined;
 
     if (
       pgError?.code === '23505' &&

@@ -18,7 +18,10 @@ import {
 
 /** When a mapped value is written relative to the platform-access workflow. */
 export type HydrationPreviewTiming =
-  'on_submit' | 'on_signup_prefill' | 'on_signup_hydration' | 'not_hydrated';
+  | 'on_submit'
+  | 'on_signup_prefill'
+  | 'on_signup_hydration'
+  | 'not_hydrated';
 
 /** One row in the internal dashboard hydration preview table. */
 export interface FormSubmissionHydrationPreviewRow {

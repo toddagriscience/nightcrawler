@@ -1,6 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
+import {
+  screen,
+  within,
+  fireEvent,
+  renderWithNextIntl,
+} from '@/test/test-utils';
 import Footer from './footer';
 import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
@@ -81,6 +86,32 @@ describe('Footer', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Visit our YouTube channel' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders the location as a static label outside the language button', async () => {
+    renderWithNextIntl(<Footer />);
+
+    const location = screen.getByText('United States');
+    expect(location.closest('button')).toBeNull();
+
+    await fireEvent.click(location);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('opens the language menu from the language button', async () => {
+    renderWithNextIntl(<Footer />);
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Change language' })
+    );
+
+    const menu = screen.getByRole('menu');
+    expect(
+      within(menu).getByRole('menuitem', { name: 'English' })
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByRole('menuitem', { name: 'Español' })
     ).toBeInTheDocument();
   });
 
