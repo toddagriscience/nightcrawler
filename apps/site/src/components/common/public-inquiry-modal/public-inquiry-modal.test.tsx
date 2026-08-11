@@ -29,6 +29,16 @@ describe('PublicInquiryModal', () => {
     expect(
       screen.getByRole('link', { name: 'Contact Support' })
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Forgot Email' })).toHaveAttribute(
+      'href',
+      '/contact'
+    );
+    expect(
+      screen.getByRole('link', { name: 'Forgot Password' })
+    ).toHaveAttribute('href', '/forgot-password');
+    expect(
+      screen.getByRole('link', { name: 'Contact Support' })
+    ).toHaveAttribute('href', '/contact');
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 });
