@@ -11,10 +11,44 @@
 import type { ConnectionOptions } from 'node:tls';
 
 /**
- * Hostnames that mean "the Docker Postgres from `bun run db:local:up`".
- * `URL.hostname` keeps the brackets on IPv6 literals, hence both spellings.
+ * Loopback spellings, stored unbracketed — `normalizeDbHost` strips the
+ * brackets `URL.hostname` keeps on an IPv6 literal, so `[::1]` and a raw
+ * `LOCAL_DATABASE_HOST=::1` both land on the same entry.
+ *
+ * This is the strict set: the importer guard refuses anything outside it, no
+ * matter what `DATABASE_PLAINTEXT_HOSTS` says.
  */
-const LOCAL_DB_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+const LOOPBACK_DB_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
+
+/**
+ * Hostnames that also mean "a database on this machine": `0.0.0.0` resolves to
+ * loopback when dialed, and `host.docker.internal` is the alias Docker hands a
+ * container for its host. Both address the local plaintext Postgres, so both
+ * must skip TLS the way loopback does.
+ */
+const LOCAL_DB_HOSTNAMES = new Set([
+  ...LOOPBACK_DB_HOSTNAMES,
+  '0.0.0.0',
+  'host.docker.internal',
+]);
+
+/**
+ * libpq query parameters that `pg-connection-string` turns into an `ssl`
+ * object. pg merges the parsed connection string *over* the explicit config
+ * (`Object.assign({}, config, parse(connectionString))`), so any one of these
+ * in a URL silently replaces the hardened config below — `sslmode=no-verify`
+ * would restore the unverified connection this module exists to prevent, and
+ * `sslmode=require` (what the DigitalOcean dashboard hands you) would drop the
+ * CA and fail every query. They are stripped before the URL reaches pg.
+ */
+const SSL_QUERY_PARAMS = new Set([
+  'ssl',
+  'sslmode',
+  'sslcert',
+  'sslkey',
+  'sslrootcert',
+  'uselibpqcompat',
+]);
 
 /**
  * Normalizes a PEM certificate that may arrive quote-wrapped and/or with
@@ -29,6 +63,73 @@ export function normalizePemCert(raw: string): string {
     .replace(/"$/, '')
     .replace(/\\n/g, '\n')
     .replace(/\r/g, '');
+}
+
+/**
+ * Canonicalizes a hostname for comparison: lowercased, brackets stripped.
+ *
+ * Both steps matter. `URL` does not lowercase the host of a `postgresql:` URL
+ * the way it does for http/https (the scheme is not "special"), so a developer
+ * who wrote `@LOCALHOST:5432` would otherwise be classified as remote; and
+ * `URL.hostname` returns IPv6 literals bracketed while an env var holds them
+ * bare.
+ *
+ * @param host - Hostname from a URL or an env var
+ */
+function normalizeDbHost(host: string): string {
+  return host.trim().toLowerCase().replace(/^\[/, '').replace(/\]$/, '');
+}
+
+/**
+ * Extra hostnames a developer has declared to be a local, plaintext database —
+ * a docker-compose service name, a LAN address, whatever their setup dials.
+ *
+ * This is the narrow replacement for `NODE_TLS_REJECT_UNAUTHORIZED=0`: that
+ * switch disabled certificate verification for every TLS connection in the
+ * process (Supabase and every other HTTPS call included) and for every host,
+ * so setting it to reach a local database also silently unverified staging and
+ * production. This one only ever names hosts, so it cannot downgrade a cluster
+ * unless someone types that cluster's hostname into it.
+ *
+ * Read per call rather than at module load so `dotenv/config` ordering and
+ * per-test overrides both take effect.
+ */
+function declaredPlaintextHosts(): Set<string> {
+  const raw = process.env.DATABASE_PLAINTEXT_HOSTS ?? '';
+  return new Set(
+    raw
+      .split(',')
+      .map((host) => normalizeDbHost(host))
+      .filter(Boolean)
+  );
+}
+
+/**
+ * Reports whether a bare hostname is a loopback address.
+ *
+ * Deliberately ignores `DATABASE_PLAINTEXT_HOSTS`: this backs the importer
+ * guard, whose job is to refuse a shared database outright, and an env var that
+ * could widen it would defeat the guard.
+ *
+ * @param host - Hostname, e.g. `process.env.LOCAL_DATABASE_HOST`
+ */
+export function isLoopbackDbHost(host: string | undefined): boolean {
+  return Boolean(host) && LOOPBACK_DB_HOSTNAMES.has(normalizeDbHost(host!));
+}
+
+/**
+ * Formats a hostname for interpolation into a connection URL, bracketing IPv6
+ * literals. Without this, `LOCAL_DATABASE_HOST=::1` builds
+ * `postgresql://u:p@::1:5432/db`, which is not a parseable URL at all — every
+ * consumer that reads it back, `isLocalDatabaseUrl` included, fails closed and
+ * demands TLS from the plaintext local database.
+ *
+ * @param host - Hostname to place in a URL's authority section
+ */
+export function formatDbHostForUrl(host: string): string {
+  const trimmed = host.trim();
+  const needsBrackets = trimmed.includes(':') && !trimmed.startsWith('[');
+  return needsBrackets ? `[${trimmed}]` : trimmed;
 }
 
 /**
@@ -51,36 +152,181 @@ export function isLocalDatabaseUrl(
     return false;
   }
 
+  let hostname: string;
   try {
-    return LOCAL_DB_HOSTNAMES.has(new URL(connectionString).hostname);
+    hostname = new URL(connectionString).hostname;
   } catch {
     return false;
   }
+
+  if (!hostname) {
+    return false;
+  }
+
+  const host = normalizeDbHost(hostname);
+  return LOCAL_DB_HOSTNAMES.has(host) || declaredPlaintextHosts().has(host);
 }
 
 /**
- * TLS options for a managed (staging/prod) cluster: validate the certificate
- * chain against our CA, but skip hostname verification. That is the psql
- * `verify-ca` posture both database workflows already use for `pg_dump`, and
- * it is deliberate — the cluster serves certificates whose subject does not
- * match the host we dial.
+ * Removes the libpq SSL query parameters from a connection URL so the explicit
+ * TLS config the caller passes to pg is the one that actually applies. See
+ * `SSL_QUERY_PARAMS` for why pg would otherwise discard it.
  *
- * Never downgrade this to `rejectUnauthorized: false`. That skips the chain as
- * well as the hostname, which leaves the connection open to a machine-in-the-
- * middle presenting any certificate at all.
+ * Stripping rather than rejecting is deliberate: `?sslmode=require` is what the
+ * DigitalOcean dashboard puts on the URL it gives you, and the posture it asks
+ * for is weaker than the one we substitute, so there is nothing to warn about.
  *
- * When no CA is configured the `ca` key is omitted rather than set to an empty
- * string, so Node falls back to its trust store and fails loudly at connect
- * time instead of silently trusting nothing.
+ * @param connectionString - Postgres URL, or undefined
+ * @returns The URL without SSL parameters, unchanged if it carried none
+ */
+export function stripSslQueryParams(
+  connectionString: string | undefined
+): string | undefined {
+  if (!connectionString) {
+    return connectionString;
+  }
+
+  let url: URL;
+  try {
+    url = new URL(connectionString);
+  } catch {
+    // Unparseable strings are handed through untouched; `isLocalDatabaseUrl`
+    // already fails them closed, so they get the verified config either way.
+    return connectionString;
+  }
+
+  const params = [...url.searchParams.entries()];
+  const kept = params.filter(
+    ([param]) => !SSL_QUERY_PARAMS.has(param.toLowerCase())
+  );
+
+  if (kept.length === params.length) {
+    return connectionString;
+  }
+
+  url.search = new URLSearchParams(kept).toString();
+  return url.toString();
+}
+
+/**
+ * The CA certificate for the staging cluster, falling back to the shared one —
+ * CI historically only sets `DATABASE_PEM_CERT`.
  *
- * @param rawCert - CA certificate as read from an env var, if one is set
+ * `||` rather than `??` on purpose: a `STAGING_DATABASE_PEM_CERT=` line with no
+ * value parses to an empty string, which is not nullish, so `??` would pin the
+ * empty string and skip a perfectly good `DATABASE_PEM_CERT`.
+ */
+export function stagingCaCert(): string | undefined {
+  return process.env.STAGING_DATABASE_PEM_CERT || process.env.DATABASE_PEM_CERT;
+}
+
+/**
+ * The CA certificate to verify a given host against: the staging cluster has
+ * its own, everything else uses the shared one. Host-matched rather than
+ * caller-declared so a script pointed at staging by `DATABASE_URL` picks up
+ * `STAGING_DATABASE_PEM_CERT` without every caller having to know.
+ *
+ * @param connectionString - Postgres URL the certificate must verify
+ */
+export function caCertForConnection(
+  connectionString: string | undefined
+): string | undefined {
+  const stagingHost = process.env.STAGING_DATABASE_HOST;
+
+  if (connectionString && stagingHost) {
+    try {
+      const host = normalizeDbHost(new URL(connectionString).hostname);
+      if (host && host === normalizeDbHost(stagingHost)) {
+        return stagingCaCert();
+      }
+    } catch {
+      // Unparseable URL — fall through to the shared certificate.
+    }
+  }
+
+  return process.env.DATABASE_PEM_CERT || undefined;
+}
+
+/**
+ * TLS options for a managed (staging/prod) cluster: prove the certificate
+ * chains to our CA *and* that it was issued for the host we dialed, i.e. the
+ * psql `verify-full` posture db-reconcile.yml already uses against both
+ * clusters.
+ *
+ * Never downgrade this to `rejectUnauthorized: false`, and do not reintroduce a
+ * `checkServerIdentity` that returns undefined. The first skips the chain, the
+ * second skips the hostname; either leaves the connection open to a
+ * machine-in-the-middle holding some other certificate.
+ *
+ * A missing certificate throws, so the misconfiguration arrives named rather
+ * than as an opaque SELF_SIGNED_CERT_IN_CHAIN at connect time. Callers that
+ * cannot throw where they are — a module-scope pool, which is imported during
+ * `next build` and by unit tests that never open a connection — should go
+ * through `resolveDbPoolConfig` instead of catching this.
+ *
+ * @param rawCert - CA certificate as read from an env var
+ * @param certVarName - Variable to name in the error when it is missing
+ * @throws If no certificate is configured
  */
 export function remoteDbSslConfig(
-  rawCert: string | undefined
+  rawCert: string | undefined,
+  certVarName = 'DATABASE_PEM_CERT'
 ): ConnectionOptions {
+  const ca = rawCert ? normalizePemCert(rawCert).trim() : '';
+
+  if (!ca) {
+    throw new Error(
+      `${certVarName} is not set — a managed Postgres cluster is verified ` +
+        'against its CA certificate, so there is nothing to verify against. ' +
+        'Set it from the provider dashboard, or point the connection at a ' +
+        'local database.'
+    );
+  }
+
+  return { ca, rejectUnauthorized: true };
+}
+
+/**
+ * The connection string and TLS options for a pg `Pool`, resolved together so
+ * no caller can sanitize the URL without hardening the socket or vice versa.
+ *
+ * With `requireCaCert`, a managed target with no configured certificate throws
+ * immediately, naming the variable to set. Scripts want that; the app pool
+ * cannot have it, because it is built when its module is imported — during
+ * `next build` and in unit tests that never open a connection — and a build
+ * with no database configured at all must not die on a certificate error.
+ *
+ * Without it, a missing certificate leaves full verification on and lets Node
+ * fall back to its public trust store. That is not a hole: hostname and chain
+ * are both still checked, so an interceptor would need a publicly-issued
+ * certificate for the cluster's own hostname. Against our clusters, which are
+ * signed by a private CA, it simply fails at connect — loudly, where a
+ * connection is actually being opened.
+ *
+ * @param connectionString - Postgres URL, typically `process.env.DATABASE_URL`
+ * @param options - `requireCaCert` to fail here rather than at connect time
+ * @throws With `requireCaCert`, if the target is managed and no cert is set
+ */
+export function resolveDbPoolConfig(
+  connectionString: string | undefined,
+  options: { requireCaCert?: boolean } = {}
+): {
+  connectionString: string | undefined;
+  ssl: ConnectionOptions | false;
+} {
+  const sanitized = stripSslQueryParams(connectionString);
+
+  if (isLocalDatabaseUrl(sanitized)) {
+    return { connectionString: sanitized, ssl: false };
+  }
+
+  const rawCert = caCertForConnection(sanitized);
+
   return {
-    ...(rawCert ? { ca: normalizePemCert(rawCert) } : {}),
-    rejectUnauthorized: true,
-    checkServerIdentity: () => undefined,
+    connectionString: sanitized,
+    ssl:
+      rawCert || options.requireCaCert
+        ? remoteDbSslConfig(rawCert)
+        : { rejectUnauthorized: true },
   };
 }
