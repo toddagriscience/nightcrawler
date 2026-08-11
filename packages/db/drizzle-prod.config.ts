@@ -2,6 +2,7 @@
 
 import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
+import { remoteDbSslConfig } from './src/utils/db-ssl';
 
 export default defineConfig({
   out: './drizzle',
@@ -14,6 +15,6 @@ export default defineConfig({
     user: process.env.PROD_DATABASE_USER,
     password: process.env.PROD_DATABASE_PASSWORD,
     database: process.env.PROD_DATABASE_DATABASE!,
-    ssl: { ca: process.env.DATABASE_PEM_CERT!, rejectUnauthorized: false },
+    ssl: remoteDbSslConfig(process.env.DATABASE_PEM_CERT),
   },
 });
