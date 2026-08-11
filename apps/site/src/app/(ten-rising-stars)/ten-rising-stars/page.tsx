@@ -28,7 +28,7 @@ const CONTACT_SUBJECT = 'Ten Rising Stars — cohort one';
 const STATEMENT = [
   'Every year a handful of teenagers build something real. Then the world tells them to wait their turn.',
   'We do not teach patience. We forge the ones who refuse to wait.',
-  'Ten. Five months hard enough to break the version of you that walked in.',
+  'Ten Rising Stars. Five months hard enough to break the version of you that walked in.',
   'Cohort one is open. It costs nothing, and almost nobody gets in.',
   'Keep your options open, or find out what you are actually made of. Only one of those is on the table.',
 ];

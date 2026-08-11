@@ -52,11 +52,15 @@ describe('TenRisingStarsPage', () => {
     expect(screen.getByAltText('Todd')).toBeInTheDocument();
   });
 
-  it('leaves the mark unnamed on screen', () => {
-    // The mark is left for the reader to wonder about, so the name must not
-    // appear as visible text anywhere on the page.
+  it('names itself inside the statement rather than in the lockup', () => {
+    // The name lands once, mid-argument, where it reads as a fact about the
+    // cohort. The header stays wordless so the mark is still the thing a
+    // reader has to ask about.
     const { container } = render(<TenRisingStarsPage />);
-    expect(container.textContent).not.toMatch(/ten rising stars/i);
+    expect(container.querySelector('header')?.textContent?.trim()).toBe('');
+    expect(
+      screen.getByText(/ten rising stars\. five months hard enough/i)
+    ).toBeInTheDocument();
   });
 
   it('credits the collaboration without naming itself', () => {
