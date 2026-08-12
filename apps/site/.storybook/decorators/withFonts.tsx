@@ -1,3 +1,5 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
 import React from 'react';
 import { neueHaasUnica, utahWGLCondensed } from '../../src/lib/fonts';
 
