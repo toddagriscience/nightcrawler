@@ -1,4 +1,6 @@
-import { Decorator } from '@storybook/react';
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import { Decorator } from '@storybook/react-vite';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
 import '../../src/app/globals.css';

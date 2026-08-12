@@ -24,4 +24,4 @@ jobs:
         run: bun i
 
       - name: Check for security vulnerabilities
-        run: bun audit --audit-level=high --ignore=GHSA-w3rx-r6r6-pgpr --ignore=GHSA-5p2g-fcmc-qvqq
+        run: bun audit --audit-level=high
