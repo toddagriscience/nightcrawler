@@ -1,6 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
+import {
+  screen,
+  within,
+  fireEvent,
+  renderWithNextIntl,
+} from '@/test/test-utils';
 import Footer from './footer';
 import '@testing-library/jest-dom';
 import { usePathname } from 'next/navigation';
