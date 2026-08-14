@@ -10,6 +10,7 @@ import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
+import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
@@ -19,6 +20,7 @@ const articlePlaceholderRoute = '/article-placeholder.webp';
  * @returns {JSX.Element} - The news highlight card component
  */
 export default function NewsHighlights() {
+  const locale = useLocale();
   const { isDark: contextIsDark } = useTheme();
   const [allNews, setAllNews] = useState<SanityArticle[]>();
   const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +73,7 @@ export default function NewsHighlights() {
                       }
                 }
                 source={article.source ?? ''}
-                date={formatArticleListDate(article.date)}
+                date={formatArticleListDate(article.date, locale)}
                 excerpt={article.summary ?? ''}
                 link={getArticleCardHref(article)}
               />

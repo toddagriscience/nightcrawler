@@ -48,5 +48,5 @@ export default async function ArticleIndexPage({
     return;
   }
 
-  return <CmsArticlePage article={article} />;
+  return <CmsArticlePage article={article} locale={locale} />;
 }
