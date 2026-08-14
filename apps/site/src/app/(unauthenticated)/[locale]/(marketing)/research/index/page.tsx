@@ -37,6 +37,7 @@ export default async function ResearchIndexPage({
       basePath="/research/index"
       title={t('titles.research')}
       t={t}
+      locale={locale}
       countParam={count}
     />
   );

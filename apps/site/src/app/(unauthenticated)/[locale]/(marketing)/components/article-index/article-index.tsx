@@ -103,6 +103,8 @@ export interface ArticleIndexProps {
   title: string;
   /** `next-intl` translator bound to the `articleIndex` namespace. */
   t: ArticleIndexTranslate;
+  /** Site locale segment used to present row dates. Falls back to English when omitted. */
+  locale?: string;
   /** Raw `?count=` value driving how many rows are revealed. */
   countParam?: string;
   /** Render the topic tab bar. Disable on surfaces whose dynamic segment is taken (e.g. `/news/[slug]`). */
@@ -139,6 +141,7 @@ export function ArticleIndex({
   basePath,
   title,
   t,
+  locale,
   countParam,
   showTopicTabs = true,
   topicHrefMode = 'path',
@@ -288,7 +291,7 @@ export function ArticleIndex({
                       )}
                     </span>
                     <span className="text-[#666666]">
-                      {formatArticleListDate(article.date)}
+                      {formatArticleListDate(article.date, locale)}
                     </span>
                   </div>
 
