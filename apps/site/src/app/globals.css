@@ -321,3 +321,15 @@ header {
     var(--background-accent)
   );
 }
+
+/*
+ * Edge (Chromium) injects a native reveal control into every
+ * <input type="password">. Apply this to masked inputs that already ship the
+ * app's own show/hide toggle, so only one control paints and React state stays
+ * the single source of truth. Inputs with no custom toggle must keep the native
+ * control as their only way to unmask.
+ */
+.hide-native-password-reveal::-ms-reveal,
+.hide-native-password-reveal::-ms-clear {
+  display: none;
+}

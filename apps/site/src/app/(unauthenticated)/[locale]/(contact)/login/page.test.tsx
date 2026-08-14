@@ -137,6 +137,24 @@ describe('login page', () => {
     expect(passwordField).toHaveRole('textbox');
   });
 
+  test('suppresses the browser native reveal control on the password field', () => {
+    render(<Login />);
+
+    expect(screen.getByTestId('password')).toHaveClass(
+      'hide-native-password-reveal'
+    );
+  });
+
+  test('password toggle is reachable with the keyboard', async () => {
+    render(<Login />);
+
+    screen.getByTestId('password').focus();
+
+    await userEvent.tab();
+
+    expect(screen.getByRole('button', { name: 'Show password' })).toHaveFocus();
+  });
+
   test('does not submit unless both email and password are entered', async () => {
     render(<Login />);
     (login as Mock).mockReturnValue({ error: null });

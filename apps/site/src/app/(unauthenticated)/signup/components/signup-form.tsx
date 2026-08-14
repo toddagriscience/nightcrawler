@@ -170,7 +170,7 @@ export default function SignupForm({ prefill }: SignupFormProps) {
                           </FieldLabel>
                           <div className="relative">
                             <Input
-                              className="border-[#848484]/80 border-1"
+                              className="hide-native-password-reveal border-[#848484]/80 border-1"
                               id="password"
                               data-testid="password"
                               type={showPassword ? 'text' : 'password'}
@@ -205,7 +205,7 @@ export default function SignupForm({ prefill }: SignupFormProps) {
                           </FieldLabel>
 
                           <Input
-                            className="border-[#848484]/80 border-1 pr-10"
+                            className="hide-native-password-reveal border-[#848484]/80 border-1 pr-10"
                             id="confirmPassword"
                             data-testid="confirm-password"
                             type={showPassword ? 'text' : 'password'}
