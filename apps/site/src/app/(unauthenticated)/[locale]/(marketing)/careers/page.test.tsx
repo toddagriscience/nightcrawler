@@ -55,4 +55,27 @@ describe('Careers landing view', () => {
       expect(mainLandmark).toContainElement(heading);
     });
   });
+
+  it('renders the legal disclosures with an accommodation inquiry link instead of an email', () => {
+    const { container } = renderWithNextIntl(
+      <CareersLandingView copy={CAREERS_LANDING_VIEW_FIXTURE} />
+    );
+
+    const inquiryLink = screen.getByRole('link', {
+      name: 'submit an accommodation inquiry',
+    });
+    expect(inquiryLink).toHaveAttribute('href', '/contact');
+    expect(screen.getByRole('main')).toContainElement(inquiryLink);
+
+    expect(
+      screen.getByRole('link', { name: 'view the pricing information' })
+    ).toHaveAttribute('target', '_blank');
+    expect(
+      screen.getByRole('link', { name: 'Privacy Policy' })
+    ).toHaveAttribute('href', '/privacy');
+
+    expect(container.textContent).toContain('equal opportunity employer');
+    expect(container.textContent).not.toMatch(/@toddagriscience\.com/);
+    expect(container.textContent).not.toMatch(/https?:\/\//);
+  });
 });

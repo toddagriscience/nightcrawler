@@ -2,6 +2,7 @@
 
 import type { ReactElement } from 'react';
 
+import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 import {
   MarketingBenefitsColumns,
   MarketingBridgeStatement,
@@ -18,6 +19,22 @@ import type { CareersLandingCopy } from '../types/careers-landing-copy';
 import { getTranslations } from 'next-intl/server';
 
 export type { CareersLandingCopy } from '../types/careers-landing-copy';
+
+/**
+ * Number of numbered paragraphs under `careers.disclaimers` in the message files.
+ */
+const CAREERS_DISCLAIMER_COUNT = 5;
+
+/**
+ * Rich-text link tags used by `careers.disclaimers`. The accommodation notice links to the
+ * contact inquiry form instead of exposing a mailbox address on the public page; the
+ * Transparency in Coverage and Privacy Policy references link to their destinations.
+ */
+const CAREERS_DISCLAIMER_LINKS = {
+  inquiry: '/contact',
+  coverage: 'https://transparency-in-coverage.collectivehealth.com/index.html',
+  privacy: '/privacy',
+} as const;
 
 /**
  * Careers hub (`/careers`) composed from reusable marketing blocks (`font-normal` typography).
@@ -132,6 +149,13 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
           heading={footerHeading}
           headingId="careers-footer-cta-heading"
           sectionId="careers-footer-cta"
+        />
+
+        <Disclaimer
+          className="mb-0 w-full max-w-none"
+          disclaimerCount={CAREERS_DISCLAIMER_COUNT}
+          links={CAREERS_DISCLAIMER_LINKS}
+          translationLoc="careers.disclaimers"
         />
       </div>
     </main>
