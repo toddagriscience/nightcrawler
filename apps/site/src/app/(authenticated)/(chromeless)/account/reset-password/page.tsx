@@ -95,7 +95,7 @@ export default function ResetPassword() {
                       </FieldLabel>
                       <div className="relative">
                         <Input
-                          className="focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
+                          className="hide-native-password-reveal focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
                           id="newPassword"
                           data-testid="new-password"
                           type={showPassword ? 'text' : 'password'}
@@ -127,7 +127,7 @@ export default function ResetPassword() {
                       </FieldLabel>
                       <div className="relative">
                         <Input
-                          className="focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
+                          className="hide-native-password-reveal focus:ring-0! bg-transparent mt-[-6px] border-1 border-[#848484]/80"
                           id="confirmNewPassword"
                           data-testid="confirm-new-password"
                           type={showPassword ? 'text' : 'password'}

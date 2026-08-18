@@ -8,6 +8,7 @@ import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { Link } from '@/i18n/config';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
@@ -16,6 +17,7 @@ interface LatestNewsTableProps {
 }
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
+  const locale = useLocale();
   const [visibleCount, setVisibleCount] = useState(3); // Show first 3 items initially
   const isAllShown = visibleCount >= items.length;
 
@@ -54,7 +56,9 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
             </div>
           </Link>
 
-          <div className="text-right">{formatArticleListDate(item.date)}</div>
+          <div className="text-right">
+            {formatArticleListDate(item.date, locale)}
+          </div>
         </div>
       ))}
 

@@ -7,6 +7,7 @@ import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { urlFor } from '@/lib/sanity/utils';
+import { useLocale } from 'next-intl';
 
 const articlePlaceholderRoute = '/article-placeholder.webp';
 
@@ -19,6 +20,8 @@ export function FeaturedNewsCarousel({
 }: {
   items: SanityArticle[];
 }) {
+  const locale = useLocale();
+
   return (
     <Carousel isDark={true} showDots={true}>
       {items.map((article) => (
@@ -41,7 +44,7 @@ export function FeaturedNewsCarousel({
                 }
           }
           source={article.source ?? ''}
-          date={formatArticleListDate(article.date)}
+          date={formatArticleListDate(article.date, locale)}
           excerpt={article.summary ?? ''}
           link={getArticleCardHref(article)}
         />

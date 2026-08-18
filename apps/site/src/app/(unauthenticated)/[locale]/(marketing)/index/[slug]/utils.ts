@@ -1,26 +1,38 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { ARTICLE_DISPLAY_DATE_LOCALE } from '@/lib/sanity/article-display-dates';
+import { resolveArticleDisplayDateLocale } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 
 import type { ArticleUiSubscript } from './types';
 
 /**
- * Formats a Sanity article ISO date string for hero display (British-style ordering).
+ * Formats a Sanity article ISO date string for hero display, presented in the reader's locale.
  *
  * @param isoDate - ISO date string when present
- * @returns Formatted string such as \"20 November 2025\" or empty when missing
+ * @param locale - Site locale segment; falls back to English when omitted
+ * @returns Formatted string such as \"20 November, 2025\" or \"20 de noviembre de 2025\", or empty when missing
  */
-export function formatArticleHeroDate(isoDate: unknown): string {
-  return isoDate != null
-    ? new Date(isoDate as string)
-        .toLocaleDateString(ARTICLE_DISPLAY_DATE_LOCALE, {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })
-        .replace(/\s(\d{4})$/, ', $1')
-    : '';
+export function formatArticleHeroDate(
+  isoDate: unknown,
+  locale?: string
+): string {
+  if (isoDate == null) return '';
+
+  const displayLocale = resolveArticleDisplayDateLocale(locale);
+  const formatted = new Date(isoDate as string).toLocaleDateString(
+    displayLocale,
+    {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }
+  );
+
+  // English hero dates separate the year with a comma ("20 November, 2025"). Spanish already reads
+  // "20 de noviembre de 2025", where the same comma would land mid-phrase, so it stays English-only.
+  return displayLocale.startsWith('en')
+    ? formatted.replace(/\s(\d{4})$/, ', $1')
+    : formatted;
 }
 
 /**

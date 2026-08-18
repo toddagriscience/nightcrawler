@@ -50,6 +50,7 @@ export default async function News({
       basePath="/news"
       title={t('titles.news')}
       t={t}
+      locale={locale}
       countParam={count}
       topicHrefMode="query"
       showTopicTabs

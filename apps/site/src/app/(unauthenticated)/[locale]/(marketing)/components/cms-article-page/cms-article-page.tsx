@@ -21,13 +21,20 @@ import { ArticleCtaButtons } from './article-cta-buttons';
  * converge on the marketing article template.
  *
  * @param props.article - Sanity document (validated by the route guard)
+ * @param props.locale - Site locale segment used to present the hero date; English when omitted
  */
-export function CmsArticlePage({ article }: { article: SanityArticle }) {
+export function CmsArticlePage({
+  article,
+  locale,
+}: {
+  article: SanityArticle;
+  locale?: string;
+}) {
   const headerImageUrl = article.headerImage
     ? urlFor(article.headerImage)?.url()
     : undefined;
 
-  const formattedDate = formatArticleHeroDate(article.date);
+  const formattedDate = formatArticleHeroDate(article.date, locale);
   const subscripts = parseArticleSubscripts(article);
   const underHeaderCtas = getArticleCtasForPlacement(article, 'under-header');
   const footerCtas = getArticleCtasForPlacement(article, 'footer');
