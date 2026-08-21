@@ -239,6 +239,46 @@ describe('updateManagementZone', () => {
     expect(written).toHaveProperty('name', 'North field');
   });
 
+  it('drops a location whose coordinates are not both finite', async () => {
+    // Clearing a coordinate box reaches the action as NaN, because
+    // react-hook-form's getFieldValueAs maps '' to NaN under valueAsNumber.
+    // PgPointTuple renders that as the literal "(NaN,NaN)", which Postgres
+    // accepts as float8 NaN and stores over the zone's real position.
+    await updateManagementZone(
+      ZONE_ID,
+      makeFormPayload({ location: [Number.NaN, Number.NaN] })
+    );
+
+    const written = capturedUpdateData.value as Record<string, unknown>;
+
+    expect(written).not.toHaveProperty('location');
+    expect(written).toHaveProperty('name', 'North field');
+  });
+
+  it('drops a half-filled location rather than writing a partial point', async () => {
+    await updateManagementZone(
+      ZONE_ID,
+      makeFormPayload({ location: [12.5, Number.NaN] })
+    );
+
+    expect(capturedUpdateData.value).not.toHaveProperty('location');
+  });
+
+  it('rejects an invalid date without touching the db', async () => {
+    // An emptied <input type="date"> becomes new Date('') under valueAsDate.
+    // Writing it would reach PgDate.mapToDriverValue and throw
+    // "RangeError: Invalid time value" from .toISOString(), after the action
+    // had already been accepted.
+    await expect(
+      updateManagementZone(
+        ZONE_ID,
+        makeFormPayload({ npkLastUsed: new Date('') })
+      )
+    ).rejects.toThrow();
+
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
   it('keeps the update scoped to the zone and the caller’s farm', async () => {
     // The client id diverges from the session id, so a WHERE built from
     // `input.farmId` instead of the session would bind 99 and fail below.

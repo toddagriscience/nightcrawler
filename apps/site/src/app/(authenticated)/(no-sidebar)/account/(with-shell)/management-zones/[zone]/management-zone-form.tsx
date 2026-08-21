@@ -90,7 +90,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.0', { valueAsNumber: true })}
+            {...register('location.0', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
         <div>
@@ -106,7 +108,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.1', { valueAsNumber: true })}
+            {...register('location.1', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
       </div>
@@ -124,7 +128,9 @@ export default function ManagementZoneForm({
             id="rotationYear"
             type="date"
             disabled={!canEdit}
-            {...register('rotationYear', { valueAsDate: true })}
+            {...register('rotationYear', {
+              setValueAs: (value) => (value === '' ? null : new Date(value)),
+            })}
             defaultValue={zone.rotationYear?.toISOString().split('T')[0]}
           />
         </div>
@@ -141,7 +147,7 @@ export default function ManagementZoneForm({
             type="date"
             disabled={!canEdit}
             {...register('npkLastUsed', {
-              valueAsDate: true,
+              setValueAs: (value) => (value === '' ? null : new Date(value)),
             })}
             defaultValue={zone.npkLastUsed?.toISOString().split('T')[0]}
           />
