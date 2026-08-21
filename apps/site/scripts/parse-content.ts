@@ -6,7 +6,7 @@
  * Parses images, PDFs, Excel files, or plain text into clean markdown.
  *
  * Usage:
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/parse-content.ts <filepath> [options]
+ *   bun run scripts/parse-content.ts <filepath> [options]
  *
  * Options:
  *   --sheet <name>    Use a specific sheet (Excel only)
