@@ -32,7 +32,9 @@ export default function ManagementZoneForm({
   } = useForm<ManagementZoneInsert>({
     defaultValues: {
       ...zone,
-      location: [0, 0],
+      // Seed from the stored point, or every save would overwrite the real
+      // coordinates with (0,0) even when the user never touched either input.
+      location: zone.location ?? [0, 0],
       // react-hook-form doesn't automatically handle Date, see each input for more context
       npkLastUsed: undefined,
       rotationYear: undefined,
@@ -88,7 +90,7 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.0')}
+            {...register('location.0', { valueAsNumber: true })}
           />
         </div>
         <div>
@@ -104,7 +106,7 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.1')}
+            {...register('location.1', { valueAsNumber: true })}
           />
         </div>
       </div>

@@ -48,6 +48,20 @@ function pickEditableManagementZoneFields(
   ) as Partial<ManagementZoneInsert>;
 }
 
+/**
+ * Updates the editable fields of a management zone owned by the caller's farm.
+ *
+ * Only the seven columns {@link pickEditableManagementZoneFields} allows are
+ * written, so a client cannot rewrite `id` or `farmId`; the `.where()` clause
+ * additionally scopes the row to the farm on the session, never to a farm id
+ * taken from the payload.
+ *
+ * @param zoneId - Management zone primary key; must be an integer
+ * @param input - Raw management zone payload from the edit form
+ * @returns Success response, or the collected validation errors
+ * @throws When the id is not an integer, the caller has no farm, the caller is
+ * not permitted to edit the farm, or the filtered payload is empty
+ */
 export async function updateManagementZone(
   zoneId: number,
   input: ManagementZoneInsert

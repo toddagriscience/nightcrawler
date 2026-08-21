@@ -106,6 +106,10 @@ function expectFarmScopedWhere(captured: unknown, zoneId: number) {
 /**
  * Builds a payload shaped like a real form submission, which round-trips the
  * whole stored row back to the server alongside the edited fields.
+ *
+ * `location` is a numeric tuple because that is the shape the column expects,
+ * which is also what the form posts now that both coordinate inputs register
+ * with `valueAsNumber`.
  */
 function makeFormPayload(
   overrides: Partial<ManagementZoneInsert> = {}
@@ -236,7 +240,12 @@ describe('updateManagementZone', () => {
   });
 
   it('keeps the update scoped to the zone and the caller’s farm', async () => {
-    await updateManagementZone(ZONE_ID, makeFormPayload());
+    // The client id diverges from the session id, so a WHERE built from
+    // `input.farmId` instead of the session would bind 99 and fail below.
+    await updateManagementZone(
+      ZONE_ID,
+      makeFormPayload({ farmId: OTHER_FARM_ID })
+    );
 
     expect(mockUpdate).toHaveBeenCalledTimes(1);
     expectFarmScopedWhere(capturedWhere.value, ZONE_ID);
