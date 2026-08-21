@@ -7,9 +7,10 @@ import 'whatwg-fetch';
  * Restores a working Web Storage implementation when the host Node build
  * shadows jsdom's.
  *
- * Node 22 shipped a built-in `localStorage`/`sessionStorage`. From Node 24 it
- * is exposed by default, but it only functions when the process is started
- * with a valid `--localstorage-file` path; otherwise Node installs a global
+ * Node 22 shipped a built-in `localStorage`/`sessionStorage` behind
+ * `--experimental-webstorage`, and Node 25 exposes it by default. It only
+ * functions when the process is started with a valid `--localstorage-file`
+ * path; otherwise Node installs a global
  * with no methods on it and warns. That global takes precedence over the one
  * jsdom installs, so `localStorage.clear()` throws "is not a function" inside
  * tests. Because those calls usually live in `beforeEach`/`afterEach`, the
@@ -51,7 +52,21 @@ function createMemoryStorage(): Storage {
 }
 
 for (const name of ['localStorage', 'sessionStorage'] as const) {
-  const existing = globalThis[name] as Storage | undefined;
+  // Web Storage is a DOM API. `@vitest-environment node` files (for example
+  // src/app/robots.test.ts) must keep server semantics, where it is absent.
+  if (typeof window === 'undefined') {
+    break;
+  }
+
+  // Reading the global is not side-effect free: Node 25.2.x, and Node 22-24
+  // under `--experimental-webstorage`, throw from this getter when
+  // `--localstorage-file` is missing. Treat a throw as an unusable Storage.
+  let existing: Storage | undefined;
+  try {
+    existing = globalThis[name] as Storage | undefined;
+  } catch {
+    existing = undefined;
+  }
 
   // A healthy Storage exposes the full interface; Node's stub exposes none of it.
   if (typeof existing?.clear === 'function') {
