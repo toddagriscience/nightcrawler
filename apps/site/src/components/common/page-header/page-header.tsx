@@ -30,7 +30,7 @@ export default function PageHeader({
     <div className="flex flex-col gap-6.25 justify-center items-center max-w-[910px] my-25 md:my-4 text-center">
       <span className="text-xs md:text-sm text-foreground">{caption}</span>
       <h1 className="text-[33px] md:text-5xl lg:text-[64px]">{title}</h1>
-      <h3 className="text-base md:text[17px]/[28px] w-[80%] sm:w-full">
+      <h3 className="text-base md:text[17px]/[28px] w-[80%] whitespace-pre-line sm:w-full">
         {subtitle}
       </h3>
       {hasButton && (

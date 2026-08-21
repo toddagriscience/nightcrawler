@@ -4,6 +4,7 @@
 
 import { Button } from '@/components/common';
 import HeaderImg from '@/components/common/header-img/header-img';
+import PageHeader from '@/components/common/page-header/page-header';
 import { Link } from '@/i18n/config';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -27,67 +28,54 @@ export default function WhoWeArePage() {
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="px-6 pt-16 md:px-10 md:pt-20 lg:pt-24"
         >
-          <HeaderImg
-            src="/marketing/who-we-are-header.webp"
-            alt="Meadow"
-            overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
-          />
-        </motion.div>
-      </div>
-      <div className="flex flex-col mx-auto max-w-[1200px]">
-        {/* Hero Text Section */}
-        <motion.div
-          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
-          initial={{ opacity: 0.5, y: 34 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.3, ease: 'easeOut' }}
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <div className="flex mb-16 flex-col max-w-[910px]">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] leading-tight font-light md:mb-6 mb-4 lg:mb-16 mt-4">
-              {t('title')}
-            </h1>
-            <div className="text-sm md:text-normal lg:text-base font-light leading-relaxed space-y-4">
-              <p>{t('intro.paragraphs.0')}</p>
-              <p>{t('intro.paragraphs.1')}</p>
-            </div>
-          </div>
-        </motion.div>
-        {/* Culture Section */}
-        <div className="w-full flex flex-col h-fit px-12 md:px-36 lg:px-26 py-8 md:py-6">
-          <div className="flex flex-col gap-6 lg:flex-row md:justify-between lg:justify-around lg:gap-18 lg:max-w-[1200px]">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl max-w-[200px] md:max-w-[250px] lg:max-w-[350px] leading-tight font-light md:basis-5/8">
-              {t('culture.heading.line1')}
-            </h2>
-            <div className="flex items-left flex-col md:basis-2/3 items-left">
-              <p className="text-normal md:text-base lg:text-lg font-thin leading-relaxed">
-                {t('culture.description')}
+          <section className="mx-auto flex max-w-[1100px] flex-col items-center">
+            <PageHeader
+              caption={t('eyebrow')}
+              title={t('title')}
+              subtitle={t('subtitle')}
+            />
+          </section>
+          <div className="mt-24 flex flex-col items-start gap-10 md:mt-32 md:flex-row md:justify-center md:gap-68">
+            <div className="flex w-full max-w-[320px] flex-col items-start text-left">
+              <h2 className="whitespace-pre-line text-2xl md:text-[28px] leading-snug font-normal">
+                {t('vision.title')}
+              </h2>
+              <p className="mt-4 whitespace-pre-line text-sm md:text-base font-normal leading-relaxed">
+                {t('vision.description')}
               </p>
-
               <Button
                 variant="outline"
                 size="md"
-                className="px-6 py-2 max-w-[210px] self-start font-thin mt-8"
-                text={t('culture.cta.careers')}
-                href="/careers"
+                className="px-6 py-2 max-w-[210px] font-thin mt-6"
+                text={t('vision.cta')}
+                href="/research"
                 showArrow={true}
               />
             </div>
+            <div className="flex w-full max-w-[580px] justify-center">
+              <Image
+                src="/marketing/aboutpagefamilyimage.jpg"
+                alt={t('vision.imageAlt')}
+                width={1440}
+                height={1799}
+                sizes="(min-width: 768px) 480px, 100vw"
+                className="h-[320px] w-full rounded-sm object-cover md:h-[580px]"
+              />
+            </div>
           </div>
-        </div>
-        <div className="w-full mb-16 flex flex-col items-center justify-center h-fit pt-24 md:pt-36 pb-8 md:pb-10 px-6 sm:px-8 md:px-12">
-          <div className="flex justify-center w-full max-w-[700px]">
-            <Image
-              src="/marketing/who-we-are-img.jpg"
-              alt="Team members"
-              width={700}
-              height={467}
-              sizes="(min-width: 1024px) 700px, 100vw"
-              className="h-auto w-full max-w-[700px] bg-gradient-to-t from-black/20 via-black/10 to-transparent rounded-sm"
+          <p className="mx-auto mt-24 max-w-[720px] text-center text-xl md:mt-32 md:text-2xl font-light leading-relaxed">
+            {t('missionStatement')}
+          </p>
+          <div className="mt-16 md:mt-20">
+            <HeaderImg
+              src="/marketing/who-we-are-header.webp"
+              alt="Meadow"
+              overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
             />
           </div>
-        </div>
+        </motion.div>
       </div>
       {/* Competencies Section */}
       <CompetenciesSection t={t} />
