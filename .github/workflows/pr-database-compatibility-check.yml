@@ -67,8 +67,12 @@ jobs:
             > /tmp/staging-db-ca.pem
           openssl x509 -in /tmp/staging-db-ca.pem -noout -subject
 
+          # sslmode=verify-full also validates the server certificate's hostname
+          # against STAGING_DATABASE_HOST (verify-ca only validates the CA
+          # chain), matching db-reconcile.yml. Keep this in step with the TLS
+          # posture the app pool and drizzle configs use.
           PGPASSWORD="$STAGING_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
-            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/staging-db-ca.pem" \
+            "host=$STAGING_DATABASE_HOST port=$STAGING_DATABASE_PORT user=$STAGING_DATABASE_USER dbname=$STAGING_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/staging-db-ca.pem" \
             --clean \
             --if-exists \
             --no-owner \
