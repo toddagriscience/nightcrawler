@@ -25,7 +25,13 @@ import { revalidatePath } from 'next/cache';
  * places no constraint on *what* is written to it.
  *
  * `undefined` values are dropped so untouched fields keep their stored value,
- * while `null` is preserved — it is how the form clears an optional date.
+ * while `null` is preserved — it is how the form clears an optional date, and
+ * drizzle emits it as a NULL parameter.
+ *
+ * `location` is dropped unless it is a complete pair of finite coordinates. An
+ * emptied coordinate box reaches this action as `NaN`, and `PgPointTuple`
+ * renders that as `(NaN,NaN)`, which Postgres accepts as float8 `NaN` and
+ * stores — silently corrupting the zone's position.
  *
  * @param input - Raw management zone payload from the client
  * @returns The subset of columns that are safe to write
@@ -35,7 +41,12 @@ function pickEditableManagementZoneFields(
 ): Partial<ManagementZoneInsert> {
   const editable: Partial<ManagementZoneInsert> = {
     name: input.name,
-    location: input.location,
+    location:
+      Array.isArray(input.location) &&
+      input.location.length === 2 &&
+      input.location.every((coordinate) => Number.isFinite(coordinate))
+        ? input.location
+        : undefined,
     rotationYear: input.rotationYear,
     npk: input.npk,
     npkLastUsed: input.npkLastUsed,
@@ -78,6 +89,17 @@ export async function updateManagementZone(
     }
 
     assertCanEditFarm(currentUser, 'update-management-zone');
+
+    // An emptied `<input type="date">` reaches react-hook-form as '', and
+    // `getFieldValueAs` turns that into `new Date('')`. Writing an Invalid Date
+    // would reach `PgDate.mapToDriverValue` and throw a RangeError from
+    // `.toISOString()`, so reject it by name instead.
+    for (const field of ['rotationYear', 'npkLastUsed'] as const) {
+      const value = input[field];
+      if (value instanceof Date && Number.isNaN(value.getTime())) {
+        throwActionError(`Invalid date supplied for ${field}`);
+      }
+    }
 
     const updates = pickEditableManagementZoneFields(input);
 
