@@ -2,6 +2,7 @@
 
 import { Link } from '@/i18n/config';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import type { DisclaimerProps } from './types/disclaimer';
@@ -11,23 +12,19 @@ export type { DisclaimerProps } from './types/disclaimer';
 const LINK_CLASS_NAME = 'underline font-normal';
 
 /**
- * Whether `href` points off-site (absolute `http(s)`), as opposed to an internal route.
- *
- * @param href - Link target from the `links` map
- */
-function isExternalHref(href: string): boolean {
-  return /^https?:\/\//i.test(href);
-}
-
-/**
  * Renders the text wrapped by a rich-text tag as a link. Internal routes go through the
- * locale-aware next-intl `Link`; external URLs open in a new tab with a safe `rel`.
+ * locale-aware next-intl `Link`; absolute `http(s)` URLs open in a new tab with a safe
+ * `rel`.
+ *
+ * Anything else — `mailto:`, `javascript:`, a protocol-relative `//host` — renders as
+ * plain text rather than an unvetted link. These disclosures are legal copy edited by
+ * translators, so a malformed href must not become a navigable target.
  *
  * @param href - Link target from the `links` map
  * @param chunks - Text wrapped by the tag in the message
  */
 function renderLink(href: string, chunks: ReactNode): ReactNode {
-  if (isExternalHref(href)) {
+  if (/^https?:\/\//i.test(href)) {
     return (
       <a
         href={href}
@@ -38,6 +35,14 @@ function renderLink(href: string, chunks: ReactNode): ReactNode {
         {chunks}
       </a>
     );
+  }
+
+  // A single leading slash only: `//evil.com` is protocol-relative and leaves the site.
+  if (!href.startsWith('/') || href.startsWith('//')) {
+    logger.warn('Disclaimer link href is neither a route nor http(s)', {
+      href,
+    });
+    return chunks;
   }
 
   return (

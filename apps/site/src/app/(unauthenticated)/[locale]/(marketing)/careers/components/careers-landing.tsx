@@ -14,27 +14,15 @@ import {
   MarketingResourceCards,
   MarketingValuesOperatingStack,
 } from '../../components/marketing-blocks';
+import {
+  CAREERS_DISCLAIMER_COUNT,
+  CAREERS_DISCLAIMER_LINKS,
+} from '../constants/careers-disclaimers';
 import { CAREERS_LANDING_MEDIA } from '../constants/careers-landing-media';
 import type { CareersLandingCopy } from '../types/careers-landing-copy';
 import { getTranslations } from 'next-intl/server';
 
 export type { CareersLandingCopy } from '../types/careers-landing-copy';
-
-/**
- * Number of numbered paragraphs under `careers.disclaimers` in the message files.
- */
-const CAREERS_DISCLAIMER_COUNT = 5;
-
-/**
- * Rich-text link tags used by `careers.disclaimers`. The accommodation notice links to the
- * contact inquiry form instead of exposing a mailbox address on the public page; the
- * Transparency in Coverage and Privacy Policy references link to their destinations.
- */
-const CAREERS_DISCLAIMER_LINKS = {
-  inquiry: '/contact',
-  coverage: 'https://transparency-in-coverage.collectivehealth.com/index.html',
-  privacy: '/privacy',
-} as const;
 
 /**
  * Careers hub (`/careers`) composed from reusable marketing blocks (`font-normal` typography).
