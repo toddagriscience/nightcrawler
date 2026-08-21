@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { BiArrowBack } from 'react-icons/bi';
 
 type AccountInfoStatusTone = 'success' | 'warning';
 
@@ -10,17 +11,44 @@ const statusStyles: Record<AccountInfoStatusTone, string> = {
   warning: 'text-[#ff4d00]',
 };
 
+/**
+ * Section wrapper shared by every `/account` page.
+ *
+ * Pass `backHref` on subpages to render a link back to their parent section;
+ * the `/account` index omits it, since the account header already links home.
+ *
+ * @param props.title - Heading rendered at the top of the section
+ * @param props.description - Optional italic subtitle below the heading
+ * @param props.backHref - Optional parent route; renders a back link when set
+ * @param props.backLabel - Visible text for the back link. Falls back to `Back`
+ *   when omitted or blank, so the link always has an accessible name
+ * @param props.children - Section body content
+ * @returns The account section wrapper
+ */
 export default function AccountInfo({
   title,
   description,
+  backHref,
+  backLabel = 'Back',
   children,
 }: {
   title: string;
   description?: string;
+  backHref?: string;
+  backLabel?: string;
   children: ReactNode;
 }) {
   return (
     <section className="w-full max-w-[568px]">
+      {backHref ? (
+        <Link
+          href={backHref}
+          className="text-muted-foreground mb-4 inline-flex items-center gap-2 text-sm hover:opacity-70"
+        >
+          <BiArrowBack className="size-4" aria-hidden="true" />
+          <span>{backLabel?.trim() || 'Back'}</span>
+        </Link>
+      ) : null}
       <h2 className="text-foreground text-3xl leading-none">{title}</h2>
       {description ? (
         <p className="text-foreground mt-6 text-sm font-light italic">

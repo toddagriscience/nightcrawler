@@ -10,6 +10,7 @@ export default function AccountSecurityPage() {
     <AccountInfo
       title="Security"
       description="Keep your Todd account secure with additional layers of protection."
+      backHref="/account"
     >
       <div className="border-t border-black/20">
         <div className="flex min-h-11 items-center justify-between gap-4 border-b border-black/20 py-1">

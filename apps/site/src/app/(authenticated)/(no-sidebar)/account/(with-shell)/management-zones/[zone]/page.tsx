@@ -45,6 +45,7 @@ export default async function ManagementZonePage({
           ? 'Edit management zone details.'
           : 'View management zone details.'
       }
+      backHref="/account/management-zones"
     >
       <ManagementZoneForm
         zone={curManagementZone}
