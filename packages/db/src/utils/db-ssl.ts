@@ -231,20 +231,45 @@ export function stagingCaCert(): string | undefined {
 export function caCertForConnection(
   connectionString: string | undefined
 ): string | undefined {
+  return caCertSourceForConnection(connectionString).cert;
+}
+
+/**
+ * The certificate for a connection *and* the env var that supplied it.
+ *
+ * Split out so a missing certificate is reported against the variable the
+ * lookup actually consulted. `resolveDbPoolConfig` previously let
+ * `remoteDbSslConfig` fall back to its `DATABASE_PEM_CERT` default, which named
+ * the wrong variable for a staging host — where `stagingCaCert()` reads
+ * `STAGING_DATABASE_PEM_CERT` first.
+ *
+ * @param connectionString - Postgres URL the certificate must verify
+ * @returns The certificate, if configured, and the variable to name on failure
+ */
+function caCertSourceForConnection(connectionString: string | undefined): {
+  cert: string | undefined;
+  varName: string;
+} {
   const stagingHost = process.env.STAGING_DATABASE_HOST;
 
   if (connectionString && stagingHost) {
     try {
       const host = normalizeDbHost(new URL(connectionString).hostname);
       if (host && host === normalizeDbHost(stagingHost)) {
-        return stagingCaCert();
+        return {
+          cert: stagingCaCert(),
+          varName: 'STAGING_DATABASE_PEM_CERT (or DATABASE_PEM_CERT)',
+        };
       }
     } catch {
       // Unparseable URL — fall through to the shared certificate.
     }
   }
 
-  return process.env.DATABASE_PEM_CERT || undefined;
+  return {
+    cert: process.env.DATABASE_PEM_CERT || undefined,
+    varName: 'DATABASE_PEM_CERT',
+  };
 }
 
 /**
@@ -320,13 +345,13 @@ export function resolveDbPoolConfig(
     return { connectionString: sanitized, ssl: false };
   }
 
-  const rawCert = caCertForConnection(sanitized);
+  const { cert: rawCert, varName } = caCertSourceForConnection(sanitized);
 
   return {
     connectionString: sanitized,
     ssl:
       rawCert || options.requireCaCert
-        ? remoteDbSslConfig(rawCert)
+        ? remoteDbSslConfig(rawCert, varName)
         : { rejectUnauthorized: true },
   };
 }
