@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { MarketingPillLink } from '@/app/(unauthenticated)/[locale]/(marketing)/components/marketing-blocks';
+import SanityBodyImage from '@/components/sanity/news/sanity-body-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
 import type { SanityArticle } from '@/lib/sanity/article-types';
@@ -88,6 +89,9 @@ export async function CareersJobPosting({
           {children}
         </h5>
       ),
+    },
+    types: {
+      image: (props) => <SanityBodyImage {...props} />,
     },
     marks: {
       link: (props) => <SanityLink {...props} />,

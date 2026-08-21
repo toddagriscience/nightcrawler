@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import SanityBodyImage from '@/components/sanity/news/sanity-body-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
 import { getArticleCtasForPlacement } from '@/lib/sanity/article-cta-utils';
@@ -68,6 +69,9 @@ export function CmsArticlePage({
           {children}
         </h5>
       ),
+    },
+    types: {
+      image: (props) => <SanityBodyImage {...props} />,
     },
     marks: {
       link: (props) => <SanityLink {...props} />,
