@@ -76,6 +76,35 @@ describe('ManagementZoneForm date pickers', () => {
     );
   });
 
+  it('marks the open panel with data-slot so the calendar renders transparent', async () => {
+    const user = userEvent.setup();
+    render(<ManagementZoneForm zone={zone} canEdit />);
+
+    await user.click(screen.getByRole('button', { name: ROTATION_TRIGGER }));
+
+    // calendar.tsx styles itself with
+    // `[[data-slot=popover-content]_&]:bg-transparent`. Without this attribute
+    // on the panel the selector never matches and the calendar keeps
+    // `bg-background` inside a `bg-popover` panel — a silent visual bug no
+    // other assertion would catch.
+    const panel = document.querySelector('[data-slot="popover-content"]');
+    expect(panel).not.toBeNull();
+    expect(panel).toContainElement(
+      screen.getByRole('button', { name: /july 15th, 2026/i })
+    );
+  });
+
+  it('does not point a label at the trigger button', async () => {
+    render(<ManagementZoneForm zone={zone} canEdit />);
+
+    // A `<label for>` cannot name a button, so the association was inert and
+    // clicking the text did nothing. The trigger owns its accessible name.
+    expect(document.querySelector('label[for="rotationYear"]')).toBeNull();
+    expect(
+      screen.getByRole('button', { name: ROTATION_TRIGGER })
+    ).toBeInTheDocument();
+  });
+
   it('disables both pickers for read only accounts', () => {
     render(<ManagementZoneForm zone={zone} canEdit={false} />);
 
