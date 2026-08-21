@@ -55,11 +55,11 @@ export default function WhoWeArePage() {
             </div>
             <div className="flex w-full max-w-[580px] justify-center">
               <Image
-                src="/marketing/aboutpagefamilyimage.jpg"
+                src="/marketing/about-family.jpg"
                 alt={t('vision.imageAlt')}
                 width={1440}
                 height={1799}
-                sizes="(min-width: 768px) 480px, 100vw"
+                sizes="(min-width: 768px) 580px, 100vw"
                 className="h-[320px] w-full rounded-sm object-cover md:h-[580px]"
               />
             </div>
