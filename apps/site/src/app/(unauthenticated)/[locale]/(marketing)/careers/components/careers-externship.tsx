@@ -3,6 +3,10 @@
 'use client';
 
 import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
+import {
+  CAREERS_DISCLAIMER_COUNT,
+  CAREERS_DISCLAIMER_LINKS,
+} from '../constants/careers-disclaimers';
 import HeaderImg from '@/components/common/header-img/header-img';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -114,7 +118,8 @@ export function CareersExternship() {
           <div className="text-left">
             <Disclaimer
               translationLoc="careers.disclaimers"
-              disclaimerCount={5}
+              disclaimerCount={CAREERS_DISCLAIMER_COUNT}
+              links={CAREERS_DISCLAIMER_LINKS}
             />
           </div>
         </main>

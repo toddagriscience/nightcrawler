@@ -2,6 +2,7 @@
 
 import type { ReactElement } from 'react';
 
+import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 import {
   MarketingBenefitsColumns,
   MarketingBridgeStatement,
@@ -13,6 +14,10 @@ import {
   MarketingResourceCards,
   MarketingValuesOperatingStack,
 } from '../../components/marketing-blocks';
+import {
+  CAREERS_DISCLAIMER_COUNT,
+  CAREERS_DISCLAIMER_LINKS,
+} from '../constants/careers-disclaimers';
 import { CAREERS_LANDING_MEDIA } from '../constants/careers-landing-media';
 import type { CareersLandingCopy } from '../types/careers-landing-copy';
 import { getTranslations } from 'next-intl/server';
@@ -132,6 +137,13 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
           heading={footerHeading}
           headingId="careers-footer-cta-heading"
           sectionId="careers-footer-cta"
+        />
+
+        <Disclaimer
+          className="mb-0 w-full max-w-none"
+          disclaimerCount={CAREERS_DISCLAIMER_COUNT}
+          links={CAREERS_DISCLAIMER_LINKS}
+          translationLoc="careers.disclaimers"
         />
       </div>
     </main>

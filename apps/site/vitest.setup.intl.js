@@ -34,24 +34,73 @@ const loadMessagesSync = (locale) => {
 
 const enMessages = loadMessagesSync('en');
 
+// Resolve a dotted key inside a message namespace object.
+const nestedGet = (obj, path) => {
+  return path.split('.').reduce((current, segment) => {
+    return current?.[segment];
+  }, obj);
+};
+
+// Minimal stand-in for next-intl's `t.rich`: replaces `<tag>text</tag>` pairs with the
+// output of the matching tag function in `values`, so components that render links inside
+// translations (e.g. `Disclaimer`) work under Vitest. Only non-nested tags are supported.
+const renderRich = (message, values = {}) => {
+  if (typeof message !== 'string') return message;
+
+  const parts = [];
+  const tagPattern = /<(\w+)>([\s\S]*?)<\/\1>/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = tagPattern.exec(message)) !== null) {
+    const [full, tag, inner] = match;
+    if (match.index > lastIndex) {
+      parts.push(message.slice(lastIndex, match.index));
+    }
+    const renderTag = values[tag];
+    parts.push(
+      typeof renderTag === 'function'
+        ? React.createElement(
+            React.Fragment,
+            { key: parts.length },
+            renderTag(inner)
+          )
+        : full
+    );
+    lastIndex = match.index + full.length;
+  }
+
+  if (lastIndex < message.length) {
+    parts.push(message.slice(lastIndex));
+  }
+
+  return parts.length === 1 && typeof parts[0] === 'string' ? parts[0] : parts;
+};
+
+// Build a translator for `namespace` that mirrors the real next-intl `t`, including `.rich`.
+// Like next-intl, `namespace` may be dotted (e.g. `careers.disclaimers`) or omitted for root.
+const createTranslator = (namespace) => {
+  const namespaceMessages = namespace
+    ? nestedGet(enMessages, namespace)
+    : enMessages;
+
+  const lookup = (key) => {
+    // Use actual message structure from loaded messages
+    if (namespaceMessages && typeof namespaceMessages === 'object') {
+      const translation = nestedGet(namespaceMessages, key);
+      if (translation) return translation;
+    }
+
+    return `[${namespace}.${key}]`;
+  };
+
+  const t = vitest.fn((key) => lookup(key));
+  t.rich = vitest.fn((key, values) => renderRich(lookup(key), values));
+  return t;
+};
+
 vitest.mock('next-intl', () => ({
-  useTranslations: vitest.fn((namespace) => {
-    return vitest.fn((key) => {
-      // Use actual message structure from loaded messages
-      const nestedGet = (obj, path) => {
-        return path.split('.').reduce((current, segment) => {
-          return current?.[segment];
-        }, obj);
-      };
-
-      if (enMessages[namespace]) {
-        const translation = nestedGet(enMessages[namespace], key);
-        if (translation) return translation;
-      }
-
-      return `[${namespace}.${key}]`;
-    });
-  }),
+  useTranslations: vitest.fn((namespace) => createTranslator(namespace)),
   useLocale: vitest.fn(() => 'en'),
   NextIntlClientProvider: ({ children }) => children,
 }));
@@ -60,16 +109,7 @@ vitest.mock('next-intl/server', () => ({
   getMessages: vitest.fn().mockResolvedValue(enMessages),
   getTranslations: vitest.fn().mockImplementation((opts) => {
     const namespace = typeof opts === 'string' ? opts : opts?.namespace;
-    return vitest.fn((key) => {
-      const nestedGet = (obj, path) => {
-        return path.split('.').reduce((current, segment) => {
-          return current?.[segment];
-        }, obj);
-      };
-
-      const translation = nestedGet(enMessages[namespace], key);
-      return translation || `[${namespace}.${key}]`;
-    });
+    return createTranslator(namespace);
   }),
   getRequestConfig: vitest.fn((fn) => fn),
 }));
