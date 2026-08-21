@@ -1,33 +1,48 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-/** Fallback identifier used when no client IP can be determined. */
-const UNKNOWN_CLIENT_IP = 'unknown';
-
 /**
- * Extracts the originating client IP address from request headers.
+ * Resolves the originating client IP for use as a rate-limit key.
  *
- * Reads the `x-forwarded-for` header (set by Vercel / upstream proxies), which
- * may contain a comma-separated list of IPs; the first entry is the original
- * client. Accepts a `Headers` object so callers can pass the result of
- * `await headers()` and so it is trivially unit-testable.
+ * Prefers `x-vercel-forwarded-for`, which the Vercel edge sets and a client
+ * cannot write. Falls back to the **right-most** entry of `x-forwarded-for`,
+ * then `x-real-ip`.
  *
- * Trust note: `x-forwarded-for` is client-supplied and only trustworthy because
- * the hosting proxy (Vercel) sets it. Used here as a rate-limit key for
- * defense-in-depth — not for auth — and the limiter fails open, so a spoofed
- * header cannot deny service to legitimate users. Do not rely on this value for
- * any security-critical decision without a trusted-proxy guarantee.
+ * The right-most entry matters. `x-forwarded-for` is append-style: each proxy
+ * adds the address it received the connection from, so the left-most element is
+ * whatever the *client* sent. Keying on it lets an attacker rotate
+ * `x-forwarded-for: <random>` and get a fresh bucket every request, which makes
+ * the limiter a no-op. The right-most entry is the one our own proxy appended.
  *
- * @param headerList - Request headers to read from.
- * @returns The trimmed client IP, or `'unknown'` when unavailable.
+ * Returns `null` rather than a sentinel string when nothing trustworthy is
+ * available. A shared constant would put every header-less request worldwide
+ * into one bucket, making the limit N requests per minute *in total* — a
+ * self-inflicted denial of service rather than a defence. Callers skip the
+ * limiter instead; on Vercel these headers are always present, so this path is
+ * effectively unreachable in production.
+ *
+ * Still not an authentication signal — defence in depth for public write
+ * endpoints only.
+ *
+ * @param headerList - Request headers to read from
+ * @returns The client IP, or `null` when none can be trusted
  */
-export function getClientIp(headerList: Headers): string {
-  const forwardedFor = headerList.get('x-forwarded-for');
-  if (!forwardedFor) {
-    return UNKNOWN_CLIENT_IP;
+export function getClientIp(headerList: Headers): string | null {
+  const vercelForwardedFor = headerList.get('x-vercel-forwarded-for')?.trim();
+  if (vercelForwardedFor) {
+    return vercelForwardedFor;
   }
 
-  const [first] = forwardedFor.split(',');
-  const ip = first?.trim();
+  const forwardedFor = headerList.get('x-forwarded-for');
+  if (forwardedFor) {
+    const hops = forwardedFor
+      .split(',')
+      .map((hop) => hop.trim())
+      .filter(Boolean);
+    const nearest = hops[hops.length - 1];
+    if (nearest) {
+      return nearest;
+    }
+  }
 
-  return ip ? ip : UNKNOWN_CLIENT_IP;
+  return headerList.get('x-real-ip')?.trim() || null;
 }

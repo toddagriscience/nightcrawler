@@ -148,6 +148,12 @@ export const publicWriteRateLimit = createRateLimiter({
  * limiter, and throws an action error when the limit is exceeded. This is the
  * one-line guard server actions should call before doing any work.
  *
+ * When no trustworthy IP is available the check is skipped rather than keyed on
+ * a shared placeholder, which would put every such request into a single global
+ * bucket and rate-limit the whole world to `requests` per window collectively.
+ * On Vercel the edge always sets a forwarding header, so this is effectively
+ * unreachable in production and matches the limiter's existing fail-open stance.
+ *
  * @param check - Limiter to enforce. Defaults to {@link publicWriteRateLimit}.
  * @param message - Error surfaced to the client when rate limited.
  */
@@ -156,6 +162,11 @@ export async function enforceRateLimit(
   message = 'Too many requests. Please try again shortly.'
 ): Promise<void> {
   const ip = getClientIp(await headers());
+  if (!ip) {
+    logger.warn('[rate-limit] No trustworthy client IP; skipping check.');
+    return;
+  }
+
   const { success } = await check(ip);
   if (!success) {
     throwActionError(message);
