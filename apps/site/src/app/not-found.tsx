@@ -9,36 +9,7 @@ import { Link } from '@/i18n/config';
 import { createClient } from '@/lib/supabase/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6';
-
-/** Social media links displayed at the bottom of the 404 page. */
-const socialMediaIcons = [
-  {
-    icon: <FaInstagram aria-hidden="true" />,
-    href: 'https://www.instagram.com/toddagriscience/',
-    ariaLabel: 'Visit our Instagram page',
-  },
-  {
-    icon: <FaLinkedinIn aria-hidden="true" />,
-    href: 'https://www.linkedin.com/company/toddagriscience/',
-    ariaLabel: 'Visit our LinkedIn page',
-  },
-  {
-    icon: <FaXTwitter aria-hidden="true" />,
-    href: 'https://x.com/toddagriscience',
-    ariaLabel: 'Visit our X (Twitter) page',
-  },
-  {
-    icon: <FaYoutube aria-hidden="true" />,
-    href: 'https://www.youtube.com/@toddagriscience',
-    ariaLabel: 'Visit our YouTube channel',
-  },
-];
+import SocialLinks from '@/components/common/social-links/social-links';
 
 /**
  * Async server component that fetches locale data and auth state.
@@ -83,17 +54,9 @@ async function NotFoundContent() {
               </div>
             </div>
             <div className="flex justify-center">
-              <div className="flex flex-row flex-wrap gap-6">
-                {socialMediaIcons.map((val) => (
-                  <Link
-                    key={val.href}
-                    href={val.href}
-                    aria-label={val.ariaLabel}
-                  >
-                    {val.icon}
-                  </Link>
-                ))}
-              </div>
+              <SocialLinks
+                platforms={['instagram', 'linkedin', 'x', 'youtube']}
+              />
             </div>
           </div>
         </FadeIn>
