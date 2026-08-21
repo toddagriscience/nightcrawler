@@ -99,12 +99,19 @@ function DateField({
 
   return (
     <div>
-      <Label
-        htmlFor={name}
+      {/*
+        A `<label for>` cannot name a `<button>`, so this is a plain span: the
+        association was inert and clicking it did nothing, unlike the native
+        date input it replaced. The trigger below carries the accessible name
+        via aria-label, so this copy is hidden from assistive tech to avoid
+        announcing the label twice.
+      */}
+      <span
+        aria-hidden="true"
         className="block text-sm font-medium leading-tight mb-1"
       >
         {label}
-      </Label>
+      </span>
       <Controller
         control={control}
         name={name}
