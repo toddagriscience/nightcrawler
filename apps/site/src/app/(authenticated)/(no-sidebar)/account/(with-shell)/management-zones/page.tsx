@@ -12,7 +12,11 @@ export default async function AccountManagementPage() {
   const managementZones = await getManagementZones();
 
   return (
-    <AccountInfo title="Management Zones">
+    <AccountInfo
+      title="Management Zones"
+      backHref="/account"
+      backLabel="Back to account"
+    >
       {managementZones.length === 0 ? (
         <AccountInfoSection title={toDisplayValue()}>
           <AccountInfoRow label="Nickname" value={toDisplayValue()} />
