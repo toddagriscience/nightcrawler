@@ -39,31 +39,43 @@ describe('WhoWeArePage', () => {
 
     expect(h1Elements).toHaveLength(1);
 
-    expect(h1Elements[0]).toHaveTextContent('Who We Are');
+    expect(h1Elements[0]).toHaveTextContent('About');
   });
 
   it('renders the hero content', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
-    expect(
-      screen.getByRole('heading', { name: 'Who We Are' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'About' })).toBeInTheDocument();
+
+    expect(screen.getByText('Company')).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Todd is building hyper-intelligent mentors/i)
-    ).toBeInTheDocument();
+      screen.getAllByText(
+        /We believe sustainable agriculture is the foundation/i
+      )
+    ).not.toHaveLength(0);
   });
 
-  it('renders culture section', () => {
+  it('renders vision section with image and CTA', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
     expect(
-      screen.getByRole('heading', { name: 'Empowered by Our Culture' })
+      screen.getByRole('heading', {
+        name: /Our vision for the future\s+of agriculture/i,
+      })
     ).toBeInTheDocument();
 
-    expect(screen.getByText(/distinctive culture/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Our research/i })
+    ).toBeInTheDocument();
+  });
 
-    expect(screen.getByRole('link', { name: 'Careers' })).toBeInTheDocument();
+  it('renders the mission statement', () => {
+    renderWithNextIntl(<WhoWeArePage />);
+
+    expect(
+      screen.getByText(/We are creating generative farms/i)
+    ).toBeInTheDocument();
   });
 
   it('renders partners section', () => {
