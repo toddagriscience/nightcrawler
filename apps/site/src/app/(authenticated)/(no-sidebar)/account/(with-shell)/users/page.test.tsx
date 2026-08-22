@@ -7,7 +7,7 @@ import AccountUsersPage from './page';
 vi.mock('../../db', () => ({
   getAccountUsersData: vi.fn(async () => ({
     principalOperator: {
-      fristName: 'Alex Owner',
+      firstName: 'Alex Owner',
       email: 'alex@example.com',
       phone: '+1 (222) 111-3333',
     },
@@ -23,6 +23,7 @@ describe('AccountUsersPage', () => {
   it('renders user rows from account data', async () => {
     render(await AccountUsersPage());
 
+    expect(screen.getByText('Alex Owner')).toBeInTheDocument();
     expect(screen.getByText('alex@example.com')).toBeInTheDocument();
     expect(screen.getByText('Jamie Admin')).toBeInTheDocument();
     expect(screen.getByText('jamie@example.com')).toBeInTheDocument();

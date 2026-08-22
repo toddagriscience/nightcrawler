@@ -15,6 +15,7 @@ import type {
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{
@@ -39,6 +40,16 @@ export async function getAccountShellData(): Promise<{
   };
 }
 
+/**
+ * Loads the contact details shown on the account users page: the authenticated
+ * user (the principal operator) and one other farm user treated as the owner.
+ *
+ * Both contacts expose `firstName` holding the full display name, matching what
+ * the account users page renders.
+ *
+ * @returns The principal operator's display name, email and phone, plus the
+ * owner's when another farm user exists, otherwise `null`.
+ */
 export async function getAccountUsersData(): Promise<{
   principalOperator: Partial<UserSelect>;
   owner: Partial<UserSelect> | null;
@@ -67,7 +78,7 @@ export async function getAccountUsersData(): Promise<{
     ) ?? farmUsers.find((farmUser) => farmUser.id !== currentUser.id);
 
   const principalContact = {
-    name: toDisplayName(
+    firstName: toDisplayName(
       principalOperator?.firstName,
       principalOperator?.lastName
     ),
@@ -87,6 +98,16 @@ export async function getAccountUsersData(): Promise<{
   };
 }
 
+/**
+ * Loads the farm record and its mailing location for the authenticated user's
+ * farm, for the account overview page.
+ *
+ * @returns The farm row plus its joined `farm_location` row, or `null` when the
+ * farm has no location on file.
+ * @throws Triggers Next.js `notFound()` when no farm row matches the
+ * authenticated user's `farmId`, so the page renders the 404 boundary instead
+ * of a 500.
+ */
 export async function getAccountFarmData(): Promise<{
   farm: FarmSelect;
   location: FarmLocationSelect | null;
@@ -99,6 +120,10 @@ export async function getAccountFarmData(): Promise<{
     .leftJoin(farmLocation, eq(farmLocation.farmId, farm.id))
     .where(eq(farm.id, currentUser.farmId))
     .limit(1);
+
+  if (!farmRecord) {
+    notFound();
+  }
 
   return { farm: farmRecord.farm, location: farmRecord.farm_location };
 }
