@@ -5,7 +5,7 @@ import Button from './button';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../.storybook/utils/storybookControls';
+} from '../../../../.storybook/utils/storybook-controls';
 
 const meta = {
   title: 'Common/Button',

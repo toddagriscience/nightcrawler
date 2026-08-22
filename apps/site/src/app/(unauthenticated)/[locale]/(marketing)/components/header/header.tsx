@@ -10,7 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { useTheme } from '@/context/theme/ThemeContext';
+import { useTheme } from '@/context/theme/theme-context';
 import { Link } from '@/i18n/config';
 import { MenuItem } from '@/lib/types/components';
 import { MenuIcon } from 'lucide-react';
