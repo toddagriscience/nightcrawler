@@ -1,9 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { SanityArticle } from '@/lib/sanity/article-types';
+import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import News from './page';
 
 const { getNewsIndexArticlesMock } = vi.hoisted(() => ({
@@ -102,5 +103,27 @@ describe('News Page', () => {
       screen.getByText('New AI Model Sets Performance Record')
     ).toBeInTheDocument();
     expect(screen.getByText('Global Trade Policy Shifts')).toBeInTheDocument();
+  });
+});
+
+// The newsroom mounts the cursor follower, which reads `window.matchMedia`;
+// jsdom has none, so stub it for every test in this file.
+beforeEach(() => {
+  stubMatchMedia(true);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+describe('News Page cursor follower', () => {
+  it('tags article rows with the localized "View" label and mounts the follower', async () => {
+    getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
+    renderWithNextIntl(await renderPage());
+
+    expect(
+      screen.getByRole('link', { name: /New AI Model Sets Performance Record/ })
+    ).toHaveAttribute('data-cursor-label', 'View');
+    expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
   });
 });
