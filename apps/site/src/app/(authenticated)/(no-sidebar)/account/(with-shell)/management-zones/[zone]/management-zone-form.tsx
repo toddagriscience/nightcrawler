@@ -3,19 +3,169 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import type {
   ManagementZoneInsert,
   ManagementZoneSelect,
 } from '@/lib/types/db';
+import { cn } from '@/lib/utils';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { BiArrowBack } from 'react-icons/bi';
+import { useMemo, useState } from 'react';
+import { Controller, useForm, type Control } from 'react-hook-form';
+import { BiArrowBack, BiCalendar } from 'react-icons/bi';
+import { toDisplayDate } from '../../../util';
 import { updateManagementZone } from './actions';
 
+const FIELD_CLASSES =
+  'w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin';
+
+const JANUARY = 0;
+const DECEMBER = 11;
+const CALENDAR_YEARS_BACK = 50;
+const CALENDAR_YEARS_AHEAD = 10;
+
+/**
+ * Converts a database date, which is stored at UTC midnight, into the local
+ * midnight date react-day-picker expects.
+ * @param {Date | null | undefined} value - The date read from the database
+ * @returns {Date | undefined} The equivalent day at local midnight
+ */
+function toCalendarDate(value: Date | null | undefined) {
+  if (!value) {
+    return undefined;
+  }
+
+  return new Date(
+    value.getUTCFullYear(),
+    value.getUTCMonth(),
+    value.getUTCDate()
+  );
+}
+
+/**
+ * Converts the local midnight date react-day-picker returns back to the UTC
+ * midnight the `date` column round-trips through, so the day does not shift for
+ * users east of UTC.
+ * @param {Date | undefined} value - The day picked in the calendar
+ * @returns {Date | null} The equivalent day at UTC midnight
+ */
+function fromCalendarDate(value: Date | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  return new Date(
+    Date.UTC(value.getFullYear(), value.getMonth(), value.getDate())
+  );
+}
+
+/**
+ * Calendar backed replacement for a native date input, wired to react-hook-form
+ * through a controller since the trigger is a button rather than an input.
+ */
+function DateField({
+  control,
+  name,
+  label,
+  disabled,
+}: {
+  control: Control<ManagementZoneInsert>;
+  name: 'rotationYear' | 'npkLastUsed';
+  label: string;
+  disabled: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+
+  // The dropdowns need an explicit range, otherwise react-day-picker caps
+  // navigation at the end of the current year and future rotation dates become
+  // unreachable.
+  const [startMonth, endMonth] = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+
+    return [
+      new Date(currentYear - CALENDAR_YEARS_BACK, JANUARY),
+      new Date(currentYear + CALENDAR_YEARS_AHEAD, DECEMBER),
+    ];
+  }, []);
+
+  return (
+    <div>
+      {/*
+       * A `<label for>` cannot name a `<button>`, so this is plain text rather
+       * than a `<Label>`: it stays visible without claiming an association it
+       * cannot have. The trigger names itself through `aria-label`, so this
+       * copy is hidden from assistive tech to avoid announcing it twice.
+       */}
+      <span
+        aria-hidden="true"
+        className="block text-sm font-medium leading-tight mb-1"
+      >
+        {label}
+      </span>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => {
+          const selected = toCalendarDate(field.value);
+          const displayValue = toDisplayDate(field.value);
+
+          return (
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  id={name}
+                  type="button"
+                  variant="outline"
+                  disabled={disabled}
+                  // A `<label for>` does not name a button, so the trigger
+                  // carries the label and the current value itself.
+                  aria-label={`${label}: ${displayValue}`}
+                  className={cn(
+                    FIELD_CLASSES,
+                    'justify-start hover:bg-transparent'
+                  )}
+                >
+                  <BiCalendar className="size-4" />
+                  {displayValue}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  autoFocus
+                  mode="single"
+                  captionLayout="dropdown"
+                  startMonth={startMonth}
+                  endMonth={endMonth}
+                  selected={selected}
+                  defaultMonth={selected}
+                  onSelect={(date) => {
+                    field.onChange(fromCalendarDate(date));
+                    setOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          );
+        }}
+      />
+    </div>
+  );
+}
+
+/**
+ * Editable details for a single management zone.
+ * @param {ManagementZoneSelect} zone - The zone being edited
+ * @param {boolean} canEdit - Whether the current user may submit changes
+ */
 export default function ManagementZoneForm({
   zone,
   canEdit,
@@ -25,6 +175,7 @@ export default function ManagementZoneForm({
 }) {
   const {
     register,
+    control,
     handleSubmit,
     trigger,
     setError,
@@ -33,9 +184,6 @@ export default function ManagementZoneForm({
     defaultValues: {
       ...zone,
       location: [0, 0],
-      // react-hook-form doesn't automatically handle Date, see each input for more context
-      npkLastUsed: undefined,
-      rotationYear: undefined,
     },
   });
 
@@ -67,7 +215,7 @@ export default function ManagementZoneForm({
           Nickname
         </Label>
         <Input
-          className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+          className={FIELD_CLASSES}
           id="name"
           disabled={!canEdit}
           {...register('name')}
@@ -83,7 +231,7 @@ export default function ManagementZoneForm({
             Latitude
           </Label>
           <Input
-            className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+            className={FIELD_CLASSES}
             id="latitude"
             type="number"
             step="any"
@@ -99,7 +247,7 @@ export default function ManagementZoneForm({
             Longitude
           </Label>
           <Input
-            className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+            className={FIELD_CLASSES}
             id="longitude"
             type="number"
             step="any"
@@ -110,40 +258,18 @@ export default function ManagementZoneForm({
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div>
-          <Label
-            htmlFor="rotationYear"
-            className="block text-sm font-medium leading-tight mb-1"
-          >
-            Rotation year
-          </Label>
-          <Input
-            className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
-            id="rotationYear"
-            type="date"
-            disabled={!canEdit}
-            {...register('rotationYear', { valueAsDate: true })}
-            defaultValue={zone.rotationYear?.toISOString().split('T')[0]}
-          />
-        </div>
-        <div>
-          <Label
-            htmlFor="npkLastUsed"
-            className="block text-sm font-medium leading-tight mb-1"
-          >
-            NPK last used
-          </Label>
-          <Input
-            className="w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
-            id="npkLastUsed"
-            type="date"
-            disabled={!canEdit}
-            {...register('npkLastUsed', {
-              valueAsDate: true,
-            })}
-            defaultValue={zone.npkLastUsed?.toISOString().split('T')[0]}
-          />
-        </div>
+        <DateField
+          control={control}
+          name="rotationYear"
+          label="Rotation year"
+          disabled={!canEdit}
+        />
+        <DateField
+          control={control}
+          name="npkLastUsed"
+          label="NPK last used"
+          disabled={!canEdit}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-2 md:grid-cols-3 mt-10">
