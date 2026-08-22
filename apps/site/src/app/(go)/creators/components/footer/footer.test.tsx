@@ -24,7 +24,7 @@ describe('GoFooter', () => {
     expect(screen.getByText('Terms & Conditions')).toBeInTheDocument();
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
     expect(screen.getByText('Accessibility')).toBeInTheDocument();
-    expect(screen.getByText('Disclosures')).toBeInTheDocument();
+    expect(screen.getByText('Legal')).toBeInTheDocument();
     expect(screen.getByText('Vulnerability Reporting')).toBeInTheDocument();
   });
 

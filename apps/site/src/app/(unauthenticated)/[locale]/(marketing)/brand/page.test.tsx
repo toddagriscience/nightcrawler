@@ -55,10 +55,12 @@ describe('BrandPage', () => {
       '/terms'
     );
 
-    const mailLinks = screen.getAllByRole('link', { name: 'brand@todd.com' });
+    const mailLinks = screen.getAllByRole('link', {
+      name: 'brand@toddagriscience.com',
+    });
     expect(mailLinks.length).toBeGreaterThanOrEqual(1);
     for (const link of mailLinks) {
-      expect(link).toHaveAttribute('href', 'mailto:brand@todd.com');
+      expect(link).toHaveAttribute('href', 'mailto:brand@toddagriscience.com');
     }
   });
 

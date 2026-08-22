@@ -84,7 +84,10 @@ const mockLocaleContext = (
  * Mock framer-motion
  * @returns {object} - The mocked framer-motion
  */
-vitest.mock('framer-motion', () => {
+vitest.mock('framer-motion', async () => {
+  const actual =
+    await vitest.importActual<typeof import('framer-motion')>('framer-motion');
+
   const MockMotionComponent = ({
     children,
     ...props
@@ -94,13 +97,15 @@ vitest.mock('framer-motion', () => {
   };
 
   return {
-    ...vitest.importActual('framer-motion'),
+    ...actual,
     useScroll: vitest.fn(() => ({ scrollYProgress: 0 })),
     useTransform: vitest.fn(() => 0),
     useMotionValueEvent: vitest.fn(),
+    useReducedMotion: vitest.fn(() => false),
     motion: {
       div: MockMotionComponent,
       button: MockMotionComponent,
+      p: MockMotionComponent,
     },
     AnimatePresence: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>

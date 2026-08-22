@@ -4,7 +4,7 @@
     "intro": {
       "paragraphs": {
         "0": "Todd is building hyper-intelligent mentors and AI research platforms for sustainable agriculture. Not models trained solely on public information. Not simulated environments. Real, physical, proprietary data that characterizes soil, generates actionable practices, and gigabytes of data that exist nowhere else.",
-        "1": "Our approach starts with a multi-strategy, generative agriculture thesis where mineral levels are closely monitored to help predict future outcomes and build superior long-term farm value. We deploy location-specific resources to farms everywhere, from renowned coastal areas to mountainous hollows— driving measurable impact and propelling a virtuous cycle of improved soil quality and healthier produce."
+        "1": "Our approach starts with a multi-strategy, generative agriculture thesis where mineral levels are closely monitored to help predict future outcomes and build superior long-term farm value. We deploy location-specific resources to farms everywhere, from renowned coastal areas to mountainous hollows — driving measurable impact and propelling a virtuous cycle of improved soil quality and healthier produce."
       }
     },
     "culture": {
@@ -22,6 +22,32 @@
         "0": "Organic & Biodynamic Management Expertise",
         "1": "Understanding of Modern Consumer Demands and Channels",
         "2": "Positioned at the Frontier of Sustainable Agriculture"
+      }
+    },
+    "responsibilities": {
+      "title": "Responsibilities",
+      "subtitle": "We work with self-supporting farms that value the Todd team’s ability to affect change in these areas.",
+      "items": {
+        "0": {
+          "heading": "Disciplined Data Selection",
+          "description": "We utilize proprietary analytic frameworks and digital capabilities to understand disease dynamics and insect mitigation holistically, enabling responsible farm management decisions."
+        },
+        "1": {
+          "heading": "Company Philosophy",
+          "description": "We are assembling a firm designed to emulate the consumer bases of our farms, embracing a holistic pace of life that nourishes the natural character of individuals, communities and the earth, in order to take what we believe to be the best path forward."
+        },
+        "2": {
+          "heading": "Farm Integration",
+          "description": "By concentrating on a small group of farms across our categories of management, we strive to support clearly defined goals centered on responsibility, sustainability, and long-term improvement."
+        },
+        "3": {
+          "heading": "Market Development & Consumer Awareness",
+          "description": "We leverage our team’s complementary entrepreneurial experience to explore direct-to-consumer channels, including CSA and other market-entry strategies that strengthen consumer connection and brand awareness."
+        },
+        "4": {
+          "heading": "Regulatory & Policy Engagement",
+          "description": "We actively monitor our farms’ regulatory obligations and play an essential role in the formulation and implementation of policies governing the worldwide agriculture industry through accountability, positions, and leadership."
+        }
       }
     },
     "partners": {

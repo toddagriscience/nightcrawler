@@ -73,6 +73,17 @@ describe('ResetPassword', () => {
     expect(newPasswordInput.type).toBe('password');
   });
 
+  test('should suppress the browser native reveal control on both password fields', () => {
+    render(<ResetPassword />);
+
+    expect(screen.getByTestId('new-password')).toHaveClass(
+      'hide-native-password-reveal'
+    );
+    expect(screen.getByTestId('confirm-new-password')).toHaveClass(
+      'hide-native-password-reveal'
+    );
+  });
+
   test('should enable/disable submit button based on PasswordChecklist callback', async () => {
     render(<ResetPassword />);
     const submitButton = screen.getByText('Invalid password');

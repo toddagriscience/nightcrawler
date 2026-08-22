@@ -7,7 +7,6 @@
 export const messageFiles = [
   'brand',
   'common',
-  'contact',
   'header',
   'footer',
   'homepage',
@@ -16,7 +15,6 @@ export const messageFiles = [
   'articleIndex',
   'investors',
   'governance',
-  'disclosures',
   'accessibility',
   'privacy',
   'terms',

@@ -92,6 +92,27 @@
       "when": 1781913600000,
       "tag": "0012_variety-inventory",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1782000000000,
+      "tag": "0013_add-reminder",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1782885722357,
+      "tag": "0014_general-imp",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1783727379522,
+      "tag": "0015_extend-mineral-schema",
+      "breakpoints": true
     }
   ]
 }

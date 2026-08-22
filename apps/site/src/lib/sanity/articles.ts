@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { client } from '@/lib/sanity/client';
+import { client, defaultSanityFetchOptions } from '@/lib/sanity/client';
 import { logger } from '@/lib/logger';
 import type { ArticleCollection } from '@/lib/sanity/article-types';
 import {
@@ -12,9 +12,6 @@ import { FilteredResponseQueryOptions } from 'next-sanity';
 
 /** GROQ `_type` values that share the article detail template and projections. */
 const ARTICLE_GROQ_TYPES = '["news", "career"]';
-
-/** One hour ISR for marketing article surfaces. */
-const LISTING_REVALIDATE = 60 * 60;
 
 /**
  * GROQ fragment: standalone `career` job documents.
@@ -87,11 +84,6 @@ const GROQ_BY_DOCUMENT_TYPE = `{
   _type == "news" => {${GROQ_NEWS_BODY}}
 }`;
 
-/** Query options reused for article fetch surfaces. */
-const defaultListingOptions: FilteredResponseQueryOptions = {
-  next: { revalidate: LISTING_REVALIDATE },
-};
-
 /**
  * Whether this article is intended to be read on-site (has no off-site URL).
  *
@@ -154,7 +146,7 @@ export async function getArticleBySlug(
     const article = await client.fetch<SanityArticle | null>(
       query,
       { slug },
-      options
+      options ?? defaultSanityFetchOptions
     );
     return article ?? null;
   } catch (error) {
@@ -186,7 +178,7 @@ export async function getArticlesByCollection(
     const articles = await client.fetch<SanityArticle[]>(
       query,
       collection === 'careers' ? {} : { collection: c },
-      options ?? defaultListingOptions
+      options ?? defaultSanityFetchOptions
     );
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
@@ -218,7 +210,7 @@ export async function getResearchIndexArticles(
     const articles = await client.fetch<SanityArticle[]>(
       query,
       { types: [...ARTICLE_INDEX_TOPIC_TYPES, 'research'] },
-      options ?? defaultListingOptions
+      options ?? defaultSanityFetchOptions
     );
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
@@ -258,7 +250,7 @@ export async function getNewsIndexArticles(
           'story',
         ],
       },
-      options ?? defaultListingOptions
+      options ?? defaultSanityFetchOptions
     );
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
@@ -284,7 +276,7 @@ export async function getFeaturedArticles(
       const articles = await client.fetch<SanityArticle[]>(
         query,
         {},
-        options ?? defaultListingOptions
+        options ?? defaultSanityFetchOptions
       );
       return Array.isArray(articles) ? articles : [];
     } catch (error) {
@@ -300,7 +292,7 @@ export async function getFeaturedArticles(
       const articles = await client.fetch<SanityArticle[]>(
         query,
         {},
-        options ?? defaultListingOptions
+        options ?? defaultSanityFetchOptions
       );
       return Array.isArray(articles) ? articles : [];
     }
@@ -311,7 +303,7 @@ export async function getFeaturedArticles(
     const articles = await client.fetch<SanityArticle[]>(
       query,
       { collection: c },
-      options ?? defaultListingOptions
+      options ?? defaultSanityFetchOptions
     );
     return Array.isArray(articles) ? articles : [];
   } catch (error) {

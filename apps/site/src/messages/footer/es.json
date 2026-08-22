@@ -5,9 +5,12 @@
     "sections": {
       "todd": "Todd",
       "connect": "Conéctate",
-      "legal": "Legal"
+      "legal": "Legal",
+      "termsAndPolicies": "Términos y Políticas"
     },
     "links": {
+      "about": "Acerca de",
+      "research": "Investigación",
       "whoWeAre": "Quiénes Somos",
       "whatWeDo": "Qué Hacemos",
       "news": "Noticias",
@@ -18,9 +21,9 @@
       "foundation": "Fundación",
       "accessibility": "Accesibilidad",
       "privacy": "Política de Privacidad",
-      "terms": "Términos & Condiciones",
+      "terms": "Términos de Uso",
       "vulnReporting": "Reporte de Vulnerabilidades",
-      "disclosures": "Divulgaciones"
+      "legal": "Legal"
     },
     "cta": {
       "letsTalk": "Hablemos",

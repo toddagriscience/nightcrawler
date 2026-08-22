@@ -5,7 +5,13 @@ import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Any protected URLs - supports wildcards with `*`
-const protectedUrls = ['/', '/account/*', '/application-success', '/accept'];
+const protectedUrls = [
+  '/',
+  '/account',
+  '/account/*',
+  '/application-success',
+  '/accept',
+];
 
 /**
  * Handle authentication-based routing. If the user is:
@@ -126,6 +132,10 @@ export function isRouteProtected(pathname: string): boolean {
     // Handle exact match for '/'
     if (pattern === '/' && pathname.length > 1) {
       return false;
+    }
+
+    if (pattern === '/account') {
+      return pathname === pattern;
     }
 
     // Check if pattern contains wildcard

@@ -10,96 +10,40 @@
  *      save to packages/db/data/variety-inventory.csv
  *   2. Dry run (writes nothing):   tsx scripts/import-seed-varieties.ts
  *   3. Commit to local DB:         tsx scripts/import-seed-varieties.ts --commit
+ *   4. Remote (staging/prod):      tsx scripts/import-seed-varieties.ts --env staging
+ *                                  ... --env staging --commit --confirm staging
  *
  * Flags:
- *   --file <path>   CSV path (default: data/variety-inventory.csv)
- *   --commit        Actually write to the local DB (otherwise dry-run)
+ *   --file <path>    CSV path (default: data/variety-inventory.csv)
+ *   --env <name>     Target DB: local (default), staging, prod
+ *   --commit         Actually write to the target DB (otherwise dry-run)
+ *   --confirm <name> Required for remote --commit; must repeat the --env value.
+ *                    Remote commits also require OPENAI_EMBEDDINGS_KEY.
  */
 
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq, inArray, notInArray } from 'drizzle-orm';
+import { count, eq, inArray, notInArray } from 'drizzle-orm';
 import { knowledgeArticle, seedCrop, seedVariety } from '../src/schema';
-import { getEmbedding } from '../src/utils/get-embedding';
-
-const EMBEDDING_DIMENSIONS = 3072;
+import { createTargetDb, resolveImporterTarget } from './lib/db-target';
+import { embed, getArg, hash, parseCsv, slugify } from './lib/importer-lib';
 
 // ---- CLI args -------------------------------------------------------------
-function getArg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i === -1 ? undefined : process.argv[i + 1];
-}
 const COMMIT = process.argv.includes('--commit');
 const CSV_PATH = getArg('file') ?? 'data/variety-inventory.csv';
 
-// ---- localhost safety guard ----------------------------------------------
-const host = process.env.LOCAL_DATABASE_HOST ?? '';
-if (!['localhost', '127.0.0.1'].includes(host)) {
-  throw new Error(
-    `Refusing to run: LOCAL_DATABASE_HOST is "${host}", expected localhost. ` +
-      'This importer only runs against the local Docker DB.'
-  );
-}
-const databaseUrl =
-  `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER ?? 'postgres')}` +
-  `:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}` +
-  `@${host}:${process.env.LOCAL_DATABASE_PORT ?? '5432'}` +
-  `/${process.env.LOCAL_DATABASE_DATABASE ?? 'postgres'}`;
+// A committed run replacing the whole mirror must never proceed from a
+// truncated/garbled CSV export — the prune step would wipe the real rows.
+// The real sheet holds ~90 crops / ~940 varieties.
+const MIN_VARIETIES = 50;
 
-// ---- minimal RFC-4180 CSV parser (quotes, commas, embedded newlines) -----
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = '';
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          field += '"';
-          i += 1;
-        } else {
-          inQuotes = false;
-        }
-      } else {
-        field += c;
-      }
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ',') {
-      row.push(field);
-      field = '';
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i += 1;
-      row.push(field);
-      field = '';
-      rows.push(row);
-      row = [];
-    } else {
-      field += c;
-    }
-  }
-  if (field.length > 0 || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
-  return rows;
-}
-
+// An absolute floor can't catch a CSV truncated to, say, 300 of ~940 rows — it
+// clears MIN_VARIETIES yet would prune the ~640 missing rows as "stale". So also
+// refuse to prune more than this fraction of the rows already in the target,
+// unless --allow-large-prune is passed for an intentional bulk deletion.
+const MAX_PRUNE_FRACTION = 0.2;
+const ALLOW_LARGE_PRUNE = process.argv.includes('--allow-large-prune');
 // ---- small helpers --------------------------------------------------------
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
 function isNumericCode(s: string): boolean {
   return /^\d+$/.test(s.trim());
 }
@@ -230,30 +174,12 @@ function classify(rows: string[][]) {
   return { crops, orphans, notes };
 }
 
-// ---- embeddings -----------------------------------------------------------
-function deterministicEmbedding(seedText: string): number[] {
-  let seed = 0;
-  for (let i = 0; i < seedText.length; i += 1) {
-    seed = (seed * 31 + seedText.charCodeAt(i)) >>> 0;
-  }
-  const values = new Array<number>(EMBEDDING_DIMENSIONS);
-  let state = seed || 1;
-  for (let i = 0; i < EMBEDDING_DIMENSIONS; i += 1) {
-    state = (1664525 * state + 1013904223) >>> 0;
-    values[i] = state / 0xffffffff;
-  }
-  return values;
-}
-async function embed(text: string): Promise<number[]> {
-  if (!process.env.OPENAI_EMBEDDINGS_KEY) return deterministicEmbedding(text);
-  return getEmbedding(text);
-}
-function hash(text: string): string {
-  return createHash('sha256').update(text).digest('hex');
-}
-
 // ---- main -----------------------------------------------------------------
 async function main() {
+  // Validate the DB target up front so a misconfigured environment fails fast
+  // on dry runs too, not only once --commit is passed.
+  const target = resolveImporterTarget();
+
   const csv = readFileSync(CSV_PATH, 'utf8');
   const rows = parseCsv(csv);
   const { crops, orphans, notes } = classify(rows);
@@ -267,7 +193,7 @@ async function main() {
   for (const c of crops)
     for (const v of c.varieties) statusCounts[v.status] += 1;
 
-  console.log(`\nParsed ${CSV_PATH}`);
+  console.log(`\nParsed ${CSV_PATH} (target: ${target.env})`);
   console.log(`  Crops:     ${crops.length}`);
   console.log(`  Varieties: ${varietyCount}`);
   console.log(
@@ -299,159 +225,195 @@ async function main() {
 
   if (!COMMIT) {
     console.log(
-      '\nDry run only. Re-run with --commit to write to the local DB.\n'
+      `\nDry run only. Re-run with --commit to write to the ${target.env} DB` +
+        (target.env === 'local' ? '.\n' : ` (plus --confirm ${target.env}).\n`)
     );
     return;
   }
 
-  const db = drizzle(databaseUrl, { casing: 'snake_case' });
-  const usedSlugs = new Set<string>();
-  const uniqueSlug = (base: string): string => {
-    let s = base || 'item';
-    let n = 2;
-    while (usedSlugs.has(s)) {
-      s = `${base}-${n}`;
-      n += 1;
-    }
-    usedSlugs.add(s);
-    return s;
-  };
+  if (crops.length === 0 || varietyCount < MIN_VARIETIES) {
+    throw new Error(
+      `Only ${crops.length} crops / ${varietyCount} varieties parsed ` +
+        `(need >= 1 crop and >= ${MIN_VARIETIES} varieties) — the CSV looks ` +
+        'truncated or malformed. Refusing to commit and prune.'
+    );
+  }
 
-  let cropsWritten = 0;
-  let varietiesWritten = 0;
-  let embeddings = 0;
-
-  for (const crop of crops) {
-    const cropSlug = uniqueSlug(slugify(crop.name));
-    const cropText = `${crop.name}\n${crop.description}`;
-    const cropHash = hash(cropText);
-
-    const [existing] = await db
-      .select()
-      .from(seedCrop)
-      .where(eq(seedCrop.slug, cropSlug))
-      .limit(1);
-
-    let cropId: number;
-    if (existing) {
-      cropId = existing.id;
-      if (existing.sourceContentHash !== cropHash) {
-        await db
-          .update(knowledgeArticle)
-          .set({ embedding: await embed(cropText) })
-          .where(eq(knowledgeArticle.id, existing.knowledgeArticleId));
-        embeddings += 1;
+  const { db, close } = createTargetDb(target);
+  try {
+    const usedSlugs = new Set<string>();
+    const uniqueSlug = (base: string): string => {
+      let s = base || 'item';
+      let n = 2;
+      while (usedSlugs.has(s)) {
+        s = `${base}-${n}`;
+        n += 1;
       }
-      await db
-        .update(seedCrop)
-        .set({
-          name: crop.name,
-          description: crop.description,
-          sourceContentHash: cropHash,
-        })
-        .where(eq(seedCrop.id, cropId));
-    } else {
-      const [k] = await db
-        .insert(knowledgeArticle)
-        .values({ embedding: await embed(cropText) })
-        .returning({ id: knowledgeArticle.id });
-      embeddings += 1;
-      const [inserted] = await db
-        .insert(seedCrop)
-        .values({
-          knowledgeArticleId: k.id,
-          name: crop.name,
-          slug: cropSlug,
-          description: crop.description,
-          sourceContentHash: cropHash,
-        })
-        .returning({ id: seedCrop.id });
-      cropId = inserted.id;
-    }
-    cropsWritten += 1;
+      usedSlugs.add(s);
+      return s;
+    };
 
-    for (const v of crop.varieties) {
-      const vSlug = uniqueSlug(`${cropSlug}-${slugify(v.name)}`);
-      const vText = `${crop.name} ${v.name}\n${v.description}`;
-      const vHash = hash(vText);
-      const fields = {
-        seedCropId: cropId,
-        name: v.name,
-        description: v.description,
-        status: v.status,
-        pricePerOzCents: v.pricePerOzCents,
-        pricePerLbCents: v.pricePerLbCents,
-        pricePerPlantCents: v.pricePerPlantCents,
-        inventoryNote: v.inventoryNote,
-        lastProduced: v.lastProduced,
-        location: v.location,
-        sourceContentHash: vHash,
-      };
+    let cropsWritten = 0;
+    let varietiesWritten = 0;
+    let embeddings = 0;
 
-      const [existingV] = await db
+    for (const crop of crops) {
+      const cropSlug = uniqueSlug(slugify(crop.name));
+      const cropText = `${crop.name}\n${crop.description}`;
+      const cropHash = hash(cropText);
+
+      const [existing] = await db
         .select()
-        .from(seedVariety)
-        .where(eq(seedVariety.slug, vSlug))
+        .from(seedCrop)
+        .where(eq(seedCrop.slug, cropSlug))
         .limit(1);
 
-      if (existingV) {
-        if (existingV.sourceContentHash !== vHash) {
+      let cropId: number;
+      if (existing) {
+        cropId = existing.id;
+        if (existing.sourceContentHash !== cropHash) {
           await db
             .update(knowledgeArticle)
-            .set({ embedding: await embed(vText) })
-            .where(eq(knowledgeArticle.id, existingV.knowledgeArticleId));
+            .set({ embedding: await embed(cropText) })
+            .where(eq(knowledgeArticle.id, existing.knowledgeArticleId));
           embeddings += 1;
         }
         await db
-          .update(seedVariety)
-          .set(fields)
-          .where(eq(seedVariety.id, existingV.id));
+          .update(seedCrop)
+          .set({
+            name: crop.name,
+            description: crop.description,
+            sourceContentHash: cropHash,
+          })
+          .where(eq(seedCrop.id, cropId));
       } else {
         const [k] = await db
           .insert(knowledgeArticle)
-          .values({ embedding: await embed(vText) })
+          .values({ embedding: await embed(cropText) })
           .returning({ id: knowledgeArticle.id });
         embeddings += 1;
-        await db
-          .insert(seedVariety)
-          .values({ knowledgeArticleId: k.id, slug: vSlug, ...fields });
+        const [inserted] = await db
+          .insert(seedCrop)
+          .values({
+            knowledgeArticleId: k.id,
+            name: crop.name,
+            slug: cropSlug,
+            description: crop.description,
+            sourceContentHash: cropHash,
+          })
+          .returning({ id: seedCrop.id });
+        cropId = inserted.id;
       }
-      varietiesWritten += 1;
-    }
-  }
-  // ---- prune stale rows (the sheet is the source of truth) ----------------
-  // Any crop/variety whose slug this run did NOT produce was removed or
-  // renamed in the sheet, so drop it. Deleting the knowledge_article row
-  // cascades to its seed_crop / seed_variety child via the FK.
-  let pruned = 0;
-  const keptSlugs = Array.from(usedSlugs);
-  if (keptSlugs.length > 0) {
-    // Guard: an empty kept-set would match everything and wipe the tables.
-    const staleVarieties = await db
-      .select({ kId: seedVariety.knowledgeArticleId })
-      .from(seedVariety)
-      .where(notInArray(seedVariety.slug, keptSlugs));
-    const staleCrops = await db
-      .select({ kId: seedCrop.knowledgeArticleId })
-      .from(seedCrop)
-      .where(notInArray(seedCrop.slug, keptSlugs));
+      cropsWritten += 1;
 
-    const staleKnowledgeIds = [
-      ...staleVarieties.map((r) => r.kId),
-      ...staleCrops.map((r) => r.kId),
-    ];
-    if (staleKnowledgeIds.length > 0) {
-      await db
-        .delete(knowledgeArticle)
-        .where(inArray(knowledgeArticle.id, staleKnowledgeIds));
-      pruned = staleKnowledgeIds.length;
-    }
-  }
+      for (const v of crop.varieties) {
+        const vSlug = uniqueSlug(`${cropSlug}-${slugify(v.name)}`);
+        const vText = `${crop.name} ${v.name}\n${v.description}`;
+        const vHash = hash(vText);
+        const fields = {
+          seedCropId: cropId,
+          name: v.name,
+          description: v.description,
+          status: v.status,
+          pricePerOzCents: v.pricePerOzCents,
+          pricePerLbCents: v.pricePerLbCents,
+          pricePerPlantCents: v.pricePerPlantCents,
+          inventoryNote: v.inventoryNote,
+          lastProduced: v.lastProduced,
+          location: v.location,
+          sourceContentHash: vHash,
+        };
 
-  console.log(
-    `\nCommitted: ${cropsWritten} crops, ${varietiesWritten} varieties, ` +
-      `${embeddings} embeddings generated, ${pruned} stale rows pruned.\n`
-  );
+        const [existingV] = await db
+          .select()
+          .from(seedVariety)
+          .where(eq(seedVariety.slug, vSlug))
+          .limit(1);
+
+        if (existingV) {
+          if (existingV.sourceContentHash !== vHash) {
+            await db
+              .update(knowledgeArticle)
+              .set({ embedding: await embed(vText) })
+              .where(eq(knowledgeArticle.id, existingV.knowledgeArticleId));
+            embeddings += 1;
+          }
+          await db
+            .update(seedVariety)
+            .set(fields)
+            .where(eq(seedVariety.id, existingV.id));
+        } else {
+          const [k] = await db
+            .insert(knowledgeArticle)
+            .values({ embedding: await embed(vText) })
+            .returning({ id: knowledgeArticle.id });
+          embeddings += 1;
+          await db
+            .insert(seedVariety)
+            .values({ knowledgeArticleId: k.id, slug: vSlug, ...fields });
+        }
+        varietiesWritten += 1;
+      }
+    }
+    // ---- prune stale rows (the sheet is the source of truth) ----------------
+    // Any crop/variety whose slug this run did NOT produce was removed or
+    // renamed in the sheet, so drop it. Deleting the knowledge_article row
+    // cascades to its seed_crop / seed_variety child via the FK.
+    let pruned = 0;
+    const keptSlugs = Array.from(usedSlugs);
+    if (keptSlugs.length > 0) {
+      // Guard: an empty kept-set would match everything and wipe the tables.
+      const staleVarieties = await db
+        .select({ kId: seedVariety.knowledgeArticleId, slug: seedVariety.slug })
+        .from(seedVariety)
+        .where(notInArray(seedVariety.slug, keptSlugs));
+      const staleCrops = await db
+        .select({ kId: seedCrop.knowledgeArticleId, slug: seedCrop.slug })
+        .from(seedCrop)
+        .where(notInArray(seedCrop.slug, keptSlugs));
+
+      const stale = [...staleVarieties, ...staleCrops];
+      // Relative safety net against a truncated CSV (see MAX_PRUNE_FRACTION).
+      const [{ n: existingCrops }] = await db
+        .select({ n: count() })
+        .from(seedCrop);
+      const [{ n: existingVarieties }] = await db
+        .select({ n: count() })
+        .from(seedVariety);
+      const existingTotal = existingCrops + existingVarieties;
+      if (
+        !ALLOW_LARGE_PRUNE &&
+        existingTotal > 0 &&
+        stale.length > existingTotal * MAX_PRUNE_FRACTION
+      ) {
+        throw new Error(
+          `Refusing to prune ${stale.length} of ${existingTotal} rows ` +
+            `(> ${MAX_PRUNE_FRACTION * 100}% of the target) — the CSV may be ` +
+            'truncated. Re-run with --allow-large-prune if this is intentional.'
+        );
+      }
+      if (stale.length > 0) {
+        console.log(
+          `\nPruning ${stale.length} stale row(s) from ${target.env}:`
+        );
+        for (const r of stale) console.log(`  - ${r.slug}`);
+        await db.delete(knowledgeArticle).where(
+          inArray(
+            knowledgeArticle.id,
+            stale.map((r) => r.kId)
+          )
+        );
+        pruned = stale.length;
+      }
+    }
+    console.log(
+      `\nCommitted to ${target.env}: ${cropsWritten} crops, ` +
+        `${varietiesWritten} varieties, ${embeddings} embeddings generated, ` +
+        `${pruned} stale rows pruned.\n`
+    );
+  } finally {
+    await close();
+  }
 }
 
 main().catch((error) => {

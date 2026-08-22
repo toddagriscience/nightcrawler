@@ -38,8 +38,6 @@ export function useMenuItems({
         { title: t('navigation.news'), url: '/news' },
       ],
     },
-    // TODO: Add foundation URL when the route is available
-    { title: t('navigation.foundation'), url: '#' },
   ];
 
   const menuItems = menu ?? defaultMenu;

@@ -2,10 +2,7 @@
 
 'use client';
 
-import {
-  TbLayoutSidebarLeftCollapse,
-  TbLayoutSidebarLeftExpand,
-} from 'react-icons/tb';
+import { BiDockLeft, BiDockRight } from 'react-icons/bi';
 import { useSidebarCollapse } from './sidebar-collapse-context';
 
 /**
@@ -25,9 +22,9 @@ export default function SidebarCollapseToggle() {
       className="flex size-8 shrink-0 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-[#D9D9D9]/20 hover:text-foreground"
     >
       {collapsed ? (
-        <TbLayoutSidebarLeftExpand className="size-5" />
+        <BiDockRight className="size-5" />
       ) : (
-        <TbLayoutSidebarLeftCollapse className="size-5" />
+        <BiDockLeft className="size-5" />
       )}
     </button>
   );

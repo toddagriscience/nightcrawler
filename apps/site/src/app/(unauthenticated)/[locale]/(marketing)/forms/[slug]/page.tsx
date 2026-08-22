@@ -16,9 +16,7 @@ export default async function FormPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const form = await getFormBySlug(slug, {
-    next: { revalidate: 60 * 60 },
-  });
+  const form = await getFormBySlug(slug);
 
   if (!form) {
     notFound();
@@ -38,9 +36,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const form = await getFormBySlug(slug, {
-    next: { revalidate: 60 * 60 },
-  });
+  const form = await getFormBySlug(slug);
 
   if (!form) {
     return { title: 'Form not found' };
