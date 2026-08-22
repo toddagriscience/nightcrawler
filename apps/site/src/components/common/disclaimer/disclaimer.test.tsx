@@ -36,8 +36,8 @@ describe('Disclaimer', () => {
     expect(link).not.toHaveAttribute('target');
   });
 
-  it('opens external http(s) links in a new tab with a safe rel', () => {
-    renderWithNextIntl(
+  it('opens external http(s) links in a new tab with a safe rel and a new-tab affordance', () => {
+    const { container } = renderWithNextIntl(
       <Disclaimer
         translationLoc="careers.disclaimers"
         disclaimerCount={4}
@@ -54,6 +54,24 @@ describe('Disclaimer', () => {
     expect(link).toHaveAttribute('href', 'https://example.com/pricing');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+
+    // Sighted users get a glyph, assistive tech gets a description. Neither may
+    // become part of the accessible name, which is why the `getByRole` lookup
+    // above still matches the translator's exact wording.
+    expect(link).toHaveAttribute('title', 'Opens in a new tab');
+    const glyph = link.querySelector('svg');
+    expect(glyph).not.toBeNull();
+    expect(glyph).toHaveAttribute('aria-hidden', 'true');
+
+    // The internal link in the same render must stay free of both.
+    const internal = screen.getByRole('link', {
+      name: 'submit an accommodation inquiry',
+    });
+    expect(internal).not.toHaveAttribute('title');
+    expect(internal.querySelector('svg')).toBeNull();
+
+    // The glyph is decorative: it must not leak into the rendered sentence.
+    expect(container.textContent).not.toContain('Opens in a new tab');
   });
 
   it('does not leak the raw tag markup, an email address, or a bare URL into the copy', () => {

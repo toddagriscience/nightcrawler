@@ -6,6 +6,7 @@
     },
     "loading": "Cargando...",
     "error": "Algo salió mal",
+    "opensInNewTab": "Se abre en una pestaña nueva",
     "notFound": {
       "title": "404",
       "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",

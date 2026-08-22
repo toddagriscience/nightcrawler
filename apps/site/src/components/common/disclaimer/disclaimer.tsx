@@ -3,6 +3,7 @@
 import { Link } from '@/i18n/config';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/logger';
+import { ExternalLink } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import type { DisclaimerProps } from './types/disclaimer';
@@ -13,17 +14,31 @@ const LINK_CLASS_NAME = 'underline font-normal';
 
 /**
  * Renders the text wrapped by a rich-text tag as a link. Internal routes go through the
- * locale-aware next-intl `Link`; absolute `http(s)` URLs open in a new tab with a safe
- * `rel`.
+ * locale-aware next-intl `Link`; absolute `http(s)` URLs open in a new tab, which needs a
+ * safe `rel` plus an advance warning that the click leaves the site.
+ *
+ * The warning is deliberately not part of the accessible name: appending visually hidden
+ * text inside the anchor would rewrite the name translators wrote, so sighted users get
+ * the conventional arrow glyph (hidden from assistive tech, which would otherwise
+ * announce a meaningless icon) and assistive tech gets the same sentence as the link's
+ * description via `title`.
  *
  * Anything else — `mailto:`, `javascript:`, a protocol-relative `//host` — renders as
  * plain text rather than an unvetted link. These disclosures are legal copy edited by
  * translators, so a malformed href must not become a navigable target.
  *
+ * Tag results need no `key`: next-intl clones every element a tag function returns with
+ * one (`prepareTranslationValues` in `use-intl`) before placing it in the chunk array.
+ *
  * @param href - Link target from the `links` map
  * @param chunks - Text wrapped by the tag in the message
+ * @param newTabLabel - Localized "opens in a new tab" warning for external links
  */
-function renderLink(href: string, chunks: ReactNode): ReactNode {
+function renderLink(
+  href: string,
+  chunks: ReactNode,
+  newTabLabel: string
+): ReactNode {
   if (/^https?:\/\//i.test(href)) {
     return (
       <a
@@ -31,8 +46,14 @@ function renderLink(href: string, chunks: ReactNode): ReactNode {
         className={LINK_CLASS_NAME}
         target="_blank"
         rel="noopener noreferrer"
+        title={newTabLabel}
       >
         {chunks}
+        {/* Inline, never flex: the anchor sits mid-sentence and its text has to
+            keep wrapping across lines. Lucide marks an icon `aria-hidden` unless
+            it is given an `aria-*`, `role` or `title` prop — do not give it one,
+            or the glyph joins the link's accessible name. */}
+        <ExternalLink className="ml-1 inline size-3 align-[-0.125em]" />
       </a>
     );
   }
@@ -69,11 +90,13 @@ export function Disclaimer({
   className,
 }: DisclaimerProps) {
   const t = useTranslations(translationLoc);
+  const tCommon = useTranslations('common');
+  const newTabLabel = tCommon('opensInNewTab');
 
   const richTags = Object.fromEntries(
     Object.entries(links).map(([tag, href]) => [
       tag,
-      (chunks: ReactNode) => renderLink(href, chunks),
+      (chunks: ReactNode) => renderLink(href, chunks, newTabLabel),
     ])
   );
 
