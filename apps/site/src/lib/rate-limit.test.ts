@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   limit: vi.fn(),
   fromEnv: vi.fn(() => ({})),
   slidingWindow: vi.fn(() => ({})),
+  ratelimitCtor: vi.fn<(config: { prefix: string }) => void>(),
   headers: vi.fn(),
   throwActionError: vi.fn((message: string) => {
     throw new Error(message);
@@ -27,6 +28,9 @@ vi.mock('@upstash/ratelimit', () => ({
   Ratelimit: class {
     static slidingWindow = mocks.slidingWindow;
     limit = mocks.limit;
+    constructor(config: { prefix: string }) {
+      mocks.ratelimitCtor(config);
+    }
   },
 }));
 
@@ -238,7 +242,15 @@ describe('rate limit presets', () => {
     await publicEmailRateLimit('1.2.3.4');
     await signupRateLimit('1.2.3.4');
 
-    // Every preset built its own sliding window with its own request budget.
+    // Upstash namespaces a limiter by its `prefix`, so two presets sharing one
+    // would silently draw down a single budget. The module does not expose the
+    // prefixes, so read them back off the `Ratelimit` constructor calls.
+    expect(
+      mocks.ratelimitCtor.mock.calls.map(([config]) => config.prefix)
+    ).toEqual(['site:public-write', 'site:public-email', 'site:signup']);
+
+    // Each preset also owns its own request budget, so the stricter email and
+    // signup limiters cannot inherit the generic public-write allowance.
     expect(mocks.slidingWindow.mock.calls).toEqual([
       [5, '60 s'],
       [3, '10 m'],
