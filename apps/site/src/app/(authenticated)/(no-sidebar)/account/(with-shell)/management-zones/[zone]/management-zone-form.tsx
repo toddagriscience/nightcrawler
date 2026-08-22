@@ -122,6 +122,11 @@ function DateField({
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
+                  // Kept for parity with every other control in this form,
+                  // which is `id={fieldName}`. Nothing points at it today —
+                  // deliberately, since a `<label for>` cannot name a button —
+                  // but it is the anchor an `aria-describedby` error message or
+                  // focus-the-first-invalid-field pass would need.
                   id={name}
                   type="button"
                   variant="outline"
