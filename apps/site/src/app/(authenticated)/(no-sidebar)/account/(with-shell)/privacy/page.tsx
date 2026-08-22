@@ -7,7 +7,12 @@ import AccountInfo, {
 
 export default function AccountPrivacyPage() {
   return (
-    <AccountInfo title="Privacy" description="Manage how your data is used.">
+    <AccountInfo
+      title="Privacy"
+      description="Manage how your data is used."
+      backHref="/account"
+      backLabel="Back to account"
+    >
       <div className="border-t border-[#D9D9D9]">
         <AccountInfoRow label="Personal Information Sharing" value="Disabled" />
         <AccountInfoRow

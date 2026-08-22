@@ -24,6 +24,8 @@ export default async function FarmProfilePage() {
       <AccountInfo
         title="Farm profile"
         description="Edit farm profile details."
+        backHref="/account"
+        backLabel="Back to account"
       >
         <p className="text-sm text-[#ff4d00]">
           User is not associated with a farm.
@@ -57,7 +59,11 @@ export default async function FarmProfilePage() {
     .limit(1);
 
   return (
-    <AccountInfo title="Farm profile">
+    <AccountInfo
+      title="Farm profile"
+      backHref="/account"
+      backLabel="Back to account"
+    >
       <AccountInfoSection title="Overview">
         <AccountInfoRow
           label="Management date"

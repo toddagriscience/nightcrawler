@@ -12,7 +12,11 @@ export default async function AccountUsersPage() {
   const ownerData = accountUsersData.owner;
 
   return (
-    <AccountInfo title="User information">
+    <AccountInfo
+      title="User information"
+      backHref="/account"
+      backLabel="Back to account"
+    >
       <AccountInfoSection title="Principal operator">
         <AccountInfoRow label="Name" value={principalOperator.firstName} />
         <AccountInfoRow label="Email Address" value={principalOperator.email} />
