@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { submitContactToSheets } from './googleSheets';
+import { submitContactToSheets } from './google-sheets';
 
 const ORIGINAL_URL = process.env.CONTACT_GOOGLE_SCRIPT_URL;
 

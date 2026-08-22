@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import useCurrentUrl from '@/lib/hooks/useCurrentUrl';
+import useCurrentUrl from '@/lib/hooks/use-current-url';
 import logger from '@/lib/logger';
 import { useState } from 'react';
 import { FaFacebookF } from 'react-icons/fa';
