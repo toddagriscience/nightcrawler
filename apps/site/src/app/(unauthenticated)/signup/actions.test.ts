@@ -12,6 +12,7 @@ import { AuthResponseTypes } from '@/lib/types/auth';
 import type { AuthResponse } from '@/lib/types/auth';
 import { validateFormSubmissionSignupToken } from '@nightcrawler/db/queries';
 import { signUp } from './actions';
+import { enforceRateLimit, signupRateLimit } from '@/lib/rate-limit';
 
 /** Hoisted without importing `AuthResponseTypes` (imports are not initialized yet). */
 const { successfulSetPasswordResponse } = vi.hoisted(() => ({
@@ -29,6 +30,12 @@ vi.mock('@/lib/auth-server', () => ({
 
 vi.mock('@nightcrawler/db/utils/send-approved-applicant-invite', () => ({
   sendApprovedApplicantInvite: vi.fn(),
+}));
+
+vi.mock('@/lib/rate-limit', () => ({
+  enforceRateLimit: vi.fn().mockResolvedValue(undefined),
+  publicEmailRateLimit: vi.fn(),
+  signupRateLimit: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase/server', () => ({
@@ -104,6 +111,8 @@ describe('signUp', () => {
     vi.mocked(ensureApprovedApplicantAuthSession).mockReset();
     vi.mocked(ensureApprovedApplicantAuthSession).mockResolvedValue(undefined);
     vi.mocked(validateFormSubmissionSignupToken).mockReset();
+    vi.mocked(enforceRateLimit).mockReset();
+    vi.mocked(enforceRateLimit).mockResolvedValue(undefined);
     await db.delete(user).where(gt(user.id, 0));
     await db.delete(standardValues).where(gt(standardValues.farmId, 0));
     await db.delete(farm).where(gt(farm.id, 0));
@@ -128,6 +137,22 @@ describe('signUp', () => {
     }
     return formData;
   };
+
+  describe('rate limiting', () => {
+    it('enforces the signup limiter before doing any work', async () => {
+      vi.mocked(enforceRateLimit).mockRejectedValueOnce(
+        new Error('Too many requests. Please try again shortly.')
+      );
+
+      await expect(
+        signUp(null, createApprovedApplicantFormData())
+      ).rejects.toThrow('Too many requests. Please try again shortly.');
+
+      expect(enforceRateLimit).toHaveBeenCalledWith(signupRateLimit);
+      expect(validateFormSubmissionSignupToken).not.toHaveBeenCalled();
+      expect(ensureApprovedApplicantAuthSession).not.toHaveBeenCalled();
+    });
+  });
 
   describe('validation', () => {
     it('throws when application id is missing', async () => {

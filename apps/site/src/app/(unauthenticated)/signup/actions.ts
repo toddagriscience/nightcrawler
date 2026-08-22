@@ -23,6 +23,11 @@ import {
   validateFormSubmissionSignupToken,
 } from '@nightcrawler/db/queries';
 import logger from '@/lib/logger';
+import {
+  enforceRateLimit,
+  publicEmailRateLimit,
+  signupRateLimit,
+} from '@/lib/rate-limit';
 import { ActionResponse } from '@/lib/types/action-response';
 import {
   formatActionResponseErrors,
@@ -213,6 +218,11 @@ export async function resendApprovedApplicantActivationEmail(input: {
   token: string;
   email: string;
 }): Promise<{ sent: boolean; error?: string }> {
+  await enforceRateLimit(
+    publicEmailRateLimit,
+    'Too many activation email requests. Please try again later.'
+  );
+
   const validated = await validateFormSubmissionSignupToken(
     input.applicationId,
     input.token,
@@ -296,6 +306,8 @@ export async function signUp(
   _: unknown,
   formData: FormData
 ): Promise<ActionResponse> {
+  await enforceRateLimit(signupRateLimit);
+
   const applicationIdRaw = formData.get('applicationId')?.toString();
   const tokenRaw = formData.get('token')?.toString();
   let applicationPrefill: ApplicantPrefill | undefined;
