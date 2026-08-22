@@ -11,11 +11,11 @@ import type {
   FarmLocationSelect,
   FarmSelect,
   ManagementZoneSelect,
-  UserSelect,
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import type { AccountContact } from './types';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{
@@ -44,15 +44,15 @@ export async function getAccountShellData(): Promise<{
  * Loads the contact details shown on the account users page: the authenticated
  * user (the principal operator) and one other farm user treated as the owner.
  *
- * Both contacts expose `firstName` holding the full display name, matching what
- * the account users page renders.
+ * Both contacts hold the user's full display name in `name`, which is what the
+ * account users page renders.
  *
  * @returns The principal operator's display name, email and phone, plus the
  * owner's when another farm user exists, otherwise `null`.
  */
 export async function getAccountUsersData(): Promise<{
-  principalOperator: Partial<UserSelect>;
-  owner: Partial<UserSelect> | null;
+  principalOperator: AccountContact;
+  owner: AccountContact | null;
 }> {
   const currentUser = await getAuthenticatedInfo();
 
@@ -77,8 +77,8 @@ export async function getAccountUsersData(): Promise<{
       (farmUser) => farmUser.role === 'Admin' && farmUser.id !== currentUser.id
     ) ?? farmUsers.find((farmUser) => farmUser.id !== currentUser.id);
 
-  const principalContact = {
-    firstName: toDisplayName(
+  const principalContact: AccountContact = {
+    name: toDisplayName(
       principalOperator?.firstName,
       principalOperator?.lastName
     ),
@@ -90,7 +90,7 @@ export async function getAccountUsersData(): Promise<{
     principalOperator: principalContact,
     owner: ownerUser
       ? {
-          firstName: toDisplayName(ownerUser.firstName, ownerUser.lastName),
+          name: toDisplayName(ownerUser.firstName, ownerUser.lastName),
           email: toDisplayValue(ownerUser.email),
           phone: toDisplayValue(ownerUser.phone),
         }
