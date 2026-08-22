@@ -12,22 +12,10 @@ import type { PoolConfig } from 'pg';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { getArg, requireLocalDatabaseUrl } from './importer-lib';
+import { remoteDbSslConfig, stagingCaCert } from '../../src/utils/db-ssl';
 
 export type DbEnv = 'local' | 'staging' | 'prod';
 export type RemoteDbEnv = Exclude<DbEnv, 'local'>;
-
-/**
- * Normalizes a PEM certificate that may arrive quote-wrapped and/or with
- * escaped newlines (both storage formats exist across our GitHub secrets and
- * .env files — see the equivalent sed in pr-database-compatibility-check.yml).
- */
-export function normalizePemCert(raw: string): string {
-  return raw
-    .replace(/^"/, '')
-    .replace(/"$/, '')
-    .replace(/\\n/g, '\n')
-    .replace(/\r/g, '');
-}
 
 function requireEnvVar(name: string): string {
   const value = process.env[name];
@@ -41,28 +29,26 @@ function requireEnvVar(name: string): string {
  * Builds a node-postgres PoolConfig for staging or prod from the
  * STAGING_DATABASE_* / PROD_DATABASE_* env vars.
  *
- * TLS validates the CA chain but skips hostname verification (the psql
- * `verify-ca` posture both DB workflows already use for pg_dump); never
- * downgrade to `rejectUnauthorized: false`, which would skip the chain too.
+ * TLS posture and certificate selection both come from `db-ssl`, shared with
+ * the app pool and the drizzle-kit configs so all three stay hardened together
+ * and agree on which certificate staging uses. `remoteDbSslConfig` throws by
+ * name when the certificate is missing, so it needs no `requireEnvVar` here.
  */
 export function resolveRemoteDbConfig(env: RemoteDbEnv): PoolConfig {
   const prefix = env === 'prod' ? 'PROD_DATABASE' : 'STAGING_DATABASE';
   const caRaw =
+    env === 'staging' ? stagingCaCert() : process.env.DATABASE_PEM_CERT;
+  const certVarName =
     env === 'staging'
-      ? (process.env.STAGING_DATABASE_PEM_CERT ??
-        requireEnvVar('DATABASE_PEM_CERT'))
-      : requireEnvVar('DATABASE_PEM_CERT');
+      ? 'STAGING_DATABASE_PEM_CERT (or DATABASE_PEM_CERT)'
+      : 'DATABASE_PEM_CERT';
   return {
     host: requireEnvVar(`${prefix}_HOST`),
     port: Number(requireEnvVar(`${prefix}_PORT`)),
     user: requireEnvVar(`${prefix}_USER`),
     password: requireEnvVar(`${prefix}_PASSWORD`),
     database: requireEnvVar(`${prefix}_DATABASE`),
-    ssl: {
-      ca: normalizePemCert(caRaw),
-      rejectUnauthorized: true,
-      checkServerIdentity: () => undefined,
-    },
+    ssl: remoteDbSslConfig(caRaw, certVarName),
   };
 }
 
