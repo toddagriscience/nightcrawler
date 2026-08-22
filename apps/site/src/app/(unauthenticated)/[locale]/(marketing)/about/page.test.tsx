@@ -70,6 +70,32 @@ describe('WhoWeArePage', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders the vision image from the kebab-case asset at the slot it occupies', () => {
+    renderWithNextIntl(<WhoWeArePage />);
+
+    const image = screen.getByRole('img', { name: /family/i });
+
+    expect(image).toHaveAttribute('src', '/marketing/about-family.jpg');
+    // The slot is `max-w-[580px]`. Understating it makes the srcset picker choose
+    // one candidate too small and the photo softens on desktop.
+    expect(image).toHaveAttribute('sizes', '(min-width: 768px) 580px, 100vw');
+  });
+
+  it('never skips a heading level', () => {
+    renderWithNextIntl(<WhoWeArePage />);
+
+    const levels = screen
+      .getAllByRole('heading')
+      .map((heading) => Number(heading.tagName.slice(1)));
+
+    // The hero tagline used to be an <h3> directly under the <h1>, so the vision
+    // section's <h2> produced h1 -> h3 -> h2: a skip, then a step backwards.
+    expect(levels[0]).toBe(1);
+    for (const [index, level] of levels.slice(1).entries()) {
+      expect(level - levels[index]).toBeLessThanOrEqual(1);
+    }
+  });
+
   it('renders the mission statement', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
