@@ -9,10 +9,9 @@ import {
   FaXTwitter,
   FaYoutube,
 } from 'react-icons/fa6';
+import { SOCIAL_PROFILES, type SocialPlatform } from './social-profiles';
 
-/** A Todd social media platform rendered by {@link SocialLinks}. */
-export type SocialPlatform =
-  'x' | 'instagram' | 'linkedin' | 'youtube' | 'discord';
+export type { SocialPlatform, SocialProfile } from './social-profiles';
 
 /** A single entry of the shared {@link SOCIAL_LINKS} record. */
 export interface SocialLink {
@@ -25,36 +24,18 @@ export interface SocialLink {
 }
 
 /**
- * Canonical source of truth for Todd's social media profiles. Update a URL,
- * label, or icon here and every surface that renders {@link SocialLinks} stays
- * in sync, instead of each footer hardcoding its own copy.
+ * Canonical source of truth for Todd's renderable social media profiles: the
+ * URLs and labels from {@link SOCIAL_PROFILES} paired with their icons. Update
+ * a URL or label in `social-profiles.ts` and every surface that renders
+ * {@link SocialLinks} stays in sync, instead of each footer hardcoding its own
+ * copy.
  */
 export const SOCIAL_LINKS: Record<SocialPlatform, SocialLink> = {
-  x: {
-    href: 'https://x.com/toddagriscience',
-    label: 'Visit our X (Twitter) page',
-    Icon: FaXTwitter,
-  },
-  instagram: {
-    href: 'https://www.instagram.com/toddagriscience/',
-    label: 'Visit our Instagram page',
-    Icon: FaInstagram,
-  },
-  linkedin: {
-    href: 'https://www.linkedin.com/company/toddagriscience/',
-    label: 'Visit our LinkedIn page',
-    Icon: FaLinkedinIn,
-  },
-  youtube: {
-    href: 'https://www.youtube.com/@toddagriscience',
-    label: 'Visit our YouTube channel',
-    Icon: FaYoutube,
-  },
-  discord: {
-    href: 'https://discord.gg/rFY3kc4deK',
-    label: 'Join our Discord server',
-    Icon: FaDiscord,
-  },
+  x: { ...SOCIAL_PROFILES.x, Icon: FaXTwitter },
+  instagram: { ...SOCIAL_PROFILES.instagram, Icon: FaInstagram },
+  linkedin: { ...SOCIAL_PROFILES.linkedin, Icon: FaLinkedinIn },
+  youtube: { ...SOCIAL_PROFILES.youtube, Icon: FaYoutube },
+  discord: { ...SOCIAL_PROFILES.discord, Icon: FaDiscord },
 };
 
 /** Default platforms and order rendered when no `platforms` prop is given. */

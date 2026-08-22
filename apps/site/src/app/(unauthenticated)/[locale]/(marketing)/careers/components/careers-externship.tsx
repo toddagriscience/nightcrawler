@@ -4,6 +4,7 @@
 
 import { Disclaimer } from '@/components/common/disclaimer/disclaimer';
 import HeaderImg from '@/components/common/header-img/header-img';
+import { SOCIAL_PROFILES } from '@/components/common/social-links/social-profiles';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -87,7 +88,7 @@ export function CareersExternship() {
                     {t('applyClosed.description')}
                   </p>
                   <Link
-                    href="https://www.linkedin.com/company/toddagriscience/"
+                    href={SOCIAL_PROFILES.linkedin.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm md:text-normal lg:text-base font-normal underline leading-relaxed max-w-[300px] md:max-w-[460px] lg:max-w-[600px]"
