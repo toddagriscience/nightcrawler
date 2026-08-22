@@ -56,4 +56,13 @@ describe('AccountManagementPage', () => {
       '/account/management-zones/2'
     );
   });
+
+  it('owns the only h1, so the shell main region has a heading', async () => {
+    render(await AccountManagementPage());
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Management Zones' })
+    ).toBeInTheDocument();
+  });
 });

@@ -24,4 +24,16 @@ describe('AccountPage', () => {
     expect(screen.getByText('100 Main St, VA')).toBeInTheDocument();
     expect(screen.getByText('1/5/2024')).toBeInTheDocument();
   });
+
+  it('owns the page heading so the shell main region has an h1', async () => {
+    render(await AccountPage());
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Farm information' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Account terms' })
+    ).toBeInTheDocument();
+  });
 });

@@ -27,4 +27,13 @@ describe('AccountUsersPage', () => {
     expect(screen.getByText('Jamie Admin')).toBeInTheDocument();
     expect(screen.getByText('jamie@example.com')).toBeInTheDocument();
   });
+
+  it('owns the only h1, so the shell main region has a heading', async () => {
+    render(await AccountUsersPage());
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'User information' })
+    ).toBeInTheDocument();
+  });
 });

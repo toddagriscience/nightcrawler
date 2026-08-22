@@ -18,7 +18,12 @@ const getManagementZones = vi.fn(async () => [
 
 vi.mock('@/app/(authenticated)/(no-sidebar)/account/db', () => ({
   getManagementZones: () => getManagementZones(),
-  getAccountShellData: async () => ({ farmName: 'Green Acres' }),
+  getAccountShellData: async () => ({
+    farmName: 'Green Acres',
+    contactName: 'Jane Farmer',
+    contactEmail: 'jane@example.com',
+    contactPhone: '+15551234567',
+  }),
 }));
 
 // Sidebar is an async server component, so resolve it before handing the
