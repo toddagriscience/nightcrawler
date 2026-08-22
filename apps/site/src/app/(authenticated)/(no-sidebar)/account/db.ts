@@ -15,6 +15,7 @@ import type {
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
 export async function getAccountShellData(): Promise<{
@@ -67,7 +68,7 @@ export async function getAccountUsersData(): Promise<{
     ) ?? farmUsers.find((farmUser) => farmUser.id !== currentUser.id);
 
   const principalContact = {
-    name: toDisplayName(
+    firstName: toDisplayName(
       principalOperator?.firstName,
       principalOperator?.lastName
     ),
@@ -99,6 +100,10 @@ export async function getAccountFarmData(): Promise<{
     .leftJoin(farmLocation, eq(farmLocation.farmId, farm.id))
     .where(eq(farm.id, currentUser.farmId))
     .limit(1);
+
+  if (!farmRecord) {
+    notFound();
+  }
 
   return { farm: farmRecord.farm, location: farmRecord.farm_location };
 }
