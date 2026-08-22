@@ -17,8 +17,19 @@ import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { asc, eq } from 'drizzle-orm';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
 
+/**
+ * Loads the data rendered by the account shell chrome: the farm's display
+ * name plus the primary contact details for the signed-in user.
+ *
+ * @returns The farm name and the primary contact's name, email and phone,
+ *   each already normalised through the account display helpers (so absent
+ *   values come back as the `NOT_SET` sentinel rather than empty strings)
+ */
 export async function getAccountShellData(): Promise<{
   farmName: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
 }> {
   const currentUser = await getAuthenticatedInfo();
 
@@ -36,6 +47,9 @@ export async function getAccountShellData(): Promise<{
 
   return {
     farmName: informalName !== NOT_SET ? informalName : businessName,
+    contactName: toDisplayName(currentUser.firstName, currentUser.lastName),
+    contactEmail: toDisplayValue(currentUser.email),
+    contactPhone: toDisplayValue(currentUser.phone),
   };
 }
 

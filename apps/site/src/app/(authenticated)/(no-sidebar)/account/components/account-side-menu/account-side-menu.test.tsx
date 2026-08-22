@@ -24,6 +24,13 @@ vi.mock('next/navigation', async () => {
   };
 });
 
+const accountSideMenuProps = {
+  farmName: 'Blue River Farm',
+  contactName: 'Jane Farmer',
+  contactEmail: 'jane@example.com',
+  contactPhone: '(555) 123-4567',
+};
+
 describe('AccountSideMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -31,8 +38,43 @@ describe('AccountSideMenu', () => {
     mockLogout.mockResolvedValue({ error: null });
   });
 
+  it('renders the farm name as the account shell heading', () => {
+    render(<AccountSideMenu {...accountSideMenuProps} />);
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Blue River Farm' })
+    ).toBeInTheDocument();
+  });
+
+  it('links the primary contact email and phone', () => {
+    render(<AccountSideMenu {...accountSideMenuProps} />);
+
+    expect(screen.getByText('Jane Farmer')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'jane@example.com' })
+    ).toHaveAttribute('href', 'mailto:jane@example.com');
+    expect(
+      screen.getByRole('link', { name: '(555) 123-4567' })
+    ).toHaveAttribute('href', 'tel:5551234567');
+  });
+
+  it('renders unset contact details as plain text instead of links', () => {
+    render(
+      <AccountSideMenu
+        {...accountSideMenuProps}
+        contactEmail="Not set"
+        contactPhone="Not set"
+      />
+    );
+
+    expect(screen.getAllByText('Not set')).toHaveLength(2);
+    expect(
+      screen.queryByRole('link', { name: 'Not set' })
+    ).not.toBeInTheDocument();
+  });
+
   it('marks the active account section', () => {
-    render(<AccountSideMenu />);
+    render(<AccountSideMenu {...accountSideMenuProps} />);
 
     expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute(
       'aria-current',
@@ -41,7 +83,7 @@ describe('AccountSideMenu', () => {
   });
 
   it('renders a help link pointing to the support page', () => {
-    render(<AccountSideMenu />);
+    render(<AccountSideMenu {...accountSideMenuProps} />);
 
     expect(screen.getByRole('link', { name: 'Help' })).toHaveAttribute(
       'href',
@@ -51,7 +93,7 @@ describe('AccountSideMenu', () => {
 
   it('calls logout flow when clicking log out', async () => {
     const user = userEvent.setup();
-    render(<AccountSideMenu />);
+    render(<AccountSideMenu {...accountSideMenuProps} />);
 
     await user.click(screen.getByRole('button', { name: 'Log out' }));
 

@@ -6,11 +6,18 @@ import Link from 'next/link';
 import { BiArrowBack } from 'react-icons/bi';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 
-interface AccountHeaderProps {
-  farmName: string;
-}
-
-export default function AccountHeader({ farmName }: AccountHeaderProps) {
+/**
+ * Banner chrome for every `/account/*` page. No layout above the account
+ * shell renders any chrome, so this is the only wordmark and the only route
+ * back out of the account area.
+ *
+ * The farm name used to live here as the page heading; it now sits in
+ * `<AccountSideMenu>` alongside the primary contact details, so this header
+ * is branding plus navigation only.
+ *
+ * @returns The account banner with the Todd wordmark and a Home link
+ */
+export default function AccountHeader() {
   return (
     <>
       <header className="w-full" role="banner">
@@ -31,9 +38,6 @@ export default function AccountHeader({ farmName }: AccountHeaderProps) {
               Home
             </span>
           </Link>
-          <h1 className="text-foreground text-4xl leading-none font-light">
-            {farmName}
-          </h1>
         </div>
       </div>
     </>
