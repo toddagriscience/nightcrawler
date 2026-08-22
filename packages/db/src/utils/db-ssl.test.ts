@@ -18,6 +18,7 @@ const MANAGED_ENV_VARS = [
   'DATABASE_PEM_CERT',
   'STAGING_DATABASE_PEM_CERT',
   'STAGING_DATABASE_HOST',
+  'PROD_DATABASE_HOST',
   'DATABASE_PLAINTEXT_HOSTS',
 ] as const;
 
@@ -124,6 +125,25 @@ describe('isLocalDatabaseUrl', () => {
         'postgresql://doadmin:secret@db-postgresql-nyc3.ondigitalocean.com:25060/main'
       )
     ).toBe(false);
+  });
+
+  it('ignores a DATABASE_PLAINTEXT_HOSTS entry naming a managed cluster', () => {
+    // The list exists to reach a local database, and this is the one entry that
+    // could matter: whoever pastes a real cluster into it — or sets one env var
+    // deliberately — must not be able to take that cluster's TLS off.
+    process.env.STAGING_DATABASE_HOST = 'staging-db.example.com';
+    process.env.PROD_DATABASE_HOST = 'prod-db.example.com';
+    process.env.DATABASE_PLAINTEXT_HOSTS =
+      'STAGING-DB.example.com, prod-db.example.com, db';
+
+    expect(
+      isLocalDatabaseUrl('postgresql://u:p@staging-db.example.com:25060/main')
+    ).toBe(false);
+    expect(
+      isLocalDatabaseUrl('postgresql://u:p@prod-db.example.com:25060/main')
+    ).toBe(false);
+    // The genuinely local entry alongside them still works.
+    expect(isLocalDatabaseUrl('postgresql://u:p@db:5432/postgres')).toBe(true);
   });
 
   it('treats a managed cluster as remote', () => {
@@ -358,5 +378,51 @@ describe('resolveDbPoolConfig', () => {
     const { ssl } = resolveDbPoolConfig(REMOTE_URL);
     expect(ssl).not.toBe(false);
     expect('checkServerIdentity' in (ssl as object)).toBe(false);
+  });
+
+  it('verifies a staging host against the staging certificate', () => {
+    process.env.STAGING_DATABASE_HOST = 'staging-db.example.com';
+    process.env.STAGING_DATABASE_PEM_CERT = 'staging-cert';
+    process.env.DATABASE_PEM_CERT = 'shared-cert';
+    expect(
+      resolveDbPoolConfig('postgresql://u:p@staging-db.example.com:25060/main')
+        .ssl
+    ).toEqual({ ca: 'staging-cert', rejectUnauthorized: true });
+  });
+
+  it('names the staging certificate variable when a staging host has none', () => {
+    // The lookup reads STAGING_DATABASE_PEM_CERT first, so naming the shared
+    // variable here would send the reader to set the wrong secret.
+    process.env.STAGING_DATABASE_HOST = 'staging-db.example.com';
+    expect(() =>
+      resolveDbPoolConfig(
+        'postgresql://u:p@staging-db.example.com:25060/main',
+        { requireCaCert: true }
+      )
+    ).toThrow(/STAGING_DATABASE_PEM_CERT/);
+  });
+
+  it('cannot be talked out of TLS by naming a cluster plaintext', () => {
+    process.env.PROD_DATABASE_HOST = 'prod-db.example.com';
+    process.env.DATABASE_PLAINTEXT_HOSTS = 'prod-db.example.com';
+    process.env.DATABASE_PEM_CERT = 'cert';
+    expect(
+      resolveDbPoolConfig('postgresql://u:p@prod-db.example.com:25060/main').ssl
+    ).toEqual({ ca: 'cert', rejectUnauthorized: true });
+  });
+
+  it('rejects an unparseable URL by name instead of demanding TLS of docker', () => {
+    // Fail-closed on its own turns a raw `#` in a local password into
+    // `server does not support SSL`, which reads as a certificate problem.
+    expect(() =>
+      resolveDbPoolConfig('postgresql://postgres:p#ss@localhost:5432/postgres')
+    ).toThrow(/percent-encode/);
+    expect(() => resolveDbPoolConfig('not a url')).toThrow(/DATABASE_URL/);
+
+    // A parseable URL with no hostname at all is a unix socket, not a typo, and
+    // keeps the fail-closed treatment it already had.
+    expect(() =>
+      resolveDbPoolConfig('postgresql:///db?host=/var/run/postgresql')
+    ).not.toThrow();
   });
 });

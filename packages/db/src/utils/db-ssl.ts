@@ -81,6 +81,22 @@ function normalizeDbHost(host: string): string {
 }
 
 /**
+ * The managed clusters, as named by the deployment's own env vars. Nothing may
+ * declare one of these plaintext, so they are subtracted from
+ * `DATABASE_PLAINTEXT_HOSTS` rather than trusted.
+ *
+ * Read per call for the same reason as `declaredPlaintextHosts`: `dotenv`
+ * ordering and per-test overrides.
+ */
+function managedClusterHosts(): Set<string> {
+  return new Set(
+    [process.env.STAGING_DATABASE_HOST, process.env.PROD_DATABASE_HOST]
+      .filter((host): host is string => Boolean(host))
+      .map(normalizeDbHost)
+  );
+}
+
+/**
  * Extra hostnames a developer has declared to be a local, plaintext database —
  * a docker-compose service name, a LAN address, whatever their setup dials.
  *
@@ -91,16 +107,25 @@ function normalizeDbHost(host: string): string {
  * production. This one only ever names hosts, so it cannot downgrade a cluster
  * unless someone types that cluster's hostname into it.
  *
+ * And if they do, the entry is dropped: a host equal to
+ * `STAGING_DATABASE_HOST` or `PROD_DATABASE_HOST` is ignored, so the one
+ * mistake that would matter — pasting a real cluster into the list, or an
+ * attacker who can set one env var doing it deliberately — cannot take TLS
+ * off. Dropped silently rather than thrown: the connection simply keeps the
+ * verified config it should have had, so there is no failure to report.
+ *
  * Read per call rather than at module load so `dotenv/config` ordering and
  * per-test overrides both take effect.
  */
 function declaredPlaintextHosts(): Set<string> {
   const raw = process.env.DATABASE_PLAINTEXT_HOSTS ?? '';
+  const managed = managedClusterHosts();
+
   return new Set(
     raw
       .split(',')
       .map((host) => normalizeDbHost(host))
-      .filter(Boolean)
+      .filter((host) => host && !managed.has(host))
   );
 }
 
@@ -328,8 +353,17 @@ export function remoteDbSslConfig(
  * signed by a private CA, it simply fails at connect — loudly, where a
  * connection is actually being opened.
  *
+ * A connection string that is set but is not a URL at all throws here, named.
+ * The helpers underneath deliberately stay fail-closed on one — an unreadable
+ * string must never be the reason TLS is dropped — but "closed" for a local
+ * Docker database means demanding TLS of a server that serves none, which
+ * surfaces as `server does not support SSL` and sends the reader looking at
+ * their certificates instead of at the raw `#` in their password. Since this
+ * funnel is the one place every caller goes through, it is the place to say so.
+ *
  * @param connectionString - Postgres URL, typically `process.env.DATABASE_URL`
  * @param options - `requireCaCert` to fail here rather than at connect time
+ * @throws If the connection string is set but unparseable
  * @throws With `requireCaCert`, if the target is managed and no cert is set
  */
 export function resolveDbPoolConfig(
@@ -340,6 +374,22 @@ export function resolveDbPoolConfig(
   ssl: ConnectionOptions | false;
 } {
   const sanitized = stripSslQueryParams(connectionString);
+
+  if (sanitized) {
+    try {
+      // Not `isLocalDatabaseUrl`: that answers "is it local", and a URL that
+      // parses to no hostname at all (a unix socket) is a legitimate answer of
+      // no. Only a string `URL` outright rejects lands here.
+      new URL(sanitized);
+    } catch {
+      throw new Error(
+        'DATABASE_URL is set but is not a parseable URL, so the host it ' +
+          'points at — and therefore whether TLS applies — cannot be ' +
+          'determined. A raw "#", "/", "@" or ":" in the password is the ' +
+          'usual cause: percent-encode it ("#" as "%23", "/" as "%2F").'
+      );
+    }
+  }
 
   if (isLocalDatabaseUrl(sanitized)) {
     return { connectionString: sanitized, ssl: false };
