@@ -25,6 +25,9 @@
       "listView": "Vista de lista"
     },
     "viewMore": "Ver más",
+    "cursor": {
+      "view": "Ver"
+    },
     "empty": "Aún no hay entradas de {category}.",
     "emptyAll": "Aún no hay entradas."
   }

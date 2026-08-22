@@ -333,3 +333,15 @@ header {
 .hide-native-password-reveal::-ms-clear {
   display: none;
 }
+
+/*
+ * Custom cursor follower (components/common/cursor-follower). Hide the native
+ * pointer over labelled targets only while the follower is mounted and the
+ * device has a real mouse, so the label is never obscured by the OS arrow and
+ * the pointer never disappears on devices or pages without the follower.
+ */
+@media (hover: hover) and (pointer: fine) {
+  html[data-cursor-follower] [data-cursor-label] {
+    cursor: none;
+  }
+}

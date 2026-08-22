@@ -25,6 +25,9 @@
       "listView": "List view"
     },
     "viewMore": "View more",
+    "cursor": {
+      "view": "View"
+    },
     "empty": "No {category} entries yet.",
     "emptyAll": "No entries yet."
   }

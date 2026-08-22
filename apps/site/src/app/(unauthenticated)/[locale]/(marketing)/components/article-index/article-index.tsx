@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { CURSOR_LABEL_ATTRIBUTE } from '@/components/common/cursor-follower/constants';
+import { CursorFollower } from '@/components/common/cursor-follower/cursor-follower';
 import { Link } from '@/i18n/config';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import {
@@ -115,6 +117,12 @@ export interface ArticleIndexProps {
    * (news, whose dynamic segment is owned by `/news/[slug]`). Defaults to `'path'`.
    */
   topicHrefMode?: ArticleIndexTopicHrefMode;
+  /**
+   * Label shown inside the hover cursor over article rows (e.g. "View"). When
+   * set, rows are tagged for the {@link CursorFollower} and it is mounted on
+   * fine-pointer devices; omit to keep the native pointer (the research index does).
+   */
+  cursorLabel?: string;
 }
 
 /**
@@ -145,6 +153,7 @@ export function ArticleIndex({
   countParam,
   showTopicTabs = true,
   topicHrefMode = 'path',
+  cursorLabel,
 }: ArticleIndexProps) {
   // Tabs: 'all' + each offered topic present in the full set (fixed order).
   const presentTypes = topics.filter((type) =>
@@ -196,8 +205,15 @@ export function ArticleIndex({
     })),
   ];
 
+  // Rows carry the label as a data attribute so the client-side follower can
+  // resolve hover targets from server-rendered markup.
+  const cursorAttributes = cursorLabel
+    ? { [CURSOR_LABEL_ATTRIBUTE]: cursorLabel }
+    : undefined;
+
   return (
     <main className="bg-white text-black">
+      {cursorLabel ? <CursorFollower /> : null}
       <div className="mx-auto w-full max-w-[1440px] px-6 pb-24 pt-12 sm:px-12 md:pt-16 lg:px-20">
         {/* Heading + toolbar */}
         <header className="flex flex-col gap-8 lg:gap-10">
@@ -319,13 +335,14 @@ export function ArticleIndex({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block"
+                    {...cursorAttributes}
                   >
                     {rowInner}
                   </a>
                 );
               } else {
                 row = (
-                  <Link href={safeHref} className="block">
+                  <Link href={safeHref} className="block" {...cursorAttributes}>
                     {rowInner}
                   </Link>
                 );
