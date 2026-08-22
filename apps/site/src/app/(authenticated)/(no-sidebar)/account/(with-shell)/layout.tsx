@@ -19,56 +19,48 @@ export const metadata: Metadata = {
  * inside the Suspense boundary so the layout can still be prerendered.
  *
  * @param props.children - Nested account page content
- * @returns The account shell with the banner header and side menu
+ * @returns The account side menu and the main content region
  */
 async function AccountShell({ children }: { children: React.ReactNode }) {
   const accountShellData = await getAccountShellData();
 
   return (
-    <div className="pb-14">
-      <AccountHeader />
-      <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
-        <AccountSideMenu
-          farmName={accountShellData.farmName}
-          contactName={accountShellData.contactName}
-          contactEmail={accountShellData.contactEmail}
-          contactPhone={accountShellData.contactPhone}
-        />
-        <main className="min-w-0 flex-1">{children}</main>
-      </div>
+    <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
+      <AccountSideMenu
+        farmName={accountShellData.farmName}
+        contactName={accountShellData.contactName}
+        contactEmail={accountShellData.contactEmail}
+        contactPhone={accountShellData.contactPhone}
+      />
+      <main className="min-w-0 flex-1">{children}</main>
     </div>
   );
 }
 
 /**
- * Skeleton fallback rendered while the account shell data loads.
+ * Skeleton fallback rendered while the account shell data loads. Mirrors the
+ * shell's two-column structure; the banner sits outside the boundary so it is
+ * never replaced by a placeholder.
  *
  * @returns Placeholder layout matching the account shell structure
  */
 function AccountShellFallback() {
   return (
-    <div className="pb-14">
-      <div className="border-b border-[#D9D9D9]">
-        <div className="mx-auto mt-16 mb-10 flex w-full max-w-[1300px] items-center gap-22 px-5">
-          <Skeleton className="h-6 w-16 bg-foreground/15" />
-        </div>
+    <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
+      <div className="mt-1 w-[190px] shrink-0">
+        <Skeleton className="h-64 w-full bg-foreground/15" />
       </div>
-      <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
-        <div className="mt-1 w-[190px] shrink-0">
-          <Skeleton className="h-64 w-full bg-foreground/15" />
-        </div>
-        <main className="min-w-0 flex-1">
-          <Skeleton className="h-64 w-full bg-foreground/15" />
-        </main>
-      </div>
+      <main className="min-w-0 flex-1">
+        <Skeleton className="h-64 w-full bg-foreground/15" />
+      </main>
     </div>
   );
 }
 
 /**
- * Account layout that wraps every `/account/*` page.
- * The cookies-dependent data fetch lives inside `<AccountShell>` so it
- * sits within the Suspense boundary and doesn't block prerendering.
+ * Account layout that wraps every `/account/*` page. The banner renders
+ * eagerly; the cookies-dependent data fetch lives inside `<AccountShell>` so
+ * it sits within the Suspense boundary and doesn't block prerendering.
  *
  * @param props.children - Nested account page content
  * @returns The account layout with a Suspense-wrapped shell
@@ -79,8 +71,11 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={<AccountShellFallback />}>
-      <AccountShell>{children}</AccountShell>
-    </Suspense>
+    <div className="pb-14">
+      <AccountHeader />
+      <Suspense fallback={<AccountShellFallback />}>
+        <AccountShell>{children}</AccountShell>
+      </Suspense>
+    </div>
   );
 }

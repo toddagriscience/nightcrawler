@@ -10,6 +10,17 @@ const statusStyles: Record<AccountInfoStatusTone, string> = {
   warning: 'text-[#ff4d00]',
 };
 
+/**
+ * Section wrapper for an account page's content. Renders the page's primary
+ * heading: every `/account/*` page mounts exactly one `AccountInfo` inside the
+ * shell's `<main>`, so this `<h1>` is the main region's only top-level
+ * heading (the side menu's farm name is an `<h2>` naming that aside).
+ *
+ * @param props.title - Page heading, e.g. `'Farm information'`
+ * @param props.description - Optional supporting copy under the heading
+ * @param props.children - Page content
+ * @returns The account page section
+ */
 export default function AccountInfo({
   title,
   description,
@@ -21,7 +32,7 @@ export default function AccountInfo({
 }) {
   return (
     <section className="w-full max-w-[568px]">
-      <h2 className="text-foreground text-3xl leading-none">{title}</h2>
+      <h1 className="text-foreground text-3xl leading-none">{title}</h1>
       {description ? (
         <p className="text-foreground mt-6 text-sm font-light italic">
           {description}
@@ -32,6 +43,14 @@ export default function AccountInfo({
   );
 }
 
+/**
+ * Titled subsection inside an {@link AccountInfo} body. Sits one level below
+ * the page `<h1>`, so it renders an `<h2>`.
+ *
+ * @param props.title - Subsection heading
+ * @param props.children - Subsection rows
+ * @returns The account page subsection
+ */
 export function AccountInfoSection({
   title,
   children,
@@ -41,7 +60,7 @@ export function AccountInfoSection({
 }) {
   return (
     <div className="mt-10 first:mt-0">
-      <h3 className="text-foreground text-xl font-normal">{title}</h3>
+      <h2 className="text-foreground text-xl font-normal">{title}</h2>
       <div className="border-[#D9D9D9] mt-3 border-t px-0.5">{children}</div>
     </div>
   );

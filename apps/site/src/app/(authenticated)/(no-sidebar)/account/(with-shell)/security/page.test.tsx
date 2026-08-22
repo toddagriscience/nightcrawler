@@ -21,4 +21,13 @@ describe('AccountSecurityPage', () => {
       screen.getByRole('link', { name: 'Update password' })
     ).toHaveAttribute('href', '/account/reset-password');
   });
+
+  it('owns the only h1, so the shell main region has a heading', () => {
+    render(<AccountSecurityPage />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Security' })
+    ).toBeInTheDocument();
+  });
 });

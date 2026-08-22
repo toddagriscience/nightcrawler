@@ -28,7 +28,7 @@ const accountSideMenuProps = {
   farmName: 'Blue River Farm',
   contactName: 'Jane Farmer',
   contactEmail: 'jane@example.com',
-  contactPhone: '(555) 123-4567',
+  contactPhone: '+15551234567',
 };
 
 describe('AccountSideMenu', () => {
@@ -38,12 +38,32 @@ describe('AccountSideMenu', () => {
     mockLogout.mockResolvedValue({ error: null });
   });
 
-  it('renders the farm name as the account shell heading', () => {
+  it('names the complementary region with the farm name as an h2', () => {
     render(<AccountSideMenu {...accountSideMenuProps} />);
 
+    const heading = screen.getByRole('heading', {
+      level: 2,
+      name: 'Blue River Farm',
+    });
+
+    expect(heading).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Blue River Farm' })
-    ).toBeInTheDocument();
+      screen.getByRole('complementary', { name: 'Blue River Farm' })
+    ).toContainElement(heading);
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+  });
+
+  it('offers the route out of the account tree in its own site nav', () => {
+    render(<AccountSideMenu {...accountSideMenuProps} />);
+
+    const siteNav = screen.getByRole('navigation', { name: 'Site' });
+    const homeLink = screen.getByRole('link', { name: 'Home' });
+
+    expect(homeLink).toHaveAttribute('href', '/');
+    expect(siteNav).toContainElement(homeLink);
+    expect(
+      screen.getByRole('navigation', { name: 'Account sections' })
+    ).not.toContainElement(homeLink);
   });
 
   it('links the primary contact email and phone', () => {
@@ -53,6 +73,20 @@ describe('AccountSideMenu', () => {
     expect(
       screen.getByRole('link', { name: 'jane@example.com' })
     ).toHaveAttribute('href', 'mailto:jane@example.com');
+    expect(screen.getByRole('link', { name: '+15551234567' })).toHaveAttribute(
+      'href',
+      'tel:+15551234567'
+    );
+  });
+
+  it('strips presentation characters out of the tel: target', () => {
+    render(
+      <AccountSideMenu
+        {...accountSideMenuProps}
+        contactPhone="(555) 123-4567"
+      />
+    );
+
     expect(
       screen.getByRole('link', { name: '(555) 123-4567' })
     ).toHaveAttribute('href', 'tel:5551234567');
@@ -72,6 +106,31 @@ describe('AccountSideMenu', () => {
       screen.queryByRole('link', { name: 'Not set' })
     ).not.toBeInTheDocument();
   });
+
+  it.each([
+    ['empty', '', ''],
+    ['whitespace', '   ', '   '],
+    ['placeholder', 'N/A', 'N/A'],
+    ['partial', 'jane@', '555'],
+  ])(
+    'never emits an undialable or unmailable link for %s values',
+    (_label, contactEmail, contactPhone) => {
+      render(
+        <AccountSideMenu
+          {...accountSideMenuProps}
+          contactEmail={contactEmail}
+          contactPhone={contactPhone}
+        />
+      );
+
+      for (const link of screen.getAllByRole('link')) {
+        const href = link.getAttribute('href') ?? '';
+
+        expect(href).not.toMatch(/^mailto:/);
+        expect(href).not.toMatch(/^tel:/);
+      }
+    }
+  );
 
   it('marks the active account section', () => {
     render(<AccountSideMenu {...accountSideMenuProps} />);

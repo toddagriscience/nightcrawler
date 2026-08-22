@@ -18,4 +18,13 @@ describe('AccountPrivacyPage', () => {
       screen.getByRole('link', { name: /Privacy Policy/i })
     ).toHaveAttribute('href', '/privacy');
   });
+
+  it('owns the only h1, so the shell main region has a heading', () => {
+    render(<AccountPrivacyPage />);
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Privacy' })
+    ).toBeInTheDocument();
+  });
 });

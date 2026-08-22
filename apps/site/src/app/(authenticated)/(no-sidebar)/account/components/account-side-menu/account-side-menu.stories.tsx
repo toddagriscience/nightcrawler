@@ -10,7 +10,7 @@ const meta: Meta<typeof AccountSideMenu> = {
     farmName: 'Blue River Farm',
     contactName: 'Jane Farmer',
     contactEmail: 'jane@example.com',
-    contactPhone: '(555) 123-4567',
+    contactPhone: '+15551234567',
   },
   parameters: {
     layout: 'padded',
@@ -23,7 +23,7 @@ const meta: Meta<typeof AccountSideMenu> = {
     docs: {
       description: {
         component:
-          'Left-hand navigation for the account area. Leads with the farm name and the primary contact details (email and phone are mailto:/tel: links), then the account sections and, in the bottom utility group, a Help link to the support page (/contact) above the Log out action.',
+          'Left-hand navigation for the account area. Leads with a Home link out of the account tree, then the farm name (an h2 naming the aside) above the primary contact details (email and phone become mailto:/tel: links only when they are actually mailable/dialable), then the account sections and, in the bottom utility group, a Help link to the support page (/contact) above the Log out action.',
       },
     },
   },
