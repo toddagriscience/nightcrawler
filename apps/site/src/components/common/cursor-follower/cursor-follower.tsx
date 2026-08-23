@@ -12,7 +12,7 @@ import {
 } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
-import { CURSOR_LABEL_ATTRIBUTE, CURSOR_READY_ATTRIBUTE } from './constants';
+import { CURSOR_LABEL_ATTRIBUTE } from './constants';
 import type { CursorFollowerProps } from './types/cursor-follower';
 
 export type { CursorFollowerProps } from './types/cursor-follower';
@@ -34,6 +34,14 @@ const FOLLOW_SPRING = {
   mass: 0.5,
   skipInitialAnimation: true,
 };
+
+/**
+ * Opacity of the bubble at rest on a hovered target. Deliberately translucent
+ * so the row's own text stays readable underneath it, and so the bubble reads
+ * as an accent rather than as a replacement for the OS pointer (which stays
+ * visible — see the note in `globals.css`).
+ */
+const ACTIVE_OPACITY = 0.4;
 
 /** Scale/opacity pop when a labelled target is hovered. */
 const POP_SPRING = { type: 'spring', stiffness: 320, damping: 26 } as const;
@@ -92,8 +100,8 @@ export function CursorFollower({ className }: CursorFollowerProps) {
   useEffect(() => {
     if (!hasFinePointer) return;
 
-    // Only hide the native cursor (via the html attribute) once the bubble can
-    // actually stand in for it — i.e. after a real pointer position is known.
+    // Track the first real pointer position so the bubble can jump to it
+    // instead of tweening in from its off-screen park position.
     const markPositioned = (x: number, y: number) => {
       if (hasPositionRef.current) return;
       hasPositionRef.current = true;
@@ -101,7 +109,6 @@ export function CursorFollower({ className }: CursorFollowerProps) {
       pointerY.jump(y);
       springX.jump(x);
       springY.jump(y);
-      document.documentElement.setAttribute(CURSOR_READY_ATTRIBUTE, '');
     };
 
     const applyLabel = (next: string | null) => {
@@ -161,7 +168,6 @@ export function CursorFollower({ className }: CursorFollowerProps) {
       document.removeEventListener('pointerover', handleOver);
       document.removeEventListener('pointerout', handleOut);
       hasPositionRef.current = false;
-      document.documentElement.removeAttribute(CURSOR_READY_ATTRIBUTE);
     };
   }, [hasFinePointer, pointerX, pointerY, springX, springY]);
 
@@ -182,7 +188,10 @@ export function CursorFollower({ className }: CursorFollowerProps) {
         y: reduceMotion ? pointerY : springY,
       }}
       initial={false}
-      animate={{ scale: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+      animate={{
+        scale: isActive ? 1 : 0,
+        opacity: isActive ? ACTIVE_OPACITY : 0,
+      }}
       transition={reduceMotion ? { duration: 0 } : POP_SPRING}
     >
       {label}

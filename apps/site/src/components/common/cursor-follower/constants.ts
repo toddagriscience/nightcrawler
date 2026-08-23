@@ -14,11 +14,3 @@
  * by the server component that renders the markup).
  */
 export const CURSOR_LABEL_ATTRIBUTE = 'data-cursor-label';
-
-/**
- * Attribute set on `<html>` once the follower is mounted on a fine-pointer
- * device AND a real pointer position is known. The global stylesheet keys off
- * it to hide the native pointer over labelled targets, so the OS arrow never
- * disappears before the follower is able to stand in for it.
- */
-export const CURSOR_READY_ATTRIBUTE = 'data-cursor-follower';

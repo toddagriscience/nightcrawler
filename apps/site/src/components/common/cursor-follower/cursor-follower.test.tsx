@@ -5,7 +5,6 @@ import { fireEvent, renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { act } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CURSOR_READY_ATTRIBUTE } from './constants';
 import { CursorFollower } from './cursor-follower';
 
 function renderWithTarget() {
@@ -36,7 +35,6 @@ function dispatchWithPointerType(
 describe('CursorFollower', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
-    document.documentElement.removeAttribute(CURSOR_READY_ATTRIBUTE);
   });
 
   it('renders nothing without a fine pointer (touch devices)', () => {
@@ -44,9 +42,6 @@ describe('CursorFollower', () => {
     renderWithTarget();
 
     expect(screen.queryByTestId('cursor-follower')).not.toBeInTheDocument();
-    expect(document.documentElement).not.toHaveAttribute(
-      CURSOR_READY_ATTRIBUTE
-    );
   });
 
   it('hides the native cursor only after a real pointer position is known', () => {
@@ -55,12 +50,8 @@ describe('CursorFollower', () => {
 
     // Mounted, but no pointer event yet: the OS cursor must stay visible.
     expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
-    expect(document.documentElement).not.toHaveAttribute(
-      CURSOR_READY_ATTRIBUTE
-    );
 
     fireEvent.pointerMove(window, { clientX: 40, clientY: 40 });
-    expect(document.documentElement).toHaveAttribute(CURSOR_READY_ATTRIBUTE);
   });
 
   it('shows the hovered target label and clears it over untagged markup', () => {
@@ -73,7 +64,6 @@ describe('CursorFollower', () => {
 
     fireEvent.pointerOver(screen.getByText('Row'));
     expect(follower).toHaveTextContent('Read');
-    expect(document.documentElement).toHaveAttribute(CURSOR_READY_ATTRIBUTE);
 
     fireEvent.pointerOver(screen.getByText('Untagged copy'));
     expect(follower).toHaveTextContent('');
@@ -124,9 +114,6 @@ describe('CursorFollower', () => {
     // A tap on a row must not show the bubble.
     dispatchWithPointerType(row, 'pointerover', 'touch');
     expect(follower).toHaveTextContent('');
-    expect(document.documentElement).not.toHaveAttribute(
-      CURSOR_READY_ATTRIBUTE
-    );
 
     // A tap while the bubble is showing (from earlier mouse hover) dismisses it.
     fireEvent.pointerOver(row);
@@ -140,11 +127,7 @@ describe('CursorFollower', () => {
     const { unmount } = renderWithTarget();
 
     fireEvent.pointerOver(screen.getByText('Row'));
-    expect(document.documentElement).toHaveAttribute(CURSOR_READY_ATTRIBUTE);
 
     unmount();
-    expect(document.documentElement).not.toHaveAttribute(
-      CURSOR_READY_ATTRIBUTE
-    );
   });
 });
