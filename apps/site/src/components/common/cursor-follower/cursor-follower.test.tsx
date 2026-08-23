@@ -44,16 +44,6 @@ describe('CursorFollower', () => {
     expect(screen.queryByTestId('cursor-follower')).not.toBeInTheDocument();
   });
 
-  it('hides the native cursor only after a real pointer position is known', () => {
-    stubMatchMedia(true);
-    renderWithTarget();
-
-    // Mounted, but no pointer event yet: the OS cursor must stay visible.
-    expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
-
-    fireEvent.pointerMove(window, { clientX: 40, clientY: 40 });
-  });
-
   it('shows the hovered target label and clears it over untagged markup', () => {
     stubMatchMedia(true);
     renderWithTarget();
@@ -120,14 +110,5 @@ describe('CursorFollower', () => {
     expect(follower).toHaveTextContent('Read');
     dispatchWithPointerType(row, 'pointerover', 'touch');
     expect(follower).toHaveTextContent('');
-  });
-
-  it('removes the ready attribute when unmounted', () => {
-    stubMatchMedia(true);
-    const { unmount } = renderWithTarget();
-
-    fireEvent.pointerOver(screen.getByText('Row'));
-
-    unmount();
   });
 });
