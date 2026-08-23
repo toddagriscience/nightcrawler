@@ -180,11 +180,11 @@ describe('ArticleIndex cursor follower', () => {
 
   it('tags rows with the label and mounts the follower when cursorLabel is set', async () => {
     stubMatchMedia(true);
-    renderWithNextIntl(await render({ cursorLabel: 'View' }));
+    renderWithNextIntl(await render({ cursorLabel: 'Read' }));
 
     expect(screen.getByRole('link', { name: /Research Row/ })).toHaveAttribute(
       'data-cursor-label',
-      'View'
+      'Read'
     );
     expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
   });

@@ -11,6 +11,7 @@ import {
   useSpring,
 } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 import { CURSOR_LABEL_ATTRIBUTE, CURSOR_READY_ATTRIBUTE } from './constants';
 import type { CursorFollowerProps } from './types/cursor-follower';
 
@@ -54,9 +55,15 @@ function isMousePointer(event: PointerEvent): boolean {
 }
 
 /**
- * Custom cursor follower: a dark circle that trails the pointer and expands to
- * show a label while hovering any element tagged with
- * {@link CURSOR_LABEL_ATTRIBUTE} (e.g. a news row tagged `data-cursor-label="View"`).
+ * Custom cursor follower: a dark pill that trails the pointer and expands to
+ * show a label and a trailing arrow while hovering any element tagged with
+ * {@link CURSOR_LABEL_ATTRIBUTE} (e.g. a news row tagged `data-cursor-label="Read"`).
+ *
+ * Shape and sizing intentionally mirror the site's pill `Button` (see
+ * `components/common/button/themes/button.tsx`): the same `rounded-full`
+ * geometry, `gap-2` between label and arrow, and the same `HiArrowLongRight`
+ * glyph, one step smaller so the cursor reads as a cursor rather than as a
+ * control the user is meant to click.
  *
  * Renders nothing on the server and on touch devices; on a fine pointer it
  * listens for pointer events at the document level, so tagged targets can be
@@ -167,7 +174,7 @@ export function CursorFollower({ className }: CursorFollowerProps) {
       aria-hidden="true"
       data-testid="cursor-follower"
       className={cn(
-        'pointer-events-none fixed left-0 top-0 z-[100] flex size-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#181818] text-[14px] font-normal leading-none text-white',
+        'pointer-events-none fixed left-0 top-0 z-[100] inline-flex h-[42px] -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-[#181818] px-5 text-base font-normal leading-none text-white',
         className
       )}
       style={{
@@ -179,6 +186,7 @@ export function CursorFollower({ className }: CursorFollowerProps) {
       transition={reduceMotion ? { duration: 0 } : POP_SPRING}
     >
       {label}
+      <HiArrowLongRight className="size-6 shrink-0" aria-hidden="true" />
     </motion.div>
   );
 }

@@ -26,7 +26,7 @@
     },
     "viewMore": "View more",
     "cursor": {
-      "view": "View"
+      "read": "Read"
     },
     "empty": "No {category} entries yet.",
     "emptyAll": "No entries yet."

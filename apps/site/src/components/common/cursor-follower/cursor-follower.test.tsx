@@ -11,7 +11,7 @@ import { CursorFollower } from './cursor-follower';
 function renderWithTarget() {
   return renderWithNextIntl(
     <>
-      <a href="#row" data-cursor-label="View">
+      <a href="#row" data-cursor-label="Read">
         Row
       </a>
       <p>Untagged copy</p>
@@ -72,11 +72,28 @@ describe('CursorFollower', () => {
     expect(follower).toHaveTextContent('');
 
     fireEvent.pointerOver(screen.getByText('Row'));
-    expect(follower).toHaveTextContent('View');
+    expect(follower).toHaveTextContent('Read');
     expect(document.documentElement).toHaveAttribute(CURSOR_READY_ATTRIBUTE);
 
     fireEvent.pointerOver(screen.getByText('Untagged copy'));
     expect(follower).toHaveTextContent('');
+  });
+
+  it('renders as a pill with a trailing arrow, matching the Button geometry', () => {
+    stubMatchMedia(true);
+    renderWithTarget();
+
+    const follower = screen.getByTestId('cursor-follower');
+
+    // Pill, not a circle: rounded-full plus horizontal padding and an explicit
+    // height, mirroring components/common/button/themes/button.tsx.
+    expect(follower).toHaveClass('rounded-full', 'px-5', 'h-[42px]', 'gap-2');
+    expect(follower.className).not.toMatch(/\bsize-\d/);
+
+    // The arrow is decorative and must never join the accessible name.
+    const arrow = follower.querySelector('svg');
+    expect(arrow).not.toBeNull();
+    expect(arrow).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('hides when the pointer leaves the window but not on internal transitions', () => {
@@ -85,14 +102,14 @@ describe('CursorFollower', () => {
     const follower = screen.getByTestId('cursor-follower');
 
     fireEvent.pointerOver(screen.getByText('Row'));
-    expect(follower).toHaveTextContent('View');
+    expect(follower).toHaveTextContent('Read');
 
     // Moving to another element inside the document must NOT clear the label
     // (the next pointerover decides), only leaving the window does.
     fireEvent.pointerOut(screen.getByText('Row'), {
       relatedTarget: screen.getByText('Untagged copy'),
     });
-    expect(follower).toHaveTextContent('View');
+    expect(follower).toHaveTextContent('Read');
 
     fireEvent.pointerOut(screen.getByText('Row'), { relatedTarget: null });
     expect(follower).toHaveTextContent('');
@@ -113,7 +130,7 @@ describe('CursorFollower', () => {
 
     // A tap while the bubble is showing (from earlier mouse hover) dismisses it.
     fireEvent.pointerOver(row);
-    expect(follower).toHaveTextContent('View');
+    expect(follower).toHaveTextContent('Read');
     dispatchWithPointerType(row, 'pointerover', 'touch');
     expect(follower).toHaveTextContent('');
   });

@@ -118,7 +118,7 @@ export interface ArticleIndexProps {
    */
   topicHrefMode?: ArticleIndexTopicHrefMode;
   /**
-   * Label shown inside the hover cursor over article rows (e.g. "View"). When
+   * Label shown inside the hover cursor over article rows (e.g. "Read"). When
    * set, rows are tagged for the {@link CursorFollower} and it is mounted on
    * fine-pointer devices; omit to keep the native pointer (the research index does).
    */

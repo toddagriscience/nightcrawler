@@ -28,7 +28,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * News-style rows tagged with `data-cursor-label="View"`. Move a mouse over a
+ * News-style rows tagged with `data-cursor-label="Read"`. Move a mouse over a
  * row to see the follower expand; it is absent on touch devices by design.
  */
 export const NewsRows: Story = {
@@ -42,7 +42,7 @@ export const NewsRows: Story = {
           <li key={title} className="border-b border-[rgba(226,226,226,0.5)]">
             <a
               href="#"
-              data-cursor-label="View"
+              data-cursor-label="Read"
               className="block py-7 transition-opacity hover:opacity-70"
             >
               <h2 className="text-[18px] font-normal leading-[26px]">

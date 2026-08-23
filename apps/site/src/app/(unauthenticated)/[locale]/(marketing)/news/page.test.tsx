@@ -123,7 +123,7 @@ describe('News Page cursor follower', () => {
 
     expect(
       screen.getByRole('link', { name: /New AI Model Sets Performance Record/ })
-    ).toHaveAttribute('data-cursor-label', 'View');
+    ).toHaveAttribute('data-cursor-label', 'Read');
     expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
   });
 });
