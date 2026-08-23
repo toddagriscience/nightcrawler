@@ -180,7 +180,11 @@ export function CursorFollower({ className }: CursorFollowerProps) {
       aria-hidden="true"
       data-testid="cursor-follower"
       className={cn(
-        'pointer-events-none fixed left-0 top-0 z-[100] inline-flex h-[42px] -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-[#181818] px-5 text-base font-normal leading-none text-white',
+        // Sits ABOVE the pointer, not centred on it: centred, the pill covered
+        // the very row title the reader is trying to read. `-translate-y-full`
+        // lifts it clear by its own height, and the extra gap keeps it off the
+        // OS cursor glyph (which stays visible, see globals.css).
+        'pointer-events-none fixed left-0 top-0 z-[100] inline-flex h-[42px] -translate-x-1/2 -translate-y-[calc(100%+14px)] items-center gap-2 whitespace-nowrap rounded-full bg-[#181818] px-5 text-base font-normal leading-none text-white',
         className
       )}
       style={{
