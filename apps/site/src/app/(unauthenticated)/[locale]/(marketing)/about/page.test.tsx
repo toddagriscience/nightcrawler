@@ -65,9 +65,9 @@ describe('WhoWeArePage', () => {
       })
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('link', { name: /Our research/i })
-    ).toBeInTheDocument();
+    const cta = screen.getByRole('link', { name: /Our research/i });
+    expect(cta).toBeInTheDocument();
+    expect(cta.querySelector('svg')).not.toBeNull();
   });
 
   it('renders the vision image from the kebab-case asset at the slot it occupies', () => {

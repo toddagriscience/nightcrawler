@@ -2,9 +2,9 @@
 
 'use client';
 
-import { Button } from '@/components/common';
 import HeaderImg from '@/components/common/header-img/header-img';
 import PageHeader from '@/components/common/page-header/page-header';
+import { Button } from '@/components/ui';
 import { Link } from '@/i18n/config';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -13,7 +13,6 @@ import { HiArrowLongRight } from 'react-icons/hi2';
 import CompetenciesSection from './components/competencies-section/competencies-section';
 import Partners from './components/partners';
 import ResponsibilitiesSection from './components/responsibilities-section/responsibilities-section';
-
 /**
  * About page component (formerly Who We Are)
  * @returns {JSX.Element} - The about page
@@ -37,22 +36,25 @@ export default function WhoWeArePage() {
               subtitle={t('subtitle')}
             />
           </section>
-          <div className="mt-24 flex flex-col items-start gap-10 md:mt-32 md:flex-row md:justify-center md:gap-68">
-            <div className="flex w-full max-w-[320px] flex-col items-start text-left">
-              <h2 className="whitespace-pre-line text-2xl md:text-[28px] leading-snug font-normal">
+          <div className="mx-auto mt-24 flex w-[85%] flex-col justify-center gap-10 md:mt-32 md:flex-row md:justify-center lg:gap-40">
+            <div className="flex w-full max-w-[400px] flex-col items-start text-left">
+              <h2 className="whitespace-pre-line text-2xl md:text-3xl/[38px] leading-snug font-normal">
                 {t('vision.title')}
               </h2>
-              <p className="mt-4 whitespace-pre-line text-sm md:text-base font-normal leading-relaxed">
+              <p className="mt-6 whitespace-pre-line text-base md:text[17px]/[28px] font-normal leading-relaxed">
                 {t('vision.description')}
               </p>
               <Button
+                asChild
                 variant="outline"
-                size="md"
-                className="px-6 py-2 max-w-[210px] font-thin mt-6"
-                text={t('vision.cta')}
-                href="/research"
-                showArrow={true}
-              />
+                className="mt-16 md:mt-26 mb-16 h-[47px] min-w-[159px] rounded-full border-[0.75px] border-[#848484] px-5 text-[16px]/[40px] [&_svg]:size-4"
+                size="lg"
+              >
+                <Link href="/research">
+                  {t('vision.cta')}
+                  <HiArrowLongRight aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
             <div className="flex w-full max-w-[580px] justify-center">
               <Image
@@ -65,10 +67,10 @@ export default function WhoWeArePage() {
               />
             </div>
           </div>
-          <p className="mx-auto mt-24 max-w-[720px] text-center text-xl md:mt-32 md:text-2xl font-light leading-relaxed">
+          <p className="mx-auto mt-30 max-w-lg md:max-w-2xl lg:max-w-[850px] text-center text-2xl md:text-3xl/[38px] md:mt-46 font-regular">
             {t('missionStatement')}
           </p>
-          <div className="mt-16 md:mt-20">
+          <div className="mt-20 md:mt-27">
             <HeaderImg
               src="/marketing/who-we-are-header.webp"
               alt="Meadow"
