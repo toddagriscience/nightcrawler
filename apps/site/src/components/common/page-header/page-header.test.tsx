@@ -27,11 +27,14 @@ describe('PageHeader', () => {
     );
   });
 
-  it('applies typography classes to subtitle and title', () => {
+  it('renders the subtitle as a paragraph, not a heading', () => {
     render(<PageHeader subtitle="Small line" title="Big line" />);
 
     const subtitle = screen.getByText('Small line');
-    expect(subtitle.tagName).toBe('H3');
+    // A tagline is not a section heading. Rendering it as <h3> directly under
+    // the <h1> skipped a level, and any page that then opened a section with
+    // <h2> produced h1 -> h3 -> h2 — an outline that goes backwards.
+    expect(subtitle.tagName).toBe('P');
     expect(subtitle).toHaveClass(
       'text-base',
       'md:text[17px]/[28px]',
