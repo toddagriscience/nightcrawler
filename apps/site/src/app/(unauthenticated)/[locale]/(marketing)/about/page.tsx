@@ -78,12 +78,6 @@ export default function WhoWeArePage() {
             />
           </div>
         </motion.div>
-      </div>
-      {/* Competencies Section */}
-      <CompetenciesSection t={t} />
-      {/* Responsibilities Section */}
-      <ResponsibilitiesSection t={t} />
-      <div className="flex flex-col mx-auto max-w-[1200px]">
         {/* Partners Section */}
         <motion.div
           className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
@@ -94,7 +88,12 @@ export default function WhoWeArePage() {
         >
           <Partners />
         </motion.div>
-
+      </div>
+      {/* Competencies Section */}
+      <CompetenciesSection t={t} />
+      {/* Responsibilities Section */}
+      <ResponsibilitiesSection t={t} />
+      <div className="flex flex-col mx-auto max-w-[1200px]">
         <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
           <Link
             href="/research"
