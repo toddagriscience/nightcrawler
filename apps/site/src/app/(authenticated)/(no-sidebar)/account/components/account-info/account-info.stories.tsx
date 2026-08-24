@@ -20,7 +20,7 @@ const meta: Meta<typeof AccountInfo> = {
     docs: {
       description: {
         component:
-          'Section wrapper shared by every /account page. Subpages pass `backHref` to render a link back to their parent section; the /account index omits it, since the account header already links home.',
+          'Section wrapper shared by every /account page. `backHref` renders a back link, and is passed only on pages the account side menu cannot reach directly — farm/profile and a zone detail page. Menu-linked sections omit it, since the menu already routes back in one click.',
       },
     },
   },
@@ -45,8 +45,8 @@ export const WithBackLink: Story = {
 
 export const WithoutBackLink: Story = {
   args: {
-    title: 'Account',
-    description: 'The /account index needs no back link.',
+    title: 'Security',
+    description: 'Menu-linked sections need no back link.',
     children: (
       <AccountInfoSection title="Overview">
         <AccountInfoRow label="Farm" value="Example Farm" />

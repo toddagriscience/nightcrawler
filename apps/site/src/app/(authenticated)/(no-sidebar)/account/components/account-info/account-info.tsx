@@ -14,8 +14,10 @@ const statusStyles: Record<AccountInfoStatusTone, string> = {
 /**
  * Section wrapper shared by every `/account` page.
  *
- * Pass `backHref` on subpages to render a link back to their parent section;
- * the `/account` index omits it, since the account header already links home.
+ * Pass `backHref` only on pages the account side menu cannot reach directly —
+ * `farm/profile` and a management zone's detail page. Menu-linked sections
+ * (users, management zones, security, privacy) omit it, since the menu is
+ * already a one-click route back and a second control would be redundant.
  *
  * @param props.title - Heading rendered at the top of the section
  * @param props.description - Optional italic subtitle below the heading
