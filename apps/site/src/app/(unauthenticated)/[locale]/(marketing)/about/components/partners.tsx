@@ -42,7 +42,7 @@ export default function Partners() {
         <h2 className="text-3xl leading-tight font-normal md:text-4xl">
           {t('partners.title')}
         </h2>
-        <p className="max-w-xl px-4 pt-4 text-base leading-relaxed font-normal md:text-lg">
+        <p className="max-w-xl px-4 pt-4 text-base leading-relaxed font-normal">
           {t('partners.description')}
         </p>
       </div>
