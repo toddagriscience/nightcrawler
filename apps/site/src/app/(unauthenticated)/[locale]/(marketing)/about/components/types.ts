@@ -1,11 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import type { ImageProps } from 'next/image';
 
 /** Properties used to render a partner logo. */
 export interface PartnerProps {
   /** The statically imported partner logo. */
-  src: StaticImport;
+  src: ImageProps['src'];
   /** Accessible name of the partner represented by the logo. */
   alt: string;
   /** Optional Tailwind classes for logo-specific sizing. */
