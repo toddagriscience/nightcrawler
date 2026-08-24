@@ -109,7 +109,11 @@ describe('WhoWeArePage', () => {
     renderWithNextIntl(<WhoWeArePage />);
 
     expect(
-      screen.getByRole('heading', { name: 'Our Partners' })
+      screen.getByRole('heading', { name: 'Backed by incredible partners' })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'USDA' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Biodynamic Demeter Alliance' })
     ).toBeInTheDocument();
   });
 
