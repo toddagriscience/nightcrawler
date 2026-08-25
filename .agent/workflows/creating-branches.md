@@ -8,3 +8,6 @@ description: When creating branches for a task or issue
 4. Maintain the standard development flow: **Issue -> Branch -> PR -> Merge to preferred branch**.
 5. Keep the issue status and attributes updated as the branch progresses.
 6. Follow repository guidelines for contributing when preparing the branch for a PR. All PRs should link issues.
+
+For the pull request itself, see
+[`AGENTS.md` → Making a pull request](../../AGENTS.md#making-a-pull-request).
