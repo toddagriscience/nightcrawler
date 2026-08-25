@@ -4,7 +4,7 @@
 
 import React, { useRef } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
-import useWindowWidth from '@/lib/hooks/useWindowWidth';
+import useWindowWidth from '@/lib/hooks/use-window-width';
 
 /**
  * Scroll shrink wrapper component
