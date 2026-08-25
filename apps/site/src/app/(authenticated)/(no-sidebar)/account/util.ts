@@ -15,6 +15,47 @@ export function toDisplayValue(value?: string | null) {
   return value?.trim() || NOT_SET;
 }
 
+/**
+ * Narrows an account display value to an address that can back a `mailto:`
+ * link. The account loaders normalise absent values to `NOT_SET`, but callers
+ * pass plain strings, so anything that is not a plausible address (empty,
+ * whitespace, a placeholder such as `'N/A'`) must not be linkified — a
+ * `mailto:` with no address is a dead link.
+ *
+ * @param value - Display value for an email address
+ * @returns The trimmed address, or `null` when it is not mailable
+ */
+export function toMailtoAddress(value: string): string | null {
+  const address = value.trim();
+
+  if (address === NOT_SET || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+    return null;
+  }
+
+  return address;
+}
+
+/**
+ * Narrows an account display value to the digits that can back a `tel:` link,
+ * stripping presentation characters and keeping a leading `+`. Same contract
+ * as {@link toMailtoAddress}: a value with too few digits to dial (empty, or a
+ * placeholder such as `'N/A'`) yields `null` rather than an empty `tel:`.
+ *
+ * @param value - Display value for a phone number
+ * @returns The dialable number, or `null` when it is not dialable
+ */
+export function toTelNumber(value: string): string | null {
+  const trimmed = value.trim();
+
+  if (trimmed === NOT_SET) {
+    return null;
+  }
+
+  const dialable = trimmed.replace(/[^\d+]/g, '');
+
+  return dialable.replace(/\D/g, '').length >= 7 ? dialable : null;
+}
+
 export function toDisplayName(
   firstName?: string | null,
   lastName?: string | null

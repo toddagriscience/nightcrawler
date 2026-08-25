@@ -6,6 +6,12 @@ import AccountSideMenu from './account-side-menu';
 const meta: Meta<typeof AccountSideMenu> = {
   title: 'Account/AccountSideMenu',
   component: AccountSideMenu,
+  args: {
+    farmName: 'Blue River Farm',
+    contactName: 'Jane Farmer',
+    contactEmail: 'jane@example.com',
+    contactPhone: '+15551234567',
+  },
   parameters: {
     layout: 'padded',
     nextjs: {
@@ -17,7 +23,7 @@ const meta: Meta<typeof AccountSideMenu> = {
     docs: {
       description: {
         component:
-          'Left-hand navigation for the account area. Lists the account sections and, in the bottom utility group, a Help link to the support page (/contact) above the Log out action.',
+          'Left-hand navigation for the account area. Leads with a Home link out of the account tree, then the farm name (an h2 naming the aside) above the primary contact details (email and phone become mailto:/tel: links only when they are actually mailable/dialable), then the account sections and, in the bottom utility group, a Help link to the support page (/contact) above the Log out action.',
       },
     },
   },
@@ -36,5 +42,13 @@ export const PrivacyActive: Story = {
         pathname: '/account/privacy',
       },
     },
+  },
+};
+
+export const MissingContactDetails: Story = {
+  args: {
+    contactName: 'Not set',
+    contactEmail: 'Not set',
+    contactPhone: 'Not set',
   },
 };
