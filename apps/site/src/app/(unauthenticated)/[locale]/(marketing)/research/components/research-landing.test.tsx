@@ -3,7 +3,7 @@
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, expect, it, vi } from 'vitest';
-import WhatWeDoPage from './page';
+import ResearchLanding from './research-landing';
 
 vi.mock('next/image', () => ({
   default: ({
@@ -19,9 +19,9 @@ vi.mock('next/image', () => ({
   ),
 }));
 
-describe('WhatWeDoPage', () => {
+describe('ResearchLanding', () => {
   it('renders the hero content', () => {
-    renderWithNextIntl(<WhatWeDoPage />);
+    renderWithNextIntl(<ResearchLanding />);
 
     expect(
       screen.getByRole('heading', {
@@ -44,7 +44,7 @@ describe('WhatWeDoPage', () => {
   });
 
   it('renders approach and strategy sections', () => {
-    renderWithNextIntl(<WhatWeDoPage />);
+    renderWithNextIntl(<ResearchLanding />);
 
     expect(
       screen.getByRole('heading', { name: 'Our Approach' })
@@ -55,7 +55,7 @@ describe('WhatWeDoPage', () => {
   });
 
   it('renders principle cards', () => {
-    renderWithNextIntl(<WhatWeDoPage />);
+    renderWithNextIntl(<ResearchLanding />);
 
     expect(
       screen.getByText('Advanced Research with Disciplined Data Selection')
@@ -75,7 +75,7 @@ describe('WhatWeDoPage', () => {
   });
 
   it('renders redefining agriculture cards and CTA', () => {
-    renderWithNextIntl(<WhatWeDoPage />);
+    renderWithNextIntl(<ResearchLanding />);
 
     expect(
       screen.getByRole('heading', {
@@ -95,7 +95,7 @@ describe('WhatWeDoPage', () => {
   });
 
   it('renders exactly one h1 element with the correct title for accessibility', () => {
-    renderWithNextIntl(<WhatWeDoPage />);
+    renderWithNextIntl(<ResearchLanding />);
 
     const h1Elements = screen.getAllByRole('heading', { level: 1 });
 

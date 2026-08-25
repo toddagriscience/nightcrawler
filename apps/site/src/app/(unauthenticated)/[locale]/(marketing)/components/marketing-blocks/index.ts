@@ -22,11 +22,6 @@ export {
 } from './marketing-pill-link';
 export type { MarketingQuoteSectionProps } from './marketing-quote-section';
 export { MarketingQuoteSection } from './marketing-quote-section';
-export type {
-  MarketingResourceCard,
-  MarketingResourceCardsProps,
-} from './marketing-resource-cards';
-export { MarketingResourceCards } from './marketing-resource-cards';
 export type { MarketingSectionHeaderProps } from './marketing-section-header';
 export { MarketingSectionHeader } from './marketing-section-header';
 export type {
