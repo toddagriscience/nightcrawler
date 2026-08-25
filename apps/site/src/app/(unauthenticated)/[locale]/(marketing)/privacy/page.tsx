@@ -61,13 +61,12 @@ export default function PrivacyPage() {
   return (
     <TermsPoliciesPage title={t('title')}>
       {/* Header */}
-      <div className="mb-8">
-        <h2 className="mb-6 text-xl font-light">{t('websitePrivacyPolicy')}</h2>
+      <PolicySection title={t('websitePrivacyPolicy')} className="mb-8">
         <PolicyBody className="mb-4">{t('effective')}</PolicyBody>
         <div className="mt-8">
           <CookiePreferencesModal />
         </div>
-      </div>
+      </PolicySection>
 
       {/* Supplements Notice */}
       <div className="mb-8">
