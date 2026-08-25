@@ -6,6 +6,7 @@ import Button from '@/components/common/button/button';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 
 /**
@@ -23,6 +24,7 @@ const supportLinks = [
   },
 ];
 
+/** Shared styling for the support links pinned to the bottom of the page. */
 const supportLinkClassName =
   'underline underline-offset-4 hover:text-foreground';
 
@@ -31,6 +33,25 @@ const supportLinkClassName =
  * @returns {JSX.Element} The authentication error page
  */
 export default function AuthErrorFallback() {
+  const router = useRouter();
+
+  /**
+   * Signs the viewer out and returns them to the landing page.
+   *
+   * `logout()` reports failures by returning an error, but signals success by
+   * throwing `next/navigation`'s `NEXT_REDIRECT`, which does not navigate from
+   * a client event handler. Absorbing that throw and pushing here is the same
+   * approach `logout-link.tsx` takes, and without it the viewer stays stranded
+   * on this page with an unhandled rejection in the console.
+   */
+  const handleLogout = async () => {
+    const result = await logout().catch(() => undefined);
+
+    if (!result?.error) {
+      router.push('/');
+    }
+  };
+
   return (
     <>
       <header className="w-full" role="banner">
@@ -42,20 +63,20 @@ export default function AuthErrorFallback() {
       </header>
       <div className="flex min-h-[calc(100vh-64px)] flex-col">
         <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 text-center">
-          <h1 className="text-sm md:text-base font-light">
-            Something went wrong. Please logout and try again.
+          {/* Each sentence owns its own line at every breakpoint, so the copy
+              never wraps mid-clause. The explicit space keeps the accessible
+              name a single readable sentence pair. */}
+          <h1 className="text-sm font-light">
+            <span className="block">Something went wrong.</span>{' '}
+            <span className="block">Please logout and try again.</span>
           </h1>
           <Button
             text="Logout"
             variant="outline"
             size="sm"
             showArrow={false}
-            className="font-light px-8"
-            onClick={() => {
-              // `logout` handles its own errors and never rejects, so the
-              // promise is deliberately not awaited here.
-              void logout();
-            }}
+            className="font-light px-8 text-base"
+            onClick={handleLogout}
           />
         </div>
         <nav

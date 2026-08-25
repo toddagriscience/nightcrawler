@@ -2,22 +2,33 @@
 
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AuthErrorPage from './error';
 
-const mockLogout = vi.fn(() => Promise.resolve());
-const mockRedirect = vi.fn();
+const { mockPush, mockLogout } = vi.hoisted(() => ({
+  mockPush: vi.fn(),
+  mockLogout: vi.fn(),
+}));
 
 vi.mock('@/lib/auth-client', () => ({
-  logout: () => mockLogout(),
+  logout: mockLogout,
 }));
 
-vi.mock('next/navigation', () => ({
-  redirect: (path: string) => mockRedirect(path),
-}));
+vi.mock('next/navigation', async () => {
+  const actual = await vi.importActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: () => ({ push: mockPush }),
+  };
+});
 
 describe('AuthErrorPage', () => {
-  it('logs out when the button is clicked', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockLogout.mockResolvedValue({ error: null });
+  });
+
+  it('logs out and returns to the landing page when the button is clicked', async () => {
     const user = userEvent.setup();
     render(<AuthErrorPage />);
 
@@ -26,6 +37,6 @@ describe('AuthErrorPage', () => {
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalledTimes(1);
     });
-    expect(mockRedirect).not.toHaveBeenCalled();
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 });
