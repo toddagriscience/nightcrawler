@@ -33,6 +33,16 @@ export interface PolicySectionProps extends PolicyBlockProps {
 }
 
 /**
+ * Props for a repeated entry heading.
+ * @property level - Heading level to render; defaults to `h4`
+ * @property children - Heading content
+ * @property className - Optional extra classes merged onto the heading
+ */
+export interface PolicyItemHeadingProps extends PolicyBlockProps {
+  level?: 3 | 4;
+}
+
+/**
  * Props for a list of policy items.
  * @property items - Rendered list entries, in order
  * @property ordered - Renders an `ol` instead of the default `ul`

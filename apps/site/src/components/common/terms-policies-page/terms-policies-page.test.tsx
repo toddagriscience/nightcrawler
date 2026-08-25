@@ -4,6 +4,7 @@ import { render, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, expect, it } from 'vitest';
 import PolicyBody from './components/policy-body';
+import PolicyItemHeading from './components/policy-item-heading';
 import PolicyList from './components/policy-list';
 import PolicySection from './components/policy-section';
 import PolicySubheading from './components/policy-subheading';
@@ -72,6 +73,35 @@ describe('PolicySubheading', () => {
     expect(
       screen.getByRole('heading', { level: 3, name: 'Rights' })
     ).toBeInTheDocument();
+  });
+});
+
+describe('PolicyItemHeading', () => {
+  it('renders a level four heading by default', () => {
+    render(<PolicyItemHeading>Identifiers</PolicyItemHeading>);
+
+    expect(
+      screen.getByRole('heading', { level: 4, name: 'Identifiers' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders a level three heading when asked', () => {
+    // The level is a prop so entries that hang straight off a section's h2 can
+    // sit at h3 without skipping a level, while keeping the prose type scale.
+    render(<PolicyItemHeading level={3}>Identifiers</PolicyItemHeading>);
+
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'Identifiers' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps the prose type scale at either level', () => {
+    render(<PolicyItemHeading level={3}>Identifiers</PolicyItemHeading>);
+
+    expect(screen.getByRole('heading', { level: 3 })).toHaveClass(
+      'text-[13px]',
+      'font-normal'
+    );
   });
 });
 
