@@ -12,7 +12,7 @@ import type { PolicyBlockProps } from '../types';
  */
 export default function PolicyBody({ children, className }: PolicyBlockProps) {
   return (
-    <p className={cn('text-sm leading-relaxed font-thin', className)}>
+    <p className={cn('text-[13px] leading-relaxed font-normal', className)}>
       {children}
     </p>
   );

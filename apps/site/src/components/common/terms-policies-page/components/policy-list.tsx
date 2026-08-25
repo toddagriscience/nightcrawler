@@ -20,12 +20,12 @@ export default function PolicyList({
     <ListTag
       className={cn(
         ordered ? 'list-decimal' : 'list-disc',
-        'space-y-1 pl-6 text-sm leading-relaxed font-thin',
+        'space-y-1 pl-6 text-[13px] leading-relaxed font-normal',
         className
       )}
     >
       {items.map((item, index) => (
-        <li key={index} className="text-sm">
+        <li key={index} className="text-[13px]">
           {item}
         </li>
       ))}

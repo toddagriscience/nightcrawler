@@ -136,7 +136,7 @@ export default function PrivacyPage() {
               <div className="grid gap-4">
                 {CALIFORNIA_CATEGORIES.map((category) => (
                   <div key={category} className="py-4">
-                    <PolicyItemHeading className="mb-4 font-normal">
+                    <PolicyItemHeading className="mb-4">
                       {t(`california.categories.${category}.title`)}
                     </PolicyItemHeading>
                     <PolicyBody className="mb-4">
@@ -193,7 +193,7 @@ export default function PrivacyPage() {
               <div className="space-y-4">
                 {CALIFORNIA_RIGHTS.map((right) => (
                   <div key={right} className="py-4">
-                    <PolicyItemHeading className="mb-2 leading-relaxed font-thin">
+                    <PolicyItemHeading className="mb-2 leading-relaxed">
                       {t(`california.rights.${right}.title`)}
                     </PolicyItemHeading>
                     <PolicyBody>
