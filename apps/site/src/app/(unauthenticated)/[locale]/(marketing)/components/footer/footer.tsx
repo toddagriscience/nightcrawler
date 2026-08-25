@@ -5,6 +5,7 @@
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
+import { localizePathname } from '@/i18n/locale-path';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -79,10 +80,9 @@ const Footer = () => {
 
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    const newPath = segments.join('/') || `/${newLocale}`;
-    if (trimPath(newPath) === trimPath(pathname)) {
+    if (
+      trimPath(localizePathname(pathname, newLocale)) === trimPath(pathname)
+    ) {
       return;
     }
     setPendingLocale(newLocale);
@@ -91,10 +91,7 @@ const Footer = () => {
   useEffect(() => {
     if (!pendingLocale) return;
     document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
-    const segments = pathname.split('/');
-    segments[1] = pendingLocale;
-    const newPath = segments.join('/') || `/${pendingLocale}`;
-    window.location.assign(newPath);
+    window.location.assign(localizePathname(pathname, pendingLocale));
   }, [pendingLocale, pathname]);
 
   return (
