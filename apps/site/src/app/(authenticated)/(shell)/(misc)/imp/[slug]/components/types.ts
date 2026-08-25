@@ -1,5 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-interface ImpNotesFormValues {
+/**
+ * Form values for the IMP notes form
+ */
+export interface ImpNotesFormValues {
   notes: string;
 }

@@ -1,9 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { screen, renderWithNextIntl } from '@/test/test-utils';
+import {
+  screen,
+  within,
+  fireEvent,
+  renderWithNextIntl,
+} from '@/test/test-utils';
 import Footer from './footer';
 import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
+import { usePathname } from 'next/navigation';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 
 describe('Footer', () => {
   it('renders without crashing', () => {
@@ -87,5 +93,66 @@ describe('Footer', () => {
   it('renders normally without isLoading prop', () => {
     renderWithNextIntl(<Footer />);
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+  });
+
+  describe('switching locale', () => {
+    const chooseLanguage = async (name: string) => {
+      await fireEvent.click(
+        screen.getByRole('button', { name: 'Change language' })
+      );
+      await fireEvent.click(
+        within(screen.getByRole('menu')).getByRole('menuitem', { name })
+      );
+    };
+
+    // Routing uses `localePrefix: 'as-needed'`, so navigation has to add and
+    // remove the prefix rather than overwrite the first segment.
+    const stubLocation = (pathname: string) => {
+      vi.mocked(usePathname).mockReturnValue(pathname);
+      const assign = vi.fn();
+      vi.stubGlobal('location', { ...window.location, pathname, assign });
+      return assign;
+    };
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      vi.mocked(usePathname).mockReturnValue('/');
+    });
+
+    it('prefixes a nested page instead of overwriting its first segment', async () => {
+      const assign = stubLocation('/research/index');
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('Español');
+
+      expect(assign).toHaveBeenCalledWith('/es/research/index');
+    });
+
+    it('strips the prefix when returning to the default locale', async () => {
+      const assign = stubLocation('/es/research/index');
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('English');
+
+      expect(assign).toHaveBeenCalledWith('/research/index');
+    });
+
+    it('prefixes the homepage', async () => {
+      const assign = stubLocation('/');
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('Español');
+
+      expect(assign).toHaveBeenCalledWith('/es');
+    });
+
+    it('does not navigate when the chosen locale is already active', async () => {
+      const assign = stubLocation('/research/index');
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('English');
+
+      expect(assign).not.toHaveBeenCalled();
+    });
   });
 });

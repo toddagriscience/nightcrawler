@@ -1,43 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { stubMatchMedia } from '@/test/stub-match-media';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import useMediaQuery from './useMediaQuery';
-
-type ChangeListener = (event: { matches: boolean }) => void;
-
-function stubMatchMedia(initialMatches: boolean) {
-  // Array rather than Set: the drizzle lint plugin false-positives on any
-  // `.delete(...)` call, including Set.prototype.delete.
-  let listeners: ChangeListener[] = [];
-  let matches = initialMatches;
-
-  const mediaQueryList = {
-    get matches() {
-      return matches;
-    },
-    media: '',
-    addEventListener: (_type: string, listener: ChangeListener) => {
-      listeners.push(listener);
-    },
-    removeEventListener: (_type: string, listener: ChangeListener) => {
-      listeners = listeners.filter((existing) => existing !== listener);
-    },
-  };
-
-  vi.stubGlobal(
-    'matchMedia',
-    vi.fn(() => mediaQueryList)
-  );
-
-  return {
-    setMatches: (next: boolean) => {
-      matches = next;
-      listeners.forEach((listener) => listener({ matches: next }));
-    },
-    listenerCount: () => listeners.length,
-  };
-}
 
 describe('useMediaQuery', () => {
   afterEach(() => {
