@@ -9,6 +9,11 @@ on:
       - hotfixes
   workflow_dispatch:
 
+# Vercel is authenticated with repository secrets, not GITHUB_TOKEN, so
+# scoping the token down does not affect the deployment.
+permissions:
+  contents: read
+
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest

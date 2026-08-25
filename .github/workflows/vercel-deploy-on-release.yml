@@ -13,6 +13,11 @@ on:
     types:
       - completed
 
+# Vercel is authenticated with repository secrets, not GITHUB_TOKEN, so
+# scoping the token down does not affect the deployment.
+permissions:
+  contents: read
+
 jobs:
   Deploy-Production:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'release' }}
