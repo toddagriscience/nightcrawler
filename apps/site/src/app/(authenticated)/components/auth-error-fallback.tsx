@@ -55,7 +55,7 @@ export default function AuthErrorFallback() {
   return (
     <>
       <header className="w-full" role="banner">
-        <div className="mx-auto max-w-[107rem] mt-3 px-8">
+        <div className="mx-auto max-w-[107rem] mt-3 px-6 sm:px-8">
           <div className="flex items-center justify-between h-13">
             <ToddHeader className="flex min-h-10 flex-row items-center" />
           </div>
@@ -81,7 +81,7 @@ export default function AuthErrorFallback() {
         </div>
         <nav
           aria-label="Support links"
-          className="flex flex-row flex-wrap items-center justify-center gap-3 pb-32 text-xs font-light text-foreground/70"
+          className="flex flex-row flex-wrap items-center justify-center gap-3 px-6 pb-32 text-xs font-light text-foreground/70"
         >
           {supportLinks.map((link, index) => (
             <Fragment key={link.href}>
