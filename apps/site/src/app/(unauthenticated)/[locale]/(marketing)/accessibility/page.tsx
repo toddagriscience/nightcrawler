@@ -1,11 +1,25 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import {
+  PolicyBody,
+  PolicySection,
+  TermsPoliciesPage,
+} from '@/components/common/terms-policies-page';
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 
 export const metadata: Metadata = {
   title: 'Accessibility',
 };
+
+/** Improvement entries rendered as bulleted paragraphs, in display order. */
+const IMPROVEMENTS = [
+  'textEquivalents',
+  'keyboardAccess',
+  'siteConsistency',
+  'siteStructure',
+  'links',
+] as const;
 
 /**
  * Accessibility page component
@@ -15,54 +29,24 @@ export default function AccessibilityPage() {
   const t = useTranslations('accessibility');
 
   return (
-    <>
-      {' '}
-      <div className="mx-auto max-w-3xl px-2 pt-8">
-        <h1 className="mt-16 mb-8 text-4xl font-light">{t('title')}</h1>
-        <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
+    <TermsPoliciesPage title={t('title')}>
+      <PolicySection title={t('subtitle')}>
+        <PolicyBody className="mb-8">{t('standards')}</PolicyBody>
 
-        <h2 className="mb-6 text-xl font-light">{t('subtitle')}</h2>
-
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          {t('standards')}
-        </p>
-
-        <p className="mb-8 text-sm leading-relaxed font-thin">
+        <PolicyBody className="mb-8">
           {t('improvements.description')}
-        </p>
+        </PolicyBody>
 
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          • {t('improvements.textEquivalents.title')}
-          {': '}
-          {t('improvements.textEquivalents.content')}
-        </p>
+        {IMPROVEMENTS.map((improvement) => (
+          <PolicyBody key={improvement} className="mb-8">
+            • {t(`improvements.${improvement}.title`)}
+            {': '}
+            {t(`improvements.${improvement}.content`)}
+          </PolicyBody>
+        ))}
 
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          • {t('improvements.keyboardAccess.title')}
-          {': '}
-          {t('improvements.keyboardAccess.content')}{' '}
-        </p>
-
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          • {t('improvements.siteConsistency.title')}
-          {': '}
-          {t('improvements.siteConsistency.content')}{' '}
-        </p>
-
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          • {t('improvements.siteStructure.title')}
-          {': '}
-          {t('improvements.siteStructure.content')}{' '}
-        </p>
-
-        <p className="mb-8 text-sm leading-relaxed font-thin">
-          • {t('improvements.links.title')}
-          {': '}
-          {t('improvements.links.content')}{' '}
-        </p>
-
-        <p className="mb-12 text-sm leading-relaxed font-thin">{t('cta')}</p>
-      </div>
-    </>
+        <PolicyBody className="mb-12">{t('cta')}</PolicyBody>
+      </PolicySection>
+    </TermsPoliciesPage>
   );
 }
