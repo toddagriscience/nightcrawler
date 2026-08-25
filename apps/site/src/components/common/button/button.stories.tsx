@@ -152,3 +152,15 @@ export const DarkModeVariants: Story = {
     </div>
   ),
 };
+
+export const Action: Story = {
+  render: () => (
+    <Button
+      text="Log out"
+      variant="outline"
+      size="md"
+      showArrow={false}
+      onClick={() => {}}
+    />
+  ),
+};
