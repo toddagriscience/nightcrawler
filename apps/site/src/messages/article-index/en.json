@@ -29,6 +29,9 @@
       "read": "Read"
     },
     "empty": "No {category} entries yet.",
-    "emptyAll": "No entries yet."
+    "emptyAll": "No entries yet.",
+    "highlights": {
+      "heading": "Resources"
+    }
   }
 }

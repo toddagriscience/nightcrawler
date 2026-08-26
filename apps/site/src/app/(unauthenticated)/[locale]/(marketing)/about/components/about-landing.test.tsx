@@ -3,7 +3,7 @@
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, expect, it, vi } from 'vitest';
-import WhoWeArePage from './page';
+import AboutLanding from './about-landing';
 
 vi.mock('next/image', () => ({
   default: ({
@@ -19,22 +19,19 @@ vi.mock('next/image', () => ({
   ),
 }));
 
-vi.mock('./components/competencies-section/competencies-section', () => ({
+vi.mock('./competencies-section/competencies-section', () => ({
   default: () => <div data-testid="competencies-section">Competencies</div>,
 }));
 
-vi.mock(
-  './components/responsibilities-section/responsibilities-section',
-  () => ({
-    default: () => (
-      <div data-testid="responsibilities-section">Responsibilities</div>
-    ),
-  })
-);
+vi.mock('./responsibilities-section/responsibilities-section', () => ({
+  default: () => (
+    <div data-testid="responsibilities-section">Responsibilities</div>
+  ),
+}));
 
-describe('WhoWeArePage', () => {
+describe('AboutLanding', () => {
   it('renders exactly one h1 element with the correct title for accessibility', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     const h1Elements = screen.getAllByRole('heading', { level: 1 });
 
@@ -44,7 +41,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders the hero content', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     expect(screen.getByRole('heading', { name: 'About' })).toBeInTheDocument();
 
@@ -58,7 +55,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders vision section with image and CTA', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     expect(
       screen.getByRole('heading', {
@@ -72,7 +69,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders the vision image from the kebab-case asset at the slot it occupies', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     const image = screen.getByRole('img', { name: /family/i });
 
@@ -83,7 +80,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('never skips a heading level', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     const levels = screen
       .getAllByRole('heading')
@@ -98,7 +95,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders the mission statement', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     expect(
       screen.getByText(/We are creating generative farms/i)
@@ -106,7 +103,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders partners section', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     expect(
       screen.getByRole('heading', { name: 'Backed by incredible partners' })
@@ -118,7 +115,7 @@ describe('WhoWeArePage', () => {
   });
 
   it('renders navigation link to What We Do', () => {
-    renderWithNextIntl(<WhoWeArePage />);
+    renderWithNextIntl(<AboutLanding />);
 
     expect(
       screen.getByRole('link', { name: /What we do/i })

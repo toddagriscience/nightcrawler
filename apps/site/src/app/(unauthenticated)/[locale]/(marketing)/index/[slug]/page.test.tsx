@@ -99,6 +99,12 @@ vi.mock('@/lib/sanity/articles', () => ({
   isCareerArticle: isCareerArticleMock,
 }));
 
+// The highlight strip is an async server component with its own Sanity read and
+// its own tests; the client-side renderer here cannot await it.
+vi.mock('../../components/news-highlight-tiles/news-highlight-tiles', () => ({
+  NewsHighlightTilesSection: () => <div data-testid="article-highlights" />,
+}));
+
 const builder = {
   width: vi.fn().mockReturnThis(),
   height: vi.fn().mockReturnThis(),

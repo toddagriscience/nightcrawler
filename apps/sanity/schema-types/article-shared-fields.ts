@@ -212,6 +212,25 @@ const isFeaturedField = defineField({
   description: 'When enabled, may appear in Featured carousels on the matching collection page.',
 })
 
+const highlightPagesField = defineField({
+  name: 'highlightPages',
+  title: 'Highlight on pages',
+  type: 'array',
+  of: [{type: 'string'}],
+  options: {
+    list: [
+      {title: 'Research', value: 'research'},
+      {title: 'About', value: 'about'},
+      {title: 'Careers', value: 'careers'},
+      {title: 'Article pages', value: 'article'},
+      {title: 'Homepage', value: 'homepage'},
+    ],
+    layout: 'tags',
+  },
+  description:
+    'Pages whose three-tile highlight strip may show this article. Only the three most recent picks per page are shown, so tagging more is safe.',
+})
+
 const sourceField = defineField({
   name: 'source',
   title: 'Source',
@@ -327,6 +346,7 @@ export const articlePortableBodyFields = [
   headerImageField,
   offSiteUrlField,
   isFeaturedField,
+  highlightPagesField,
   sourceField,
   articleCtasField,
 ]
