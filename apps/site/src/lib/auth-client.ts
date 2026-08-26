@@ -3,7 +3,6 @@
 'use client';
 
 import { AuthError } from '@supabase/supabase-js';
-import { redirect } from 'next/navigation';
 import logger from './logger';
 import { createClient as createBrowserClient } from './supabase/client';
 import { AuthResponse, AuthResponseTypes } from './types/auth';
@@ -61,6 +60,15 @@ export async function login(
 
 /** CLIENT SIDE FUNCTION. Logs a user out, only if they're authenticated. Logging a user out is easiest and simplest to do client-side, which is why this function is utilized in production (unlike the client-side login function -- logging in is handled server-side).
  *
+ * On success this hard-navigates the document to `/` with
+ * `window.location.replace`, dropping the authenticated page from session
+ * history so Back cannot restore it. Callers must not additionally route to
+ * `/` — a client-side push would race the document navigation.
+ *
+ * `redirect()` from `next/navigation` cannot be used here: this is a
+ * `'use client'` module, so it throws `NEXT_REDIRECT` and makes `logout()`
+ * reject instead of return.
+ *
  * @returns {Promise<AuthResponse>} - An interface, and the object described here: https://supabase.com/docs/reference/javascript/auth-signout */
 export async function logout(): Promise<AuthResponse> {
   try {
@@ -90,7 +98,9 @@ export async function logout(): Promise<AuthResponse> {
     };
   }
 
-  redirect('/');
+  window.location.replace('/');
+
+  return { data: {}, responseType: AuthResponseTypes.Logout };
 }
 
 /**

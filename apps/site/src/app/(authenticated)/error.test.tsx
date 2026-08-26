@@ -28,7 +28,7 @@ describe('AuthErrorPage', () => {
     mockLogout.mockResolvedValue({ error: null });
   });
 
-  it('logs out and returns to the landing page when the button is clicked', async () => {
+  it('logs out without routing itself when the button is clicked', async () => {
     const user = userEvent.setup();
     render(<AuthErrorPage />);
 
@@ -37,6 +37,7 @@ describe('AuthErrorPage', () => {
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalledTimes(1);
     });
-    expect(mockPush).toHaveBeenCalledWith('/');
+    // `logout()` hard-navigates; a push here would race it.
+    expect(mockPush).not.toHaveBeenCalled();
   });
 });

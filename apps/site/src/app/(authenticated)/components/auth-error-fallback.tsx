@@ -6,7 +6,6 @@ import Button from '@/components/common/button/button';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 
 /**
@@ -33,23 +32,13 @@ const supportLinkClassName =
  * @returns {JSX.Element} The authentication error page
  */
 export default function AuthErrorFallback() {
-  const router = useRouter();
-
   /**
-   * Signs the viewer out and returns them to the landing page.
-   *
-   * `logout()` reports failures by returning an error, but signals success by
-   * throwing `next/navigation`'s `NEXT_REDIRECT`, which does not navigate from
-   * a client event handler. Absorbing that throw and pushing here is the same
-   * approach `logout-link.tsx` takes, and without it the viewer stays stranded
-   * on this page with an unhandled rejection in the console.
+   * Signs the viewer out. `logout()` hard-navigates the document to `/` on
+   * success, so this must not route as well — a client-side push would race
+   * that navigation.
    */
   const handleLogout = async () => {
-    const result = await logout().catch(() => undefined);
-
-    if (!result?.error) {
-      router.push('/');
-    }
+    await logout();
   };
 
   return (
