@@ -333,3 +333,28 @@ header {
 .hide-native-password-reveal::-ms-clear {
   display: none;
 }
+
+/*
+ * Custom cursor follower (components/common/cursor-follower).
+ *
+ * The native pointer is deliberately LEFT VISIBLE over labelled targets. An
+ * earlier revision set `cursor: none` here; that was removed for three
+ * reasons:
+ *
+ * 1. It overrides OS accessibility settings. Both macOS and Windows let users
+ *    enlarge the pointer, raise its contrast, or shake-to-locate it. Those are
+ *    deliberate accommodations, and `cursor: none` silently defeats every one
+ *    of them on exactly the rows a reader is trying to click.
+ * 2. The bubble trails the pointer by design (it is spring-damped), so it is
+ *    not at the click point while the pointer is moving. Substituting a
+ *    lagging indicator for the real one costs targeting accuracy for anyone
+ *    with a tremor or limited fine motor control.
+ * 3. The bubble renders at 40% opacity, so it is a faint stand-in even when
+ *    stationary.
+ *
+ * The follower is decorative (`aria-hidden`, `pointer-events-none`) and sits
+ * alongside the real pointer rather than replacing it. If a future design
+ * genuinely requires hiding the OS cursor, gate it on
+ * `@media (prefers-reduced-motion: no-preference)` at minimum, and raise the
+ * bubble's opacity so it can actually serve as a pointer.
+ */

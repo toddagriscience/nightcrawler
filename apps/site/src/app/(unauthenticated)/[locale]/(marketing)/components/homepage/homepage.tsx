@@ -8,12 +8,15 @@ import SectionContent from '@/components/common/section-content/section-content'
 import { Button } from '@/components/ui';
 import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import type { ReactNode } from 'react';
 
 /**
  * Homepage component
+ *
+ * @param props.highlights - Highlight strip node, server-rendered by the route
  * @returns {JSX.Element} - The homepage component
  */
-export default function Homepage() {
+export default function Homepage({ highlights }: { highlights?: ReactNode }) {
   const t = useTranslations('homepage');
 
   return (
@@ -37,6 +40,7 @@ export default function Homepage() {
         caption={t('sectionContent.section1.caption')}
         title={t('sectionContent.section1.title')}
       />
+      {highlights}
       <div className="flex flex-col items-center justify-center space-y-15 my-44">
         <h2 className="text-3xl lg:text-5xl/[24px]">
           {t('sectionContent.explore.title')}

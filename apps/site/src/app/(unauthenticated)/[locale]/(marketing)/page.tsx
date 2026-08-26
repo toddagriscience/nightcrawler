@@ -3,6 +3,7 @@
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import Homepage from './components/homepage/homepage';
+import { NewsHighlightTilesSection } from './components/news-highlight-tiles/news-highlight-tiles';
 
 /**
  * Homepage metadata for SEO and social media
@@ -42,8 +43,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage({}: {
+/**
+ * Marketing homepage. The highlight strip is server-rendered here and handed to
+ * the client body as a prop.
+ *
+ * @param params - Route params including locale
+ */
+export default async function HomePage({
+  params,
+}: {
   params: Promise<{ locale: string }>;
 }) {
-  return <Homepage />;
+  const { locale } = await params;
+
+  return (
+    <Homepage
+      highlights={
+        <NewsHighlightTilesSection
+          locale={locale}
+          page="homepage"
+          sectionId="homepage-highlights"
+        />
+      }
+    />
+  );
 }

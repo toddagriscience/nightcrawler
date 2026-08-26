@@ -18,6 +18,7 @@ import {
   user,
   widget,
 } from '../src/schema';
+import { formatDbHostForUrl, resolveDbPoolConfig } from '../src/utils/db-ssl';
 
 const DEFAULT_SEED_ADMIN_EMAIL = 'example@testmail.com';
 
@@ -66,8 +67,11 @@ const isLocalDatabaseConfigured = Boolean(
   process.env.LOCAL_DATABASE_DATABASE
 );
 
+// `formatDbHostForUrl` brackets an IPv6 host: `::1` interpolated bare builds a
+// string `URL` cannot parse, which would fail closed and demand TLS from the
+// plaintext local database.
 const localDatabaseUrl = isLocalDatabaseConfigured
-  ? `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER!)}:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}@${process.env.LOCAL_DATABASE_HOST}:${process.env.LOCAL_DATABASE_PORT}/${process.env.LOCAL_DATABASE_DATABASE}`
+  ? `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER!)}:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}@${formatDbHostForUrl(process.env.LOCAL_DATABASE_HOST!)}:${process.env.LOCAL_DATABASE_PORT}/${process.env.LOCAL_DATABASE_DATABASE}`
   : process.env.DATABASE_URL;
 
 if (!localDatabaseUrl) {
@@ -78,16 +82,14 @@ if (!localDatabaseUrl) {
 
 const seededEmail = email;
 
-const pool = new Pool({
-  connectionString: localDatabaseUrl,
-  ssl: isLocalDatabaseConfigured
-    ? false
-    : !process.env.NODE_TLS_REJECT_UNAUTHORIZED
-      ? {
-          ca: process.env.DATABASE_PEM_CERT!,
-        }
-      : false,
-});
+// Plaintext only for a database on this machine; anything else must verify.
+// Resolved from the URL rather than `isLocalDatabaseConfigured`, which is only
+// true of LOCAL_DATABASE_* being *set* — those vars can name a remote host, and
+// that host must not get an unverified connection. Going through the shared
+// resolver is also what picks the staging CA when the URL names staging.
+const pool = new Pool(
+  resolveDbPoolConfig(localDatabaseUrl, { requireCaCert: true })
+);
 
 const db = drizzle(pool, { casing: 'snake_case' });
 
