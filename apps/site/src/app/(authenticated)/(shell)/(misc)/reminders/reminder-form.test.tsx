@@ -2,8 +2,12 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import ResizeObserver from 'resize-observer-polyfill';
 import { describe, expect, it, vi } from 'vitest';
 import { ReminderForm } from './reminder-form';
+
+// jsdom has no ResizeObserver, which Radix's popover measures its trigger with.
+global.ResizeObserver = ResizeObserver;
 
 // Stub the server actions so nothing reaches the db module.
 vi.mock('./actions', () => ({
@@ -15,6 +19,17 @@ vi.mock('./actions', () => ({
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
 }));
+
+/** Accessible name for the 15th of the month the empty picker opens on. */
+function midMonthDayName() {
+  const day = new Date();
+  day.setDate(15);
+
+  return new RegExp(
+    `${day.toLocaleDateString('en-US', { month: 'long' })} 15th, ${day.getFullYear()}`,
+    'i'
+  );
+}
 
 describe('ReminderForm seasonal/exact-date mutual exclusion', () => {
   it('disables the Exact Date input once a Seasonal Label is typed', async () => {
@@ -41,9 +56,17 @@ describe('ReminderForm seasonal/exact-date mutual exclusion', () => {
 
     expect(seasonal).not.toBeDisabled();
 
-    await user.type(exactDate, '2026-06-15');
+    await user.click(exactDate);
+    await user.click(screen.getByRole('button', { name: midMonthDayName() }));
 
     expect(seasonal).toBeDisabled();
     expect(exactDate).not.toBeDisabled();
+  });
+
+  it('does not point a label at the exact-date trigger button', () => {
+    render(<ReminderForm onSuccess={vi.fn()} />);
+
+    expect(document.querySelector('label[for="dueDate"]')).toBeNull();
+    expect(screen.getByLabelText(/exact date/i)).toBeInTheDocument();
   });
 });
