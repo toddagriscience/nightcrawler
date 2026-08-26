@@ -8,7 +8,7 @@
  * and solubility tables.
  *
  * Usage:
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/parse-soil-test.ts <filepath> [options]
+ *   bun run scripts/parse-soil-test.ts <filepath> [options]
  *
  * Options:
  *   --farm-id <n>        Farm ID to associate analyses with (default: 2)
@@ -502,7 +502,7 @@ async function main() {
 
   if (!filePath) {
     console.error(
-      'Usage: NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/parse-soil-test.ts' +
+      'Usage: bun run scripts/parse-soil-test.ts' +
         ' <filepath> [--farm-id <n>] [--zone-id <n>] [--date YYYY-MM-DD]' +
         ' [--sheet <name>] [--dry-run]'
     );

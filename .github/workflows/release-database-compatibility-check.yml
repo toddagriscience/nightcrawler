@@ -68,8 +68,12 @@ jobs:
           printf '%s\n' "$DATABASE_PEM_CERT" | sed -e 's/\r$//' > /tmp/prod-db-ca.pem
           openssl x509 -in /tmp/prod-db-ca.pem -noout -subject
 
+          # sslmode=verify-full also validates the server certificate's hostname
+          # against PROD_DATABASE_HOST (verify-ca only validates the CA chain),
+          # matching db-reconcile.yml. Keep this in step with the TLS posture
+          # the app pool and drizzle configs use.
           PGPASSWORD="$PROD_DATABASE_PASSWORD" /usr/lib/postgresql/18/bin/pg_dump \
-            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-ca sslrootcert=/tmp/prod-db-ca.pem" \
+            "host=$PROD_DATABASE_HOST port=$PROD_DATABASE_PORT user=$PROD_DATABASE_USER dbname=$PROD_DATABASE_DATABASE sslmode=verify-full sslrootcert=/tmp/prod-db-ca.pem" \
             --clean \
             --if-exists \
             --no-owner \
