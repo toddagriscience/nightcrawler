@@ -8,6 +8,7 @@ export { default as PolicySection } from './components/policy-section';
 export { default as PolicySubheading } from './components/policy-subheading';
 export type {
   PolicyBlockProps,
+  PolicyItemHeadingProps,
   PolicyListProps,
   PolicySectionProps,
   TermsPoliciesPageProps,

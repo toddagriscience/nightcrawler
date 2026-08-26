@@ -11,8 +11,8 @@ import {
   PolicySubheading,
   TermsPoliciesPage,
 } from '@/components/common/terms-policies-page';
+import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 
 /** Personal-information categories listed in the California supplement. */
 const CALIFORNIA_CATEGORIES = [
@@ -30,13 +30,21 @@ const CALIFORNIA_CATEGORIES = [
   'sensitiveInfo',
 ] as const;
 
-/** Consumer rights listed in the California supplement. */
+/**
+ * Consumer rights listed in the California supplement, each paired with the
+ * message key that carries its prose. `disclosure` and `exercise` do not use a
+ * `content` key: the first introduces its list through `intro`, the second says
+ * everything in `verification`.
+ */
 const CALIFORNIA_RIGHTS = [
-  'deletion',
-  'disclosure',
-  'correction',
-  'noDiscrimination',
-  'exercise',
+  { key: 'deletion', body: 'california.rights.deletion.content' },
+  { key: 'disclosure', body: 'california.rights.disclosure.intro' },
+  { key: 'correction', body: 'california.rights.correction.content' },
+  {
+    key: 'noDiscrimination',
+    body: 'california.rights.noDiscrimination.content',
+  },
+  { key: 'exercise', body: 'california.rights.exercise.verification' },
 ] as const;
 
 /** Border shared by the regional supplement sections. */
@@ -135,14 +143,16 @@ export default function PrivacyPage() {
               <div className="grid gap-4">
                 {CALIFORNIA_CATEGORIES.map((category) => (
                   <div key={category} className="py-4">
-                    <PolicyItemHeading className="mb-4">
+                    {/* h3, not the default h4: these hang straight off the
+                        supplement's h2, so h4 would skip a level. */}
+                    <PolicyItemHeading level={3} className="mb-4">
                       {t(`california.categories.${category}.title`)}
                     </PolicyItemHeading>
                     <PolicyBody className="mb-4">
                       {t(`california.categories.${category}.description`)}
                     </PolicyBody>
                     <PolicyBody>
-                      Collected:{' '}
+                      {t('california.collectedLabel')}:{' '}
                       {t(`california.categories.${category}.collected`)}
                     </PolicyBody>
                   </div>
@@ -174,7 +184,6 @@ export default function PrivacyPage() {
 
             {/* Disclosure */}
             <div>
-              <PolicySubheading>Disclosure of Information</PolicySubheading>
               <PolicyBody className="mb-2">
                 {t('california.disclosure.intro')}
               </PolicyBody>
@@ -190,24 +199,17 @@ export default function PrivacyPage() {
                 {t('california.rights.title')}
               </PolicySubheading>
               <div className="space-y-4">
-                {CALIFORNIA_RIGHTS.map((right) => (
-                  <div key={right} className="py-4">
+                {CALIFORNIA_RIGHTS.map(({ key, body }) => (
+                  <div key={key} className="py-4">
                     <PolicyItemHeading className="mb-2 leading-relaxed">
-                      {t(`california.rights.${right}.title`)}
+                      {t(`california.rights.${key}.title`)}
                     </PolicyItemHeading>
-                    <PolicyBody>
-                      {t(`california.rights.${right}.content`)}
-                    </PolicyBody>
-                    {right === 'disclosure' && (
+                    <PolicyBody>{t(body)}</PolicyBody>
+                    {key === 'disclosure' && (
                       <PolicyList
                         className="mt-2"
                         items={listFrom('california.rights.disclosure.list', 6)}
                       />
-                    )}
-                    {right === 'exercise' && (
-                      <PolicyBody className="mt-2">
-                        {t('california.rights.exercise.verification')}
-                      </PolicyBody>
                     )}
                   </div>
                 ))}
@@ -251,11 +253,13 @@ export default function PrivacyPage() {
               items={listFrom('japan.informationRequest.info', 7)}
             />
             <PolicySubheading>{t('japan.questions.title')}</PolicySubheading>
+            {/* The sentence points at 此方 ("here") as the place to get in
+                touch, so the link goes there rather than trailing off the end
+                as an English fragment. */}
             <PolicyBody>
-              {t('japan.questions.content')}
-              <Link href={'/contact'} className="inline-block">
-                : Contact us.
-              </Link>
+              {t.rich('japan.questions.content', {
+                link: (chunks) => <Link href="/contact">{chunks}</Link>,
+              })}
             </PolicyBody>
           </div>
         </PolicySection>
@@ -286,7 +290,10 @@ export default function PrivacyPage() {
                 <PolicyBody>{t('euUk.processing.automated')}</PolicyBody>
                 <PolicyBody>{t('euUk.processing.disclosure')}</PolicyBody>
                 <PolicyBody>{t('euUk.processing.links')}</PolicyBody>
-                <PolicyBody>{t('euUk.processing.legal')}</PolicyBody>
+                {/* Restored: this shared the `legal` key with the paragraph
+                    above, so JSON's last-wins rule hid it and printed that one
+                    twice. */}
+                <PolicyBody>{t('euUk.processing.legalDisclosure')}</PolicyBody>
               </div>
             </div>
 

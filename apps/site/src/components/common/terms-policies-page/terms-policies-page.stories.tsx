@@ -2,6 +2,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import PolicyBody from './components/policy-body';
+import PolicyItemHeading from './components/policy-item-heading';
 import PolicyList from './components/policy-list';
 import PolicySection from './components/policy-section';
 import PolicySubheading from './components/policy-subheading';
@@ -77,6 +78,38 @@ export const OrderedList: Story = {
           ordered
           items={['Your full name', 'Your address', 'Your contact details']}
         />
+      </PolicySection>
+    ),
+  },
+};
+
+/**
+ * Repeated entries carry one type scale at two heading levels. The categories
+ * grid hangs off the supplement's `h2` and so takes `level={3}`, while the
+ * rights list sits under an `h3` and keeps the default `h4`. The two look
+ * identical on purpose: the level describes the outline, not the size.
+ */
+export const ItemHeadingLevels: Story = {
+  args: {
+    title: 'Privacy Policy',
+    children: (
+      <PolicySection title="Supplement for California Residents">
+        <PolicyBody>
+          Categories of Personal Information We Collect: we collect limited
+          types of personal information through our website.
+        </PolicyBody>
+        <PolicyItemHeading level={3} className="mb-4">
+          Identifiers
+        </PolicyItemHeading>
+        <PolicyBody>Name, contact details and address.</PolicyBody>
+
+        <PolicySubheading className="mt-8 mb-4">
+          Rights under the CCPA
+        </PolicySubheading>
+        <PolicyItemHeading className="mb-2">
+          How to Exercise Your Rights
+        </PolicyItemHeading>
+        <PolicyBody>We will contact you to confirm receipt.</PolicyBody>
       </PolicySection>
     ),
   },
