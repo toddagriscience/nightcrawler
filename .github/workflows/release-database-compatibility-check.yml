@@ -8,6 +8,9 @@ on:
       - created
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   production-db-release-push:
     name: Production Drizzle Push Check
