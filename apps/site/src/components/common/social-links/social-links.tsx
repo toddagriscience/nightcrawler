@@ -3,7 +3,6 @@
 import { cn } from '@/lib/utils';
 import type { IconType } from 'react-icons';
 import {
-  FaDiscord,
   FaInstagram,
   FaLinkedinIn,
   FaXTwitter,
@@ -35,7 +34,6 @@ export const SOCIAL_LINKS: Record<SocialPlatform, SocialLink> = {
   instagram: { ...SOCIAL_PROFILES.instagram, Icon: FaInstagram },
   linkedin: { ...SOCIAL_PROFILES.linkedin, Icon: FaLinkedinIn },
   youtube: { ...SOCIAL_PROFILES.youtube, Icon: FaYoutube },
-  discord: { ...SOCIAL_PROFILES.discord, Icon: FaDiscord },
 };
 
 /** Default platforms and order rendered when no `platforms` prop is given. */
@@ -44,7 +42,6 @@ const DEFAULT_PLATFORMS: SocialPlatform[] = [
   'instagram',
   'linkedin',
   'youtube',
-  'discord',
 ];
 
 /** Props for {@link SocialLinks}. */

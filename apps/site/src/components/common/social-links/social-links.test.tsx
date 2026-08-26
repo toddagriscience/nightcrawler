@@ -31,11 +31,6 @@ const EXPECTED_LINKS = [
     label: 'Visit our YouTube channel',
     href: 'https://www.youtube.com/@toddagriscience',
   },
-  {
-    platform: 'discord',
-    label: 'Join our Discord server',
-    href: 'https://discord.gg/rFY3kc4deK',
-  },
 ] as const;
 
 describe('SocialLinks', () => {

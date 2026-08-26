@@ -36,7 +36,7 @@ const GoFooter = async () => {
           ))}
         </div>
         <SocialLinks
-          platforms={['x', 'instagram', 'linkedin', 'youtube', 'discord']}
+          platforms={['x', 'instagram', 'linkedin', 'youtube']}
           iconSize={20}
           newTab
         />

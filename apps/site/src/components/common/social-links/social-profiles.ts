@@ -1,8 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 /** A Todd social media platform. */
-export type SocialPlatform =
-  'x' | 'instagram' | 'linkedin' | 'youtube' | 'discord';
+export type SocialPlatform = 'x' | 'instagram' | 'linkedin' | 'youtube';
 
 /** URL and accessible label of a single Todd social media profile. */
 export interface SocialProfile {
@@ -37,9 +36,5 @@ export const SOCIAL_PROFILES: Record<SocialPlatform, SocialProfile> = {
   youtube: {
     href: 'https://www.youtube.com/@toddagriscience',
     label: 'Visit our YouTube channel',
-  },
-  discord: {
-    href: 'https://discord.gg/rFY3kc4deK',
-    label: 'Join our Discord server',
   },
 };

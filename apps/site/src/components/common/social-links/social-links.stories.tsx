@@ -15,10 +15,6 @@ const meta: Meta<typeof SocialLinks> = {
       },
     },
   },
-  argTypes: {
-    iconSize: { control: { type: 'number' } },
-    newTab: { control: { type: 'boolean' } },
-  },
   tags: ['autodocs'],
 };
 
@@ -27,16 +23,8 @@ type Story = StoryObj<typeof SocialLinks>;
 
 export const AllPlatforms: Story = {};
 
-export const MarketingFooter: Story = {
+export const Footer: Story = {
   args: {
     platforms: ['instagram', 'linkedin', 'x', 'youtube'],
-  },
-};
-
-export const GoFooter: Story = {
-  args: {
-    platforms: ['x', 'instagram', 'linkedin', 'youtube', 'discord'],
-    iconSize: 20,
-    newTab: true,
   },
 };
