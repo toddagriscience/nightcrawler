@@ -75,7 +75,7 @@ export function NewsHighlightTiles({
       id={sectionId}
     >
       <h2
-        className="text-center text-[18px] font-normal leading-7 text-foreground"
+        className="text-center text-[30px] font-normal leading-9 text-foreground"
         id={headingId}
       >
         {heading}
