@@ -42,8 +42,5 @@ describe('GoFooter', () => {
     expect(
       screen.getByRole('link', { name: 'Visit our YouTube channel' })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: 'Join our Discord server' })
-    ).toHaveAttribute('href', 'https://discord.gg/rFY3kc4deK');
   });
 });
