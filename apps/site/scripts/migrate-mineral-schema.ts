@@ -5,7 +5,7 @@
  * Manganese, Copper, Boron, ideal_value, tag, four_lows, and dimensionless units.
  *
  * Usage:
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/migrate-mineral-schema.ts
+ *   bun run scripts/migrate-mineral-schema.ts
  */
 
 import { db } from '@nightcrawler/db/schema/connection';
