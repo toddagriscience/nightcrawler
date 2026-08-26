@@ -142,7 +142,7 @@ function DateField({
                   {displayValue}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto border-0 p-0" align="start">
                 <Calendar
                   autoFocus
                   mode="single"
