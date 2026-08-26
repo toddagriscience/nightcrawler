@@ -39,36 +39,22 @@ describe('AuthErrorFallback', () => {
     });
   });
 
-  it('returns to the landing page after a successful logout', async () => {
+  it('leaves navigation to logout instead of routing itself', async () => {
+    // `logout()` hard-navigates the document with `window.location.replace`.
+    // A client-side push here would race that navigation, so this page must
+    // not route at all — see the contract on `logout()`.
     const user = userEvent.setup();
     render(<AuthErrorFallback />);
 
     await user.click(screen.getByRole('button', { name: /logout/i }));
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/');
+      expect(mockLogout).toHaveBeenCalledTimes(1);
     });
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it('still navigates when logout signals success by throwing NEXT_REDIRECT', async () => {
-    // `logout()` ends in next/navigation's `redirect('/')`, which throws
-    // instead of returning. Left unhandled that rejects the click handler and
-    // strands the viewer on this page, so the throw must not stop navigation.
-    const redirectError = Object.assign(new Error('NEXT_REDIRECT'), {
-      digest: 'NEXT_REDIRECT;replace;/;307;',
-    });
-    mockLogout.mockRejectedValue(redirectError);
-    const user = userEvent.setup();
-    render(<AuthErrorFallback />);
-
-    await user.click(screen.getByRole('button', { name: /logout/i }));
-
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/');
-    });
-  });
-
-  it('stays put when logout reports a failure', async () => {
+  it('does not route when logout reports a failure either', async () => {
     mockLogout.mockResolvedValue({ error: new Error('nope') });
     const user = userEvent.setup();
     render(<AuthErrorFallback />);

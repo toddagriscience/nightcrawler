@@ -5,7 +5,7 @@
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { BiHelpCircle, BiLogOut } from 'react-icons/bi';
 
 const sideMenuItems = [
@@ -18,14 +18,9 @@ const sideMenuItems = [
 
 export default function AccountSideMenu() {
   const pathname = usePathname().replace(/\/$/, '') || '/account';
-  const router = useRouter();
 
   const handleLogout = async () => {
-    const result = await logout();
-
-    if (!result?.error) {
-      router.push('/');
-    }
+    await logout();
   };
 
   return (

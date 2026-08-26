@@ -2,12 +2,15 @@
 
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -15,10 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
+import { CalendarIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { createReminder, updateReminderById } from './actions';
 import { parseSeasonalLabel } from './parse-seasonal';
 import type { Reminder, ReminderType } from './types';
-import { createReminder, updateReminderById } from './actions';
 
 const reminderTypeOptions: { value: ReminderType; label: string }[] = [
   { value: 'planting', label: 'Planting' },
@@ -30,6 +38,13 @@ const reminderTypeOptions: { value: ReminderType; label: string }[] = [
   { value: 'other', label: 'Other' },
 ];
 
+const JANUARY = 0;
+const DECEMBER = 11;
+const CALENDAR_YEARS_BACK = 50;
+const CALENDAR_YEARS_AHEAD = 10;
+const EXACT_DATE_LABEL = 'Or Exact Date';
+const UNSET_DATE_LABEL = 'Select date';
+
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     weekday: 'short',
@@ -37,6 +52,122 @@ function formatDate(date: Date): string {
     day: 'numeric',
     year: 'numeric',
   });
+}
+
+function formatTriggerDate(value: Date | undefined) {
+  if (!value) {
+    return UNSET_DATE_LABEL;
+  }
+
+  return value.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+/**
+ * Converts a stored timestamp, treated as UTC midnight of a calendar day, into
+ * the local midnight date react-day-picker expects.
+ * @param {Date | null | undefined} value - The date read from the database
+ * @returns {Date | undefined} The equivalent day at local midnight
+ */
+function toCalendarDate(value: Date | null | undefined) {
+  if (!value) {
+    return undefined;
+  }
+
+  return new Date(
+    value.getUTCFullYear(),
+    value.getUTCMonth(),
+    value.getUTCDate()
+  );
+}
+
+/**
+ * Converts the local midnight date react-day-picker returns back to UTC
+ * midnight so the due day does not shift for users east of UTC.
+ * @param {Date | undefined} value - The day picked in the calendar
+ * @returns {Date | null} The equivalent day at UTC midnight
+ */
+function fromCalendarDate(value: Date | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  return new Date(
+    Date.UTC(value.getFullYear(), value.getMonth(), value.getDate())
+  );
+}
+
+/**
+ * Calendar-backed replacement for a native date input. The trigger is a button,
+ * so the visible label is not a `<label for>` and the button names itself.
+ */
+function ExactDateField({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: Date | undefined;
+  onChange: (date: Date | undefined) => void;
+  disabled: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const displayValue = formatTriggerDate(value);
+
+  const [startMonth, endMonth] = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+
+    return [
+      new Date(currentYear - CALENDAR_YEARS_BACK, JANUARY),
+      new Date(currentYear + CALENDAR_YEARS_AHEAD, DECEMBER),
+    ];
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span
+        aria-hidden="true"
+        className="flex items-center gap-2 text-sm leading-none font-medium select-none"
+      >
+        {EXACT_DATE_LABEL}
+      </span>
+      <Popover modal open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            id="dueDate"
+            type="button"
+            variant="outline"
+            disabled={disabled}
+            aria-label={`${EXACT_DATE_LABEL}: ${displayValue}`}
+            className={cn(
+              'h-10 w-full justify-start font-normal hover:bg-transparent',
+              !value && 'text-muted-foreground'
+            )}
+          >
+            <CalendarIcon aria-hidden="true" className="size-4" />
+            {displayValue}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="z-[100] w-auto border-0 p-0" align="start">
+          <Calendar
+            autoFocus
+            mode="single"
+            captionLayout="dropdown"
+            startMonth={startMonth}
+            endMonth={endMonth}
+            selected={value}
+            defaultMonth={value}
+            onSelect={(date) => {
+              onChange(date);
+              setOpen(false);
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
 }
 
 interface ReminderFormProps {
@@ -59,10 +190,8 @@ export function ReminderForm({
   const [seasonalLabel, setSeasonalLabel] = useState(
     initialData?.seasonalLabel ?? ''
   );
-  const [dueDate, setDueDate] = useState(
-    initialData?.dueDate
-      ? new Date(initialData.dueDate).toISOString().split('T')[0]
-      : ''
+  const [dueDate, setDueDate] = useState<Date | undefined>(
+    toCalendarDate(initialData?.dueDate)
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,12 +207,11 @@ export function ReminderForm({
     const title = formData.get('title') as string;
     const body = formData.get('body') as string;
     const type = formData.get('type') as ReminderType;
-    const dueDateStr = formData.get('dueDate') as string;
     let seasonalLabelVal = formData.get('seasonalLabel') as string;
 
     // Mutual exclusion guard: an exact date and a seasonal label must never both
     // be stored. If both are somehow present, keep only the exact date.
-    if (seasonalLabelVal && dueDateStr) {
+    if (seasonalLabelVal && dueDate) {
       seasonalLabelVal = '';
     }
 
@@ -93,7 +221,7 @@ export function ReminderForm({
           title,
           body,
           type,
-          dueDate: dueDateStr ? new Date(dueDateStr + 'T00:00:00') : null,
+          dueDate: fromCalendarDate(dueDate),
           seasonalLabel: seasonalLabelVal || null,
         });
       } else {
@@ -101,7 +229,7 @@ export function ReminderForm({
           title,
           body,
           type,
-          dueDate: dueDateStr ? new Date(dueDateStr + 'T00:00:00') : null,
+          dueDate: fromCalendarDate(dueDate),
           seasonalLabel: seasonalLabelVal || null,
         });
       }
@@ -161,7 +289,7 @@ export function ReminderForm({
           name="seasonalLabel"
           value={seasonalLabel}
           onChange={(e) => setSeasonalLabel(e.target.value)}
-          disabled={dueDate !== ''}
+          disabled={dueDate !== undefined}
           placeholder="e.g., mid March, early spring, 6 months from now"
         />
         <p className="text-xs text-[var(--color-muted-foreground)]">
@@ -179,17 +307,11 @@ export function ReminderForm({
         </div>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="dueDate">Or Exact Date</Label>
-        <Input
-          id="dueDate"
-          name="dueDate"
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          disabled={seasonalLabel !== ''}
-        />
-      </div>
+      <ExactDateField
+        value={dueDate}
+        onChange={setDueDate}
+        disabled={seasonalLabel !== ''}
+      />
 
       <div className="flex justify-end gap-2">
         {onCancel && (

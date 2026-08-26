@@ -5,9 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AccountSideMenu from './account-side-menu';
 
-const { mockUsePathname, mockPush, mockLogout } = vi.hoisted(() => ({
+const { mockUsePathname, mockLogout } = vi.hoisted(() => ({
   mockUsePathname: vi.fn(),
-  mockPush: vi.fn(),
   mockLogout: vi.fn(),
 }));
 
@@ -20,7 +19,6 @@ vi.mock('next/navigation', async () => {
   return {
     ...actual,
     usePathname: mockUsePathname,
-    useRouter: () => ({ push: mockPush }),
   };
 });
 
@@ -49,13 +47,12 @@ describe('AccountSideMenu', () => {
     );
   });
 
-  it('calls logout flow when clicking log out', async () => {
+  it('calls logout when clicking log out and leaves navigation to logout', async () => {
     const user = userEvent.setup();
     render(<AccountSideMenu />);
 
     await user.click(screen.getByRole('button', { name: 'Log out' }));
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith('/');
   });
 });
