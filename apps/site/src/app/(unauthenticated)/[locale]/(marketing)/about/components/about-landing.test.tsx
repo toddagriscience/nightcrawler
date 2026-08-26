@@ -63,7 +63,8 @@ describe('AboutLanding', () => {
       })
     ).toBeInTheDocument();
 
-    const cta = screen.getByRole('link', { name: /Our research/i });
+    // Exact match: the closing CTA label also contains "our research".
+    const cta = screen.getByRole('link', { name: 'Our research' });
     expect(cta).toBeInTheDocument();
     expect(cta.querySelector('svg')).not.toBeNull();
   });
@@ -114,11 +115,14 @@ describe('AboutLanding', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders navigation link to What We Do', () => {
+  it('renders the closing call to action pointing at research', () => {
     renderWithNextIntl(<AboutLanding />);
 
     expect(
-      screen.getByRole('link', { name: /What we do/i })
+      screen.getByRole('heading', { level: 2, name: /What we do/i })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Explore our research/i })
+    ).toHaveAttribute('href', '/research');
   });
 });

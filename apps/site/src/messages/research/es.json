@@ -61,7 +61,8 @@
       }
     },
     "buildABetterFarm": {
-      "title": "Construir una granja mejor"
+      "title": "Construir una granja mejor",
+      "cta": "Conoce Iris"
     },
     "disclaimers": {
       "0": "Los servicios de asesoría y gestión de Todd no deben considerarse una garantía de que no se producirán pérdidas. Existen riesgos que no son monitoreados ni controlados por Todd y riesgos que pueden ser mayores a los previstos por Todd, especialmente en condiciones ambientales inusuales. Pueden producirse pérdidas significativas o totales como resultado de estos riesgos u otras razones, a pesar de los protocolos de gestión de Todd o de cualquier información proporcionada en el presente documento.",

@@ -49,7 +49,8 @@
       "description": "Tenemos la suerte de contar con el apoyo de socios que comparten nuestra visión. Su respaldo nos ayuda a impulsar la agricultura sostenible."
     },
     "navigation": {
-      "whatWeDo": "Qué hacemos"
+      "whatWeDo": "Qué hacemos",
+      "whatWeDoCta": "Explorar nuestra investigación"
     }
   }
 }
