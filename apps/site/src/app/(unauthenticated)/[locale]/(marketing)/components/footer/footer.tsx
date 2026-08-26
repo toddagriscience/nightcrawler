@@ -3,18 +3,13 @@
 'use client';
 
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import SocialLinks from '@/components/common/social-links/social-links';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
 import { localizePathname } from '@/i18n/locale-path';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6';
 
 /**
  * Footer component
@@ -24,29 +19,6 @@ const Footer = () => {
   const locale = useLocale();
   const t = useTranslations('footer');
   const tCookiePreferences = useTranslations('cookiePreferences');
-
-  const socialMediaIcons = [
-    {
-      icon: <FaInstagram aria-hidden="true" />,
-      href: 'https://www.instagram.com/toddagriscience/',
-      ariaLabel: 'Visit our Instagram page',
-    },
-    {
-      icon: <FaLinkedinIn aria-hidden="true" />,
-      href: 'https://www.linkedin.com/company/toddagriscience/',
-      ariaLabel: 'Visit our LinkedIn page',
-    },
-    {
-      icon: <FaXTwitter aria-hidden="true" />,
-      href: 'https://x.com/toddagriscience',
-      ariaLabel: 'Visit our X (Twitter) page',
-    },
-    {
-      icon: <FaYoutube aria-hidden="true" />,
-      href: 'https://www.youtube.com/@toddagriscience',
-      ariaLabel: 'Visit our YouTube channel',
-    },
-  ];
 
   const footerSections = [
     {
@@ -136,11 +108,12 @@ const Footer = () => {
           />
         </div>
         <div className="flex flex-wrap items-center gap-8 md:justify-end">
-          {socialMediaIcons.map((val) => (
-            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
-              {val.icon}
-            </Link>
-          ))}
+          {/* `contents` keeps the icons as direct children of this flex row so
+              they share its `gap-8` with the language switcher. */}
+          <SocialLinks
+            platforms={['instagram', 'linkedin', 'x', 'youtube']}
+            className="contents"
+          />
           <div className="relative inline-flex">
             <button
               type="button"
