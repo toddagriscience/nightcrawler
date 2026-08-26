@@ -1,0 +1,154 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+import { render, screen, act } from '@testing-library/react';
+import { ThemeProvider, useTheme } from './theme-context';
+import '@testing-library/jest-dom';
+import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+
+// Mock component to access theme context values
+const ThemeDisplay = () => {
+  const { isDark, toggleDark, setIsDark, setIsDarkSmooth } = useTheme();
+  return (
+    <div>
+      <div data-testid="theme-display">{isDark ? 'dark' : 'light'}</div>
+      <button data-testid="toggle-btn" onClick={toggleDark}>
+        Toggle
+      </button>
+      <button data-testid="set-dark-btn" onClick={() => setIsDark(true)}>
+        Set Dark
+      </button>
+      <button
+        data-testid="set-smooth-btn"
+        onClick={() => setIsDarkSmooth(true)}
+      >
+        Set Smooth
+      </button>
+    </div>
+  );
+};
+
+describe('ThemeContext', () => {
+  const mockDocumentElement = {
+    classList: {
+      add: vi.fn(),
+      remove: vi.fn(),
+    },
+    setAttribute: vi.fn(),
+    style: {
+      setProperty: vi.fn(),
+    },
+  };
+
+  beforeEach(() => {
+    // Mock document.documentElement
+    Object.defineProperty(document, 'documentElement', {
+      value: mockDocumentElement,
+      writable: true,
+    });
+
+    // Reset timers
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.useRealTimers();
+    mockDocumentElement.classList.add.mockReset();
+    mockDocumentElement.classList.remove.mockReset();
+    mockDocumentElement.setAttribute.mockReset();
+    mockDocumentElement.style.setProperty.mockReset();
+  });
+
+  it('should initialize with light theme', async () => {
+    await act(async () => {
+      render(
+        <ThemeProvider>
+          <ThemeDisplay />
+        </ThemeProvider>
+      );
+    });
+
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
+    expect(mockDocumentElement.classList.remove).toHaveBeenCalledWith('dark');
+  });
+
+  it('should toggle theme', async () => {
+    await act(async () => {
+      render(
+        <ThemeProvider>
+          <ThemeDisplay />
+        </ThemeProvider>
+      );
+    });
+
+    // Initial state
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
+
+    // Toggle to dark
+    await act(async () => {
+      screen.getByTestId('toggle-btn').click();
+    });
+
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
+  });
+
+  it('should handle smooth theme transition', async () => {
+    await act(async () => {
+      render(
+        <ThemeProvider>
+          <ThemeDisplay />
+        </ThemeProvider>
+      );
+    });
+
+    // Initial state
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
+
+    // Start smooth transition
+    await act(async () => {
+      screen.getByTestId('set-smooth-btn').click();
+    });
+
+    // Theme should not change immediately
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
+
+    // Fast-forward timer
+    await act(async () => {
+      vi.advanceTimersByTime(300);
+    });
+
+    // Theme should be dark after transition
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
+  });
+
+  it('should prevent multiple smooth transitions at once', async () => {
+    await act(async () => {
+      render(
+        <ThemeProvider>
+          <ThemeDisplay />
+        </ThemeProvider>
+      );
+    });
+
+    // Initial state
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('light');
+
+    // Trigger multiple transitions
+    await act(async () => {
+      screen.getByTestId('set-smooth-btn').click();
+      screen.getByTestId('set-smooth-btn').click();
+      screen.getByTestId('set-smooth-btn').click();
+    });
+
+    // Fast-forward timer
+    await act(async () => {
+      vi.advanceTimersByTime(300);
+    });
+
+    // Theme should only have changed once
+    expect(screen.getByTestId('theme-display')).toHaveTextContent('dark');
+    expect(mockDocumentElement.classList.add).toHaveBeenCalledWith('dark');
+  });
+});

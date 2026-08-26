@@ -34,24 +34,61 @@ const loadMessagesSync = (locale) => {
 
 const enMessages = loadMessagesSync('en');
 
+// Use actual message structure from loaded messages
+const nestedGet = (obj, path) =>
+  path.split('.').reduce((current, segment) => current?.[segment], obj);
+
+/**
+ * Builds a translator shaped closely enough to the real one for component
+ * tests: callable for plain messages, with `.rich` for a message that wraps
+ * part of its text in a tag, e.g. `<link>here</link>`.
+ */
+const createTranslator = (namespace) => {
+  const lookup = (key) => {
+    if (enMessages[namespace]) {
+      const translation = nestedGet(enMessages[namespace], key);
+      if (translation) return translation;
+    }
+
+    return `[${namespace}.${key}]`;
+  };
+
+  const translate = vitest.fn(lookup);
+
+  translate.rich = vitest.fn((key, values = {}) => {
+    const message = lookup(key);
+    const parts = [];
+    const tag = /<(\w+)>([\s\S]*?)<\/\1>/g;
+    let cursor = 0;
+    let match;
+    let index = 0;
+
+    while ((match = tag.exec(message)) !== null) {
+      if (match.index > cursor) parts.push(message.slice(cursor, match.index));
+
+      const render = values[match[1]];
+      parts.push(
+        render
+          ? React.createElement(
+              React.Fragment,
+              { key: index++ },
+              render(match[2])
+            )
+          : match[2]
+      );
+      cursor = tag.lastIndex;
+    }
+
+    if (cursor < message.length) parts.push(message.slice(cursor));
+
+    return parts;
+  });
+
+  return translate;
+};
+
 vitest.mock('next-intl', () => ({
-  useTranslations: vitest.fn((namespace) => {
-    return vitest.fn((key) => {
-      // Use actual message structure from loaded messages
-      const nestedGet = (obj, path) => {
-        return path.split('.').reduce((current, segment) => {
-          return current?.[segment];
-        }, obj);
-      };
-
-      if (enMessages[namespace]) {
-        const translation = nestedGet(enMessages[namespace], key);
-        if (translation) return translation;
-      }
-
-      return `[${namespace}.${key}]`;
-    });
-  }),
+  useTranslations: vitest.fn(createTranslator),
   useLocale: vitest.fn(() => 'en'),
   NextIntlClientProvider: ({ children }) => children,
 }));

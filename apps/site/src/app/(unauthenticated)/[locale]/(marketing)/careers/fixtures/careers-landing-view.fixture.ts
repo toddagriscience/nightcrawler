@@ -58,12 +58,6 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
   },
   quoteText: 'Quote text.',
   quoteAttribution: 'Author.',
-  resourcesEyebrow: 'Resources',
-  resourceCards: [
-    { title: 'Leadership', category: 'Company' },
-    { title: 'Interview guide', category: 'Careers' },
-    { title: 'Building dynamic teams', category: 'Company' },
-  ],
   footerHeading: 'Footer headline',
   footerCtaLabel: 'View careers →',
   footerCtaHref: '/careers/search',

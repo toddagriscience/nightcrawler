@@ -4,7 +4,7 @@
 
 import { FadeIn, NewsCard } from '@/components/common';
 import { Spinner } from '@/components/ui/spinner';
-import { useTheme } from '@/context/theme/ThemeContext';
+import { useTheme } from '@/context/theme/theme-context';
 import { loadArticlesForHighlights } from '@/lib/sanity/article-actions';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';

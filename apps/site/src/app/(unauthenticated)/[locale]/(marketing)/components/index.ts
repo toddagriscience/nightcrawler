@@ -12,7 +12,6 @@ export {
   MarketingPageHero,
   MarketingPillLink,
   MarketingQuoteSection,
-  MarketingResourceCards,
   MarketingSectionHeader,
   MarketingValuesOperatingStack,
   MarketingValuesTwoColumns,
