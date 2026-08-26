@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Button from './button';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('Button', () => {
   it('renders with required props', () => {
@@ -66,6 +67,34 @@ describe('Button', () => {
       'lg:text-2xl',
       'px-5',
       'py-2'
+    );
+  });
+  it('renders a link when no onClick is given', () => {
+    render(<Button href="/test" text="Test" />);
+
+    expect(screen.getByTestId('button-component').tagName).toBe('A');
+  });
+
+  it('renders a button element and runs onClick when given an action', async () => {
+    const handleClick = vi.fn();
+    const user = userEvent.setup();
+    render(<Button text="Log out" showArrow={false} onClick={handleClick} />);
+
+    const button = screen.getByTestId('button-component');
+    expect(button.tagName).toBe('BUTTON');
+    expect(button).toHaveAttribute('type', 'button');
+
+    await user.click(button);
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the shared outline styling on an action button', () => {
+    render(<Button text="Log out" variant="outline" onClick={vi.fn()} />);
+
+    expect(screen.getByTestId('button-component')).toHaveClass(
+      'border',
+      'border-[#2A2727]',
+      'rounded-full'
     );
   });
 });

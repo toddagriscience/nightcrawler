@@ -18,10 +18,9 @@ import type {
 } from '@/lib/types/db';
 import { cn } from '@/lib/utils';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { Controller, useForm, type Control } from 'react-hook-form';
-import { BiArrowBack, BiCalendar } from 'react-icons/bi';
+import { BiCalendar } from 'react-icons/bi';
 import { toDisplayDate } from '../../../util';
 import { updateManagementZone } from './actions';
 
@@ -188,7 +187,9 @@ export default function ManagementZoneForm({
   } = useForm<ManagementZoneInsert>({
     defaultValues: {
       ...zone,
-      location: [0, 0],
+      // Seed from the stored point, or every save would overwrite the real
+      // coordinates with (0,0) even when the user never touched either input.
+      location: zone.location ?? [0, 0],
     },
   });
 
@@ -241,7 +242,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.0')}
+            {...register('location.0', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
         <div>
@@ -257,7 +260,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.1')}
+            {...register('location.1', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
       </div>
@@ -328,12 +333,6 @@ export default function ManagementZoneForm({
               <p className="text-sm text-[#ff4d00]">{errors.root.message}</p>
             </div>
           )}
-          <Link
-            href={'/account/management-zones'}
-            className="flex flex-row items-center gap-2 text-sm font-light hover:text-foreground/70 transition-all duration-300 ease-in-out"
-          >
-            <BiArrowBack className="size-5" /> Back to zones
-          </Link>
         </div>
       </div>
     </form>

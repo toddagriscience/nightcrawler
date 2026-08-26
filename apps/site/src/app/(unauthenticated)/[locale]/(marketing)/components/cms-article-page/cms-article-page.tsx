@@ -15,6 +15,7 @@ import {
   formatArticleHeroDate,
   parseArticleSubscripts,
 } from '../../index/[slug]/utils';
+import { NewsHighlightTilesSection } from '../news-highlight-tiles/news-highlight-tiles';
 import { ArticleCtaButtons } from './article-cta-buttons';
 
 /**
@@ -104,6 +105,11 @@ export function CmsArticlePage({
           subscripts={subscripts}
         />
         <ArticleCtaButtons ctas={footerCtas} className="mb-16" />
+        <NewsHighlightTilesSection
+          locale={locale}
+          page="article"
+          sectionId="article-highlights"
+        />
       </main>
     </div>
   );

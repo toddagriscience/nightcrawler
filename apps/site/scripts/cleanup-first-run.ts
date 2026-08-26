@@ -8,8 +8,8 @@
  * reports by default. Pass `--confirm` to actually delete.
  *
  * Usage:
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/cleanup-first-run.ts           # dry run
- *   NODE_TLS_REJECT_UNAUTHORIZED=0 bun run scripts/cleanup-first-run.ts --confirm # delete
+ *   bun run scripts/cleanup-first-run.ts           # dry run
+ *   bun run scripts/cleanup-first-run.ts --confirm # delete
  */
 
 import { db } from '@nightcrawler/db/schema/connection';

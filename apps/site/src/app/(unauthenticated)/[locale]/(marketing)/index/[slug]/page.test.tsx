@@ -21,6 +21,7 @@ vi.mock('next/image', () => ({
     src: string | { src: string };
     alt: string;
   }) => (
+    // eslint-disable-next-line @next/next/no-img-element
     <img src={typeof src === 'string' ? src : src.src} alt={alt} {...props} />
   ),
 }));
@@ -96,6 +97,12 @@ vi.mock('@/lib/sanity/articles', () => ({
   getArticleBySlug: getArticleBySlugMock,
   isInternalArticle: isInternalArticleMock,
   isCareerArticle: isCareerArticleMock,
+}));
+
+// The highlight strip is an async server component with its own Sanity read and
+// its own tests; the client-side renderer here cannot await it.
+vi.mock('../../components/news-highlight-tiles/news-highlight-tiles', () => ({
+  NewsHighlightTilesSection: () => <div data-testid="article-highlights" />,
 }));
 
 const builder = {
