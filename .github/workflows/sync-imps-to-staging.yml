@@ -8,6 +8,11 @@ on:
         type: boolean
         default: false
 
+# Default for the whole file, so a job added later cannot silently fall back
+# to the repository default. The job below widens this with `id-token`.
+permissions:
+  contents: read
+
 jobs:
   sync-imps-to-staging:
     name: Sync General IMPs to Staging

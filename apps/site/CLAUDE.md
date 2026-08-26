@@ -1,287 +1,183 @@
-# ToddAgriScience Website - Development Context
+# apps/site — Development Context
 
-## Project Overview
+> Repo-wide conventions (naming, feature-sliced design, logging, JSDoc, commit and
+> PR workflow, commands) live in [`AGENTS.md`](../../AGENTS.md) and are **not**
+> repeated here. Read that first. This file covers only what is specific to
+> `apps/site`.
 
-A modern, production-ready Next.js website for Todd Agriscience with comprehensive development infrastructure, smooth user experience, and complete SEO optimization. This codebase emphasizes maintainability, type safety, internationalization support, and component-driven architecture.
+## What this app is
 
-## Tech Stack
+The Next.js application behind Todd Agriscience: a public marketing site and an
+authenticated customer platform in one App Router tree.
 
-### Core Framework
+- **Marketing site** — everything under the `[locale]` route; internationalized.
+- **Platform** — the authenticated routes; not internationalized.
 
-- **Next.js 15** with App Router & Turbopack
-- **TypeScript** with strict type checking
-- **Tailwind CSS v4** with custom brand configuration
-- **React 19** with modern hooks and patterns
-- Drizzle for ORM with PostgreSQL
+## Tech stack
 
-### UI Component System
+Versions here are the ones actually declared in `package.json`. Update this list
+when you bump them.
 
-- **shadcn/ui** integration with Radix UI primitives
-- **class-variance-authority** for component variants
-- **Lucide React** for consistent iconography
-- **Radix UI Slot** for composition patterns
-- **clsx & tailwind-merge** for conditional styling
+### Core
+
+- Next.js `16.3.0-canary.37`, App Router, Turbopack
+- React `19.2`, TypeScript `5.9` (strict)
+- Tailwind CSS `4.2`
+- Drizzle ORM `0.45` over PostgreSQL, via `@nightcrawler/db`
+
+### UI
+
+- shadcn/ui on Radix primitives (`src/components/ui/`)
+- `class-variance-authority` for component variants
+- `lucide-react` for icons; `react-icons` for brand logos
+- `clsx` + `tailwind-merge` for conditional styling
+
+### Content, data, and services
+
+- `next-sanity` `12.2` — CMS content (articles, careers, forms, governance)
+- `@supabase/supabase-js` `2.102` — auth
+- `stripe` `20.4` — billing
+- `posthog-js` `1.365` — analytics
+- `newrelic` `13.20` — APM, wired through `src/instrumentation/`
 
 ### Internationalization
 
-- **Multi-language support** (en, es) with architecture ready for expansion
-- **Smart locale detection** from browser settings and localStorage
-- **Type-safe translations** with parameter interpolation
-- **Fallback system** to English for missing translations
+- `next-intl` `4.9`, locales `en` and `es`, English fallback
+- Type-safe translations with parameter interpolation
 
-### Animation & UX
+### Animation
 
-- **Framer Motion v12.23** for component animations and scroll-based effects
-- **Lenis v1.0** for buttery smooth scrolling (matching original feel)
-- **Embla Carousel** for interactive content carousels
-- **Dynamic header** with scroll-based state changes
-- **Advanced theme system** with smooth transitions and scroll-based dark mode
-- **Centralized theme context** with debounced state management
+- `framer-motion` `12.38`
+- `@studio-freight/lenis` `1.0` for smooth scrolling
+- `embla-carousel-react` `8.6`
 
-### Development Infrastructure
+### Development
 
-- **Vitest v4 + React Testing Library v16.3** (unit testing)
-- **Storybook v9.1** with accessibility addon
-- **ESLint v9 + Prettier v3.6** with pre-commit hooks (Husky v9.1)
-- **GitHub Actions** CI/CD pipeline
+- Vitest `4.1` + React Testing Library `16.3`
+- Storybook `10.3` with the a11y addon
 
-### SEO & Performance
-
-- **Comprehensive metadata** (OpenGraph, Twitter cards, structured data)
-- **Custom fonts** (next/font/local with Neue Haas Unica, Utah WGL)
-- **Optimized assets** (favicons, social images, robots.txt)
-- **Type-safe metadata utilities** for dynamic pages
-
-## Directory Structure
+## Directory structure
 
 ```
 src/
-  app/                    # Next.js App Router
-    [locale]/            # Internationalized pages with layout
-      [...rest]/         # Catch-all route for dynamic pages
-    api/                 # API routes
-    globals.css          # Global styles with Lenis setup
-    layout.tsx           # Root layout with providers
-  components/             # All React components
-    common/              # Reusable components
-      button/            # Custom button with variants & types
-      carousel/          # Embla carousel component
-      locale-switcher/   # Language selection component
-      news-card/         # News article card component
-      placeholder-image/ # Image placeholder component
-      smooth-scroll/     # Smooth scroll wrapper
-    landing/             # Homepage-specific components
-      footer/            # Landing page footer
-      header/            # Landing page header with navigation
-      hero/              # Hero section component
-      news-highlights/ # Combined news + quote card
-      page/              # Landing page layout
-      quote/             # Quote/About section
-      scroll-shrink-wrapper/ # Scroll animation wrapper
-    ui/                  # shadcn/ui components
-      button.tsx         # shadcn/ui button component
-  context/               # React contexts
-    theme/               # Theme context with types
-      ThemeContext.tsx   # Theme and dark mode context
-      types/             # Theme-related TypeScript types
-  data/                  # Static data files
-    featured-news.json   # Featured news articles data
-  i18n/                  # Internationalization config
-    config.ts            # i18n configuration
-    request.ts           # Server-side i18n utilities
-  lib/                   # Utility functions
-    env.ts               # Environment configuration
-    fonts.ts             # Custom font loading
-    locale-utils.ts      # Locale helper functions
-    locales.ts           # Locale definitions
-    logger.ts            # Environment-aware logging utility
-    metadata.ts          # SEO metadata utilities
-    scroll-to-top.tsx    # Scroll to top component
-    utils.ts             # shadcn/ui utility functions
-  messages/              # Translation JSON files
-    en.json              # English translations
-    es.json              # Spanish translations
-  test/                  # Testing utilities
-    test-utils.tsx       # React Testing Library setup
-  types/                 # Global TypeScript types
-  proxy.ts               # next-intl proxy
-public/                  # Static assets
-  fonts/                 # Custom fonts (Neue Haas, Utah WGL)
-  publications/          # PDF documents
-scripts/                 # Build and utility scripts
-.github/workflows/       # CI/CD pipelines
-.storybook/             # Storybook configuration
-  decorators/            # Custom Storybook decorators
-components.json          # shadcn/ui configuration
+  app/                     # Next.js App Router
+    (unauthenticated)/     # Public routes
+      [locale]/            # Internationalized marketing site
+    (authenticated)/       # Customer platform (not internationalized)
+    (go)/                  # Standalone campaign routes
+    (viewer-agreement)/
+    api/                   # Route handlers
+    globals.css            # Global styles + CSS variables
+    providers.tsx          # Client providers
+  components/
+    common/                # Reusable app components
+    sanity/                # Sanity content renderers
+    go/                    # Campaign-specific components
+    ui/                    # shadcn/ui primitives (button.tsx, etc.)
+  context/
+    theme/                 # Theme + dark-mode context
+  data/                    # Static data files
+  i18n/
+    config.ts              # Routing / locale config
+    request.ts             # Server-side message loading
+    message-files.ts       # Namespace list driving the dynamic import
+  instrumentation/         # New Relic agent wiring
+  lib/
+    actions/               # Server actions
+    ai/  order/  sanity/  stripe/  supabase/  utils/
+    hooks/                 # Shared React hooks
+    types/                 # Shared TypeScript types
+    env.ts  fonts.ts  logger.ts  metadata.ts  locales.ts
+  messages/                # One directory per namespace, each with en.json + es.json
+  test/
+    test-utils.tsx         # React Testing Library setup
+  instrumentation.ts       # Next.js instrumentation entry
+  proxy.ts                 # next-intl proxy (Next 16's replacement for middleware.ts)
+public/                    # Static assets, fonts, publications
+scripts/                   # Build and utility scripts
+.storybook/                # Storybook configuration
+components.json            # shadcn/ui configuration
 ```
 
-### Development Priorities
+## Component organization
 
-When making changes, prioritize:
+Page-specific components are co-located with the page that uses them; test and
+Storybook files sit alongside the component:
 
-1. **Type Safety**: Maintain strict TypeScript throughout
-2. **Internationalization**: Support multi-language architecture
-3. **Testing**: Write tests for functionality and accessibility
-4. **Performance**: Optimize animations and bundle size
-5. **Accessibility**: Ensure WCAG compliance
-
-### File Organization & Conventions
-
-#### Component Structure
-
-- **Slice Architecture**: Each page has its own components directory co-located with the page
-- **Co-located files**: Test files (`.test.tsx`) and Storybook files (`.stories.tsx`) alongside components
-- **Page-specific structure**: Components are organized per page/feature:
-  ```
-  app/
-  ├── [locale]/
-  │   ├── about/
-  │   │   ├── components/       # About page specific components
-  │   │   │   ├── hero/
-  │   │   │   │   ├── types/
-  │   │   │   │   │   └── hero.ts
-  │   │   │   │   ├── hero.tsx
-  │   │   │   │   ├── hero.test.tsx
-  │   │   │   │   └── hero.stories.tsx
-  │   │   │   └── index.ts      # Barrel export for about page components
-  │   │   └── page.tsx          # About page
-  │   └── page.tsx              # Homepage (landing components in src/components/landing/)
-  ```
-- **Global components**: Reusable components in `src/components/common/` and `src/components/ui/`
-- **Landing page exception**: Current landing page components remain in `src/components/landing/`
-- **shadcn/ui components**: Direct files in `src/components/ui/` (e.g., `button.tsx`)
-- **Import paths**: Use `@/` alias for all src imports
-- **Naming**: Use kebab-case for directories, PascalCase for components
-- **Component variants**: Use `class-variance-authority` for component styling variants
-
-### Development Workflow
-
-Run Bun commands from the repository root unless a workflow explicitly needs a workspace directory.
-
-#### Commit/Push Reliability Workflow
-
-- Before any commit or push flow that uses `--no-verify`, automatically run: `rm -rf apps/site/.next && bun i`.
-- If that command fails because of sandbox or permissions, rerun it with elevated permissions.
-- If `git add`/`git commit` fails with `.git/index.lock` permission errors in sandbox, rerun the same git command with elevated permissions.
-- If `git push` fails in sandbox with GitHub host/network resolution errors, rerun the push with elevated permissions.
-
-#### Essential Commands
-
-- `bun dev` - Development server with Turbopack
-- `bun ci` - Full validation (type-check → lint → test → build)
-- `bun validate` - Complete pipeline (format:check → ci)
-- `bun type-check` - Check for type errors
-
-#### Testing & Quality
-
-- `bun run test` - Run unit tests
-- `bun lint:fix` - Auto-fix linting issues
-- `bun format` - Format code
-- `bun storybook` - Component documentation
-
-#### Before Making Changes
-
-1. Run `bun validate` to ensure clean baseline
-2. Create feature branch from current working branch
-3. Make changes following established patterns
-4. Write/update tests for new functionality
-5. Run `bun validate` before committing
-
-### Code Quality Standards
-
-#### Pre-commit Requirements
-
-- **Automatic formatting**: Prettier runs on staged files
-- **Linting**: ESLint with auto-fix attempts
-- **Type checking**: TypeScript validation before commit
-
-#### Logging Standards
-
-- **Environment-aware logging**: Use `@/lib/logger` instead of console methods
-- **Production-safe**: Only `logger.warn` and `logger.error` should be used
-- **No console.log**: Avoid console.log entirely - use logger.warn for debug info
-- **Critical errors only**: Use logger.error only for critical issues that need attention
-
-#### Pull Request Requirements
-
-- All CI checks must pass (lint → type-check → test → build)
-- New components require tests and Storybook stories
-- Changes to i18n require translation updates
-- Performance impact should be minimal
-
-## Key Architecture Patterns
-
-### When modifying database tables
-
-Do not create migrations or migrate (i.e. no running `bunx drizzle-kit generate`).
-
-### When Adding New Components
-
-- **Follow slice architecture**: Page-specific components go in `app/[locale]/page-name/components/`
-- **Use TypeScript**: Strict typing for all props and state
-- **Component variants**: Use `class-variance-authority` for styling variants
-- **Theme support**: Integrate with existing ThemeContext when applicable
-- **Internationalization**: Use next-intl for any user-facing text
-- **Testing**: Include unit tests and Storybook stories
-- **Performance**: Consider animation performance and bundle impact
-- **shadcn/ui integration**: Leverage shadcn/ui components for consistency
-
-### When Modifying Existing Code
-
-- **Preserve patterns**: Follow existing component structure
-- **Maintain tests**: Update tests when changing behavior
-- **Check translations**: Ensure i18n keys still match
-- **Verify accessibility**: Maintain ARIA attributes and semantic HTML
-
-### State Management Approach
-
-- **Context for global state**: Use React Context for theme, locale
-- **Local state for components**: useState/useReducer for component-specific state
-- **Performance optimization**: Use requestAnimationFrame for scroll/animation effects
-
-## Development Guidelines
-
-### Core Principles
-
-- **Type safety first**: Use TypeScript strictly, avoid `any` types
-- **Performance matters**: Optimize animations, images, and bundle size
-- **Accessibility required**: Follow WCAG guidelines, test with screen readers
-- **Internationalization ready**: Support multi-language from the start
-- **Test-driven approach**: Write tests for new functionality
-- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
-- **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
-- **Properly CopyRight**: All new files should include "Copyright Todd Agriscience, Inc. All rights reserved. as a comment at the top
-- **Comments**: Every exported component, page, and util should have proper jsdocs. Private helper methods, components and .storybook.tsx files are excluded from this principle.
-- **Always format files**: Run `bun format` at the end of every piece of work
-
-### When Making Changes
-
-- **Understand context**: Review related files before making changes
-- **Follow patterns**: Use existing component and utility patterns
-- **Consider impact**: Think about performance, accessibility, and i18n
-- **Document changes**: Update Storybook stories for UI changes
-- **Validate thoroughly**: Run full validation suite before submitting
-- **Use proper logging**: Import and use `@/lib/logger` instead of console methods
-
-### Logging Usage Examples
-
-```tsx
-import { logger } from '@/lib/logger';
-
-// For debugging and development info (only shows in dev/local)
-logger.warn('Component state changed:', { newState });
-logger.warn('[GPC] Privacy signal detected');
-
-// For critical errors that need attention (always shows, even in production)
-logger.error('API call failed:', error);
-logger.error('Critical authentication error');
-
-// console.log, console.info, console.debug can still be used for development, though they should be removed before PRs
+```
+app/
+└── (unauthenticated)/
+    └── [locale]/
+        └── about/
+            ├── components/
+            │   └── hero/
+            │       ├── types/
+            │       │   └── hero.ts
+            │       ├── hero.tsx
+            │       ├── hero.test.tsx
+            │       └── hero.stories.tsx
+            └── page.tsx
 ```
 
-### Getting Help
+Genuinely reusable components go in `src/components/common/`; shadcn/ui
+primitives are flat files in `src/components/ui/`.
 
-- **Always ask for context**: Always request clarification on requirements and questions
-- **Provide options**: Present multiple implementation approaches
-- **Explain tradeoffs**: Discuss pros/cons of different solutions
-- **Consider maintenance**: Choose solutions that are easy to maintain
+## Adding a component
+
+- Co-locate it with its page unless it is used across the app.
+- Use `class-variance-authority` for styling variants.
+- Integrate with the existing `ThemeContext` where relevant.
+- Use `next-intl` for any user-facing text on the marketing site.
+- Include a unit test and a Storybook story.
+- Prefer shadcn/ui primitives over hand-rolled equivalents.
+
+## Site-specific commands
+
+Run these from `apps/site` — they do not exist at the repository root.
+
+- `bun run ci` — `type-check` → `lint` → `test` → `build`
+- `bun run validate` — `format:check` → `ci`
+- `bun run lint:fix` — applies license headers, ESLint `--fix`, then formats
+- `bun run test:watch` / `bun run test:coverage`
+- `bun run storybook` — component explorer on port 6006
+
+### A note on `no-secrets`
+
+We use [`eslint-plugin-no-secrets`](https://github.com/nickdeis/eslint-plugin-no-secrets)
+to catch credentials committed as plaintext. It occasionally false-positives. When
+it does:
+
+```ts
+// eslint-disable-next-line no-secrets/no-secrets
+```
+
+## Logging
+
+Use `import { logger } from '@/lib/logger'`. Levels and the production-visibility
+rule are documented in [`AGENTS.md`](../../AGENTS.md#logging).
+
+## Internationalization
+
+Locales are `en` and `es`, with English as the fallback. Only the marketing site
+(the `[locale]` routes) is internationalized.
+
+Messages live in `src/messages/<namespace>/{en,es}.json`. The namespace list in
+`src/i18n/message-files.ts` drives a dynamic import in `src/i18n/request.ts` — a
+new namespace directory is invisible until it is added to that array.
+
+Routing is configured in `src/i18n/config.ts`:
+
+- `localePrefix: 'as-needed'` — the default locale has no URL prefix.
+- `localeDetection: process.env.NODE_ENV === 'production'` — negotiation from the
+  request (`Accept-Language`, `NEXT_LOCALE` cookie) is **on in production only**.
+  In development the locale always comes from the URL, so detection bugs will not
+  reproduce locally.
+
+To add a locale, update `src/lib/locales.ts` and `src/i18n/config.ts`, then add
+the matching JSON file to every namespace directory.
+
+## Styling
+
+Global styles and CSS variables live in `src/app/globals.css`. Marketing and
+platform routes read their background from `--background` and
+`--background-platform` respectively.

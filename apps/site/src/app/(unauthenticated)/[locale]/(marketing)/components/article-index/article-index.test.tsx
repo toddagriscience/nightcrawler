@@ -1,14 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import enMessages from '@/messages/articleIndex/en.json';
+import enMessages from '@/messages/article-index/en.json';
 import {
   NEWS_TOPIC_TYPES,
   RESEARCH_CONTENT_TYPES,
   type SanityArticle,
 } from '@/lib/sanity/article-types';
+import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ArticleIndex,
   type ArticleIndexProps,
@@ -169,5 +170,32 @@ describe('ArticleIndex', () => {
     );
     expect(screen.getByText('Evil Row').closest('a')).toBeNull();
     expect(container.querySelector('a[href^="javascript:" i]')).toBeNull();
+  });
+});
+
+describe('ArticleIndex cursor follower', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('tags rows with the label and mounts the follower when cursorLabel is set', async () => {
+    stubMatchMedia(true);
+    renderWithNextIntl(await render({ cursorLabel: 'Read' }));
+
+    expect(screen.getByRole('link', { name: /Research Row/ })).toHaveAttribute(
+      'data-cursor-label',
+      'Read'
+    );
+    expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
+  });
+
+  it('keeps the native pointer when cursorLabel is omitted', async () => {
+    stubMatchMedia(true);
+    renderWithNextIntl(await render());
+
+    expect(
+      screen.getByRole('link', { name: /Research Row/ })
+    ).not.toHaveAttribute('data-cursor-label');
+    expect(screen.queryByTestId('cursor-follower')).not.toBeInTheDocument();
   });
 });

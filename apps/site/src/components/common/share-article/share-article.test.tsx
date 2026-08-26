@@ -9,7 +9,7 @@ import ShareArticleButtons from './share-article';
 
 const PAGE_URL = 'https://toddagriscience.com/index/why-i-started-todd';
 
-vi.mock('@/lib/hooks/useCurrentUrl', () => ({
+vi.mock('@/lib/hooks/use-current-url', () => ({
   default: () => PAGE_URL,
 }));
 

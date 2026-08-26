@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   staging-db-push-dry-run:
     name: Staging Clone + Drizzle Push Check

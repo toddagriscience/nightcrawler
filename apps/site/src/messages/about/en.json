@@ -1,21 +1,15 @@
 {
   "whoWeAre": {
-    "title": "Who We Are",
-    "intro": {
-      "paragraphs": {
-        "0": "Todd is building hyper-intelligent mentors and AI research platforms for sustainable agriculture. Not models trained solely on public information. Not simulated environments. Real, physical, proprietary data that characterizes soil, generates actionable practices, and gigabytes of data that exist nowhere else.",
-        "1": "Our approach starts with a multi-strategy, generative agriculture thesis where mineral levels are closely monitored to help predict future outcomes and build superior long-term farm value. We deploy location-specific resources to farms everywhere, from renowned coastal areas to mountainous hollows — driving measurable impact and propelling a virtuous cycle of improved soil quality and healthier produce."
-      }
+    "eyebrow": "Company",
+    "title": "About",
+    "subtitle": "We believe sustainable agriculture is the foundation of a healthy planet and\nthriving communities.",
+    "vision": {
+      "title": "Our vision for the future\nof agriculture",
+      "description": "We believe agriculture should remain a human centric career that heals the planet and supports communities.",
+      "cta": "Our research",
+      "imageAlt": "Family gardening together"
     },
-    "culture": {
-      "heading": {
-        "line1": "Empowered by Our Culture"
-      },
-      "description": "We’ve built a distinctive culture that shapes everything we do—whether we’re working, socializing or supporting our communities. Our leadership shares a determination and responsibility for growing and developing our next generation of leaders.",
-      "cta": {
-        "careers": "Careers"
-      }
-    },
+    "missionStatement": "We are creating generative farms, but will also consider our mission fulfilled if our work aids others to achieve this outcome.",
     "competencies": {
       "title": "Todd is differentiated by a combination of three core competencies.",
       "items": {
@@ -51,8 +45,8 @@
       }
     },
     "partners": {
-      "title": "Our Partners",
-      "description": "We’re fortunate to be supported by investors and industry partners who share our vision. Their backing will help us grow our team, scale our firm, and develop the first generation of generative farms."
+      "title": "Backed by incredible partners",
+      "description": "We’re fortunate to be supported by partners who share our vision. Their backing helps us advance sustainable agriculture."
     },
     "navigation": {
       "whatWeDo": "What we do"

@@ -2,6 +2,8 @@
 
 A Next.js site for the Todd Agriscience's marketing site and customer platform. Please follow the base [README.md](/README.md) in the root directory for general information.
 
+Repo-wide conventions live in [`AGENTS.md`](/AGENTS.md). Development context for this workspace lives in [`CLAUDE.md`](./CLAUDE.md).
+
 ## Notes
 
 A few important things to mention:
@@ -52,7 +54,6 @@ We use a plugin that helps catch/find strings that might be secrets or credentia
 
 ### Miscellaneous
 
-- `bun run generate-icons` - Runs a script to generate PWA icons
 - `bun run --filter @nightcrawler/db db:local:up` - Start local Postgres 18 via Docker Compose
 - `bun run --filter @nightcrawler/db db:local:migrate` - Apply Drizzle migrations to local Postgres
 - `bun run --filter @nightcrawler/db db:local:seed` - Seed local Postgres with starter data
@@ -101,10 +102,10 @@ Folders, what they do, and why they exist.
   - `/context` - Theme context logic
   - `/data` - Static data that shouldn't be publicly accessible. Rarely used
   - `/i18n` - Logic/configuration for `next-intl`
+  - `/instrumentation` - New Relic agent wiring, loaded via `src/instrumentation.ts`
   - `/lib` - Non-UI related sitewide logic (ex. hooks)
-  - `/messages` - Internationalized message files
-  - `/middleware` - Middleware configuration and tests
-  - `/scripts` - Arbitrary scripts. Will likely be merged with `./scripts` (scripts folder in root directory)
+  - `/messages` - Internationalized message files, one directory per namespace
+  - `/proxy` - Proxy configuration and tests, loaded via `src/proxy.ts` (Next.js 16's replacement for `middleware.ts`)
   - `/test` - Extra utility for testing
 
 ### Architecture (Or where do I put components?)
@@ -118,7 +119,7 @@ Logic that isn't generic enough to be placed in one of the "generic" folders (`.
 └── src/
     ├── app/
     │   └── login/
-    │       ├── page.test..tsx
+    │       ├── page.test.tsx
     │       ├── page.tsx
     │       └── components/
     │           ├── login-modal.test.tsx
@@ -130,16 +131,16 @@ Logic that isn't generic enough to be placed in one of the "generic" folders (`.
     │       ├── button.test.tsx
     │       └── button.tsx
     ├── lib/
-    │   ├── db/
-    │   │   └── schema/
-    │   │       ├── model.ts
-    │   │       └── index.ts
     │   ├── types/
     │   │   └── auth.ts
+    │   ├── utils/
+    │   │   └── ...
     │   └── actions/
     │       └── auth.ts
     └── ...
 ```
+
+The database schema is not in this workspace — it lives in [`packages/db`](../../packages/db) and is consumed via `@nightcrawler/db`.
 
 Note that there are some older pieces of logic (namely the components for the landing page) that do not abide by this. We ask you to politely ignore this for now -- it'll be refactored in the future at some point.
 
@@ -165,8 +166,8 @@ All internationalization is handled via `next-intl`.
 
 If you'd like to:
 
-- Add a new language: refer to `./src/lib/locales.ts` and `./src/lib/locale-utils.ts`, then update any necessary `next-intl` message files accordingly (see next)
-- Add a new translation: refer to the `./src/messages/` folder
+- Add a new language: refer to `./src/lib/locales.ts` and `./src/i18n/config.ts`, then update any necessary `next-intl` message files accordingly (see next)
+- Add a new translation: refer to the `./src/messages/` folder. Each namespace is its own directory containing one JSON file per locale, and a new namespace must be registered in `./src/i18n/message-files.ts` before it loads.
 
 ### Styling & Branding
 
@@ -174,12 +175,12 @@ We utilize multiple different UI libraries as well as Tailwind v4. Global styles
 
 #### Background Colors
 
-The site uses two separate background colors:
+The site reads its background from two separate CSS variables, both currently `#ffffff`:
 
-- **Marketing Site Background** (`#fcfbf8`): Used for all unauthenticated routes (marketing site pages under `[locale]` routes). Defined as `--background` CSS variable in `globals.css`.
-- **Platform Background** (`#ffffff`): Used for all authenticated routes (platform pages like `/`, `/account`, etc.). Defined as `--background-platform` CSS variable in `globals.css` and can be used with the `bg-background-platform` Tailwind class.
+- **Marketing Site Background**: Used for all unauthenticated routes (marketing site pages under `[locale]` routes). Defined as the `--background` CSS variable in `globals.css`.
+- **Platform Background**: Used for all authenticated routes (platform pages like `/`, `/account`, etc.). Defined as the `--background-platform` CSS variable in `globals.css` and can be used with the `bg-background-platform` Tailwind class.
 
-Both colors can be modified in `./src/app/globals.css` in the `:root` CSS variables section.
+Both colors can be modified in `./src/app/globals.css` in the `:root` CSS variables section, which also records the historical values each variable used to hold.
 
 ## 📝 Contributing
 

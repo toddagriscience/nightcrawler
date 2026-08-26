@@ -2,10 +2,9 @@
 description: Commit and Push Reliability Workflow
 ---
 
-1. Before any commit or push flow that uses `--no-verify`, automatically run:
+See [`AGENTS.md` → Making a pull request](../../AGENTS.md#making-a-pull-request)
+and [`AGENTS.md` → Sandbox fallbacks](../../AGENTS.md#sandbox-fallbacks).
 
-   `cd frontend && rm -rf .next && bun i`
-
-2. If that command fails because of sandbox or permissions, rerun it with elevated permissions.
-3. If `git add`/`git commit` fails with `.git/index.lock` permission errors in the sandbox, rerun the same git command with elevated permissions.
-4. If `git push` fails in sandbox with GitHub host/network resolution errors, rerun the push with elevated permissions.
+The rule this workflow used to state — clear the build cache before any
+`--no-verify` commit or push — lives there now, with the correct path
+(`rm -rf apps/site/.next && bun install` from the repository root).

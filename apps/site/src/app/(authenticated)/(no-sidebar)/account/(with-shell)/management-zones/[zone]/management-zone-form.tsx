@@ -11,9 +11,7 @@ import type {
   ManagementZoneSelect,
 } from '@/lib/types/db';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { BiArrowBack } from 'react-icons/bi';
 import { updateManagementZone } from './actions';
 
 export default function ManagementZoneForm({
@@ -32,7 +30,9 @@ export default function ManagementZoneForm({
   } = useForm<ManagementZoneInsert>({
     defaultValues: {
       ...zone,
-      location: [0, 0],
+      // Seed from the stored point, or every save would overwrite the real
+      // coordinates with (0,0) even when the user never touched either input.
+      location: zone.location ?? [0, 0],
       // react-hook-form doesn't automatically handle Date, see each input for more context
       npkLastUsed: undefined,
       rotationYear: undefined,
@@ -88,7 +88,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.0')}
+            {...register('location.0', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
         <div>
@@ -104,7 +106,9 @@ export default function ManagementZoneForm({
             type="number"
             step="any"
             disabled={!canEdit}
-            {...register('location.1')}
+            {...register('location.1', {
+              setValueAs: (value) => (value === '' ? undefined : Number(value)),
+            })}
           />
         </div>
       </div>
@@ -122,7 +126,9 @@ export default function ManagementZoneForm({
             id="rotationYear"
             type="date"
             disabled={!canEdit}
-            {...register('rotationYear', { valueAsDate: true })}
+            {...register('rotationYear', {
+              setValueAs: (value) => (value === '' ? null : new Date(value)),
+            })}
             defaultValue={zone.rotationYear?.toISOString().split('T')[0]}
           />
         </div>
@@ -139,7 +145,7 @@ export default function ManagementZoneForm({
             type="date"
             disabled={!canEdit}
             {...register('npkLastUsed', {
-              valueAsDate: true,
+              setValueAs: (value) => (value === '' ? null : new Date(value)),
             })}
             defaultValue={zone.npkLastUsed?.toISOString().split('T')[0]}
           />
@@ -197,12 +203,6 @@ export default function ManagementZoneForm({
               <p className="text-sm text-[#ff4d00]">{errors.root.message}</p>
             </div>
           )}
-          <Link
-            href={'/account/management-zones'}
-            className="flex flex-row items-center gap-2 text-sm font-light hover:text-foreground/70 transition-all duration-300 ease-in-out"
-          >
-            <BiArrowBack className="size-5" /> Back to zones
-          </Link>
         </div>
       </div>
     </form>
