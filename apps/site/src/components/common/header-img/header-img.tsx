@@ -26,9 +26,9 @@ const CAPTION_TRACKING =
 /**
  * HeaderImg component for displaying a header image on pages
  *
- * @param props.caption - Visible credit rendered under the image, tied to it by
- * a `figure`. Describe the photo in `alt` and keep the caption for context, so a
- * screen reader does not hear the same thing twice.
+ * When provided, `caption` renders a visible credit under the image, tied to it
+ * with a `figure`. Describe the photo in `alt` and keep the caption for context,
+ * so a screen reader does not hear the same thing twice.
  * @returns {JSX.Element} - The header image component
  */
 export default function HeaderImg({
