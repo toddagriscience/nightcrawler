@@ -79,6 +79,29 @@ describe('AboutLanding', () => {
     expect(image).toHaveAttribute('sizes', '(min-width: 768px) 580px, 100vw');
   });
 
+  it('captions the header photo without repeating its alt text', () => {
+    const { container } = renderWithNextIntl(<AboutLanding />);
+
+    const caption = screen.getByText('Image: Partner Farm in Grass Valley, CA');
+    expect(caption.tagName).toBe('FIGCAPTION');
+
+    const image = container.querySelector(
+      'img[src="/marketing/who-we-are-header.webp"]'
+    );
+    expect(image).not.toBeNull();
+    expect(caption.closest('figure')).toContainElement(
+      image as HTMLElement | null
+    );
+
+    // The alt used to be the hardcoded, untranslated "Meadow". It describes the
+    // photo; the caption says where it was taken. Neither should restate the
+    // other, or the image is announced twice.
+    expect(image).toHaveAttribute(
+      'alt',
+      'A grass path winding between fruit trees on a partner farm'
+    );
+  });
+
   it('never skips a heading level', () => {
     renderWithNextIntl(<AboutLanding />);
 

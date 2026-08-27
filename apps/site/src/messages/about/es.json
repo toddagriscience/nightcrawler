@@ -10,6 +10,10 @@
       "imageAlt": "Familia cultivando un jardín juntos"
     },
     "missionStatement": "Estamos creando granjas generativas, pero también consideraremos cumplida nuestra misión si nuestro trabajo ayuda a otros a lograr este resultado.",
+    "headerImage": {
+      "alt": "Un sendero de hierba que serpentea entre árboles frutales en una granja asociada.",
+      "caption": "Imagen: Granja asociada en Grass Valley, CA"
+    },
     "competencies": {
       "title": "Todd se diferencia por una combinación de tres competencias clave.",
       "items": [

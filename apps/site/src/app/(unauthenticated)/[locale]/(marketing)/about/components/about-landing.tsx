@@ -82,7 +82,8 @@ export default function AboutLanding({
           <div className="mt-20 md:mt-27">
             <HeaderImg
               src="/marketing/who-we-are-header.webp"
-              alt="Meadow"
+              alt={t('headerImage.alt')}
+              caption={t('headerImage.caption')}
               overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
             />
           </div>
