@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { MARKETING_PILL_LINK_CLASSNAME } from '@/app/(unauthenticated)/[locale]/(marketing)/components/marketing-blocks/marketing-pill-link';
 import { CURSOR_LABEL_ATTRIBUTE } from '@/components/common/cursor-follower/constants';
 import { CursorFollower } from '@/components/common/cursor-follower/cursor-follower';
 import { Link } from '@/i18n/config';
@@ -366,7 +367,7 @@ export function ArticleIndex({
             <Link
               href={viewMoreHref}
               scroll={false}
-              className="rounded-[50px] border-[0.75px] border-[#848484] px-7 py-2.5 text-[14px] leading-none text-[#181818] transition-colors hover:bg-black/5"
+              className={MARKETING_PILL_LINK_CLASSNAME}
             >
               {t('viewMore')}
             </Link>
