@@ -79,26 +79,30 @@ describe('AboutLanding', () => {
     expect(image).toHaveAttribute('sizes', '(min-width: 768px) 580px, 100vw');
   });
 
-  it('captions the header photo without repeating its alt text', () => {
-    const { container } = renderWithNextIntl(<AboutLanding />);
+  it('captions the vision photo without repeating its alt text', () => {
+    renderWithNextIntl(<AboutLanding />);
 
     const caption = screen.getByText('Image: Partner Farm in Grass Valley, CA');
+    const image = screen.getByRole('img', { name: /family/i });
+
+    // A screen reader announces the two together only when they share a figure.
     expect(caption.tagName).toBe('FIGCAPTION');
+    expect(caption.closest('figure')).toContainElement(image);
 
-    const image = container.querySelector(
-      'img[src="/marketing/who-we-are-header.webp"]'
-    );
-    expect(image).not.toBeNull();
-    expect(caption.closest('figure')).toContainElement(
-      image as HTMLElement | null
-    );
+    // The alt describes the photo, the caption says where it was taken; neither
+    // restates the other, or the image is announced twice.
+    expect(image).toHaveAttribute('alt', 'Family gardening together');
+  });
 
-    // The alt used to be the hardcoded, untranslated "Meadow". It describes the
-    // photo; the caption says where it was taken. Neither should restate the
-    // other, or the image is announced twice.
-    expect(image).toHaveAttribute(
+  it('translates the header photo alt text', () => {
+    const { container } = renderWithNextIntl(<AboutLanding />);
+
+    // It was the hardcoded, untranslated "Meadow".
+    expect(
+      container.querySelector('img[src="/marketing/who-we-are-header.webp"]')
+    ).toHaveAttribute(
       'alt',
-      'A grass path winding between fruit trees on a partner farm'
+      'A grass path winding between fruit trees on a meadow'
     );
   });
 
