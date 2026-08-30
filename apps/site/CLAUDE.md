@@ -48,7 +48,7 @@ when you bump them.
 ### Animation
 
 - `framer-motion` `12.38`
-- `@studio-freight/lenis` `1.0` for smooth scrolling
+- `lenis` `1.3` for smooth scrolling
 - `embla-carousel-react` `8.6`
 
 ### Development
