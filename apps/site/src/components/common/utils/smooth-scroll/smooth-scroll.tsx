@@ -3,7 +3,6 @@
 'use client';
 
 import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
 import { logger } from '@/lib/logger';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
