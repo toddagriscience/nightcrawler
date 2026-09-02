@@ -43,13 +43,12 @@ describe('Careers landing view', () => {
     const h1Element = screen.getByRole('heading', { level: 1 });
     expect(mainLandmark).toContainElement(h1Element);
 
-    const valuesLink = screen.getByRole('link', { name: 'View careers' });
-    expect(valuesLink).toHaveAttribute('href', '/careers/search');
-
-    const listingLink = screen.getByRole('link', {
-      name: 'View careers →',
+    // Hero secondary CTA and the closing pill now share a label (arrows dropped).
+    const careersLinks = screen.getAllByRole('link', { name: 'View careers' });
+    expect(careersLinks).toHaveLength(2);
+    careersLinks.forEach((link) => {
+      expect(link).toHaveAttribute('href', '/careers/search');
     });
-    expect(listingLink).toHaveAttribute('href', '/careers/search');
 
     screen.getAllByRole('heading', { level: 2 }).forEach((heading) => {
       expect(mainLandmark).toContainElement(heading);

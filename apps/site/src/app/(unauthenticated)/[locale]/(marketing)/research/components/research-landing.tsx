@@ -11,12 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
-import { Link } from '@/i18n/config';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRef, type ReactNode } from 'react';
-import { HiArrowLongRight } from 'react-icons/hi2';
+import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
 
 /**
  * Research page body (formerly What We Do). Client-side because of the parallax
@@ -222,17 +221,13 @@ export default function ResearchLanding({
             ))}
           </div>
           {/* Build a Better Farm Section */}
-          <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
-            <Link
-              href="index/introducing-iris"
-              className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
-            >
-              {t('buildABetterFarm.title')}
-              <span className="mt-1">
-                <HiArrowLongRight className="size-12" />
-              </span>
-            </Link>
-          </div>
+          <MarketingCenteredPageCta
+            ctaHref="/index/introducing-iris"
+            ctaLabel={t('buildABetterFarm.cta')}
+            heading={t('buildABetterFarm.title')}
+            headingId="research-footer-cta-heading"
+            sectionId="research-footer-cta"
+          />
           {/* Highlighted Articles Section */}
           {highlights}
           {/* Disclaimer Section */}

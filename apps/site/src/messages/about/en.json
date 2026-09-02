@@ -49,7 +49,8 @@
       "description": "We’re fortunate to be supported by partners who share our vision. Their backing helps us advance sustainable agriculture."
     },
     "navigation": {
-      "whatWeDo": "What we do"
+      "whatWeDo": "What we do",
+      "whatWeDoCta": "Explore our research"
     }
   }
 }
