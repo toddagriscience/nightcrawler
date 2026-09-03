@@ -171,6 +171,27 @@ describe('ArticleIndex', () => {
     expect(screen.getByText('Evil Row').closest('a')).toBeNull();
     expect(container.querySelector('a[href^="javascript:" i]')).toBeNull();
   });
+
+  it('styles "View more" as the shared 14px outline pill', async () => {
+    // The button only renders past the first page, so overflow PAGE_SIZE (9).
+    renderWithNextIntl(
+      await render({
+        articles: Array.from({ length: 10 }, (_, index) => ({
+          ...ITEMS[0],
+          _id: `r${index}`,
+          title: `Research Row ${index}`,
+          slug: { current: `research-row-${index}` },
+        })),
+      })
+    );
+
+    const viewMore = screen.getByRole('link', { name: 'View more' });
+    expect(viewMore).toHaveAttribute('href', '/research/index?count=10');
+    // Asserts the traits the issue calls for -- an outline pill at 14px --
+    // rather than the shared constant itself, so a palette tweak upstream does
+    // not break this test while hand-written classes still would.
+    expect(viewMore).toHaveClass('rounded-full', 'border', 'text-sm');
+  });
 });
 
 describe('ArticleIndex cursor follower', () => {
