@@ -46,7 +46,11 @@
     },
     "partners": {
       "title": "Respaldado por socios increíbles",
-      "description": "Tenemos la suerte de contar con el apoyo de socios que comparten nuestra visión. Su respaldo nos ayuda a impulsar la agricultura sostenible."
+      "description": "Tenemos la suerte de contar con el apoyo de socios que comparten nuestra visión. Su respaldo nos ayuda a impulsar la agricultura sostenible.",
+      "tagline": {
+        "0": "Y otros",
+        "1": "socios destacados"
+      }
     },
     "navigation": {
       "whatWeDo": "Qué hacemos"
