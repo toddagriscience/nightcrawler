@@ -46,14 +46,27 @@
   --color-background: var(--background);
   --color-background-platform: var(--background-platform);
   --color-secondary: var(--background-secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-popover: var(--background);
   --color-popover-foreground: var(--popover-foreground);
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+  /* --color-input is intentionally NOT mapped. shadcn uses `input` as a
+   * border token (border-input on inputs and outline buttons), but --input
+   * above is a white control FILL, so mapping it would paint those borders
+   * white and erase them. Unmapped, border-input stays inert and the
+   * borders keep their currentColor fallback. */
   --font-sans: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 }

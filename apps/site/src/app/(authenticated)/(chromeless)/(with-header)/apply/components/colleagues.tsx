@@ -283,7 +283,7 @@ export default function Colleagues() {
                             <SelectItem
                               key={role.role}
                               value={role.role}
-                              className="text-muted-foreground/70 font-thin hover:cursor-pointer hover:bg-[#d9d9d9]/50"
+                              className="text-muted-foreground font-thin hover:cursor-pointer hover:bg-[#d9d9d9]/50"
                             >
                               {role.role} - {role.description}
                             </SelectItem>

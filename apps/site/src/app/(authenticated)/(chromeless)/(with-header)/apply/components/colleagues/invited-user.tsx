@@ -69,6 +69,7 @@ export default function InvitedUser({
           </span>
           {canEditFarm && !isVerified && (
             <Button
+              variant="ghost"
               onClick={handleResend}
               className="hover:cursor-pointer hover:text-green-500"
               disabled={!isResendActive}
