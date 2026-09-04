@@ -34,13 +34,13 @@ export default function SelfSelectAdmin({
               {...register('isAdmin')}
               defaultChecked={getValues().isAdmin}
             />
-            <Label className="text-sm text-muted-foreground/70 leading-tight">
+            <Label className="text-sm text-muted-foreground leading-tight">
               I am an administrator
             </Label>
           </Field>
         </form>
       ) : (
-        <p className="mb-8 text-sm text-muted-foreground/70">
+        <p className="mb-8 text-sm text-muted-foreground">
           Your role is {role}. Only administrators can change farm permissions.
         </p>
       )}
