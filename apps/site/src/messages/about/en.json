@@ -46,7 +46,11 @@
     },
     "partners": {
       "title": "Backed by incredible partners",
-      "description": "We’re fortunate to be supported by partners who share our vision. Their backing helps us advance sustainable agriculture."
+      "description": "We’re fortunate to be supported by partners who share our vision. Their backing helps us advance sustainable agriculture.",
+      "tagline": {
+        "0": "And Other",
+        "1": "Notable Partners"
+      }
     },
     "navigation": {
       "whatWeDo": "What we do"
