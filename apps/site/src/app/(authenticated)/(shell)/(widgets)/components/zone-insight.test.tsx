@@ -14,29 +14,41 @@ describe('ZoneInsight', () => {
     );
 
     expect(
-      screen.getByText('Healthy baseline mineral profile.')
+      screen.getByText(
+        'Highest pH in the set, with lower zinc and manganese than most zones. Calcium, magnesium, and potassium are moderate.'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText('Recommended action')).toBeInTheDocument();
     expect(
-      screen.getByText('Maintain calcium and organic matter.')
+      screen.getByText(
+        'Focus on nutrient availability at the higher pH level, especially zinc and manganese. Compare this zone with neighboring fields before making a field-specific adjustment.'
+      )
     ).toBeInTheDocument();
   });
 
   it('renders summary without an action block', () => {
-    render(<ZoneInsight summary="Healthy baseline mineral profile." />);
+    render(
+      <ZoneInsight summary="Highest pH in the set, with lower zinc and manganese than most zones. Calcium, magnesium, and potassium are moderate." />
+    );
 
     expect(
-      screen.getByText('Healthy baseline mineral profile.')
+      screen.getByText(
+        'Highest pH in the set, with lower zinc and manganese than most zones. Calcium, magnesium, and potassium are moderate.'
+      )
     ).toBeInTheDocument();
     expect(screen.queryByText('Recommended action')).toBeNull();
   });
 
   it('renders action without a summary', () => {
-    render(<ZoneInsight action="Maintain calcium and organic matter." />);
+    render(
+      <ZoneInsight action="Focus on nutrient availability at the higher pH level, especially zinc and manganese. Compare this zone with neighboring fields before making a field-specific adjustment." />
+    );
 
     expect(screen.getByText('Recommended action')).toBeInTheDocument();
     expect(
-      screen.getByText('Maintain calcium and organic matter.')
+      screen.getByText(
+        'Focus on nutrient availability at the higher pH level, especially zinc and manganese. Compare this zone with neighboring fields before making a field-specific adjustment.'
+      )
     ).toBeInTheDocument();
   });
 
