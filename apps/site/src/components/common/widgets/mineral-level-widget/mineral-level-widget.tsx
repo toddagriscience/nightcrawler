@@ -51,7 +51,7 @@ export default function MineralLevelWidget({
         fill="#0A0A0A"
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize="16"
+        fontSize="14"
       >
         {content}
       </text>
