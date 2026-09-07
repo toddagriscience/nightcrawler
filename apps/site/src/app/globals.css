@@ -2,6 +2,11 @@
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
+/* Lenis' own styles, required by the smooth scrolling in `SmoothScroll`.
+   Imported here rather than from the component so there is a single import
+   site: `SmoothScroll` is mounted from several layouts plus `not-found.tsx`,
+   and this keeps global CSS at the global level as the rest of the app does. */
+@import 'lenis/dist/lenis.css';
 
 /* Custom Wordmark Class */
 .wordmark {

@@ -7,7 +7,7 @@ import SmoothScroll from './smooth-scroll';
 
 const destroy = vi.fn();
 
-vi.mock('@studio-freight/lenis', () => ({
+vi.mock('lenis', () => ({
   default: class {
     raf = vi.fn();
     scrollTo = vi.fn();
@@ -58,6 +58,6 @@ describe('SmoothScroll', () => {
 
     unmount();
 
-    expect(window.lenis).toBeUndefined();
+    expect(window.__lenis).toBeUndefined();
   });
 });
