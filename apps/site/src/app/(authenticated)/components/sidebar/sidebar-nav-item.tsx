@@ -36,8 +36,8 @@ export default function SidebarNavItem({
     flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors w-full text-left
     ${
       isActive
-        ? 'bg-accent text-foreground font-semibold'
-        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+        ? 'bg-accent/85 text-foreground font-semibold'
+        : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground'
     }
   `;
 

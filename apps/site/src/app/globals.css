@@ -109,6 +109,77 @@ body:has(.authenticated-root) {
   background: var(--background-platform);
 }
 
+/*
+ * Iris platform component style: slightly-rounded (Codex / vercel.com) + flat.
+ * Scoped to authenticated routes only. Fonts and colors are intentionally unchanged,
+ * and the shared shadcn primitives in src/components/ui are not modified, so the
+ * marketing site is untouched.
+ */
+
+/*
+ * Normalize every rounded utility to a uniform, slightly-rounded radius across the
+ * platform (buttons included). rounded-full is preserved so switches, avatars,
+ * carousel arrows, and the spinner stay circular.
+ */
+.authenticated-root [class*='rounded']:not([class*='rounded-full']) {
+  border-radius: 0.375rem !important;
+}
+
+/*
+ * Flatten Tailwind drop shadows for the flat Codex look. Overriding --tw-shadow
+ * (rather than box-shadow) leaves the ring shadow vars intact, so focus rings
+ * (ring-*) still render for accessibility.
+ */
+.authenticated-root [class*='shadow-']:not([class*='shadow-none']) {
+  --tw-shadow: 0 0 #0000;
+}
+
+/*
+ * Soften the full-strength accent (tan/brown) hover + highlight backgrounds used
+ * by shared components (Button outline/ghost `hover:bg-accent`, SelectItem and
+ * menu items `focus:bg-accent`) so they are not so heavy on the platform.
+ * The `/NN` opacity utilities (e.g. the sidebar's hover:bg-accent/60) are distinct
+ * classes and are intentionally left untouched.
+ */
+.authenticated-root .hover\:bg-accent:hover,
+.authenticated-root .focus\:bg-accent:focus {
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent) 60%,
+    transparent
+  ) !important;
+}
+
+/*
+ * Lighter platform scrollbars. `scrollbar-color` inherits, so this covers the
+ * inner scroll containers (main content, search results). The WebKit overrides
+ * cover the html/body page scrollbar on scrolling authenticated routes. Grey
+ * matches the #D9D9D9 border color used across the platform chrome.
+ */
+.authenticated-root {
+  scrollbar-color: #d9d9d9 transparent;
+}
+
+html.authenticated-root::-webkit-scrollbar-thumb,
+body.authenticated-root::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+}
+
+html.authenticated-root::-webkit-scrollbar-thumb:hover,
+body.authenticated-root::-webkit-scrollbar-thumb:hover {
+  background-color: #c4c4c4;
+}
+
+/*
+ * The platform shell fills the full viewport width (its inner containers own
+ * their scrolling and html never scrolls), so drop the reserved scrollbar gutter
+ * that otherwise leaves empty space to the right of the collapsed search rail.
+ * Marketing keeps `scrollbar-gutter: stable` for its page-to-page consistency.
+ */
+html.authenticated-root {
+  scrollbar-gutter: auto;
+}
+
 * {
   font-family: var(--font-neue-haas), Arial, sans-serif;
 }

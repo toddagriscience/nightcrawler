@@ -85,7 +85,7 @@ export function RemindersList({ reminders }: RemindersListProps) {
       <div
         role="status"
         aria-live="polite"
-        className="py-16 text-center rounded-xl bg-[var(--color-background)]/30 border border-[var(--color-border)]/50"
+        className="py-16 text-center rounded-xl bg-[var(--color-background)]/30 border border-foreground/15"
       >
         <svg
           aria-hidden="true"
@@ -117,7 +117,7 @@ export function RemindersList({ reminders }: RemindersListProps) {
         {upcoming.length > 0 && (
           <section>
             <SectionHeader title="Upcoming" count={upcoming.length} />
-            <div className="rounded-xl bg-[var(--color-surface)]/40 border border-[var(--color-border)]/60 overflow-hidden">
+            <div className="rounded-xl bg-[var(--color-surface)]/40 border border-foreground/15 overflow-hidden">
               {upcoming.map((r) => (
                 <ReminderCard key={r.id} reminder={r} onEdit={handleEdit} />
               ))}
@@ -128,7 +128,7 @@ export function RemindersList({ reminders }: RemindersListProps) {
         {later.length > 0 && (
           <section>
             <SectionHeader title="Later" count={later.length} />
-            <div className="rounded-xl bg-[var(--color-surface)]/40 border border-[var(--color-border)]/60 overflow-hidden">
+            <div className="rounded-xl bg-[var(--color-surface)]/40 border border-foreground/15 overflow-hidden">
               {later.map((r) => (
                 <ReminderCard key={r.id} reminder={r} onEdit={handleEdit} />
               ))}

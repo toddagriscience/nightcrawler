@@ -11,7 +11,6 @@
 import { useRef, useState } from 'react';
 import { BiDockLeft, BiUpArrowAlt } from 'react-icons/bi';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/order/utils';
 import { useOrder } from '@/lib/order/hooks';
 import Link from 'next/link';
@@ -59,14 +58,14 @@ export function SearchPanelBody() {
     <div className="flex h-full flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-end px-5 py-4">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
+          type="button"
           onClick={collapsePanel}
           aria-label="Collapse search results"
+          className="flex size-8 shrink-0 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-[#D9D9D9]/20 hover:text-foreground"
         >
-          <BiDockLeft className="size-4" />
-        </Button>
+          <BiDockLeft className="size-5" />
+        </button>
       </div>
 
       {/* Results */}
