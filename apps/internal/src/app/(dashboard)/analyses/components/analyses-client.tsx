@@ -232,7 +232,7 @@ export default function AnalysesClient({
               <TableHead>Zone</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Summary</TableHead>
-              <TableHead className="w-25">Actions</TableHead>
+              <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
