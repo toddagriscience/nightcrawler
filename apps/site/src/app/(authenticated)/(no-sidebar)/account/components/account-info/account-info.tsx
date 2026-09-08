@@ -144,7 +144,7 @@ export function AccountInfoRow({
       >
         <span className="text-muted-foreground text-sm mx-0.5">{label}</span>
         <div className="flex items-center gap-1.5">
-          <span className="text-sm text-muted-foreground/70 mx-0.5">
+          <span className="text-sm text-muted-foreground mx-0.5">
             {renderedRightContent}
           </span>
         </div>

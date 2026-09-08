@@ -81,7 +81,7 @@ export default function Certifications() {
                 <Input
                   type="date"
                   {...register('GAPDate')}
-                  className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+                  className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin"
                 />
               </div>
             </>
@@ -135,7 +135,7 @@ export default function Certifications() {
               <Input
                 type="date"
                 {...register('localInspectionDate')}
-                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin"
               />
             </div>
           )}
@@ -188,7 +188,7 @@ export default function Certifications() {
               <Input
                 type="date"
                 {...register('organicDate')}
-                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin"
               />
             </div>
           )}
@@ -241,7 +241,7 @@ export default function Certifications() {
               <Input
                 type="date"
                 {...register('biodynamicDate')}
-                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin"
               />
             </div>
           )}
@@ -297,7 +297,7 @@ export default function Certifications() {
               <Input
                 type="date"
                 {...register('regenerativeOrganic')}
-                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin"
+                className="w-fit ml-6 border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin"
               />
             </div>
           )}

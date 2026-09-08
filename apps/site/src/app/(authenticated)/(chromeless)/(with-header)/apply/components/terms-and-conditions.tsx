@@ -68,6 +68,7 @@ export default function TermsAndConditions() {
               and Bank Information before submitting your application.
             </p>
             <Button
+              variant="ghost"
               className="h-min p-0 hover:cursor-pointer"
               onClick={() => router.refresh()}
             >
