@@ -2,6 +2,7 @@
 
 'use client';
 
+import PageHeader from '@/components/common/page-header/page-header';
 import SubmitButton from '@/components/common/utils/submit-button/submit-button';
 import { Field, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,10 @@ import { FormFooterCheckbox } from './form-footer-checkbox';
 export interface DynamicFormProps {
   /** CMS form definition */
   form: SanityForm;
+  /** Optional PageHeader title override */
+  title?: string;
+  /** Optional PageHeader subtitle; when set, CMS description is not also shown as body copy */
+  subtitle?: string;
 }
 
 /**
@@ -43,11 +48,11 @@ function splitCopyParagraphs(copy: string): string[] {
 }
 
 /**
- * Renders a Sanity-defined access request form on a single centered page.
+ * Renders a Sanity-defined access request form: centered title, left-aligned body.
  *
- * @param props - CMS form document
+ * @param props - CMS form document and optional header copy
  */
-export function DynamicForm({ form }: DynamicFormProps) {
+export function DynamicForm({ form, title, subtitle }: DynamicFormProps) {
   const t = useTranslations('formsPage');
   const searchParams = useSearchParams();
   const sourceArticleSlug = searchParams.get('ref') ?? undefined;
@@ -108,13 +113,11 @@ export function DynamicForm({ form }: DynamicFormProps) {
 
   if (submitted) {
     return (
-      <main className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-6 py-16 text-center md:px-10">
-        <h1 className="max-w-2xl text-3xl font-normal md:text-4xl">
-          {form.successTitle ?? t('defaultSuccessTitle')}
-        </h1>
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground">
-          {form.successMessage ?? t('defaultSuccessMessage')}
-        </p>
+      <main className="mx-auto flex min-h-[60vh] w-full max-w-[910px] flex-col items-center justify-center px-6 py-16 text-center md:px-10">
+        <PageHeader
+          title={form.successTitle ?? t('defaultSuccessTitle')}
+          subtitle={form.successMessage ?? t('defaultSuccessMessage')}
+        />
       </main>
     );
   }
@@ -123,17 +126,20 @@ export function DynamicForm({ form }: DynamicFormProps) {
     footerCheckboxes.length > 0 || footerTextParagraphs.length > 0;
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col items-center px-6 py-16 text-center md:px-10 md:py-24">
-      <h1 className="max-w-2xl text-3xl font-normal leading-tight md:text-5xl md:leading-tight">
-        {form.title}
-      </h1>
+    <main className="mx-auto flex w-full flex-col items-center px-6 pt-16 pb-16 md:px-10 md:pt-20 md:pb-24 lg:pt-24">
+      <PageHeader
+        className="max-w-[910px]"
+        title={title ?? form.title}
+        subtitle={subtitle}
+        titleClassName="max-w-none text-wrap"
+      />
 
-      {descriptionParagraphs.length > 0 ? (
-        <div className="mt-16 flex w-full max-w-2xl flex-col gap-8 md:mt-24 md:gap-10">
+      {subtitle === undefined && descriptionParagraphs.length > 0 ? (
+        <div className="mt-16 flex w-full max-w-2xl flex-col gap-8 text-left md:mt-24 md:gap-10">
           {descriptionParagraphs.map((paragraph) => (
             <p
               key={paragraph}
-              className="text-base leading-relaxed text-foreground md:text-lg"
+              className="text-base leading-relaxed text-foreground md:text-[16px]/[28px]"
             >
               {paragraph}
             </p>

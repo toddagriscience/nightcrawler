@@ -1,21 +1,20 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import PageHeader from '@/components/common/page-header/page-header';
+import { getTranslations } from 'next-intl/server';
 import type { ReactElement, ReactNode } from 'react';
-
 import {
   MarketingBenefitsColumns,
   MarketingBridgeStatement,
   MarketingCenteredPageCta,
   MarketingFullWidthImage,
   MarketingImageTextSplit,
-  MarketingPageHero,
   MarketingQuoteSection,
   MarketingValuesOperatingStack,
 } from '../../components/marketing-blocks';
 import { NewsHighlightTilesSection } from '../../components/news-highlight-tiles/news-highlight-tiles';
 import { CAREERS_LANDING_MEDIA } from '../constants/careers-landing-media';
 import type { CareersLandingCopy } from '../types/careers-landing-copy';
-import { getTranslations } from 'next-intl/server';
 
 export type { CareersLandingCopy } from '../types/careers-landing-copy';
 
@@ -52,18 +51,18 @@ export function CareersLandingView({
 
   return (
     <main className="text-foreground" id="careers-overview">
-      <div className="mx-auto flex max-w-[1100px] flex-col gap-20 px-4 pt-12 md:gap-28 md:px-6 md:pt-16">
-        <MarketingPageHero
-          kicker={hero.kicker}
-          secondaryCta={{
-            href: hero.valuesAnchorHref,
-            label: hero.valuesLinkLabel,
-          }}
-          subtitle={hero.subtitle}
+      <div className="mx-auto flex max-w-[1100px] flex-col gap-0 px-4 pt-16 md:gap-20  md:px-6 md:pt-20 lg:pt-24">
+        <PageHeader
+          caption={hero.kicker}
           title={hero.title}
-          titleId="careers-hub-heading"
+          subtitle={hero.subtitle}
+          subtitleClassName="max-w-none md:whitespace-nowrap"
+          button={{
+            href: hero.valuesAnchorHref,
+            text: hero.valuesLinkLabel,
+          }}
         />
-        <div className="mt-12 md:mt-20">
+        <div className="mb-15 md:mb-12">
           <MarketingBridgeStatement text={bridgeStatement} />
         </div>
         <MarketingValuesOperatingStack

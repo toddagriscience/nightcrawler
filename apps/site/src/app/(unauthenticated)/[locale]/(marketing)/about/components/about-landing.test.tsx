@@ -48,10 +48,10 @@ describe('AboutLanding', () => {
     expect(screen.getByText('Company')).toBeInTheDocument();
 
     expect(
-      screen.getAllByText(
-        /We believe sustainable agriculture is the foundation/i
+      screen.getByText(
+        'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
-    ).not.toHaveLength(0);
+    ).toHaveClass('max-w-none', 'md:whitespace-nowrap');
   });
 
   it('renders vision section with image and CTA', () => {

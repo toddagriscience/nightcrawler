@@ -26,12 +26,12 @@ export default async function CareersIndexPage({
   return (
     <section
       aria-labelledby="careers-at-todd-heading"
-      className="mx-auto max-w-[1200px] px-4 pb-16 md:px-6"
+      className="mx-auto max-w-[1200px] px-4 pb-16 pt-16 md:px-6 md:pt-20 lg:pt-24"
     >
-      <div className="fadeInAnimation relative mx-auto mt-12 w-full max-w-4xl">
+      <div className="fadeInAnimation relative mx-auto w-full max-w-4xl">
         <h1
           id="careers-at-todd-heading"
-          className="mb-14 text-center text-[64px] font-normal leading-tight tracking-tight text-black md:mb-16"
+          className="mb-14 text-center text-[48px]/[64px] font-normal md:mb-16"
         >
           {t('metadata.title')}
         </h1>

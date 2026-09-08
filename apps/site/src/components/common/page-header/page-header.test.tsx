@@ -20,11 +20,20 @@ describe('PageHeader', () => {
     const root = container.firstElementChild;
     expect(root).toHaveClass(
       'flex',
+      'w-full',
       'flex-col',
       'justify-center',
       'items-center',
-      'max-w-[910px]'
+      'md:max-w-[910px]'
     );
+  });
+
+  it('uses the inner-page width when narrow', () => {
+    const { container } = render(
+      <PageHeader narrow subtitle="Sub" title="Main" />
+    );
+    expect(container.firstElementChild).toHaveClass('md:max-w-[610px]');
+    expect(container.firstElementChild).not.toHaveClass('md:max-w-[910px]');
   });
 
   it('renders the subtitle as a paragraph, not a heading', () => {
@@ -35,14 +44,59 @@ describe('PageHeader', () => {
     // the <h1> skipped a level, and any page that then opened a section with
     // <h2> produced h1 -> h3 -> h2 — an outline that goes backwards.
     expect(subtitle.tagName).toBe('P');
-    expect(subtitle).toHaveClass(
-      'text-base',
-      'md:text[17px]/[28px]',
-      'w-[80%]',
-      'sm:w-full'
-    );
+    expect(subtitle).toHaveClass('max-w-[37rem]');
+    expect(subtitle.className).toContain('clamp(');
 
     const title = screen.getByRole('heading', { level: 1 });
-    expect(title).toHaveClass('text-[33px]', 'md:text-5xl', 'lg:text-[64px]');
+    expect(title).toHaveClass(
+      'w-[70%]',
+      'sm:w-full',
+      'max-w-none',
+      'md:max-w-[910px]'
+    );
+    expect(title.className).toContain('clamp(');
+  });
+
+  it('applies title and subtitle class overrides', () => {
+    render(
+      <PageHeader
+        title="Job title"
+        subtitle="Team — Remote"
+        titleClassName="text-[48px]"
+        subtitleClassName="max-w-none text-[16px]"
+      />
+    );
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass(
+      'text-[48px]'
+    );
+    expect(screen.getByText('Team — Remote')).toHaveClass(
+      'max-w-none',
+      'text-[16px]'
+    );
+  });
+
+  it('allows a wider root max-width override', () => {
+    const { container } = render(
+      <PageHeader className="max-w-[1110px]" title="Wide title" />
+    );
+
+    expect(container.firstElementChild).toHaveClass('max-w-[1110px]');
+  });
+
+  it('opens outbound button hrefs in a new tab', () => {
+    render(
+      <PageHeader
+        title="Role"
+        button={{ href: 'https://jobs.example/apply', text: 'Apply now' }}
+      />
+    );
+
+    const link = screen.getByRole('link', { name: 'Apply now' });
+    expect(link).toHaveAttribute('href', 'https://jobs.example/apply');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(link).toHaveClass('w-fit', 'px-[20px]');
+    expect(link).not.toHaveClass('w-[168px]');
   });
 });

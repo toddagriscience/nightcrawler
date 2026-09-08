@@ -2,6 +2,7 @@
 
 import { CURSOR_LABEL_ATTRIBUTE } from '@/components/common/cursor-follower/constants';
 import { CursorFollower } from '@/components/common/cursor-follower/cursor-follower';
+import PageHeader from '@/components/common/page-header/page-header';
 import { Link } from '@/i18n/config';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import {
@@ -103,6 +104,8 @@ export interface ArticleIndexProps {
   basePath: string;
   /** Page heading (already localized). */
   title: string;
+  /** Optional eyebrow above a centered {@link PageHeader}; omit for the listing `h1`. */
+  caption?: string;
   /** `next-intl` translator bound to the `articleIndex` namespace. */
   t: ArticleIndexTranslate;
   /** Site locale segment used to present row dates. Falls back to English when omitted. */
@@ -129,7 +132,7 @@ export interface ArticleIndexProps {
  * OpenAI-style article listing template shared by `/research/index`,
  * `/research/index/[topic]`, and `/news`.
  *
- * Server-renders a heading, an optional content-type tab bar, a Filter/Sort/
+ * Server-renders a heading (or centered {@link PageHeader} when `caption` is set), an optional content-type tab bar, a Filter/Sort/
  * grid-list toolbar, and a divided list of rows that link to each article's
  * detail route. Tabs are derived from the `topics` prop (research vs news
  * taxonomy) and encoded per `topicHrefMode` — `'path'` segments for the research
@@ -148,6 +151,7 @@ export function ArticleIndex({
   activeTopic,
   basePath,
   title,
+  caption,
   t,
   locale,
   countParam,
@@ -214,12 +218,16 @@ export function ArticleIndex({
   return (
     <main className="bg-white text-black">
       {cursorLabel ? <CursorFollower /> : null}
-      <div className="mx-auto w-full max-w-[1440px] px-6 pb-24 pt-12 sm:px-12 md:pt-16 lg:px-20">
+      <div className="mx-auto w-full max-w-[1440px] px-6 pb-24 pt-16 sm:px-12 md:pt-20 lg:px-20 lg:pt-18">
+        {caption ? <PageHeader caption={caption} title={title} /> : null}
+
         {/* Heading + toolbar */}
         <header className="flex flex-col gap-8 lg:gap-10">
-          <h1 className="text-[40px] font-normal leading-tight sm:text-[48px] sm:leading-[64px]">
-            {title}
-          </h1>
+          {caption ? null : (
+            <h1 className="text-[40px] font-normal leading-tight sm:text-[48px] sm:leading-[64px]">
+              {title}
+            </h1>
+          )}
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {showTopicTabs ? (
