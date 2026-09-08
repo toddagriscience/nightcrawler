@@ -10,8 +10,11 @@ describe('ZoneStatusPlaceholder', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: 'This management zone is pending.',
+        name: 'Under Review',
       })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('This management zone is pending.')
     ).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Appeal' })).toBeNull();
   });

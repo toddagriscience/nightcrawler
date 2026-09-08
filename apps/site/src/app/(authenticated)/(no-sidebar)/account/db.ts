@@ -14,7 +14,7 @@ import type {
   ManagementZoneSelect,
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, eq, notExists } from 'drizzle-orm';
+import { asc, eq, notExists, sql } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import type { AccountContact } from './types';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
@@ -168,12 +168,12 @@ export async function getSidebarManagementZones(): Promise<
     .select({
       id: managementZone.id,
       name: managementZone.name,
-      isPending: notExists(
+      isPending: sql<boolean>`${notExists(
         db
           .select({ id: analysis.id })
           .from(analysis)
           .where(eq(analysis.managementZone, managementZone.id))
-      ),
+      )}`,
     })
     .from(managementZone)
     .where(eq(managementZone.farmId, currentUser.farmId))
