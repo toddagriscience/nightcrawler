@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import {
+  analysis,
   farm,
   farmLocation,
   managementZone,
@@ -13,7 +14,7 @@ import type {
   ManagementZoneSelect,
 } from '@/lib/types/db';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq, notExists } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import type { AccountContact } from './types';
 import { NOT_SET, toDisplayName, toDisplayValue } from './util';
@@ -133,6 +134,47 @@ export async function getManagementZones(): Promise<ManagementZoneSelect[]> {
 
   const zones = await db
     .select()
+    .from(managementZone)
+    .where(eq(managementZone.farmId, currentUser.farmId))
+    .orderBy(asc(managementZone.name));
+
+  return zones;
+}
+
+/** A sidebar management-zone row plus its derived pending state. */
+export interface SidebarManagementZone {
+  /** Management zone id. */
+  id: number;
+  /** Display name, or `null` when unset. */
+  name: string | null;
+  /** True when the zone has no analysis yet (rendered as an "Under Review" placeholder). */
+  isPending: boolean;
+}
+
+/**
+ * Loads the authenticated user's management zones for the sidebar, ordered by
+ * name, with a derived `isPending` flag. A zone is pending when it has no
+ * `analysis` row — the same rule the zone template uses to show the pending
+ * placeholder — so no stored status column is required.
+ *
+ * @returns The farm's management zones with their pending state.
+ */
+export async function getSidebarManagementZones(): Promise<
+  SidebarManagementZone[]
+> {
+  const currentUser = await getAuthenticatedInfo();
+
+  const zones = await db
+    .select({
+      id: managementZone.id,
+      name: managementZone.name,
+      isPending: notExists(
+        db
+          .select({ id: analysis.id })
+          .from(analysis)
+          .where(eq(analysis.managementZone, managementZone.id))
+      ),
+    })
     .from(managementZone)
     .where(eq(managementZone.farmId, currentUser.farmId))
     .orderBy(asc(managementZone.name));

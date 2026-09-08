@@ -71,21 +71,21 @@ export default function MineralLevelWidget({
             <Bar
               dataKey="low"
               stackId="a"
-              fill="#e6cd5590"
+              fill="#D4B189"
               barSize={22}
               label={(props) => renderLowLabel(props, 'Low')}
             />
             <Bar
               dataKey="ideal"
               stackId="a"
-              fill="#35ba2380"
+              fill="#D4C5A8"
               barSize={22}
               label={(props) => renderLowLabel(props, 'Ideal')}
             />
             <Bar
               dataKey="high"
               stackId="a"
-              fill="#e6cd5590"
+              fill="#D4B189"
               barSize={22}
               label={(props) => renderLowLabel(props, 'High')}
             />
@@ -104,7 +104,7 @@ export default function MineralLevelWidget({
               unit={' ' + chartData[0].unit}
             />
             <YAxis dataKey={'y'} hide type="number" domain={yAxisDomain} />
-            <Scatter dataKey={'x'} fill="#0A0A0A" />
+            <Scatter dataKey={'x'} fill="#2A2727" />
             <Tooltip
               content={MetricRangeTooltip}
               cursor={false}

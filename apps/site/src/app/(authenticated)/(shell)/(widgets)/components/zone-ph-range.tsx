@@ -12,13 +12,13 @@ import {
 } from './to-ph-range';
 
 /** Matches `bg-foreground/15` as an SVG fill, same hex style as Calcium. */
-const BAND_FILL = '#2a272726';
+const BAND_FILL = '#D4B189';
 
 /** Matches `bg-emerald-700/45` as an SVG fill. */
-const TARGET_FILL = '#04785773';
+const TARGET_FILL = '#D4C5A8';
 
 /** Same scatter fill as `MineralLevelWidget`. */
-const MARKER_FILL = '#0A0A0A';
+const MARKER_FILL = '#2A2727';
 
 const PH_DISPLAY_SPAN = PH_DISPLAY_MAX - PH_DISPLAY_MIN;
 
