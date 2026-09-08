@@ -65,7 +65,7 @@ export default function AboutLanding({
                 </Link>
               </Button>
             </div>
-            <div className="flex w-full max-w-[580px] justify-center">
+            <figure className="flex w-full max-w-[580px] flex-col">
               <Image
                 src="/marketing/about-family.jpg"
                 alt={t('vision.imageAlt')}
@@ -74,7 +74,10 @@ export default function AboutLanding({
                 sizes="(min-width: 768px) 580px, 100vw"
                 className="h-[320px] w-full rounded-sm object-cover md:h-[580px]"
               />
-            </div>
+              <figcaption className="mt-3 text-left text-sm text-foreground/70">
+                {t('vision.imageCaption')}
+              </figcaption>
+            </figure>
           </div>
           <p className="mx-auto mt-30 max-w-lg md:max-w-2xl lg:max-w-[850px] text-center text-2xl md:text-3xl/[38px] md:mt-46 font-regular">
             {t('missionStatement')}
@@ -82,7 +85,7 @@ export default function AboutLanding({
           <div className="mt-20 md:mt-27">
             <HeaderImg
               src="/marketing/who-we-are-header.webp"
-              alt="Meadow"
+              alt={t('headerImage.alt')}
               overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
             />
           </div>
