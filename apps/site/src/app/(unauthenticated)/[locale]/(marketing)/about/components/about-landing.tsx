@@ -9,8 +9,8 @@ import { Link } from '@/i18n/config';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { HiArrowLongRight } from 'react-icons/hi2';
 import type { ReactNode } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
 import CompetenciesSection from './competencies-section/competencies-section';
 import Partners from './partners';
 import ResponsibilitiesSection from './responsibilities-section/responsibilities-section';
@@ -36,17 +36,18 @@ export default function AboutLanding({
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="px-6 pt-16 md:px-10 md:pt-20 lg:pt-24"
+          className="px-6 md:px-10 md:pt-18"
         >
           <section className="mx-auto flex max-w-[1100px] flex-col items-center">
             <PageHeader
               caption={t('eyebrow')}
               title={t('title')}
               subtitle={t('subtitle')}
+              subtitleClassName="max-w-[37rem]"
             />
           </section>
-          <div className="mx-auto mt-24 flex w-[85%] flex-col justify-center gap-10 md:mt-32 md:flex-row md:justify-center lg:gap-40">
-            <div className="flex w-full max-w-[400px] flex-col items-start text-left">
+          <div className="mx-auto mt-5 flex w-[85%] flex-col justify-center gap-10 md:mt-43 md:flex-row md:justify-center lg:gap-40">
+            <div className="flex w-full max-w-[400px] flex-col items-start text-left mt-4">
               <h2 className="whitespace-pre-line text-2xl md:text-3xl/[38px] leading-snug font-normal">
                 {t('vision.title')}
               </h2>
@@ -56,7 +57,7 @@ export default function AboutLanding({
               <Button
                 asChild
                 variant="outline"
-                className="mt-16 md:mt-26 mb-16 h-[47px] min-w-[159px] rounded-full border-[0.75px] border-[#848484] px-5 text-[16px]/[40px] [&_svg]:size-4"
+                className="mt-16 md:mt-26 mb-16 h-[47px] min-w-[159px] rounded-full border-[0.75px] border-[#848484] px-5 text-[14px]/[40px] [&_svg]:size-4"
                 size="lg"
               >
                 <Link href="/research">

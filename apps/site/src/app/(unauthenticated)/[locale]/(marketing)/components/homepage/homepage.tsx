@@ -24,10 +24,10 @@ export default function Homepage({ highlights }: { highlights?: ReactNode }) {
       <PageHeader
         title={t('pageHeading.title')}
         subtitle={t('pageHeading.subtitle')}
+        subtitleClassName="mb-4"
         button={{
           href: '/research',
           text: t('pageHeading.button'),
-          buttonClassName: 'w-[174px]',
         }}
       />
       <HeaderImg
