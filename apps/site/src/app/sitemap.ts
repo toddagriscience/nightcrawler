@@ -18,8 +18,8 @@ export async function generateSitemaps(): Promise<Array<{ id: string }>> {
   return [{ id: 'main' }, { id: 'careers' }];
 }
 
-// Revalidate sitemap every 24 hours (86400 seconds)
-export const revalidate = 86400;
+// No segment-level `revalidate`: `cacheComponents` rejects it. The 24h window
+// lives on the Sanity fetches below via `next: { revalidate: 86400 }`.
 
 /**
  * Generates split sitemaps: `main` (static pages + non-career articles) and `careers` (career articles only).
