@@ -141,7 +141,7 @@
         "next": "16.3.3",
         "next-intl": "^4.9.0",
         "next-sanity": "^12.2.2",
-        "nodemailer": "^8.0.5",
+        "nodemailer": "^9.1.0",
         "openai": "^6.25.0",
         "pdf-parse": "^2.4.5",
         "posthog-js": "^1.365.4",
