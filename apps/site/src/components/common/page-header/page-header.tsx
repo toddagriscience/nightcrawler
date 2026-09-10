@@ -51,7 +51,12 @@ export default function PageHeader({
   return (
     <div
       className={cn(
-        'mx-auto my-25 flex w-full max-w-none flex-col items-center justify-center gap-6 text-center md:my-5',
+        // Bottom-only margin; the top offset is owned here so every page's
+        // title lands the same distance below the nav. When a caption sits
+        // above the title, the top offset is reduced by the caption block's
+        // height (~20px) plus the flex gap (24px) so the title still aligns.
+        'mx-auto mb-25 flex w-full max-w-none flex-col items-center justify-center gap-6 pt-25 text-center md:mb-5 md:pt-35',
+        caption ? 'pt-14 md:pt-24' : undefined,
         narrow ? 'md:max-w-[610px]' : 'md:max-w-[910px]',
         className
       )}
@@ -61,7 +66,8 @@ export default function PageHeader({
       ) : null}
       <h1
         className={cn(
-          'w-[70%] sm:w-full max-w-none text-wrap text-[clamp(2rem,calc(2rem+2*((100vw-23.4375rem)/66.5625)),4rem)] leading-[clamp(2.28rem,calc(2.28rem+1.72*((100vw-23.4375rem)/66.5625)),4rem)] md:max-w-[910px] md:text-balance',
+          'sm:w-full max-w-none text-wrap text-[clamp(2rem,calc(2rem+2*((100vw-23.4375rem)/66.5625)),4rem)] leading-[clamp(2.28rem,calc(2.28rem+1.72*((100vw-23.4375rem)/66.5625)),4rem)] md:max-w-[910px] md:text-balance',
+          narrow ? 'w-[95%]' : 'w-[85%]',
           titleClassName
         )}
       >

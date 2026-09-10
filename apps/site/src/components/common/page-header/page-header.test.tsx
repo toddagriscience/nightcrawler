@@ -28,6 +28,16 @@ describe('PageHeader', () => {
     );
   });
 
+  it('reduces the top offset when a caption is present so titles stay aligned', () => {
+    const { container: withCaption } = render(
+      <PageHeader caption="Company" title="About" />
+    );
+    expect(withCaption.firstElementChild).toHaveClass('pt-14', 'md:pt-24');
+
+    const { container: withoutCaption } = render(<PageHeader title="About" />);
+    expect(withoutCaption.firstElementChild).toHaveClass('pt-25', 'md:pt-35');
+  });
+
   it('uses the inner-page width when narrow', () => {
     const { container } = render(
       <PageHeader narrow subtitle="Sub" title="Main" />
@@ -49,7 +59,7 @@ describe('PageHeader', () => {
 
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toHaveClass(
-      'w-[70%]',
+      'w-[85%]',
       'sm:w-full',
       'max-w-none',
       'md:max-w-[910px]'

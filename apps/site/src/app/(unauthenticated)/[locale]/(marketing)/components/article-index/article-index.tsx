@@ -13,6 +13,7 @@ import {
 } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { isOutboundHref, toSafeHref } from '@/lib/sanity/safe-href';
+import { cn } from '@/lib/utils';
 import { BiChevronDown } from 'react-icons/bi';
 import { LuLayoutGrid, LuMenu } from 'react-icons/lu';
 
@@ -218,7 +219,14 @@ export function ArticleIndex({
   return (
     <main className="bg-white text-black">
       {cursorLabel ? <CursorFollower /> : null}
-      <div className="mx-auto w-full max-w-[1440px] px-6 pb-24 pt-16 sm:px-12 md:pt-20 lg:px-20 lg:pt-18">
+      <div
+        className={cn(
+          'mx-auto w-full max-w-[1440px] px-6 pb-24 sm:px-12 lg:px-20',
+          // When a caption is present the centered PageHeader owns the top
+          // offset; otherwise this wrapper provides it for the plain listing h1.
+          caption ? undefined : 'pt-16 md:pt-20 lg:pt-18'
+        )}
+      >
         {caption ? <PageHeader caption={caption} title={title} /> : null}
 
         {/* Heading + toolbar */}

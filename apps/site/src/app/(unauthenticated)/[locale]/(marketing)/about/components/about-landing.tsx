@@ -36,7 +36,7 @@ export default function AboutLanding({
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="px-6 md:px-10 md:pt-18"
+          className="px-6 md:px-10"
         >
           <section className="mx-auto flex max-w-[1100px] flex-col items-center">
             <PageHeader

@@ -51,12 +51,13 @@ export function CareersLandingView({
 
   return (
     <main className="text-foreground" id="careers-overview">
-      <div className="mx-auto flex max-w-[1100px] flex-col gap-0 px-4 pt-16 md:gap-20  md:px-6 md:pt-20 lg:pt-24">
+      <div className="mx-auto flex max-w-[1100px] flex-col gap-0 px-4 md:gap-20 md:px-6">
         <PageHeader
+          titleClassName="w-[95%]"
           caption={hero.kicker}
           title={hero.title}
           subtitle={hero.subtitle}
-          subtitleClassName="max-w-none md:whitespace-nowrap"
+          subtitleClassName="w-[90%] sm:max-w-[37rem] md:whitespace-nowrap"
           button={{
             href: hero.valuesAnchorHref,
             text: hero.valuesLinkLabel,

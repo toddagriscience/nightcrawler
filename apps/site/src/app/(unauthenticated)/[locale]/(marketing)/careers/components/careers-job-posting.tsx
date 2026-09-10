@@ -101,7 +101,7 @@ export async function CareersJobPosting({
 
   return (
     <main className="min-h-[50vh]" id={`careers-post-${article.slug.current}`}>
-      <div className="mx-auto max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px] md:pt-20">
+      <div className="mx-auto max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
         <header className="flex flex-col items-center text-center">
           <PageHeader
             caption={t('jobPosting.kicker')}
