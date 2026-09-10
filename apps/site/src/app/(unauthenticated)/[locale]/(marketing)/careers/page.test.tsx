@@ -16,7 +16,8 @@ describe('Careers landing view', () => {
     expect(h1Element).toHaveTextContent('Build the future');
     expect(h1Element.className).not.toContain('3rem');
     expect(screen.getByText('Team subtitle.')).toHaveClass(
-      'max-w-none',
+      'w-[90%]',
+      'sm:max-w-[37rem]',
       'md:whitespace-nowrap'
     );
   });

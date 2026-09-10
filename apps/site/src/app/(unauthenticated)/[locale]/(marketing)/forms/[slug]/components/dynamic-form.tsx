@@ -115,6 +115,7 @@ export function DynamicForm({ form, title, subtitle }: DynamicFormProps) {
     return (
       <main className="mx-auto flex min-h-[60vh] w-full max-w-[910px] flex-col items-center justify-center px-6 py-16 text-center md:px-10">
         <PageHeader
+          className="pt-0 md:pt-0"
           title={form.successTitle ?? t('defaultSuccessTitle')}
           subtitle={form.successMessage ?? t('defaultSuccessMessage')}
         />
@@ -126,8 +127,9 @@ export function DynamicForm({ form, title, subtitle }: DynamicFormProps) {
     footerCheckboxes.length > 0 || footerTextParagraphs.length > 0;
 
   return (
-    <main className="mx-auto flex w-full flex-col items-center px-6 pt-16 pb-16 md:px-10 md:pt-20 md:pb-24 lg:pt-24">
+    <main className="mx-auto flex w-full flex-col items-center px-6 pb-16 md:px-10 md:pb-24">
       <PageHeader
+        narrow
         className="max-w-[910px]"
         title={title ?? form.title}
         subtitle={subtitle}

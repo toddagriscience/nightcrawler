@@ -20,7 +20,7 @@ export default function Homepage({ highlights }: { highlights?: ReactNode }) {
   const t = useTranslations('homepage');
 
   return (
-    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:my-30">
+    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:mb-30">
       <PageHeader
         title={t('pageHeading.title')}
         subtitle={t('pageHeading.subtitle')}
