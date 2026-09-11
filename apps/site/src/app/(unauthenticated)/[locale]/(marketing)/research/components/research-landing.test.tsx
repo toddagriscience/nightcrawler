@@ -90,8 +90,12 @@ describe('ResearchLanding', () => {
     expect(screen.getByText('Broader Communities')).toBeInTheDocument();
 
     expect(
-      screen.getByRole('link', { name: 'Build a better farm' })
+      screen.getByRole('heading', { level: 2, name: 'Build a better farm' })
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Meet Iris' })).toHaveAttribute(
+      'href',
+      '/index/introducing-iris'
+    );
   });
 
   it('renders exactly one h1 element with the correct title for accessibility', () => {

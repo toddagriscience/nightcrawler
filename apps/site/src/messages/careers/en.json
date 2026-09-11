@@ -52,14 +52,14 @@
         "residency": {
           "heading": "Todd Residency",
           "body": "Our early talent programs offers a chance to make a direct impact at Todd and contribute to Todd's growth journey. We welcome curious, driven people early in their professional journey through.",
-          "cta": "Learn more →",
+          "cta": "Learn more",
           "ctaHref": "/careers/search",
           "imageAlt": "Two Todd teammates talking in a bright office lounge"
         },
         "talent": {
           "heading": "Early talent",
           "body": "We welcome curious, driven people early in their professional journey to make a direct impact at Todd and contribute to Todd's own growth journey.",
-          "cta": "Learn more →",
+          "cta": "Learn more",
           "ctaHref": "/careers/search",
           "imageAlt": "Early-career teammates collaborating in a modern office"
         }
@@ -70,7 +70,7 @@
       },
       "footerCta": {
         "heading": "Shape the future of agriculture",
-        "cta": "View careers →",
+        "cta": "View careers",
         "ctaHref": "/careers/search"
       }
     },
@@ -79,7 +79,7 @@
       "applyNow": "Apply now"
     },
     "jobListings": {
-      "apply": "Apply now →",
+      "apply": "Apply now",
       "toolbarAria": "Filter job postings",
       "searchPlaceholder": "Search",
       "searchAria": "Search job postings",

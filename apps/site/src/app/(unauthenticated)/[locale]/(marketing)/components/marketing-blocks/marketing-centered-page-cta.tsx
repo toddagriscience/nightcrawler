@@ -33,7 +33,7 @@ export function MarketingCenteredPageCta({
     >
       <h2
         id={hid}
-        className="text-3xl font-normal leading-tight tracking-tight text-foreground md:text-[34px] md:leading-tight"
+        className="text-4xl font-normal leading-tight tracking-tight text-foreground md:text-[48px] md:leading-tight"
       >
         {heading}
       </h2>
