@@ -1,7 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
-import Link from 'next/link';
 
 /**
  * Minimalistic header component for unauthenticated pages
@@ -13,6 +12,7 @@ import Link from 'next/link';
  * pass `localeAware` from a localized layout, omit it everywhere else.
  *
  * @param {boolean} localeAware - Keep the home link in the current locale (localized pages only)
+ * Displays the TODD brand
  * @returns {JSX.Element} - The unauthenticated header component
  */
 export default function UnauthenticatedHeader({
@@ -28,14 +28,6 @@ export default function UnauthenticatedHeader({
             className="flex min-h-10 flex-row items-center"
             localeAware={localeAware}
           />
-          <nav className="flex items-center">
-            <Link
-              href="/contact"
-              className="p-1 text-foreground text-base transition-opacity hover:opacity-70 tracking-tight"
-            >
-              Help
-            </Link>
-          </nav>
         </div>
       </div>
     </header>

@@ -57,8 +57,9 @@ describe('News Page', () => {
     renderWithNextIntl(await renderPage());
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Newsroom' })
+      screen.getByRole('heading', { level: 1, name: 'News' })
     ).toBeInTheDocument();
+    expect(screen.getAllByText('Company').length).toBeGreaterThan(0);
     expect(
       screen.getByText('New AI Model Sets Performance Record')
     ).toBeInTheDocument();

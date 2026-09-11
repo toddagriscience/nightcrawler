@@ -1,8 +1,9 @@
 {
   "articleIndex": {
+    "eyebrow": "Empresa",
     "titles": {
       "research": "Investigación",
-      "news": "Sala de prensa"
+      "news": "Noticias"
     },
     "tabs": {
       "all": "Todos",

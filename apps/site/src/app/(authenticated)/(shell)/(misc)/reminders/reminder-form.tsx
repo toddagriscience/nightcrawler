@@ -142,7 +142,7 @@ function ExactDateField({
             disabled={disabled}
             aria-label={`${EXACT_DATE_LABEL}: ${displayValue}`}
             className={cn(
-              'h-10 w-full justify-start font-normal hover:bg-transparent',
+              'h-10 w-full justify-start border-foreground/15 font-normal hover:bg-transparent',
               !value && 'text-muted-foreground'
             )}
           >
@@ -159,6 +159,11 @@ function ExactDateField({
             endMonth={endMonth}
             selected={value}
             defaultMonth={value}
+            className="border-foreground/15"
+            classNames={{
+              dropdown_root:
+                'has-focus:border-foreground/15 border-foreground/15 shadow-xs has-focus:ring-ring/50 has-focus:ring-1 relative rounded-md border-1',
+            }}
             onSelect={(date) => {
               onChange(date);
               setOpen(false);
@@ -252,6 +257,7 @@ export function ReminderForm({
           defaultValue={initialData?.title ?? ''}
           placeholder="e.g., Apply pre-emergent herbicide"
           required
+          className="border-foreground/15"
         />
       </div>
 
@@ -263,16 +269,17 @@ export function ReminderForm({
           defaultValue={initialData?.body ?? ''}
           placeholder="Optional details..."
           rows={3}
+          className="border-foreground/15"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="type">Type</Label>
         <Select name="type" defaultValue={initialData?.type ?? 'other'}>
-          <SelectTrigger>
+          <SelectTrigger className="border border-foreground/15 px-3">
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-foreground/15">
             {reminderTypeOptions.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
@@ -291,6 +298,7 @@ export function ReminderForm({
           onChange={(e) => setSeasonalLabel(e.target.value)}
           disabled={dueDate !== undefined}
           placeholder="e.g., mid March, early spring, 6 months from now"
+          className="border-foreground/15"
         />
         <p className="text-xs text-[var(--color-muted-foreground)]">
           Examples: &quot;mid March&quot;, &quot;early spring&quot;, &quot;late
@@ -315,7 +323,12 @@ export function ReminderForm({
 
       <div className="flex justify-end gap-2">
         {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            className="border-foreground/15"
+          >
             Cancel
           </Button>
         )}

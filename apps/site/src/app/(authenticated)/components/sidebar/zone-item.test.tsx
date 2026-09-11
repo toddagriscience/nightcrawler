@@ -16,11 +16,18 @@ describe('ZoneItem', () => {
     expect(screen.getByText('Alt 3')).toBeInTheDocument();
   });
 
-  it('does not render a status indicator dot', () => {
-    const { container } = render(
-      <ZoneItem id={7} name="North Field" index={0} />
-    );
-    expect(container.querySelector('.bg-green-500')).not.toBeInTheDocument();
+  it('does not render a status indicator dot by default', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} />);
+    expect(
+      screen.queryByRole('img', { name: /pending review/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders a yellow pending dot when isPending', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} isPending />);
+    const dot = screen.getByRole('img', { name: /pending review/i });
+    expect(dot).toBeInTheDocument();
+    expect(dot).toHaveClass('bg-yellow-500');
   });
 
   it('exposes no delete control (read-only row)', () => {

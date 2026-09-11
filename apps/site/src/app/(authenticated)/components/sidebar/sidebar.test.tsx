@@ -11,13 +11,13 @@ vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 
-const getManagementZones = vi.fn(async () => [
-  { id: 1, name: 'North Field' },
-  { id: 2, name: 'South Field' },
+const getSidebarManagementZones = vi.fn(async () => [
+  { id: 1, name: 'North Field', isPending: false },
+  { id: 2, name: 'South Field', isPending: true },
 ]);
 
 vi.mock('@/app/(authenticated)/(no-sidebar)/account/db', () => ({
-  getManagementZones: () => getManagementZones(),
+  getSidebarManagementZones: () => getSidebarManagementZones(),
   getAccountShellData: async () => ({ farmName: 'Green Acres' }),
 }));
 
@@ -33,7 +33,7 @@ async function renderSidebar() {
 
 afterEach(() => {
   localStorage.clear();
-  getManagementZones.mockClear();
+  getSidebarManagementZones.mockClear();
 });
 
 describe('Sidebar', () => {
@@ -72,6 +72,13 @@ describe('Sidebar', () => {
     );
     expect(screen.getByText('Alt 1')).toBeInTheDocument();
     expect(screen.getByText('Alt 2')).toBeInTheDocument();
+  });
+
+  it('marks pending zones with a status dot', async () => {
+    await renderSidebar();
+    const dots = screen.getAllByRole('img', { name: /pending review/i });
+    // Only the pending zone (South Field) shows the dot.
+    expect(dots).toHaveLength(1);
   });
 
   it('does not render add or delete zone controls', async () => {

@@ -14,6 +14,12 @@ describe('Careers landing view', () => {
 
     const h1Element = screen.getByRole('heading', { level: 1 });
     expect(h1Element).toHaveTextContent('Build the future');
+    expect(h1Element.className).not.toContain('3rem');
+    expect(screen.getByText('Team subtitle.')).toHaveClass(
+      'w-[90%]',
+      'sm:max-w-[37rem]',
+      'md:whitespace-nowrap'
+    );
   });
 
   it('has a level-one heading for accessibility', () => {
