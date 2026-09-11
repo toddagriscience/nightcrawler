@@ -4,7 +4,7 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 
 /**
  * Minimalistic header component for unauthenticated pages
- * Displays the TODD brand and navigation link to the contact page
+ * Displays the TODD brand
  *
  * This header renders both inside and outside the `[locale]` tree. Only the
  * localized pages have a `NextIntlClientProvider`, and next-intl's locale-aware
@@ -12,7 +12,6 @@ import ToddHeader from '@/components/common/wordmark/todd-wordmark';
  * pass `localeAware` from a localized layout, omit it everywhere else.
  *
  * @param {boolean} localeAware - Keep the home link in the current locale (localized pages only)
- * Displays the TODD brand
  * @returns {JSX.Element} - The unauthenticated header component
  */
 export default function UnauthenticatedHeader({

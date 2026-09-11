@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { renderWithNextIntl } from '@/test/test-utils';
 import { render, screen } from '@testing-library/react';
-import { renderWithNextIntl, screen } from '@/test/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import UnauthenticatedHeader from './unauthenticated-header';
 
@@ -33,8 +33,8 @@ describe('UnauthenticatedHeader', () => {
     render(<UnauthenticatedHeader />);
 
     expect(screen.getByTestId('wordmark-link')).toHaveAttribute('href', '/');
-    
-describe('UnauthenticatedHeader', () => {
+  });
+
   it('renders the Todd home link without a help link', () => {
     renderWithNextIntl(<UnauthenticatedHeader />);
 
