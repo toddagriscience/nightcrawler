@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   LogOut,
   ClipboardList,
+  FileSignature,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -42,6 +43,7 @@ const navItems: NavItem[] = [
   { label: 'IMPs', href: '/imps', icon: FileText },
   { label: 'Seed Products', href: '/seed-products', icon: Sprout },
   { label: 'Tabs & Widgets', href: '/tabs-widgets', icon: Columns3 },
+  { label: 'Offer Letters', href: '/offer-letters', icon: FileSignature },
 ];
 
 /**
