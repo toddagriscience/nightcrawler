@@ -17,6 +17,13 @@ import SignupForm from './components/signup-form';
 type SignupPageSearchParams = Record<string, string | string[] | undefined>;
 
 /**
+ * Largest value Postgres accepts for the `serial` (`int4`) submission id.
+ * Anything above it aborts the statement with `22003` instead of matching no
+ * rows, so an id from a mangled link is treated as invalid before it is queried.
+ */
+const MAX_APPLICATION_ID = 2_147_483_647;
+
+/**
  * Reads a single string value from Next.js search params.
  *
  * @param params - Page search params
@@ -77,7 +84,11 @@ export default async function Join({
 
   const parsedApplicationId = Number.parseInt(applicationId, 10);
 
-  if (!Number.isFinite(parsedApplicationId)) {
+  if (
+    !Number.isInteger(parsedApplicationId) ||
+    parsedApplicationId <= 0 ||
+    parsedApplicationId > MAX_APPLICATION_ID
+  ) {
     return (
       <ApprovedApplicantGate reason="invalid-link" token={token} email="" />
     );
