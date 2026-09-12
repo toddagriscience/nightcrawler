@@ -10,7 +10,7 @@ import {
   type UseFormRegister,
 } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Copy, Download } from 'lucide-react';
+import { Copy, Download, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -32,7 +32,11 @@ import { Label } from '@/components/ui/label';
 import logger from '@/lib/logger';
 import { notifyActionError } from '@/lib/notify-action-error';
 import { generateOfferLetter } from '../actions';
-import { buildOfferEmail } from '../email-template';
+import {
+  buildGmailComposeUrl,
+  buildOfferEmail,
+  OFFER_EMAIL_SUBJECT,
+} from '../email-template';
 import { US_STATES } from '../us-states';
 import type { OfferLetterFormData } from '../types';
 
@@ -165,13 +169,12 @@ export default function OfferLetterForm() {
     }
   };
 
-  const copyEmail = async () => {
-    if (!emailText) return;
+  const copy = async (text: string, label: string) => {
     try {
-      await navigator.clipboard.writeText(emailText);
-      toast.success('Email copied to clipboard.');
+      await navigator.clipboard.writeText(text);
+      toast.success(`${label} copied to clipboard.`);
     } catch (error) {
-      logger.error('Failed to copy offer email:', error);
+      logger.error(`Failed to copy offer ${label.toLowerCase()}:`, error);
       toast.error('Could not copy. Select the text and copy it manually.');
     }
   };
@@ -375,22 +378,66 @@ export default function OfferLetterForm() {
           <DialogHeader>
             <DialogTitle>Offer Email</DialogTitle>
             <DialogDescription>
-              The PDF has been downloaded. Paste this into the email to the
-              hiree and attach the PDF.
+              The PDF has been downloaded. Copy the subject and body into the
+              email to the hiree, or open a prefilled Gmail draft. Gmail links
+              cannot attach files, so add the PDF to the draft yourself.
             </DialogDescription>
           </DialogHeader>
-          <textarea
-            readOnly
-            aria-label="Offer email body"
-            value={emailText ?? ''}
-            rows={14}
-            className="w-full resize-y rounded-md border border-input bg-muted/40 p-3 font-mono text-sm"
-            onFocus={(e) => e.currentTarget.select()}
-          />
-          <DialogFooter>
-            <Button onClick={copyEmail}>
+
+          <div className="space-y-2">
+            <Label htmlFor="offer-email-subject">Subject</Label>
+            <div className="flex gap-2">
+              <Input
+                id="offer-email-subject"
+                readOnly
+                value={OFFER_EMAIL_SUBJECT}
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label="Copy subject"
+                onClick={() => copy(OFFER_EMAIL_SUBJECT, 'Subject')}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="offer-email-body">Body</Label>
+            <textarea
+              id="offer-email-body"
+              readOnly
+              value={emailText ?? ''}
+              rows={12}
+              className="w-full resize-y rounded-md border border-input bg-muted/40 p-3 font-mono text-sm"
+              onFocus={(e) => e.currentTarget.select()}
+            />
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => emailText && copy(emailText, 'Body')}
+            >
               <Copy className="mr-2 h-4 w-4" />
-              Copy Email
+              Copy Body
+            </Button>
+            <Button asChild>
+              <a
+                href={buildGmailComposeUrl(
+                  OFFER_EMAIL_SUBJECT,
+                  emailText ?? ''
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Open in Gmail
+              </a>
             </Button>
           </DialogFooter>
         </DialogContent>
