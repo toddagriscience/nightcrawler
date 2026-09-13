@@ -2,16 +2,9 @@
 
 'use server';
 
-import {
-  ensureApprovedApplicantAuthSession,
-  getUserEmail,
-  setPassword,
-} from '@/lib/auth-server';
+import { ensureApprovedApplicantAuthSession } from '@/lib/auth-server';
 import { sendApprovedApplicantInvite } from '@nightcrawler/db/utils/send-approved-applicant-invite';
-import {
-  type ApplicantPrefill,
-  buildSignupUrl,
-} from '@nightcrawler/db/utils/extract-applicant-prefill';
+import { buildSignupUrl } from '@nightcrawler/db/utils/extract-applicant-prefill';
 import { formSubmission } from '@nightcrawler/db/schema';
 import { createClient } from '@/lib/supabase/server';
 import { getAuthRedirectBaseUrl } from '@/lib/env';
@@ -19,6 +12,7 @@ import { farm, user, standardValues } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import {
   completeFormSubmissionSignup,
+  isFormSubmissionSignupAlreadyCompleted,
   resolveSignupContext,
   validateFormSubmissionSignupToken,
 } from '@nightcrawler/db/queries';
@@ -34,17 +28,25 @@ import {
   throwActionError,
 } from '@/lib/utils/actions';
 import { userInfo } from '@/lib/zod-schemas/onboarding';
-import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
+import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { formatSignupDatabaseError } from './signup-db-errors';
 
-/** Schema for sign up validation - extends userInfo with password */
-const signUpSchema = userInfo.extend({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  applicationId: z.string().optional(),
-  token: z.string().optional(),
-});
+/** Stored applicant identity and the password requirements shown in the form. */
+const signUpSchema = userInfo
+  .extend({
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain an uppercase letter')
+      .regex(/\d/, 'Password must contain a number')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain a special character'),
+    confirmPassword: z.string(),
+  })
+  .refine((input) => input.password === input.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'],
+  });
 
 /** Input for creating or updating farm and user records during signup. */
 interface SignupRecordInput {
@@ -53,19 +55,19 @@ interface SignupRecordInput {
   farmName: string;
   email: string;
   phone: string;
-  applicationId?: number;
+  applicationId: number;
 }
 
 /**
  * Creates or updates Postgres farm and user records for a signup attempt.
  *
- * @param input - Applicant profile and optional approved application id
+ * @param input - Profile from the approved application
  */
 async function persistSignupRecords(input: SignupRecordInput): Promise<{
   user: typeof user.$inferSelect;
-  farm: typeof farm.$inferSelect | { id: number } | null;
+  farm: typeof farm.$inferSelect | { id: number };
 }> {
-  const { firstName, lastName, farmName, email, phone, applicationId } = input;
+  const { firstName, lastName, farmName, email, phone } = input;
 
   const [existingUser] = await db
     .select()
@@ -82,6 +84,12 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
           .limit(1)
       : [];
 
+    if (!existingFarm || existingUser.role !== 'Admin') {
+      throwActionError(
+        'This email is already associated with another account. Contact support to finish onboarding.'
+      );
+    }
+
     const [updatedUser] = await db
       .update(user)
       .set({
@@ -92,15 +100,11 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
       .where(eq(user.id, existingUser.id))
       .returning();
 
-    if (applicationId && existingUser.farmId) {
-      await completeFormSubmissionSignup(applicationId, existingUser.farmId);
-    }
-
     logger.info(`Signup reused existing user record for ${email}`);
 
     return {
       user: updatedUser ?? existingUser,
-      farm: existingFarm ?? null,
+      farm: existingFarm,
     };
   }
 
@@ -132,10 +136,6 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
     return { user: newUser, farm: newFarm };
   });
 
-  if (applicationId) {
-    await completeFormSubmissionSignup(applicationId, result.farm.id);
-  }
-
   logger.info(`Successfully created user ${email} with farm ${farmName}`);
 
   return result;
@@ -148,22 +148,47 @@ async function persistSignupRecords(input: SignupRecordInput): Promise<{
  */
 async function completeApprovedApplicantSignup(
   input: SignupRecordInput & { password: string }
-): Promise<never> {
-  const { email, password, firstName } = input;
+): Promise<void> {
+  const { email, password, firstName, applicationId } = input;
+  let supabase = await createClient();
+  const { data: initialAuthData } = await supabase.auth.getUser();
+  const initialAuthUser = initialAuthData.user;
 
-  try {
-    await ensureApprovedApplicantAuthSession(email, password, firstName);
-  } catch (error) {
+  if (
+    initialAuthUser?.email &&
+    initialAuthUser.email.toLowerCase() !== email.toLowerCase()
+  ) {
     throwActionError(
-      error instanceof Error
-        ? error.message
-        : 'Unable to activate your account. Use your onboarding link from Todd and try again.'
+      'You are signed in with a different email. Open the approval link from the same inbox.'
     );
   }
 
-  const authenticatedEmail = await getUserEmail();
+  const passwordAlreadySet =
+    initialAuthUser?.email?.toLowerCase() === email.toLowerCase() &&
+    initialAuthUser.user_metadata.onboarding_applicant === true &&
+    initialAuthUser.user_metadata.onboarding_password_set === true &&
+    initialAuthUser.user_metadata.onboarding_application_id === applicationId;
+
+  if (!passwordAlreadySet) {
+    try {
+      await ensureApprovedApplicantAuthSession(email, password, firstName);
+    } catch (error) {
+      throwActionError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to activate your account. Use your onboarding link from Todd and try again.'
+      );
+    }
+  }
+
+  supabase = await createClient();
+  const { data: authenticatedData, error: sessionError } =
+    await supabase.auth.getUser();
+  const authenticatedUser = authenticatedData.user;
+  const authenticatedEmail = authenticatedUser?.email;
 
   if (
+    sessionError ||
     !authenticatedEmail ||
     authenticatedEmail.toLowerCase() !== email.toLowerCase()
   ) {
@@ -172,40 +197,81 @@ async function completeApprovedApplicantSignup(
     );
   }
 
+  if (
+    authenticatedUser?.user_metadata.onboarding_applicant === true &&
+    authenticatedUser.user_metadata.onboarding_password_set === true
+  ) {
+    if (
+      authenticatedUser.user_metadata.onboarding_application_id !==
+      applicationId
+    ) {
+      throwActionError(
+        'Your password has already been set. Sign in to continue onboarding.'
+      );
+    }
+
+    const [existingUser] = await db
+      .select({ farmId: user.farmId, role: user.role })
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1);
+
+    if (!existingUser?.farmId || existingUser.role !== 'Admin') {
+      throwActionError(
+        'Unable to resume onboarding. Contact support for help.'
+      );
+    }
+
+    await completeFormSubmissionSignup(applicationId, existingUser.farmId);
+    return;
+  }
+
+  let signupRecords: Awaited<ReturnType<typeof persistSignupRecords>>;
   try {
-    await persistSignupRecords(input);
+    signupRecords = await persistSignupRecords(input);
   } catch (error) {
     logger.error(`Failed to create user/farm in database: ${error}`);
     throwActionError(formatSignupDatabaseError(error));
   }
 
-  const { error: passwordError } = await setPassword(password);
+  const onboardingMetadata = {
+    first_name: firstName,
+    name: firstName,
+    email_verified: true,
+    onboarding_applicant: true,
+    onboarding_application_id: applicationId,
+    onboarding_password_set: true,
+    onboarding_team_step_done: false,
+    onboarding_payment_continued: false,
+  };
+  let { error: passwordError } = await supabase.auth.updateUser({
+    password,
+    data: onboardingMetadata,
+  });
+
+  // Session bootstrap may already have set this exact password. Prove that it
+  // works before recording completion without a second password update.
+  if (passwordError?.code === 'same_password') {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      throwActionError(signInError.message);
+    }
+
+    const result = await supabase.auth.updateUser({ data: onboardingMetadata });
+    passwordError = result.error;
+  }
 
   if (passwordError) {
     const message =
       formatActionResponseErrors(passwordError)[0] ?? 'Failed to set password';
-    logger.warn(
-      `Failed to set password for invited applicant ${email}: ${message}`
-    );
     throwActionError(message);
   }
 
-  const supabase = await createClient();
-  const { error: metadataError } = await supabase.auth.updateUser({
-    data: {
-      first_name: firstName,
-      name: firstName,
-    },
-  });
-
-  if (metadataError) {
-    logger.warn(
-      `Failed to update profile metadata for invited applicant ${email}: ${metadataError.message}`
-    );
-    throwActionError(metadataError.message);
-  }
-
-  redirect('/apply');
+  await completeFormSubmissionSignup(applicationId, signupRecords.farm.id);
 }
 
 /**
@@ -278,29 +344,10 @@ export async function resendApprovedApplicantActivationEmail(input: {
 }
 
 /**
- * Reads a trimmed string from form data.
- *
- * @param value - Raw form entry
- */
-function readFormString(value: FormDataEntryValue | null): string {
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-/**
- * Prefers a submitted value and falls back to stored application prefill.
- *
- * @param formValue - Value from the signup form
- * @param prefillValue - Value from the approved application answers
- */
-function coalescePrefill(formValue: string, prefillValue?: string): string {
-  return formValue || prefillValue?.trim() || '';
-}
-
-/**
  * Completes approved-applicant signup (platform access forms only).
  *
  * @param _ - The initial state (unneeded in this function)
- * @param formData - The form data containing user, farm, application id, and token
+ * @param formData - Application id, token, password, and password confirmation
  */
 export async function signUp(
   _: unknown,
@@ -310,95 +357,134 @@ export async function signUp(
 
   const applicationIdRaw = formData.get('applicationId')?.toString();
   const tokenRaw = formData.get('token')?.toString();
-  let applicationPrefill: ApplicantPrefill | undefined;
 
-  if (applicationIdRaw && tokenRaw) {
-    const parsedApplicationId = Number.parseInt(applicationIdRaw, 10);
-
-    if (Number.isFinite(parsedApplicationId)) {
-      const signupContext = await resolveSignupContext(
-        parsedApplicationId,
-        tokenRaw
-      );
-      applicationPrefill = signupContext?.prefill;
-    }
-  }
-
-  const rawData = {
-    firstName: coalescePrefill(
-      readFormString(formData.get('firstName')),
-      applicationPrefill?.firstName
-    ),
-    lastName: coalescePrefill(
-      readFormString(formData.get('lastName')),
-      applicationPrefill?.lastName
-    ),
-    farmName: coalescePrefill(
-      readFormString(formData.get('farmName')),
-      applicationPrefill?.farmName
-    ),
-    email: coalescePrefill(
-      readFormString(formData.get('email')),
-      applicationPrefill?.email
-    ),
-    phone: coalescePrefill(
-      readFormString(formData.get('phone')),
-      applicationPrefill?.phone
-    ),
-    password: formData.get('password'),
-    applicationId: applicationIdRaw,
-    token: tokenRaw,
-  };
-
-  const validated = signUpSchema.safeParse(rawData);
-
-  if (!validated.success) {
-    logger.info('Sign up data was not valid');
-    throwActionError(z.treeifyError(validated.error));
-  }
-
-  const {
-    firstName,
-    lastName,
-    farmName,
-    email,
-    phone,
-    password,
-    applicationId,
-    token,
-  } = validated.data;
-
-  if (!applicationId || !token) {
+  if (!applicationIdRaw || !tokenRaw?.trim()) {
     throwActionError(
       'Account setup requires a valid onboarding link from your approval email.'
     );
   }
 
-  const parsedApplicationId = Number.parseInt(applicationId, 10);
+  const parsedApplicationId = Number(applicationIdRaw);
 
-  if (!Number.isFinite(parsedApplicationId)) {
+  if (
+    !Number.isSafeInteger(parsedApplicationId) ||
+    parsedApplicationId <= 0 ||
+    parsedApplicationId > 2_147_483_647
+  ) {
     throwActionError('This signup link is invalid or expired.');
   }
 
-  const validatedApplication = await validateFormSubmissionSignupToken(
-    parsedApplicationId,
-    token,
-    email
-  );
+  return db.transaction(async (transaction) => {
+    // Namespace 1148 isolates approved-applicant signup locks. Only an advisory
+    // lock is held here: existing signup queries use their own DB connections.
+    // Fail fast on overlap instead of reserving pool connections while waiting.
+    const lock = await transaction.execute<{ acquired: boolean }>(sql`
+      SELECT pg_try_advisory_xact_lock(1148, ${parsedApplicationId}) AS acquired
+    `);
+    if (!lock.rows.at(0)?.acquired) {
+      throwActionError(
+        'Account setup is already in progress. Please try again shortly.'
+      );
+    }
 
-  if (!validatedApplication) {
-    throwActionError('This signup link is invalid or expired.');
-  }
+    // Read the token and auth state only after owning the application lock.
+    const signupContext = await resolveSignupContext(
+      parsedApplicationId,
+      tokenRaw
+    );
 
-  await completeApprovedApplicantSignup({
-    firstName,
-    lastName,
-    farmName,
-    email,
-    phone,
-    password,
-    applicationId: validatedApplication.applicationId,
+    if (!signupContext) {
+      const supabase = await createClient();
+      const { data, error } = await supabase.auth.getUser();
+      const authenticatedEmail = data.user?.email;
+
+      if (
+        !error &&
+        authenticatedEmail &&
+        (await isFormSubmissionSignupAlreadyCompleted(
+          parsedApplicationId,
+          tokenRaw,
+          authenticatedEmail
+        ))
+      ) {
+        return { data: null };
+      }
+
+      throwActionError('This signup link is invalid or expired.');
+    }
+
+    const supabase = await createClient();
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    const authenticatedUser = authData.user;
+    const applicantEmail = signupContext.email.trim().toLowerCase();
+
+    if (!authError && authenticatedUser?.email) {
+      if (authenticatedUser.email.toLowerCase() !== applicantEmail) {
+        throwActionError(
+          'You are signed in with a different email. Open the approval link from the same inbox.'
+        );
+      }
+
+      if (
+        authenticatedUser.user_metadata.onboarding_applicant === true &&
+        authenticatedUser.user_metadata.onboarding_password_set === true
+      ) {
+        if (
+          authenticatedUser.user_metadata.onboarding_application_id !==
+          signupContext.applicationId
+        ) {
+          throwActionError(
+            'Your password has already been set. Sign in to continue onboarding.'
+          );
+        }
+
+        const [existingUser] = await db
+          .select({ farmId: user.farmId, role: user.role })
+          .from(user)
+          .where(eq(user.email, applicantEmail))
+          .limit(1);
+
+        if (!existingUser?.farmId || existingUser.role !== 'Admin') {
+          throwActionError(
+            'Unable to resume onboarding. Contact support for help.'
+          );
+        }
+
+        await completeFormSubmissionSignup(
+          signupContext.applicationId,
+          existingUser.farmId
+        );
+        return { data: null };
+      }
+    }
+
+    const validated = signUpSchema.safeParse({
+      firstName: signupContext.prefill.firstName?.trim() ?? '',
+      lastName: signupContext.prefill.lastName?.trim() ?? '',
+      farmName: signupContext.prefill.farmName?.trim() ?? '',
+      email: applicantEmail,
+      phone: signupContext.prefill.phone?.trim() ?? '',
+      password: formData.get('password'),
+      confirmPassword: formData.get('confirmPassword'),
+    });
+
+    if (!validated.success) {
+      throwActionError(z.treeifyError(validated.error));
+    }
+
+    const { firstName, lastName, farmName, email, phone, password } =
+      validated.data;
+
+    await completeApprovedApplicantSignup({
+      firstName,
+      lastName,
+      farmName,
+      email,
+      phone,
+      password,
+      applicationId: signupContext.applicationId,
+    });
+
+    return { data: null };
   });
-
-  return { data: null };
 }
