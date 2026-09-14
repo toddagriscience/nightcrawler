@@ -43,7 +43,7 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
   splitResidency: {
     heading: 'Residency',
     body: 'Body.',
-    ctaLabel: 'Learn more →',
+    ctaLabel: 'Learn more',
     ctaHref: '/careers/search',
     imageSrc: '/marketing/careers-1.webp',
     imageAlt: '',
@@ -51,7 +51,7 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
   splitEarlyTalent: {
     heading: 'Talent',
     body: 'Body.',
-    ctaLabel: 'Learn more →',
+    ctaLabel: 'Learn more',
     ctaHref: '/careers/search',
     imageSrc: '/marketing/who-we-are-img.jpg',
     imageAlt: '',
@@ -59,6 +59,6 @@ export const CAREERS_LANDING_VIEW_FIXTURE: CareersLandingCopy = {
   quoteText: 'Quote text.',
   quoteAttribution: 'Author.',
   footerHeading: 'Footer headline',
-  footerCtaLabel: 'View careers →',
+  footerCtaLabel: 'View careers',
   footerCtaHref: '/careers/search',
 };
