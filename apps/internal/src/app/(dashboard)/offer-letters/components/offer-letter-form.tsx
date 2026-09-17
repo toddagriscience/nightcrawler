@@ -123,8 +123,11 @@ function downloadPdf(base64: string, filename: string) {
   const link = document.createElement('a');
   link.href = url;
   link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 /** Registration rule that converts number inputs before schema validation. */
