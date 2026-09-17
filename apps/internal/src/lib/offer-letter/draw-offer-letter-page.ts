@@ -224,7 +224,7 @@ export function drawOfferLetterPage(
   drawLinesAtTop(
     page,
     [
-      'Your employment with Todd will be “at will,” meaning that either you or Todd may terminate the employment relationship at ay',
+      'Your employment with Todd will be “at will,” meaning that either you or Todd may terminate the employment relationship at any',
       'time, with or without cause or notice.',
     ],
     { x: 43.6, top: 479.9, leading: 15, font: fonts.letter }
