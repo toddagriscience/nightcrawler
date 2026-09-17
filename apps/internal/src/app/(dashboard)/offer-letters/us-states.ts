@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-/** US states and DC as `[code, name]` pairs, for the address state select. */
+/** US states, DC, and territories as `[code, name]` pairs, for the address state select. */
 export const US_STATES: ReadonlyArray<readonly [string, string]> = [
   ['AL', 'Alabama'],
   ['AK', 'Alaska'],
@@ -53,6 +53,11 @@ export const US_STATES: ReadonlyArray<readonly [string, string]> = [
   ['WV', 'West Virginia'],
   ['WI', 'Wisconsin'],
   ['WY', 'Wyoming'],
+  ['AS', 'American Samoa'],
+  ['GU', 'Guam'],
+  ['MP', 'Northern Mariana Islands'],
+  ['PR', 'Puerto Rico'],
+  ['VI', 'U.S. Virgin Islands'],
 ];
 
 /** Set of valid state codes for server-side validation. */
