@@ -241,7 +241,7 @@ export function drawOfferLetterPage(
     page,
     [
       `Please review this offer carefully and sign and date this letter electronically by ${content.acceptByDate} to indicate your acceptance.`,
-      'We are excited about the possibility of you doing us to help build the future of agriculture.',
+      'We are excited about the possibility of you joining us to help build the future of agriculture.',
     ],
     {
       x: 43.6,
