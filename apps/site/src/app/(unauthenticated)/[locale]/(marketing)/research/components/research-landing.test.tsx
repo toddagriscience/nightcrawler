@@ -32,7 +32,7 @@ describe('ResearchLanding', () => {
       screen.getByText(
         'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
-    ).toBeInTheDocument();
+    ).toHaveClass('max-w-none', 'md:whitespace-nowrap');
     expect(screen.getByText('Research')).toBeInTheDocument();
     expect(screen.getByAltText('Meadow')).toHaveAttribute(
       'src',
