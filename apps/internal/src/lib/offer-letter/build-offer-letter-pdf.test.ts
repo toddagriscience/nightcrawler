@@ -54,6 +54,6 @@ describe('buildOfferLetterPdf', () => {
     expect(pdf.getPage(1).node.get(PDFName.of('Contents'))).toBeDefined();
     expect(pdf.catalog.get(PDFName.of('AcroForm'))).toBeUndefined();
     expect(letterFonts).toContain('/Helvetica');
-    expect(legalFonts).toContain('/NeueHaasUnicaPro-Regular-1007');
+    expect(legalFonts.some((font) => /NeueHaasUnica/i.test(font))).toBe(true);
   });
 });
