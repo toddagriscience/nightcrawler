@@ -59,3 +59,13 @@ export const US_STATES: ReadonlyArray<readonly [string, string]> = [
 export const US_STATE_CODES: ReadonlySet<string> = new Set(
   US_STATES.map(([code]) => code)
 );
+
+/**
+ * Returns the display name for a two-letter US state code.
+ *
+ * @param code - Two-letter state code
+ * @returns State name, or the original code when no match exists
+ */
+export function getUsStateName(code: string): string {
+  return US_STATES.find(([stateCode]) => stateCode === code)?.[1] ?? code;
+}

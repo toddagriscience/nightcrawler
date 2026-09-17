@@ -4,7 +4,7 @@ import OfferLetterForm from './components/offer-letter-form';
 
 /**
  * Offer letters page.
- * Renders the form that generates a downloadable offer letter PDF.
+ * Renders the form that generates a downloadable offer packet PDF.
  */
 export default function OfferLettersPage() {
   return (
@@ -12,8 +12,8 @@ export default function OfferLettersPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Offer Letters</h1>
         <p className="text-sm text-muted-foreground">
-          Fill in the hiree&apos;s details to generate a downloadable offer
-          letter PDF.
+          Enter the candidate and offer details to generate a downloadable offer
+          packet PDF.
         </p>
       </div>
       <OfferLetterForm />

@@ -3,6 +3,7 @@
 'use client';
 
 import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
   type FieldError,
@@ -37,6 +38,11 @@ import {
   buildOfferEmail,
   OFFER_EMAIL_SUBJECT,
 } from '../email-template';
+import {
+  DEFAULT_OFFER_LOCATION,
+  getCurrentIsoDate,
+  offerLetterSchema,
+} from '../schema';
 import { US_STATES } from '../us-states';
 import type { OfferLetterFormData } from '../types';
 
@@ -48,11 +54,14 @@ type FieldPath =
   | 'address.line2'
   | 'address.city'
   | 'address.zip'
+  | 'letterDate'
+  | 'acceptByDate'
   | 'startDate'
   | 'endDate'
+  | 'location'
   | 'annualBaseSalary'
   | 'signingBonus'
-  | 'equity';
+  | 'equityPercentage';
 
 interface FieldProps<TName extends FieldPath> {
   /** Form path, also used to derive the input id */
@@ -118,35 +127,36 @@ function downloadPdf(base64: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-/** Registration rules for a non-negative whole-dollar/unit amount. */
+/** Registration rule that converts number inputs before schema validation. */
 const amountRules = {
   valueAsNumber: true,
-  required: 'Required',
-  min: { value: 0, message: 'Must be 0 or more' },
-  validate: (v: number) => Number.isFinite(v) || 'Enter a number',
 };
 
 /**
- * Offer letter form. Collects hiree details, downloads the generated PDF and
+ * Offer letter form. Collects candidate details, downloads the generated PDF and
  * shows the matching offer email so it can be copied into a mail client.
  */
 export default function OfferLetterForm() {
   const [emailText, setEmailText] = useState<string | null>(null);
+  const today = getCurrentIsoDate();
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<OfferLetterFormData>({
+    resolver: zodResolver(offerLetterSchema),
     defaultValues: {
       name: '',
       position: '',
       address: { street: '', line2: '', city: '', state: '', zip: '' },
-      startDate: '',
-      endDate: '',
+      letterDate: today,
+      acceptByDate: today,
+      startDate: today,
+      endDate: today,
+      location: DEFAULT_OFFER_LOCATION,
       annualBaseSalary: 0,
       signingBonus: 0,
-      equity: 0,
+      equityPercentage: 0,
     },
   });
 
@@ -154,15 +164,15 @@ export default function OfferLetterForm() {
     try {
       const pdf = await generateOfferLetter(data);
       if (!pdf) {
-        toast.error('Failed to generate offer letter.');
+        toast.error('Failed to generate offer packet.');
         return;
       }
       const slug = data.name
         .trim()
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-');
-      downloadPdf(pdf, `offer-letter-${slug}.pdf`);
-      toast.success('Offer letter downloaded.');
+      downloadPdf(pdf, `${slug}-packet.pdf`);
+      toast.success('Offer packet downloaded.');
       setEmailText(buildOfferEmail(data.name, data.position));
     } catch {
       notifyActionError();
@@ -179,18 +189,13 @@ export default function OfferLetterForm() {
     }
   };
 
-  const required = (message: string) => ({
-    required: message,
-    validate: (v: string) => v.trim().length > 0 || message,
-  });
-
   return (
     <>
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle>New Offer Letter</CardTitle>
           <CardDescription>
-            Generates a test PDF with the details below.
+            Generates a complete offer packet with the details below.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -200,13 +205,12 @@ export default function OfferLetterForm() {
             noValidate
           >
             <fieldset className="space-y-4">
-              <legend className="mb-2 text-sm font-semibold">Hiree</legend>
+              <legend className="mb-2 text-sm font-semibold">Candidate</legend>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field
                   name="name"
-                  label="Hiree Name"
+                  label="Candidate Name"
                   register={register}
-                  rules={required('Hiree name is required')}
                   error={errors.name}
                   inputProps={{ autoComplete: 'off' }}
                 />
@@ -214,7 +218,6 @@ export default function OfferLetterForm() {
                   name="position"
                   label="Position Name"
                   register={register}
-                  rules={required('Position name is required')}
                   error={errors.position}
                   placeholder="Software Engineer Intern"
                   inputProps={{ autoComplete: 'off' }}
@@ -228,7 +231,6 @@ export default function OfferLetterForm() {
                 name="address.street"
                 label="Street Address"
                 register={register}
-                rules={required('Street address is required')}
                 error={errors.address?.street}
                 placeholder="123 Main St"
                 inputProps={{ autoComplete: 'off' }}
@@ -245,7 +247,6 @@ export default function OfferLetterForm() {
                   name="address.city"
                   label="City"
                   register={register}
-                  rules={required('City is required')}
                   error={errors.address?.city}
                   inputProps={{ autoComplete: 'off' }}
                 />
@@ -260,9 +261,7 @@ export default function OfferLetterForm() {
                         ? 'offer-address-state-error'
                         : undefined
                     }
-                    {...register('address.state', {
-                      required: 'State is required',
-                    })}
+                    {...register('address.state')}
                   >
                     <option value="">Select…</option>
                     {US_STATES.map(([code, label]) => (
@@ -284,13 +283,6 @@ export default function OfferLetterForm() {
                   name="address.zip"
                   label="ZIP"
                   register={register}
-                  rules={{
-                    required: 'ZIP is required',
-                    pattern: {
-                      value: /^\d{5}(-\d{4})?$/,
-                      message: 'Use 12345 or 12345-6789',
-                    },
-                  }}
                   error={errors.address?.zip}
                   placeholder="62701"
                   inputProps={{ autoComplete: 'off', inputMode: 'numeric' }}
@@ -299,14 +291,29 @@ export default function OfferLetterForm() {
             </fieldset>
 
             <fieldset className="space-y-4">
-              <legend className="mb-2 text-sm font-semibold">Dates</legend>
+              <legend className="mb-2 text-sm font-semibold">
+                Offer Details
+              </legend>
               <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  name="letterDate"
+                  label="Letter Date"
+                  type="date"
+                  register={register}
+                  error={errors.letterDate}
+                />
+                <Field
+                  name="acceptByDate"
+                  label="Accept By"
+                  type="date"
+                  register={register}
+                  error={errors.acceptByDate}
+                />
                 <Field
                   name="startDate"
                   label="Start Date"
                   type="date"
                   register={register}
-                  rules={{ required: 'Start date is required' }}
                   error={errors.startDate}
                 />
                 <Field
@@ -314,15 +321,17 @@ export default function OfferLetterForm() {
                   label="End Date"
                   type="date"
                   register={register}
-                  rules={{
-                    required: 'End date is required',
-                    validate: (v: string) =>
-                      v >= getValues('startDate') ||
-                      'End date must be on or after start date',
-                  }}
                   error={errors.endDate}
                 />
               </div>
+              <Field
+                name="location"
+                label="Location"
+                register={register}
+                error={errors.location}
+                placeholder="Los Angeles, CA/Remote"
+                inputProps={{ autoComplete: 'off' }}
+              />
             </fieldset>
 
             <fieldset className="space-y-4">
@@ -349,13 +358,13 @@ export default function OfferLetterForm() {
                   inputProps={{ min: 0, step: 1 }}
                 />
                 <Field
-                  name="equity"
-                  label="Equity (units)"
+                  name="equityPercentage"
+                  label="Equity (%)"
                   type="number"
                   register={register}
                   rules={amountRules}
-                  error={errors.equity}
-                  inputProps={{ min: 0, step: 1 }}
+                  error={errors.equityPercentage}
+                  inputProps={{ min: 0, max: 100, step: 0.01 }}
                 />
               </div>
             </fieldset>
@@ -378,9 +387,10 @@ export default function OfferLetterForm() {
           <DialogHeader>
             <DialogTitle>Offer Email</DialogTitle>
             <DialogDescription>
-              The PDF has been downloaded. Copy the subject and body into the
-              email to the hiree, or open a prefilled Gmail draft. Gmail links
-              cannot attach files, so add the PDF to the draft yourself.
+              The offer packet has been downloaded. Copy the subject and body
+              into the email to the candidate, or open a prefilled Gmail draft.
+              Gmail links cannot attach files, so add the PDF to the draft
+              yourself.
             </DialogDescription>
           </DialogHeader>
 
