@@ -192,9 +192,11 @@ export default function Login() {
                 </Button> */}
 
                 <p className="text-left text-sm font-thin">
-                  Not yet a Todd Client?{' '}
-                  <Link href="/contact" className="font-normal underline">
-                    Learn how to become one
+                  <Link
+                    href="/index/introducing-iris"
+                    className="font-normal underline"
+                  >
+                    Learn more about Todd Iris
                   </Link>
                 </p>
               </form>
