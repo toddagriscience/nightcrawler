@@ -82,16 +82,19 @@ export default function TermsAndConditions() {
           </div>
         )}
       </div>
-      <AccountAgreementConfirmation
-        disabled={!canEditFarm || !canSubmitApplication}
-        waitTimeMs={waitTime}
-        onConfirm={async () => {
-          setSubmitError(false);
-          await actions.submitApplication();
-          router.push('/');
-        }}
-        onError={() => setSubmitError(true)}
-      />
+      <div className="flex justify-end">
+        <AccountAgreementConfirmation
+          triggerClassName="h-11 w-[200px] rounded-full font-semibold"
+          disabled={!canEditFarm || !canSubmitApplication}
+          waitTimeMs={waitTime}
+          onConfirm={async () => {
+            setSubmitError(false);
+            await actions.submitApplication();
+            router.push('/');
+          }}
+          onError={() => setSubmitError(true)}
+        />
+      </div>
     </div>
   );
 }

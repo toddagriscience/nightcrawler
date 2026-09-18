@@ -19,3 +19,11 @@ views cover long pages.
 Only reliable viewport captures are included. Tall/full-page exports had capture
 artifacts and were excluded; the exact 1440×7000 Chrome capture recipe was not
 completed.
+
+## Agree button follow-up
+
+`agree-button-before.png` and `agree-button-after.png` are crops of the
+`Onboarding/Terms and Conditions` Storybook story (Default) at 1440px wide. The
+Agree button was full width when the `after-terms-*` captures above were taken;
+it now uses the same 200px pill sizing and right alignment as the Continue
+buttons on the other steps.
