@@ -43,6 +43,7 @@ export default function PublicInquiryModal({
         {trigger ? (
           <Button
             type="button"
+            variant="link"
             className="m-0 h-min w-auto !justify-start p-0 font-medium hover:cursor-pointer hover:no-underline"
           >
             {trigger}

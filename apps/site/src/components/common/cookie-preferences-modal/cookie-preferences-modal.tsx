@@ -40,6 +40,7 @@ export default function CookiePreferencesModal({
         {trigger ? (
           <Button
             type="button"
+            variant="link"
             className="m-0 h-min w-auto !justify-start p-0 text-base font-light hover:cursor-pointer"
           >
             {trigger}
@@ -76,13 +77,14 @@ export default function CookiePreferencesModal({
             </Link>
             <div className="flex flex-row items-center gap-2">
               <Switch
-                className={isCapturing ? 'bg-green-500' : 'bg-gray-500'}
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-500"
                 checked={isCapturing}
                 onCheckedChange={(checked) => applyPostHogPreference(checked)}
               />
               <Label>Do not sell or share my personal information</Label>
             </div>
             <Button
+              variant="outline"
               className="rounded-4xl border border-solid border-black px-8 py-2 hover:cursor-pointer"
               onClick={() => setIsOpen(false)}
             >
