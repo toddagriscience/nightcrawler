@@ -71,6 +71,15 @@ describe('isArticleIndexTopic', () => {
 });
 
 describe('ArticleIndex', () => {
+  it('renders a centered PageHeader when a caption is provided', async () => {
+    renderWithNextIntl(await render({ caption: 'Company', title: 'News' }));
+
+    const heading = screen.getByRole('heading', { level: 1, name: 'News' });
+    expect(heading).toBeInTheDocument();
+    expect(heading.className).toContain('clamp(');
+    expect(screen.getByText('Company')).toBeInTheDocument();
+  });
+
   it('renders the topic tab bar by default', async () => {
     renderWithNextIntl(await render());
     expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();

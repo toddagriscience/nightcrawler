@@ -82,19 +82,20 @@ export default function ResearchLanding({
           initial={{ opacity: 0, filter: 'blur(16px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="px-6 pt-16 md:px-10 md:pt-20 lg:pt-24"
+          className="px-6 md:px-10"
         >
           <section className="mx-auto flex max-w-[1100px] flex-col items-center">
             <PageHeader
               caption={t('eyebrow')}
               title={t('title')}
               subtitle={t('subtitle')}
+              subtitleClassName="max-w-none md:whitespace-nowrap"
               button={{
                 text: t('cta.researchIndex'),
                 href: '/research/index',
               }}
             />
-            <div className="mt-16 w-full overflow-hidden rounded-sm bg-[#d9d9d9] md:mt-20">
+            <div className="w-full overflow-hidden rounded-sm bg-[#d9d9d9] md:mt-18">
               <Image
                 src="/marketing/meadow-4.webp"
                 alt={t('heroImageAlt')}

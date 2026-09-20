@@ -37,7 +37,9 @@ describe('CareersIndexPage', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Careers at Todd' })
-    ).toBeInTheDocument();
+    ).toHaveClass(
+      'text-[clamp(2rem,calc(2rem+1*((100vw-23.4375rem)/66.5625)),3rem)]'
+    );
   });
 
   it('renders CareersJobList when Sanity returns jobs', async () => {

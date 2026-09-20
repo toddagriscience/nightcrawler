@@ -1,20 +1,23 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { analysis } from '@nightcrawler/db/schema';
+import {
+  createFarmDefaultSettings,
+  getStandardValues,
+} from '@nightcrawler/db/queries';
+import { analysis, mineral } from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
-import { desc, eq } from 'drizzle-orm';
-import { ZoneSearchForm } from './zone-search-form';
+import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { and, desc, eq, inArray } from 'drizzle-orm';
+import { toMineralChartProps } from './to-mineral-chart';
+import { toPhRange } from './to-ph-range';
+import { ZoneActiveTemplate } from './zone-active-template';
+import type { ZoneMineralChart } from './zone-mineral-charts';
+import { ZoneStatusPlaceholder } from './zone-status-placeholder';
 
 /** Months between a soil sample and the next scheduled one. */
 const TEST_PERIOD_MONTHS = 6;
 
-/** Placeholder until advisors are modeled in the DB. */
-const LEAD_ADVISOR_PLACEHOLDER = 'Not assigned';
-
-/** Shared vertical spacing for each stacked section. */
-const SECTION_CLASS = 'py-6';
-
-const HEADING_CLASS = 'text-sm font-medium text-foreground';
+const ZONE_READING_MINERALS = ['Calcium', 'PH'] as const;
 
 function addMonths(date: Date, months: number): Date {
   const next = new Date(date);
@@ -32,9 +35,9 @@ function formatDate(date: Date | null): string {
 }
 
 /**
- * Per-management-zone template. Renders stacked sections separated by divider
- * lines: zone info, mineral IMPs placeholder, client observations (shell only
- * for now), and a search form that opens the inference search panel.
+ * Per-management-zone template. Zones without an analysis show a pending
+ * placeholder. Zones with an analysis show info, Calcium/pH charts, insight,
+ * observations, and search.
  *
  * @param {object} props - Component props.
  * @param {number} props.zoneId - Selected management zone id.
@@ -49,64 +52,88 @@ export default async function ZoneTemplate({
   zoneName: string;
 }) {
   const [latest] = await db
-    .select({ analysisDate: analysis.analysisDate })
+    .select({
+      id: analysis.id,
+      analysisDate: analysis.analysisDate,
+      summary: analysis.summary,
+      macroActionableInfo: analysis.macroActionableInfo,
+    })
     .from(analysis)
     .where(eq(analysis.managementZone, zoneId))
     .orderBy(desc(analysis.analysisDate))
     .limit(1);
 
-  const sampleDate = latest?.analysisDate ?? null;
-  const nextDate = sampleDate
-    ? addMonths(sampleDate, TEST_PERIOD_MONTHS)
+  if (!latest) {
+    return <ZoneStatusPlaceholder status="pending" />;
+  }
+
+  const currentUser = await getAuthenticatedInfo();
+
+  const [readings, initialCalciumThresholds, initialPhThresholds] =
+    await Promise.all([
+      db
+        .select({
+          name: mineral.name,
+          realValue: mineral.realValue,
+          units: mineral.units,
+        })
+        .from(mineral)
+        .where(
+          and(
+            eq(mineral.analysisId, latest.id),
+            inArray(mineral.name, [...ZONE_READING_MINERALS])
+          )
+        ),
+      getStandardValues(currentUser.farmId, 'Calcium'),
+      getStandardValues(currentUser.farmId, 'PH'),
+    ]);
+
+  let calciumThresholds = initialCalciumThresholds;
+  let phThresholds = initialPhThresholds;
+  if (!calciumThresholds || !phThresholds) {
+    await createFarmDefaultSettings(currentUser.farmId);
+    [calciumThresholds, phThresholds] = await Promise.all([
+      getStandardValues(currentUser.farmId, 'Calcium'),
+      getStandardValues(currentUser.farmId, 'PH'),
+    ]);
+  }
+
+  const charts: ZoneMineralChart[] = [];
+  const calciumReading = readings.find((row) => row.name === 'Calcium');
+  if (calciumReading) {
+    const props = toMineralChartProps({
+      name: 'Calcium',
+      realValue: Number(calciumReading.realValue),
+      date: latest.analysisDate,
+      storedUnit: calciumReading.units,
+      thresholds: calciumThresholds,
+    });
+    if (props) {
+      charts.push({ label: 'Calcium', props });
+    }
+  }
+
+  const phReading = readings.find((row) => row.name === 'PH');
+  const phRange = phReading
+    ? toPhRange({
+        value: Number(phReading.realValue),
+        phLow: phThresholds?.low ?? null,
+        phHigh: phThresholds?.high ?? null,
+      })
     : null;
 
+  const sampleDate = latest.analysisDate;
+  const nextDate = addMonths(sampleDate, TEST_PERIOD_MONTHS);
+
   return (
-    <div className="divide-foreground/10 mx-auto max-w-4xl divide-y px-6">
-      {/* Info */}
-      <section className={SECTION_CLASS}>
-        <h2 className="text-foreground text-xl font-medium">{zoneName}</h2>
-        <div className="mt-4 flex flex-wrap gap-x-12 gap-y-3 text-sm">
-          <div>
-            <span className="text-foreground/50">Sample </span>
-            <span className="text-foreground">{formatDate(sampleDate)}</span>
-          </div>
-          <div>
-            <span className="text-foreground/50">Next </span>
-            <span className="text-foreground">{formatDate(nextDate)}</span>
-          </div>
-          <div>
-            <span className="text-foreground/50">Lead Advisor </span>
-            <span className="text-foreground">{LEAD_ADVISOR_PLACEHOLDER}</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Mineral IMPs placeholder until analysis tables are wired */}
-      <section className={SECTION_CLASS}>
-        <p className="text-foreground/60 text-sm">
-          Information temporarily not available
-        </p>
-      </section>
-
-      {/* Observations — shell only for now */}
-      <section className={SECTION_CLASS}>
-        <p className={HEADING_CLASS}>Observations</p>
-        <button
-          type="button"
-          disabled
-          className="border-foreground/20 text-foreground/50 mt-4 w-full rounded-md border border-dashed px-4 py-3 text-left text-sm"
-        >
-          + Add an observation to {zoneName}
-        </button>
-      </section>
-
-      {/* Search — opens the right-side search panel seeded with the query */}
-      <section className={SECTION_CLASS}>
-        <label htmlFor="zone-search" className={HEADING_CLASS}>
-          Ask about this zone
-        </label>
-        <ZoneSearchForm />
-      </section>
-    </div>
+    <ZoneActiveTemplate
+      zoneName={zoneName}
+      sampleLabel={formatDate(sampleDate)}
+      nextLabel={formatDate(nextDate)}
+      charts={charts}
+      phRange={phRange}
+      summary={latest.summary}
+      action={latest.macroActionableInfo}
+    />
   );
 }

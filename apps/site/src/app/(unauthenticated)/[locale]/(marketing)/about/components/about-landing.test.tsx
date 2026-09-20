@@ -1,8 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AboutLanding from './about-landing';
 
 vi.mock('next/image', () => ({
@@ -30,6 +31,16 @@ vi.mock('./responsibilities-section/responsibilities-section', () => ({
 }));
 
 describe('AboutLanding', () => {
+  beforeEach(() => {
+    // The partners section reads prefers-reduced-motion via useMediaQuery,
+    // and jsdom ships no matchMedia.
+    stubMatchMedia(false);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('renders exactly one h1 element with the correct title for accessibility', () => {
     renderWithNextIntl(<AboutLanding />);
 
@@ -48,10 +59,10 @@ describe('AboutLanding', () => {
     expect(screen.getByText('Company')).toBeInTheDocument();
 
     expect(
-      screen.getAllByText(
-        /We believe sustainable agriculture is the foundation/i
+      screen.getByText(
+        'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
-    ).not.toHaveLength(0);
+    ).toHaveClass('max-w-[37rem]');
   });
 
   it('renders vision section with image and CTA', () => {
@@ -77,6 +88,33 @@ describe('AboutLanding', () => {
     // The slot is `max-w-[580px]`. Understating it makes the srcset picker choose
     // one candidate too small and the photo softens on desktop.
     expect(image).toHaveAttribute('sizes', '(min-width: 768px) 580px, 100vw');
+  });
+
+  it('captions the vision photo without repeating its alt text', () => {
+    renderWithNextIntl(<AboutLanding />);
+
+    const caption = screen.getByText('Image: Partner Farm in Grass Valley, CA');
+    const image = screen.getByRole('img', { name: /family/i });
+
+    // A screen reader announces the two together only when they share a figure.
+    expect(caption.tagName).toBe('FIGCAPTION');
+    expect(caption.closest('figure')).toContainElement(image);
+
+    // The alt describes the photo, the caption says where it was taken; neither
+    // restates the other, or the image is announced twice.
+    expect(image).toHaveAttribute('alt', 'Family gardening together');
+  });
+
+  it('translates the header photo alt text', () => {
+    const { container } = renderWithNextIntl(<AboutLanding />);
+
+    // It was the hardcoded, untranslated "Meadow".
+    expect(
+      container.querySelector('img[src="/marketing/who-we-are-header.webp"]')
+    ).toHaveAttribute(
+      'alt',
+      'A grass path winding between fruit trees on a meadow'
+    );
   });
 
   it('never skips a heading level', () => {

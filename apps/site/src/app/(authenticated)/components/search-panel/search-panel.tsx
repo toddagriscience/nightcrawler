@@ -41,14 +41,29 @@ export function SearchPanel() {
       />
 
       {showCollapsedTab && (
-        <button
-          type="button"
-          onClick={expandPanel}
-          aria-label="Expand search results"
-          className="text-foreground/60 hover:text-foreground fixed top-4 right-4 z-50 flex items-center justify-center transition-colors"
-        >
-          <BiDockRight className="size-3.5" aria-hidden />
-        </button>
+        <>
+          {/* Desktop: in-flow rail mirroring the collapsed left sidebar */}
+          <div className="hidden h-screen flex-col items-center border-l border-[#D9D9D9]/30 px-2 pt-2 md:flex">
+            <button
+              type="button"
+              onClick={expandPanel}
+              aria-label="Expand search results"
+              className="flex size-8 shrink-0 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-[#D9D9D9]/20 hover:text-foreground"
+            >
+              <BiDockRight className="size-5" aria-hidden />
+            </button>
+          </div>
+
+          {/* Mobile: floating affordance to reopen the drawer */}
+          <button
+            type="button"
+            onClick={expandPanel}
+            aria-label="Expand search results"
+            className="text-foreground/60 hover:text-foreground fixed top-4 right-4 z-50 flex items-center justify-center transition-colors md:hidden"
+          >
+            <BiDockRight className="size-3.5" aria-hidden />
+          </button>
+        </>
       )}
 
       {/*
