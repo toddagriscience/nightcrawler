@@ -11,6 +11,7 @@ const protectedUrls = [
   '/account/*',
   '/application-success',
   '/accept',
+  '/apply',
 ];
 
 /**
@@ -68,6 +69,17 @@ export async function handleAuthRouting(
 
   if (isRouteProtected(pathname)) {
     if (isAuthenticated) {
+      return supabaseResponse;
+    }
+
+    // Approved applicants reach password setup before a session exists. The
+    // onboarding page and signup action independently validate this token.
+    const query = new URL(request.url).searchParams;
+    if (
+      pathname === '/apply' &&
+      query.get('application_id') &&
+      query.get('token')
+    ) {
       return supabaseResponse;
     }
 
@@ -134,7 +146,7 @@ export function isRouteProtected(pathname: string): boolean {
       return false;
     }
 
-    if (pattern === '/account') {
+    if (pattern === '/account' || pattern === '/apply') {
       return pathname === pattern;
     }
 
