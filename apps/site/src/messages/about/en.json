@@ -57,7 +57,8 @@
       }
     },
     "navigation": {
-      "whatWeDo": "What we do"
+      "whatWeDo": "What we do",
+      "whatWeDoCta": "Explore our research"
     }
   }
 }
