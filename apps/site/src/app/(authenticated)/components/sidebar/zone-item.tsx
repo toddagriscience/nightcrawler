@@ -1,6 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+'use client';
+
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 interface ZoneItemProps {
   id: number;
@@ -24,24 +27,32 @@ export default function ZoneItem({
   index,
   isPending = false,
 }: ZoneItemProps) {
+  const searchParams = useSearchParams();
+  const isActive = searchParams.get('zone') === String(id);
+
   return (
-    <div className="text-foreground/70 hover:text-foreground flex items-center gap-2 px-3 py-1.5 text-sm transition-colors">
-      <Link
-        href={`/?zone=${id}`}
-        className="flex min-w-0 flex-1 items-center gap-2"
-      >
-        {isPending ? (
-          <span
-            className="size-2 shrink-0 rounded-full bg-yellow-500"
-            role="img"
-            aria-label="Pending review"
-          />
-        ) : null}
-        <span className="min-w-0 flex-1 truncate">{name}</span>
-        <kbd className="text-foreground/40 shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px]">
-          Alt {index + 1}
-        </kbd>
-      </Link>
-    </div>
+    <Link
+      href={`/?zone=${id}`}
+      className={`
+        flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors w-full text-left
+        ${
+          isActive
+            ? 'bg-accent/85 text-foreground font-semibold'
+            : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground'
+        }
+      `}
+    >
+      {isPending ? (
+        <span
+          className="size-2 shrink-0 rounded-full bg-yellow-500"
+          role="img"
+          aria-label="Pending review"
+        />
+      ) : null}
+      <span className="min-w-0 flex-1 truncate">{name}</span>
+      <kbd className="text-foreground/40 shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px]">
+        Alt {index + 1}
+      </kbd>
+    </Link>
   );
 }

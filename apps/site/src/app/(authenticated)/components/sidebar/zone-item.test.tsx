@@ -1,8 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import ZoneItem from './zone-item';
+
+vi.mock('next/navigation', () => ({
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn((key: string) => null),
+  })),
+}));
 
 describe('ZoneItem', () => {
   it('renders the zone name linking to its zone view', () => {
