@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
+;
 
 type LoginFormData = { email: string; password: string };
 
