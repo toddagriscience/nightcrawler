@@ -2,13 +2,16 @@
 
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { SearchPanelProvider } from '../search-panel/search-panel-context';
 import Sidebar from './sidebar';
 import { SidebarCollapseProvider } from './sidebar-collapse-context';
-import { SearchPanelProvider } from '../search-panel/search-panel-context';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
   useRouter: vi.fn(() => ({ push: vi.fn() })),
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn((key: string) => null),
+  })),
 }));
 
 const getSidebarManagementZones = vi.fn(async () => [

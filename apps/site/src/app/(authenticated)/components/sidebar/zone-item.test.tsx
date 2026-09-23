@@ -4,6 +4,12 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import ZoneItem from './zone-item';
 
+vi.mock('next/navigation', () => ({
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn((key: string) => null),
+  })),
+}));
+
 describe('ZoneItem', () => {
   it('renders the zone name linking to its zone view', () => {
     render(<ZoneItem id={7} name="North Field" index={0} />);
