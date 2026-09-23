@@ -15,7 +15,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
-;
 
 type LoginFormData = { email: string; password: string };
 
@@ -194,7 +193,10 @@ export default function Login() {
 
                 <p className="text-left text-sm font-thin">
                   Not yet a Todd Client?{' '}
-                  <Link href="/index/introducing-iris" className="font-normal underline">
+                  <Link
+                    href="/index/introducing-iris"
+                    className="font-normal underline"
+                  >
                     Learn more about Todd Iris
                   </Link>
                 </p>
