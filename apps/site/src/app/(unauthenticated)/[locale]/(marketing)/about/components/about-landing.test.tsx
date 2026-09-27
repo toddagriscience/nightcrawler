@@ -1,8 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AboutLanding from './about-landing';
 
 vi.mock('next/image', () => ({
@@ -30,6 +31,16 @@ vi.mock('./responsibilities-section/responsibilities-section', () => ({
 }));
 
 describe('AboutLanding', () => {
+  beforeEach(() => {
+    // The partners section reads prefers-reduced-motion via useMediaQuery,
+    // and jsdom ships no matchMedia.
+    stubMatchMedia(false);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('renders exactly one h1 element with the correct title for accessibility', () => {
     renderWithNextIntl(<AboutLanding />);
 

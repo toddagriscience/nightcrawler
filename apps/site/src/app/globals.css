@@ -202,6 +202,18 @@ html {
   scrollbar-gutter: stable;
 }
 
+/*
+ * Dialogs lock page scrolling through react-remove-scroll, which assumes the
+ * scrollbar disappears and pads the body by its width to compensate. With the
+ * gutter reserved above, nothing disappears, so that margin double-counts the
+ * gutter and nudges the whole page sideways while a dialog is open. The platform
+ * opts out of the stable gutter (see html.authenticated-root), so the
+ * compensation stays correct there.
+ */
+html:not(.authenticated-root) body[data-scroll-locked] {
+  margin-right: 0 !important;
+}
+
 html,
 body {
   font-family: var(--font-haas);
