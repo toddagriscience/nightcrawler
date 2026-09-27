@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import type { OnboardingFlowProps } from '@/app/(onboarding)/apply/types';
 import { ApplicationContext } from '@/app/(onboarding)/apply/components/onboarding-context';
 import OnboardingProgress from '@/app/(onboarding)/apply/components/onboarding-progress';
+import { ONBOARDING_STEPS } from '@/app/(onboarding)/apply/onboarding-steps';
+import { LegalSubtext } from '@/components/common/legal-subtext/legal-subtext';
 import SetPasswordStep from '@/app/(onboarding)/apply/components/set-password-step';
 import Colleagues from '@/app/(onboarding)/apply/components/colleagues';
 import BankInformation from '@/app/(onboarding)/apply/components/bank-information';
@@ -21,6 +23,8 @@ export default function OnboardingFlow({
   const router = useRouter();
   const contentRef = useRef<HTMLElement>(null);
   const step = applicant ? 'password' : data.initialStep;
+  const stepLabel =
+    ONBOARDING_STEPS.find(({ id }) => id === step)?.label ?? step;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -32,8 +36,16 @@ export default function OnboardingFlow({
 
   return (
     <main className="mx-auto mb-16 mt-12 w-[90vw] max-w-[550px]">
-      <h1 className="mb-8 text-2xl font-normal">Set up your account</h1>
-      <OnboardingProgress step={step} />
+      {step === 'password' ? (
+        <>
+          <h1 className="mb-10 text-center text-3xl font-normal md:text-4xl">
+            Welcome to Todd-Iris
+          </h1>
+          <OnboardingProgress step={step} />
+        </>
+      ) : (
+        <h1 className="sr-only">{stepLabel}</h1>
+      )}
       <section
         ref={contentRef}
         tabIndex={-1}
@@ -73,6 +85,11 @@ export default function OnboardingFlow({
           </ApplicationContext.Provider>
         )}
       </section>
+      {step === 'password' && (
+        <div className="mt-12 flex justify-center">
+          <LegalSubtext />
+        </div>
+      )}
     </main>
   );
 }

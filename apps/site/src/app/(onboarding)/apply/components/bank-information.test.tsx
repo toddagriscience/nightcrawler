@@ -93,9 +93,7 @@ describe('BankInformation', () => {
   it('allows going back before bank details have been saved', async () => {
     const user = userEvent.setup();
     renderWithContext();
-    await user.click(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    );
+    await user.click(screen.getByRole('button', { name: 'Back' }));
     expect(backToTeam).toHaveBeenCalledOnce();
     expect(createSetup).not.toHaveBeenCalled();
   });
@@ -106,9 +104,7 @@ describe('BankInformation', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Bank information on file'
     );
-    await user.click(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    );
+    await user.click(screen.getByRole('button', { name: 'Back' }));
     expect(backToTeam).toHaveBeenCalledOnce();
     expect(continuePayment).not.toHaveBeenCalled();
   });
@@ -124,7 +120,7 @@ describe('BankInformation', () => {
   it('removes navigation after payment has been continued', () => {
     renderWithContext({ hasBankSetup: true, paymentContinued: true });
     expect(
-      screen.queryByRole('button', { name: 'Back to Add people' })
+      screen.queryByRole('button', { name: 'Back' })
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Continue' })
@@ -137,9 +133,7 @@ describe('BankInformation', () => {
     expect(
       screen.getByRole('button', { name: 'Add Bank Information' })
     ).toBeDisabled();
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Back' })).toBeDisabled();
   });
 
   it('keeps payment accessible when Continue fails', async () => {
@@ -152,18 +146,14 @@ describe('BankInformation', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Unable to save progress.'
     );
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Back' })).toBeEnabled();
   });
 
   it('surfaces back-navigation persistence errors', async () => {
     const user = userEvent.setup();
     backToTeam.mockRejectedValueOnce(new Error('Please retry.'));
     renderWithContext({ hasBankSetup: true });
-    await user.click(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    );
+    await user.click(screen.getByRole('button', { name: 'Back' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Please retry.');
   });
 
@@ -199,9 +189,7 @@ describe('BankInformation', () => {
     expect(bankSaved).toHaveBeenCalledOnce();
     expect(continuePayment).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled();
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Back' })).toBeEnabled();
     expect(mockConfirmSetup).toHaveBeenCalledWith(
       expect.objectContaining({
         redirect: 'if_required',
@@ -302,18 +290,12 @@ describe('BankInformation', () => {
     expect(
       await screen.findByRole('button', { name: 'Saving…' })
     ).toBeDisabled();
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeDisabled();
-    await user.click(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    );
+    expect(screen.getByRole('button', { name: 'Back' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Back' }));
     expect(backToTeam).not.toHaveBeenCalled();
     finish();
     await screen.findByRole('status');
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Back' })).toBeEnabled();
   });
 
   it('falls back to the original SetupIntent ID for server verification', async () => {
@@ -344,9 +326,7 @@ describe('BankInformation', () => {
     expect(
       await screen.findByRole('button', { name: 'Saving…' })
     ).toBeDisabled();
-    expect(
-      screen.getByRole('button', { name: 'Back to Add people' })
-    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Back' })).toBeDisabled();
     finish();
     await screen.findByRole('status');
     expect(recordSetup).toHaveBeenCalledOnce();

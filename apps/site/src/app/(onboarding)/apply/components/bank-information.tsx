@@ -343,7 +343,7 @@ export default function BankInformation({
               }
               onClick={() => void handleNavigation(() => navigate('back'))()}
             >
-              Back to Add people
+              Back
             </Button>
             <Button
               type="submit"

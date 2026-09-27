@@ -117,4 +117,38 @@ describe('OnboardingFlow', () => {
       screen.queryByRole('button', { name: /back/i })
     ).not.toBeInTheDocument();
   });
+  it('welcomes applicants and shows the progress bar only on the password step', () => {
+    const { rerender } = render(
+      <OnboardingFlow
+        applicant={{
+          applicationId: 42,
+          token: 'preview-token',
+          email: 'alex@example.com',
+        }}
+        actions={ONBOARDING_ACTIONS}
+      />
+    );
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Welcome to Todd-Iris' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('list', { name: 'Account setup progress' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Todd Account Agreement' })
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Set up your account')).not.toBeInTheDocument();
+
+    rerender(
+      <OnboardingFlow data={ONBOARDING_DATA} actions={ONBOARDING_ACTIONS} />
+    );
+    expect(
+      screen.queryByRole('list', { name: 'Account setup progress' })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Welcome to Todd-Iris')).not.toBeInTheDocument();
+    expect(screen.queryByText('Set up your account')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Add people' })
+    ).toBeInTheDocument();
+  });
 });
