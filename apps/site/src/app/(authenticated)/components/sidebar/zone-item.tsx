@@ -28,7 +28,10 @@ export default function ZoneItem({
   isPending = false,
 }: ZoneItemProps) {
   const searchParams = useSearchParams();
-  const isActive = searchParams.get('zone') === String(id);
+  const currentZoneParam = searchParams.get('zone');
+  const isActive = currentZoneParam
+    ? currentZoneParam === String(id)
+    : id === 1;
 
   return (
     <Link

@@ -42,4 +42,15 @@ describe('ZoneItem', () => {
       screen.queryByRole('button', { name: /delete/i })
     ).not.toBeInTheDocument();
   });
+  it('applies active styling to zone 1 by default when search params are empty', () => {
+    render(<ZoneItem id={1} name="North Field" index={0} />);
+    const link = screen.getByRole('link', { name: /North Field/i });
+    expect(link).toHaveClass('bg-accent/85');
+  });
+
+  it('keeps normal styling for other zones when search params are empty', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} />);
+    const link = screen.getByRole('link', { name: /North Field/i });
+    expect(link).toHaveClass('text-muted-foreground');
+  });
 });
