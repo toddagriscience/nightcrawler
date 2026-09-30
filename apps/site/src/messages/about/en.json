@@ -8,7 +8,7 @@
       "description": "We believe agriculture should remain a human centric career that heals the planet and supports communities.",
       "cta": "Our research",
       "imageAlt": "Family gardening together",
-      "imageCaption": "Image: Partner Farm in Grass Valley, CA"
+      "imageCaption": "Image: Family Farm in Grass Valley, CA"
     },
     "missionStatement": "We are creating generative farms, but will also consider our mission fulfilled if our work aids others to achieve this outcome.",
     "headerImage": {
@@ -32,7 +32,7 @@
         },
         "1": {
           "heading": "Company Philosophy",
-          "description": "We are assembling a firm designed to emulate the consumer bases of our farms, embracing a holistic pace of life that nourishes the natural character of individuals, communities and the earth, in order to take what we believe to be the best path forward."
+          "description": "We are assembling a company designed to emulate the consumer bases of our farms, embracing a holistic pace of life that nourishes the natural character of individuals, communities and the earth, in order to take what we believe to be the best path forward."
         },
         "2": {
           "heading": "Farm Integration",
@@ -49,7 +49,7 @@
       }
     },
     "partners": {
-      "title": "Backed by incredible partners",
+      "title": "Supported by incredible partners",
       "description": "We’re fortunate to be supported by partners who share our vision. Their backing helps us advance sustainable agriculture.",
       "tagline": {
         "0": "And Other",
