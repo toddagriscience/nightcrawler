@@ -40,6 +40,7 @@ export default function Address() {
         <div className="flex flex-row gap-4">
           <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               setValue('hasAddress', 'yes');
               trigger();
@@ -50,6 +51,7 @@ export default function Address() {
           </Button>
           <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               setValue('hasAddress', 'no');
               trigger();

@@ -18,6 +18,7 @@ const NewTabButton = forwardRef<
     <Button
       ref={ref}
       type="button"
+      variant="ghost"
       aria-label={pending ? 'Creating a new tab' : 'Open new tab menu'}
       aria-busy={pending}
       disabled={pending}
