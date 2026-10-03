@@ -27,4 +27,6 @@ jobs:
         run: bun i
 
       - name: Check for security vulnerabilities
-        run: bun audit --audit-level=high
+        # braces has no patched release. It is only used by build-time tooling;
+        # remove this ignore once https://github.com/advisories/GHSA-vfj7-8cjw-p6xm is fixed upstream.
+        run: bun audit --audit-level=high --ignore GHSA-vfj7-8cjw-p6xm
