@@ -24,6 +24,7 @@ import {
 } from '../utils';
 import { FormFieldRenderer } from './form-field-renderer';
 import { FormFooterCheckbox } from './form-footer-checkbox';
+import { FormSuccess } from './form-success';
 
 /** Props for {@link DynamicForm}. */
 export interface DynamicFormProps {
@@ -113,13 +114,7 @@ export function DynamicForm({ form, title, subtitle }: DynamicFormProps) {
 
   if (submitted) {
     return (
-      <main className="mx-auto flex min-h-[60vh] w-full max-w-[910px] flex-col items-center justify-center px-6 py-16 text-center md:px-10">
-        <PageHeader
-          className="pt-0 md:pt-0"
-          title={form.successTitle ?? t('defaultSuccessTitle')}
-          subtitle={form.successMessage ?? t('defaultSuccessMessage')}
-        />
-      </main>
+      <FormSuccess title={form.successTitle} message={form.successMessage} />
     );
   }
 
@@ -233,7 +228,6 @@ export function DynamicForm({ form, title, subtitle }: DynamicFormProps) {
             buttonText={form.submitButtonLabel ?? t('submit')}
             disabled={!isValid || isSubmitting}
             reactHookFormPending={isSubmitting}
-            onClickFunction={() => void handleSubmit(onSubmit)()}
           />
         </div>
       </form>

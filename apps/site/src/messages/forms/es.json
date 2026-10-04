@@ -2,8 +2,9 @@
   "formsPage": {
     "submit": "Enviar solicitud",
     "submitError": "No se pudo enviar su solicitud. Inténtelo de nuevo.",
-    "defaultSuccessTitle": "Solicitud recibida",
-    "defaultSuccessMessage": "Gracias. Nuestro equipo revisará su solicitud y se comunicará por correo electrónico.",
+    "defaultSuccessTitle": "Solicitud enviada correctamente",
+    "defaultSuccessMessage": "Gracias por enviar tu solicitud. Recibirás una respuesta en un plazo de 1 a 3 días hábiles.",
+    "successResearchLink": "Ver nuestra investigación",
     "retentionTitle": "Retención de datos",
     "retentionLabel": "Pueden conservar mi información para referencia futura si mi solicitud no es aprobada.",
     "retentionDescription": "Si no marca esta casilla, su información se eliminará después de tomar una decisión.",
