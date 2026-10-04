@@ -1,10 +1,29 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
-import { renderWithNextIntl, screen, waitFor } from '@/test/test-utils';
+import { render, screen, waitFor } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import userEvent from '@testing-library/user-event';
-import CookiePreferencesModal from './cookie-preferences-modal';
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import enMessages from '@/messages/cookie-preferences/en.json';
+import esMessages from '@/messages/cookie-preferences/es.json';
 import posthog from 'posthog-js';
+
+vitest.unmock('next-intl');
+
+function renderWithNextIntl(
+  ui: React.ReactElement,
+  locale: 'en' | 'es' = 'en'
+) {
+  return render(
+    <NextIntlClientProvider
+      locale={locale}
+      messages={locale === 'es' ? esMessages : enMessages}
+    >
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
 
 vitest.mock('next/image', () => ({
   default: ({
@@ -59,6 +78,42 @@ describe('CookiePreferencesModal', () => {
       expect(screen.getByText(/Todd uses non-essential/i)).toBeInTheDocument();
     });
   });
+
+  test.each([
+    {
+      locale: 'en' as const,
+      trigger: 'Cookie Settings',
+      toggleLabel: 'Do not sell or share my personal information',
+      privacyPolicy: 'US Privacy Policy',
+      save: 'Confirm',
+    },
+    {
+      locale: 'es' as const,
+      trigger: 'Configuración de cookies',
+      toggleLabel: 'No vender ni compartir mi información personal',
+      privacyPolicy: 'Política de privacidad de EE. UU.',
+      save: 'Confirmar',
+    },
+  ])(
+    'renders translated privacy controls in $locale',
+    async ({ locale, trigger, toggleLabel, privacyPolicy, save }) => {
+      const user = userEvent.setup();
+      renderWithNextIntl(<CookiePreferencesModal />, locale);
+
+      await user.click(screen.getByRole('button', { name: trigger }));
+
+      expect(
+        screen.getByRole('switch', { name: toggleLabel })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: privacyPolicy })).toHaveAttribute(
+        'href',
+        '/privacy'
+      );
+
+      await user.click(screen.getByRole('button', { name: save }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    }
+  );
 
   test('displays switch with correct initial state when cookies are enabled', async () => {
     getExplicitConsentStatusMock.mockImplementation(() => 'granted');

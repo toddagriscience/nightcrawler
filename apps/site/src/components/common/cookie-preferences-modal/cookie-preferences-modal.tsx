@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
@@ -31,6 +31,7 @@ export default function CookiePreferencesModal({
   trigger?: React.ReactNode;
 }) {
   const t = useTranslations('cookiePreferences');
+  const toggleId = useId();
   const { isCapturing, applyPostHogPreference } = useCookiePreferences();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,15 +73,16 @@ export default function CookiePreferencesModal({
               href={'/privacy'}
               className="underline"
             >
-              US Privacy Policy
+              {t('privacyPolicy')}
             </Link>
             <div className="flex flex-row items-center gap-2">
               <Switch
+                id={toggleId}
                 className={isCapturing ? 'bg-green-500' : 'bg-gray-500'}
                 checked={isCapturing}
                 onCheckedChange={(checked) => applyPostHogPreference(checked)}
               />
-              <Label>Do not sell or share my personal information</Label>
+              <Label htmlFor={toggleId}>{t('toggleLabel')}</Label>
             </div>
             <Button
               className="rounded-4xl border border-solid border-black px-8 py-2 hover:cursor-pointer"
