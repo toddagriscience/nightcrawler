@@ -83,14 +83,14 @@ describe('CookiePreferencesModal', () => {
     {
       locale: 'en' as const,
       trigger: 'Cookie Settings',
-      toggleLabel: 'Do not sell or share my personal information',
+      toggleLabel: 'Enable Cookies',
       privacyPolicy: 'US Privacy Policy',
       save: 'Confirm',
     },
     {
       locale: 'es' as const,
       trigger: 'Configuración de cookies',
-      toggleLabel: 'No vender ni compartir mi información personal',
+      toggleLabel: 'Habilitar cookies',
       privacyPolicy: 'Política de privacidad de EE. UU.',
       save: 'Confirmar',
     },
