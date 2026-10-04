@@ -9,7 +9,7 @@ import ZoneItem from './zone-item';
 import ZoneKeyboardNav from './zone-keyboard-nav';
 import {
   getAccountShellData,
-  getManagementZones,
+  getSidebarManagementZones,
 } from '@/app/(authenticated)/(no-sidebar)/account/db';
 import { BiTimeFive } from 'react-icons/bi';
 
@@ -21,7 +21,7 @@ import { BiTimeFive } from 'react-icons/bi';
  */
 export default async function Sidebar() {
   const [zones, { farmName }] = await Promise.all([
-    getManagementZones(),
+    getSidebarManagementZones(),
     getAccountShellData(),
   ]);
 
@@ -58,6 +58,7 @@ export default async function Sidebar() {
                 index={index}
                 id={zone.id}
                 name={zone.name ?? ''}
+                isPending={zone.isPending}
               />
             ))}
           </>

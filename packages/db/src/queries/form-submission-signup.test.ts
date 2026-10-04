@@ -65,7 +65,11 @@ vi.mock('../schema/connection', () => ({
   },
 }));
 
-import { completeFormSubmissionSignup } from './form-submission-signup';
+import {
+  completeFormSubmissionSignup,
+  isFormSubmissionSignupLinkConsumed,
+  resolveSignupContext,
+} from './form-submission-signup';
 
 describe('completeFormSubmissionSignup', () => {
   beforeEach(() => {
@@ -107,5 +111,53 @@ describe('completeFormSubmissionSignup', () => {
 
     expect(updateMock).toHaveBeenCalledTimes(1);
     expect(hydrateFarmFromFormSubmission).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * `signupToken` is a `uuid` column and `id` a `serial`, so Postgres aborts the
+ * statement on a malformed literal instead of matching no rows. A mangled
+ * approval link must therefore be rejected before it reaches the database, or
+ * it surfaces as a server error rather than the expired-link screen.
+ */
+describe('malformed signup links', () => {
+  const VALID_TOKEN = '8abd4716-bfcc-4417-8e91-a68f1f435fc4';
+
+  beforeEach(() => {
+    selectMock.mockReset();
+  });
+
+  it.each([
+    ['a token that is not a uuid', 4, 'totally-bogus-token'],
+    ['a truncated token', 4, '8abd4716-bfcc-4417'],
+    ['an empty token', 4, '   '],
+    ['an id beyond int4', 2_147_483_648, VALID_TOKEN],
+    ['a fractional id', 4.5, VALID_TOKEN],
+    ['a negative id', -1, VALID_TOKEN],
+  ])(
+    'resolveSignupContext returns null for %s without querying',
+    async (_label, submissionId, token) => {
+      await expect(
+        resolveSignupContext(submissionId, token)
+      ).resolves.toBeNull();
+
+      expect(selectMock).not.toHaveBeenCalled();
+    }
+  );
+
+  it('isFormSubmissionSignupLinkConsumed returns false for a non-uuid token without querying', async () => {
+    await expect(
+      isFormSubmissionSignupLinkConsumed(4, 'totally-bogus-token')
+    ).resolves.toBe(false);
+
+    expect(selectMock).not.toHaveBeenCalled();
+  });
+
+  it('still queries for a well-formed link', async () => {
+    selectMock.mockReturnValue(buildSelectChain([]));
+
+    await expect(resolveSignupContext(4, VALID_TOKEN)).resolves.toBeNull();
+
+    expect(selectMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -47,15 +47,15 @@ export function ArticleHeader({
           <span className="text-[#848484]">{company}</span>
         ) : null}
       </div>
-      <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-4">
+      <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-7">
         {title}
       </h2>
       {subtitle !== undefined ? (
-        <p className="w-full max-w-[661px] mx-auto mb-6 text-center text-[16px] font-normal leading-[27px] tracking-normal text-foreground">
+        <p className="w-full max-w-[661px] mx-auto mb-8 text-center text-[16px] font-normal leading-[27px] tracking-normal text-foreground">
           {subtitle}
         </p>
       ) : null}
-      {ctaButtons ? <div className="mb-6 w-full">{ctaButtons}</div> : null}
+      {ctaButtons ? <div className="mb-14  w-full">{ctaButtons}</div> : null}
       <div className="mt-6 w-full border-t-[1px] border-[#EFEFEF] pt-6">
         <ArticleShareCopyLink />
       </div>

@@ -27,7 +27,7 @@ export function CreateReminderDialog() {
           New Reminder
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="border-foreground/15">
         <DialogHeader>
           <DialogTitle>Create New Reminder</DialogTitle>
           <DialogDescription>

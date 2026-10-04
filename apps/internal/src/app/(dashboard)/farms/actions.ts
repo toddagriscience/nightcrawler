@@ -3,6 +3,7 @@
 'use server';
 
 import { db } from '@nightcrawler/db';
+import { createFarmDefaultSettings } from '@nightcrawler/db/queries';
 import {
   farm,
   managementZone,
@@ -68,6 +69,9 @@ export async function createFarm(data: {
         stripeCustomerId: data.stripeCustomerId,
       })
       .returning();
+    if (result) {
+      await createFarmDefaultSettings(result.id);
+    }
     return result;
   } catch (error) {
     logger.error('Failed to create farm:', error);

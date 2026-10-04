@@ -2,11 +2,11 @@
 
 'use server';
 
+import logger from '@/lib/logger';
+import { requireInternalAccount } from '@/lib/require-internal-account';
 import { db } from '@nightcrawler/db';
 import { analysis, mineral } from '@nightcrawler/db/schema';
 import { eq, ilike, or } from 'drizzle-orm';
-import logger from '@/lib/logger';
-import { requireInternalAccount } from '@/lib/require-internal-account';
 
 /**
  * Fetches all analyses, optionally filtered by search query.
@@ -91,7 +91,9 @@ export async function createAnalysis(data: {
       | 'PhosphatePhosphorus'
       | 'Zinc'
       | 'Iron'
-      | 'OrganicMatter';
+      | 'OrganicMatter'
+      | 'Manganese'
+      | 'Copper';
     realValue: number;
     units: 'ppm' | '%';
     actionableInfo?: string;

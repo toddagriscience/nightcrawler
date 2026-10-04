@@ -61,7 +61,7 @@ export function ReminderCard({ reminder: r, onEdit }: ReminderCardProps) {
       : null;
 
   return (
-    <div className="group relative flex gap-4 px-4 py-5 rounded-lg hover:bg-[var(--color-background)]/50 transition-colors duration-200 border border-transparent hover:border-[var(--color-border)]/30">
+    <div className="group relative flex gap-4 px-4 py-5 rounded-lg hover:bg-[var(--color-background)]/50 transition-colors duration-200 border border-transparent hover:border-foreground/15">
       <Icon
         aria-hidden="true"
         className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type] ?? typeColors.other}`}
@@ -94,12 +94,10 @@ export function ReminderCard({ reminder: r, onEdit }: ReminderCardProps) {
               </p>
             )}
           </div>
-          <Button
+          <button
             type="button"
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             onClick={() => onEdit(r)}
+            className="flex size-8 shrink-0 items-center justify-center rounded-md text-foreground/60 opacity-0 transition-colors group-hover:opacity-100 hover:bg-[#D9D9D9]/20 hover:text-foreground"
           >
             <svg
               aria-hidden="true"
@@ -116,7 +114,7 @@ export function ReminderCard({ reminder: r, onEdit }: ReminderCardProps) {
               />
             </svg>
             <span className="sr-only">Edit</span>
-          </Button>
+          </button>
         </div>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-2 line-clamp-2 leading-relaxed">
           {r.body}

@@ -8,6 +8,7 @@ import {
   getMainSitemapArticles,
 } from '@/lib/sanity/articles';
 import type { SanityArticle } from '@/lib/sanity/article-types';
+import { cacheLife } from 'next/cache';
 import type { MetadataRoute } from 'next';
 import { Languages } from 'next/dist/lib/metadata/types/alternative-urls-types';
 
@@ -17,9 +18,6 @@ const baseUrl = env.baseUrl;
 export async function generateSitemaps(): Promise<Array<{ id: string }>> {
   return [{ id: 'main' }, { id: 'careers' }];
 }
-
-// Revalidate sitemap every 24 hours (86400 seconds)
-export const revalidate = 86400;
 
 /**
  * Generates split sitemaps: `main` (static pages + non-career articles) and `careers` (career articles only).
@@ -170,10 +168,10 @@ function articleListToCareersPostingSitemapEntries(
 
 /** Non-career Sanity article URLs for the main sitemap slice. */
 async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap> {
+  'use cache';
+  cacheLife({ revalidate: 86400 });
   try {
-    const articles = await getMainSitemapArticles({
-      next: { revalidate: 86400 },
-    });
+    const articles = await getMainSitemapArticles();
     return articleListToIndexSitemapEntries(articles);
   } catch (error) {
     logger.error('Error generating main Sanity article sitemap:', error);
@@ -183,10 +181,10 @@ async function getSanityArticleMainIndexSitemap(): Promise<MetadataRoute.Sitemap
 
 /** Career-tagged Sanity article URLs under `/careers/[slug]` for the dedicated careers sitemap file. */
 async function getSanityCareersArticleCareersRouteSitemap(): Promise<MetadataRoute.Sitemap> {
+  'use cache';
+  cacheLife({ revalidate: 86400 });
   try {
-    const articles = await getCareersSitemapArticles({
-      next: { revalidate: 86400 },
-    });
+    const articles = await getCareersSitemapArticles();
     return articleListToCareersPostingSitemapEntries(articles);
   } catch (error) {
     logger.error('Error generating careers Sanity article sitemap:', error);

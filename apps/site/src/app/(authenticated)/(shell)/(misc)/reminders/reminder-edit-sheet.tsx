@@ -58,7 +58,7 @@ export function ReminderEditSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-lg">
+      <SheetContent className="sm:max-w-lg border-foreground/15">
         <SheetHeader>
           <SheetTitle>Edit Reminder</SheetTitle>
           <SheetDescription>Make changes to your reminder.</SheetDescription>
@@ -73,7 +73,7 @@ export function ReminderEditSheet({
           />
         </div>
 
-        <SheetFooter className="mt-6 pt-4 border-t border-[var(--color-border)]">
+        <SheetFooter className="mt-6 pt-4 border-t border-foreground/15">
           <div className="flex items-center justify-between w-full">
             <div className="flex gap-2">
               {!reminder.read && (
@@ -82,7 +82,7 @@ export function ReminderEditSheet({
                   variant="outline"
                   size="sm"
                   onClick={handleMarkRead}
-                  className="gap-1.5"
+                  className="gap-1.5 border-foreground/15"
                 >
                   <CheckCircle aria-hidden="true" className="size-3" />
                   Mark Read
@@ -93,7 +93,7 @@ export function ReminderEditSheet({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="gap-1.5 text-destructive hover:text-destructive"
+                className="gap-1.5 border-foreground/15 text-destructive hover:text-destructive"
               >
                 <Trash2 aria-hidden="true" className="size-3" />
                 Delete

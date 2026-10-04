@@ -83,7 +83,7 @@ export function CmsArticlePage({
 
   return (
     <div className="max-w-[80%] mx-auto">
-      <main className="mt-20 container mx-auto min-h-screen flex flex-col gap-10 md:gap-4">
+      <main className="container mx-auto flex min-h-screen flex-col gap-10 pt-16 md:gap-4 md:pt-20 lg:pt-24">
         <ArticleHeader
           company={article.company}
           subtitle={article.subtitle}

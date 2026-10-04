@@ -2,7 +2,7 @@
 
 'use client';
 
-import Lenis from '@studio-freight/lenis';
+import Lenis from 'lenis';
 import { logger } from '@/lib/logger';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -13,8 +13,14 @@ import React, { useEffect, useRef, useState } from 'react';
  */
 declare global {
   interface Window {
-    /** Optional Lenis smooth scroll instance stored globally for cross-component access */
-    lenis?: Lenis;
+    /**
+     * Optional Lenis smooth scroll instance stored globally for cross-component
+     * access.
+     *
+     * Deliberately not the `lenis` key: since 1.3 Lenis claims that one itself
+     * in its constructor.
+     */
+    __lenis?: Lenis;
   }
 }
 
@@ -48,18 +54,19 @@ export default function SmoothScroll({
     const initializeLenis = () => {
       try {
         lenis = new Lenis({
-          duration: 1.1,
-          easing: (t) =>
-            t === 1
-              ? 1
-              : 1 - Math.pow(2, -10 * t) * Math.sin((t - 0.75) * Math.PI * 2),
+          // `duration`/`easing` are deliberately omitted to keep the same feel
+          // of the site with the new lenis package
           lerp: 0.07,
           wheelMultiplier: 0.7,
           smoothWheel: true,
+          // Under `prefers-reduced-motion: reduce` Lenis forces `lerp` to 1 so
+          // scrolling tracks the input device 1:1, "disabling" smooth scroll.
+          // This is the default, but set explicitly here for clarity
+          respectReducedMotion: true,
         });
 
         // Store lenis instance globally after successful initialization
-        window.lenis = lenis;
+        window.__lenis = lenis;
         setIsLenisReady(true);
       } catch (e) {
         logger.error('Lenis initialization failed', e);
@@ -103,20 +110,20 @@ export default function SmoothScroll({
     return () => {
       destroyLenis();
       setIsLenisReady(false);
-      if (window.lenis) {
-        delete window.lenis;
+      if (window.__lenis) {
+        delete window.__lenis;
       }
     };
   }, []);
 
   // Handle scroll to top on navigation - only when Lenis is ready
   useEffect(() => {
-    if (!isLenisReady || !window.lenis) return;
+    if (!isLenisReady || !window.__lenis) return;
     if (skipScrollFromHistory.current) {
       skipScrollFromHistory.current = false;
       return;
     }
-    window.lenis.scrollTo(0, { immediate: true });
+    window.__lenis.scrollTo(0, { immediate: true });
   }, [pathname, isLenisReady]);
 
   return <>{children}</>;

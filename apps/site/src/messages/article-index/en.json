@@ -1,8 +1,9 @@
 {
   "articleIndex": {
+    "eyebrow": "Company",
     "titles": {
       "research": "Research",
-      "news": "Newsroom"
+      "news": "News"
     },
     "tabs": {
       "all": "All",

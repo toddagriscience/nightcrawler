@@ -1,13 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { PAGE_HEADER_BUTTON_CLASSNAME } from '@/components/common/page-header/page-header';
+import { Button } from '@/components/ui';
 import { Link } from '@/i18n/config';
 import { isOutboundHref, toSafeHref } from '@/lib/sanity/safe-href';
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
 /** Tailwind classes shared by outline pill CTAs across marketing surfaces */
-export const MARKETING_PILL_LINK_CLASSNAME =
-  'inline-flex items-center justify-center rounded-full border border-neutral-400 bg-background px-7 py-2.5 text-sm font-normal tracking-tight text-foreground outline-offset-2 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
+export const MARKETING_PILL_LINK_CLASSNAME = PAGE_HEADER_BUTTON_CLASSNAME;
 
 /** Props for {@link MarketingPillLink} */
 export interface MarketingPillLinkProps {
@@ -19,7 +20,8 @@ export interface MarketingPillLinkProps {
 }
 
 /**
- * Locale-aware outline pill link (`next-intl` `Link` internally, `<a>` when external http(s)).
+ * Locale-aware outline pill matching the PageHeader CTA (`Button` outline,
+ * `next-intl` `Link` internally, `<a>` when external http(s)).
  *
  * @param props - Destination and label
  */
@@ -33,33 +35,34 @@ export function MarketingPillLink({
 
   // Unsafe/empty destination — render the label without a link.
   if (safeHref === null) {
-    return <span className={combined}>{children}</span>;
+    return (
+      <Button asChild variant="outline" className={combined}>
+        <span>{children}</span>
+      </Button>
+    );
   }
 
   if (safeHref.startsWith('#')) {
     return (
-      <a className={combined} href={safeHref}>
-        {children}
-      </a>
+      <Button asChild variant="outline" className={combined}>
+        <a href={safeHref}>{children}</a>
+      </Button>
     );
   }
 
   if (isOutboundHref(safeHref)) {
     return (
-      <a
-        className={combined}
-        href={safeHref}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        {children}
-      </a>
+      <Button asChild variant="outline" className={combined}>
+        <a href={safeHref} rel="noopener noreferrer" target="_blank">
+          {children}
+        </a>
+      </Button>
     );
   }
 
   return (
-    <Link className={combined} href={safeHref}>
-      {children}
-    </Link>
+    <Button asChild variant="outline" className={combined}>
+      <Link href={safeHref}>{children}</Link>
+    </Button>
   );
 }

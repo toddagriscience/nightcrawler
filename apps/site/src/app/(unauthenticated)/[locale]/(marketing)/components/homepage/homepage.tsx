@@ -20,14 +20,14 @@ export default function Homepage({ highlights }: { highlights?: ReactNode }) {
   const t = useTranslations('homepage');
 
   return (
-    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:my-30">
+    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:mb-30">
       <PageHeader
         title={t('pageHeading.title')}
         subtitle={t('pageHeading.subtitle')}
+        subtitleClassName="mb-4"
         button={{
           href: '/research',
           text: t('pageHeading.button'),
-          buttonClassName: 'w-[174px]',
         }}
       />
       <HeaderImg

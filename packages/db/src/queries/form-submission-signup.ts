@@ -31,6 +31,39 @@ export interface FormSubmissionSignupContext {
   prefill: ApplicantPrefill;
 }
 
+/** Canonical 8-4-4-4-12 hexadecimal form of a `uuid` literal. */
+const SIGNUP_TOKEN_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Largest value Postgres accepts for the `serial` (`int4`) primary key. */
+const MAX_SUBMISSION_ID = 2_147_483_647;
+
+/**
+ * Whether a submission id and signup token can be compared against their columns
+ * at all.
+ *
+ * Postgres does not simply match nothing when a literal is malformed: it aborts
+ * the statement, with `22P02` for a token that is not a uuid and `22003` for an
+ * id outside `int4`. A mangled approval link — a token truncated by an email
+ * client, an id someone typed — would therefore surface as an unhandled server
+ * error rather than the expired-link screen, so those values are rejected here
+ * instead of reaching the database.
+ *
+ * @param submissionId - Form submission id from the signup link
+ * @param signupToken - Trimmed signup token from the approval email
+ */
+function isQueryableSignupLink(
+  submissionId: number,
+  signupToken: string
+): boolean {
+  return (
+    Number.isInteger(submissionId) &&
+    submissionId > 0 &&
+    submissionId <= MAX_SUBMISSION_ID &&
+    SIGNUP_TOKEN_PATTERN.test(signupToken)
+  );
+}
+
 /**
  * Shared where-clause filters for an active approved platform-access signup link.
  *
@@ -62,7 +95,7 @@ export async function resolveSignupContext(
 ): Promise<FormSubmissionSignupContext | null> {
   const normalizedToken = signupToken.trim();
 
-  if (!normalizedToken || !Number.isFinite(submissionId)) {
+  if (!isQueryableSignupLink(submissionId, normalizedToken)) {
     return null;
   }
 
@@ -173,7 +206,7 @@ export async function isFormSubmissionSignupLinkConsumed(
 ): Promise<boolean> {
   const normalizedToken = token.trim();
 
-  if (!normalizedToken || !Number.isFinite(submissionId)) {
+  if (!isQueryableSignupLink(submissionId, normalizedToken)) {
     return false;
   }
 
@@ -201,7 +234,10 @@ export async function isFormSubmissionSignupAlreadyCompleted(
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedToken = token.trim();
 
-  if (!normalizedEmail || !normalizedToken) {
+  if (
+    !normalizedEmail ||
+    !isQueryableSignupLink(submissionId, normalizedToken)
+  ) {
     return false;
   }
 

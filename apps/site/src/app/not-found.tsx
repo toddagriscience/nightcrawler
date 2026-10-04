@@ -29,7 +29,7 @@ async function NotFoundContent() {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <SmoothScroll>
-        {user ? <AuthenticatedHeader /> : <UnauthenticatedHeader />}
+        {user ? <AuthenticatedHeader /> : <UnauthenticatedHeader localeAware />}
         <FadeIn>
           <div className="flex flex-col items-center justify-end max-w-[1200px] mx-auto lg:mt-20">
             <div className="flex lg:flex-row flex-col justify-center lg:items-end items-center gap-20 lg:gap-12 lg:mb-42 mb-20">
