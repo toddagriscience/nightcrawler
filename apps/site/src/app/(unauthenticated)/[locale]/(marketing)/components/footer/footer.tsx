@@ -97,7 +97,7 @@ const Footer = () => {
       <div className="-mx-4 mt-8 flex flex-col gap-6 border-t-[1.5px] border-foreground/10 px-4 pt-6 md:-mx-6 md:flex-row md:items-center md:justify-between md:px-6 lg:-mx-12 lg:px-12 xl:-mx-18 xl:px-18">
         <div className="flex flex-col text-[15px] font-normal md:flex-row md:items-center md:gap-10">
           <p className="text-[15px] font-normal">
-            Todd Agriscience © 2018-{currentYear}
+            Todd Agriscience © {currentYear}
           </p>
           <CookiePreferencesModal
             trigger={

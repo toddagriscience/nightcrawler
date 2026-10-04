@@ -8,7 +8,7 @@
       "description": "Creemos que la agricultura debe seguir siendo una carrera centrada en el ser humano que cura el planeta y apoya a las comunidades.",
       "cta": "Nuestra investigación",
       "imageAlt": "Familia cultivando un jardín juntos",
-      "imageCaption": "Imagen: Granja asociada en Grass Valley, CA"
+      "imageCaption": "Imagen: Granja familiar en Grass Valley, CA"
     },
     "missionStatement": "Estamos creando granjas generativas, pero también consideraremos cumplida nuestra misión si nuestro trabajo ayuda a otros a lograr este resultado.",
     "headerImage": {
@@ -32,7 +32,7 @@
         },
         "1": {
           "heading": "Filosofía de la empresa",
-          "description": "Estamos formando una firma diseñada para emular las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de las personas, las comunidades y la tierra, con el fin de tomar el que creemos es el mejor camino a seguir."
+          "description": "Estamos formando una empresa diseñada para emular las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de las personas, las comunidades y la tierra, con el fin de tomar el que creemos es el mejor camino a seguir."
         },
         "2": {
           "heading": "Integración agrícola",
@@ -49,7 +49,7 @@
       }
     },
     "partners": {
-      "title": "Respaldado por socios increíbles",
+      "title": "Soportado por socios increíbles",
       "description": "Tenemos la suerte de contar con el apoyo de socios que comparten nuestra visión. Su respaldo nos ayuda a impulsar la agricultura sostenible.",
       "tagline": {
         "0": "Y otros",
