@@ -90,6 +90,17 @@ describe('BankInformation', () => {
     expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled();
   });
 
+  it('sizes Back to match Continue', () => {
+    renderWithContext();
+    // jsdom computes no layout, so pin the shared width utility instead.
+    expect(screen.getByRole('button', { name: 'Back' })).toHaveClass(
+      'w-[200px]'
+    );
+    expect(screen.getByRole('button', { name: 'Continue' })).toHaveClass(
+      'w-[200px]'
+    );
+  });
+
   it('allows going back before bank details have been saved', async () => {
     const user = userEvent.setup();
     renderWithContext();

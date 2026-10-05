@@ -37,14 +37,14 @@ export default function OnboardingFlow({
   return (
     <main className="mx-auto mb-16 mt-12 w-[90vw] max-w-[550px]">
       {step === 'password' ? (
+        <h1 className="mb-10 text-center text-3xl font-normal md:text-4xl">
+          Welcome to Todd-Iris
+        </h1>
+      ) : (
         <>
-          <h1 className="mb-10 text-center text-3xl font-normal md:text-4xl">
-            Welcome to Todd-Iris
-          </h1>
+          <h1 className="sr-only">{stepLabel}</h1>
           <OnboardingProgress step={step} />
         </>
-      ) : (
-        <h1 className="sr-only">{stepLabel}</h1>
       )}
       <section
         ref={contentRef}

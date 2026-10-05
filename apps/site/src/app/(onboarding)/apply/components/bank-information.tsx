@@ -333,7 +333,7 @@ export default function BankInformation({
             <Button
               type="button"
               variant="outline"
-              className="h-11 rounded-full px-6"
+              className="h-11 w-[200px] rounded-full"
               disabled={
                 !canEditFarm ||
                 isNavigating ||
