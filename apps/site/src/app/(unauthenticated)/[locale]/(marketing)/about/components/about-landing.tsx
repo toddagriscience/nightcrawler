@@ -11,9 +11,9 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
 import CompetenciesSection from './competencies-section/competencies-section';
 import Partners from './partners';
-import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
 import ResponsibilitiesSection from './responsibilities-section/responsibilities-section';
 
 /**
@@ -111,9 +111,9 @@ export default function AboutLanding({
         {/* Highlighted Articles Section */}
         {highlights}
         <MarketingCenteredPageCta
-          ctaHref="/research"
-          ctaLabel={t('navigation.whatWeDoCta')}
-          heading={t('navigation.whatWeDo')}
+          ctaHref="/careers"
+          ctaLabel={t('navigation.joinUsCta')}
+          heading={t('navigation.joinUs')}
           headingId="about-footer-cta-heading"
           sectionId="about-footer-cta"
         />

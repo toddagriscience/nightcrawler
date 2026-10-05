@@ -223,9 +223,9 @@ export default function ResearchLanding({
           </div>
           {/* Build a Better Farm Section */}
           <MarketingCenteredPageCta
-            ctaHref="/index/introducing-iris"
-            ctaLabel={t('buildABetterFarm.cta')}
-            heading={t('buildABetterFarm.title')}
+            ctaHref="/research/index"
+            ctaLabel={t('exploreAllResearch.cta')}
+            heading={t('exploreAllResearch.title')}
             headingId="research-footer-cta-heading"
             sectionId="research-footer-cta"
           />
