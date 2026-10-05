@@ -1,6 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { renderWithNextIntl, screen } from '@/test/test-utils';
+import { renderWithNextIntl, screen, within } from '@/test/test-utils';
 import '@testing-library/jest-dom';
 import { describe, expect, it, vi } from 'vitest';
 import ResearchLanding from './research-landing';
@@ -38,9 +38,13 @@ describe('ResearchLanding', () => {
       'src',
       '/marketing/meadow-4.webp'
     );
-    expect(
-      screen.getByRole('link', { name: 'View research index' })
-    ).toHaveAttribute('href', '/research/index');
+
+    const researchIndexLinks = screen.getAllByRole('link', {
+      name: 'View research index',
+    });
+
+    expect(researchIndexLinks).toHaveLength(2);
+    expect(researchIndexLinks[0]).toHaveAttribute('href', '/research/index');
   });
 
   it('renders approach and strategy sections', () => {
@@ -89,13 +93,16 @@ describe('ResearchLanding', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Broader Communities')).toBeInTheDocument();
 
+    const footerCta = screen.getByRole('region', {
+      name: 'Explore all research',
+    });
+
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Build a better farm' })
+      screen.getByRole('heading', { level: 2, name: 'Explore all research' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Meet Iris' })).toHaveAttribute(
-      'href',
-      '/index/introducing-iris'
-    );
+    expect(
+      within(footerCta).getByRole('link', { name: 'View research index' })
+    ).toHaveAttribute('href', '/research/index');
   });
 
   it('renders exactly one h1 element with the correct title for accessibility', () => {

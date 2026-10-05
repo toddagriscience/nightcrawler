@@ -157,10 +157,14 @@ describe('AboutLanding', () => {
     renderWithNextIntl(<AboutLanding />);
 
     expect(
-      screen.getByRole('heading', { level: 2, name: /What we do/i })
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Join us in shaping the future of agriculture/i,
+      })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: /Explore our research/i })
-    ).toHaveAttribute('href', '/research');
+    expect(screen.getByRole('link', { name: /View careers/i })).toHaveAttribute(
+      'href',
+      '/careers'
+    );
   });
 });
