@@ -426,12 +426,12 @@ function ResponsibilityColumn({
   return (
     <motion.div
       style={{ opacity, y }}
-      className="flex flex-col gap-2 text-left"
+      className="flex flex-col gap-3 text-left"
     >
-      <h3 className="text-base font-normal leading-snug text-[#4a3520]">
+      <h3 className="text-lg font-normal leading-snug text-[#4a3520]">
         {t(`responsibilities.items.${index}.heading`)}
       </h3>
-      <p className="text-sm font-normal leading-relaxed">
+      <p className="text-base font-normal">
         {t(`responsibilities.items.${index}.description`)}
       </p>
     </motion.div>

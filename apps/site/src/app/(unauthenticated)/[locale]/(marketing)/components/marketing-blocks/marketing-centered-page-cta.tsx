@@ -28,16 +28,16 @@ export function MarketingCenteredPageCta({
   return (
     <section
       aria-labelledby={hid}
-      className="mx-auto max-w-3xl px-4 pb-16 pt-12 text-center md:px-6 md:pb-24 md:pt-16"
+      className="mx-auto max-w-[80%] px-4 pb-16 pt-12 text-center md:px-6 md:pb-24 md:pt-16"
       id={sectionId}
     >
       <h2
         id={hid}
-        className="text-3xl font-normal leading-tight tracking-tight text-foreground md:text-[34px] md:leading-tight"
+        className="text-4xl font-normal text-foreground md:text-[48px]"
       >
         {heading}
       </h2>
-      <div className="mt-10 flex justify-center">
+      <div className="mt-10 md:mt-14 flex justify-center">
         <MarketingPillLink href={ctaHref}>{ctaLabel}</MarketingPillLink>
       </div>
     </section>

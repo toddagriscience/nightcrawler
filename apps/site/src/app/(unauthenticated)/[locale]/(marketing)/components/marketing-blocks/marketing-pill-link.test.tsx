@@ -18,7 +18,7 @@ describe('MarketingPillLink', () => {
 
     const link = screen.getByRole('link', { name: 'View research' });
     expect(link).toHaveAttribute('href', '/research');
-    expect(link).toHaveClass('h-[44px]', 'w-fit', 'rounded-full', 'px-[20px]');
+    expect(link).toHaveClass('h-[42px]', 'w-fit', 'rounded-full', 'px-[20px]');
   });
 
   it('opens outbound hrefs in a new tab', () => {

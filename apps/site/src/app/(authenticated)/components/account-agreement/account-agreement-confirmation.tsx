@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui';
+import { cn } from '@/lib/utils';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ export default function AccountAgreementConfirmation({
   onConfirm,
   onError = () => {},
   triggerButtonText = 'Agree',
+  triggerClassName = '',
   submitButtonText = 'Agree and submit',
   waitTimeMs = 3000,
   dialogTitle = 'Are you sure you want to submit?',
@@ -32,6 +34,8 @@ export default function AccountAgreementConfirmation({
   onConfirm: () => Promise<void>;
   onError?: () => void;
   triggerButtonText?: string;
+  /** Extra classes for the trigger button, e.g. to size it like sibling step buttons instead of full width. */
+  triggerClassName?: string;
   submitButtonText?: string;
   waitTimeMs?: number;
   dialogTitle?: string;
@@ -54,7 +58,10 @@ export default function AccountAgreementConfirmation({
       <DialogTrigger asChild>
         <Button
           type="button"
-          className="w-full bg-black text-white hover:cursor-pointer hover:bg-black/80"
+          className={cn(
+            'w-full bg-black text-white hover:cursor-pointer hover:bg-black/80',
+            triggerClassName
+          )}
           disabled={disabled}
           onClick={() => {
             if (disabled) {

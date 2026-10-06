@@ -40,7 +40,7 @@
   --destructive: #dc2626; /* Red for errors */
   --destructive-foreground: #fafafa;
   --border: #2a2727; /* Your border color */
-  --input: #ffffff; /* Form / control fills — white (was Your light card #ccc5b5) */
+  --input: #848484; /* Form / control borders */
   --ring: #2a2727; /* Focus rings */
   --radius: 0.5rem;
 
@@ -57,6 +57,7 @@
   --color-popover: var(--background);
   --color-popover-foreground: var(--popover-foreground);
   --color-border: var(--border);
+  --color-input: var(--input);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-neue-haas), Arial, sans-serif;
