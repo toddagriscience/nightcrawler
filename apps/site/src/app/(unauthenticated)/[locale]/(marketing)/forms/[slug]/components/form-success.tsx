@@ -39,17 +39,16 @@ export function FormSuccess({ title, message }: FormSuccessProps) {
       <h1
         ref={headingRef}
         tabIndex={-1}
-        className="text-[32px]/[40px] font-normal text-foreground outline-none"
+        className="text-[28px]/[32px] font-normal"
       >
         {successTitle}
       </h1>
-      <p className="mt-4 max-w-md text-base leading-7 text-foreground">
-        {successMessage}
-      </p>
+      <p className="mt-4 mb-6 max-w-sm text-[14px]/[24px]">{successMessage}</p>
       <Button
         asChild
         variant="outline"
-        className="mt-7 h-12 rounded-full border-foreground/50 px-6 text-base"
+        className="rounded-full border-[0.75px] border-[#848484] text-sm w-[160px] h-[42px]"
+        size="lg"
       >
         <Link href="/research">{t('successResearchLink')}</Link>
       </Button>
