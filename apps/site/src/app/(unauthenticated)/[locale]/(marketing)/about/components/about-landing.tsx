@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
 import CompetenciesSection from './competencies-section/competencies-section';
 import Partners from './partners';
 import ResponsibilitiesSection from './responsibilities-section/responsibilities-section';
@@ -109,17 +110,13 @@ export default function AboutLanding({
       <div className="flex flex-col mx-auto max-w-[1200px]">
         {/* Highlighted Articles Section */}
         {highlights}
-        <div className="w-full h-fit mb-16 md:mb-32 py-12 md:py-16">
-          <Link
-            href="/research"
-            className="text-3xl md:text-4xl lg:text-4xl leading-tight font-thin flex justify-center items-center gap-5"
-          >
-            {t('navigation.whatWeDo')}
-            <span className="mt-1">
-              <HiArrowLongRight className="size-12" />
-            </span>
-          </Link>
-        </div>
+        <MarketingCenteredPageCta
+          ctaHref="/careers"
+          ctaLabel={t('navigation.joinUsCta')}
+          heading={t('navigation.joinUs')}
+          headingId="about-footer-cta-heading"
+          sectionId="about-footer-cta"
+        />
       </div>
     </main>
   );
