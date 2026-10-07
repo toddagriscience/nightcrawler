@@ -29,7 +29,7 @@ export function ZoneInsight({ summary, action }: ZoneInsightProps) {
   return (
     <section className={ZONE_SECTION_CLASS}>
       {trimmedSummary ? (
-        <p className="text-foreground text-xl font-medium">{trimmedSummary}</p>
+        <p className="text-foreground text-xl">{trimmedSummary}</p>
       ) : null}
       {trimmedAction ? (
         <div
@@ -38,9 +38,7 @@ export function ZoneInsight({ summary, action }: ZoneInsightProps) {
           <p className="text-foreground/50 text-xs tracking-wider uppercase">
             Recommended action
           </p>
-          <p className="text-foreground/80 mt-3 text-sm leading-relaxed">
-            {trimmedAction}
-          </p>
+          <p className="text-foreground/80 mt-3 text-sm">{trimmedAction}</p>
         </div>
       ) : null}
     </section>

@@ -8,15 +8,15 @@
  * results for the active query and exposes a follow-up input at the bottom.
  */
 
+import { Input } from '@/components/ui/input';
+import type { SearchResult } from '@/lib/ai/types';
+import { useOrder } from '@/lib/order/hooks';
+import { formatPrice } from '@/lib/order/utils';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { BiDockLeft, BiUpArrowAlt } from 'react-icons/bi';
-import { Input } from '@/components/ui/input';
-import { formatPrice } from '@/lib/order/utils';
-import { useOrder } from '@/lib/order/hooks';
-import Link from 'next/link';
-import type { SearchResult } from '@/lib/ai/types';
-import { useSearchPanel } from './search-panel-context';
 import { previewText, resultHref } from './search-display';
+import { useSearchPanel } from './search-panel-context';
 
 /**
  * Renders the inference search results panel body.
@@ -72,7 +72,7 @@ export function SearchPanelBody() {
       <div className="flex-1 overflow-y-auto px-5 py-6">
         {activeQuery && (
           <div className="mb-6 flex justify-end">
-            <p className="bg-stone-100 text-foreground max-w-[90%] rounded-[3px] px-4 py-3 text-sm leading-relaxed">
+            <p className="bg-stone-100 text-foreground max-w-[90%] rounded-[3px] px-4 py-2 text-sm leading-relaxed">
               {activeQuery}
             </p>
           </div>
@@ -179,8 +179,8 @@ export function SearchPanelBody() {
       </div>
 
       {/* Follow-up search */}
-      <form onSubmit={handleFollowUpSubmit} className="px-4 py-3">
-        <div className="flex items-center gap-2 rounded-xl border border-[#D9D9D9]/60 bg-white py-2 pr-2 pl-4">
+      <form onSubmit={handleFollowUpSubmit} className="px-4 py-3 mb-4">
+        <div className="flex items-center gap-2 rounded-xl border border-[#D9D9D9]/60 bg-white pr-2 pl-3">
           <Input
             ref={followUpRef}
             value={followUp}
