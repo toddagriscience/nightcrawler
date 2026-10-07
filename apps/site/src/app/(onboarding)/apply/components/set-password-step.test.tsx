@@ -52,8 +52,10 @@ describe('SetPasswordStep', () => {
       target: { value: 'Different1!' },
     });
     fireEvent.submit(container.querySelector('form')!);
-    await waitFor(() => expect(action).not.toHaveBeenCalled());
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled();
+    await waitFor(() => {
+      expect(action).not.toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled();
+    });
   });
 
   it('submits the token and passwords without trusting client profile fields', async () => {

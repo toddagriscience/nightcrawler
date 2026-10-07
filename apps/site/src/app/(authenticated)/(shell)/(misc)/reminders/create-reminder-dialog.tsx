@@ -2,9 +2,6 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -13,6 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
+import { IrisButton } from '../../../../../components/common/iris-button/iris-button';
 import { ReminderForm } from './reminder-form';
 
 /** Button + dialog for creating a new reminder. */
@@ -22,10 +22,10 @@ export function CreateReminderDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <IrisButton variant="outline" type="button" className="gap-2">
           <Plus aria-hidden="true" className="size-4" />
           New Reminder
-        </Button>
+        </IrisButton>
       </DialogTrigger>
       <DialogContent className="border-foreground/15">
         <DialogHeader>
