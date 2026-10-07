@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "prelint:fix": "tsx ./scripts/prep-for-license.ts",
     "lint:fix": "bun run prelint:fix && eslint . --fix && bun run format",
-    "type-check": "rm -rf .next/dev .next/types && next typegen && tsc --noEmit",
+    "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest --run",
