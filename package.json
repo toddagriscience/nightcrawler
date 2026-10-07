@@ -67,7 +67,8 @@
     "undici": "^7.29.1"
   },
   "overrides": {
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
+    "source-map-js": "^1.2.2",
     "browserslist": "^4.28.8",
     "postcss": "^8.5.12",
     "flatted": "^3.4.2",
