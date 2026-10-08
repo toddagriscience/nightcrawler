@@ -1,0 +1,28 @@
+{
+  "varieties": {
+    "metadata": {
+      "description": "El índice público de Todd de las variedades que conserva en su banco de germoplasma y referencias históricas.",
+      "shortTitle": "Lista general de variedades",
+      "title": "Lista general de variedades | Todd"
+    },
+    "title": "Lista general de variedades",
+    "subtitle": "Todd mantiene un índice público de las variedades que conserva en su banco de germoplasma y referencias históricas.",
+    "intro": "Esta colección es vital para mantener el suministro de alimentos del país, al proveer a las granjas las variedades que necesitan para producir productos agrícolas nutritivos, abundantes y asequibles.",
+    "list": {
+      "apply": "Solicitar ahora",
+      "toolbarAria": "Filtrar variedades",
+      "searchPlaceholder": "Buscar",
+      "searchAria": "Buscar variedades",
+      "cropFilterAria": "Filtrar por cultivo",
+      "availabilityFilterAria": "Filtrar por disponibilidad",
+      "filterAllCrops": "Todos los cultivos",
+      "filterAllAvailability": "Disponibilidad",
+      "availabilityAvailable": "Disponible",
+      "availabilityBackOrder": "Pedido pendiente",
+      "availabilityReference": "Referencia",
+      "showingCount": "Mostrando {visible} variedades de {total}",
+      "noMatches": "Ninguna variedad coincide con estos filtros.",
+      "empty": "No hay variedades disponibles en este momento."
+    }
+  }
+}
