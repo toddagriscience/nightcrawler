@@ -51,3 +51,9 @@ The `seed_crop` / `seed_variety` tables are a regenerable mirror of the "Variety
 3. Commit to the local DB: `bun run db:import-varieties --commit`
 
 The importer upserts by slug and prunes rows no longer present in the Sheet, so re-running fully reconciles the DB to the current export.
+
+## Metric table cutover
+
+The analysis reading table is mapped as `metric`, since it also stores pH, salinity, and organic matter. `@nightcrawler/db/schema` exports `metric`, `metricTypes`, and `metricTag`; legacy `mineral` imports remain aliases of the same objects for existing consumers. Enum SQL names and all columns remain unchanged.
+
+This branch requires a coordinated physical table rename before deployment. Existing ids, relationships, indexes, privileges, and data must be preserved and verified by the database operator. Migration `0017_rename-mineral-to-metric.sql` renames the table and its foreign-key constraint without recreating rows. The user explicitly authorized adding this migration file; it has not been executed here. The database operator owns its application and production verification. Keep the PR draft until the operator-approved cutover and application read/write smoke tests are complete.
