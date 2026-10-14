@@ -14,13 +14,13 @@ export default function AccountPrivacyPage() {
           label="Request Personal Data"
           value={<BiChevronRight className="size-6" />}
           valueClassName="text-foreground"
-          href="/contact"
+          href="/support/contact"
         />
         <AccountInfoRow
           label="Request Data Deletion"
           value={<BiChevronRight className="size-6" />}
           valueClassName="text-foreground"
-          href="/contact"
+          href="/support/contact"
         />
         <AccountInfoRow
           label="Privacy Policy"

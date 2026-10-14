@@ -29,6 +29,9 @@ export default async function SupportToolsPage() {
 
       <section className="mx-49 mt-10 w-[50%] max-w-[750px]">
         <div className="mt-12 flex flex-wrap gap-5">
+          <Button asChild variant="brand" className="h-11 rounded-full">
+            <Link href="/support/contact">Contact your advisor</Link>
+          </Button>
           <Button
             asChild
             variant="brand"

@@ -12,6 +12,7 @@ const protectedUrls = [
   '/application-success',
   '/accept',
   '/apply',
+  '/support/contact',
 ];
 
 /**
@@ -146,7 +147,11 @@ export function isRouteProtected(pathname: string): boolean {
       return false;
     }
 
-    if (pattern === '/account' || pattern === '/apply') {
+    if (
+      pattern === '/account' ||
+      pattern === '/apply' ||
+      pattern === '/support/contact'
+    ) {
       return pathname === pattern;
     }
 

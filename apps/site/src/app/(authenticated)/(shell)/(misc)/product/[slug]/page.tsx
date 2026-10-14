@@ -116,7 +116,14 @@ export default async function ProductPage({
             />
 
             <Button asChild variant="outline" className="w-full">
-              <Link href={product.advisorContactUrl || '/contact'}>
+              <Link
+                href={
+                  !product.advisorContactUrl ||
+                  product.advisorContactUrl === '/contact'
+                    ? '/support/contact'
+                    : product.advisorContactUrl
+                }
+              >
                 Contact an advisor
               </Link>
             </Button>

@@ -126,7 +126,7 @@ export default async function VarietyPage({
             variety and amount you need.
           </p>
           <Button asChild className="mt-4">
-            <Link href="/contact">Request through an advisor</Link>
+            <Link href="/support/contact">Request through an advisor</Link>
           </Button>
         </section>
       ) : (

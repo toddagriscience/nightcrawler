@@ -57,7 +57,7 @@ export default async function DashboardPage({
             {(
               [
                 { href: '/order', label: 'Orders' },
-                { href: '/contact', label: 'Contact' },
+                { href: '/support/contact', label: 'Contact' },
                 { href: '/account', label: 'Account' },
               ] as const
             ).map((item) => (

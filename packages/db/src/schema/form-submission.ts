@@ -58,7 +58,7 @@ export const formSubmission = pgTable('form_submissions', {
   inviteSentAt: timestamp(),
   /** When the applicant finished account + farm creation */
   signedUpAt: timestamp(),
-  /** Farm created from an approved platform-access submission */
+  /** Associated farm: created by platform access or resolved from an Iris contact sender. */
   farmId: integer().references(() => farm.id),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp()

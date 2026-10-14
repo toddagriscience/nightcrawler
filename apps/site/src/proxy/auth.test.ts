@@ -33,6 +33,12 @@ function makeMockRequest(url: string): NextRequest {
 }
 
 describe('isRouteProtected', () => {
+  it('protects the authenticated contact route without hiding public contact', () => {
+    expect(isRouteProtected('/support/contact')).toBe(true);
+    expect(isRouteProtected('/support/contact-other')).toBe(false);
+    expect(isRouteProtected('/contact')).toBe(false);
+    expect(isRouteProtected('/es/contact')).toBe(false);
+  });
   it('protects the exact onboarding URL without matching lookalikes', () => {
     expect(isRouteProtected('/apply')).toBe(true);
     expect(isRouteProtected('/apply-now')).toBe(false);

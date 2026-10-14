@@ -65,7 +65,7 @@ export default async function AccountPage() {
 
       <div className="mt-5 flex justify-end px-0.5">
         <Link
-          href={'/contact'}
+          href={'/support/contact'}
           className="text-normal text-sm leading-none font-normal text-[#ff4d00] hover:opacity-80"
         >
           Request deactivation

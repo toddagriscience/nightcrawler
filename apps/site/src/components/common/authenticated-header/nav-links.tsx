@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
+import { hasAcceptedAccountAgreement } from '@/lib/utils/account-agreement';
 import { hasCompletedPlatformOnboarding } from '@/lib/utils/platform-onboarding';
 import Link from 'next/link';
 import { ApplyLogoutLink } from './components/apply-logout-link';
@@ -15,18 +16,27 @@ import { OrderNavLink } from './components/order-nav-link';
  */
 export async function NavLinks() {
   let onboardingComplete = false;
+  let contactAvailable = false;
   try {
     const currentUser = await getAuthenticatedInfo();
     onboardingComplete = await hasCompletedPlatformOnboarding(
       currentUser.id,
       currentUser.approved
     );
+    contactAvailable =
+      onboardingComplete &&
+      (currentUser.role !== 'Viewer' ||
+        (await hasAcceptedAccountAgreement(currentUser.id)));
   } catch {
     onboardingComplete = false;
+    contactAvailable = false;
   }
 
   const links = [
-    { href: '/contact', label: 'Contact' },
+    {
+      href: contactAvailable ? '/support/contact' : '/contact',
+      label: 'Contact',
+    },
     ...(onboardingComplete ? [{ href: '/account', label: 'Account' }] : []),
   ];
 

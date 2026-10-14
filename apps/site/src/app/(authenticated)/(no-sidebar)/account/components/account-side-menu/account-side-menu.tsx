@@ -50,7 +50,7 @@ export default function AccountSideMenu() {
 
       <div className="mt-17.5 space-y-3 border-t border-[#D9D9D9] pt-4">
         <Link
-          href="/contact"
+          href="/support/contact"
           className="flex w-fit items-center gap-2 text-sm font-normal text-foreground/70 hover:text-foreground"
         >
           Help

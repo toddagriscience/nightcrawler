@@ -10,10 +10,10 @@ describe('AccountPrivacyPage', () => {
 
     expect(
       screen.getByRole('link', { name: /Request Personal Data/i })
-    ).toHaveAttribute('href', '/contact');
+    ).toHaveAttribute('href', '/support/contact');
     expect(
       screen.getByRole('link', { name: /Request Data Deletion/i })
-    ).toHaveAttribute('href', '/contact');
+    ).toHaveAttribute('href', '/support/contact');
     expect(
       screen.getByRole('link', { name: /Privacy Policy/i })
     ).toHaveAttribute('href', '/privacy');

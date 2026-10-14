@@ -43,7 +43,7 @@ describe('AccountSideMenu', () => {
 
     expect(screen.getByRole('link', { name: 'Help' })).toHaveAttribute(
       'href',
-      '/contact'
+      '/support/contact'
     );
   });
 

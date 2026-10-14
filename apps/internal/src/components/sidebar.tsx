@@ -16,6 +16,7 @@ import {
   LogOut,
   ClipboardList,
   FileSignature,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -37,6 +38,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Internal Accounts', href: '/', icon: ShieldCheck },
   { label: 'Applications', href: '/applications', icon: ClipboardList },
+  { label: 'Client Inquiries', href: '/inquiries', icon: Mail },
   { label: 'Users', href: '/users', icon: Users },
   { label: 'Farms', href: '/farms', icon: Tractor },
   { label: 'Analyses', href: '/analyses', icon: FlaskConical },
