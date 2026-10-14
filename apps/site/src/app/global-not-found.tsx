@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import '@/app/globals.css';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 import english from '@/messages/common/en.json';
 import spanish from '@/messages/common/es.json';
 import { fontVariables } from '@/lib/fonts';
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
 };
 
 /** Complete, server-rendered document for routes outside any of the application's root layouts. */
-export default function GlobalNotFound() {
+export default async function GlobalNotFound() {
+  await getCspNonce();
   return (
     <html lang="en">
       <body className={fontVariables}>

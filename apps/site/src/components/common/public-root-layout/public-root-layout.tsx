@@ -58,9 +58,12 @@ const organizationStructuredData: WithContext<Organization> = {
 export default function PublicRootLayout({
   children,
   locale = 'en',
+  nonce,
 }: {
   children: React.ReactNode;
   locale?: string;
+  /** Request nonce supplied by a server root; optional for isolated previews. */
+  nonce?: string;
 }) {
   return (
     <html lang={locale === 'es' ? 'es' : 'en'}>
@@ -68,6 +71,7 @@ export default function PublicRootLayout({
       <head>
         {/** JSON-LD is static site data; keep it in the crawler-visible head. */}
         <script
+          nonce={nonce}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteStructuredData).replace(
@@ -77,6 +81,7 @@ export default function PublicRootLayout({
           }}
         />
         <script
+          nonce={nonce}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationStructuredData).replace(

@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
 import AuthErrorFallback from './components/auth-error-fallback';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 
 /**
  * Checks whether the current viewer has accepted the account agreement.
@@ -44,11 +45,12 @@ async function ViewerAgreementGate({
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The authenticated layout
  */
-export default function AuthenticatedLayout({
+export default async function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await getCspNonce();
   return (
     <html lang="en" className="authenticated-root bg-background-platform">
       <body

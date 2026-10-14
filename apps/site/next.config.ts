@@ -21,8 +21,9 @@ const isDev = process.env.NODE_ENV === 'development';
  * protection CSP is meant to provide. We therefore drop it from the production
  * policy. See https://github.com/toddagriscience/nightcrawler/issues/934.
  *
- * `'unsafe-inline'` is retained for now: removing it requires per-request nonces
- * (or hashes), which conflict with this app's `cacheComponents` (PPR) rendering.
+ * This legacy enforced policy remains during the nonce report-only rollout.
+ * The proxy now forwards a per-request nonce policy to Next.js and sends it in
+ * Content-Security-Policy-Report-Only. A separate change enforces that policy.
  *
  * @param dev - Whether the app is running in development mode
  * @returns The space-delimited `script-src` source list
@@ -34,6 +35,8 @@ export function buildScriptSrc(dev: boolean): string {
     ...(dev ? ["'unsafe-eval'"] : []),
     'https://*.posthog.com',
     'https://js.stripe.com',
+    'https://*.js.stripe.com',
+    'https://checkout.stripe.com',
   ].join(' ');
 }
 
@@ -103,22 +106,23 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Allow Stripe-hosted styles used by Elements
       "style-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://js.stripe.com https://m.stripe.network", // Explicitly allow stylesheet elements used by Stripe iframes and Elements
       "style-src-attr 'unsafe-inline'", // Allow inline style attributes required by third-party embeds
-      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io ${seedImageUrl?.origin ?? ''}`.trim(), // Allow images from self, blob URLs, and data URLs
+      `img-src 'self' blob: data: https://*.posthog.com https://cdn.sanity.io https://*.stripe.com ${seedImageUrl?.origin ?? ''}`.trim(), // Allow images from self, blob URLs, and data URLs
       "font-src 'self' https://*.posthog.com", // Only allow fonts from same origin - prevents Google Fonts data leaks
-      "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co https://api.stripe.com https://r.stripe.com", // Allow payment requests and Stripe telemetry required by Elements
+      "connect-src 'self' https://*.sanity.io https://*.posthog.com https://*.supabase.co https://api.stripe.com https://r.stripe.com https://checkout.stripe.com", // Allow payment requests and Stripe telemetry required by Elements
       "media-src 'self' https://*.posthog.com https://cdn.sanity.io", // Restrict media sources
       "object-src 'none'", // Block object/embed/applet
       "base-uri 'self'", // Restrict base tag URLs
       "form-action 'self'", // Restrict form submissions
       "frame-ancestors 'self'", // Prevent embedding in frames
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+      "frame-src 'self' https://js.stripe.com https://*.js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
       'upgrade-insecure-requests', // Upgrade HTTP to HTTPS
     ].join('; '),
   },
 ];
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
+  // Per-request nonces require dynamic HTML. Sanity fetch/data caches remain reusable.
+  cacheComponents: false,
   // Every crawler and browser receives one complete metadata set in the HTML head.
   htmlLimitedBots: /.*/,
   experimental: { globalNotFound: true },

@@ -5,13 +5,15 @@ import AuthenticatedHeader from '@/components/common/authenticated-header/authen
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import { fontVariables } from '@/lib/fonts';
 import '@/app/globals.css';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 
 /** Desktop-only root that supports both token-validated signup and authenticated resume. */
-export default function OnboardingLayout({
+export default async function OnboardingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await getCspNonce();
   return (
     <html lang="en" className="authenticated-root bg-background-platform">
       <body

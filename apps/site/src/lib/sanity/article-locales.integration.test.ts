@@ -34,7 +34,9 @@ vi.mock('@/lib/sanity/client', async () => {
     },
   };
 });
-vi.mock('next/cache', () => ({ cacheLife: vi.fn() }));
+vi.mock('next/cache', () => ({
+  unstable_cache: (fn: unknown) => fn,
+}));
 vi.mock('@/i18n/config', () => ({
   routing: { locales: ['en', 'es'], defaultLocale: 'en' },
 }));

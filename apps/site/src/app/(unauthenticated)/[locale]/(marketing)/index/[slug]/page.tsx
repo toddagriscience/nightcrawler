@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { CmsArticlePage } from '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 import { env } from '@/lib/env';
 import { getLocalizedPath } from '@/lib/canonical-urls';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
@@ -55,5 +56,6 @@ export default async function ArticleIndexPage({
     return;
   }
 
-  return <CmsArticlePage article={article} locale={locale} />;
+  const nonce = await getCspNonce();
+  return <CmsArticlePage article={article} locale={locale} nonce={nonce} />;
 }

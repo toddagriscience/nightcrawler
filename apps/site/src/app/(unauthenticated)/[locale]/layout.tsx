@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { FadeIn, SmoothScroll } from '@/components/common';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 import PublicRootLayout from '@/components/common/public-root-layout/public-root-layout';
 import { routing } from '@/i18n/config';
 import { getPageAlternates, getCanonicalUrl } from '@/lib/canonical-urls';
@@ -114,9 +115,10 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages({ locale });
+  const nonce = await getCspNonce();
 
   return (
-    <PublicRootLayout locale={locale}>
+    <PublicRootLayout locale={locale} nonce={nonce}>
       <NextIntlClientProvider locale={locale} messages={messages}>
         <SmoothScroll>
           <FadeIn>{children}</FadeIn>
