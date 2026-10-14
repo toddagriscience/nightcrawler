@@ -27,7 +27,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Pencil, Trash2, Plus, ExternalLink } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuTrash2 as Trash2,
+  LuPlus as Plus,
+  LuExternalLink as ExternalLink,
+} from 'react-icons/lu';
 import {
   getSeedProducts,
   createSeedProduct,
@@ -169,7 +174,7 @@ export default function SeedProductsClient({
 
       <div className="flex justify-end">
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
           New Product
         </Button>
       </div>
@@ -213,7 +218,11 @@ export default function SeedProductsClient({
                           href={`/product/${p.slug}`}
                           aria-label={`View details for ${p.name}`}
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <ExternalLink
+                            size={24}
+                            aria-hidden="true"
+                            className="h-4 w-4"
+                          />
                         </Link>
                       </Button>
                       <Button
@@ -221,14 +230,22 @@ export default function SeedProductsClient({
                         size="icon"
                         onClick={() => openEdit(p)}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(p.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>

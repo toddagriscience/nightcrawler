@@ -20,7 +20,7 @@ when you bump them.
 
 ### Core
 
-- Next.js `16.3.0-canary.37`, App Router, Turbopack
+- Next.js `16.3.8`, App Router, Turbopack
 - React `19.2`, TypeScript `5.9` (strict)
 - Tailwind CSS `4.2`
 - Drizzle ORM `0.45` over PostgreSQL, via `@nightcrawler/db`
@@ -29,7 +29,7 @@ when you bump them.
 
 - shadcn/ui on Radix primitives (`src/components/ui/`)
 - `class-variance-authority` for component variants
-- `lucide-react` for icons; `react-icons` for brand logos
+- `react-icons` for interface icons and brand logos
 - `clsx` + `tailwind-merge` for conditional styling
 
 ### Content, data, and services
@@ -130,6 +130,8 @@ primitives are flat files in `src/components/ui/`.
 - Use `next-intl` for any user-facing text on the marketing site.
 - Include a unit test and a Storybook story.
 - Prefer shadcn/ui primitives over hand-rolled equivalents.
+- Adapt registry component icons to `react-icons/lu`, preserving 24px defaults,
+  CSS size overrides, and accessible names or decorative `aria-hidden` attributes.
 
 ## Site-specific commands
 

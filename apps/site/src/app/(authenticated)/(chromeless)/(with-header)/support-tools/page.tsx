@@ -1,7 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { Button } from '@/components/ui/button';
-import { Mail, MessageCircle } from 'lucide-react';
+import {
+  LuMail as Mail,
+  LuMessageCircle as MessageCircle,
+} from 'react-icons/lu';
 import Link from 'next/link';
 import { BiArrowBack } from 'react-icons/bi';
 import SupportLinksSection from './components/support-links-section';
@@ -35,7 +38,7 @@ export default async function SupportToolsPage() {
             className="h-11 w-[144px] rounded-full"
           >
             <a href="mailto:service.us@toddagriscience.com">
-              <Mail />
+              <Mail size={24} aria-hidden="true" />
               Email
             </a>
           </Button>
@@ -46,7 +49,7 @@ export default async function SupportToolsPage() {
             className="h-11 w-[144px] rounded-full"
           >
             <a href="tel:+18882791283">
-              <MessageCircle />
+              <MessageCircle size={24} aria-hidden="true" />
               SMS Text
             </a>
           </Button>

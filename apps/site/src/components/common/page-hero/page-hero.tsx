@@ -3,7 +3,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { ArrowDown } from 'lucide-react';
+import { LuArrowDown as ArrowDown } from 'react-icons/lu';
 import { PageHeroProps } from './types/page-hero';
 
 /**
@@ -45,7 +45,12 @@ const PageHero = ({
       </div>
       {showArrow && (
         <div className="flex justify-center mt-12 lg:mt-16">
-          <ArrowDown className="text-foreground" />
+          <ArrowDown
+            size={24}
+            aria-hidden="true"
+            data-testid="page-hero-arrow"
+            className="text-foreground"
+          />
         </div>
       )}
     </div>

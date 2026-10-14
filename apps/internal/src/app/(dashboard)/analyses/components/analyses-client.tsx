@@ -24,7 +24,12 @@ import {
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { notifyActionError } from '@/lib/notify-action-error';
-import { Pencil, Plus, Trash2, X } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuPlus as Plus,
+  LuTrash2 as Trash2,
+  LuX as X,
+} from 'react-icons/lu';
 import { useCallback, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -219,7 +224,7 @@ export default function AnalysesClient({
 
       <div className="flex justify-end">
         <Button onClick={openCreateDialog}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
           New Analysis
         </Button>
       </div>
@@ -266,7 +271,11 @@ export default function AnalysesClient({
                         onClick={() => openEditDialog(record)}
                         aria-label={`Edit analysis ${record.id}`}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
@@ -274,7 +283,11 @@ export default function AnalysesClient({
                         onClick={() => handleDelete(record.id)}
                         aria-label={`Delete analysis ${record.id}`}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>
@@ -363,7 +376,11 @@ export default function AnalysesClient({
                       })
                     }
                   >
-                    <Plus className="mr-1 h-3 w-3" />
+                    <Plus
+                      size={24}
+                      aria-hidden="true"
+                      className="mr-1 h-3 w-3"
+                    />
                     Add Mineral
                   </Button>
                 </div>
@@ -419,7 +436,7 @@ export default function AnalysesClient({
                       className="mt-5"
                       onClick={() => remove(index)}
                     >
-                      <X className="h-4 w-4" />
+                      <X size={24} aria-hidden="true" className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}

@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
+import { LuPlus as Plus } from 'react-icons/lu';
 import { useState } from 'react';
 import { IrisButton } from '../../../../../components/common/iris-button/iris-button';
 import { ReminderForm } from './reminder-form';
@@ -23,7 +23,7 @@ export function CreateReminderDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <IrisButton variant="outline" type="button" className="gap-2">
-          <Plus aria-hidden="true" className="size-4" />
+          <Plus size={24} aria-hidden="true" className="size-4" />
           New Reminder
         </IrisButton>
       </DialogTrigger>

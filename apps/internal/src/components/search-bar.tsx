@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Search } from 'lucide-react';
+import { LuSearch as Search } from 'react-icons/lu';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
@@ -57,7 +57,7 @@ export function SearchBar({
         onClick={handleSearch}
         aria-label="Search"
       >
-        <Search className="h-4 w-4" />
+        <Search size={24} aria-hidden="true" className="h-4 w-4" />
       </Button>
     </div>
   );

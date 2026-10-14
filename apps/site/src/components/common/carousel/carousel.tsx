@@ -3,7 +3,10 @@
 'use client';
 
 import useEmblaCarousel from 'embla-carousel-react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  LuArrowLeft as ArrowLeft,
+  LuArrowRight as ArrowRight,
+} from 'react-icons/lu';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import CarouselProps from './types/carousel';
 
@@ -108,7 +111,7 @@ const Carousel = ({ children, loop = true, className = '' }: CarouselProps) => {
           aria-label="Previous slide"
           data-testid="left-button"
         >
-          <ArrowLeft className="text-foreground" />
+          <ArrowLeft size={24} aria-hidden="true" className="text-foreground" />
         </button>
         <button
           onClick={scrollNext}
@@ -117,7 +120,11 @@ const Carousel = ({ children, loop = true, className = '' }: CarouselProps) => {
           aria-label="Next slide"
           data-testid="right-button"
         >
-          <ArrowRight className="text-foreground" />
+          <ArrowRight
+            size={24}
+            aria-hidden="true"
+            className="text-foreground"
+          />
         </button>
       </div>
       <div className="mx-auto w-full overflow-hidden" ref={emblaRef}>

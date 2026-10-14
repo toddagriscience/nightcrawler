@@ -5,23 +5,24 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Users,
-  Tractor,
-  FlaskConical,
-  FileText,
-  Sprout,
-  LayoutDashboard,
-  Columns3,
-  ShieldCheck,
-  LogOut,
-  ClipboardList,
-  FileSignature,
-} from 'lucide-react';
+  LuUsers as Users,
+  LuTractor as Tractor,
+  LuFlaskConical as FlaskConical,
+  LuFileText as FileText,
+  LuSprout as Sprout,
+  LuLayoutDashboard as LayoutDashboard,
+  LuColumns3 as Columns3,
+  LuShieldCheck as ShieldCheck,
+  LuLogOut as LogOut,
+  LuClipboardList as ClipboardList,
+  LuFilePenLine as FileSignature,
+} from 'react-icons/lu';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import logger from '@/lib/logger';
+import type { IconType } from 'react-icons';
 
 /** Navigation item definition */
 interface NavItem {
@@ -29,8 +30,8 @@ interface NavItem {
   label: string;
   /** Route path */
   href: string;
-  /** Lucide icon component */
-  icon: React.ComponentType<{ className?: string }>;
+  /** Icon component from react-icons. */
+  icon: IconType;
 }
 
 /** Navigation items for the sidebar */
@@ -68,7 +69,7 @@ export function Sidebar() {
     <aside className="flex h-screen w-64 flex-col border-r bg-sidebar">
       <div className="flex h-14 items-center px-6">
         <Link href="/" className="flex items-center gap-2">
-          <LayoutDashboard className="h-5 w-5" />
+          <LayoutDashboard size={24} aria-hidden="true" className="h-5 w-5" />
           <span className="text-lg font-bold">Todd Internal</span>
         </Link>
       </div>
@@ -90,7 +91,7 @@ export function Sidebar() {
               )}
               aria-current={isActive ? 'page' : undefined}
             >
-              <item.icon className="h-4 w-4" />
+              <item.icon size={24} aria-hidden="true" className="h-4 w-4" />
               {item.label}
             </Link>
           );
@@ -103,7 +104,7 @@ export function Sidebar() {
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer"
           aria-label="Sign out"
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut size={24} aria-hidden="true" className="h-4 w-4" />
           Sign Out
         </button>
       </div>

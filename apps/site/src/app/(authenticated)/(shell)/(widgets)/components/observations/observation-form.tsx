@@ -14,7 +14,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import { LuCalendar as CalendarIcon } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -105,7 +105,7 @@ function ObservationDateField({
               !value && 'text-muted-foreground'
             )}
           >
-            <CalendarIcon aria-hidden="true" className="size-4" />
+            <CalendarIcon size={24} aria-hidden="true" className="size-4" />
             {displayValue}
           </Button>
         </PopoverTrigger>

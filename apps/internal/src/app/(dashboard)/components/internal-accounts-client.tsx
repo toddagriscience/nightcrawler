@@ -26,7 +26,11 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuTrash2 as Trash2,
+  LuPlus as Plus,
+} from 'react-icons/lu';
 import {
   getInternalAccounts,
   createInternalAccount,
@@ -166,7 +170,7 @@ export default function InternalAccountsClient({
 
       <div className="flex justify-end">
         <Button onClick={openCreateDialog}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
           New Account
         </Button>
       </div>
@@ -213,7 +217,11 @@ export default function InternalAccountsClient({
                         onClick={() => openEditDialog(account)}
                         aria-label={`Edit ${account.firstName}`}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
@@ -221,7 +229,11 @@ export default function InternalAccountsClient({
                         onClick={() => handleDelete(account.id)}
                         aria-label={`Delete ${account.firstName}`}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>

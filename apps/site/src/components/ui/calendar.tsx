@@ -3,10 +3,10 @@
 'use client';
 
 import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from 'lucide-react';
+  LuChevronDown as ChevronDownIcon,
+  LuChevronLeft as ChevronLeftIcon,
+  LuChevronRight as ChevronRightIcon,
+} from 'react-icons/lu';
 import * as React from 'react';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
@@ -151,13 +151,20 @@ function Calendar({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
             return (
-              <ChevronLeftIcon className={cn('size-4', className)} {...props} />
+              <ChevronLeftIcon
+                size={24}
+                aria-hidden="true"
+                className={cn('size-4', className)}
+                {...props}
+              />
             );
           }
 
           if (orientation === 'right') {
             return (
               <ChevronRightIcon
+                size={24}
+                aria-hidden="true"
                 className={cn('size-4', className)}
                 {...props}
               />
@@ -165,7 +172,12 @@ function Calendar({
           }
 
           return (
-            <ChevronDownIcon className={cn('size-4', className)} {...props} />
+            <ChevronDownIcon
+              size={24}
+              aria-hidden="true"
+              className={cn('size-4', className)}
+              {...props}
+            />
           );
         },
         DayButton: CalendarDayButton,

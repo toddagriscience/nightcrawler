@@ -7,7 +7,7 @@ import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { Link } from '@/i18n/config';
 import clsx from 'clsx';
-import { ExternalLink } from 'lucide-react';
+import { LuExternalLink as ExternalLink } from 'react-icons/lu';
 import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
@@ -52,7 +52,11 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
           >
             <div className="flex items-center justify-end text-right gap-1 hover:underline">
               {item.source}
-              <ExternalLink className="h-3.5 w-3.5 transition" />
+              <ExternalLink
+                size={24}
+                aria-hidden="true"
+                className="h-3.5 w-3.5 transition"
+              />
             </div>
           </Link>
 

@@ -26,7 +26,11 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuTrash2 as Trash2,
+  LuPlus as Plus,
+} from 'react-icons/lu';
 import {
   getFarms,
   createFarm,
@@ -205,7 +209,8 @@ function FarmsTab({ initialData }: { initialData: any[] }) {
           />
         </div>
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" /> New Farm
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" /> New
+          Farm
         </Button>
       </div>
 
@@ -248,14 +253,22 @@ function FarmsTab({ initialData }: { initialData: any[] }) {
                         size="icon"
                         onClick={() => openEdit(f)}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(f.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>
@@ -437,7 +450,8 @@ function ZonesTab({ initialData }: { initialData: any[] }) {
           />
         </div>
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" /> New Zone
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" /> New
+          Zone
         </Button>
       </div>
 
@@ -478,14 +492,22 @@ function ZonesTab({ initialData }: { initialData: any[] }) {
                         size="icon"
                         onClick={() => openEdit(z)}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(z.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>
@@ -685,7 +707,11 @@ function StandardValuesTab({ initialData }: { initialData: any[] }) {
                       size="icon"
                       onClick={() => openEdit(v)}
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Pencil
+                        size={24}
+                        aria-hidden="true"
+                        className="h-4 w-4"
+                      />
                     </Button>
                   </TableCell>
                 </TableRow>

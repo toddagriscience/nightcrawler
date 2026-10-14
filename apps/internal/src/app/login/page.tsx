@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { LayoutDashboard } from 'lucide-react';
+import { LuLayoutDashboard as LayoutDashboard } from 'react-icons/lu';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -66,7 +66,7 @@ export default function LoginPage() {
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
         <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <LayoutDashboard className="h-6 w-6" />
+          <LayoutDashboard size={24} aria-hidden="true" className="h-6 w-6" />
         </div>
         <CardTitle className="text-xl">Todd Internal Dashboard</CardTitle>
         <CardDescription>
