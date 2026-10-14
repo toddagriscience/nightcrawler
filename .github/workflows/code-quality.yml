@@ -39,3 +39,6 @@ jobs:
 
       - name: Run linting
         run: bun run lint
+
+      - name: Analyze undeclared and unresolved imports
+        run: bun run knip:check
