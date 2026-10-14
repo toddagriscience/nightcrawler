@@ -3,7 +3,6 @@
 'use client';
 
 import { logout } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
 import { BiLogOut } from 'react-icons/bi';
 
 interface LogoutLinkProps {
@@ -19,14 +18,8 @@ export default function LogoutLink({
   className,
   label = 'Logout',
 }: LogoutLinkProps) {
-  const router = useRouter();
-
   const handleLogout = async () => {
-    const result = await logout();
-    // If logout doesn't redirect automatically, manually redirect
-    if (!result?.error) {
-      router.push('/');
-    }
+    await logout();
   };
 
   return (

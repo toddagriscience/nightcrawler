@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 /**
  * Inline `image` block stored in the shared article Portable Text schema
- * (`articlePortableContentOf` in `apps/sanity/schemaTypes/article-shared-fields.ts`).
+ * (`articlePortableContentOf` in `apps/sanity/schema-types/article-shared-fields.ts`).
  */
 export interface SanityBodyImageValue extends Partial<SanityImageObject> {
   /** Alt text; required by the CMS schema, defaulted to decorative when absent. */

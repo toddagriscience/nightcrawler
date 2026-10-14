@@ -8,6 +8,7 @@ import { formatActionResponseErrors } from '@/lib/utils/actions';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { saveImpNotes } from '../actions';
+import type { ImpNotesFormValues } from './types';
 
 export function ImpNotesForm({
   articleId,

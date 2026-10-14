@@ -13,13 +13,18 @@ on:
     types:
       - completed
 
+# Vercel is authenticated with repository secrets, not GITHUB_TOKEN, so
+# scoping the token down does not affect the deployment.
+permissions:
+  contents: read
+
 jobs:
   Deploy-Production:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'release' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
       - name: Install Vercel CLI
         run: bun i --global vercel@latest
       - name: Pull Vercel Environment Information

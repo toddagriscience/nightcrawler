@@ -33,6 +33,10 @@ function makeMockRequest(url: string): NextRequest {
 }
 
 describe('isRouteProtected', () => {
+  it('protects the exact onboarding URL without matching lookalikes', () => {
+    expect(isRouteProtected('/apply')).toBe(true);
+    expect(isRouteProtected('/apply-now')).toBe(false);
+  });
   describe('Root path "/" behavior', () => {
     it('should return true for exact root path "/"', () => {
       expect(isRouteProtected('/')).toBe(true);
@@ -119,6 +123,29 @@ describe('isRouteProtected', () => {
 describe('handleAuthRouting', () => {
   beforeEach(() => {
     vitest.clearAllMocks();
+  });
+
+  it('allows token-bearing applicants to reach page-level validation before signup', async () => {
+    (createServerClient as Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+    const result = await handleAuthRouting(
+      makeMockRequest(
+        'https://example.com/apply?application_id=42&token=approval-token'
+      )
+    );
+    expect(result?.status).toBe(200);
+    expect(result?.headers.get('location')).toBeNull();
+  });
+
+  it('protects onboarding resume when no session or complete link is present', async () => {
+    (createServerClient as Mock).mockReturnValue(
+      mockSupabase({ authenticated: false })
+    );
+    const result = await handleAuthRouting(
+      makeMockRequest('https://example.com/apply?application_id=42')
+    );
+    expect(result?.headers.get('location')).toBe('https://example.com/');
   });
 
   it('allows authenticated users on a protected route', async () => {

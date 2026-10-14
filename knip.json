@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "workspaces": {
+    ".": {
+      "project": ["*.{js,mjs,cjs,ts}"]
+    },
+    "apps/site": {
+      "entry": [
+        "newrelic.cjs",
+        "scripts/**/*.{ts,mjs}",
+        "src/**/*.stories.tsx",
+        "src/**/*.test.{ts,tsx}"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}",
+        "scripts/**/*.{ts,mjs}",
+        ".storybook/**/*.{ts,tsx}"
+      ],
+      "ignoreDependencies": ["newrelic", "tw-animate-css"]
+    },
+    "apps/internal": {
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["tw-animate-css"]
+    },
+    "apps/sanity": {
+      "project": ["**/*.{ts,tsx}"]
+    },
+    "packages/db": {
+      "entry": [
+        "scripts/**/*.ts",
+        "drizzle-*.config.ts",
+        "src/**/*.test.ts",
+        "vitest.config.mjs"
+      ],
+      "project": ["src/**/*.ts", "scripts/**/*.ts"]
+    }
+  }
+}

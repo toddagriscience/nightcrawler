@@ -28,10 +28,12 @@ vi.mock('@/components/common/page-header/page-header', () => ({
   default: ({
     title,
     subtitle,
+    subtitleClassName,
     button,
   }: {
     title: string;
     subtitle?: string;
+    subtitleClassName?: string;
     button?: {
       href: string;
       text: string;
@@ -42,6 +44,7 @@ vi.mock('@/components/common/page-header/page-header', () => ({
       data-testid="page-header"
       data-title={title}
       data-subtitle={subtitle}
+      data-subtitle-class-name={subtitleClassName}
       data-button-href={button?.href}
       data-button-text={button?.text}
       data-button-class-name={button?.buttonClassName}
@@ -105,9 +108,10 @@ describe('Homepage', () => {
     const header = screen.getByTestId('page-header');
     expect(header).toHaveAttribute('data-title', 'pageHeading.title');
     expect(header).toHaveAttribute('data-subtitle', 'pageHeading.subtitle');
+    expect(header).toHaveAttribute('data-subtitle-class-name', 'mb-4');
     expect(header).toHaveAttribute('data-button-href', '/research');
     expect(header).toHaveAttribute('data-button-text', 'pageHeading.button');
-    expect(header).toHaveAttribute('data-button-class-name', 'w-[174px]');
+    expect(header).not.toHaveAttribute('data-button-class-name');
 
     const image = screen.getByTestId('header-img');
     expect(image).toHaveAttribute('data-src', '/marketing/garden-bed.svg');

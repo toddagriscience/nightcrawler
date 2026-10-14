@@ -14,7 +14,7 @@ export default async function AccountUsersPage() {
   return (
     <AccountInfo title="User information">
       <AccountInfoSection title="Principal operator">
-        <AccountInfoRow label="Name" value={principalOperator.firstName} />
+        <AccountInfoRow label="Name" value={principalOperator.name} />
         <AccountInfoRow label="Email Address" value={principalOperator.email} />
         <AccountInfoRow
           label="Phone Number"
@@ -23,10 +23,7 @@ export default async function AccountUsersPage() {
       </AccountInfoSection>
 
       <AccountInfoSection title="Owner">
-        <AccountInfoRow
-          label="Name"
-          value={ownerData?.firstName ?? 'Not set'}
-        />
+        <AccountInfoRow label="Name" value={ownerData?.name ?? 'Not set'} />
         <AccountInfoRow
           label="Email Address"
           value={ownerData?.email ?? 'Not set'}

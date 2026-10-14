@@ -10,6 +10,7 @@
 
 import { createHash } from 'node:crypto';
 import { getEmbedding } from '../../src/utils/get-embedding';
+import { formatDbHostForUrl, isLoopbackDbHost } from '../../src/utils/db-ssl';
 
 /** Dimensionality of the pgvector embeddings stored on knowledge_article. */
 export const EMBEDDING_DIMENSIONS = 3072;
@@ -25,12 +26,17 @@ export function getArg(name: string): string | undefined {
  * connection URL. Importers rebuild whole tables, so they must never point at
  * a shared/remote database.
  *
+ * Shares its notion of "local" with the TLS helper via `isLoopbackDbHost`, so
+ * the two cannot drift. It is deliberately the loopback-only check rather than
+ * the wider `isLocalDatabaseUrl`: that one honors `DATABASE_PLAINTEXT_HOSTS`,
+ * and an env var that could widen this guard would defeat its purpose.
+ *
  * @returns The localhost postgres connection URL
- * @throws If LOCAL_DATABASE_HOST is not localhost / 127.0.0.1
+ * @throws If LOCAL_DATABASE_HOST is not a loopback address
  */
 export function requireLocalDatabaseUrl(): string {
   const host = process.env.LOCAL_DATABASE_HOST ?? '';
-  if (!['localhost', '127.0.0.1'].includes(host)) {
+  if (!isLoopbackDbHost(host)) {
     throw new Error(
       `Refusing to run: LOCAL_DATABASE_HOST is "${host}", expected localhost. ` +
         'This importer only runs against the local Docker DB.'
@@ -39,7 +45,7 @@ export function requireLocalDatabaseUrl(): string {
   return (
     `postgresql://${encodeURIComponent(process.env.LOCAL_DATABASE_USER ?? 'postgres')}` +
     `:${encodeURIComponent(process.env.LOCAL_DATABASE_PASSWORD ?? '')}` +
-    `@${host}:${process.env.LOCAL_DATABASE_PORT ?? '5432'}` +
+    `@${formatDbHostForUrl(host)}:${process.env.LOCAL_DATABASE_PORT ?? '5432'}` +
     `/${process.env.LOCAL_DATABASE_DATABASE ?? 'postgres'}`
   );
 }

@@ -2,8 +2,12 @@
 
 import { client, defaultSanityFetchOptions } from '@/lib/sanity/client';
 import { logger } from '@/lib/logger';
-import type { ArticleCollection } from '@/lib/sanity/article-types';
+import type {
+  ArticleCollection,
+  ArticleHighlightPage,
+} from '@/lib/sanity/article-types';
 import {
+  ARTICLE_HIGHLIGHT_TILE_COUNT,
   ARTICLE_INDEX_TOPIC_TYPES,
   NEWS_TOPIC_TYPES,
 } from '@/lib/sanity/article-types';
@@ -57,6 +61,7 @@ const GROQ_NEWS_BODY = `
   headerImage,
   offSiteUrl,
   isFeatured,
+  "highlightPages": coalesce(highlightPages, []),
   source,
   subscripts,
   "contentType": coalesce(contentType, "news"),
@@ -255,6 +260,42 @@ export async function getNewsIndexArticles(
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
     logger.error('Sanity getNewsIndexArticles failed', error);
+    return [];
+  }
+}
+
+/**
+ * The most recent articles an editor has tagged to highlight on one marketing
+ * page, for that page's three-tile strip.
+ *
+ * Selection is explicit: only documents whose `highlightPages` contains `page`
+ * are returned, newest first, capped at `limit`. Articles missing the field are
+ * never picked up, so the strip stays empty until an editor opts something in.
+ *
+ * @param page - Highlight surface key (`research`, `about`, `careers`, `article`, `homepage`)
+ * @param limit - Maximum tiles to return; defaults to {@link ARTICLE_HIGHLIGHT_TILE_COUNT}
+ * @param options - Optional Sanity fetch options
+ * @returns Up to `limit` articles sorted by date descending
+ */
+export async function getHighlightedArticlesForPage(
+  page: ArticleHighlightPage,
+  limit: number = ARTICLE_HIGHLIGHT_TILE_COUNT,
+  options?: FilteredResponseQueryOptions
+): Promise<SanityArticle[]> {
+  // The slice bound is interpolated rather than passed as a `$param`: GROQ range
+  // syntax takes a literal here. `limit` is caller-supplied code, never user
+  // input, and is coerced to a non-negative integer before it reaches the query.
+  const size = Math.max(0, Math.trunc(limit));
+  try {
+    const query = `*[_type == "news" && $page in coalesce(highlightPages, [])] | order(coalesce(date, _updatedAt) desc)[0...${size}] ${GROQ_NEWS_ONLY}`;
+    const articles = await client.fetch<SanityArticle[]>(
+      query,
+      { page },
+      options ?? defaultSanityFetchOptions
+    );
+    return Array.isArray(articles) ? articles : [];
+  } catch (error) {
+    logger.error('Sanity getHighlightedArticlesForPage failed', error);
     return [];
   }
 }

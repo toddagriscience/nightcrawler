@@ -1,8 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { ThemeReset } from '@/components/common';
+import { SOCIAL_PROFILES } from '@/components/common/social-links/social-profiles';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from '@/context/theme/ThemeContext';
+import { ThemeProvider } from '@/context/theme/theme-context';
 import { fontVariables } from '@/lib/fonts';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
@@ -34,8 +35,8 @@ const organizationStructuredData: WithContext<Organization> = {
   url: 'https://toddagriscience.com',
   sameAs: [
     'https://www.toddagriscience.com',
-    'https://www.linkedin.com/company/toddagriscience',
-    'https://x.com/toddagriscience',
+    SOCIAL_PROFILES.linkedin.href,
+    SOCIAL_PROFILES.x.href,
   ],
   logo: 'https://toddagriscience.com/icon.png',
   name: 'Todd',

@@ -50,9 +50,11 @@ vitest.mock('./supabase/server', async (importActual) => {
   };
 });
 
-const mockRedirect = vitest.fn();
+// `auth-client` no longer imports `next/navigation`, but keep this module mock:
+// other modules in this test's graph resolve it, and it must not touch the real
+// server-only implementation.
 vitest.mock('next/navigation', () => ({
-  redirect: (path: string) => mockRedirect(path),
+  redirect: vitest.fn(),
 }));
 
 describe('login', () => {
@@ -97,23 +99,40 @@ describe('login', () => {
 });
 
 describe('logout', () => {
+  const mockLocationReplace = vitest.fn();
+  const originalLocation = window.location;
+
   beforeEach(() => {
     vitest.clearAllMocks();
     mockGetUser.mockResolvedValue({
       data: { user: { id: '123' } },
     });
+    Object.defineProperty(window, 'location', {
+      value: { replace: mockLocationReplace },
+      writable: true,
+      configurable: true,
+    });
   });
 
-  it('logs out when authenticated and redirects', async () => {
+  afterEach(() => {
+    Object.defineProperty(window, 'location', {
+      value: originalLocation,
+      writable: true,
+      configurable: true,
+    });
+  });
+
+  it('logs out when authenticated and hard-navigates to root', async () => {
     mockSignOut.mockResolvedValue({ error: null });
 
-    await logout();
+    const result = await logout();
 
     expect(mockSignOut).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).toHaveBeenCalledWith('/');
+    expect(mockLocationReplace).toHaveBeenCalledWith('/');
+    expect(result.error).toBeUndefined();
   });
 
-  it('does not log out when not authenticated, but still redirects', async () => {
+  it('does not call signOut when not authenticated, but still hard-navigates to root', async () => {
     mockGetUser.mockResolvedValue({
       data: { user: null },
     });
@@ -121,23 +140,26 @@ describe('logout', () => {
     await logout();
 
     expect(mockSignOut).not.toHaveBeenCalled();
+    expect(mockLocationReplace).toHaveBeenCalledWith('/');
   });
 
-  it('logs warning on Supabase signOut error but still redirects', async () => {
+  it('returns an AuthError on Supabase signOut error and does not navigate', async () => {
     const fakeError = new AuthError('signout failed');
 
     mockSignOut.mockResolvedValue({ error: fakeError });
 
-    await logout();
+    const result = await logout();
 
     expect(mockSignOut).toHaveBeenCalled();
+    expect(result.error).toBeInstanceOf(AuthError);
+    expect(mockLocationReplace).not.toHaveBeenCalled();
   });
 
-  it('returns AuthError when an exception is thrown and does not redirect', async () => {
+  it('returns AuthError when an exception is thrown and does not navigate', async () => {
     const result = await logout();
 
     expect(result?.error).toBeInstanceOf(AuthError);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    expect(mockLocationReplace).not.toHaveBeenCalled();
   });
 });
 

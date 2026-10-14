@@ -3,8 +3,52 @@
 'use client';
 
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import {
+  PolicyBody,
+  PolicyItemHeading,
+  PolicyList,
+  PolicySection,
+  PolicySubheading,
+  TermsPoliciesPage,
+} from '@/components/common/terms-policies-page';
+import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+
+/** Personal-information categories listed in the California supplement. */
+const CALIFORNIA_CATEGORIES = [
+  'identifiers',
+  'personalRecords',
+  'protectedCharacteristics',
+  'commercialInfo',
+  'biometricInfo',
+  'internetActivity',
+  'geolocation',
+  'sensoryData',
+  'professionalInfo',
+  'educationInfo',
+  'inferences',
+  'sensitiveInfo',
+] as const;
+
+/**
+ * Consumer rights listed in the California supplement, each paired with the
+ * message key that carries its prose. `disclosure` and `exercise` do not use a
+ * `content` key: the first introduces its list through `intro`, the second says
+ * everything in `verification`.
+ */
+const CALIFORNIA_RIGHTS = [
+  { key: 'deletion', body: 'california.rights.deletion.content' },
+  { key: 'disclosure', body: 'california.rights.disclosure.intro' },
+  { key: 'correction', body: 'california.rights.correction.content' },
+  {
+    key: 'noDiscrimination',
+    body: 'california.rights.noDiscrimination.content',
+  },
+  { key: 'exercise', body: 'california.rights.exercise.verification' },
+] as const;
+
+/** Border shared by the regional supplement sections. */
+const SUPPLEMENT_DIVIDER = 'border-t border-[#2A2727]/20 pt-8';
 
 /**
  * Privacy page component
@@ -13,138 +57,104 @@ import Link from 'next/link';
 export default function PrivacyPage() {
   const t = useTranslations('privacy');
 
+  /**
+   * Builds an ordered list of translated strings from a numerically indexed key.
+   * @param prefix - Message key prefix holding `0`, `1`, … entries
+   * @param length - Number of entries to read
+   * @returns The translated entries in order
+   */
+  const listFrom = (prefix: string, length: number) =>
+    Array.from({ length }, (_, index) => t(`${prefix}.${index}`));
+
   return (
-    <div className="mx-auto max-w-3xl px-2 pt-8">
+    <TermsPoliciesPage title={t('title')}>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="mt-16 mb-8 text-4xl font-light">{t('title')}</h1>
-        <div className="mb-6 h-px bg-[#2A2727] opacity-20" />
-        <h2 className="mb-6 text-xl font-light">{t('websitePrivacyPolicy')}</h2>
-        <p className="mb-4 text-sm leading-relaxed font-thin">
-          {t('effective')}
-        </p>
+      <PolicySection title={t('websitePrivacyPolicy')} className="mb-8">
+        <PolicyBody className="mb-4">{t('effective')}</PolicyBody>
         <div className="mt-8">
           <CookiePreferencesModal />
         </div>
-      </div>
+      </PolicySection>
 
       {/* Supplements Notice */}
       <div className="mb-8">
-        <ul className="space-y-2 text-sm leading-relaxed font-thin">
-          <li>{t('supplements.california')}</li>
-          <li>{t('supplements.euUk')}</li>
-          <li>{t('supplements.japan')}</li>
-        </ul>
+        <PolicyList
+          className="list-none space-y-2 pl-0"
+          items={[
+            t('supplements.california'),
+            t('supplements.euUk'),
+            t('supplements.japan'),
+          ]}
+        />
       </div>
 
       {/* Main Content */}
       <div className="space-y-8">
-        {/* Commitment Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">{t('commitment.title')}</h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">
-            {t('commitment.content')}
-          </p>
-          <p className="text-sm leading-relaxed font-thin">
-            {t('commitment.description')}
-          </p>
-        </section>
+        <PolicySection title={t('commitment.title')}>
+          <PolicyBody className="mb-4">{t('commitment.content')}</PolicyBody>
+          <PolicyBody>{t('commitment.description')}</PolicyBody>
+        </PolicySection>
 
-        {/* Information Collection Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">
-            {t('informationCollection.title')}
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed font-thin">
-            <p>{t('informationCollection.general')}</p>
-            <p>{t('informationCollection.usage')}</p>
-            <p>{t('informationCollection.security')}</p>
+        <PolicySection title={t('informationCollection.title')}>
+          <div className="space-y-4">
+            <PolicyBody>{t('informationCollection.general')}</PolicyBody>
+            <PolicyBody>{t('informationCollection.usage')}</PolicyBody>
+            <PolicyBody>{t('informationCollection.security')}</PolicyBody>
           </div>
-        </section>
+        </PolicySection>
 
-        {/* Job Applicants Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">
-            {t('jobApplicants.title')}
-          </h2>
-          <p className="text-sm leading-relaxed font-thin">
-            {t('jobApplicants.content')}
-          </p>
-        </section>
+        <PolicySection title={t('jobApplicants.title')}>
+          <PolicyBody>{t('jobApplicants.content')}</PolicyBody>
+        </PolicySection>
 
-        {/* Capacity Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">{t('capacity.title')}</h2>
-          <p className="text-sm leading-relaxed font-thin">
-            {t('capacity.content')}
-          </p>
-        </section>
+        <PolicySection title={t('capacity.title')}>
+          <PolicyBody>{t('capacity.content')}</PolicyBody>
+        </PolicySection>
 
-        {/* Notifications Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">
-            {t('notifications.title')}
-          </h2>
-          <p className="text-sm leading-relaxed font-thin">
-            {t('notifications.content')}
-          </p>
-        </section>
+        <PolicySection title={t('notifications.title')}>
+          <PolicyBody>{t('notifications.content')}</PolicyBody>
+        </PolicySection>
 
-        {/* Miscellaneous Section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">
-            {t('miscellaneous.title')}
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed font-thin">
-            <p>{t('miscellaneous.termsReference')}</p>
-            <p>{t('miscellaneous.headings')}</p>
+        <PolicySection title={t('miscellaneous.title')}>
+          <div className="space-y-4">
+            <PolicyBody>{t('miscellaneous.termsReference')}</PolicyBody>
+            <PolicyBody>{t('miscellaneous.headings')}</PolicyBody>
           </div>
-        </section>
+        </PolicySection>
 
         {/* California Supplement */}
-        <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-6 text-xl font-light">{t('california.title')}</h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">
+        <PolicySection
+          title={t('california.title')}
+          className={SUPPLEMENT_DIVIDER}
+        >
+          <PolicyBody className="mb-4">
             {t('california.lastUpdated')}
-          </p>
+          </PolicyBody>
 
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">
-              {t('california.intro')}
-            </p>
+            <PolicyBody>{t('california.intro')}</PolicyBody>
 
             <div>
-              <p className="mb-4 text-sm leading-relaxed font-thin">
+              <PolicyBody className="mb-4">
                 {t('california.categoriesIntro')}
-              </p>
+              </PolicyBody>
 
               {/* Categories Grid */}
               <div className="grid gap-4">
-                {[
-                  'identifiers',
-                  'personalRecords',
-                  'protectedCharacteristics',
-                  'commercialInfo',
-                  'biometricInfo',
-                  'internetActivity',
-                  'geolocation',
-                  'sensoryData',
-                  'professionalInfo',
-                  'educationInfo',
-                  'inferences',
-                  'sensitiveInfo',
-                ].map((category) => (
+                {CALIFORNIA_CATEGORIES.map((category) => (
                   <div key={category} className="py-4">
-                    <h4 className="mb-4 text-sm font-normal">
+                    {/* h3, not the default h4: these hang straight off the
+                        supplement's h2, so h4 would skip a level. */}
+                    <PolicyItemHeading level={3} className="mb-4">
                       {t(`california.categories.${category}.title`)}
-                    </h4>
-                    <p className="mb-4 text-sm leading-relaxed font-thin">
+                    </PolicyItemHeading>
+                    <PolicyBody className="mb-4">
                       {t(`california.categories.${category}.description`)}
-                    </p>
-                    <p className="text-sm leading-relaxed font-thin">
-                      Collected:{' '}
+                    </PolicyBody>
+                    <PolicyBody>
+                      {t('california.collectedLabel')}:{' '}
                       {t(`california.categories.${category}.collected`)}
-                    </p>
+                    </PolicyBody>
                   </div>
                 ))}
               </div>
@@ -152,304 +162,189 @@ export default function PrivacyPage() {
 
             {/* Sensitive Data Usage */}
             <div>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
+              <PolicyBody className="mb-2">
                 {t('california.sensitiveDataUsage.intro')}
-              </p>
-              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-                {Array.from({ length: 8 }, (_, i) => (
-                  <li key={i} className="text-sm">
-                    {t(`california.sensitiveDataUsage.purposes.${i}`)}
-                  </li>
-                ))}
-              </ul>
+              </PolicyBody>
+              <PolicyList
+                items={listFrom('california.sensitiveDataUsage.purposes', 8)}
+              />
             </div>
 
-            <p className="text-sm leading-relaxed font-thin">
-              {t('california.minorPolicy')}
-            </p>
+            <PolicyBody>{t('california.minorPolicy')}</PolicyBody>
 
             {/* Purposes */}
             <div>
-              <h3 className="mb-3 text-lg font-light">
+              <PolicySubheading>
                 {t('california.purposes.title')}
-              </h3>
-              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-                {Array.from({ length: 8 }, (_, i) => (
-                  <li key={i} className="text-sm">
-                    {t(`california.purposes.list.${i}`)}
-                  </li>
-                ))}
-              </ul>
+              </PolicySubheading>
+              <PolicyList items={listFrom('california.purposes.list', 8)} />
             </div>
 
-            <p className="text-sm leading-relaxed font-thin">
-              {t('california.retention')}
-            </p>
+            <PolicyBody>{t('california.retention')}</PolicyBody>
 
             {/* Disclosure */}
             <div>
-              <h3 className="mb-3 text-lg font-light">
-                Disclosure of Information
-              </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
+              <PolicyBody className="mb-2">
                 {t('california.disclosure.intro')}
-              </p>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
+              </PolicyBody>
+              <PolicyBody className="mb-2">
                 {t('california.disclosure.businessPurpose')}
-              </p>
-              <p className="text-sm leading-relaxed font-thin">
-                {t('california.disclosure.thirdParties')}
-              </p>
+              </PolicyBody>
+              <PolicyBody>{t('california.disclosure.thirdParties')}</PolicyBody>
             </div>
 
             {/* Rights */}
             <div>
-              <h3 className="mb-4 text-lg font-light">
+              <PolicySubheading className="mb-4">
                 {t('california.rights.title')}
-              </h3>
+              </PolicySubheading>
               <div className="space-y-4">
-                {[
-                  'deletion',
-                  'disclosure',
-                  'correction',
-                  'noDiscrimination',
-                  'exercise',
-                ].map((right) => (
-                  <div key={right} className="py-4">
-                    <h4 className="mb-2 text-sm leading-relaxed font-thin">
-                      {t(`california.rights.${right}.title`)}
-                    </h4>
-                    <p className="text-sm leading-relaxed font-thin">
-                      {t(`california.rights.${right}.content`)}
-                    </p>
-                    {right === 'disclosure' && (
-                      <ul className="mt-2 list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-                        {Array.from({ length: 6 }, (_, i) => (
-                          <li key={i} className="text-sm">
-                            {t(`california.rights.disclosure.list.${i}`)}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {right === 'exercise' && (
-                      <p className="mt-2 text-sm leading-relaxed font-thin">
-                        {t('california.rights.exercise.verification')}
-                      </p>
+                {CALIFORNIA_RIGHTS.map(({ key, body }) => (
+                  <div key={key} className="py-4">
+                    <PolicyItemHeading className="mb-2 leading-relaxed">
+                      {t(`california.rights.${key}.title`)}
+                    </PolicyItemHeading>
+                    <PolicyBody>{t(body)}</PolicyBody>
+                    {key === 'disclosure' && (
+                      <PolicyList
+                        className="mt-2"
+                        items={listFrom('california.rights.disclosure.list', 6)}
+                      />
                     )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </section>
+        </PolicySection>
 
-        {/* Japan section */}
-        <section>
-          <h2 className="mb-6 text-xl font-light">{t('japan.title')}</h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">
-            {t('japan.lastUpdated')}
-          </p>
+        {/* Japan Supplement */}
+        <PolicySection title={t('japan.title')}>
+          <PolicyBody className="mb-4">{t('japan.lastUpdated')}</PolicyBody>
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.intro')}
-            </p>
-            <h3 className="mb-3 text-lg font-light">
-              {t('japan.compliance.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.compliance.content')}
-            </p>
-            <h3 className="mb-3 text-lg font-light">
-              {t('japan.purposeOfUse.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.purposeOfUse.content')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.businessDetails')}
-            </p>
-            <p className="ml-4 text-sm leading-relaxed font-thin">
+            <PolicyBody>{t('japan.intro')}</PolicyBody>
+            <PolicySubheading>{t('japan.compliance.title')}</PolicySubheading>
+            <PolicyBody>{t('japan.compliance.content')}</PolicyBody>
+            <PolicySubheading>{t('japan.purposeOfUse.title')}</PolicySubheading>
+            <PolicyBody>{t('japan.purposeOfUse.content')}</PolicyBody>
+            <PolicyBody>{t('japan.businessDetails')}</PolicyBody>
+            <PolicyBody className="ml-4">
               {t('japan.relatedBusiness')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.purposeOfUse.subtitle')}
-            </p>
-            <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-              {Array.from({ length: 12 }, (_, i) => (
-                <li key={i} className="text-sm">
-                  {t(`japan.purposeOfUse.purposes.${i}`)}
-                </li>
-              ))}
-            </ul>
-            <h3 className="mb-3 text-lg font-light">
-              {t('japan.safety.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.safety.content')}
-            </p>
-            <h3 className="mb-3 text-lg font-light">{t('japan.ci.title')}</h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.ci.content')}
-            </p>
-            <h3 className="mb-3 text-lg font-light">
+            </PolicyBody>
+            <PolicyBody>{t('japan.purposeOfUse.subtitle')}</PolicyBody>
+            <PolicyList items={listFrom('japan.purposeOfUse.purposes', 12)} />
+            <PolicySubheading>{t('japan.safety.title')}</PolicySubheading>
+            <PolicyBody>{t('japan.safety.content')}</PolicyBody>
+            <PolicySubheading>{t('japan.ci.title')}</PolicySubheading>
+            <PolicyBody>{t('japan.ci.content')}</PolicyBody>
+            <PolicySubheading>
               {t('japan.requestDisclosure.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.requestDisclosure.content')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.requestDisclosure.addition')}
-            </p>
-            <h3 className="mb-3 text-lg font-light">
+            </PolicySubheading>
+            <PolicyBody>{t('japan.requestDisclosure.content')}</PolicyBody>
+            <PolicyBody>{t('japan.requestDisclosure.addition')}</PolicyBody>
+            <PolicySubheading>
               {t('japan.informationRequest.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.informationRequest.content')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.informationRequest.requestInfo')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.informationRequest.addition')}
-            </p>
-            <ol className="list-decimal space-y-1 pl-6 text-sm leading-relaxed font-thin">
-              {Array.from({ length: 7 }, (_, i) => (
-                <li key={i} className="text-sm">
-                  {t(`japan.informationRequest.info.${i}`)}
-                </li>
-              ))}
-            </ol>
-            <h3 className="mb-3 text-lg font-light">
-              {t('japan.questions.title')}
-            </h3>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('japan.questions.content')}
-              <Link href={'/contact'} className="inline-block">
-                : Contact us.
-              </Link>
-            </p>
+            </PolicySubheading>
+            <PolicyBody>{t('japan.informationRequest.content')}</PolicyBody>
+            <PolicyBody>{t('japan.informationRequest.requestInfo')}</PolicyBody>
+            <PolicyBody>{t('japan.informationRequest.addition')}</PolicyBody>
+            <PolicyList
+              ordered
+              items={listFrom('japan.informationRequest.info', 7)}
+            />
+            <PolicySubheading>{t('japan.questions.title')}</PolicySubheading>
+            {/* The sentence points at 此方 ("here") as the place to get in
+                touch, so the link goes there rather than trailing off the end
+                as an English fragment. */}
+            <PolicyBody>
+              {t.rich('japan.questions.content', {
+                link: (chunks) => <Link href="/contact">{chunks}</Link>,
+              })}
+            </PolicyBody>
           </div>
-        </section>
+        </PolicySection>
 
-        {/* EU-UK Section */}
-        <section className="border-t border-[#2A2727]/20 pt-8">
-          <h2 className="mb-6 text-xl font-light">{t('euUk.title')}</h2>
-          <p className="mb-4 text-sm leading-relaxed font-thin">
-            {t('euUk.lastUpdated')}
-          </p>
+        {/* EU-UK Supplement */}
+        <PolicySection title={t('euUk.title')} className={SUPPLEMENT_DIVIDER}>
+          <PolicyBody className="mb-4">{t('euUk.lastUpdated')}</PolicyBody>
 
           <div className="space-y-6">
-            <p className="text-sm leading-relaxed font-thin">
-              {t('euUk.intro')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('euUk.definitions')}
-            </p>
-            <p className="text-sm leading-relaxed font-thin">
-              {t('euUk.scope')}
-            </p>
+            <PolicyBody>{t('euUk.intro')}</PolicyBody>
+            <PolicyBody>{t('euUk.definitions')}</PolicyBody>
+            <PolicyBody>{t('euUk.scope')}</PolicyBody>
 
-            {/* Additional Information */}
             <div>
-              <h3 className="mb-3 text-lg font-light">
+              <PolicySubheading>
                 {t('euUk.additionalInfo.title')}
-              </h3>
-              <p className="text-sm leading-relaxed font-thin">
-                {t('euUk.additionalInfo.content')}
-              </p>
+              </PolicySubheading>
+              <PolicyBody>{t('euUk.additionalInfo.content')}</PolicyBody>
             </div>
 
-            {/* Purpose of Processing */}
             <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.processing.title')}
-              </h3>
-              <div className="space-y-3 text-sm leading-relaxed font-thin">
-                <p>{t('euUk.processing.legal')}</p>
-                <p>{t('euUk.processing.requirements')}</p>
-                <p>{t('euUk.processing.multipleBases')}</p>
-                <p>{t('euUk.processing.purposes')}</p>
-                <p>{t('euUk.processing.automated')}</p>
-                <p>{t('euUk.processing.disclosure')}</p>
-                <p>{t('euUk.processing.links')}</p>
-                <p>{t('euUk.processing.legal')}</p>
-              </div>
-            </div>
-
-            {/* Sharing and Transfers */}
-            <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.sharing.title')}
-              </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
-                {t('euUk.sharing.content')}
-              </p>
-            </div>
-
-            {/* Retention and Security */}
-            <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.retention.title')}
-              </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
-                {t('euUk.retention.security')}
-              </p>
-              <p className="text-sm leading-relaxed font-thin">
-                {t('euUk.retention.retention')}
-              </p>
-            </div>
-
-            {/* Direct Communications */}
-            <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.marketing.title')}
-              </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
-                {t('euUk.marketing.content')}
-              </p>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
-                {t('euUk.marketing.optOut.intro')}
-              </p>
-              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-                {Array.from({ length: 2 }, (_, i) => (
-                  <li key={i} className="text-sm">
-                    {t(`euUk.marketing.optOut.methods.${i}`)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Rights */}
-            <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.rights.title')}
-              </h3>
+              <PolicySubheading>{t('euUk.processing.title')}</PolicySubheading>
               <div className="space-y-3">
-                <p className="text-sm leading-relaxed font-thin">
-                  {t('euUk.rights.list')}
-                </p>
-                <p className="text-sm leading-relaxed font-thin">
-                  {t('euUk.rights.verification')}
-                </p>
+                <PolicyBody>{t('euUk.processing.legal')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.requirements')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.multipleBases')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.purposes')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.automated')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.disclosure')}</PolicyBody>
+                <PolicyBody>{t('euUk.processing.links')}</PolicyBody>
+                {/* Restored: this shared the `legal` key with the paragraph
+                    above, so JSON's last-wins rule hid it and printed that one
+                    twice. */}
+                <PolicyBody>{t('euUk.processing.legalDisclosure')}</PolicyBody>
               </div>
             </div>
 
-            {/* Complaints */}
             <div>
-              <h3 className="mb-3 text-lg font-light">
-                {t('euUk.complaints.title')}
-              </h3>
-              <p className="mb-2 text-sm leading-relaxed font-thin">
+              <PolicySubheading>{t('euUk.sharing.title')}</PolicySubheading>
+              <PolicyBody className="mb-2">
+                {t('euUk.sharing.content')}
+              </PolicyBody>
+            </div>
+
+            <div>
+              <PolicySubheading>{t('euUk.retention.title')}</PolicySubheading>
+              <PolicyBody className="mb-2">
+                {t('euUk.retention.security')}
+              </PolicyBody>
+              <PolicyBody>{t('euUk.retention.retention')}</PolicyBody>
+            </div>
+
+            <div>
+              <PolicySubheading>{t('euUk.marketing.title')}</PolicySubheading>
+              <PolicyBody className="mb-2">
+                {t('euUk.marketing.content')}
+              </PolicyBody>
+              <PolicyBody className="mb-2">
+                {t('euUk.marketing.optOut.intro')}
+              </PolicyBody>
+              <PolicyList
+                items={listFrom('euUk.marketing.optOut.methods', 2)}
+              />
+            </div>
+
+            <div>
+              <PolicySubheading>{t('euUk.rights.title')}</PolicySubheading>
+              <div className="space-y-3">
+                <PolicyBody>{t('euUk.rights.list')}</PolicyBody>
+                <PolicyBody>{t('euUk.rights.verification')}</PolicyBody>
+              </div>
+            </div>
+
+            <div>
+              <PolicySubheading>{t('euUk.complaints.title')}</PolicySubheading>
+              <PolicyBody className="mb-2">
                 {t('euUk.complaints.intro')}
-              </p>
-              <ul className="list-disc space-y-1 pl-6 text-sm leading-relaxed font-thin">
-                <li className="text-sm">{t('euUk.complaints.uk')}</li>
-                <li className="text-sm">{t('euUk.complaints.eu')}</li>
-              </ul>
+              </PolicyBody>
+              <PolicyList
+                items={[t('euUk.complaints.uk'), t('euUk.complaints.eu')]}
+              />
             </div>
           </div>
-        </section>
+        </PolicySection>
       </div>
-    </div>
+    </TermsPoliciesPage>
   );
 }

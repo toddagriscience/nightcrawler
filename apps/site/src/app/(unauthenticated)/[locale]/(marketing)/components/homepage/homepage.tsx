@@ -8,23 +8,26 @@ import SectionContent from '@/components/common/section-content/section-content'
 import { Button } from '@/components/ui';
 import { Link } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import type { ReactNode } from 'react';
 
 /**
  * Homepage component
+ *
+ * @param props.highlights - Highlight strip node, server-rendered by the route
  * @returns {JSX.Element} - The homepage component
  */
-export default function Homepage() {
+export default function Homepage({ highlights }: { highlights?: ReactNode }) {
   const t = useTranslations('homepage');
 
   return (
-    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:my-30">
+    <section className="flex flex-col items-center space-y-15 w-[90%] sm:w-[80%] mx-auto md:mb-30">
       <PageHeader
         title={t('pageHeading.title')}
         subtitle={t('pageHeading.subtitle')}
+        subtitleClassName="mb-4"
         button={{
           href: '/research',
           text: t('pageHeading.button'),
-          buttonClassName: 'w-[174px]',
         }}
       />
       <HeaderImg
@@ -37,6 +40,7 @@ export default function Homepage() {
         caption={t('sectionContent.section1.caption')}
         title={t('sectionContent.section1.title')}
       />
+      {highlights}
       <div className="flex flex-col items-center justify-center space-y-15 my-44">
         <h2 className="text-3xl lg:text-5xl/[24px]">
           {t('sectionContent.explore.title')}

@@ -48,12 +48,14 @@ export default async function News({
       topics={NEWS_TOPIC_TYPES}
       activeTopic={activeTopic}
       basePath="/news"
+      caption={t('eyebrow')}
       title={t('titles.news')}
       t={t}
       locale={locale}
       countParam={count}
       topicHrefMode="query"
       showTopicTabs
+      cursorLabel={t('cursor.read')}
     />
   );
 }

@@ -98,6 +98,28 @@ export const ARTICLE_COLLECTIONS = [
 
 export type ArticleCollection = (typeof ARTICLE_COLLECTIONS)[number];
 
+/**
+ * Marketing surfaces that can carry a three-tile highlight strip. Editors pick
+ * these per article in Studio (`news.highlightPages`); the strip on each page
+ * queries its own key, so an article can be highlighted in several places.
+ *
+ * Kept in sync with the `highlightPages` option list in
+ * `apps/sanity/schema-types/article-shared-fields.ts`.
+ */
+export const ARTICLE_HIGHLIGHT_PAGES = [
+  'research',
+  'about',
+  'careers',
+  'article',
+  'homepage',
+] as const;
+
+/** Type for a single `news.highlightPages` entry. */
+export type ArticleHighlightPage = (typeof ARTICLE_HIGHLIGHT_PAGES)[number];
+
+/** How many tiles a highlight strip renders. Fixed by design — the strip has no pagination. */
+export const ARTICLE_HIGHLIGHT_TILE_COUNT = 3;
+
 /** Where an article CTA pill renders on the marketing article template. */
 export const ARTICLE_CTA_PLACEMENTS = ['under-header', 'footer'] as const;
 
@@ -157,6 +179,8 @@ export interface SanityArticle {
   /** When set, the article is external and must not expose a canonical on-site detail page. */
   offSiteUrl?: string;
   isFeatured?: boolean;
+  /** Marketing pages whose three-tile highlight strip may show this article. */
+  highlightPages?: ArticleHighlightPage[];
   source?: string;
   subscripts?: SanityArticleSubscript[];
   /** Primary category for routing; legacy/unknown values normalize to `news-company`. */

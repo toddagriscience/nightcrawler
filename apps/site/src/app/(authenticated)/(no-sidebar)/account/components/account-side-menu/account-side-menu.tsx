@@ -5,7 +5,7 @@
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { BiArrowBack, BiHelpCircle, BiLogOut } from 'react-icons/bi';
 import { toMailtoAddress, toTelNumber } from '../../util';
 import type { AccountSideMenuProps } from './types';
@@ -43,21 +43,16 @@ export default function AccountSideMenu({
   contactPhone,
 }: AccountSideMenuProps) {
   const pathname = usePathname().replace(/\/$/, '') || '/account';
-  const router = useRouter();
   const mailtoAddress = toMailtoAddress(contactEmail);
   const telNumber = toTelNumber(contactPhone);
 
   const handleLogout = async () => {
-    const result = await logout();
-
-    if (!result?.error) {
-      router.push('/');
-    }
+    await logout();
   };
 
   return (
     <aside
-      className="w-[190px] shrink-0 mt-1"
+      className="w-full sm:w-[190px] shrink-0 mt-1"
       aria-labelledby="account-side-menu-heading"
     >
       <nav aria-label="Site" className="pb-6">
@@ -105,7 +100,11 @@ export default function AccountSideMenu({
       <div className="border-t border-[#D9D9D9] pt-4">
         <nav className="space-y-2.5" aria-label="Account sections">
           {sideMenuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              pathname === item.href ||
+              (item.href === '/account'
+                ? pathname.startsWith('/account/farm/')
+                : pathname.startsWith(`${item.href}/`));
 
             return (
               <Link

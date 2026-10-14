@@ -3,17 +3,13 @@
 'use client';
 
 import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import SocialLinks from '@/components/common/social-links/social-links';
 import ToddHeader from '@/components/common/wordmark/todd-wordmark';
 import { Link } from '@/i18n/config';
+import { localizePathname } from '@/i18n/locale-path';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6';
 
 /**
  * Footer component
@@ -23,29 +19,6 @@ const Footer = () => {
   const locale = useLocale();
   const t = useTranslations('footer');
   const tCookiePreferences = useTranslations('cookiePreferences');
-
-  const socialMediaIcons = [
-    {
-      icon: <FaInstagram aria-hidden="true" />,
-      href: 'https://www.instagram.com/toddagriscience/',
-      ariaLabel: 'Visit our Instagram page',
-    },
-    {
-      icon: <FaLinkedinIn aria-hidden="true" />,
-      href: 'https://www.linkedin.com/company/toddagriscience/',
-      ariaLabel: 'Visit our LinkedIn page',
-    },
-    {
-      icon: <FaXTwitter aria-hidden="true" />,
-      href: 'https://x.com/toddagriscience',
-      ariaLabel: 'Visit our X (Twitter) page',
-    },
-    {
-      icon: <FaYoutube aria-hidden="true" />,
-      href: 'https://www.youtube.com/@toddagriscience',
-      ariaLabel: 'Visit our YouTube channel',
-    },
-  ];
 
   const footerSections = [
     {
@@ -79,10 +52,9 @@ const Footer = () => {
 
   const handleLocaleChange = (newLocale: string) => {
     setLangOpen(false);
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    const newPath = segments.join('/') || `/${newLocale}`;
-    if (trimPath(newPath) === trimPath(pathname)) {
+    if (
+      trimPath(localizePathname(pathname, newLocale)) === trimPath(pathname)
+    ) {
       return;
     }
     setPendingLocale(newLocale);
@@ -91,10 +63,7 @@ const Footer = () => {
   useEffect(() => {
     if (!pendingLocale) return;
     document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
-    const segments = pathname.split('/');
-    segments[1] = pendingLocale;
-    const newPath = segments.join('/') || `/${pendingLocale}`;
-    window.location.assign(newPath);
+    window.location.assign(localizePathname(pathname, pendingLocale));
   }, [pendingLocale, pathname]);
 
   return (
@@ -128,7 +97,7 @@ const Footer = () => {
       <div className="-mx-4 mt-8 flex flex-col gap-6 border-t-[1.5px] border-foreground/10 px-4 pt-6 md:-mx-6 md:flex-row md:items-center md:justify-between md:px-6 lg:-mx-12 lg:px-12 xl:-mx-18 xl:px-18">
         <div className="flex flex-col text-[15px] font-normal md:flex-row md:items-center md:gap-10">
           <p className="text-[15px] font-normal">
-            Todd Agriscience © 2018-{currentYear}
+            Todd Agriscience © {currentYear}
           </p>
           <CookiePreferencesModal
             trigger={
@@ -139,11 +108,12 @@ const Footer = () => {
           />
         </div>
         <div className="flex flex-wrap items-center gap-8 md:justify-end">
-          {socialMediaIcons.map((val) => (
-            <Link key={val.href} href={val.href} aria-label={val.ariaLabel}>
-              {val.icon}
-            </Link>
-          ))}
+          {/* `contents` keeps the icons as direct children of this flex row so
+              they share its `gap-8` with the language switcher. */}
+          <SocialLinks
+            platforms={['instagram', 'linkedin', 'x', 'youtube']}
+            className="contents"
+          />
           <div className="relative inline-flex">
             <button
               type="button"

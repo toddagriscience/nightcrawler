@@ -4,6 +4,7 @@
 
 import { getFormBySlug } from '@/lib/sanity/forms';
 import type { SanityFormWorkflowType } from '@/lib/sanity/form-types';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import { db } from '@nightcrawler/db';
 import { formSubmission } from '@nightcrawler/db/schema';
 import { logger } from '@/lib/logger';
@@ -50,6 +51,8 @@ function resolveWorkflowType(
 export async function submitFormSubmission(
   input: SubmitFormSubmissionInput
 ): Promise<ActionResponse> {
+  await enforceRateLimit();
+
   const form = await getFormBySlug(input.formSlug, { cache: 'no-store' });
   if (!form) {
     throwActionError('This form is not available.');

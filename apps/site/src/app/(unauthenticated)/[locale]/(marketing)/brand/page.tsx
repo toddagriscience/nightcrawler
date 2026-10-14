@@ -141,6 +141,7 @@ export default async function BrandPage() {
     <div className="mx-auto flex flex-col items-center justify-center max-w-[1750px]">
       {/* Page Header */}
       <PageHeader
+        narrow
         subtitle={t('pageHeading.subtitle')}
         title={t('pageHeading.title')}
       />

@@ -154,6 +154,34 @@ describe('NotFound Page', () => {
     ).toBeInTheDocument();
   });
 
+  it('should render the shared social links', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+
+    await act(() => {
+      renderWithNextIntl(NotFound());
+    });
+
+    expect(
+      screen.getByRole('link', { name: 'Visit our Instagram page' })
+    ).toHaveAttribute('href', 'https://www.instagram.com/toddagriscience/');
+    expect(
+      screen.getByRole('link', { name: 'Visit our LinkedIn page' })
+    ).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/company/toddagriscience/'
+    );
+    expect(
+      screen.getByRole('link', { name: 'Visit our X (Twitter) page' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Visit our YouTube channel' })
+    ).toBeInTheDocument();
+    // The 404 page deliberately omits Discord.
+    expect(
+      screen.queryByRole('link', { name: 'Join our Discord server' })
+    ).not.toBeInTheDocument();
+  });
+
   it('should use the correct locale', async () => {
     (getLocale as Mock).mockResolvedValue('es');
     mockGetUser.mockResolvedValue({ data: { user: null } });

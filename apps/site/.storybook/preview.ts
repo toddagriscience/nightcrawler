@@ -1,9 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Preview } from '@storybook/react-vite';
-import { withFonts } from './decorators/withFonts';
+import { withFonts } from './decorators/with-fonts';
 import { withNextNavigation } from './decorators/withNextNavigation';
-import { withStorybookProvider } from './decorators/withStorybookProvider';
+import { withStorybookProvider } from './decorators/with-storybook-provider';
 import '../src/app/globals.css';
 
 const preview: Preview = {

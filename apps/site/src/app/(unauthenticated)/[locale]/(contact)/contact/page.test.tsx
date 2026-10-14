@@ -15,8 +15,19 @@ vitest.mock('@/lib/sanity/forms', () => ({
 vitest.mock(
   '@/app/(unauthenticated)/[locale]/(marketing)/forms/[slug]/components/dynamic-form',
   () => ({
-    DynamicForm: ({ form }: { form: SanityForm }) => (
-      <div data-testid="dynamic-form">{form.title}</div>
+    DynamicForm: ({
+      form,
+      title,
+      subtitle,
+    }: {
+      form: SanityForm;
+      title?: string;
+      subtitle?: string;
+    }) => (
+      <div data-testid="dynamic-form">
+        <h1>{title ?? form.title}</h1>
+        {subtitle ? <p>{subtitle}</p> : null}
+      </div>
     ),
   })
 );
@@ -56,9 +67,10 @@ describe('Contact page', () => {
     expect(getFormBySlug).toHaveBeenCalledWith('contact', {
       next: { revalidate: 60 * 60 },
     });
-    expect(screen.getByTestId('dynamic-form')).toHaveTextContent(
-      'Contact our advisory team'
-    );
+    expect(
+      screen.getByRole('heading', { name: 'Contact our advisory team' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Get started with Todd Iris')).toBeInTheDocument();
   });
 
   test('delegates to notFound when the contact form is missing', async () => {

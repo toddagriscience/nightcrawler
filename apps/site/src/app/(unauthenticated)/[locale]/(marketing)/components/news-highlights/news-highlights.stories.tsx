@@ -6,7 +6,7 @@ import NewsHighlights from './news-highlights';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../../../../.storybook/utils/storybookControls';
+} from '../../../../../../../.storybook/utils/storybook-controls';
 
 const meta = {
   title: 'Landing/NewsHighlights',

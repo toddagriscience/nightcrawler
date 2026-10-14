@@ -1,0 +1,123 @@
+// Copyright © Todd Agriscience, Inc. All rights reserved.
+
+'use client';
+
+import HeaderImg from '@/components/common/header-img/header-img';
+import PageHeader from '@/components/common/page-header/page-header';
+import { Button } from '@/components/ui';
+import { Link } from '@/i18n/config';
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import type { ReactNode } from 'react';
+import { HiArrowLongRight } from 'react-icons/hi2';
+import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
+import CompetenciesSection from './competencies-section/competencies-section';
+import Partners from './partners';
+import ResponsibilitiesSection from './responsibilities-section/responsibilities-section';
+
+/**
+ * About page body (formerly Who We Are). Client-side because of the entrance
+ * animations; the server-rendered highlight strip arrives as `highlights`.
+ *
+ * @param props.highlights - Highlight strip node rendered above the closing link
+ * @returns {JSX.Element} - The about page body
+ */
+export default function AboutLanding({
+  highlights,
+}: {
+  highlights?: ReactNode;
+}) {
+  const t = useTranslations('whoWeAre');
+
+  return (
+    <main>
+      <div className="max-w-[1400px] mx-auto">
+        <motion.div
+          initial={{ opacity: 0, filter: 'blur(16px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="px-6 md:px-10"
+        >
+          <section className="mx-auto flex max-w-[1100px] flex-col items-center">
+            <PageHeader
+              caption={t('eyebrow')}
+              title={t('title')}
+              subtitle={t('subtitle')}
+              subtitleClassName="max-w-[37rem]"
+            />
+          </section>
+          <div className="mx-auto mt-5 flex w-[85%] flex-col justify-center gap-10 md:mt-43 md:flex-row md:justify-center lg:gap-40">
+            <div className="flex w-full max-w-[400px] flex-col items-start text-left mt-4">
+              <h2 className="whitespace-pre-line text-2xl md:text-3xl/[38px] leading-snug font-normal">
+                {t('vision.title')}
+              </h2>
+              <p className="mt-6 whitespace-pre-line text-base md:text[17px]/[28px] font-normal leading-relaxed">
+                {t('vision.description')}
+              </p>
+              <Button
+                asChild
+                variant="outline"
+                className="mt-16 md:mt-26 mb-16 h-[47px] min-w-[159px] rounded-full border-[0.75px] border-[#848484] px-5 text-[14px]/[40px] [&_svg]:size-4"
+                size="lg"
+              >
+                <Link href="/research">
+                  {t('vision.cta')}
+                  <HiArrowLongRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+            <figure className="flex w-full max-w-[580px] flex-col">
+              <Image
+                src="/marketing/about-family.jpg"
+                alt={t('vision.imageAlt')}
+                width={1440}
+                height={1799}
+                sizes="(min-width: 768px) 580px, 100vw"
+                className="h-[320px] w-full rounded-sm object-cover md:h-[580px]"
+              />
+              <figcaption className="mt-3 text-left text-sm text-foreground/70">
+                {t('vision.imageCaption')}
+              </figcaption>
+            </figure>
+          </div>
+          <p className="mx-auto mt-30 max-w-lg md:max-w-2xl lg:max-w-[850px] text-center text-2xl md:text-3xl/[38px] md:mt-46 font-regular">
+            {t('missionStatement')}
+          </p>
+          <div className="mt-20 md:mt-27">
+            <HeaderImg
+              src="/marketing/who-we-are-header.webp"
+              alt={t('headerImage.alt')}
+              overlayClassName="bg-gradient-to-t from-black/20 via-black/10 to-transparent transition-all duration-200 ease-in-out"
+            />
+          </div>
+        </motion.div>
+        {/* Partners Section */}
+        <motion.div
+          className="w-full flex flex-col h-fit px-12 md:px-20 lg:px-26 py-16 lg:py-6"
+          initial={{ opacity: 0.5, y: 34 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.8, ease: 'easeOut' }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <Partners />
+        </motion.div>
+      </div>
+      {/* Competencies Section */}
+      <CompetenciesSection t={t} />
+      {/* Responsibilities Section */}
+      <ResponsibilitiesSection t={t} />
+      <div className="flex flex-col mx-auto max-w-[1200px]">
+        {/* Highlighted Articles Section */}
+        {highlights}
+        <MarketingCenteredPageCta
+          ctaHref="/careers"
+          ctaLabel={t('navigation.joinUsCta')}
+          heading={t('navigation.joinUs')}
+          headingId="about-footer-cta-heading"
+          sectionId="about-footer-cta"
+        />
+      </div>
+    </main>
+  );
+}

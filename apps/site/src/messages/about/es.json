@@ -1,20 +1,18 @@
 {
   "whoWeAre": {
-    "title": "Quiénes Somos",
-    "intro": {
-      "paragraphs": {
-        "0": "Todd está construyendo mentores hiperinteligentes y plataformas de investigación de IA para la agricultura sostenible. No modelos entrenados únicamente con información pública. No entornos simulados. Datos reales, físicos y propietarios que caracterizan el suelo, generan prácticas accionables y gigabytes de datos que no existen en ningún otro lugar.",
-        "1": "Nuestro enfoque comienza con una tesis de agricultura generativa y de múltiples estrategias, en la que los niveles minerales se monitorean de cerca para ayudar a predecir resultados futuros y construir un valor agrícola superior a largo plazo. Desplegamos recursos específicos por ubicación en granjas de todas partes, desde reconocidas zonas costeras hasta hondonadas montañosas, impulsando un impacto medible y promoviendo un ciclo virtuoso de mejor calidad del suelo y productos más saludables."
-      }
+    "eyebrow": "Empresa",
+    "title": "Acerca de",
+    "subtitle": "Creemos que la agricultura sostenible es la base de un planeta saludable y comunidades prósperas.",
+    "vision": {
+      "title": "Nuestra visión para el futuro\nde la agricultura",
+      "description": "Creemos que la agricultura debe seguir siendo una carrera centrada en el ser humano que cura el planeta y apoya a las comunidades.",
+      "cta": "Nuestra investigación",
+      "imageAlt": "Familia cultivando un jardín juntos",
+      "imageCaption": "Imagen: Granja familiar en Grass Valley, CA"
     },
-    "culture": {
-      "heading": {
-        "line1": "Impulsados por nuestra Cultura"
-      },
-      "description": "Hemos construido una cultura distintiva que define todo lo que hacemos, ya sea trabajando, socializando o apoyando a nuestras comunidades. Nuestro liderazgo comparte la determinación y la responsabilidad de formar y desarrollar a la próxima generación de líderes.",
-      "cta": {
-        "careers": "Carreras"
-      }
+    "missionStatement": "Estamos creando granjas generativas, pero también consideraremos cumplida nuestra misión si nuestro trabajo ayuda a otros a lograr este resultado.",
+    "headerImage": {
+      "alt": "Un camino de hierba serpenteando entre árboles frutales en una pradera."
     },
     "competencies": {
       "title": "Todd se diferencia por una combinación de tres competencias clave.",
@@ -34,7 +32,7 @@
         },
         "1": {
           "heading": "Filosofía de la empresa",
-          "description": "Estamos formando una firma diseñada para emular las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de las personas, las comunidades y la tierra, con el fin de tomar el que creemos es el mejor camino a seguir."
+          "description": "Estamos formando una empresa diseñada para emular las bases de consumidores de nuestras granjas, adoptando un ritmo de vida holístico que nutre el carácter natural de las personas, las comunidades y la tierra, con el fin de tomar el que creemos es el mejor camino a seguir."
         },
         "2": {
           "heading": "Integración agrícola",
@@ -51,11 +49,16 @@
       }
     },
     "partners": {
-      "title": "Nuestros socios",
-      "description": "Tenemos la fortuna de contar con el apoyo de inversores y socios estratégicos que comparten nuestra visión. Su respaldo nos permitirá ampliar nuestro equipo, escalar la empresa y desarrollar la primera generación de granjas generativas."
+      "title": "Soportado por socios increíbles",
+      "description": "Tenemos la suerte de contar con el apoyo de socios que comparten nuestra visión. Su respaldo nos ayuda a impulsar la agricultura sostenible.",
+      "tagline": {
+        "0": "Y otros",
+        "1": "socios destacados"
+      }
     },
     "navigation": {
-      "whatWeDo": "Qué hacemos"
+      "joinUs": "Únete a nosotros en dar forma al futuro de la agricultura",
+      "joinUsCta": "Ver carreras"
     }
   }
 }

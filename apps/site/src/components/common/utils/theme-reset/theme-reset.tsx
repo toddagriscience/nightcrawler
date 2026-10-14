@@ -3,7 +3,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useTheme } from '@/context/theme/ThemeContext';
+import { useTheme } from '@/context/theme/theme-context';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 

@@ -5,9 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AccountSideMenu from './account-side-menu';
 
-const { mockUsePathname, mockPush, mockLogout } = vi.hoisted(() => ({
+const { mockUsePathname, mockLogout } = vi.hoisted(() => ({
   mockUsePathname: vi.fn(),
-  mockPush: vi.fn(),
   mockLogout: vi.fn(),
 }));
 
@@ -20,7 +19,6 @@ vi.mock('next/navigation', async () => {
   return {
     ...actual,
     usePathname: mockUsePathname,
-    useRouter: () => ({ push: mockPush }),
   };
 });
 
@@ -132,6 +130,17 @@ describe('AccountSideMenu', () => {
     }
   );
 
+  it('keeps Farm information active on the farm profile detail route', () => {
+    mockUsePathname.mockReturnValue('/account/farm/profile');
+    render(<AccountSideMenu {...accountSideMenuProps} />);
+    expect(
+      screen.getByRole('link', { name: 'Farm information' })
+    ).toHaveAttribute('aria-current', 'page');
+    expect(
+      screen.getByRole('link', { name: 'User information' })
+    ).not.toHaveAttribute('aria-current');
+  });
+
   it('marks the active account section', () => {
     render(<AccountSideMenu {...accountSideMenuProps} />);
 
@@ -150,13 +159,12 @@ describe('AccountSideMenu', () => {
     );
   });
 
-  it('calls logout flow when clicking log out', async () => {
+  it('calls logout when clicking log out and leaves navigation to logout', async () => {
     const user = userEvent.setup();
     render(<AccountSideMenu {...accountSideMenuProps} />);
 
     await user.click(screen.getByRole('button', { name: 'Log out' }));
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith('/');
   });
 });

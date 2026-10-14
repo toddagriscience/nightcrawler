@@ -5,7 +5,7 @@ import PageHero from './page-hero';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../.storybook/utils/storybookControls';
+} from '../../../../.storybook/utils/storybook-controls';
 
 const meta = {
   title: 'Common/PageHero',

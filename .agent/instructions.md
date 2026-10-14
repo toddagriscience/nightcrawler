@@ -1,59 +1,35 @@
-# ToddAgriScience Website - Development Rules & Context
+# Agent instructions
 
-## Project Overview
+Repo-wide conventions are defined once, in [`AGENTS.md`](../AGENTS.md). Read it
+first. It is the single source of truth for:
 
-A modern, production-ready Next.js website for Todd Agriscience emphasizing maintainability, type safety, internationalization support, and component-driven architecture.
+- [Repository layout and commands](../AGENTS.md#commands)
+- [Feature-sliced design, naming, imports, copyright headers, JSDoc](../AGENTS.md#making-a-change)
+- [Frontend conventions: accessibility, performance, state management](../AGENTS.md#frontend)
+- [Database rules](../AGENTS.md#database)
+- [Logging](../AGENTS.md#logging)
+- [Testing](../AGENTS.md#testing)
+- [Git hooks](../AGENTS.md#git-hooks)
+- [Commit and pull-request workflow](../AGENTS.md#making-a-pull-request)
 
-## Tech Stack
+Workspace-specific context for the Next.js site — tech stack, directory
+structure, component organization, internationalization — lives in
+[`apps/site/CLAUDE.md`](../apps/site/CLAUDE.md).
 
-- **Next.js 15** with App Router & Turbopack
-- **TypeScript**, **Tailwind CSS v4**, **React 19**
-- **Drizzle ORM** with PostgreSQL
-- **UI Components**: shadcn/ui, class-variance-authority, Lucide React, Framer Motion v12.23, Lenis v1.0, Embla Carousel
-- **Infrastructure**: Vitest v4, Storybook v9.1, ESLint v9
+This file deliberately restates none of it. Duplicated rules drift; pointers do
+not.
 
-## Command and Execution Rules
+## Workflows
 
-- **No-verify commits/pushes**: Before any commit or push that uses `--no-verify`, run `cd frontend && rm -rf .next && bun i` from the repo root (rerun with elevated permissions if sandbox blocks file/network access).
-- **Directory**: All `bun` commands MUST be run in the `./frontend` folder.
-- **Commands**:
-  - `bun dev` - Dev server
-  - `bun ci` - Full validation
-  - `bun validate` - Format check and CI
-  - `bun run test` - Unit tests
-  - `bun lint:fix` - Auto-fix linting
-  - `bun format` - Format code
+The `workflows/` directory holds task-specific procedures that add something
+beyond the documents above:
 
-## Development & Code Quality Guidelines
-
-1. **Type Safety**: Maintain strict TypeScript (no `any`).
-2. **Internationalization**: Support multi-language architecture (en, es).
-3. **Testing**: Write tests for functionality and accessibility.
-4. **Performance**: Optimize animations and bundle size.
-5. **Accessibility**: Ensure WCAG compliance.
-6. **Copyright**: All new files should include `// Copyright Todd Agriscience, Inc. All rights reserved.` as a comment at the top.
-7. **Comments**: Every exported component, page, and util should have proper JSDocs (exclude private helpers and storybook files).
-8. **Logging Standards**:
-   - Use `@/lib/logger` instead of console methods in production code.
-   - Use `logger.error` for critical issues, `logger.warn` for debug info.
-
-- Example:
-  ```tsx
-  import { logger } from '@/lib/logger';
-  logger.warn('Component state changed:', { newState });
-  logger.error('API call failed:', error);
-  ```
-
-## File Organization & Component Structure
-
-- **Slice Architecture**: Page-specific components go in `app/[locale]/page-name/components/`.
-- **Co-location**: Test files (`.test.tsx`) and Storybook (`.stories.tsx`) live alongside components.
-- **Global components**: Reusable components in `src/components/common/` and `src/components/ui/`.
-- **Naming**: `kebab-case` for directories, `PascalCase` for components.
-- **Path Aliases**: Use `@/` alias for all src imports.
-
-## State Management Approach
-
-- React Context for global state (theme, locale).
-- `useState`/`useReducer` for component-specific state.
-- `requestAnimationFrame` for scroll/animation effects.
+| Workflow                                                   | Use when                                                   |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+| [`creating-issues.md`](workflows/creating-issues.md)       | Opening a GitHub issue                                     |
+| [`creating-branches.md`](workflows/creating-branches.md)   | Starting work on an issue                                  |
+| [`create-feature.md`](workflows/create-feature.md)         | Before making changes                                      |
+| [`modifying-code.md`](workflows/modifying-code.md)         | Changing existing code                                     |
+| [`adding-components.md`](workflows/adding-components.md)   | Adding a React component                                   |
+| [`modifying-database.md`](workflows/modifying-database.md) | Touching the schema, and how migrations reach staging/prod |
+| [`commit-and-push.md`](workflows/commit-and-push.md)       | Committing and pushing                                     |

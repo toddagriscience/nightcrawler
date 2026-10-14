@@ -1,4 +1,4 @@
-# Copyright Todd LLC, All rights reserved
+# Copyright © Todd Agriscience, Inc. All rights reserved.
 
 # Global ownership - require review from core team
 * @toddagriscience/core-team
@@ -10,29 +10,31 @@
 /.github/workflows/ @toddagriscience/devops-team
 /apps/site/next.config.ts @toddagriscience/devops-team
 /package.json @toddagriscience/devops-team
-/package-lock.json @toddagriscience/devops-team
+/bun.lock @toddagriscience/devops-team
 /turbo.json @toddagriscience/devops-team
 
 # Environment and configuration
 /.env* @toddagriscience/devops-team
-/envexample.md @toddagriscience/devops-team
+**/env.example @toddagriscience/devops-team
 
 # Code quality and tooling
 /eslint.config.mjs @toddagriscience/frontend-team
-/prettier.config.* @toddagriscience/frontend-team
+/.prettierrc @toddagriscience/frontend-team
+/.prettierignore @toddagriscience/frontend-team
 /apps/site/tailwind.config.ts @toddagriscience/frontend-team
 /apps/site/tsconfig.json @toddagriscience/frontend-team
 /packages/db/tsconfig.json @toddagriscience/frontend-team
 
 # Testing configuration
-/jest.config.js @toddagriscience/frontend-team
-/jest.setup.* @toddagriscience/frontend-team
+/apps/site/vitest.config.ts @toddagriscience/frontend-team
+/packages/db/vitest.config.mjs @toddagriscience/frontend-team
+/apps/site/vitest.setup.* @toddagriscience/frontend-team
 /apps/site/.storybook/ @toddagriscience/frontend-team
 
 # Internationalization
 /apps/site/src/messages/ @toddagriscience/content-team @toddagriscience/frontend-team
 /apps/site/src/i18n/ @toddagriscience/frontend-team
-/apps/site/src/middleware.ts @toddagriscience/frontend-team
+/apps/site/src/proxy* @toddagriscience/frontend-team
 
 # Core application structure
 /apps/site/src/app/ @toddagriscience/frontend-team
@@ -46,5 +48,6 @@
 
 # Documentation
 /README.md @toddagriscience/core-team
+/AGENTS.md @toddagriscience/core-team
 /apps/site/CLAUDE.md @toddagriscience/core-team
 /.github/CONTRIBUTING.md @toddagriscience/core-team

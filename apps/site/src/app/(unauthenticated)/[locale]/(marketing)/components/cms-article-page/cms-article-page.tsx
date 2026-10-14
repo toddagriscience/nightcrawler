@@ -15,6 +15,7 @@ import {
   formatArticleHeroDate,
   parseArticleSubscripts,
 } from '../../index/[slug]/utils';
+import { NewsHighlightTilesSection } from '../news-highlight-tiles/news-highlight-tiles';
 import { ArticleCtaButtons } from './article-cta-buttons';
 
 /**
@@ -82,7 +83,7 @@ export function CmsArticlePage({
 
   return (
     <div className="max-w-[80%] mx-auto">
-      <main className="mt-20 container mx-auto min-h-screen flex flex-col gap-10 md:gap-4">
+      <main className="container mx-auto flex min-h-screen flex-col gap-10 pt-16 md:gap-4 md:pt-20 lg:pt-24">
         <ArticleHeader
           company={article.company}
           subtitle={article.subtitle}
@@ -104,6 +105,11 @@ export function CmsArticlePage({
           subscripts={subscripts}
         />
         <ArticleCtaButtons ctas={footerCtas} className="mb-16" />
+        <NewsHighlightTilesSection
+          locale={locale}
+          page="article"
+          sectionId="article-highlights"
+        />
       </main>
     </div>
   );

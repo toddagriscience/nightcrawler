@@ -2,6 +2,7 @@
 
 import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
+import { remoteDbSslConfig, stagingCaCert } from './src/utils/db-ssl';
 
 export default defineConfig({
   out: './drizzle',
@@ -14,11 +15,9 @@ export default defineConfig({
     user: process.env.STAGING_DATABASE_USER,
     password: process.env.STAGING_DATABASE_PASSWORD,
     database: process.env.STAGING_DATABASE_DATABASE!,
-    ssl: {
-      // Fall back to the shared cert — CI historically only sets DATABASE_PEM_CERT.
-      ca:
-        process.env.STAGING_DATABASE_PEM_CERT ?? process.env.DATABASE_PEM_CERT!,
-      rejectUnauthorized: false,
-    },
+    ssl: remoteDbSslConfig(
+      stagingCaCert(),
+      'STAGING_DATABASE_PEM_CERT (or DATABASE_PEM_CERT)'
+    ),
   },
 });

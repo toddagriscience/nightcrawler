@@ -1,21 +1,20 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import type { ReactElement } from 'react';
-
+import PageHeader from '@/components/common/page-header/page-header';
+import { getTranslations } from 'next-intl/server';
+import type { ReactElement, ReactNode } from 'react';
 import {
   MarketingBenefitsColumns,
   MarketingBridgeStatement,
   MarketingCenteredPageCta,
   MarketingFullWidthImage,
   MarketingImageTextSplit,
-  MarketingPageHero,
   MarketingQuoteSection,
-  MarketingResourceCards,
   MarketingValuesOperatingStack,
 } from '../../components/marketing-blocks';
+import { NewsHighlightTilesSection } from '../../components/news-highlight-tiles/news-highlight-tiles';
 import { CAREERS_LANDING_MEDIA } from '../constants/careers-landing-media';
 import type { CareersLandingCopy } from '../types/careers-landing-copy';
-import { getTranslations } from 'next-intl/server';
 
 export type { CareersLandingCopy } from '../types/careers-landing-copy';
 
@@ -23,8 +22,15 @@ export type { CareersLandingCopy } from '../types/careers-landing-copy';
  * Careers hub (`/careers`) composed from reusable marketing blocks (`font-normal` typography).
  *
  * @param props.copy - Resolved hub copy (translations + fixed media paths)
+ * @param props.highlights - Highlight strip node, supplied by {@link CareersLanding}; omitted in structural tests
  */
-export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
+export function CareersLandingView({
+  copy,
+  highlights,
+}: {
+  copy: CareersLandingCopy;
+  highlights?: ReactNode;
+}) {
   const {
     hero,
     bridgeStatement,
@@ -38,8 +44,6 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
     splitEarlyTalent,
     quoteText,
     quoteAttribution,
-    resourcesEyebrow,
-    resourceCards,
     footerHeading,
     footerCtaLabel,
     footerCtaHref,
@@ -47,18 +51,19 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
 
   return (
     <main className="text-foreground" id="careers-overview">
-      <div className="mx-auto flex max-w-[1100px] flex-col gap-20 px-4 pt-12 md:gap-28 md:px-6 md:pt-16">
-        <MarketingPageHero
-          kicker={hero.kicker}
-          secondaryCta={{
-            href: hero.valuesAnchorHref,
-            label: hero.valuesLinkLabel,
-          }}
-          subtitle={hero.subtitle}
+      <div className="mx-auto flex max-w-[1100px] flex-col gap-0 px-4 md:gap-20 md:px-6">
+        <PageHeader
+          titleClassName="w-[95%]"
+          caption={hero.kicker}
           title={hero.title}
-          titleId="careers-hub-heading"
+          subtitle={hero.subtitle}
+          subtitleClassName="w-[90%] sm:max-w-[37rem] md:whitespace-nowrap"
+          button={{
+            href: hero.valuesAnchorHref,
+            text: hero.valuesLinkLabel,
+          }}
         />
-        <div className="mt-12 md:mt-20">
+        <div className="mb-15 md:mb-12">
           <MarketingBridgeStatement text={bridgeStatement} />
         </div>
         <MarketingValuesOperatingStack
@@ -119,12 +124,7 @@ export function CareersLandingView({ copy }: { copy: CareersLandingCopy }) {
           sectionId="careers-quote"
         />
 
-        <MarketingResourceCards
-          cards={resourceCards}
-          eyebrow={resourcesEyebrow}
-          eyebrowClassName="text-black"
-          sectionId="careers-resources"
-        />
+        {highlights}
 
         <MarketingCenteredPageCta
           ctaHref={footerCtaHref}
@@ -253,25 +253,21 @@ export async function CareersLanding({
     },
     quoteText: t('landing.quote.text'),
     quoteAttribution: t('landing.quote.attribution'),
-    resourcesEyebrow: t('landing.resources.eyebrow'),
-    resourceCards: [
-      {
-        title: t('landing.resources.card1Title'),
-        category: t('landing.resources.card1Category'),
-      },
-      {
-        title: t('landing.resources.card2Title'),
-        category: t('landing.resources.card2Category'),
-      },
-      {
-        title: t('landing.resources.card3Title'),
-        category: t('landing.resources.card3Category'),
-      },
-    ],
     footerHeading: t('landing.footerCta.heading'),
     footerCtaLabel: t('landing.footerCta.cta'),
     footerCtaHref: t('landing.footerCta.ctaHref'),
   };
 
-  return <CareersLandingView copy={copy} />;
+  return (
+    <CareersLandingView
+      copy={copy}
+      highlights={
+        <NewsHighlightTilesSection
+          locale={locale}
+          page="careers"
+          sectionId="careers-resources"
+        />
+      }
+    />
+  );
 }

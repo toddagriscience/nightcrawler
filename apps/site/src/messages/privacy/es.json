@@ -95,7 +95,7 @@
       },
       "questions": {
         "title": "ご質問・ご意見・苦情等について",
-        "content": "当社は、お客様からいただいた個人情報に関するご質問、ご意見、苦情等に対し、迅速かつ誠実に対応するよう努めます。ご質問、ご意見、苦情等が ございましたら、此方 までご連絡ください"
+        "content": "当社は、お客様からいただいた個人情報に関するご質問、ご意見、苦情等に対し、迅速かつ誠実に対応するよう努めます。ご質問、ご意見、苦情等が ございましたら、<link>此方</link> までご連絡ください"
       }
     },
     "california": {
@@ -103,6 +103,7 @@
       "lastUpdated": "Last Updated: June 23, 2024",
       "intro": "This California Website Privacy Policy supplements the Website Privacy Policy with respect to specific rights granted under the California Consumer Privacy Act of 2018, as amended (the \"CCPA\"), to natural person California residents and provides information regarding how such California residents can exercise their rights under the CCPA. This supplement is only relevant to you if you are a resident of California as determined in accordance with the CCPA. Information required to be disclosed to California residents under the CCPA regarding the collection of their personal information that is not set forth in this supplement is otherwise set forth above in the Website Privacy Policy. To the extent there is any conflict with the privacy requirements under the Gramm-Leach-Bliley Act and/or Regulation S-P (collectively, the \"GLB Rights\"), the GLB Rights shall apply.",
       "categoriesIntro": "Categories of Personal Information We Collect: We collect limited types of personal information through our website and grower reporting portals, as well as through other electronic communications (e.g., emails), as applicable (collectively, the \"Website\"). The types of personal information we collect about you depends on the nature of your interaction with us. The categories of personal information we have collected from individuals on this Website over the last twelve (12) months include the following:",
+      "collectedLabel": "Collected",
       "categories": {
         "identifiers": {
           "title": "Identifiers",
@@ -207,7 +208,6 @@
         "disclosure": {
           "title": "Disclosure and Access Rights",
           "intro": "You have the right to request that we disclose to you certain information regarding our collection, use, disclosure and sale of personal information specific to you over the last twelve (12) months. Such information includes:",
-          "content": "",
           "list": [
             "The categories of personal information we collected about you;",
             "The categories of sources from which the personal information is collected;",
@@ -227,7 +227,6 @@
         },
         "exercise": {
           "title": "How to Exercise Your Rights",
-          "content": "",
           "verification": "We will contact you to confirm receipt of your request under the CCPA and request any additional information necessary to verify your request. We verify requests by matching information provided in connection with your request to information contained in our records. Depending on the sensitivity of the request and the varying levels of risk in responding to such requests (for example, the risk of responding to fraudulent or malicious requests), we may request further information or your investor portal access credentials, if applicable in order to verify your request. You may designate an authorized agent to make a request under the CCPA on your behalf, provided that you provide a signed agreement verifying such authorized agent's authority to make requests on your behalf, and we may verify such authorized person's identity using the procedures above. If we request you verify your request and we do not receive your response, we will pause processing your request until such verification is received."
         }
       }
@@ -251,7 +250,7 @@
         "automated": "No automated decision-making, including profiling, is used when processing your personal data.",
         "disclosure": "Disclosure and Transfer of Personal Data If collected, your personal information may be shared with and processed by our affiliates, agents, and certain service providers, as necessary, to fulfill the purposes set out this Privacy Policy, including professional advisors and data hosting providers.",
         "links": "Our website contains links to other websites which are not hosted or operated by us. These websites may use automated means to collect information regarding your use of the websites. This information is subject to the privacy policies or notices of the provider's website.",
-        "legal": "We reserve the right to disclose your personal information as required by law or legal process, or when we believe that disclosure is necessary or appropriate to protect our rights, prevent physical harm or financial loss, and/or comply with a judicial proceeding, court order, request from a regulator, national security, for the purposes of public importance or any other legal or investigatory process involving us. Should we, or any of our affiliated entities, be the subject of a takeover, divestment or acquisition, or otherwise sell or transfer all or a portion of our business or assets (including in the event of a reorganization, dissolution, or liquidation), we may disclose your personal information to the new owner of the relevant business and their advisors on the basis of our legitimate interest."
+        "legalDisclosure": "We reserve the right to disclose your personal information as required by law or legal process, or when we believe that disclosure is necessary or appropriate to protect our rights, prevent physical harm or financial loss, and/or comply with a judicial proceeding, court order, request from a regulator, national security, for the purposes of public importance or any other legal or investigatory process involving us. Should we, or any of our affiliated entities, be the subject of a takeover, divestment or acquisition, or otherwise sell or transfer all or a portion of our business or assets (including in the event of a reorganization, dissolution, or liquidation), we may disclose your personal information to the new owner of the relevant business and their advisors on the basis of our legitimate interest."
       },
       "sharing": {
         "title": "SHARING AND TRANSFERS OF PERSONAL DATA",

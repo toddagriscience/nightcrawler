@@ -25,7 +25,7 @@ async function AccountShell({ children }: { children: React.ReactNode }) {
   const accountShellData = await getAccountShellData();
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
+    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-8 sm:flex-row sm:gap-12 px-4 py-10">
       <AccountSideMenu
         farmName={accountShellData.farmName}
         contactName={accountShellData.contactName}
@@ -46,7 +46,7 @@ async function AccountShell({ children }: { children: React.ReactNode }) {
  */
 function AccountShellFallback() {
   return (
-    <div className="mx-auto flex w-full max-w-[960px] gap-12 px-4 py-10">
+    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-8 sm:flex-row sm:gap-12 px-4 py-10">
       <div className="mt-1 w-[190px] shrink-0">
         <Skeleton className="h-64 w-full bg-foreground/15" />
       </div>

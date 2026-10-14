@@ -5,7 +5,7 @@ import Button from './button';
 import {
   storybookControls,
   storybookArgs,
-} from '../../../../.storybook/utils/storybookControls';
+} from '../../../../.storybook/utils/storybook-controls';
 
 const meta = {
   title: 'Common/Button',
@@ -150,5 +150,17 @@ export const DarkModeVariants: Story = {
         isDark={args.isDark}
       />
     </div>
+  ),
+};
+
+export const Action: Story = {
+  render: () => (
+    <Button
+      text="Log out"
+      variant="outline"
+      size="md"
+      showArrow={false}
+      onClick={() => {}}
+    />
   ),
 };

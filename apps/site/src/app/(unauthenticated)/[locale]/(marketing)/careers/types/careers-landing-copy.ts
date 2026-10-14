@@ -2,7 +2,6 @@
 
 import type {
   MarketingBenefitColumn,
-  MarketingResourceCard,
   MarketingValueOperatingBlockCopy,
 } from '../../components/marketing-blocks';
 
@@ -52,9 +51,6 @@ export interface CareersLandingCopy {
   };
   quoteText: string;
   quoteAttribution: string;
-  /** Label above the resource cards grid */
-  resourcesEyebrow: string;
-  resourceCards: readonly MarketingResourceCard[];
   footerHeading: string;
   footerCtaLabel: string;
   footerCtaHref: string;

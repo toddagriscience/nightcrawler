@@ -2,14 +2,18 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
@@ -18,22 +22,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Pencil, Trash2, Plus, X } from 'lucide-react';
-import {
-  getAnalyses,
-  createAnalysis,
-  updateAnalysis,
-  deleteAnalysis,
-} from '../actions';
+import { Textarea } from '@/components/ui/textarea';
 import { notifyActionError } from '@/lib/notify-action-error';
+import { Pencil, Plus, Trash2, X } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import {
+  createAnalysis,
+  deleteAnalysis,
+  getAnalyses,
+  updateAnalysis,
+} from '../actions';
 
 /** Mineral type options */
 const MINERAL_TYPES = [
@@ -48,6 +48,8 @@ const MINERAL_TYPES = [
   'Zinc',
   'Iron',
   'OrganicMatter',
+  'Manganese',
+  'Copper',
 ] as const;
 
 /** Unit type options */
@@ -253,7 +255,7 @@ export default function AnalysesClient({
                   <TableCell>
                     {new Date(record.analysisDate).toLocaleDateString()}
                   </TableCell>
-                  <TableCell className="max-w-[300px] truncate">
+                  <TableCell className="max-w-75 truncate">
                     {record.summary ?? '—'}
                   </TableCell>
                   <TableCell>

@@ -5,6 +5,7 @@
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { localizePathname } from '@/i18n/locale-path';
 import { SUPPORTED_LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from '@/lib/locales';
 
 const locales = SUPPORTED_LOCALES.map((code) => ({
@@ -20,12 +21,7 @@ export default function LocaleSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLocaleChange = (newLocale: string) => {
-    // Remove current locale from pathname and add new one
-    const segments = pathname.split('/');
-    segments[1] = newLocale; // Replace locale segment
-    const newPath = segments.join('/');
-
-    router.push(newPath);
+    router.push(localizePathname(pathname, newLocale));
     setIsOpen(false);
   };
 

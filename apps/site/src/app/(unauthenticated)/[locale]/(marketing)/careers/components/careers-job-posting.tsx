@@ -1,14 +1,15 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { MarketingPillLink } from '@/app/(unauthenticated)/[locale]/(marketing)/components/marketing-blocks';
+import PageHeader from '@/components/common/page-header/page-header';
 import SanityBodyImage from '@/components/sanity/news/sanity-body-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
-import type { SanityArticle } from '@/lib/sanity/article-types';
 import { logger } from '@/lib/logger';
-import { PortableText } from 'next-sanity';
-import type { PortableTextReactComponents } from 'next-sanity';
+import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getTranslations } from 'next-intl/server';
+import type { PortableTextReactComponents } from 'next-sanity';
+import { PortableText } from 'next-sanity';
 
 /** Props for {@link CareersJobPosting}. */
 interface CareersJobPostingProps {
@@ -100,28 +101,26 @@ export async function CareersJobPosting({
 
   return (
     <main className="min-h-[50vh]" id={`careers-post-${article.slug.current}`}>
-      <div className="mx-auto mt-16 max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
+      <div className="mx-auto max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
         <header className="flex flex-col items-center text-center">
-          <p className="text-sm font-normal tracking-normal text-black">
-            {t('jobPosting.kicker')}
-          </p>
-          <h1 className="mt-6 text-4xl leading-tight tracking-tight text-black font-normal md:text-[44px] md:leading-tight">
-            {article.title}
-          </h1>
-          {subtitle !== undefined ? (
-            <p className="mt-4 max-w-xl text-base font-normal text-foreground">
-              {subtitle}
-            </p>
-          ) : null}
-          {applyHref ? (
-            <div className="mt-8 flex justify-center">
-              <MarketingPillLink href={applyHref}>
-                {t('jobPosting.applyNow')}
-              </MarketingPillLink>
-            </div>
-          ) : null}
+          <PageHeader
+            caption={t('jobPosting.kicker')}
+            title={article.title}
+            subtitle={subtitle}
+            className="mb-0 md:mb-0"
+            titleClassName="text-[clamp(2rem,calc(2rem+1*((100vw-23.4375rem)/66.5625)),3rem)] leading-[clamp(2.28rem,calc(2.28rem+0.72*((100vw-23.4375rem)/66.5625)),3rem)]"
+            subtitleClassName="text-[16px]"
+            button={
+              applyHref
+                ? {
+                    href: applyHref,
+                    text: t('jobPosting.applyNow'),
+                  }
+                : undefined
+            }
+          />
         </header>
-        <div className="mx-auto mb-14 mt-14 flex w-full max-w-[685px] flex-col gap-[7px] text-left text-foreground md:mt-16">
+        <div className="mx-auto lg:mb-14 mt-14 flex w-full max-w-[685px] flex-col gap-[7px] text-left text-foreground md:mt-16">
           {Array.isArray(article.content) ? (
             <PortableText
               components={portableTextComponents}

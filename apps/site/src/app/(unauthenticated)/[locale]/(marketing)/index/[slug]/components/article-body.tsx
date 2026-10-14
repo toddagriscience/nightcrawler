@@ -2,8 +2,8 @@
 
 import SanityHeaderImage from '@/components/sanity/news/sanity-header-image';
 import type { SanityArticle } from '@/lib/sanity/article-types';
-import { PortableText } from 'next-sanity';
 import type { PortableTextReactComponents } from 'next-sanity';
+import { PortableText } from 'next-sanity';
 
 /**
  * Main article column: hero image slot and Sanity Portable Text.
@@ -36,7 +36,7 @@ export function ArticleBody({
           />
         </div>
       ) : null}
-      <div className="mt-10 mb-10 sm:mb-20 md:mb-26 flex w-full max-w-[685px] flex-col gap-[7px] mx-auto text-left">
+      <div className="mb-10 sm:mb-20 md:mb-26 flex w-full max-w-[685px] flex-col gap-[7px] mx-auto text-left">
         {Array.isArray(content) && (
           <PortableText value={content} components={portableTextComponents} />
         )}

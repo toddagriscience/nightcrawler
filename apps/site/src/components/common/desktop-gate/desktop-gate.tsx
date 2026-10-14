@@ -4,7 +4,6 @@
 
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
 import ToddHeader from '../wordmark/todd-wordmark';
 
@@ -38,14 +37,8 @@ export default function DesktopGate({
     getServerSnapshot
   );
 
-  const router = useRouter();
-
   const handleLogout = async () => {
-    const result = await logout();
-
-    if (!result?.error) {
-      router.push('/');
-    }
+    await logout();
   };
 
   if (!isAllowed) {

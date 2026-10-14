@@ -41,6 +41,9 @@ describe('TermsOfUsePage', () => {
   it('has correct margins', () => {
     const { container } = renderWithNextIntl(<TermsOfUsePage />);
 
-    expect(container.querySelector('.pt-24')).toBeInTheDocument();
+    // The shared template renders pt-8 on the container plus mt-16 on the h1.
+    // That is the same 96px offset the page previously got from a bare pt-24.
+    expect(container.querySelector('.pt-8')).toBeInTheDocument();
+    expect(container.querySelector('.mt-16')).toBeInTheDocument();
   });
 });
