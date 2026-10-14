@@ -202,3 +202,21 @@ head; the regular Metadata API owns title, meta, and canonical/link elements.
 
 Build cache inputs include workspace `.env*` files so cached bundles cannot
 reuse a previous environment’s compiled canonical origin or public configuration.
+
+## Publications
+
+CMS articles render one semantic article with one H1. `article-presentation.ts`
+provides the shared excerpt, author/editorial owner, genuine publication date,
+optional editorial update date, canonical URL and main/share image. Only explicitly
+set `dateModified` describes editorial changes; `_updatedAt` is CMS bookkeeping.
+Legacy blank summaries use an excerpt from the published body, unsigned Todd
+publications display Todd Agriscience as editorial owner, and records without a
+CMS image use a title cover from `/api/articles/[slug]/image?locale=en`.
+
+Run `bun run verify:articles <base-url> [canonical-origin]` from `apps/site` against
+a production server to check raw browser and search-crawler responses and images.
+`bun run audit:publications` prints read-only CMS backfill proposals for editorial
+review. It never writes to Sanity. Editors should approve the suggested excerpt
+and owner and add genuine main images; do not fabricate dates or named authors.
+Article JSON-LD follows the supported native script pattern inside the article;
+it must receive a nonce when the CSP nonce foundation is integrated.

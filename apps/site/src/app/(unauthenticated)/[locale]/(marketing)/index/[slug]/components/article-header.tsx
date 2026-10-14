@@ -2,6 +2,7 @@
 
 import ArticleShareCopyLink from '@/components/common/news/article-share-copy-link';
 import type { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 
 /**
  * Hero block for CMS article titles and metadata lines.
@@ -12,6 +13,9 @@ export function ArticleHeader({
   title,
   subtitle,
   company,
+  summary,
+  modifiedDateTime,
+  formattedModifiedDate,
   dateTime,
   formattedDate,
   ctaButtons,
@@ -22,6 +26,10 @@ export function ArticleHeader({
   subtitle?: string;
   /** Optional company attribution */
   company?: string;
+  /** The same excerpt used in metadata and structured data. */
+  summary: string;
+  modifiedDateTime?: string;
+  formattedModifiedDate?: string;
   /** ISO date for `<time datetime>` when present */
   dateTime?: string;
   /** Already localized date presentation */
@@ -29,6 +37,7 @@ export function ArticleHeader({
   /** Optional CTA pills rendered above the share link */
   ctaButtons?: ReactNode;
 }) {
+  const t = useTranslations('common.article');
   return (
     <header className="flex w-full max-w-[686px] flex-col items-center mx-auto lg:mb-6">
       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center text-[14px] font-normal leading-[28px] tracking-normal">
@@ -47,10 +56,25 @@ export function ArticleHeader({
           <span className="text-[#848484]">{company}</span>
         ) : null}
       </div>
-      <h2 className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-7">
+      <h1
+        id="article-title"
+        className="w-full max-w-[664px] mx-auto text-balance text-center font-normal tracking-normal text-[2rem] leading-[2rem] sm:text-[2.5rem] sm:leading-[2.5rem] md:text-[3rem] md:leading-[3rem] lg:text-[64px] lg:leading-[64px] mt-4 mb-7"
+      >
         {title}
-      </h2>
-      {subtitle !== undefined ? (
+      </h1>
+      {formattedModifiedDate ? (
+        <p className="text-center text-sm">
+          {t('updated')}:{' '}
+          <time dateTime={modifiedDateTime}>{formattedModifiedDate}</time>
+        </p>
+      ) : null}
+      <p
+        data-article-summary
+        className="w-full max-w-[661px] mx-auto mb-8 text-center text-[16px] leading-[27px]"
+      >
+        {summary}
+      </p>
+      {subtitle !== undefined && subtitle !== summary ? (
         <p className="w-full max-w-[661px] mx-auto mb-8 text-center text-[16px] font-normal leading-[27px] tracking-normal text-foreground">
           {subtitle}
         </p>

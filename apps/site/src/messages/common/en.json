@@ -10,6 +10,11 @@
       "title": "404",
       "message": "The page you are looking for could not be found. Please check the URL and try again.",
       "homeButton": "Home"
+    },
+    "article": {
+      "author": "Author",
+      "editorialOwner": "Editorial owner",
+      "updated": "Updated"
     }
   },
   "metadata": {

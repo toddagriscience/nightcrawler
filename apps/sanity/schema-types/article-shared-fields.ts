@@ -125,9 +125,42 @@ const slugField = defineField({
 
 const dateField = defineField({
   name: 'date',
-  title: 'Date',
+  title: 'Publication date',
   type: 'datetime',
   initialValue: () => new Date().toISOString(),
+  validation: (rule) => rule.required(),
+  description: 'The original publication date, not the CMS edit timestamp.',
+})
+
+const dateModifiedField = defineField({
+  name: 'dateModified',
+  title: 'Editorial update date',
+  type: 'datetime',
+  description:
+    'Only set after a substantive content update. Shown to readers and in article metadata.',
+  validation: (rule) =>
+    rule.custom((value, context) => {
+      const published = context.document?.date
+      return value && typeof published === 'string' && Date.parse(value) <= Date.parse(published)
+        ? 'The update date must follow the publication date.'
+        : true
+    }),
+})
+
+const editorialOwnerField = defineField({
+  name: 'editorialOwner',
+  title: 'Editorial owner',
+  type: 'string',
+  initialValue: 'Todd Agriscience',
+  description:
+    'Organization responsible for an unsigned publication. Do not invent a personal author.',
+  validation: (rule) =>
+    rule.custom((value, context) =>
+      (typeof context.document?.author === 'string' && context.document.author.trim()) ||
+      value?.trim()
+        ? true
+        : 'Set an author or editorial owner.',
+    ),
 })
 
 const authorField = defineField({
@@ -225,8 +258,16 @@ const summaryField = defineField({
   name: 'summary',
   title: 'Summary',
   type: 'string',
-  validation: (rule) => rule.required(),
-  description: 'Short description for SEO and listing cards.',
+  validation: (rule) =>
+    rule
+      .required()
+      .custom((value) =>
+        value?.replace(/[\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/g, '').trim()
+          ? true
+          : 'Write a useful summary.',
+      ),
+  description:
+    'A useful excerpt displayed above the body and reused in search and sharing metadata.',
 })
 
 const thumbnailField = defineField({
@@ -248,7 +289,8 @@ const headerImageField = defineField({
   name: 'headerImage',
   title: 'Header Image',
   type: 'image',
-  description: 'Header image on the detail page; appears above the body content when set.',
+  description:
+    'Main article image, also used for sharing. Legacy documents without an image show a title cover until an editor supplies one.',
   fields: [
     {
       name: 'alt',
@@ -407,7 +449,9 @@ export const articlePortableBodyFields = [
   subtitleField,
   slugField,
   dateField,
+  dateModifiedField,
   authorField,
+  editorialOwnerField,
   companyField,
   contentFieldNews,
   subscriptsField,
