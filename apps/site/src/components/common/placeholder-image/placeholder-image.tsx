@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Image as ImageIcon } from 'lucide-react';
+import { LuImage as ImageIcon } from 'react-icons/lu';
 import Image from 'next/image';
 import { useState } from 'react';
 import PlaceholderImageProps from './types/placeholder-image';
@@ -68,7 +68,11 @@ const PlaceholderImage = ({
         aria-label={alt}
       >
         <div className="text-center">
-          <ImageIcon className="mx-auto h-14 w-14" />
+          <ImageIcon
+            size={24}
+            aria-hidden="true"
+            className="mx-auto h-14 w-14"
+          />
           <p className="mt-2 text-sm">{fallbackText}</p>
         </div>
       </div>

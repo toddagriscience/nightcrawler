@@ -11,7 +11,10 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { logger } from '@/lib/logger';
-import { CheckCircle, Trash2 } from 'lucide-react';
+import {
+  LuCircleCheck as CheckCircle,
+  LuTrash2 as Trash2,
+} from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { IrisButton } from '../../../../../components/common/iris-button/iris-button';
@@ -78,7 +81,11 @@ export function ReminderEditSheet({
             <div className="flex gap-2">
               {!reminder.read && (
                 <IrisButton variant="primary" onClick={handleMarkRead}>
-                  <CheckCircle aria-hidden="true" className="size-3" />
+                  <CheckCircle
+                    size={24}
+                    aria-hidden="true"
+                    className="size-3"
+                  />
                   Mark Read
                 </IrisButton>
               )}
@@ -87,7 +94,7 @@ export function ReminderEditSheet({
                 variant="outline"
                 onClick={() => setShowDeleteConfirm(true)}
               >
-                <Trash2 aria-hidden="true" className="size-3" />
+                <Trash2 size={24} aria-hidden="true" className="size-3" />
                 Delete
               </IrisButton>
             </div>

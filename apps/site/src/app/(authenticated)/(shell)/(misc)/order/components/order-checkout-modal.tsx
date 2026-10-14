@@ -2,7 +2,7 @@
 
 'use client';
 
-import { LoaderCircle } from 'lucide-react';
+import { LuLoaderCircle as LoaderCircle } from 'react-icons/lu';
 import {
   Dialog,
   DialogContent,
@@ -38,6 +38,7 @@ export function OrderCheckoutModal({
           {modalState === 'loading' ? (
             <div className="flex min-h-80 flex-col items-center justify-center gap-3 text-center text-sm text-foreground/70">
               <LoaderCircle
+                size={24}
                 className="size-6 animate-spin"
                 aria-hidden="true"
               />

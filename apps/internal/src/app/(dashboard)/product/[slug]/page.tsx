@@ -19,7 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { LuArrowLeft as ArrowLeft } from 'react-icons/lu';
 import { getSeedProductBySlug } from '../../seed-products/actions';
 
 /**
@@ -102,7 +102,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       <div className="space-y-4">
         <Button variant="ghost" asChild>
           <Link href="/seed-products">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
             Back to Seed Products
           </Link>
         </Button>
@@ -117,7 +117,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     <div className="space-y-6">
       <Button variant="ghost" asChild>
         <Link href="/seed-products">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
           Back to Seed Products
         </Link>
       </Button>

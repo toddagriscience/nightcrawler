@@ -25,7 +25,11 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuTrash2 as Trash2,
+  LuPlus as Plus,
+} from 'react-icons/lu';
 import {
   getTabs,
   createTab,
@@ -158,7 +162,7 @@ function TabsTab({ initialData }: { initialData: any[] }) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" /> New Tab
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" /> New Tab
         </Button>
       </div>
 
@@ -194,7 +198,11 @@ function TabsTab({ initialData }: { initialData: any[] }) {
                       size="icon"
                       onClick={() => handleDelete(t.id)}
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2
+                        size={24}
+                        aria-hidden="true"
+                        className="h-4 w-4 text-destructive"
+                      />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -353,7 +361,8 @@ function WidgetsTab({ initialData }: { initialData: any[] }) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" /> New Widget
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" /> New
+          Widget
         </Button>
       </div>
 
@@ -394,14 +403,22 @@ function WidgetsTab({ initialData }: { initialData: any[] }) {
                         size="icon"
                         onClick={() => openEdit(w)}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(w.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>

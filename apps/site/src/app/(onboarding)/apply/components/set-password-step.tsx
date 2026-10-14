@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { Eye, EyeOff } from 'lucide-react';
+import { LuEye as Eye, LuEyeOff as EyeOff } from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import PasswordChecklist from '@/components/common/password-checklist/password-checklist';
@@ -103,9 +103,9 @@ export default function SetPasswordStep({
                 onClick={() => setVisible(!visible)}
               >
                 {visible ? (
-                  <EyeOff aria-hidden="true" />
+                  <EyeOff size={24} aria-hidden="true" />
                 ) : (
-                  <Eye aria-hidden="true" />
+                  <Eye size={24} aria-hidden="true" />
                 )}
               </Button>
             </div>

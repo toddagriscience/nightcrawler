@@ -2,7 +2,7 @@
 
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { cva } from 'class-variance-authority';
-import { ChevronDown } from 'lucide-react';
+import { LuChevronDown as ChevronDown } from 'react-icons/lu';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -63,6 +63,7 @@ const NavigationMenuTrigger = React.forwardRef<
   >
     {children}{' '}
     <ChevronDown
+      size={24}
       className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
       aria-hidden="true"
     />

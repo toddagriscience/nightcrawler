@@ -29,7 +29,12 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Pencil, Trash2, Plus, Eye } from 'lucide-react';
+import {
+  LuPencil as Pencil,
+  LuTrash2 as Trash2,
+  LuPlus as Plus,
+  LuEye as Eye,
+} from 'react-icons/lu';
 import { getImps, createImp, updateImp, deleteImp } from '../actions';
 import { notifyActionError } from '@/lib/notify-action-error';
 
@@ -205,7 +210,7 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
 
       <div className="flex justify-end">
         <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
           New IMP
         </Button>
       </div>
@@ -258,21 +263,29 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
                         onClick={() => openPreview(imp)}
                         aria-label="Preview"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye size={24} aria-hidden="true" className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => openEdit(imp)}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(imp.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2
+                          size={24}
+                          aria-hidden="true"
+                          className="h-4 w-4 text-destructive"
+                        />
                       </Button>
                     </div>
                   </TableCell>

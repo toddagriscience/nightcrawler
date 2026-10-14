@@ -3,15 +3,15 @@
 'use client';
 
 import {
-  Bell,
-  CheckCircle,
-  AlertTriangle,
-  Clock,
-  Sprout,
-  Beaker,
-  Wheat,
-  HelpCircle,
-} from 'lucide-react';
+  LuBell as Bell,
+  LuCircleCheck as CheckCircle,
+  LuTriangleAlert as AlertTriangle,
+  LuClock as Clock,
+  LuSprout as Sprout,
+  LuBeaker as Beaker,
+  LuWheat as Wheat,
+  LuCircleHelp as HelpCircle,
+} from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import { updateReminder } from './actions';
 import type { Reminder, ReminderType } from './types';
@@ -63,6 +63,7 @@ export function ReminderCard({ reminder: r, onEdit }: ReminderCardProps) {
   return (
     <div className="group relative flex gap-4 px-4 py-5 rounded-lg hover:bg-[var(--color-background)]/50 transition-colors duration-200 border border-transparent hover:border-foreground/15">
       <Icon
+        size={24}
         aria-hidden="true"
         className={`size-5 mt-0.5 shrink-0 ${typeColors[r.type] ?? typeColors.other}`}
       />
@@ -129,7 +130,7 @@ export function ReminderCard({ reminder: r, onEdit }: ReminderCardProps) {
                 variant="ghost"
                 className="h-7 px-2 text-xs text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] gap-1.5"
               >
-                <CheckCircle aria-hidden="true" className="size-3" />
+                <CheckCircle size={24} aria-hidden="true" className="size-3" />
                 Mark read
               </Button>
             </form>

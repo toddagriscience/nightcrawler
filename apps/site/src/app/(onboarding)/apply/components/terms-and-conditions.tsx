@@ -7,7 +7,7 @@ import AccountAgreementContent from '@/app/(authenticated)/components/account-ag
 import { Button } from '@/components/ui';
 import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { RefreshCw } from 'lucide-react';
+import { LuRefreshCw as RefreshCw } from 'react-icons/lu';
 import { ApplicationContext } from '@/app/(onboarding)/apply/components/onboarding-context';
 
 /** The time required to wait to press the submit application button in the modal. */
@@ -77,7 +77,7 @@ export default function TermsAndConditions() {
               className="h-min p-0 hover:cursor-pointer"
               onClick={() => router.refresh()}
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw size={24} aria-hidden="true" className="h-4 w-4" />
             </Button>
           </div>
         )}

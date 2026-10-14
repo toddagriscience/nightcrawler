@@ -11,7 +11,11 @@ import {
   type UseFormRegister,
 } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Copy, Download, ExternalLink } from 'lucide-react';
+import {
+  LuCopy as Copy,
+  LuDownload as Download,
+  LuExternalLink as ExternalLink,
+} from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -374,7 +378,11 @@ export default function OfferLetterForm() {
 
             <div className="flex justify-end">
               <Button type="submit" disabled={isSubmitting}>
-                <Download className="mr-2 h-4 w-4" />
+                <Download
+                  size={24}
+                  aria-hidden="true"
+                  className="mr-2 h-4 w-4"
+                />
                 {isSubmitting ? 'Generating…' : 'Generate PDF'}
               </Button>
             </div>
@@ -413,7 +421,7 @@ export default function OfferLetterForm() {
                 aria-label="Copy subject"
                 onClick={() => copy(OFFER_EMAIL_SUBJECT, 'Subject')}
               >
-                <Copy className="h-4 w-4" />
+                <Copy size={24} aria-hidden="true" className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -436,7 +444,7 @@ export default function OfferLetterForm() {
               variant="outline"
               onClick={() => emailText && copy(emailText, 'Body')}
             >
-              <Copy className="mr-2 h-4 w-4" />
+              <Copy size={24} aria-hidden="true" className="mr-2 h-4 w-4" />
               Copy Body
             </Button>
             <Button asChild>
@@ -448,7 +456,11 @@ export default function OfferLetterForm() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <ExternalLink className="mr-2 h-4 w-4" />
+                <ExternalLink
+                  size={24}
+                  aria-hidden="true"
+                  className="mr-2 h-4 w-4"
+                />
                 Open in Gmail
               </a>
             </Button>

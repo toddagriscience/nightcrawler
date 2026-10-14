@@ -3,7 +3,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CircleCheckBig } from 'lucide-react';
+import { LuCircleCheckBig as CircleCheckBig } from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -32,7 +32,7 @@ export function OrderSuccessModal({
               className="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
               aria-hidden="true"
             >
-              <CircleCheckBig className="size-8" />
+              <CircleCheckBig size={24} aria-hidden="true" className="size-8" />
             </div>
             <DialogTitle className="text-2xl font-semibold text-foreground">
               Added to your order

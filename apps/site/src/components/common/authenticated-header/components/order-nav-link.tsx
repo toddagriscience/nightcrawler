@@ -3,7 +3,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart } from 'lucide-react';
+import { LuShoppingCart as ShoppingCart } from 'react-icons/lu';
 import { useOrder } from '@/lib/order/hooks';
 
 /**
@@ -22,7 +22,7 @@ export function OrderNavLink() {
       href="/order"
       className="text-foreground inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-70"
     >
-      <ShoppingCart className="size-4" aria-hidden="true" />
+      <ShoppingCart size={24} className="size-4" aria-hidden="true" />
       <span>Order</span>
       <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-foreground/70">
         {itemCount}

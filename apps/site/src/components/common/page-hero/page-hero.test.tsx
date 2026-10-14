@@ -32,8 +32,17 @@ describe('PageHero', () => {
 
   it('hides arrow when showArrow is false', () => {
     renderWithNextIntl(<PageHero title="Test Title" showArrow={false} />);
-    const arrowIcon = document.querySelector('.lucide-arrow-down');
+    const arrowIcon = screen.queryByTestId('page-hero-arrow');
     expect(arrowIcon).not.toBeInTheDocument();
+  });
+
+  it('keeps the decorative arrow at 24px independently of inherited text size', () => {
+    renderWithNextIntl(<PageHero title="About Us" />);
+    const arrowIcon = screen.getByTestId('page-hero-arrow');
+    expect(arrowIcon).toHaveAttribute('width', '24');
+    expect(arrowIcon).toHaveAttribute('height', '24');
+    expect(arrowIcon).toHaveAttribute('stroke-width', '2');
+    expect(arrowIcon).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('applies custom className when provided', () => {

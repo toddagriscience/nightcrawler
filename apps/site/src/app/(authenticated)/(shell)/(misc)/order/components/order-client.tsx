@@ -5,7 +5,10 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CircleAlert, CircleCheckBig } from 'lucide-react';
+import {
+  LuCircleAlert as CircleAlert,
+  LuCircleCheckBig as CircleCheckBig,
+} from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import { useOrder } from '@/lib/order/hooks';
 import type { OrderItem } from '@/lib/order/types';
@@ -168,7 +171,7 @@ export function OrderClient() {
         <div className="mx-auto max-w-3xl px-4 py-16">
           <section className="rounded-3xl border border-stone-200 bg-white p-8 shadow-sm">
             <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-              <CircleCheckBig className="size-8" />
+              <CircleCheckBig size={24} aria-hidden="true" className="size-8" />
             </div>
             <h1 className="mt-6 text-center text-3xl font-semibold text-foreground">
               Payment received
@@ -200,7 +203,7 @@ export function OrderClient() {
         <div className="mx-auto max-w-3xl px-4 py-16">
           <section className="rounded-3xl border border-stone-200 bg-white p-8 shadow-sm">
             <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-red-100 text-red-700">
-              <CircleAlert className="size-8" />
+              <CircleAlert size={24} aria-hidden="true" className="size-8" />
             </div>
             <h1 className="mt-6 text-center text-3xl font-semibold text-foreground">
               Checkout unavailable
