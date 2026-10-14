@@ -19,7 +19,7 @@ describe('public document language', () => {
     'puts the actual %s language on server-rendered HTML',
     (locale) => {
       const html = renderToStaticMarkup(
-        <PublicRootLayout locale={locale}>
+        <PublicRootLayout locale={locale} nonce={'a'.repeat(32)}>
           <main>Content</main>
         </PublicRootLayout>
       );
@@ -30,6 +30,9 @@ describe('public document language', () => {
         'script[type="application/ld+json"]'
       );
       expect(scripts).toHaveLength(2);
+      expect(
+        Array.from(scripts, (script) => script.getAttribute('nonce'))
+      ).toEqual(['a'.repeat(32), 'a'.repeat(32)]);
       expect(
         document.body.querySelectorAll('script[type="application/ld+json"]')
       ).toHaveLength(0);

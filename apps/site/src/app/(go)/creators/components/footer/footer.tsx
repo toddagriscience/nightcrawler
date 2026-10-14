@@ -9,7 +9,6 @@ import Link from 'next/link';
  * @returns {JSX.Element} - The go domain footer component
  */
 const GoFooter = async () => {
-  'use cache';
   const legalLinks = [
     { href: '/terms', label: 'Terms & Conditions' },
     { href: '/privacy', label: 'Privacy Policy' },

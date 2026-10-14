@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import { FadeIn, SmoothScroll } from '../../components/common';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 
 /**
  * Layout for go subdomain routes
@@ -13,7 +14,12 @@ import '../globals.css';
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The go subdomain layout
  */
-export default function GoLayout({ children }: { children: React.ReactNode }) {
+export default async function GoLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  await getCspNonce();
   return (
     <html lang="en">
       <body className={fontVariables}>

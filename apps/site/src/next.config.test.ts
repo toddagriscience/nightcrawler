@@ -63,6 +63,8 @@ describe('Next.js Security Headers Configuration', () => {
     expect(csp).toContain('https://m.stripe.network');
     expect(csp).toContain('https://api.stripe.com');
     expect(csp).toContain('https://hooks.stripe.com');
+    expect(csp).toContain('https://checkout.stripe.com');
+    expect(csp).toContain('https://*.js.stripe.com');
     expect(csp).toContain("style-src-elem 'self' 'unsafe-inline'");
     expect(csp).toContain("style-src-attr 'unsafe-inline'");
     expect(csp).toContain("font-src 'self'"); // No external font loading

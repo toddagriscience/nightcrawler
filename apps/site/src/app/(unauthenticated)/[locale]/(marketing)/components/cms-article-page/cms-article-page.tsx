@@ -31,9 +31,12 @@ import { ArticleCtaButtons } from './article-cta-buttons';
 export function CmsArticlePage({
   article,
   locale,
+  nonce,
 }: {
   article: SanityArticle;
   locale?: string;
+  /** Request nonce supplied by the server route. */
+  nonce?: string;
 }) {
   const facts = getArticlePresentation(article);
   const formattedDate = formatArticleHeroDate(article.date, locale);
@@ -89,6 +92,7 @@ export function CmsArticlePage({
           aria-labelledby="article-title"
         >
           <script
+            nonce={nonce}
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(

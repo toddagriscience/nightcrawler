@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { getCspNonce } from '@/lib/get-csp-nonce';
 import PublicRootLayout from '@/components/common/public-root-layout/public-root-layout';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
@@ -10,6 +11,11 @@ export const metadata: Metadata = {
 };
 
 /** English document shell for auth and onboarding entry routes. */
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return <PublicRootLayout>{children}</PublicRootLayout>;
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const nonce = await getCspNonce();
+  return <PublicRootLayout nonce={nonce}>{children}</PublicRootLayout>;
 }

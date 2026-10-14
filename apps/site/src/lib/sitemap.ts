@@ -14,7 +14,7 @@ import {
 } from '@/lib/sanity/articles';
 import { SANITY_REVALIDATE } from '@/lib/sanity/client';
 import { isActiveJob } from '@/lib/sanity/job-posting';
-import { cacheLife } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 import type { MetadataRoute } from 'next';
 
 /** Child sitemap identifiers, linked from the XML index at `/sitemap.xml`. */
@@ -96,8 +96,8 @@ async function getArticleSitemap(
 }
 
 // Cache stable news data. Career closure/expiry stays outside this boundary.
-async function getCachedMainSitemapArticles() {
-  'use cache';
-  cacheLife({ revalidate: SANITY_REVALIDATE });
-  return getMainSitemapArticles();
-}
+const getCachedMainSitemapArticles = unstable_cache(
+  async () => getMainSitemapArticles(),
+  ['published-main-sitemap-articles'],
+  { revalidate: SANITY_REVALIDATE }
+);

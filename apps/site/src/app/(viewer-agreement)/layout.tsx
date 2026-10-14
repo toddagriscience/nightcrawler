@@ -4,6 +4,7 @@ import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
 import { Suspense } from 'react';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 
 /**
  * Layout for the viewer agreement page.
@@ -12,11 +13,12 @@ import '../globals.css';
  * @param {React.ReactNode} children - The children of the layout
  * @returns {React.ReactNode} - The viewer agreement layout
  */
-export default function ViewerAgreementLayout({
+export default async function ViewerAgreementLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await getCspNonce();
   return (
     <html lang="en" className="authenticated-root bg-background-platform">
       <body

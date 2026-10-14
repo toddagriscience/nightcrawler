@@ -6,6 +6,10 @@ import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ArticleIndexPage from './page';
 
+vi.mock('@/lib/get-csp-nonce', () => ({
+  getCspNonce: vi.fn(async () => 'a'.repeat(32)),
+}));
+
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
   permanentRedirect: vi.fn(),
@@ -147,6 +151,10 @@ describe('Article index Page', () => {
     const schema = JSON.parse(
       document.querySelector('article script[type="application/ld+json"]')
         ?.textContent ?? '{}'
+    );
+    expect(document.querySelector('article script')).toHaveAttribute(
+      'nonce',
+      'a'.repeat(32)
     );
     expect(schema.headline).toBe(item.title);
     expect(schema.description).toBe(item.summary);

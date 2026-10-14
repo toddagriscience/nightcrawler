@@ -3,6 +3,7 @@
 import type { Metadata } from 'next';
 import { fontVariables } from '../../lib/fonts';
 import '../globals.css';
+import { getCspNonce } from '@/lib/get-csp-nonce';
 
 export const metadata: Metadata = {
   title: 'Ten Rising Stars',
@@ -24,11 +25,12 @@ export const metadata: Metadata = {
  *
  * @param children - Page content
  */
-export default function TenRisingStarsLayout({
+export default async function TenRisingStarsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await getCspNonce();
   return (
     <html lang="en">
       <body className={`${fontVariables} bg-white`}>{children}</body>
