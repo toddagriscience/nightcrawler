@@ -7,8 +7,6 @@ import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ZoneTemplate from './components/zone-template';
-import { Button } from '@/components/ui/button';
-import { canEditFarm } from '@/lib/utils/farm-rbac';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -49,20 +47,9 @@ export default async function DashboardPage({
           <p className="text-foreground/75 text-lg font-light">
             There are no management zones on this account yet.
             <br />
-            Add your parcel details to request a soil sample kit from your
-            advisor.
+            You can keep exploring the platform while we finish setting things
+            up.
           </p>
-          {canEditFarm(currentUser) ? (
-            <Button variant="brand" asChild>
-              <Link href="/account/management-zones/request">
-                Add management zone
-              </Link>
-            </Button>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Ask a farm Admin to request a management zone.
-            </p>
-          )}
           <nav
             aria-label="Explore the platform"
             className="border-foreground/10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t pt-8"
