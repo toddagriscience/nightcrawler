@@ -79,7 +79,7 @@ export default function CookiePreferencesModal({
             <div className="flex flex-row items-center gap-2">
               <Switch
                 id={optOutId}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-500"
+                className="data-[state=checked]:bg-green-700 data-[state=unchecked]:bg-gray-500"
                 checked={!isCapturing}
                 onCheckedChange={(checked) => applyPostHogPreference(!checked)}
               />
