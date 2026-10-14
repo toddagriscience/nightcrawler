@@ -23,8 +23,8 @@ export const routing = defineRouting({
   // Only prefix non-default locales (en served at /, es at /es/)
   localePrefix: 'as-needed',
 
-  // Enable locale detection in production, disable in development for easier testing
-  localeDetection: process.env.NODE_ENV === 'production',
+  // URLs choose their language; unprefixed English canonicals must always serve English.
+  localeDetection: false,
 
   // Don't redirect to 404 for unknown paths - let Next.js handle it
   alternateLinks: false,

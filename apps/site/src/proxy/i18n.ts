@@ -63,6 +63,11 @@ export function handleI18nMiddleware(
       const response = intlMiddleware(request) as NextResponse;
       if (explicitLocale === routing.defaultLocale) {
         response.cookies.set('NEXT_LOCALE', explicitLocale, { path: '/' });
+        if (response.headers.has('location'))
+          return new NextResponse(response.body, {
+            status: 308,
+            headers: response.headers,
+          });
       }
       return response;
     }
@@ -74,23 +79,10 @@ export function handleI18nMiddleware(
       return response;
     }
 
-    // For paths without locale (like /about), detect preferred locale and
-    // redirect non-default locales to /{locale}/path. For the default locale
-    // (en), delegate to intl middleware which rewrites internally without
-    // adding a /en/ prefix to the URL.
-    const preferredLocale =
-      request.cookies?.get('NEXT_LOCALE')?.value ||
-      request.headers?.get('accept-language')?.split(',')[0]?.slice(0, 2) ||
-      'en';
-    const locale = SUPPORTED_LOCALES.includes(preferredLocale as Locale)
-      ? preferredLocale
-      : 'en';
-    if (locale === 'en') {
-      return intlMiddleware(request);
-    }
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}${pathname}`;
-    return NextResponse.redirect(url);
+    // Every unprefixed public URL is the final English URL. Cookie or browser
+    // language negotiation would otherwise redirect English fallback links back
+    // to Spanish documents that do not exist.
+    return intlMiddleware(request);
   }
 
   return NextResponse.next();

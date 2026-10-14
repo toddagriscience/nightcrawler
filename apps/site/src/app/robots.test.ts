@@ -51,9 +51,10 @@ describe('robots.txt', () => {
     expect(robots).toContain('ls=');
   });
 
-  it('retains both sitemap locations', () => {
-    expect(robots).toContain('sitemap/main.xml');
-    expect(robots).toContain('sitemap/careers.xml');
+  it('points to the canonical XML sitemap index', () => {
+    expect(robots).toContain(
+      'Sitemap: https://toddagriscience.com/sitemap.xml'
+    );
   });
 
   it('remains crawlable for the default user-agent', () => {

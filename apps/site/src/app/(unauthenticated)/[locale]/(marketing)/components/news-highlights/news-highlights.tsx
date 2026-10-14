@@ -9,6 +9,7 @@ import { loadArticlesForHighlights } from '@/lib/sanity/article-actions';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import { urlFor } from '@/lib/sanity/utils';
 import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -31,12 +32,12 @@ export default function NewsHighlights() {
 
   useEffect(() => {
     async function getNews() {
-      const news = await loadArticlesForHighlights();
+      const news = await loadArticlesForHighlights(locale);
       setAllNews(news);
       setIsLoading(false);
     }
     getNews();
-  }, [setAllNews]);
+  }, [setAllNews, locale]);
 
   return (
     <>
@@ -75,6 +76,8 @@ export default function NewsHighlights() {
                 source={article.source ?? ''}
                 date={formatArticleListDate(article.date, locale)}
                 excerpt={article.summary ?? ''}
+                language={article.language}
+                availableInEnglish={isEnglishArticleFallback(article, locale)}
                 link={getArticleCardHref(article)}
               />
             ))}

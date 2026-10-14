@@ -23,6 +23,8 @@ export interface AuthLinks {
 
 /** Public props for the marketing header. */
 export interface NewHeaderProps {
+  /** Final published article destination; may fall back to English on Spanish pages. */
+  productHref?: string;
   className?: string;
   menu?: MenuItem[];
   auth?: AuthLinks;

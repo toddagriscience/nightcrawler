@@ -3,11 +3,12 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
-import { Link } from '@/i18n/config';
+import Link from 'next/link';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
 import { BiSearch } from 'react-icons/bi';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { MarketingFilterDropdown } from '../../components/marketing-filter-dropdown';
@@ -73,6 +74,8 @@ const CAREERS_FILTER_TRIGGER_CLASS =
  */
 export function CareersJobList({ items }: CareersJobListProps) {
   const t = useTranslations('careers');
+  const tArticles = useTranslations('articleIndex');
+  const locale = useLocale();
 
   const teamOptions = useMemo(() => {
     const raw = items
@@ -271,7 +274,10 @@ export function CareersJobList({ items }: CareersJobListProps) {
                 aria-label={rowAriaLabel}
               >
                 <div className="min-w-0 text-sm leading-snug">
-                  <span className="font-normal text-foreground">
+                  <span
+                    lang={item.language ?? 'en'}
+                    className="font-normal text-foreground"
+                  >
                     {item.title}
                   </span>
                   {dept !== null ? (
@@ -289,7 +295,10 @@ export function CareersJobList({ items }: CareersJobListProps) {
                 aria-label={rowAriaLabel}
               >
                 <div className="min-w-0 text-sm leading-snug">
-                  <span className="font-normal text-foreground">
+                  <span
+                    lang={item.language ?? 'en'}
+                    className="font-normal text-foreground"
+                  >
                     {item.title}
                   </span>
                   {dept !== null ? (
@@ -311,6 +320,11 @@ export function CareersJobList({ items }: CareersJobListProps) {
                   {titleLocationLink}
                   <div className="shrink-0 md:text-right">{applyControl}</div>
                 </div>
+                {isEnglishArticleFallback(item, locale) ? (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {tArticles('availableInEnglish')}
+                  </p>
+                ) : null}
               </li>
             );
           })}

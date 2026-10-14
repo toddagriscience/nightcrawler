@@ -24,7 +24,7 @@ describe('getArticleBySlug', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       expect.any(String),
-      { slug: 'my-article' },
+      { slug: 'my-article', language: 'en' },
       defaultSanityFetchOptions
     );
   });
@@ -34,7 +34,7 @@ describe('getArticleBySlug', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       expect.any(String),
-      { slug: 'my-article' },
+      { slug: 'my-article', language: 'en' },
       { cache: 'no-store' }
     );
   });
@@ -56,7 +56,7 @@ describe('getHighlightedArticlesForPage', () => {
     // The slice bound is interpolated, so an unbounded query would still pass a
     // params-only assertion.
     expect(query).toContain('[0...3]');
-    expect(params).toEqual({ page: 'careers' });
+    expect(params).toEqual({ page: 'careers', language: 'en' });
     expect(options).toBe(defaultSanityFetchOptions);
   });
 

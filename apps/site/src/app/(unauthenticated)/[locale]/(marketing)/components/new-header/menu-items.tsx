@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { useTranslations } from 'next-intl';
+import { getCanonicalUrl } from '@/lib/canonical-urls';
 import { AuthLinks, MenuItem, NewHeaderProps } from './types';
 
 /**
@@ -13,7 +14,8 @@ import { AuthLinks, MenuItem, NewHeaderProps } from './types';
 export function useMenuItems({
   menu,
   auth,
-}: Pick<NewHeaderProps, 'menu' | 'auth'>): {
+  productHref,
+}: Pick<NewHeaderProps, 'menu' | 'auth' | 'productHref'>): {
   menuItems: MenuItem[];
   authLinks: AuthLinks;
 } {
@@ -28,7 +30,10 @@ export function useMenuItems({
         { title: t('research.researchOverview.title'), url: '/research' },
       ],
     },
-    { title: t('navigation.products'), url: '/index/introducing-iris' },
+    {
+      title: t('navigation.products'),
+      url: productHref ?? getCanonicalUrl('/index/introducing-iris'),
+    },
     {
       title: t('navigation.company'),
       url: '/about',

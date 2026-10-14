@@ -5,6 +5,7 @@
 import { NavigationMenuLink } from '@/components/ui/navigation-menu';
 import { useRouter } from '@/i18n/config';
 import { useLocale } from 'next-intl';
+import { getLocalizedPath } from '@/lib/canonical-urls';
 import type { ComponentProps, MouseEvent, ReactNode } from 'react';
 
 /**
@@ -71,7 +72,7 @@ export default function NavMenuLink({
     );
   }
 
-  const localizedHref = `/${locale}${href.startsWith('/') ? href : `/${href}`}`;
+  const localizedHref = getLocalizedPath(href, locale);
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     // Respect modifier clicks so users can still open links in a new tab.

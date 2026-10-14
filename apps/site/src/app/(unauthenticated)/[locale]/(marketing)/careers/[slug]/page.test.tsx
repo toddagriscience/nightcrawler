@@ -46,7 +46,7 @@ describe('/careers/[slug] postings', () => {
     isCareerArticleMock.mockReset();
   });
 
-  it('permanent-redirects when off-site URL points at same legacy careers path', async () => {
+  it('renders self-referencing career URLs instead of creating a redirect loop', async () => {
     const article = {
       _id: '1b',
       _type: 'career' as const,
@@ -59,12 +59,14 @@ describe('/careers/[slug] postings', () => {
     isCareerArticleMock.mockReturnValueOnce(true);
     isInternalArticleMock.mockReturnValueOnce(false);
 
-    await CareersPostingPage({
+    const node = await CareersPostingPage({
       params: Promise.resolve({ locale: 'en', slug: 'loop-role' }),
     });
+    render(node);
+    expect(screen.getByTestId('careers-job-posting')).toBeInTheDocument();
 
     expect(redirect).not.toHaveBeenCalled();
-    expect(permanentRedirect).toHaveBeenCalledWith('/en/careers/loop-role');
+    expect(permanentRedirect).not.toHaveBeenCalled();
   });
 
   it('redirects externally when off-site URL is set', async () => {

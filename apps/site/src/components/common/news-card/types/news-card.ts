@@ -15,6 +15,10 @@
  */
 export default interface NewsCardProps {
   title: string;
+  /** Marks English-only documents on a Spanish listing. */
+  availableInEnglish?: boolean;
+  /** Language of the published article text. */
+  language?: 'en' | 'es';
   excerpt: string;
   source?: string;
   date: string;

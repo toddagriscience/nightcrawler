@@ -1,8 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { FadeIn, SmoothScroll } from '@/components/common';
+import PublicRootLayout from '@/components/common/public-root-layout/public-root-layout';
 import { routing } from '@/i18n/config';
-import { env } from '@/lib/env';
+import { getPageAlternates, getCanonicalUrl } from '@/lib/canonical-urls';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata, Viewport } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
@@ -33,17 +34,11 @@ export async function generateMetadata({
     },
     description: t('description'),
     metadataBase: new URL(siteConfig.url),
-    alternates: {
-      canonical: `${env.baseUrl}/${locale}`,
-      languages: Object.fromEntries([
-        ...routing.locales.map((loc) => [loc, `${env.baseUrl}/${loc}`]),
-        ['x-default', `${env.baseUrl}/${routing.defaultLocale}`],
-      ]),
-    },
+    alternates: getPageAlternates('/', locale),
     openGraph: {
       title: siteConfig.homeTitle,
       description: t('description'),
-      url: `${env.baseUrl}/${locale}`,
+      url: getCanonicalUrl('/', locale),
       siteName: siteConfig.name,
       locale: ogLocale,
       type: 'website',
@@ -121,10 +116,12 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <SmoothScroll>
-        <FadeIn>{children}</FadeIn>
-      </SmoothScroll>
-    </NextIntlClientProvider>
+    <PublicRootLayout locale={locale}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <SmoothScroll>
+          <FadeIn>{children}</FadeIn>
+        </SmoothScroll>
+      </NextIntlClientProvider>
+    </PublicRootLayout>
   );
 }

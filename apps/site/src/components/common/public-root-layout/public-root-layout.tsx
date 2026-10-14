@@ -6,20 +6,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme/theme-context';
 import { fontVariables } from '@/lib/fonts';
 import { siteConfig } from '@/lib/metadata';
-import type { Metadata } from 'next';
 import { Organization, WebSite, WithContext } from 'schema-dts';
-import '../globals.css';
-import { PostHogProvider } from '../providers';
-
-/**
- * Root layout metadata for pages outside [locale] directory
- */
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-};
+import '@/app/globals.css';
+import { PostHogProvider } from '@/app/providers';
 
 const webSiteStructuredData: WithContext<WebSite> = {
   '@context': 'https://schema.org',
@@ -66,14 +55,16 @@ const organizationStructuredData: WithContext<Organization> = {
  * @param {React.ReactNode} children - The children of the root layout
  * @returns {React.ReactNode} - The root layout
  */
-export default function RootLayout({
+export default function PublicRootLayout({
   children,
+  locale = 'en',
 }: {
   children: React.ReactNode;
+  locale?: string;
 }) {
   return (
-    <html lang="en">
-      <head>
+    <html lang={locale === 'es' ? 'es' : 'en'}>
+      <body className={fontVariables}>
         {/** Do not dangerously set inner HTML for any user-inputted values. */}
         <script
           type="application/ld+json"
@@ -87,8 +78,7 @@ export default function RootLayout({
             __html: JSON.stringify(organizationStructuredData),
           }}
         />
-      </head>
-      <body className={fontVariables}>
+
         <PostHogProvider>
           <ThemeProvider>
             <TooltipProvider delayDuration={0} skipDelayDuration={0}>

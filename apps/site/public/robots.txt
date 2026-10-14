@@ -83,7 +83,5 @@ Disallow: /
 User-agent: 360Spider
 Disallow: /
 
-# --- Sitemap Locations ---
-# Split via app/sitemap.ts + generateSitemaps (/sitemap.xml serves HTML in Next 16 here—use children).
-Sitemap: https://toddagriscience.com/sitemap/main.xml
-Sitemap: https://toddagriscience.com/sitemap/careers.xml
+# --- Sitemap Location ---
+Sitemap: https://toddagriscience.com/sitemap.xml

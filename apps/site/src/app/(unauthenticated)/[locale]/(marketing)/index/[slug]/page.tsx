@@ -2,13 +2,20 @@
 
 import { CmsArticlePage } from '@/app/(unauthenticated)/[locale]/(marketing)/components/cms-article-page/cms-article-page';
 import { env } from '@/lib/env';
+import { getLocalizedPath } from '@/lib/canonical-urls';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import {
   getArticleBySlug,
+  getPublishedArticleRouteParams,
   isCareerArticle,
   isInternalArticle,
 } from '@/lib/sanity/articles';
 import { notFound, permanentRedirect, redirect } from 'next/navigation';
+
+/** Generates routes for published article-language documents only. */
+export async function generateStaticParams() {
+  return getPublishedArticleRouteParams('news');
+}
 
 /**
  * Canonical CMS article page for news and general marketing articles at `/index/[slug]`.
@@ -22,7 +29,7 @@ export default async function ArticleIndexPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { slug, locale } = await params;
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug, undefined, locale);
 
   if (article == null) {
     notFound();
@@ -30,7 +37,7 @@ export default async function ArticleIndexPage({
   }
 
   if (isCareerArticle(article)) {
-    permanentRedirect(`/${locale}/careers/${slug}`);
+    permanentRedirect(getLocalizedPath(`/careers/${slug}`, locale));
     return;
   }
 

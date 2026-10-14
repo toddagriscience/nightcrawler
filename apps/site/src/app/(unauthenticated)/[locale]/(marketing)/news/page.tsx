@@ -35,7 +35,7 @@ export default async function News({
   const { locale } = await params;
   const { count, topic } = await searchParams;
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getNewsIndexArticles();
+  const articles = await getNewsIndexArticles(undefined, locale);
 
   const activeTopic: ArticleIndexProps['activeTopic'] =
     topic && (NEWS_TOPIC_TYPES as readonly string[]).includes(topic)

@@ -8,6 +8,7 @@ import {
 } from '@/app/(unauthenticated)/[locale]/(marketing)/components/article-index/article-index';
 import { getResearchIndexArticles } from '@/lib/sanity/articles';
 import type { Metadata } from 'next';
+import { createLocalizedMetadata } from '@/lib/metadata';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
@@ -31,11 +32,15 @@ export async function generateMetadata({
   const { locale, topic } = await params;
   if (!isArticleIndexTopic(topic)) return {};
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  return {
-    title: `${t(`tabs.${topicTabKey(topic)}`)} · ${t('titles.research')}`,
-    description:
-      'Research and product release news from Todd Agriscience, Inc.',
-  };
+  return createLocalizedMetadata(
+    {
+      title: `${t(`tabs.${topicTabKey(topic)}`)} · ${t('titles.research')}`,
+      description:
+        'Research and product release news from Todd Agriscience, Inc.',
+    },
+    `/research/index/${topic}`,
+    locale
+  );
 }
 
 /**
@@ -62,7 +67,7 @@ export default async function ResearchTopicPage({
   if (!isArticleIndexTopic(topic)) notFound();
 
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getResearchIndexArticles();
+  const articles = await getResearchIndexArticles(undefined, locale);
 
   return (
     <ArticleIndex

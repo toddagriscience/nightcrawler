@@ -8,8 +8,8 @@ import {
   isFormSubmissionSignupLinkConsumed,
   resolveSignupContext,
 } from '@nightcrawler/db/queries';
-import ApprovedApplicantGate from '@/app/(unauthenticated)/signup/components/approved-applicant-gate';
-import { signUp } from '@/app/(unauthenticated)/signup/actions';
+import ApprovedApplicantGate from '@/app/(unauthenticated)/(unlocalized)/signup/components/approved-applicant-gate';
+import { signUp } from '@/app/(unauthenticated)/(unlocalized)/signup/actions';
 import OnboardingFlow from '@/app/(onboarding)/apply/components/onboarding-flow';
 import {
   getOnboardingAccount,

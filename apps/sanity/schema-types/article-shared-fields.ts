@@ -41,6 +41,55 @@ const titleField = defineField({
     'Visible title only. Nothing extra (such as “Your title | Todd Agriscience”) is required.',
 })
 
+const languageField = defineField({
+  name: 'language',
+  title: 'Language',
+  type: 'string',
+  initialValue: 'en',
+  options: {
+    list: [
+      {title: 'English', value: 'en'},
+      {title: 'Spanish', value: 'es'},
+    ],
+    layout: 'radio',
+  },
+  validation: (rule) =>
+    rule
+      .required()
+      .custom((value) => (value === 'en' || value === 'es' ? true : 'Choose English or Spanish.')),
+  description:
+    'The language of this document. Legacy documents without a language are served only in English.',
+})
+
+const translationGroupField = defineField({
+  name: 'translationGroup',
+  title: 'Translation group',
+  type: 'string',
+  description:
+    'Use the same stable identifier on the English and Spanish documents that translate each other. Publish each language separately. Required for Spanish documents.',
+  validation: (rule) =>
+    rule.custom(async (value, context) => {
+      if (!value?.trim())
+        return context.document?.language === 'es'
+          ? 'Set a translation group for the Spanish publication.'
+          : true
+      const document = context.document
+      const publishedId = document?._id.replace(/^drafts\./, '') ?? ''
+      const unique = await context
+        .getClient({apiVersion: '2024-01-01'})
+        .fetch<boolean>(
+          '!defined(*[_type == $type && coalesce(translationGroup, _id) == $group && coalesce(language, "en") == $language && !(_id in $ids)][0]._id)',
+          {
+            type: document?._type,
+            group: value.trim(),
+            language: document?.language ?? 'en',
+            ids: [publishedId, `drafts.${publishedId}`],
+          },
+        )
+      return unique ? true : 'This translation group already has a document in the same language.'
+    }),
+})
+
 const subtitleField = defineField({
   name: 'subtitle',
   title: 'Subtitle',
@@ -56,7 +105,20 @@ const slugField = defineField({
   options: {
     source: 'title',
     maxLength: 96,
-    isUnique: (value, context) => context.defaultIsUnique(value, context),
+    isUnique: async (value, context) => {
+      const document = context.document
+      const publishedId = document?._id.replace(/^drafts\./, '') ?? ''
+      return context
+        .getClient({apiVersion: '2024-01-01'})
+        .fetch<boolean>(
+          '!defined(*[_type in ["news", "career"] && slug.current == $slug && coalesce(language, "en") == $language && !(_id in $ids)][0]._id)',
+          {
+            slug: value,
+            language: document?.language ?? 'en',
+            ids: [publishedId, `drafts.${publishedId}`],
+          },
+        )
+    },
   },
   validation: (rule) => rule.required(),
 })
@@ -320,7 +382,13 @@ const articleCtasField = defineField({
  * Opening fields for `career` documents (sitemap, title, slug). Job-specific rows are defined in `career.ts`
  * between this block and {@link careerArticleTrailFields}.
  */
-export const careerArticleLeadFields = [excludeFromSitemapField, titleField, slugField]
+export const careerArticleLeadFields = [
+  languageField,
+  translationGroupField,
+  excludeFromSitemapField,
+  titleField,
+  slugField,
+]
 
 /**
  * Portable Text body for `career` documents — follows team/location/apply/SEO description in Studio (`source` stays on `news` only).
@@ -332,6 +400,8 @@ export const careerArticleTrailFields = [contentFieldCareer]
  * Order is preserved for existing Studio layouts.
  */
 export const articlePortableBodyFields = [
+  languageField,
+  translationGroupField,
   excludeFromSitemapField,
   titleField,
   subtitleField,

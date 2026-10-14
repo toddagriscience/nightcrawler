@@ -27,7 +27,7 @@ export default async function ResearchIndexPage({
   const { locale } = await params;
   const { count } = await searchParams;
   const t = await getTranslations({ locale, namespace: 'articleIndex' });
-  const articles = await getResearchIndexArticles();
+  const articles = await getResearchIndexArticles(undefined, locale);
 
   return (
     <ArticleIndex

@@ -1,6 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { createMetadata } from '@/lib/metadata';
+import { getArticleAlternates } from '@/lib/sanity/article-locales';
+import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
+import { env } from '@/lib/env';
 import {
   getArticleBySlug,
   isCareerArticle,
@@ -19,11 +22,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug, undefined, locale);
   if (article === undefined || article === null) {
     return {};
   }
-  if (!isInternalArticle(article)) {
+  if (
+    !isInternalArticle(article) &&
+    !isSelfReferentialArticleUrl(
+      String(article.offSiteUrl),
+      locale,
+      slug,
+      env.baseUrl
+    )
+  ) {
     return {};
   }
   const path = isCareerArticle(article)
@@ -34,11 +45,14 @@ export async function generateMetadata({
     summary !== undefined && summary !== null && summary.length > 0
       ? summary
       : 'Todd Agriscience articles and announcements.';
-  return createMetadata({
-    title: article.title,
-    description,
-    path,
-  });
+  return {
+    ...createMetadata({
+      title: article.title,
+      description,
+      path,
+    }),
+    alternates: getArticleAlternates(article),
+  };
 }
 
 /**

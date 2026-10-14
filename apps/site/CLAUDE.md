@@ -20,7 +20,7 @@ when you bump them.
 
 ### Core
 
-- Next.js `16.3.0-canary.37`, App Router, Turbopack
+- Next.js `16.3.8`, App Router, Turbopack
 - React `19.2`, TypeScript `5.9` (strict)
 - Tailwind CSS `4.2`
 - Drizzle ORM `0.45` over PostgreSQL, via `@nightcrawler/db`
@@ -139,6 +139,8 @@ Run these from `apps/site` — they do not exist at the repository root.
 - `bun run validate` — `format:check` → `ci`
 - `bun run lint:fix` — applies license headers, ESLint `--fix`, then formats
 - `bun run test:watch` / `bun run test:coverage`
+- `bun run verify:routes <base-url>` — HTTP checks against a running production
+  server for locale canonicals, missing CMS resources, and XML sitemaps
 - `bun run storybook` — component explorer on port 6006
 
 ### A note on `no-secrets`
@@ -168,10 +170,15 @@ new namespace directory is invisible until it is added to that array.
 Routing is configured in `src/i18n/config.ts`:
 
 - `localePrefix: 'as-needed'` — the default locale has no URL prefix.
-- `localeDetection: process.env.NODE_ENV === 'production'` — negotiation from the
-  request (`Accept-Language`, `NEXT_LOCALE` cookie) is **on in production only**.
-  In development the locale always comes from the URL, so detection bugs will not
-  reproduce locally.
+- `localeDetection: false` — the URL chooses its language in every environment.
+  Unprefixed English URLs keep serving English even with a Spanish browser
+  preference, so canonical URLs and untranslated article links never redirect
+  back to an unavailable Spanish document.
+
+Public route shapes are listed in `src/proxy/public-routes.ts` so unknown paths
+return a 404 before rendering can stream a success response. Update that list
+when adding a public page. Dynamic CMS routes also check published document
+existence in the proxy.
 
 To add a locale, update `src/lib/locales.ts` and `src/i18n/config.ts`, then add
 the matching JSON file to every namespace directory.

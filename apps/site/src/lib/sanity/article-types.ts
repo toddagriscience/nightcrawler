@@ -160,6 +160,12 @@ export interface SanityArticle {
   _id: string;
   _type: 'news' | 'career';
   _updatedAt?: string;
+  /** Published document language; legacy documents without this field are English. */
+  language?: 'en' | 'es';
+  /** Shared identifier linking separately published translations. */
+  translationGroup?: string;
+  /** Available published on-site variants, projected by the article queries. */
+  publishedTranslations?: PublishedArticleTranslation[];
   title: string;
   subtitle?: string;
   slug: { current: string };
@@ -201,4 +207,13 @@ export interface SanityArticle {
    * @deprecated Legacy single footer CTA — migrated in {@link resolveArticleCtas}.
    */
   ctaHref?: string;
+}
+
+/** Minimal published language variant used for reciprocal hreflang and routing. */
+export interface PublishedArticleTranslation {
+  _id: string;
+  _type: 'news' | 'career';
+  language: 'en' | 'es';
+  slug: { current: string };
+  excludeFromSitemap?: boolean;
 }

@@ -1,8 +1,11 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { SanityArticle } from '@/lib/sanity/article-types';
+import { getCanonicalUrl, getLocalizedPath } from '@/lib/canonical-urls';
+import { env } from '@/lib/env';
+import { toSafeHref } from '@/lib/sanity/safe-href';
 
-import { isCareerArticle } from '@/lib/sanity/articles';
+import { getArticleBySlug, isCareerArticle } from '@/lib/sanity/articles';
 
 /** Normalizes hostnames so `www.example.com` matches `example.com`. */
 function hostnameWithoutWww(host: string): string {
@@ -94,18 +97,48 @@ export function getArticleCardHref(
   article: {
     offSiteUrl?: string | null;
     slug: { current: string };
-  } & Pick<SanityArticle, '_type'>
+  } & Pick<SanityArticle, '_type' | 'language'>
 ): string {
   const external = article.offSiteUrl;
   if (
     external !== undefined &&
     external !== null &&
-    String(external).trim() !== ''
+    String(external).trim() !== '' &&
+    !isSelfReferentialArticleUrl(
+      String(external),
+      article.language ?? 'en',
+      article.slug.current,
+      env.baseUrl
+    )
   ) {
     return external;
   }
   if (isCareerArticle(article)) {
-    return getInternalCareerArticlePath(article.slug.current);
+    return getLocalizedPath(
+      getInternalCareerArticlePath(article.slug.current),
+      article.language ?? 'en'
+    );
   }
-  return getInternalArticlePath(article.slug.current);
+  return getLocalizedPath(
+    getInternalArticlePath(article.slug.current),
+    article.language ?? 'en'
+  );
+}
+
+/** Resolves a fixed article navigation link to a published translation, with final English fallback. */
+export async function getArticleNavigationUrl(
+  slug: string,
+  locale: string
+): Promise<string> {
+  const article = await getArticleBySlug(slug);
+  const variant = article?.publishedTranslations?.find(
+    (translation) => translation.language === locale
+  );
+  const publication = variant ?? article;
+  const href = publication ? toSafeHref(getArticleCardHref(publication)) : null;
+  if (href && /^https?:/.test(href)) return href;
+  return getCanonicalUrl(
+    href ?? getInternalArticlePath(slug),
+    publication?.language ?? 'en'
+  );
 }
