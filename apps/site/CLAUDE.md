@@ -220,3 +220,33 @@ review. It never writes to Sanity. Editors should approve the suggested excerpt
 and owner and add genuine main images; do not fabricate dates or named authors.
 Article JSON-LD follows the supported native script pattern inside the article;
 it must receive a nonce when the CSP nonce foundation is integrated.
+
+## Jobs and crawler access
+
+Recruiting owns the verified JobPosting facts in Sanity: original posting date,
+closing deadline or explicit no-expiry confirmation, employment type, workplace
+address or eligible remote countries, and pay currency/range/period when shown.
+A general application is not a specific vacancy. Missing facts suppress schema;
+CMS creation timestamps, job-title guesses and assumed country restrictions are
+never substituted. Run `bun run audit:jobs` from `apps/site` for read-only gaps.
+
+Career detail, listing and XML responses check active status at request time.
+Closed/expired roles return 404 and leave listings/schema/sitemap immediately;
+careers XML uses `Cache-Control: no-store`. Stable main/news sitemap data retains
+its 300-second cache. The same-document expiry-crossing regression covers schema,
+routing, listings and XML data. The career route passes the incoming `x-nonce`
+to its JSON-LD script for compatibility with the CSP foundation.
+
+The existing robots.txt policy is preserved. Googlebot, Bingbot and OAI-SearchBot
+inherit public access. GPTBot and ClaudeBot also retain their current wildcard
+behavior; no new training crawler restriction is introduced. OAI-SearchBot serves
+ChatGPT Search and is distinct from GPTBot training. Keep CDN/WAF rules consistent
+with this existing policy. `bun run verify:crawlers <base-url> [additional-paths]`
+checks robots rules and public HTTP content for those three search crawlers. Run
+it on the deployed origin too: local/user-agent smoke checks do not prove actual
+crawler-IP allow rules or provider dashboard configuration.
+
+The jobs PR stays draft until recruiting enters verified facts and the deployed
+job details pass Google's Rich Results Test. No production CMS backfill is part
+of this code change. Guidance: https://developers.google.com/search/docs/appearance/structured-data/job-posting
+and https://developers.openai.com/api/docs/bots.

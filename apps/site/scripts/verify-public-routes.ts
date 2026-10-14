@@ -77,11 +77,15 @@ for (const path of [
   const response = await fetch(`${baseUrl}${path}`);
   assert.equal(response.status, 200);
   assert.match(response.headers.get('content-type') ?? '', /^application\/xml/);
+  if (path === '/sitemap/careers.xml')
+    assert.match(response.headers.get('cache-control') ?? '', /no-store/);
   const xml = new JSDOM(await response.text(), {
     contentType: 'application/xml',
   });
   assert.equal(xml.window.document.querySelector('parsererror'), null);
-  assert.equal(xml.window.document.querySelectorAll('loc').length > 0, true);
+  // The careers URL set can legitimately be empty when every role has closed.
+  if (path !== '/sitemap/careers.xml')
+    assert.equal(xml.window.document.querySelectorAll('loc').length > 0, true);
   for (const url of xml.window.document.querySelectorAll('loc')) {
     assert.doesNotMatch(url.textContent ?? '', /\/en\//);
   }

@@ -35,7 +35,9 @@
     "validate": "bun run format:check && bun run ci",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "verify:articles": "bun scripts/verify-public-articles.ts",
-    "audit:publications": "bun scripts/audit-publications.ts"
+    "audit:publications": "bun scripts/audit-publications.ts",
+    "audit:jobs": "bun scripts/audit-jobs.ts",
+    "verify:crawlers": "bun scripts/verify-public-crawlers.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.16",

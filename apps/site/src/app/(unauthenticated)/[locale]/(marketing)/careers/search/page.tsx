@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { connection } from 'next/server';
 import { getArticlesByCollection } from '@/lib/sanity/articles';
 import { getTranslations } from 'next-intl/server';
 
@@ -18,6 +19,7 @@ export default async function CareersIndexPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  await connection();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'careers' });
 

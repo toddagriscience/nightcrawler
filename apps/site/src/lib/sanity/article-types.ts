@@ -1,5 +1,10 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import type {
+  JobAddress,
+  JobSalary,
+  JOB_EMPLOYMENT_TYPES,
+} from './job-posting';
 import type { PortableTextBlock } from '@portabletext/types';
 
 /**
@@ -180,6 +185,19 @@ export interface SanityArticle {
   jobLocation?: string;
   /** Job posting team label (`career` documents); editors may omit on legacy rows. */
   jobTeam?: string;
+  /** Only open, unexpired vacancies can expose active JobPosting data. */
+  jobStatus?: 'open' | 'closed';
+  jobPostingKind?: 'vacancy' | 'general-application';
+  /** Verified original posting date; never inferred from CMS creation. */
+  datePosted?: string;
+  validThrough?: string;
+  /** Recruiting confirmation that the vacancy has no scheduled expiry. */
+  noExpiry?: boolean;
+  employmentTypes?: Array<(typeof JOB_EMPLOYMENT_TYPES)[number]>;
+  workplaceType?: 'onsite' | 'hybrid' | 'remote';
+  applicantCountries?: string[];
+  jobAddress?: JobAddress;
+  baseSalary?: JobSalary;
   /** Apply CTA destination for internal career postings (`career`). */
   applyUrl?: string;
   content?: SanityArticlePortableText;
@@ -220,4 +238,7 @@ export interface PublishedArticleTranslation {
   language: 'en' | 'es';
   slug: { current: string };
   excludeFromSitemap?: boolean;
+  jobStatus?: 'open' | 'closed';
+  datePosted?: string;
+  validThrough?: string;
 }

@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { isActiveJob } from '@/lib/sanity/job-posting';
 import { getCanonicalUrl } from '@/lib/canonical-urls';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 
@@ -44,6 +45,7 @@ export function getArticleAlternates(article: SanityArticle) {
   ];
   const languages: Record<string, string> = {};
   for (const variant of variants) {
+    if (variant._type === 'career' && !isActiveJob(variant)) continue;
     const variantPath =
       variant._type === 'career'
         ? `/careers/${variant.slug.current}`
