@@ -12,6 +12,12 @@ export default defineConfig({
     ],
     globals: true,
     environment: 'jsdom',
+    server: {
+      deps: {
+        // Allow Next.js navigation mocks inside the real locale-aware Link.
+        inline: ['next-intl'],
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

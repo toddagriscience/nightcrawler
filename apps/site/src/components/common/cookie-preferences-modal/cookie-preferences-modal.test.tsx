@@ -1,10 +1,45 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
-import { renderWithNextIntl, screen, waitFor } from '@/test/test-utils';
+import { render, screen, waitFor } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import userEvent from '@testing-library/user-event';
-import CookiePreferencesModal from './cookie-preferences-modal';
+import CookiePreferencesModal from '@/components/common/cookie-preferences-modal/cookie-preferences-modal';
+import enMessages from '@/messages/cookie-preferences/en.json';
+import esMessages from '@/messages/cookie-preferences/es.json';
 import posthog from 'posthog-js';
+
+vitest.unmock('next-intl');
+vitest.unmock('next-intl/routing');
+vitest.unmock('@/i18n/config');
+
+// Keep the real locale-aware Link; only the Next.js navigation primitives
+// need stand-ins outside a running router.
+vitest.mock('next/navigation', () => ({
+  usePathname: vitest.fn(() => '/'),
+  useRouter: vitest.fn(() => ({
+    push: vitest.fn(),
+    replace: vitest.fn(),
+    prefetch: vitest.fn(),
+  })),
+  redirect: vitest.fn(),
+  permanentRedirect: vitest.fn(),
+}));
+
+function renderWithNextIntl(
+  ui: React.ReactElement,
+  locale: 'en' | 'es' = 'en'
+) {
+  return render(
+    <NextIntlClientProvider
+      locale={locale}
+      messages={locale === 'es' ? esMessages : enMessages}
+      timeZone="UTC"
+    >
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
 
 vitest.mock('next/image', () => ({
   default: ({
@@ -35,6 +70,7 @@ describe('CookiePreferencesModal', () => {
   beforeEach(() => {
     localStorage.clear();
     vitest.clearAllMocks();
+    getExplicitConsentStatusMock.mockReturnValue('denied');
   });
 
   test('renders default trigger button', () => {
@@ -60,26 +96,118 @@ describe('CookiePreferencesModal', () => {
     });
   });
 
+  test.each([
+    {
+      locale: 'en' as const,
+      trigger: 'Cookie Settings',
+      toggleLabel: 'Enable Cookies',
+      privacyPolicy: 'US Privacy Policy',
+      privacyHref: '/privacy',
+      close: 'Close',
+      save: 'Confirm',
+    },
+    {
+      locale: 'es' as const,
+      trigger: 'Configuración de cookies',
+      toggleLabel: 'Habilitar cookies',
+      privacyPolicy: 'Política de privacidad de EE. UU.',
+      privacyHref: '/es/privacy',
+      close: 'Cerrar',
+      save: 'Confirmar',
+    },
+  ])(
+    'renders translated privacy controls in $locale',
+    async ({
+      locale,
+      trigger,
+      toggleLabel,
+      privacyPolicy,
+      privacyHref,
+      close,
+      save,
+    }) => {
+      const user = userEvent.setup();
+      renderWithNextIntl(<CookiePreferencesModal />, locale);
+
+      await user.click(screen.getByRole('button', { name: trigger }));
+
+      expect(
+        screen.getByRole('switch', { name: toggleLabel })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: privacyPolicy })).toHaveAttribute(
+        'href',
+        privacyHref
+      );
+
+      expect(screen.getByRole('button', { name: save })).toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: close }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    }
+  );
+
+  test.each([
+    {
+      locale: 'en' as const,
+      trigger: 'Cookie Settings',
+      toggleLabel: 'Enable Cookies',
+    },
+    {
+      locale: 'es' as const,
+      trigger: 'Configuración de cookies',
+      toggleLabel: 'Habilitar cookies',
+    },
+  ])(
+    'the affirmative $locale label enables capturing when checked and disables it when unchecked',
+    async ({ locale, trigger, toggleLabel }) => {
+      const user = userEvent.setup();
+      renderWithNextIntl(<CookiePreferencesModal />, locale);
+
+      await user.click(screen.getByRole('button', { name: trigger }));
+      const uiSwitch = screen.getByRole('switch', { name: toggleLabel });
+      expect(uiSwitch).not.toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'unchecked');
+      expect(uiSwitch).toHaveClass('data-[state=checked]:bg-green-700');
+
+      await user.click(screen.getByText(toggleLabel));
+
+      expect(uiSwitch).toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'checked');
+      expect(optInCapturingMock).toHaveBeenCalledTimes(1);
+      expect(optOutCapturingMock).not.toHaveBeenCalled();
+
+      await user.click(screen.getByText(toggleLabel));
+
+      expect(uiSwitch).not.toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'unchecked');
+      expect(optOutCapturingMock).toHaveBeenCalledTimes(1);
+      expect(optInCapturingMock).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test('uses distinct label targets when multiple modal instances are mounted', async () => {
+    const user = userEvent.setup();
+    renderWithNextIntl(
+      <>
+        <CookiePreferencesModal trigger="First settings" />
+        <CookiePreferencesModal trigger="Second settings" />
+      </>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'First settings' }));
+    const firstId = screen.getByRole('switch', { name: 'Enable Cookies' }).id;
+    expect(screen.getByText('Enable Cookies')).toHaveAttribute('for', firstId);
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    await user.click(screen.getByRole('button', { name: 'Second settings' }));
+    const secondId = screen.getByRole('switch', { name: 'Enable Cookies' }).id;
+
+    expect(firstId).not.toBe('');
+    expect(secondId).not.toBe(firstId);
+    expect(screen.getByText('Enable Cookies')).toHaveAttribute('for', secondId);
+  });
+
   test('displays switch with correct initial state when cookies are enabled', async () => {
     getExplicitConsentStatusMock.mockImplementation(() => 'granted');
     const user = userEvent.setup();
-
-    renderWithNextIntl(<CookiePreferencesModal />);
-
-    const triggerButton = screen.getByRole('button', {
-      name: /Cookie Settings/i,
-    });
-    await user.click(triggerButton);
-
-    await waitFor(() => {
-      const uiSwitch = screen.getByRole('switch');
-      expect(uiSwitch).not.toBeChecked();
-    });
-  });
-
-  test('displays checkbox with correct initial state when cookies are disabled', async () => {
-    const user = userEvent.setup();
-    getExplicitConsentStatusMock.mockImplementation(() => 'denied');
 
     renderWithNextIntl(<CookiePreferencesModal />);
 
@@ -94,11 +222,27 @@ describe('CookiePreferencesModal', () => {
     });
   });
 
-  test('saves preferences when save button is clicked', async () => {
+  test('displays switch with correct initial state when cookies are disabled', async () => {
+    const user = userEvent.setup();
+    getExplicitConsentStatusMock.mockImplementation(() => 'denied');
+
+    renderWithNextIntl(<CookiePreferencesModal />);
+
+    const triggerButton = screen.getByRole('button', {
+      name: /Cookie Settings/i,
+    });
+    await user.click(triggerButton);
+
+    await waitFor(() => {
+      const uiSwitch = screen.getByRole('switch');
+      expect(uiSwitch).not.toBeChecked();
+    });
+  });
+
+  test('confirms and closes after enabling cookies', async () => {
     const user = userEvent.setup();
 
     renderWithNextIntl(<CookiePreferencesModal />);
-    getExplicitConsentStatusMock.mockReturnValue('denied');
 
     // Wait for component to mount and initialize
     await waitFor(() => {
@@ -119,11 +263,11 @@ describe('CookiePreferencesModal', () => {
       expect(screen.getByRole('switch')).toBeInTheDocument();
     });
 
-    // Toggle switch to disabled
-    const uiSwitch = screen.getByRole('switch', {
-      name: /do not sell or share/i,
-    });
+    // Enabling the switch applies the preference immediately.
+    const uiSwitch = screen.getByRole('switch');
     await user.click(uiSwitch);
+    expect(uiSwitch).toBeChecked();
+    expect(optInCapturingMock).toHaveBeenCalledTimes(1);
 
     // Click save button
     const saveButton = screen.getByRole('button', {
@@ -137,24 +281,9 @@ describe('CookiePreferencesModal', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
-  test('opts out when the labeled privacy switch is checked', async () => {
+  test('disables capturing when enabled cookies are switched off', async () => {
+    const user = userEvent.setup();
     getExplicitConsentStatusMock.mockReturnValue('granted');
-    const user = userEvent.setup();
-    renderWithNextIntl(<CookiePreferencesModal />);
-    await user.click(screen.getByRole('button', { name: /cookie settings/i }));
-    const optOutSwitch = screen.getByRole('switch', {
-      name: /do not sell or share my personal information/i,
-    });
-    expect(optOutSwitch).not.toBeChecked();
-    await user.click(
-      screen.getByText('Do not sell or share my personal information')
-    );
-    expect(optOutSwitch).toBeChecked();
-    expect(optOutCapturingMock).toHaveBeenCalled();
-    expect(optInCapturingMock).not.toHaveBeenCalled();
-  });
-  test('cancels and closes modal when cancel button is clicked', async () => {
-    const user = userEvent.setup();
     renderWithNextIntl(<CookiePreferencesModal />);
 
     const triggerButton = screen.getByRole('button', {
@@ -166,12 +295,14 @@ describe('CookiePreferencesModal', () => {
       expect(screen.getByRole('switch')).toBeInTheDocument();
     });
 
-    // Toggle checkbox
-    const checkbox = screen.getByRole('switch');
-    await user.click(checkbox);
+    const uiSwitch = screen.getByRole('switch');
+    expect(uiSwitch).toBeChecked();
+    await user.click(uiSwitch);
+    expect(uiSwitch).not.toBeChecked();
+    expect(optOutCapturingMock).toHaveBeenCalledTimes(1);
+    expect(optInCapturingMock).not.toHaveBeenCalled();
 
-    const cancelButton = screen.getByRole('button', { name: /confirm/i });
-    await user.click(cancelButton);
+    await user.click(screen.getByRole('button', { name: /confirm/i }));
 
     await waitFor(() => {
       // Modal should be closed (check that dialog is not in document)

@@ -31,9 +31,9 @@ export default function CookiePreferencesModal({
   trigger?: React.ReactNode;
 }) {
   const t = useTranslations('cookiePreferences');
+  const toggleId = useId();
   const { isCapturing, applyPostHogPreference } = useCookiePreferences();
   const [isOpen, setIsOpen] = useState(false);
-  const optOutId = useId();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -56,7 +56,10 @@ export default function CookiePreferencesModal({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent
+        className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]"
+        closeButtonLabel={t('close')}
+      >
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription className="text-base">
@@ -70,22 +73,19 @@ export default function CookiePreferencesModal({
           <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row md:gap-0">
             <Link
               onClick={() => setIsOpen(false)}
-              locale="en"
               href={'/privacy'}
               className="underline"
             >
-              US Privacy Policy
+              {t('privacyPolicy')}
             </Link>
             <div className="flex flex-row items-center gap-2">
               <Switch
-                id={optOutId}
+                id={toggleId}
                 className="data-[state=checked]:bg-green-700 data-[state=unchecked]:bg-gray-500"
-                checked={!isCapturing}
-                onCheckedChange={(checked) => applyPostHogPreference(!checked)}
+                checked={isCapturing}
+                onCheckedChange={(checked) => applyPostHogPreference(checked)}
               />
-              <Label htmlFor={optOutId}>
-                Do not sell or share my personal information
-              </Label>
+              <Label htmlFor={toggleId}>{t('toggleLabel')}</Label>
             </div>
             <Button
               variant="outline"
