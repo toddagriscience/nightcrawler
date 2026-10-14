@@ -11,6 +11,7 @@ export function isKnownPublicRoute(pathname: string): boolean {
     '/about',
     '/research',
     '/research/index',
+    '/varieties',
     '/news',
     '/careers',
     '/careers/search',

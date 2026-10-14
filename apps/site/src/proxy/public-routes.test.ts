@@ -27,4 +27,10 @@ describe('public route existence before streaming', () => {
   ])('rejects unknown route %s before a 200 shell can be sent', (path) =>
     expect(isKnownPublicRoute(path)).toBe(false)
   );
+  it.each(['/varieties', '/es/varieties'])(
+    'allows the inventory entry point %s when its route is installed',
+    (path) => {
+      expect(isKnownPublicRoute(path)).toBe(true);
+    }
+  );
 });
