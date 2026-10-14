@@ -35,6 +35,15 @@ describe('Varieties metadata', () => {
         },
       });
       expect(metadata.openGraph?.url).toBe(url);
+      expect(metadata.openGraph?.images).toEqual([
+        {
+          url: 'https://toddagriscience.com/opengraph-image.png',
+          alt: 'Todd',
+        },
+      ]);
+      expect(metadata.twitter?.images).toEqual([
+        'https://toddagriscience.com/opengraph-image.png',
+      ]);
     }
   );
 });
