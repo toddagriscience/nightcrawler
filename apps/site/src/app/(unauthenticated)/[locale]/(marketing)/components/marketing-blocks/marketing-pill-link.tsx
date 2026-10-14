@@ -1,14 +1,16 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { PAGE_HEADER_BUTTON_CLASSNAME } from '@/components/common/page-header/page-header';
-import { Button } from '@/components/ui';
+import {
+  OutlinePillButton,
+  OUTLINE_PILL_BUTTON_CLASSNAME,
+} from '@/components/common/outline-pill-button/outline-pill-button';
 import { Link } from '@/i18n/config';
 import { isOutboundHref, toSafeHref } from '@/lib/sanity/safe-href';
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
 /** Tailwind classes shared by outline pill CTAs across marketing surfaces */
-export const MARKETING_PILL_LINK_CLASSNAME = PAGE_HEADER_BUTTON_CLASSNAME;
+export const MARKETING_PILL_LINK_CLASSNAME = OUTLINE_PILL_BUTTON_CLASSNAME;
 
 /** Props for {@link MarketingPillLink} */
 export interface MarketingPillLinkProps {
@@ -36,33 +38,33 @@ export function MarketingPillLink({
   // Unsafe/empty destination — render the label without a link.
   if (safeHref === null) {
     return (
-      <Button asChild variant="outline" className={combined}>
+      <OutlinePillButton asChild className={combined}>
         <span>{children}</span>
-      </Button>
+      </OutlinePillButton>
     );
   }
 
   if (safeHref.startsWith('#')) {
     return (
-      <Button asChild variant="outline" className={combined}>
+      <OutlinePillButton asChild className={combined}>
         <a href={safeHref}>{children}</a>
-      </Button>
+      </OutlinePillButton>
     );
   }
 
   if (isOutboundHref(safeHref)) {
     return (
-      <Button asChild variant="outline" className={combined}>
+      <OutlinePillButton asChild className={combined}>
         <a href={safeHref} rel="noopener noreferrer" target="_blank">
           {children}
         </a>
-      </Button>
+      </OutlinePillButton>
     );
   }
 
   return (
-    <Button asChild variant="outline" className={combined}>
+    <OutlinePillButton asChild className={combined}>
       <Link href={safeHref}>{children}</Link>
-    </Button>
+    </OutlinePillButton>
   );
 }

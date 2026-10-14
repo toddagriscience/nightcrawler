@@ -3,13 +3,15 @@
 import { Link } from '@/i18n/config';
 import { isOutboundHref, toSafeHref } from '@/lib/sanity/safe-href';
 import { cn } from '@/lib/utils';
-import { Button } from '../../ui';
+import {
+  OutlinePillButton,
+  OUTLINE_PILL_BUTTON_CLASSNAME,
+} from '@/components/common/outline-pill-button/outline-pill-button';
 
 /**
  * Outline pill classes for {@link PageHeader} CTAs (also used by marketing pill links).
  */
-export const PAGE_HEADER_BUTTON_CLASSNAME =
-  'h-[42px] w-fit rounded-full border-[0.75px] border-[#848484] px-[20px] text-sm';
+export const PAGE_HEADER_BUTTON_CLASSNAME = OUTLINE_PILL_BUTTON_CLASSNAME;
 
 /**
  * PageHeader component for displaying a page header
@@ -85,9 +87,8 @@ export default function PageHeader({
       ) : null}
       {button && buttonHref ? (
         <div className="mt-0.5 flex justify-center">
-          <Button
+          <OutlinePillButton
             asChild
-            variant="outline"
             className={cn(PAGE_HEADER_BUTTON_CLASSNAME, button.buttonClassName)}
           >
             {isOutboundHref(buttonHref) ? (
@@ -97,7 +98,7 @@ export default function PageHeader({
             ) : (
               <Link href={buttonHref}>{button.text}</Link>
             )}
-          </Button>
+          </OutlinePillButton>
         </div>
       ) : null}
     </div>
