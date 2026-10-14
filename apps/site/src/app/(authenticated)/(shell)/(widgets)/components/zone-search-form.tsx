@@ -2,8 +2,9 @@
 
 'use client';
 
-import { useState } from 'react';
 import { useSearchPanel } from '@/app/(authenticated)/components/search-panel/search-panel-context';
+import { useState } from 'react';
+import { IrisButton } from '../../../../../components/common/iris-button/iris-button';
 
 /**
  * Zone-scoped search form. Opens the right-side search panel and runs an
@@ -18,7 +19,7 @@ export function ZoneSearchForm() {
   return (
     <form
       role="search"
-      className="mt-4 flex gap-2"
+      className="mt-4 flex items-center gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         const trimmed = query.trim();
@@ -33,14 +34,9 @@ export function ZoneSearchForm() {
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="e.g. What does this mean for my tomatoes?"
-        className="border-foreground/15 text-foreground flex-1 rounded-md border bg-transparent px-3 py-2 text-sm"
+        className="border-foreground/15 text-foreground flex-1 rounded-md border bg-transparent px-3 py-1.5 text-sm focus-visible:outline-none"
       />
-      <button
-        type="submit"
-        className="border-foreground/15 text-foreground hover:bg-foreground/5 rounded-md border px-5 py-2 text-sm"
-      >
-        Ask
-      </button>
+      <IrisButton type="submit">Ask</IrisButton>
     </form>
   );
 }

@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import type { ZoneObservation } from './observations/types';
+import { ZoneObservations } from './observations/zone-observations';
 import type { PhRangeModel } from './to-ph-range';
 import { ZONE_SECTION_CLASS, ZoneInsight } from './zone-insight';
 import {
@@ -12,12 +14,16 @@ import { ZoneSearchForm } from './zone-search-form';
 /** Placeholder until advisors are modeled in the DB. */
 const LEAD_ADVISOR_PLACEHOLDER = 'Not assigned';
 
-const HEADING_CLASS = 'text-sm font-medium text-foreground';
+const HEADING_CLASS = 'text-sm text-foreground/50';
 
 /** Props for the active (has-analysis) zone dashboard. */
 export interface ZoneActiveTemplateProps {
+  /** Selected management zone id. */
+  zoneId: number;
   /** Selected management zone name. */
   zoneName: string;
+  /** Observations saved for this zone, oldest day first. */
+  observations: ZoneObservation[];
   /** Formatted latest sample date. */
   sampleLabel: string;
   /** Formatted next scheduled sample date. */
@@ -41,7 +47,9 @@ export interface ZoneActiveTemplateProps {
  * @returns {React.ReactNode} The active zone layout.
  */
 export function ZoneActiveTemplate({
+  zoneId,
   zoneName,
+  observations,
   sampleLabel,
   nextLabel,
   charts,
@@ -82,13 +90,11 @@ export function ZoneActiveTemplate({
 
       <section className={ZONE_SECTION_CLASS}>
         <p className={HEADING_CLASS}>Observations</p>
-        <button
-          type="button"
-          disabled
-          className="border-foreground/20 text-foreground/50 mt-4 w-full rounded-md border border-dashed px-4 py-3 text-left text-sm"
-        >
-          + Add an observation to {zoneName}
-        </button>
+        <ZoneObservations
+          zoneId={zoneId}
+          zoneName={zoneName}
+          observations={observations}
+        />
       </section>
 
       <section className={ZONE_SECTION_CLASS}>

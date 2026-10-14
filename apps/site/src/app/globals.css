@@ -60,6 +60,8 @@
   --color-input: var(--input);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --font-sans: var(--font-neue-haas), Arial, sans-serif;
   --font-mono: var(--font-neue-haas), 'Courier New', monospace;
 }
