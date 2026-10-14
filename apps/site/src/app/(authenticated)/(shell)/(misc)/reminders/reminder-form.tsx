@@ -2,6 +2,7 @@
 
 'use client';
 
+import { IrisButton } from '@/components/common/iris-button/iris-button';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -323,22 +324,17 @@ export function ReminderForm({
 
       <div className="flex justify-end gap-2">
         {onCancel && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            className="border-foreground/15"
-          >
+          <IrisButton type="button" variant="outline" onClick={onCancel}>
             Cancel
-          </Button>
+          </IrisButton>
         )}
-        <Button type="submit" disabled={isSubmitting}>
+        <IrisButton type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? 'Saving...'
             : mode === 'edit'
               ? 'Save Changes'
               : 'Create Reminder'}
-        </Button>
+        </IrisButton>
       </div>
     </form>
   );

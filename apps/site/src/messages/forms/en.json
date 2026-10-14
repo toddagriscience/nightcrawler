@@ -2,8 +2,9 @@
   "formsPage": {
     "submit": "Submit request",
     "submitError": "Unable to submit your request. Please try again.",
-    "defaultSuccessTitle": "Request received",
-    "defaultSuccessMessage": "Thank you. Our team will review your request and follow up by email.",
+    "defaultSuccessTitle": "Submission successful",
+    "defaultSuccessMessage": "Thank you for submitting your request. You should hear from us within 1-3 business days.",
+    "successResearchLink": "View our research",
     "retentionTitle": "Data retention",
     "retentionLabel": "You may keep my information on file for future reference if my application is not approved.",
     "retentionDescription": "If unchecked, your information will be deleted after a decision is made.",

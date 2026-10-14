@@ -207,6 +207,15 @@ export async function ensureApprovedApplicantAuthSession(
     throw new Error(createError.message);
   }
 
+  if (
+    existingUser.user_metadata.onboarding_applicant === true &&
+    existingUser.user_metadata.onboarding_password_set === true
+  ) {
+    throw new Error(
+      'Your password has already been set. Sign in with that password to continue onboarding.'
+    );
+  }
+
   const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
     existingUser.id,
     {

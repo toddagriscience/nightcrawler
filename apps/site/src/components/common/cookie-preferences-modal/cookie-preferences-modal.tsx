@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Dialog,
@@ -33,6 +33,7 @@ export default function CookiePreferencesModal({
   const t = useTranslations('cookiePreferences');
   const { isCapturing, applyPostHogPreference } = useCookiePreferences();
   const [isOpen, setIsOpen] = useState(false);
+  const optOutId = useId();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -77,11 +78,14 @@ export default function CookiePreferencesModal({
             </Link>
             <div className="flex flex-row items-center gap-2">
               <Switch
+                id={optOutId}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-500"
-                checked={isCapturing}
-                onCheckedChange={(checked) => applyPostHogPreference(checked)}
+                checked={!isCapturing}
+                onCheckedChange={(checked) => applyPostHogPreference(!checked)}
               />
-              <Label>Do not sell or share my personal information</Label>
+              <Label htmlFor={optOutId}>
+                Do not sell or share my personal information
+              </Label>
             </div>
             <Button
               variant="outline"

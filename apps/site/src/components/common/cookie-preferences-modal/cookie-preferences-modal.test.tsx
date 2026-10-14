@@ -73,7 +73,7 @@ describe('CookiePreferencesModal', () => {
 
     await waitFor(() => {
       const uiSwitch = screen.getByRole('switch');
-      expect(uiSwitch).toBeChecked();
+      expect(uiSwitch).not.toBeChecked();
     });
   });
 
@@ -90,7 +90,7 @@ describe('CookiePreferencesModal', () => {
 
     await waitFor(() => {
       const uiSwitch = screen.getByRole('switch');
-      expect(uiSwitch).not.toBeChecked();
+      expect(uiSwitch).toBeChecked();
     });
   });
 
@@ -120,7 +120,9 @@ describe('CookiePreferencesModal', () => {
     });
 
     // Toggle switch to disabled
-    const uiSwitch = screen.getByRole('switch');
+    const uiSwitch = screen.getByRole('switch', {
+      name: /do not sell or share/i,
+    });
     await user.click(uiSwitch);
 
     // Click save button
@@ -134,6 +136,22 @@ describe('CookiePreferencesModal', () => {
       expect(optOutCapturingMock).not.toHaveBeenCalled();
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
+  });
+  test('opts out when the labeled privacy switch is checked', async () => {
+    getExplicitConsentStatusMock.mockReturnValue('granted');
+    const user = userEvent.setup();
+    renderWithNextIntl(<CookiePreferencesModal />);
+    await user.click(screen.getByRole('button', { name: /cookie settings/i }));
+    const optOutSwitch = screen.getByRole('switch', {
+      name: /do not sell or share my personal information/i,
+    });
+    expect(optOutSwitch).not.toBeChecked();
+    await user.click(
+      screen.getByText('Do not sell or share my personal information')
+    );
+    expect(optOutSwitch).toBeChecked();
+    expect(optOutCapturingMock).toHaveBeenCalled();
+    expect(optInCapturingMock).not.toHaveBeenCalled();
   });
   test('cancels and closes modal when cancel button is clicked', async () => {
     const user = userEvent.setup();
