@@ -180,7 +180,7 @@ export function createLocalizedMetadata(
       ...defaultMetadata.openGraph,
       ...metadata.openGraph,
       url: getCanonicalUrl(path, locale),
-      locale,
+      locale: locale === 'es' ? 'es_US' : 'en_US',
     },
   };
 }

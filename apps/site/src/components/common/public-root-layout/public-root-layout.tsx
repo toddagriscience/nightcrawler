@@ -64,21 +64,29 @@ export default function PublicRootLayout({
 }) {
   return (
     <html lang={locale === 'es' ? 'es' : 'en'}>
+      {/* eslint-disable-next-line @next/next/no-head-element -- The Metadata API cannot emit native JSON-LD script tags. */}
+      <head>
+        {/** JSON-LD is static site data; keep it in the crawler-visible head. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteStructuredData).replace(
+              /</g,
+              '\\u003c'
+            ),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData).replace(
+              /</g,
+              '\\u003c'
+            ),
+          }}
+        />
+      </head>
       <body className={fontVariables}>
-        {/** Do not dangerously set inner HTML for any user-inputted values. */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(webSiteStructuredData),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationStructuredData),
-          }}
-        />
-
         <PostHogProvider>
           <ThemeProvider>
             <TooltipProvider delayDuration={0} skipDelayDuration={0}>

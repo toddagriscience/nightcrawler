@@ -19,6 +19,7 @@
     "build": "next build",
     "start": "next start",
     "verify:routes": "bun scripts/verify-public-routes.ts",
+    "verify:metadata": "bun scripts/verify-public-metadata.ts",
     "lint": "eslint .",
     "prelint:fix": "tsx ./scripts/prep-for-license.ts",
     "lint:fix": "bun run prelint:fix && eslint . --fix && bun run format",

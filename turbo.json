@@ -18,7 +18,8 @@
         ".next/**",
         "!.next/cache/**",
         "storybook-static/**"
-      ]
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "dev": {
       "cache": false,

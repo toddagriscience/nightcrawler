@@ -1,23 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { createLocalizedMetadata } from '@/lib/metadata';
+import { createPublicPageMetadata } from '@/lib/public-page-metadata';
+import type { Metadata } from 'next';
 
-import { Metadata } from 'next';
-
-const pageMetadata: Metadata = {
-  title: 'Research',
-};
-
-/** Metadata URLs for the route's actual language and final public path. */
+/** Complete translated metadata for the final public page URL. */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return createLocalizedMetadata(pageMetadata, '/research', locale);
+  return createPublicPageMetadata('research', locale);
 }
 
+/** Preserves the page's presentation around its children. */
 export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

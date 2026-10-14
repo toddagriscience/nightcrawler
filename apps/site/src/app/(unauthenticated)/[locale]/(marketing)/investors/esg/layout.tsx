@@ -1,19 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { createLocalizedMetadata } from '@/lib/metadata';
+import { createPublicPageMetadata } from '@/lib/public-page-metadata';
 import type { Metadata } from 'next';
 
-/** Final URLs for the translated ESG page. */
+/** Complete translated metadata for the final public page URL. */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return createLocalizedMetadata({}, '/investors/esg', locale);
+  return createPublicPageMetadata('esg', locale);
 }
 
-/** Keeps the investor layout around the ESG page. */
+/** Preserves the page's presentation around its children. */
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

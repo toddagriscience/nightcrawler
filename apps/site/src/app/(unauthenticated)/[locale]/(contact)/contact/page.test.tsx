@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { notFound } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { describe, expect, test, vitest } from 'vitest';
-import Contact, { metadata } from './page';
+import Contact from './page';
 
 vitest.mock('@/lib/sanity/forms', () => ({
   getFormBySlug: vitest.fn(),
@@ -79,9 +79,5 @@ describe('Contact page', () => {
     await Contact();
 
     expect(notFound).toHaveBeenCalled();
-  });
-
-  test('sets contact page metadata', () => {
-    expect(metadata).toEqual({ title: 'Contact' });
   });
 });

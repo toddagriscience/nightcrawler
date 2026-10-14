@@ -139,6 +139,8 @@ Run these from `apps/site` — they do not exist at the repository root.
 - `bun run validate` — `format:check` → `ci`
 - `bun run lint:fix` — applies license headers, ESLint `--fix`, then formats
 - `bun run test:watch` / `bun run test:coverage`
+- `bun run verify:metadata <base-url> [canonical-origin]` — raw HTML metadata checks
+  for a browser, Googlebot, Bingbot, and OAI-SearchBot against a production server
 - `bun run verify:routes <base-url>` — HTTP checks against a running production
   server for locale canonicals, missing CMS resources, and XML sitemaps
 - `bun run storybook` — component explorer on port 6006
@@ -188,3 +190,15 @@ the matching JSON file to every namespace directory.
 Global styles and CSS variables live in `src/app/globals.css`. Marketing and
 platform routes read their background from `--background` and
 `--background-platform` respectively.
+
+## Public metadata
+
+`htmlLimitedBots: /.*/` disables metadata streaming so every caller receives
+the final metadata in the HTML head. Core public pages use
+`src/lib/public-page-metadata.ts` and translated copy in `metadata.pages` within
+the common message files. Search and social titles/descriptions use the same
+route-specific copy. Global WebSite and Organization JSON-LD stays in the root
+head; the regular Metadata API owns title, meta, and canonical/link elements.
+
+Build cache inputs include workspace `.env*` files so cached bundles cannot
+reuse a previous environment’s compiled canonical origin or public configuration.

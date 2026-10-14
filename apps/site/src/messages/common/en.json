@@ -13,6 +13,76 @@
     }
   },
   "metadata": {
-    "description": "Todd Agriscience is a first-generation generative agriculture firm."
+    "description": "Todd Agriscience is a first-generation generative agriculture firm.",
+    "pages": {
+      "home": {
+        "title": "Todd | Sustainable Agriculture",
+        "description": "Todd advances sustainable agriculture through research, farm management and crop genetics."
+      },
+      "research": {
+        "title": "Research | Todd",
+        "description": "Explore Todd’s approach to soil health, crop production and farm management for sustainable agriculture."
+      },
+      "researchIndex": {
+        "title": "Research Index | Todd",
+        "description": "Read Todd’s research publications, experiments and technical insights on sustainable agriculture."
+      },
+      "news": {
+        "title": "News | Todd",
+        "description": "Read the latest Todd Agriscience announcements, company updates and publications."
+      },
+      "careers": {
+        "title": "Careers | Todd",
+        "description": "Explore roles at Todd and join our scientists, engineers and builders working on sustainable agriculture."
+      },
+      "careerSearch": {
+        "title": "Open Roles | Todd",
+        "description": "Browse current opportunities across Todd’s research, engineering and other teams."
+      },
+      "about": {
+        "title": "About | Todd",
+        "description": "Learn about Todd’s mission, approach and partnerships to build sustainable farms and support thriving communities."
+      },
+      "contact": {
+        "title": "Contact | Todd",
+        "description": "Get in touch with Todd Agriscience about research, farm services and general questions."
+      },
+      "investors": {
+        "title": "Investors | Todd",
+        "description": "Learn about investment opportunities, governance and leadership at Todd Agriscience."
+      },
+      "esg": {
+        "title": "Environmental, Social and Governance | Todd Investors",
+        "description": "Explore Todd’s environmental, social and governance commitments to nature, employees, partners and stakeholders."
+      },
+      "brand": {
+        "title": "Brand Resources | Todd",
+        "description": "Access Todd Agriscience’s wordmarks, visual identity and brand guidelines."
+      },
+      "legal": {
+        "title": "Legal | Todd",
+        "description": "Read Todd Agriscience’s legal notices and disclosures."
+      },
+      "privacy": {
+        "title": "Privacy Policy | Todd",
+        "description": "Learn how Todd Agriscience handles personal information and protects your privacy."
+      },
+      "terms": {
+        "title": "Terms of Use | Todd",
+        "description": "Read the terms that govern your use of Todd Agriscience’s website and services."
+      },
+      "accessibility": {
+        "title": "Accessibility | Todd",
+        "description": "Read Todd Agriscience’s accessibility commitments and learn how to request assistance."
+      },
+      "login": {
+        "title": "Login | Todd",
+        "description": "Sign in to your Todd account to manage your farm and access the Iris platform."
+      },
+      "forgotPassword": {
+        "title": "Reset Password | Todd",
+        "description": "Reset the password for your Todd account."
+      }
+    }
   }
 }

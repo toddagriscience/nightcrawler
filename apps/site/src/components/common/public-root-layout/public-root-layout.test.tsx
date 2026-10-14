@@ -25,7 +25,20 @@ describe('public document language', () => {
       );
       expect(html).toContain(`<html lang="${locale}">`);
       expect(html).toContain('<main>Content</main>');
-      expect(html).toContain('application/ld+json');
+      const document = new DOMParser().parseFromString(html, 'text/html');
+      const scripts = document.head.querySelectorAll(
+        'script[type="application/ld+json"]'
+      );
+      expect(scripts).toHaveLength(2);
+      expect(
+        document.body.querySelectorAll('script[type="application/ld+json"]')
+      ).toHaveLength(0);
+      expect(
+        Array.from(
+          scripts,
+          (script) => JSON.parse(script.textContent ?? '{}')['@type']
+        )
+      ).toEqual(['WebSite', 'Organization']);
     }
   );
 });
