@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { OutlinePillButton } from '@/components/common/outline-pill-button/outline-pill-button';
 import { CURSOR_LABEL_ATTRIBUTE } from '@/components/common/cursor-follower/constants';
 import { CursorFollower } from '@/components/common/cursor-follower/cursor-follower';
 import PageHeader from '@/components/common/page-header/page-header';
@@ -379,13 +380,11 @@ export function ArticleIndex({
         {/* View more */}
         {hasMore ? (
           <div className="mt-12 flex justify-center">
-            <Link
-              href={viewMoreHref}
-              scroll={false}
-              className="rounded-[50px] border-[0.75px] border-[#848484] px-7 py-2.5 text-[14px] leading-none text-[#181818] transition-colors hover:bg-black/5"
-            >
-              {t('viewMore')}
-            </Link>
+            <OutlinePillButton asChild>
+              <Link href={viewMoreHref} scroll={false}>
+                {t('viewMore')}
+              </Link>
+            </OutlinePillButton>
           </div>
         ) : null}
       </div>
