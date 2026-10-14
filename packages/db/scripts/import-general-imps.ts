@@ -26,6 +26,7 @@ import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { count, eq, inArray, notInArray } from 'drizzle-orm';
 import { generalImp, knowledgeArticle } from '../src/schema';
+import { generalImpEmbeddingText as embedText } from '../src/utils/general-imp-content';
 import { createTargetDb, resolveImporterTarget } from './lib/db-target';
 import { embed, getArg, hash, parseCsv, slugify } from './lib/importer-lib';
 import { fetchImpSheetRows } from './lib/sheets-source';
@@ -95,13 +96,6 @@ function classify(rows: string[][]): ParsedImp[] {
   return imps;
 }
 
-/** Text embedded and fingerprinted for change-detection on re-import. */
-function embedText(imp: ParsedImp): string {
-  return [imp.title ?? '', imp.tags.join(' '), imp.content]
-    .filter(Boolean)
-    .join('\n');
-}
-
 // ---- main -----------------------------------------------------------------
 async function main() {
   // Validate the DB target up front so a misconfigured environment fails fast
@@ -115,15 +109,52 @@ async function main() {
   const imps = classify(rows);
   const sourceLabel = SOURCE === 'sheet' ? 'Google Sheet' : CSV_PATH;
 
+  // Slug is the stable identity used to match a sheet row to its existing DB
+  // row on re-import, so it must not depend on row order. First pass counts
+  // how often each base slug occurs across the whole sheet; a base slug that
+  // occurs once is used bare, while EVERY row sharing a duplicated base slug
+  // gets a suffix hashed from its own content (no first-row "winner" claims
+  // the bare slug, so reordering rows can never swap DB identities). The
+  // -2/-3 fallback only fires for the pathological case of duplicated rows
+  // with identical content (and therefore identical hashes).
+  const baseSlugOf = (imp: ParsedImp): string =>
+    slugify(imp.title ?? imp.tags[0] ?? 'imp') || 'imp';
+  const baseSlugCounts = new Map<string, number>();
+  for (const imp of imps) {
+    const base = baseSlugOf(imp);
+    baseSlugCounts.set(base, (baseSlugCounts.get(base) ?? 0) + 1);
+  }
+  const usedSlugs = new Set<string>();
+  const stableSlug = (base: string, seed: string): string => {
+    if ((baseSlugCounts.get(base) ?? 0) <= 1) {
+      usedSlugs.add(base);
+      return base;
+    }
+    const suffix = hash(seed).slice(0, 8);
+    let s = `${base}-${suffix}`;
+    let n = 2;
+    while (usedSlugs.has(s)) {
+      s = `${base}-${suffix}-${n}`;
+      n += 1;
+    }
+    usedSlugs.add(s);
+    return s;
+  };
+
+  const planned = imps.map((imp) => {
+    const embedInput = embedText(imp);
+    return { imp, embedInput, slug: stableSlug(baseSlugOf(imp), embedInput) };
+  });
+
   console.log(`\nParsed ${sourceLabel} (target: ${target.env})`);
 
   console.log(`  IMPs:         ${imps.length}`);
   console.log(`  With trigger: ${imps.filter((i) => i.triggerRaw).length}`);
   console.log(`  With title:   ${imps.filter((i) => i.title).length}`);
   console.log('\n  Sample (first 5):');
-  for (const imp of imps.slice(0, 5)) {
+  for (const { imp, slug } of planned.slice(0, 5)) {
     console.log(
-      `    [${imp.title ?? '(no title)'}] tags=${JSON.stringify(imp.tags)} ` +
+      `    slug=${slug} [${imp.title ?? '(no title)'}] tags=${JSON.stringify(imp.tags)} ` +
         `trigger=${imp.triggerRaw ?? '(always)'} — ${imp.content.slice(0, 60)}...`
     );
   }
@@ -145,44 +176,30 @@ async function main() {
 
   const { db, close } = createTargetDb(target);
   try {
-    // Slug is the stable identity used to match a sheet row to its existing DB
-    // row on re-import, so it must not depend on row order. First pass counts
-    // how often each base slug occurs across the whole sheet; a base slug that
-    // occurs once is used bare, while EVERY row sharing a duplicated base slug
-    // gets a suffix hashed from its own content (no first-row "winner" claims
-    // the bare slug, so reordering rows can never swap DB identities). The
-    // -2/-3 fallback only fires for the pathological case of duplicated rows
-    // with identical content (and therefore identical hashes).
-    const baseSlugOf = (imp: ParsedImp): string =>
-      slugify(imp.title ?? imp.tags[0] ?? 'imp') || 'imp';
-    const baseSlugCounts = new Map<string, number>();
-    for (const imp of imps) {
-      const base = baseSlugOf(imp);
-      baseSlugCounts.set(base, (baseSlugCounts.get(base) ?? 0) + 1);
+    const keptSlugs = Array.from(usedSlugs);
+    const stale = await db
+      .select({ kId: generalImp.knowledgeArticleId, slug: generalImp.slug })
+      .from(generalImp)
+      .where(notInArray(generalImp.slug, keptSlugs));
+    const [{ n: existingCount }] = await db
+      .select({ n: count() })
+      .from(generalImp);
+    // Refuse a truncated source before any upsert or embedding request.
+    if (
+      !ALLOW_LARGE_PRUNE &&
+      existingCount > 0 &&
+      stale.length > existingCount * MAX_PRUNE_FRACTION
+    ) {
+      throw new Error(
+        `Refusing to prune ${stale.length} of ${existingCount} rows ` +
+          `(> ${MAX_PRUNE_FRACTION * 100}% of the target) — the CSV may be truncated. ` +
+          'Re-run with --allow-large-prune if this is intentional.'
+      );
     }
-    const usedSlugs = new Set<string>();
-    const stableSlug = (base: string, seed: string): string => {
-      if ((baseSlugCounts.get(base) ?? 0) <= 1) {
-        usedSlugs.add(base);
-        return base;
-      }
-      const suffix = hash(seed).slice(0, 8);
-      let s = `${base}-${suffix}`;
-      let n = 2;
-      while (usedSlugs.has(s)) {
-        s = `${base}-${suffix}-${n}`;
-        n += 1;
-      }
-      usedSlugs.add(s);
-      return s;
-    };
 
     let written = 0;
     let embeddings = 0;
-
-    for (const imp of imps) {
-      const embedInput = embedText(imp);
-      const slug = stableSlug(baseSlugOf(imp), embedInput);
+    for (const { imp, embedInput, slug } of planned) {
       const contentHash = hash(embedInput);
       const fields = {
         title: imp.title,
@@ -235,41 +252,16 @@ async function main() {
 
     // ---- prune stale rows (the sheet is the source of truth) ----------------
     let pruned = 0;
-    const keptSlugs = Array.from(usedSlugs);
-    if (keptSlugs.length > 0) {
-      const stale = await db
-        .select({ kId: generalImp.knowledgeArticleId, slug: generalImp.slug })
-        .from(generalImp)
-        .where(notInArray(generalImp.slug, keptSlugs));
-      // Relative safety net against a truncated CSV (see MAX_PRUNE_FRACTION).
-      const [{ n: existing }] = await db
-        .select({ n: count() })
-        .from(generalImp);
-      if (
-        !ALLOW_LARGE_PRUNE &&
-        existing > 0 &&
-        stale.length > existing * MAX_PRUNE_FRACTION
-      ) {
-        throw new Error(
-          `Refusing to prune ${stale.length} of ${existing} rows ` +
-            `(> ${MAX_PRUNE_FRACTION * 100}% of the target) — the CSV may be ` +
-            'truncated. Re-run with --allow-large-prune if this is intentional.'
-        );
-      }
-
-      if (stale.length > 0) {
-        console.log(
-          `\nPruning ${stale.length} stale row(s) from ${target.env}:`
-        );
-        for (const r of stale) console.log(`  - ${r.slug}`);
-        await db.delete(knowledgeArticle).where(
-          inArray(
-            knowledgeArticle.id,
-            stale.map((r) => r.kId)
-          )
-        );
-        pruned = stale.length;
-      }
+    if (stale.length > 0) {
+      console.log(`\nPruning ${stale.length} stale row(s) from ${target.env}:`);
+      for (const r of stale) console.log(`  - ${r.slug}`);
+      await db.delete(knowledgeArticle).where(
+        inArray(
+          knowledgeArticle.id,
+          stale.map((r) => r.kId)
+        )
+      );
+      pruned = stale.length;
     }
 
     console.log(

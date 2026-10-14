@@ -33,7 +33,7 @@ Only available from within `packages/db`:
 
 - `bun run db:add-seed-product` - Add a seed product
 - `bun run db:import-varieties` - Import the variety inventory (see below)
-- `bun run db:import-imps` - Import general integrated management plans
+- `bun run db:import-imps` - Import general integrated management practices ([operator guide](docs/general-imps.md))
 - `bun run db:migrate:remote` - Apply migrations to a remote database
 
 ### Quality

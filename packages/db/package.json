@@ -16,7 +16,8 @@
     "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts",
     "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts",
     "./utils/iris-access-allowlists-manifest": "./src/utils/iris-access-allowlists-manifest.ts",
-    "./utils/preview-form-submission-hydration": "./src/utils/preview-form-submission-hydration.ts"
+    "./utils/preview-form-submission-hydration": "./src/utils/preview-form-submission-hydration.ts",
+    "./utils/general-imp-content": "./src/utils/general-imp-content.ts"
   },
   "scripts": {
     "lint": "eslint .",

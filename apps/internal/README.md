@@ -26,3 +26,7 @@ This workspace defines no `test` script, so `bun run test` at the root does not 
 ## Rendering note
 
 All dashboard routes are forced to `dynamic` rendering on purpose. This avoids Turborepo/Vercel build-time database fetching issues and keeps the internal site loading data at request time instead of during static generation.
+
+## General IMP catalog
+
+**IMPs → Open general IMP catalog** displays the spreadsheet-backed practices separately from farm-specific plans. Active staff can compare low/ideal/high ranges, edit or create a practice with synchronized search embeddings, and export a review snapshot. Reconcile dashboard edits to the source spreadsheet before importing again. See the [operator guide](../../packages/db/docs/general-imps.md) for CSV/Google Sheet imports, target guards and recovery.

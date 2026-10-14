@@ -5,6 +5,7 @@
  */
 export const dynamic = 'force-dynamic';
 
+import Link from 'next/link';
 import { getImps } from './actions';
 import ImpsClient from './components/imps-client';
 
@@ -15,5 +16,15 @@ import ImpsClient from './components/imps-client';
 export default async function ImpsPage() {
   const initialImps = await getImps();
 
-  return <ImpsClient initialImps={initialImps} />;
+  return (
+    <div className="space-y-6">
+      <Link
+        href="/imps/catalog"
+        className="inline-flex underline underline-offset-4"
+      >
+        Open general IMP catalog (spreadsheet imports)
+      </Link>
+      <ImpsClient initialImps={initialImps} />
+    </div>
+  );
 }
