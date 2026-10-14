@@ -23,6 +23,34 @@ beforeEach(() => {
 });
 
 describe('InquiriesList', () => {
+  it('shows the attached zone and original questions independently of the edited message, escaping both', () => {
+    const { container } = render(
+      <InquiriesList
+        inquiries={[
+          {
+            ...inquiry,
+            message: 'Additional client details',
+            inferenceContext: {
+              questions: ['Original question', '<script>question()</script>'],
+              managementZoneId: 12,
+              managementZoneName: 'North field',
+            },
+          },
+        ]}
+        handleAction={vi.fn()}
+      />
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Original inference questions' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Management zone: North field (zone 12)')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Original question')).toBeInTheDocument();
+    expect(screen.getByText('<script>question()</script>')).toBeInTheDocument();
+    expect(screen.getByText('Additional client details')).toBeInTheDocument();
+    expect(container.querySelector('script')).toBeNull();
+  });
   it('shows sender and farm context while rendering client text safely', () => {
     const { container } = render(
       <InquiriesList inquiries={[inquiry]} handleAction={vi.fn()} />

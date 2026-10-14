@@ -22,6 +22,10 @@ interface SearchPanelValue {
   modalOpen: boolean;
   /** Active inference-search query shown in the results panel. */
   activeQuery: string;
+  /** Original and follow-up questions for the current search conversation. */
+  questions: string[];
+  /** Zone captured when this conversation began, retained across follow-ups. */
+  activeManagementZoneId: number | undefined;
   /** Results for the active query. */
   results: SearchResult[];
   /** Whether a search request is in flight. */
@@ -40,7 +44,11 @@ interface SearchPanelValue {
    * Runs a new inference search, opens the results panel, and replaces any
    * prior query/results.
    */
-  submitSearch: (query: string) => void;
+  submitSearch: (query: string, managementZoneId?: number) => void;
+  /** Adds a follow-up while preserving the original questions and search zone. */
+  submitFollowUp: (query: string) => void;
+  /** Registers the zone currently rendered on the dashboard. */
+  setCurrentZone: (zoneId: number | undefined) => void;
 }
 
 const SearchPanelContext = createContext<SearchPanelValue | null>(null);
@@ -63,6 +71,11 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeQuery, setActiveQuery] = useState('');
+  const [questions, setQuestions] = useState<string[]>([]);
+  const [currentZoneId, setCurrentZone] = useState<number | undefined>();
+  const [activeManagementZoneId, setActiveManagementZoneId] = useState<
+    number | undefined
+  >();
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState(false);
@@ -77,10 +90,27 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
   const expandPanel = useCallback(() => setOpen(true), []);
   const collapsePanel = useCallback(() => setOpen(false), []);
 
-  const submitSearch = useCallback((query: string) => {
+  const submitSearch = useCallback(
+    (query: string, managementZoneId = currentZoneId) => {
+      const trimmed = query.trim();
+      if (!trimmed) return;
+      setActiveQuery(trimmed);
+      setQuestions([trimmed]);
+      setActiveManagementZoneId(managementZoneId);
+      setResults([]);
+      setSearchError(false);
+      setOpen(true);
+      setModalOpen(false);
+      setIsSearching(true);
+    },
+    [currentZoneId]
+  );
+
+  const submitFollowUp = useCallback((query: string) => {
     const trimmed = query.trim();
     if (!trimmed) return;
     setActiveQuery(trimmed);
+    setQuestions((current) => [...current, trimmed]);
     setResults([]);
     setSearchError(false);
     setOpen(true);
@@ -141,6 +171,8 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
       open,
       modalOpen,
       activeQuery,
+      questions,
+      activeManagementZoneId,
       results,
       isSearching,
       searchError,
@@ -149,11 +181,15 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
       expandPanel,
       collapsePanel,
       submitSearch,
+      submitFollowUp,
+      setCurrentZone,
     }),
     [
       open,
       modalOpen,
       activeQuery,
+      questions,
+      activeManagementZoneId,
       results,
       isSearching,
       searchError,
@@ -162,6 +198,7 @@ export function SearchPanelProvider({ children }: { children: ReactNode }) {
       expandPanel,
       collapsePanel,
       submitSearch,
+      submitFollowUp,
     ]
   );
 

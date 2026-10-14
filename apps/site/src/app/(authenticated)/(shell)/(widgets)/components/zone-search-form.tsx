@@ -12,7 +12,7 @@ import { IrisButton } from '../../../../../components/common/iris-button/iris-bu
  *
  * @returns The search input and submit button
  */
-export function ZoneSearchForm() {
+export function ZoneSearchForm({ zoneId }: { zoneId: number }) {
   const { submitSearch } = useSearchPanel();
   const [query, setQuery] = useState('');
 
@@ -24,13 +24,14 @@ export function ZoneSearchForm() {
         event.preventDefault();
         const trimmed = query.trim();
         if (!trimmed) return;
-        submitSearch(trimmed);
+        submitSearch(trimmed, zoneId);
       }}
     >
       <input
         id="zone-search"
         name="q"
         type="search"
+        maxLength={1000}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="e.g. What does this mean for my tomatoes?"

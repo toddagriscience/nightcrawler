@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Link from 'next/link';
 import { contactSchema } from '../schema';
 import type { ContactInput, ContactResult } from '../types';
 
@@ -16,6 +17,10 @@ interface ContactFormProps {
   senderName: string;
   senderEmail: string;
   farmName: string;
+  /** Editable starting values from an authorized inference draft. */
+  initialValues?: ContactInput;
+  /** Start a fresh contact request after sending a single-use inference draft. */
+  anotherMessageHref?: string;
   /** Authorized server action, or an isolated preview/test replacement. */
   submitAction: (input: ContactInput) => Promise<ContactResult>;
 }
@@ -25,13 +30,15 @@ export function ContactForm({
   senderName,
   senderEmail,
   farmName,
+  initialValues,
+  anotherMessageHref,
   submitAction,
 }: ContactFormProps) {
   const fieldId = useId();
   const [requestId, setRequestId] = useState<number | null>(null);
   const form = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
-    defaultValues: { subject: '', message: '' },
+    defaultValues: initialValues ?? { subject: '', message: '' },
   });
   const { errors, isSubmitting } = form.formState;
 
@@ -42,7 +49,7 @@ export function ContactForm({
         form.setError('root', { message: result.message });
         return;
       }
-      form.reset();
+      form.reset({ subject: '', message: '' });
       setRequestId(result.id);
     } catch {
       form.setError('root', {
@@ -58,13 +65,19 @@ export function ContactForm({
           Message sent. Your advisor will follow up at {senderEmail}. Your
           request number is {requestId}.
         </p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setRequestId(null)}
-        >
-          Send another message
-        </Button>
+        {anotherMessageHref ? (
+          <Button asChild variant="outline">
+            <Link href={anotherMessageHref}>Send another message</Link>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setRequestId(null)}
+          >
+            Send another message
+          </Button>
+        )}
       </div>
     );
   }

@@ -101,7 +101,7 @@ export function ZoneActiveTemplate({
         <label htmlFor="zone-search" className={HEADING_CLASS}>
           Ask about this zone
         </label>
-        <ZoneSearchForm />
+        <ZoneSearchForm zoneId={zoneId} />
       </section>
     </div>
   );

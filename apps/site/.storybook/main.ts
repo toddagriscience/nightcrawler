@@ -74,6 +74,10 @@ const config: StorybookConfig = {
       // prefix, so the broader '@' must come last or it swallows '@/storybook'
       // and resolves it to a src path that does not exist.
       '@/storybook': path.resolve(rootDir, '.storybook'),
+      // A dynamic server-action import still enters Vite's graph. Keep the
+      // contact action's Node/database dependencies out of browser previews.
+      '@/app/(authenticated)/(shell)/(misc)/support/contact/inference-actions':
+        path.resolve(rootDir, '.storybook/mocks/inference-contact-actions.ts'),
       '@public': path.resolve(rootDir, 'public'),
       '@': path.resolve(rootDir, 'src'),
       'next/font/local': path.resolve(

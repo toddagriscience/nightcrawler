@@ -9,9 +9,12 @@ import { hasCompletedPlatformOnboarding } from '@/lib/utils/platform-onboarding'
 import { hasAcceptedAccountAgreement } from '@/lib/utils/account-agreement';
 import type { AuthenticatedInfo } from '@/lib/types/get-authenticated-info';
 import { db } from '@nightcrawler/db/schema/connection';
-import { formSubmission } from '@nightcrawler/db/schema';
+import { formSubmission, managementZone } from '@nightcrawler/db/schema';
 import { contactSchema } from './schema';
 import type { ContactInput, ContactResult } from './types';
+import { and, eq, gt, isNull, sql } from 'drizzle-orm';
+import { loadInferenceContactContext } from './inference-context';
+import { INFERENCE_CONTACT_LIFETIME_MS } from './inference-schema';
 
 const contactRateLimit = createRateLimiter({
   requests: 5,
@@ -26,7 +29,8 @@ const contactRateLimit = createRateLimiter({
  * @param input - Subject and message from the authenticated contact form
  */
 export async function submitClientContact(
-  input: ContactInput
+  input: ContactInput,
+  contextToken?: string
 ): Promise<ContactResult> {
   let currentUser: AuthenticatedInfo;
   try {
@@ -76,6 +80,63 @@ export async function submitClientContact(
       };
     }
 
+    const context = contextToken
+      ? await loadInferenceContactContext(contextToken)
+      : null;
+    if (contextToken && !context) {
+      return {
+        success: false,
+        message:
+          'Your saved search is no longer available. Start a new search or contact your advisor directly.',
+      };
+    }
+    const answers = {
+      subject: parsed.data.subject,
+      message: parsed.data.message,
+      userId: currentUser.id,
+      senderName: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
+      senderEmail: currentUser.email,
+      ...(context
+        ? {
+            source: 'inference',
+            questions: context.questions,
+            managementZoneId: context.managementZone?.id ?? null,
+            managementZoneName: context.managementZone?.name ?? null,
+          }
+        : {}),
+    };
+    // Promoting a draft is atomic and single-use; an unsent draft stays out of the staff inbox.
+    if (context) {
+      const [request] = await db
+        .update(formSubmission)
+        .set({ formSlug: 'iris-contact', answers, createdAt: sql`now()` })
+        .where(
+          and(
+            eq(formSubmission.id, context.id),
+            eq(formSubmission.formSlug, 'iris-contact-draft'),
+            eq(formSubmission.workflowType, 'generic'),
+            eq(formSubmission.farmId, currentUser.farmId),
+            sql`${formSubmission.answers}->>'userId' = ${String(currentUser.id)}`,
+            sql`${formSubmission.answers}->>'contextToken' = ${context.token}`,
+            gt(
+              formSubmission.createdAt,
+              sql`now() - ${INFERENCE_CONTACT_LIFETIME_MS} * interval '1 millisecond'`
+            ),
+            isNull(formSubmission.deletedAt),
+            context.managementZone
+              ? sql`exists (select 1 from ${managementZone} where ${managementZone.id} = ${context.managementZone.id} and ${managementZone.farmId} = ${currentUser.farmId})`
+              : undefined
+          )
+        )
+        .returning({ id: formSubmission.id });
+      if (!request)
+        return {
+          success: false,
+          message:
+            'Your saved search was already sent or has expired. Please start a new search.',
+        };
+      return { success: true, id: request.id };
+    }
     const [request] = await db
       .insert(formSubmission)
       .values({
@@ -84,13 +145,7 @@ export async function submitClientContact(
         status: null,
         farmId: currentUser.farmId,
         retentionConsent: false,
-        answers: {
-          subject: parsed.data.subject,
-          message: parsed.data.message,
-          userId: currentUser.id,
-          senderName: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
-          senderEmail: currentUser.email,
-        },
+        answers,
       })
       .returning({ id: formSubmission.id });
 

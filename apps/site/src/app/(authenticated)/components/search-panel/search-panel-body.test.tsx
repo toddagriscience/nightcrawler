@@ -6,6 +6,13 @@ import { SearchPanelBody } from './search-panel-body';
 import { SearchPanelProvider, useSearchPanel } from './search-panel-context';
 
 const runInferenceSearch = vi.fn();
+const prepare = vi.hoisted(() => vi.fn());
+const push = vi.hoisted(() => vi.fn());
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
+vi.mock(
+  '@/app/(authenticated)/(shell)/(misc)/support/contact/inference-actions',
+  () => ({ prepareInferenceContact: prepare })
+);
 
 vi.mock('@/app/(authenticated)/actions/inference-search', () => ({
   runInferenceSearch: (query: string) => runInferenceSearch(query),
@@ -46,6 +53,10 @@ function renderBody() {
 
 beforeEach(() => {
   runInferenceSearch.mockResolvedValue(sampleResults);
+  prepare.mockResolvedValue({
+    success: true,
+    url: '/support/contact?context=opaque-id',
+  });
 });
 
 afterEach(() => {
@@ -54,6 +65,45 @@ afterEach(() => {
 });
 
 describe('SearchPanelBody', () => {
+  it('offers advisor handoff when no confident matches exist and preserves original and follow-up questions', async () => {
+    runInferenceSearch.mockResolvedValue([]);
+    renderBody();
+    fireEvent.click(screen.getByRole('button', { name: 'run-search' }));
+    await screen.findByRole('button', { name: 'Contact an advisor' });
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'Follow-up question' }),
+      { target: { value: 'soil pH' } }
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Submit follow-up question' })
+    );
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'Contact an advisor' })
+    );
+    await waitFor(() =>
+      expect(prepare).toHaveBeenCalledWith({
+        questions: ['tomato blight', 'soil pH'],
+        managementZoneId: undefined,
+      })
+    );
+    expect(push).toHaveBeenCalledWith('/support/contact?context=opaque-id');
+  });
+
+  it('also offers the same safe handoff if inference cannot load its results', async () => {
+    runInferenceSearch.mockRejectedValue(new Error('Inference unavailable'));
+    renderBody();
+    fireEvent.click(screen.getByRole('button', { name: 'run-search' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Something went wrong'
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Contact an advisor' }));
+    await waitFor(() =>
+      expect(prepare).toHaveBeenCalledWith({
+        questions: ['tomato blight'],
+        managementZoneId: undefined,
+      })
+    );
+  });
   it('loads and lists inference search results', async () => {
     renderBody();
     fireEvent.click(screen.getByRole('button', { name: 'run-search' }));

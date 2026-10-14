@@ -11,6 +11,12 @@ export interface ClientInquiry {
   senderEmail: string;
   createdAt: Date;
   reviewedAt: Date | null;
+  /** Search context attached only after the client sends their inference draft. */
+  inferenceContext?: {
+    questions: string[];
+    managementZoneId: number | null;
+    managementZoneName: string | null;
+  };
 }
 
 /** Result of marking one client inquiry handled. */
