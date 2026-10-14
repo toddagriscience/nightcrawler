@@ -74,7 +74,8 @@ describe('AboutLanding', () => {
       })
     ).toBeInTheDocument();
 
-    const cta = screen.getByRole('link', { name: /Our research/i });
+    // Exact match: the closing CTA label also contains "our research".
+    const cta = screen.getByRole('link', { name: 'Our research' });
     expect(cta).toBeInTheDocument();
     expect(cta.querySelector('svg')).not.toBeNull();
   });
@@ -93,7 +94,7 @@ describe('AboutLanding', () => {
   it('captions the vision photo without repeating its alt text', () => {
     renderWithNextIntl(<AboutLanding />);
 
-    const caption = screen.getByText('Image: Partner Farm in Grass Valley, CA');
+    const caption = screen.getByText('Image: Family Farm in Grass Valley, CA');
     const image = screen.getByRole('img', { name: /family/i });
 
     // A screen reader announces the two together only when they share a figure.
@@ -144,7 +145,7 @@ describe('AboutLanding', () => {
     renderWithNextIntl(<AboutLanding />);
 
     expect(
-      screen.getByRole('heading', { name: 'Backed by incredible partners' })
+      screen.getByRole('heading', { name: 'Supported by incredible partners' })
     ).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'USDA' })).toBeInTheDocument();
     expect(
@@ -152,11 +153,18 @@ describe('AboutLanding', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders navigation link to What We Do', () => {
+  it('renders the closing call to action pointing at research', () => {
     renderWithNextIntl(<AboutLanding />);
 
     expect(
-      screen.getByRole('link', { name: /What we do/i })
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Join us in shaping the future of agriculture/i,
+      })
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /View careers/i })).toHaveAttribute(
+      'href',
+      '/careers'
+    );
   });
 });

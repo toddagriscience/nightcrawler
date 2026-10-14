@@ -21,4 +21,5 @@ export const messageFiles = [
   'careers',
   'cookie-preferences',
   'forms',
+  'login',
 ];

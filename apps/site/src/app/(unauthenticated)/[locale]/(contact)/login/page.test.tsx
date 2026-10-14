@@ -2,13 +2,31 @@
 
 import { login } from '@/lib/actions/auth';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
+import enMessages from '@/messages/login/en.json';
+import esMessages from '@/messages/login/es.json';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import ResizeObserver from 'resize-observer-polyfill';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vitest } from 'vitest';
 import Login from './page';
+
+// Use real locale/message context; the navigation stub follows as-needed prefixes.
+vitest.unmock('next-intl');
+
+vitest.mock('@/i18n/config', async () => {
+  const { useLocale } = await import('next-intl');
+
+  return {
+    Link: ({ href, ...props }: React.ComponentProps<'a'>) => {
+      const locale = useLocale();
+      const localizedHref = locale === 'en' ? href : `/${locale}${href}`;
+      return <a href={localizedHref} {...props} />;
+    },
+  };
+});
 
 vitest.mock('@/lib/auth-client', () => ({
   login: vitest.fn(),
@@ -39,6 +57,18 @@ vitest.mock('@/components/common', () => ({
 
 global.ResizeObserver = ResizeObserver;
 
+function renderLogin(locale: 'en' | 'es' = 'en') {
+  return render(
+    <NextIntlClientProvider
+      locale={locale}
+      messages={locale === 'en' ? enMessages : esMessages}
+      timeZone="UTC"
+    >
+      <Login />
+    </NextIntlClientProvider>
+  );
+}
+
 describe('login page', () => {
   const mockPush = vitest.fn();
 
@@ -48,7 +78,7 @@ describe('login page', () => {
   });
 
   test('renders login form', () => {
-    render(<Login />);
+    renderLogin();
 
     expect(
       screen.getByRole('heading', { name: 'Login to Todd' })
@@ -58,11 +88,40 @@ describe('login page', () => {
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
 
+  test.each([
+    {
+      locale: 'en' as const,
+      prompt: 'Not yet a Todd Client?',
+      linkName: 'Learn more about Todd Iris',
+      href: '/index/introducing-iris',
+    },
+    {
+      locale: 'es' as const,
+      prompt: '¿Aún no eres cliente de Todd?',
+      linkName: 'Más información sobre Todd Iris',
+      href: '/es/index/introducing-iris',
+    },
+  ])(
+    'preserves the $locale locale for the Todd Iris link',
+    ({ locale, prompt, linkName, href }) => {
+      renderLogin(locale);
+
+      expect(screen.getByText(prompt, { exact: false })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: linkName })).toHaveAttribute(
+        'href',
+        href
+      );
+      expect(
+        screen.queryByRole('link', { name: 'Learn how to become one' })
+      ).not.toBeInTheDocument();
+    }
+  );
+
   test('shows spinner while loading', async () => {
     (login as Mock).mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve({}), 1000))
     );
-    render(<Login />);
+    renderLogin();
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');
@@ -85,7 +144,7 @@ describe('login page', () => {
       'Invalid credentials',
     ]);
 
-    render(<Login />);
+    renderLogin();
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');
@@ -107,7 +166,7 @@ describe('login page', () => {
     });
     (formatActionResponseErrors as Mock).mockReturnValue(['Network down']);
 
-    render(<Login />);
+    renderLogin();
 
     const emailField = screen.getByTestId('email');
     const passwordField = screen.getByTestId('password');
@@ -124,7 +183,7 @@ describe('login page', () => {
   });
 
   test('shows and hides password appropriately', async () => {
-    render(<Login />);
+    renderLogin();
 
     const passwordField = screen.getByTestId('password');
 
@@ -138,7 +197,7 @@ describe('login page', () => {
   });
 
   test('suppresses the browser native reveal control on the password field', () => {
-    render(<Login />);
+    renderLogin();
 
     expect(screen.getByTestId('password')).toHaveClass(
       'hide-native-password-reveal'
@@ -146,7 +205,7 @@ describe('login page', () => {
   });
 
   test('password toggle is reachable with the keyboard', async () => {
-    render(<Login />);
+    renderLogin();
 
     screen.getByTestId('password').focus();
 
@@ -156,7 +215,7 @@ describe('login page', () => {
   });
 
   test('does not submit unless both email and password are entered', async () => {
-    render(<Login />);
+    renderLogin();
     (login as Mock).mockReturnValue({ error: null });
 
     const emailField = screen.getByTestId('email');

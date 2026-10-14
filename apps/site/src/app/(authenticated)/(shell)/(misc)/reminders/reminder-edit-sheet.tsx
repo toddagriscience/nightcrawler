@@ -2,10 +2,6 @@
 
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Trash2, CheckCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -15,8 +11,12 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { logger } from '@/lib/logger';
+import { CheckCircle, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { IrisButton } from '../../../../../components/common/iris-button/iris-button';
+import { deleteReminder, updateReminder } from './actions';
 import { ReminderForm } from './reminder-form';
-import { updateReminder, deleteReminder } from './actions';
 import type { Reminder } from './types';
 
 interface ReminderEditSheetProps {
@@ -77,27 +77,19 @@ export function ReminderEditSheet({
           <div className="flex items-center justify-between w-full">
             <div className="flex gap-2">
               {!reminder.read && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleMarkRead}
-                  className="gap-1.5 border-foreground/15"
-                >
+                <IrisButton variant="primary" onClick={handleMarkRead}>
                   <CheckCircle aria-hidden="true" className="size-3" />
                   Mark Read
-                </Button>
+                </IrisButton>
               )}
-              <Button
+              <IrisButton
                 type="button"
                 variant="outline"
-                size="sm"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="gap-1.5 border-foreground/15 text-destructive hover:text-destructive"
               >
                 <Trash2 aria-hidden="true" className="size-3" />
                 Delete
-              </Button>
+              </IrisButton>
             </div>
 
             {showDeleteConfirm && (
@@ -105,22 +97,20 @@ export function ReminderEditSheet({
                 <span className="text-sm text-[var(--color-muted-foreground)]">
                   Delete?
                 </span>
-                <Button
-                  type="button"
+                <IrisButton
                   variant="destructive"
-                  size="sm"
+                  type="button"
                   onClick={handleDelete}
                 >
                   Confirm
-                </Button>
-                <Button
-                  type="button"
+                </IrisButton>
+                <IrisButton
                   variant="outline"
-                  size="sm"
+                  type="button"
                   onClick={() => setShowDeleteConfirm(false)}
                 >
                   Cancel
-                </Button>
+                </IrisButton>
               </div>
             )}
           </div>

@@ -8,10 +8,11 @@ import SubmitButton from '@/components/common/utils/submit-button/submit-button'
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Link } from '@/i18n/config';
 import { login } from '@/lib/actions/auth';
 import { formatActionResponseErrors } from '@/lib/utils/actions';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiSolidHide } from 'react-icons/bi';
@@ -24,6 +25,7 @@ type LoginFormData = { email: string; password: string };
  * @returns {JSX.Element} - The login page
  * */
 export default function Login() {
+  const t = useTranslations('loginPage');
   const [showPassword, setShowPassword] = useState(false);
   const [actionErrors, setActionErrors] = useState<string[]>([]);
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
@@ -192,9 +194,12 @@ export default function Login() {
                 </Button> */}
 
                 <p className="text-left text-sm font-thin">
-                  Not yet a Todd Client?{' '}
-                  <Link href="/contact" className="font-normal underline">
-                    Learn how to become one
+                  {t('clientPrompt')}{' '}
+                  <Link
+                    href="/index/introducing-iris"
+                    className="font-normal underline"
+                  >
+                    {t('learnMoreAboutIris')}
                   </Link>
                 </p>
               </form>
