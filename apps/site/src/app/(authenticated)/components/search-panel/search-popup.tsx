@@ -116,6 +116,7 @@ export function SearchPopup() {
               placeholder="Find..."
               className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent text-base outline-none"
               aria-label="Search query"
+              maxLength={1000}
             />
             <button
               type="button"

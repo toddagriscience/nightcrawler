@@ -7,6 +7,7 @@ import { asc, eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ZoneTemplate from './components/zone-template';
+import { SearchZoneContext } from '@/app/(authenticated)/components/search-panel/search-zone-context';
 
 /**
  * Dashboard homepage metadata - uses specific title without template
@@ -84,6 +85,7 @@ export default async function DashboardPage({
 
   return (
     <div className="flex h-screen flex-col">
+      <SearchZoneContext zoneId={selectedZone.id} />
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-auto">
           <ZoneTemplate

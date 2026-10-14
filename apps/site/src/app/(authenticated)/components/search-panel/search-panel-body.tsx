@@ -17,6 +17,7 @@ import { useRef, useState } from 'react';
 import { BiDockLeft, BiUpArrowAlt } from 'react-icons/bi';
 import { previewText, resultHref } from './search-display';
 import { useSearchPanel } from './search-panel-context';
+import { AdvisorContactButton } from './advisor-contact-button';
 
 /**
  * Renders the inference search results panel body.
@@ -26,11 +27,13 @@ import { useSearchPanel } from './search-panel-context';
 export function SearchPanelBody() {
   const {
     activeQuery,
+    questions,
+    activeManagementZoneId,
     results,
     isSearching,
     searchError,
     collapsePanel,
-    submitSearch,
+    submitFollowUp,
   } = useSearchPanel();
   const [followUp, setFollowUp] = useState('');
   const [clearedForQuery, setClearedForQuery] = useState(activeQuery);
@@ -47,7 +50,7 @@ export function SearchPanelBody() {
     const trimmed = followUp.trim();
     if (!trimmed) return;
     setFollowUp('');
-    submitSearch(trimmed);
+    submitFollowUp(trimmed);
   }
 
   function resultKey(result: SearchResult) {
@@ -83,18 +86,35 @@ export function SearchPanelBody() {
         )}
 
         {searchError && !isSearching && (
-          <p role="alert" className="text-sm text-red-600">
-            Something went wrong loading results. Please try again.
-          </p>
+          <div>
+            <p role="alert" className="text-sm text-red-600">
+              Something went wrong loading results. Please try again.
+            </p>
+            {activeQuery ? (
+              <AdvisorContactButton
+                questions={questions}
+                managementZoneId={activeManagementZoneId}
+                onTransferred={collapsePanel}
+              />
+            ) : null}
+          </div>
         )}
 
         {!isSearching &&
           !searchError &&
           results.length === 0 &&
           activeQuery && (
-            <p className="text-muted-foreground text-sm">
-              No matching IMPs or products found. Try rephrasing your question.
-            </p>
+            <div>
+              <p className="text-muted-foreground text-sm">
+                No matching IMPs or products found. Try rephrasing your question
+                or contact an advisor with your questions.
+              </p>
+              <AdvisorContactButton
+                questions={questions}
+                managementZoneId={activeManagementZoneId}
+                onTransferred={collapsePanel}
+              />
+            </div>
           )}
 
         {!isSearching && !searchError && results.length > 0 && (
@@ -188,6 +208,7 @@ export function SearchPanelBody() {
             placeholder="Ask a follow up question..."
             className="flex-1 border-0 bg-transparent text-sm shadow-none focus-visible:ring-0"
             aria-label="Follow-up question"
+            maxLength={1000}
           />
           <button
             type="submit"

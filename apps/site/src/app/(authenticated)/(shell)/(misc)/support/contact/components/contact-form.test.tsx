@@ -13,6 +13,36 @@ const identity = {
 };
 
 describe('ContactForm', () => {
+  it('prefills transferred questions, permits review edits, and starts a fresh request after sending a single-use draft', async () => {
+    const user = userEvent.setup();
+    const action = vi.fn().mockResolvedValue({ success: true, id: 42 });
+    render(
+      <ContactForm
+        {...identity}
+        initialValues={{
+          subject: 'Question from inference search',
+          message: '1. Original question\n\n2. Follow-up',
+        }}
+        anotherMessageHref="/support/contact"
+        submitAction={action}
+      />
+    );
+    expect(screen.getByRole('textbox', { name: 'Message' })).toHaveValue(
+      '1. Original question\n\n2. Follow-up'
+    );
+    await user.type(
+      screen.getByRole('textbox', { name: 'Message' }),
+      '\nAdditional detail.'
+    );
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+    expect(action).toHaveBeenCalledWith({
+      subject: 'Question from inference search',
+      message: '1. Original question\n\n2. Follow-up\nAdditional detail.',
+    });
+    expect(
+      await screen.findByRole('link', { name: 'Send another message' })
+    ).toHaveAttribute('href', '/support/contact');
+  });
   it('labels the fields and prevents empty messages from reaching the server', async () => {
     const user = userEvent.setup();
     const action = vi.fn();

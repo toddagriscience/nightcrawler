@@ -52,6 +52,31 @@ export async function getClientInquiries(): Promise<ClientInquiry[]> {
         : '',
     createdAt: row.createdAt,
     reviewedAt: row.reviewedAt,
+    ...(row.answers.source === 'inference'
+      ? {
+          inferenceContext: {
+            questions: Array.isArray(row.answers.questions)
+              ? row.answers.questions
+                  .filter(
+                    (question: unknown): question is string =>
+                      typeof question === 'string'
+                  )
+                  .slice(0, 10)
+                  .map((question: string) => question.slice(0, 1000))
+              : [],
+            managementZoneId:
+              typeof row.answers.managementZoneId === 'number' &&
+              Number.isSafeInteger(row.answers.managementZoneId) &&
+              row.answers.managementZoneId > 0
+                ? row.answers.managementZoneId
+                : null,
+            managementZoneName:
+              typeof row.answers.managementZoneName === 'string'
+                ? row.answers.managementZoneName.slice(0, 200)
+                : null,
+          },
+        }
+      : {}),
   }));
 }
 

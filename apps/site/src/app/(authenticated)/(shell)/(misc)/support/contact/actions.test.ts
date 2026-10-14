@@ -2,6 +2,7 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { formSubmission } from '@nightcrawler/db/schema';
+import { PgDialect } from 'drizzle-orm/pg-core';
 import { submitClientContact } from './actions';
 import type { ContactInput } from './types';
 
@@ -14,6 +15,10 @@ const mocks = vi.hoisted(() => ({
   values: vi.fn(),
   returning: vi.fn(),
   error: vi.fn(),
+  context: vi.fn(),
+  update: vi.fn(),
+  set: vi.fn(),
+  updateWhere: vi.fn(),
 }));
 
 vi.mock('@/lib/utils/get-authenticated-info', () => ({
@@ -27,8 +32,11 @@ vi.mock('@/lib/utils/account-agreement', () => ({
 }));
 vi.mock('@/lib/rate-limit', () => ({ createRateLimiter: () => mocks.limit }));
 vi.mock('@/lib/logger', () => ({ logger: { error: mocks.error } }));
+vi.mock('./inference-context', () => ({
+  loadInferenceContactContext: mocks.context,
+}));
 vi.mock('@nightcrawler/db/schema/connection', () => ({
-  db: { insert: mocks.insert },
+  db: { insert: mocks.insert, update: mocks.update },
 }));
 
 beforeEach(() => {
@@ -48,9 +56,104 @@ beforeEach(() => {
   mocks.insert.mockReturnValue({ values: mocks.values });
   mocks.values.mockReturnValue({ returning: mocks.returning });
   mocks.returning.mockResolvedValue([{ id: 42 }]);
+  mocks.context.mockResolvedValue({
+    id: 42,
+    token: '2ad9a2b1-d203-4bdf-80d2-1c91c5c24124',
+    questions: ['Original question', 'Follow-up'],
+    managementZone: { id: 12, name: 'North field' },
+  });
+  mocks.update.mockReturnValue({ set: mocks.set });
+  mocks.set.mockReturnValue({ where: mocks.updateWhere });
+  mocks.updateWhere.mockReturnValue({ returning: mocks.returning });
 });
 
 describe('submitClientContact', () => {
+  it('promotes an owned draft exactly once with the original questions and trusted zone attached', async () => {
+    const token = '2ad9a2b1-d203-4bdf-80d2-1c91c5c24124';
+    expect(
+      await submitClientContact(
+        { subject: 'Edited subject', message: 'Added details' },
+        token
+      )
+    ).toEqual({ success: true, id: 42 });
+    expect(mocks.context).toHaveBeenCalledWith(token);
+    expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.set).toHaveBeenCalledWith({
+      formSlug: 'iris-contact',
+      createdAt: expect.anything(),
+      answers: {
+        subject: 'Edited subject',
+        message: 'Added details',
+        userId: 7,
+        senderName: 'Alex Client',
+        senderEmail: 'alex@example.test',
+        source: 'inference',
+        questions: ['Original question', 'Follow-up'],
+        managementZoneId: 12,
+        managementZoneName: 'North field',
+      },
+    });
+    expect(
+      new PgDialect().sqlToQuery(mocks.set.mock.calls[0][0].createdAt).sql
+    ).toBe('now()');
+    const query = new PgDialect({ casing: 'snake_case' }).sqlToQuery(
+      mocks.updateWhere.mock.calls[0][0]
+    );
+    expect(query.params.slice(0, 6)).toEqual([
+      42,
+      'iris-contact-draft',
+      'generic',
+      3,
+      '7',
+      token,
+    ]);
+    expect(query.params.slice(-2)).toEqual([12, 3]);
+    expect(query.sql).toContain('exists (select 1 from "management_zone"');
+    expect(query.sql).toContain('"form_submissions"."deleted_at" is null');
+  });
+
+  it('never sends an unavailable or another client’s draft', async () => {
+    mocks.context.mockResolvedValue(null);
+    expect(
+      await submitClientContact(
+        { subject: 'Question', message: 'Help' },
+        '2ad9a2b1-d203-4bdf-80d2-1c91c5c24124'
+      )
+    ).toMatchObject({
+      success: false,
+      message: expect.stringContaining('no longer available'),
+    });
+    expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it('reports a draft that was concurrently sent or expired without sending a duplicate', async () => {
+    mocks.returning.mockResolvedValue([]);
+    expect(
+      await submitClientContact(
+        { subject: 'Question', message: 'Help' },
+        '2ad9a2b1-d203-4bdf-80d2-1c91c5c24124'
+      )
+    ).toMatchObject({
+      success: false,
+      message: expect.stringContaining('already sent or has expired'),
+    });
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
+
+  it('returns a recoverable failure if draft promotion fails', async () => {
+    mocks.returning.mockRejectedValue(new Error('private database error'));
+    expect(
+      await submitClientContact(
+        { subject: 'Question', message: 'Help' },
+        '2ad9a2b1-d203-4bdf-80d2-1c91c5c24124'
+      )
+    ).toEqual({
+      success: false,
+      message: 'Your message could not be sent. Please try again.',
+    });
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
   it('stores a generic inbox request with trusted farm and sender identity', async () => {
     expect(
       await submitClientContact({

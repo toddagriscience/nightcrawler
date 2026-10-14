@@ -91,6 +91,28 @@ export function InquiriesList({ inquiries, handleAction }: InquiriesListProps) {
               UTC
             </time>
             <p className="whitespace-pre-wrap break-words">{inquiry.message}</p>
+            {inquiry.inferenceContext ? (
+              <div className="space-y-2 border-t pt-3">
+                <h3 className="text-sm font-semibold">
+                  Original inference questions
+                </h3>
+                {inquiry.inferenceContext.managementZoneId ? (
+                  <p className="text-sm">
+                    Management zone:{' '}
+                    {inquiry.inferenceContext.managementZoneName ||
+                      'Unnamed zone'}{' '}
+                    (zone {inquiry.inferenceContext.managementZoneId})
+                  </p>
+                ) : null}
+                <ol className="list-decimal space-y-2 pl-5 text-sm">
+                  {inquiry.inferenceContext.questions.map((question, index) => (
+                    <li key={index} className="whitespace-pre-wrap break-words">
+                      {question}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : null}
             {!handled ? (
               <Button
                 type="button"

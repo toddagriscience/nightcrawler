@@ -55,6 +55,37 @@ beforeEach(() => {
 });
 
 describe('getClientInquiries', () => {
+  it('projects the original inference questions and zone after a client sends the draft', async () => {
+    mocks.orderBy.mockResolvedValue([
+      {
+        id: 42,
+        farmId: 3,
+        farmName: 'Green Acres',
+        answers: {
+          subject: 'Edited subject',
+          message: 'Edited message',
+          source: 'inference',
+          questions: ['Original question', 'Follow-up'],
+          managementZoneId: 12,
+          managementZoneName: 'North field',
+          contextToken: 'must not reach the inbox',
+          signupToken: 'must not reach the inbox',
+        },
+        createdAt: new Date(),
+        reviewedAt: null,
+      },
+    ]);
+    const [inquiry] = await getClientInquiries();
+    expect(inquiry.inferenceContext).toEqual({
+      questions: ['Original question', 'Follow-up'],
+      managementZoneId: 12,
+      managementZoneName: 'North field',
+    });
+    expect(inquiry).not.toHaveProperty('contextToken');
+    expect(inquiry).not.toHaveProperty('signupToken');
+    const filter = new PgDialect().sqlToQuery(mocks.listWhere.mock.calls[0][0]);
+    expect(filter.params).toEqual(['iris-contact', 'generic']);
+  });
   it('lists only live generic Iris requests and projects the inbox fields', async () => {
     expect(await getClientInquiries()).toEqual([
       {

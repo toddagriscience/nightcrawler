@@ -10,10 +10,12 @@ import {
 
 /** Exposes the panel's open state and active query for assertions. */
 function PanelState() {
-  const { open, activeQuery, isSearching } = useSearchPanel();
+  const { open, activeQuery, isSearching, activeManagementZoneId } =
+    useSearchPanel();
   return (
     <span data-testid="state">
-      {String(open)}:{activeQuery}:{String(isSearching)}
+      {String(open)}:{activeQuery}:{String(isSearching)}:
+      {activeManagementZoneId}
     </span>
   );
 }
@@ -21,7 +23,7 @@ function PanelState() {
 function renderForm() {
   return render(
     <SearchPanelProvider>
-      <ZoneSearchForm />
+      <ZoneSearchForm zoneId={12} />
       <PanelState />
     </SearchPanelProvider>
   );
@@ -37,6 +39,8 @@ describe('ZoneSearchForm', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Ask/i }));
 
-    expect(screen.getByTestId('state')).toHaveTextContent('true:soil pH:true');
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'true:soil pH:true:12'
+    );
   });
 });
