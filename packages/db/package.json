@@ -17,7 +17,9 @@
     "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts",
     "./utils/iris-access-allowlists-manifest": "./src/utils/iris-access-allowlists-manifest.ts",
     "./utils/preview-form-submission-hydration": "./src/utils/preview-form-submission-hydration.ts",
-    "./utils/general-imp-content": "./src/utils/general-imp-content.ts"
+    "./utils/general-imp-content": "./src/utils/general-imp-content.ts",
+    "./utils/imp-diagram": "./src/utils/imp-diagram.ts",
+    "./utils/imp-diagram-storage": "./src/utils/imp-diagram-storage.ts"
   },
   "scripts": {
     "lint": "eslint .",
@@ -38,6 +40,7 @@
     "db:local:reset": "bun run db:local:wipe && bun run db:local:init"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1151.0",
     "@supabase/supabase-js": "^2.97.0",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.2",

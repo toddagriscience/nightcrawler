@@ -3,7 +3,8 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
-import ReactMarkdown from 'react-markdown';
+import { ImpMarkdown as ReactMarkdown } from '@/features/imp-diagrams/components/imp-markdown';
+import { DiagramUpload } from '@/features/imp-diagrams/components/diagram-upload';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,8 @@ export function CatalogEditor({
 }) {
   const {
     register,
+    getValues,
+    setValue,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -139,6 +142,15 @@ export function CatalogEditor({
             />
             {errors.content && <p role="alert">{errors.content.message}</p>}
           </div>
+          <DiagramUpload
+            onUploaded={(markdown) =>
+              setValue(
+                'content',
+                `${getValues('content') || ''}\n\n${markdown}`,
+                { shouldDirty: true }
+              )
+            }
+          />
           <details>
             <summary className="cursor-pointer">Markdown preview</summary>
             <div className="prose prose-sm max-w-none rounded border p-4">

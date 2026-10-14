@@ -51,3 +51,7 @@ The `seed_crop` / `seed_variety` tables are a regenerable mirror of the "Variety
 3. Commit to the local DB: `bun run db:import-varieties --commit`
 
 The importer upserts by slug and prunes rows no longer present in the Sheet, so re-running fully reconciles the DB to the current export.
+
+## IMP diagrams
+
+Private S3-compatible diagram uploads and rendering use existing Markdown bodies. See the [storage/operator guide](docs/imp-diagrams.md) for server configuration, access rules, lifecycle and local verification.
