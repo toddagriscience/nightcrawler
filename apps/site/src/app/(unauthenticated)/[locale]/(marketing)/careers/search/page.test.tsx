@@ -10,6 +10,8 @@ const { getArticlesByCollectionMock } = vi.hoisted(() => ({
   getArticlesByCollectionMock: vi.fn(),
 }));
 
+vi.mock('next/server', () => ({ connection: vi.fn(async () => undefined) }));
+
 vi.mock('@/lib/sanity/articles', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/sanity/articles')>();
   return {

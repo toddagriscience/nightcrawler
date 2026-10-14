@@ -76,7 +76,37 @@
     },
     "jobPosting": {
       "kicker": "Careers",
-      "applyNow": "Apply now"
+      "applyNow": "Apply now",
+      "employer": "Employer",
+      "datePosted": "Posted",
+      "validThrough": "Apply by",
+      "employmentType": "Employment type",
+      "workplace": "Workplace",
+      "address": "Workplace address",
+      "applicantLocations": "Eligible applicant locations",
+      "compensation": "Base compensation",
+      "employment": {
+        "FULL_TIME": "Full time",
+        "PART_TIME": "Part time",
+        "CONTRACTOR": "Contractor",
+        "TEMPORARY": "Temporary",
+        "INTERN": "Internship",
+        "VOLUNTEER": "Volunteer",
+        "PER_DIEM": "Per diem",
+        "OTHER": "Other"
+      },
+      "workplaceTypes": {
+        "remote": "Fully remote",
+        "onsite": "On site",
+        "hybrid": "Hybrid"
+      },
+      "payPeriods": {
+        "HOUR": "per hour",
+        "DAY": "per day",
+        "WEEK": "per week",
+        "MONTH": "per month",
+        "YEAR": "per year"
+      }
     },
     "jobListings": {
       "apply": "Apply now",

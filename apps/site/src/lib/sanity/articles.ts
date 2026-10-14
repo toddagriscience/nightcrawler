@@ -13,6 +13,7 @@ import {
 } from '@/lib/sanity/article-types';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { FilteredResponseQueryOptions } from 'next-sanity';
+import { isActiveJob } from '@/lib/sanity/job-posting';
 import { selectArticlesForLocale } from '@/lib/sanity/article-locales';
 
 /** GROQ `_type` values that share the article detail template and projections. */
@@ -32,7 +33,7 @@ const GROQ_LANGUAGE_FIELDS = `
   "language": coalesce(language, "en"),
   "translationGroup": coalesce(translationGroup, _id),
   "publishedTranslations": *[${GROQ_PUBLISHED} && _type == ^._type && defined(slug.current) && (!defined(offSiteUrl) || offSiteUrl == "") && coalesce(translationGroup, _id) == coalesce(^.translationGroup, ^._id)]{
-    _id, _type, "language": coalesce(language, "en"), slug, excludeFromSitemap
+    _id, _type, "language": coalesce(language, "en"), slug, excludeFromSitemap, jobStatus, datePosted, validThrough
   }
 `;
 
@@ -55,6 +56,7 @@ const GROQ_CAREER_BODY = `
   title,
   slug,
   jobTeam,
+  jobStatus, jobPostingKind, datePosted, validThrough, noExpiry, employmentTypes, workplaceType, applicantCountries, jobAddress, baseSalary,
   jobLocation,
   applyUrl,
   content,
@@ -180,7 +182,9 @@ export async function getArticleBySlug(
       { slug, language: locale },
       options ?? defaultSanityFetchOptions
     );
-    return article ?? null;
+    return article && (article._type !== 'career' || isActiveJob(article))
+      ? article
+      : null;
   } catch (error) {
     logger.error('Sanity getArticleBySlug failed', error);
     return null;
@@ -190,13 +194,35 @@ export async function getArticleBySlug(
 /** Minimal published routing record, checked before rendering can stream a successful response. */
 export async function getArticleRoutingInfo(
   slug: string,
-  locale: string
-): Promise<Pick<SanityArticle, '_id' | '_type' | 'language' | 'slug'> | null> {
-  return client.fetch(
-    `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug && coalesce(language, "en") == $language] | order(_type asc)[0]{_id, _type, slug, "language": coalesce(language, "en")}`,
+  locale: string,
+  options?: FilteredResponseQueryOptions
+): Promise<Pick<
+  SanityArticle,
+  | '_id'
+  | '_type'
+  | 'language'
+  | 'slug'
+  | 'jobStatus'
+  | 'datePosted'
+  | 'validThrough'
+> | null> {
+  const query = `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug && coalesce(language, "en") == $language] | order(_type asc)[0]{_id, _type, slug, jobStatus, datePosted, validThrough, "language": coalesce(language, "en")}`;
+  let article = await client.fetch<SanityArticle | null>(
+    query,
     { slug, language: locale },
-    defaultSanityFetchOptions
+    options ?? defaultSanityFetchOptions
   );
+  // Alias routes can also resolve to a career. Recheck its status live so closing
+  // a cached CMS record cannot leave an active public route behind.
+  if (article?._type === 'career' && options?.cache !== 'no-store')
+    article = await client.fetch(
+      query,
+      { slug, language: locale },
+      { cache: 'no-store' }
+    );
+  return article && (article._type !== 'career' || isActiveJob(article))
+    ? article
+    : null;
 }
 
 /** Existence check for public CMS forms and governance profiles before rendering starts. */
@@ -217,16 +243,23 @@ export async function getPublishedArticleRouteParams(
   locale?: string
 ): Promise<Array<{ locale: string; slug: string }>> {
   const articles = await client.fetch<
-    Array<{ slug: { current: string }; language: string }>
+    Array<
+      Pick<
+        SanityArticle,
+        '_type' | 'slug' | 'jobStatus' | 'datePosted' | 'validThrough'
+      > & { language: string }
+    >
   >(
-    `*[${GROQ_PUBLISHED} && _type == $type && defined(slug.current) && (!defined($language) || coalesce(language, "en") == $language) && (!defined(offSiteUrl) || offSiteUrl == "")]{slug, "language": coalesce(language, "en")}`,
+    `*[${GROQ_PUBLISHED} && _type == $type && defined(slug.current) && (!defined($language) || coalesce(language, "en") == $language) && (!defined(offSiteUrl) || offSiteUrl == "")]{_type,slug,jobStatus,datePosted,validThrough,"language": coalesce(language, "en")}`,
     { type, language: locale ?? null },
     defaultSanityFetchOptions
   );
-  return articles.map((article) => ({
-    locale: article.language,
-    slug: article.slug.current,
-  }));
+  return articles
+    .filter((article) => article._type !== 'career' || isActiveJob(article))
+    .map((article) => ({
+      locale: article.language,
+      slug: article.slug.current,
+    }));
 }
 
 /**
@@ -255,10 +288,18 @@ export async function getArticlesByCollection(
       collection === 'careers'
         ? { language: locale }
         : { collection: c, language: locale },
-      options ?? defaultSanityFetchOptions
+      options ??
+        (collection === 'careers'
+          ? { cache: 'no-store' }
+          : defaultSanityFetchOptions)
     );
     return Array.isArray(articles)
-      ? selectArticlesForLocale(articles, locale)
+      ? selectArticlesForLocale(
+          articles.filter(
+            (article) => article._type !== 'career' || isActiveJob(article)
+          ),
+          locale
+        )
       : [];
   } catch (error) {
     logger.error('Sanity getArticlesByCollection failed', error);

@@ -109,13 +109,21 @@ export default async function proxy(request: NextRequest) {
     const locale = articleRoute[1] ?? 'en';
     try {
       const slug = decodeURIComponent(articleRoute[3]);
-      const article = await getArticleRoutingInfo(slug, locale);
+      const article = await getArticleRoutingInfo(
+        slug,
+        locale,
+        articleRoute[2] === 'careers' ? { cache: 'no-store' } : undefined
+      );
       if (
         !article ||
         (articleRoute[2] === 'careers' && article._type !== 'career')
       ) {
         if (locale === 'es') {
-          const englishArticle = await getArticleRoutingInfo(slug, 'en');
+          const englishArticle = await getArticleRoutingInfo(
+            slug,
+            'en',
+            articleRoute[2] === 'careers' ? { cache: 'no-store' } : undefined
+          );
           if (
             englishArticle &&
             (articleRoute[2] !== 'careers' || englishArticle._type === 'career')

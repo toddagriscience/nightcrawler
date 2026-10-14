@@ -76,7 +76,37 @@
     },
     "jobPosting": {
       "kicker": "Carreras",
-      "applyNow": "Aplicar ahora"
+      "applyNow": "Aplicar ahora",
+      "employer": "Empleador",
+      "datePosted": "Publicado",
+      "validThrough": "Solicitudes hasta",
+      "employmentType": "Tipo de empleo",
+      "workplace": "Modalidad",
+      "address": "Dirección del lugar de trabajo",
+      "applicantLocations": "Ubicaciones elegibles para solicitantes",
+      "compensation": "Compensación base",
+      "employment": {
+        "FULL_TIME": "Tiempo completo",
+        "PART_TIME": "Tiempo parcial",
+        "CONTRACTOR": "Contratista",
+        "TEMPORARY": "Temporal",
+        "INTERN": "Prácticas",
+        "VOLUNTEER": "Voluntariado",
+        "PER_DIEM": "Por día",
+        "OTHER": "Otro"
+      },
+      "workplaceTypes": {
+        "remote": "Totalmente remoto",
+        "onsite": "Presencial",
+        "hybrid": "Híbrido"
+      },
+      "payPeriods": {
+        "HOUR": "por hora",
+        "DAY": "por día",
+        "WEEK": "por semana",
+        "MONTH": "por mes",
+        "YEAR": "por año"
+      }
     },
     "jobListings": {
       "apply": "Aplicar ahora",

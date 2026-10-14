@@ -6,6 +6,8 @@ import { redirect, permanentRedirect, notFound } from 'next/navigation';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import CareersPostingPage from './page';
 
+vi.mock('next/headers', () => ({ headers: vi.fn(async () => new Headers()) }));
+
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
   permanentRedirect: vi.fn(),

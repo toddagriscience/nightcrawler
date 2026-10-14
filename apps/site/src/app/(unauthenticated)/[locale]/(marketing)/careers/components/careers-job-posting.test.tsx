@@ -49,4 +49,70 @@ describe('CareersJobPosting', () => {
     expect(applyLinks[0]).toHaveAttribute('target', '_blank');
     expect(applyLinks).toHaveLength(2);
   });
+  it('shows verified recruiting facts and supplies a CSP nonce to the single schema', async () => {
+    const verified: SanityArticle = {
+      ...posting,
+      datePosted: '2026-10-01T00:00:00Z',
+      noExpiry: true,
+      employmentTypes: ['FULL_TIME'],
+      workplaceType: 'remote',
+      applicantCountries: ['US'],
+      baseSalary: {
+        currency: 'USD',
+        minValue: 100000,
+        maxValue: 150000,
+        unitText: 'YEAR',
+      },
+      content: [
+        {
+          _key: 'body',
+          _type: 'block',
+          style: 'normal',
+          markDefs: [],
+          children: [
+            {
+              _key: 'text',
+              _type: 'span',
+              marks: [],
+              text: 'Study agricultural soils.',
+            },
+          ],
+        },
+      ],
+    };
+    renderWithNextIntl(
+      await CareersJobPosting({
+        article: verified,
+        locale: 'en',
+        nonce: 'fixture-nonce',
+      })
+    );
+    expect(screen.getByText('Todd Agriscience')).toBeInTheDocument();
+    expect(screen.getByText('United States')).toBeInTheDocument();
+    expect(screen.getByText(/\$100,000/)).toBeInTheDocument();
+    expect(
+      document
+        .querySelector('[data-job-details] time')
+        ?.getAttribute('datetime')
+    ).toBe(verified.datePosted);
+    const scripts = document.querySelectorAll(
+      'script[type="application/ld+json"]'
+    );
+    expect(scripts).toHaveLength(1);
+    expect(scripts[0]).toHaveAttribute('nonce', 'fixture-nonce');
+    expect(JSON.parse(scripts[0].textContent ?? '{}')).toMatchObject({
+      '@type': 'JobPosting',
+      title: verified.title,
+      datePosted: verified.datePosted,
+    });
+  });
+
+  it('does not fabricate schema for legacy job documents or general-interest applications', async () => {
+    renderWithNextIntl(
+      await CareersJobPosting({ article: posting, locale: 'en' })
+    );
+    expect(
+      document.querySelector('script[type="application/ld+json"]')
+    ).toBeNull();
+  });
 });

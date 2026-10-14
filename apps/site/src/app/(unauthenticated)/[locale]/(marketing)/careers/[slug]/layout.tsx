@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { connection } from 'next/server';
 import { createMetadata } from '@/lib/metadata';
 import { getArticleAlternates } from '@/lib/sanity/article-locales';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
@@ -49,8 +50,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
+  await connection();
   const { locale, slug } = await params;
-  const article = await getArticleBySlug(slug, undefined, locale);
+  const article = await getArticleBySlug(slug, { cache: 'no-store' }, locale);
   if (article === undefined || article === null) {
     return {};
   }

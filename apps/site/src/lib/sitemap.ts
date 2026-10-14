@@ -13,6 +13,7 @@ import {
   getMainSitemapArticles,
 } from '@/lib/sanity/articles';
 import { SANITY_REVALIDATE } from '@/lib/sanity/client';
+import { isActiveJob } from '@/lib/sanity/job-posting';
 import { cacheLife } from 'next/cache';
 import type { MetadataRoute } from 'next';
 
@@ -66,30 +67,37 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
 async function getArticleSitemap(
   slice: 'main' | 'careers'
 ): Promise<MetadataRoute.Sitemap> {
-  'use cache';
-  cacheLife({ revalidate: SANITY_REVALIDATE });
   try {
     const articles =
       slice === 'careers'
-        ? await getCareersSitemapArticles()
-        : await getMainSitemapArticles();
-    return articles.map((article: SanityArticle) => {
-      const alternates = getArticleAlternates({
-        ...article,
-        publishedTranslations: article.publishedTranslations?.filter(
-          (variant) => variant.excludeFromSitemap !== true
-        ),
+        ? await getCareersSitemapArticles({ cache: 'no-store' })
+        : await getCachedMainSitemapArticles();
+    return articles
+      .filter((article) => article._type !== 'career' || isActiveJob(article))
+      .map((article: SanityArticle) => {
+        const alternates = getArticleAlternates({
+          ...article,
+          publishedTranslations: article.publishedTranslations?.filter(
+            (variant) => variant.excludeFromSitemap !== true
+          ),
+        });
+        return {
+          url: alternates.canonical,
+          ...(article._updatedAt ? { lastModified: article._updatedAt } : {}),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+          alternates: { languages: alternates.languages },
+        };
       });
-      return {
-        url: alternates.canonical,
-        ...(article._updatedAt ? { lastModified: article._updatedAt } : {}),
-        changeFrequency: 'weekly',
-        priority: 0.7,
-        alternates: { languages: alternates.languages },
-      };
-    });
   } catch (error) {
     logger.error('Error generating published article sitemap:', error);
     return [];
   }
+}
+
+// Cache stable news data. Career closure/expiry stays outside this boundary.
+async function getCachedMainSitemapArticles() {
+  'use cache';
+  cacheLife({ revalidate: SANITY_REVALIDATE });
+  return getMainSitemapArticles();
 }

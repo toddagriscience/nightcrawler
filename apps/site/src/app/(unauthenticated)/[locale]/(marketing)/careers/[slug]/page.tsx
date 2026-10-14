@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { headers } from 'next/headers';
 import { CareersJobPosting } from '@/app/(unauthenticated)/[locale]/(marketing)/careers/components/careers-job-posting';
 import { env } from '@/lib/env';
 import { getLocalizedPath } from '@/lib/canonical-urls';
@@ -27,8 +28,9 @@ export default async function CareersPostingPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
   const { locale, slug } = await params;
-  const article = await getArticleBySlug(slug, undefined, locale);
+  const article = await getArticleBySlug(slug, { cache: 'no-store' }, locale);
   if (article === undefined || article === null) {
     notFound();
     return;
@@ -50,5 +52,5 @@ export default async function CareersPostingPage({
       return;
     }
   }
-  return <CareersJobPosting article={article} locale={locale} />;
+  return <CareersJobPosting article={article} locale={locale} nonce={nonce} />;
 }

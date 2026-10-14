@@ -5,6 +5,8 @@ import PageHeader from '@/components/common/page-header/page-header';
 import SanityBodyImage from '@/components/sanity/news/sanity-body-image';
 import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
+import { createJobPostingStructuredData } from '@/lib/sanity/job-posting';
+import { formatArticleHeroDate } from '../../index/[slug]/utils';
 import { logger } from '@/lib/logger';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getTranslations } from 'next-intl/server';
@@ -17,6 +19,8 @@ interface CareersJobPostingProps {
   article: SanityArticle;
   /** Locale code for localized copy */
   locale: string;
+  /** Request nonce supplied by the career route for strict CSP compatibility. */
+  nonce?: string;
 }
 
 /**
@@ -50,8 +54,21 @@ function careerHeroSubtitle(article: SanityArticle): string | undefined {
 export async function CareersJobPosting({
   article,
   locale,
+  nonce,
 }: CareersJobPostingProps) {
   const t = await getTranslations({ locale, namespace: 'careers' });
+  const structuredData = createJobPostingStructuredData(article);
+  const countries = new Intl.DisplayNames([locale === 'es' ? 'es' : 'en'], {
+    type: 'region',
+  });
+  const salary = article.baseSalary;
+  const money =
+    salary && /^[A-Z]{3}$/.test(salary.currency)
+      ? new Intl.NumberFormat(locale, {
+          style: 'currency',
+          currency: salary.currency,
+        })
+      : undefined;
   const subtitle = careerHeroSubtitle(article);
   const applyHref = trimmedOrUndefined(article.applyUrl);
 
@@ -64,7 +81,7 @@ export async function CareersJobPosting({
 
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
-      normal: (props) => <SanityNormal {...props} summary={article.summary} />,
+      normal: (props) => <SanityNormal {...props} />,
       h1: ({ children }) => (
         <h2 className="mb-4 mt-10 text-2xl leading-snug font-normal md:text-[28px] md:leading-normal">
           {children}
@@ -101,6 +118,15 @@ export async function CareersJobPosting({
 
   return (
     <main className="min-h-[50vh]" id={`careers-post-${article.slug.current}`}>
+      {structuredData ? (
+        <script
+          type="application/ld+json"
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+          }}
+        />
+      ) : null}
       <div className="mx-auto max-w-3xl px-4 pb-24 md:px-6 lg:max-w-[820px]">
         <header className="flex flex-col items-center text-center">
           <PageHeader
@@ -120,7 +146,98 @@ export async function CareersJobPosting({
             }
           />
         </header>
-        <div className="mx-auto lg:mb-14 mt-14 flex w-full max-w-[685px] flex-col gap-[7px] text-left text-foreground md:mt-16">
+        <dl
+          data-job-details
+          className="mx-auto mt-8 grid w-full max-w-[685px] grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-[auto_1fr]"
+        >
+          <dt>{t('jobPosting.employer')}</dt>
+          <dd>Todd Agriscience</dd>
+          {article.datePosted ? (
+            <>
+              <dt>{t('jobPosting.datePosted')}</dt>
+              <dd>
+                <time dateTime={article.datePosted}>
+                  {formatArticleHeroDate(article.datePosted, locale)}
+                </time>
+              </dd>
+            </>
+          ) : null}
+          {article.validThrough ? (
+            <>
+              <dt>{t('jobPosting.validThrough')}</dt>
+              <dd>
+                <time dateTime={article.validThrough}>
+                  {formatArticleHeroDate(article.validThrough, locale)}
+                </time>
+              </dd>
+            </>
+          ) : null}
+          {article.employmentTypes?.length ? (
+            <>
+              <dt>{t('jobPosting.employmentType')}</dt>
+              <dd>
+                {article.employmentTypes
+                  .map((type) => t(`jobPosting.employment.${type}`))
+                  .join(', ')}
+              </dd>
+            </>
+          ) : null}
+          {article.workplaceType ? (
+            <>
+              <dt>{t('jobPosting.workplace')}</dt>
+              <dd>{t(`jobPosting.workplaceTypes.${article.workplaceType}`)}</dd>
+            </>
+          ) : null}
+          {article.jobAddress ? (
+            <>
+              <dt>{t('jobPosting.address')}</dt>
+              <dd>
+                {[
+                  article.jobAddress.streetAddress,
+                  article.jobAddress.addressLocality,
+                  article.jobAddress.addressRegion,
+                  article.jobAddress.postalCode,
+                  /^[A-Z]{2}$/.test(article.jobAddress.addressCountry)
+                    ? countries.of(article.jobAddress.addressCountry)
+                    : article.jobAddress.addressCountry,
+                ]
+                  .filter(Boolean)
+                  .join(', ')}
+              </dd>
+            </>
+          ) : null}
+          {article.applicantCountries?.length ? (
+            <>
+              <dt>{t('jobPosting.applicantLocations')}</dt>
+              <dd>
+                {article.applicantCountries
+                  .map((code) =>
+                    /^[A-Z]{2}$/.test(code) ? countries.of(code) : code
+                  )
+                  .join(', ')}
+              </dd>
+            </>
+          ) : null}
+          {salary && money ? (
+            <>
+              <dt>{t('jobPosting.compensation')}</dt>
+              <dd>
+                {money.format(salary.minValue)} –{' '}
+                {money.format(salary.maxValue)}{' '}
+                {t(`jobPosting.payPeriods.${salary.unitText}`)}
+              </dd>
+            </>
+          ) : null}
+        </dl>
+        {article.summary?.trim() ? (
+          <p data-job-summary className="mx-auto mt-8 max-w-[685px]">
+            {article.summary}
+          </p>
+        ) : null}
+        <div
+          data-job-description
+          className="mx-auto lg:mb-14 mt-14 flex w-full max-w-[685px] flex-col gap-[7px] text-left text-foreground md:mt-16"
+        >
           {Array.isArray(article.content) ? (
             <PortableText
               components={portableTextComponents}

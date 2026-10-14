@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { connection } from 'next/server';
 import sitemap from '@/lib/sitemap';
 
 function escapeXml(value: string): string {
@@ -11,11 +12,6 @@ function escapeXml(value: string): string {
     .replace(/'/g, '&apos;');
 }
 
-/** Prerenders both canonical child sitemap URLs. */
-export function generateStaticParams() {
-  return [{ id: 'main.xml' }, { id: 'careers.xml' }];
-}
-
 /** XML URL set with reciprocal links limited to actual published translations. */
 export async function GET(
   _request: Request,
@@ -24,6 +20,7 @@ export async function GET(
   const { id } = await params;
   if (id !== 'main.xml' && id !== 'careers.xml')
     return new Response('Not found', { status: 404 });
+  if (id === 'careers.xml') await connection();
   const entries = await sitemap({
     id: Promise.resolve(id.replace(/\.xml$/, '')),
   });
@@ -45,6 +42,11 @@ export async function GET(
     // eslint-disable-next-line no-secrets/no-secrets -- XML declaration is a public format header.
     `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${body}</urlset>`,
-    { headers: { 'Content-Type': 'application/xml; charset=utf-8' } }
+    {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        ...(id === 'careers.xml' ? { 'Cache-Control': 'no-store' } : {}),
+      },
+    }
   );
 }

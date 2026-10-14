@@ -3,6 +3,7 @@
 import {CaseIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
+import {careerJobFields} from './career-job-fields'
 import {careerArticleLeadFields, careerArticleTrailFields} from './article-shared-fields'
 
 /**
@@ -17,6 +18,7 @@ export default defineType({
   type: 'document',
   fields: [
     ...careerArticleLeadFields,
+    ...careerJobFields,
     defineField({
       name: 'jobTeam',
       title: 'Team',
