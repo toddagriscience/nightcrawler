@@ -6,4 +6,4 @@ The Supabase `{{ .ConfirmationURL }}` and `{{ .Data.first_name }}` placeholders 
 
 To install, save a copy of the current hosted template, then paste this HTML into **Authentication → Email Templates → Confirm sign up** for the intended Supabase project. Committing this file does not update a hosted project's template automatically.
 
-Verification: render with disposable placeholder values, check that the PNG loads at 76×25, and follow the confirmation link in the test project. Send a test signup email to an authorized Gmail recipient and verify the logo there before considering #391 complete. Other existing hosted templates can use the same PNG image tag without changing their own auth-link placeholders.
+Verification: render with disposable placeholder values, check that the PNG loads at 76px wide with its original aspect ratio, and follow the confirmation link in the test project. Send a test signup email to an authorized Gmail recipient and verify the logo there before considering #391 complete. Other existing hosted templates can use the same PNG image tag without changing their own auth-link placeholders.
