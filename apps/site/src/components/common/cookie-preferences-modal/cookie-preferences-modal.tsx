@@ -55,7 +55,10 @@ export default function CookiePreferencesModal({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent
+        className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]"
+        closeButtonLabel={t('close')}
+      >
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription className="text-base">
@@ -69,7 +72,6 @@ export default function CookiePreferencesModal({
           <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row md:gap-0">
             <Link
               onClick={() => setIsOpen(false)}
-              locale="en"
               href={'/privacy'}
               className="underline"
             >
