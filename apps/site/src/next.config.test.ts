@@ -2,7 +2,7 @@
 
 import { beforeAll, describe, expect, it, vitest } from 'vitest';
 import { NextConfig } from 'next';
-import nextConfig, { buildScriptSrc } from '../next.config';
+import nextConfig from '../next.config';
 
 // Mock next-intl/plugin to avoid Next.js initialization errors in tests
 vitest.mock(import('next-intl/plugin'), async (importOriginal) => {
@@ -83,13 +83,10 @@ describe('Next.js Security Headers Configuration', () => {
       .find((directive) => directive.startsWith('script-src'));
 
     expect(scriptSrc).toBeDefined();
-    // unsafe-eval is the dangerous one: drop it outside development (#934).
+    // API/static responses have no rendering nonce and may not run scripts.
+    expect(scriptSrc).toBe("script-src 'none'");
     expect(scriptSrc).not.toContain("'unsafe-eval'");
-    // Inline scripts and trusted third parties must still be allowed.
-    expect(scriptSrc).toContain("'self'");
-    expect(scriptSrc).toContain("'unsafe-inline'");
-    expect(scriptSrc).toContain('https://*.posthog.com');
-    expect(scriptSrc).toContain('https://js.stripe.com');
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
   });
 
   it('should include comprehensive Permissions-Policy', () => {
@@ -226,24 +223,5 @@ describe('Security Headers Compliance', () => {
 
     // Prevent external font loading (data leaks)
     expect(cspHeader!.value).toContain("font-src 'self'");
-  });
-});
-
-describe('buildScriptSrc', () => {
-  it('includes unsafe-eval only in development', () => {
-    expect(buildScriptSrc(true)).toContain("'unsafe-eval'");
-  });
-
-  it('omits unsafe-eval in production', () => {
-    expect(buildScriptSrc(false)).not.toContain("'unsafe-eval'");
-  });
-
-  it('always allows self, inline scripts, and trusted third parties', () => {
-    for (const scriptSrc of [buildScriptSrc(true), buildScriptSrc(false)]) {
-      expect(scriptSrc).toContain("'self'");
-      expect(scriptSrc).toContain("'unsafe-inline'");
-      expect(scriptSrc).toContain('https://*.posthog.com');
-      expect(scriptSrc).toContain('https://js.stripe.com');
-    }
   });
 });
