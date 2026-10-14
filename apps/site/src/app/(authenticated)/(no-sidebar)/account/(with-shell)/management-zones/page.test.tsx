@@ -4,6 +4,17 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AccountManagementPage from './page';
 
+vi.mock('@/lib/utils/get-authenticated-info', () => ({
+  getAuthenticatedInfo: vi.fn(async () => ({
+    id: 3,
+    farmId: 2,
+    role: 'Admin',
+  })),
+}));
+vi.mock('./request/actions', () => ({
+  getFarmManagementZoneRequests: vi.fn(async () => []),
+}));
+
 vi.mock('../../db', () => ({
   getManagementZones: vi.fn(async () => [
     {
@@ -40,6 +51,10 @@ vi.mock('../../db', () => ({
 describe('AccountManagementPage', () => {
   it('renders management information from account data', async () => {
     render(await AccountManagementPage());
+
+    expect(
+      screen.getByRole('link', { name: 'Add management zone' })
+    ).toHaveAttribute('href', '/account/management-zones/request');
 
     expect(screen.getAllByText('North Field').length).toBeGreaterThan(0);
     expect(screen.getAllByText('South Field').length).toBeGreaterThan(0);
