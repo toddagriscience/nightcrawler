@@ -67,7 +67,7 @@ describe('withNonceCsp', () => {
     });
     expect(renderingNonce).toMatch(/^[A-Za-z0-9+/]{32}$/);
     expect(renderingNonce).not.toBe('forged');
-    expect(response.headers.get('Content-Security-Policy-Report-Only')).toBe(
+    expect(response.headers.get('Content-Security-Policy')).toBe(
       renderingPolicy
     );
     expect(response.headers.get('x-middleware-request-x-nonce')).toBe(
@@ -79,8 +79,9 @@ describe('withNonceCsp', () => {
     expect(response.headers.get('x-middleware-override-headers')).toContain(
       'x-nonce'
     );
-    // This foundation does not claim to enforce the strict policy yet.
-    expect(response.headers.has('Content-Security-Policy')).toBe(false);
+    expect(response.headers.has('Content-Security-Policy-Report-Only')).toBe(
+      false
+    );
   });
 
   it('generates an independent unpredictable nonce for every request', async () => {
@@ -136,9 +137,7 @@ describe('withNonceCsp', () => {
     expect(response.status).toBe(307);
     expect(response.headers.get('location')).toBe('http://localhost/login');
     expect(response.cookies.get('session-refresh')?.value).toBe('fixture');
-    expect(response.headers.has('Content-Security-Policy-Report-Only')).toBe(
-      true
-    );
+    expect(response.headers.has('Content-Security-Policy')).toBe(true);
   });
 
   it('forwards refreshed authentication cookies to the renderer', async () => {

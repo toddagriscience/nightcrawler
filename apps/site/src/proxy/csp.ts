@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Builds the nonce script policy used for rendering and review.
+ * Builds the nonce script policy used for rendering and enforcement.
  * Inline CSS remains available to React and Stripe; executable inline scripts
  * require a matching nonce. Dynamic loaders inherit trust through strict-dynamic.
  */
@@ -32,7 +32,7 @@ export function buildNonceCsp(nonce: string, development: boolean): string {
 /**
  * Gives one request a fresh 192-bit nonce and forwards the rendering policy to
  * Next.js. Preserves redirects, rewrites, locale overrides and privacy cookies.
- * The response policy is report-only until the separate enforcement change.
+ * The response enforces the same script policy used by the renderer.
  */
 export async function withNonceCsp(
   original: NextRequest,
@@ -75,6 +75,8 @@ export async function withNonceCsp(
     'x-middleware-override-headers',
     [...overrideNames].join(',')
   );
-  response.headers.set('Content-Security-Policy-Report-Only', policy);
+  // eslint-disable-next-line drizzle/enforce-delete-with-where -- This removes an HTTP header, not a database row.
+  response.headers.delete('Content-Security-Policy-Report-Only');
+  response.headers.set('Content-Security-Policy', policy);
   return response;
 }
