@@ -5,7 +5,8 @@
 import { useState, useCallback } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-import ReactMarkdown from 'react-markdown';
+import { ImpMarkdown as ReactMarkdown } from '@/features/imp-diagrams/components/imp-markdown';
+import { DiagramUpload } from '@/features/imp-diagrams/components/diagram-upload';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -78,6 +79,8 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
 
   const {
     register,
+    getValues,
+    setValue,
     handleSubmit,
     reset,
     control,
@@ -369,6 +372,15 @@ export default function ImpsClient({ initialImps }: ImpsClientProps) {
               </Tabs>
             </div>
 
+            <DiagramUpload
+              onUploaded={(markdown) =>
+                setValue(
+                  'content',
+                  `${getValues('content') || ''}\n\n${markdown}`,
+                  { shouldDirty: true }
+                )
+              }
+            />
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Category</Label>

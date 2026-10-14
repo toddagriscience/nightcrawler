@@ -3,3 +3,5 @@
 export * from './create-farm-default-settings';
 export * from './get-standard-values';
 export * from './form-submission-signup';
+
+export { canReadImpDiagram } from './imp-diagram';

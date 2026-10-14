@@ -2,10 +2,21 @@
 
 import ReactMarkdown from 'react-markdown';
 
+/** Renders IMP advice and responsive diagrams without allowing raw HTML. */
 export function ImpMarkdown({ content }: { content: string }) {
   return (
     <ReactMarkdown
       components={{
+        img: ({ src, alt }) => (
+          // Diagram bytes are served through the authenticated app route; no public bucket URL.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={alt || 'IMP diagram'}
+            loading="lazy"
+            className="my-6 h-auto max-w-full rounded border border-stone-200"
+          />
+        ),
         h1: ({ children }) => (
           <h1 className="mt-8 text-3xl font-semibold text-foreground first:mt-0">
             {children}

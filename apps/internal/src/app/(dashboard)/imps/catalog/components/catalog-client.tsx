@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
+import { ImpMarkdown as ReactMarkdown } from '@/features/imp-diagrams/components/imp-markdown';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
