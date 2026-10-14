@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { routing } from '@/i18n/config';
 import { env } from '@/lib/env';
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
@@ -17,6 +18,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = (await params).locale;
   const t = await getTranslations({ locale, namespace: 'varieties.metadata' });
+  const localizedUrls = Object.fromEntries(
+    routing.locales.map((loc) => [
+      loc,
+      new URL(
+        `${loc === routing.defaultLocale ? '' : `/${loc}`}/varieties`,
+        env.baseUrl
+      ).toString(),
+    ])
+  );
+  const pageUrl = localizedUrls[locale];
 
   return {
     metadataBase: new URL(env.baseUrl),
@@ -24,10 +35,17 @@ export async function generateMetadata({
       absolute: `${t('shortTitle')} | ${siteConfig.name}`,
     },
     description: t('description'),
+    alternates: {
+      canonical: pageUrl,
+      languages: {
+        ...localizedUrls,
+        'x-default': localizedUrls[routing.defaultLocale],
+      },
+    },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${env.baseUrl}/${locale}/varieties`,
+      url: pageUrl,
       siteName: siteConfig.name,
       locale: locale,
       type: 'website',

@@ -9,7 +9,8 @@
     "subtitle": "Todd maintains a public index of varieties held within its germplasm repository and historical references.",
     "intro": "This collection is vital for maintaining the nation's food supply by providing farms the varieties they need to produce nutritious, abundant and affordable agricultural products.",
     "list": {
-      "apply": "Apply now",
+      "request": "Request",
+      "requestAria": "Request {name}",
       "toolbarAria": "Filter varieties",
       "searchPlaceholder": "Search",
       "searchAria": "Search varieties",

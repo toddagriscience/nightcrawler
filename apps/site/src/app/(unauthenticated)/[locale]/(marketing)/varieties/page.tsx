@@ -34,16 +34,16 @@ export default async function VarietiesIndexPage({
         >
           {t('title')}
         </h1>
-        <p className="mx-auto mb-6 max-w-2xl px-0 text-center text-[#555555] md:text-lg">
+        <p className="mx-auto mb-6 max-w-2xl px-0 text-center text-base text-[#555555]">
           {t('subtitle')}
         </p>
-        <p className="mx-auto mb-14 max-w-2xl px-0 text-center text-[#555555] md:text-lg">
+        <p className="mx-auto mb-14 max-w-2xl px-0 text-center text-base text-[#555555]">
           {t('intro')}
         </p>
         {varieties.length > 0 ? (
           <VarietyPublicList items={varieties} />
         ) : (
-          <p className="mx-auto max-w-2xl px-0 text-center text-[#555555] md:text-lg">
+          <p className="mx-auto max-w-2xl px-0 text-center text-base text-[#555555]">
             {t('list.empty')}
           </p>
         )}

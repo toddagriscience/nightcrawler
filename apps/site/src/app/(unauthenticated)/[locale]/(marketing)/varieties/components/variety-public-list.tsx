@@ -29,7 +29,7 @@ interface VarietyFiltersFormValues {
 
 /** Matches the careers toolbar filter styling. */
 const VARIETY_FILTER_TRIGGER_CLASS =
-  'inline-flex h-auto w-max min-w-0 max-w-none items-center justify-start gap-1 rounded-none border-0 bg-transparent py-2 pl-0 pr-0 text-left text-sm font-normal text-foreground shadow-none outline-none focus-visible:ring-1 focus-visible:ring-offset-2';
+  'inline-flex h-auto w-max min-w-0 max-w-full items-center justify-start gap-1 rounded-none border-0 bg-transparent py-2 pl-0 pr-0 text-left text-sm font-normal text-foreground shadow-none outline-none focus-visible:ring-1 focus-visible:ring-offset-2';
 
 /** Normalizes searchable text without allocating per keystroke regex. */
 function containsIgnoreCase(haystack: string, needle: string): boolean {
@@ -127,11 +127,15 @@ export function VarietyPublicList({ items }: VarietyPublicListProps) {
                 aria-label={t('list.searchAria')}
               />
             </div>
-            <p className="text-sm font-normal text-[#848484]">
+            <p
+              className="text-sm font-normal text-[#848484]"
+              role="status"
+              aria-live="polite"
+            >
               {t('list.showingCount', { visible, total })}
             </p>
           </div>
-          <div className="flex flex-row flex-nowrap items-center justify-start gap-2 sm:justify-end sm:gap-3">
+          <div className="flex flex-row flex-wrap items-center justify-start gap-2 sm:justify-end sm:gap-3">
             <Controller
               name="crop"
               control={control}
@@ -204,12 +208,19 @@ export function VarietyPublicList({ items }: VarietyPublicListProps) {
                 <span className="shrink-0 text-sm font-normal text-[#848484] md:text-right md:tabular-nums">
                   {item.id}
                 </span>
-                <Link
-                  href="/contact"
-                  className="inline-flex shrink-0 text-sm font-normal text-foreground underline-offset-4 transition hover:underline"
-                >
-                  {t('list.apply')}
-                </Link>
+                {item.status === 'reference' ? (
+                  <span className="shrink-0 text-sm font-normal text-[#848484]">
+                    {t('list.availabilityReference')}
+                  </span>
+                ) : (
+                  <Link
+                    href="/contact"
+                    aria-label={t('list.requestAria', { name: item.name })}
+                    className="inline-flex shrink-0 text-sm font-normal text-foreground underline-offset-4 transition hover:underline"
+                  >
+                    {t('list.request')}
+                  </Link>
+                )}
               </div>
             </li>
           ))}
