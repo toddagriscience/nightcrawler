@@ -1,6 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Link, routing } from '@/i18n/config';
+import { routing } from '@/i18n/config';
+import Link from 'next/link';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import {
   ARTICLE_HIGHLIGHT_TILE_COUNT,
   normalizeContentType,
@@ -30,6 +32,10 @@ export type NewsHighlightCategoryLabel = (type: ArticleContentType) => string;
 
 /** Props for {@link NewsHighlightTiles}. */
 export interface NewsHighlightTilesProps {
+  /** Active page language for untranslated-document notices. */
+  locale?: string;
+  /** Localized notice for English-only publications on Spanish pages. */
+  availableInEnglishLabel?: string;
   /** Articles to tile, already ordered and capped by the caller. */
   articles: SanityArticle[];
   /** Localized category label per content type. */
@@ -56,6 +62,8 @@ export interface NewsHighlightTilesProps {
  */
 export function NewsHighlightTiles({
   articles,
+  locale = 'en',
+  availableInEnglishLabel = 'Available in English',
   categoryLabel,
   heading,
   sectionId,
@@ -85,6 +93,8 @@ export function NewsHighlightTiles({
           <li key={article._id}>
             <NewsHighlightTile
               article={article}
+              locale={locale}
+              availableInEnglishLabel={availableInEnglishLabel}
               category={categoryLabel(
                 normalizeContentType(article.contentType)
               )}
@@ -99,9 +109,13 @@ export function NewsHighlightTiles({
 /** A single tile: square thumbnail over the article title and its category. */
 function NewsHighlightTile({
   article,
+  locale,
+  availableInEnglishLabel,
   category,
 }: {
   article: SanityArticle;
+  locale: string;
+  availableInEnglishLabel: string;
   category: string;
 }) {
   const thumbnailUrl =
@@ -124,9 +138,17 @@ function NewsHighlightTile({
           width={TILE_IMAGE_SIZE}
         />
       </div>
-      <h3 className="mt-4 text-[18px] font-normal leading-[26px] text-foreground">
+      <h3
+        lang={article.language ?? 'en'}
+        className="mt-4 text-[18px] font-normal leading-[26px] text-foreground"
+      >
         {article.title}
       </h3>
+      {isEnglishArticleFallback(article, locale) ? (
+        <p className="mt-1 text-sm text-muted-foreground">
+          {availableInEnglishLabel}
+        </p>
+      ) : null}
       <p className="mt-1 text-[14px] font-normal leading-6 text-[#848484]">
         {category}
       </p>
@@ -196,7 +218,12 @@ export async function NewsHighlightTilesSection({
   className,
 }: NewsHighlightTilesSectionProps): Promise<ReactNode> {
   const [articles, t] = await Promise.all([
-    getHighlightedArticlesForPage(page, ARTICLE_HIGHLIGHT_TILE_COUNT),
+    getHighlightedArticlesForPage(
+      page,
+      ARTICLE_HIGHLIGHT_TILE_COUNT,
+      undefined,
+      locale ?? 'en'
+    ),
     getTranslations({
       locale: locale ?? routing.defaultLocale,
       namespace: 'articleIndex',
@@ -206,6 +233,8 @@ export async function NewsHighlightTilesSection({
   return (
     <NewsHighlightTiles
       articles={articles}
+      locale={locale ?? 'en'}
+      availableInEnglishLabel={t('availableInEnglish')}
       categoryLabel={(type) => t(`tabs.${topicTabKey(type)}`)}
       className={className}
       heading={heading ?? t('highlights.heading')}

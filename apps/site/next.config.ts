@@ -119,6 +119,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  experimental: { globalNotFound: true },
 
   transpilePackages: ['@nightcrawler/db'],
 

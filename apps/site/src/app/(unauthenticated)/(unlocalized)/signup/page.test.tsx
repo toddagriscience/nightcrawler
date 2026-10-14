@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Signup from '@/app/(unauthenticated)/signup/page';
+import Signup from '@/app/(unauthenticated)/(unlocalized)/signup/page';
 import { redirect } from 'next/navigation';
 
 vi.mock('next/navigation', () => ({

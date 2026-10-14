@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata } from 'next';
+import { createLocalizedMetadata } from '@/lib/metadata';
 
 /**
  * Generate metadata for investors section
@@ -12,12 +13,17 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  return {
-    title: {
-      default: 'Todd Investors',
-      template: '%s | Todd Investors',
+  const { locale } = await params;
+  return createLocalizedMetadata(
+    {
+      title: {
+        default: 'Todd Investors',
+        template: '%s | Todd Investors',
+      },
     },
-  };
+    '/investors',
+    locale
+  );
 }
 /**
  * Layout for investors section

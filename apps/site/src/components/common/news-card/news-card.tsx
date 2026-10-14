@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { Link } from '@/i18n/config';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import PlaceholderImage from '../placeholder-image/placeholder-image';
 import NewsCardProps from './types/news-card';
 
@@ -31,7 +32,10 @@ const NewsCard = ({
   className = '',
   link,
   title,
+  availableInEnglish = false,
+  language = 'en',
 }: NewsCardProps) => {
+  const t = useTranslations('articleIndex');
   return (
     <div
       className={`text-foreground w-full px-2 py-2 font-light transition-colors duration-300 ${className}`}
@@ -49,13 +53,22 @@ const NewsCard = ({
           />
           {/* <div className={`p-4 ${isDark ? 'text-white' : ''}`}> */}
           <div className="p-4 gap-1 flex flex-col">
-            <h2 className="line-clamp-2 min-h-[2.5rem] md:min-h-[2.75rem] lg:min-h-[3rem] text-sm md:text-normal lg:text-base font-thin leading-tight">
+            {availableInEnglish ? (
+              <p className="text-sm">{t('availableInEnglish')}</p>
+            ) : null}
+            <h2
+              lang={language}
+              className="line-clamp-2 min-h-[2.5rem] md:min-h-[2.75rem] lg:min-h-[3rem] text-sm md:text-normal lg:text-base font-thin leading-tight"
+            >
               {title}
             </h2>
             <p className="mb-1 text-xl">
               {source} <span className="mx-1">•</span> {date}
             </p>
-            <h3 className="line-clamp-2 text-lg md:text-xl italic font-light">
+            <h3
+              lang={language}
+              className="line-clamp-2 text-lg md:text-xl italic font-light"
+            >
               {excerpt}
             </h3>
           </div>

@@ -6,6 +6,7 @@ export const client = createClient({
   projectId: '3x7sixjh',
   dataset: 'production',
   apiVersion: '2024-01-01',
+  perspective: 'published',
   // The Sanity CDN serves cached responses that Next.js cannot invalidate,
   // stacking a second staleness window on top of the ISR window below.
   // Editors expect published changes to appear within minutes, so we read

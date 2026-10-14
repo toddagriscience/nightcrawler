@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { createLocalizedMetadata } from '@/lib/metadata';
+
 import {
   PolicyBody,
   PolicySection,
@@ -8,9 +10,19 @@ import {
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Accessibility',
 };
+
+/** Metadata URLs for the route's actual language and final public path. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createLocalizedMetadata(pageMetadata, '/accessibility', locale);
+}
 
 /** Improvement entries rendered as bulleted paragraphs, in display order. */
 const IMPROVEMENTS = [

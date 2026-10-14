@@ -36,7 +36,9 @@ vi.mock('@/app/(onboarding)/apply/db', () => ({
   getOnboardingAccount: getAccount,
   getOnboardingTeam: getTeam,
 }));
-vi.mock('@/app/(unauthenticated)/signup/actions', () => ({ signUp: vi.fn() }));
+vi.mock('@/app/(unauthenticated)/(unlocalized)/signup/actions', () => ({
+  signUp: vi.fn(),
+}));
 vi.mock('@/app/(onboarding)/apply/navigation/actions', () => ({
   completeTeamStep: vi.fn(),
   completePaymentStep: vi.fn(),
@@ -53,7 +55,7 @@ vi.mock('@/app/(onboarding)/apply/components/colleagues/actions', () => ({
   uninviteUser: vi.fn(),
 }));
 vi.mock(
-  '@/app/(unauthenticated)/signup/components/approved-applicant-gate',
+  '@/app/(unauthenticated)/(unlocalized)/signup/components/approved-applicant-gate',
   () => ({ default: ({ reason }: { reason: string }) => <p>{reason}</p> })
 );
 vi.mock('@/app/(onboarding)/apply/components/onboarding-flow', () => ({

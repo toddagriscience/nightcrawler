@@ -62,8 +62,18 @@ const Footer = () => {
 
   useEffect(() => {
     if (!pendingLocale) return;
+    const alternate = document.querySelector<HTMLLinkElement>(
+      `link[rel="alternate"][hreflang="${pendingLocale}"]`
+    );
+    const isArticle =
+      /^\/(?:(en|es)\/)?(index|news|careers)\/(?!search$)[^/]+$/.test(pathname);
+    // Article translations may have a different slug. A missing alternate means
+    // that language has not been published, so keep the existing publication.
+    if (isArticle && !alternate) return;
     document.cookie = `NEXT_LOCALE=${pendingLocale};path=/;max-age=31536000`;
-    window.location.assign(localizePathname(pathname, pendingLocale));
+    window.location.assign(
+      alternate?.href ?? localizePathname(pathname, pendingLocale)
+    );
   }, [pendingLocale, pathname]);
 
   return (
@@ -81,7 +91,6 @@ const Footer = () => {
                   <Link
                     key={val.href}
                     href={val.href}
-                    locale={locale}
                     className="text-[15px] font-normal"
                   >
                     <span className="link text-underline-left text-underline-left-black text-black">

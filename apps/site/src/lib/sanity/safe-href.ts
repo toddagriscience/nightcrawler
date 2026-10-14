@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { env } from '@/lib/env';
+
 /** Absolute-URL schemes permitted for CMS-authored links. */
 const SAFE_ABSOLUTE_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:']);
 
@@ -17,6 +19,9 @@ const SAFE_ABSOLUTE_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:']);
  * protocol-relative `//host`, scheme-relative junk, and unknown schemes —
  * returns `null` so callers can render the element without a link.
  *
+ * Legacy English prefixes in on-site links are removed while preserving query
+ * parameters and fragments. Spanish and third-party URLs retain their language.
+ *
  * @param raw - Raw href value from Sanity (may be `undefined`/`null`)
  * @returns A safe href string, or `null` when the value is unsafe or empty
  */
@@ -30,13 +35,25 @@ export function toSafeHref(raw: string | null | undefined): string | null {
 
   // Root-relative path, but never protocol-relative (`//host`).
   if (trimmed.startsWith('/')) {
-    return trimmed.startsWith('//') ? null : trimmed;
+    if (trimmed.startsWith('//')) return null;
+    const finalPath = trimmed.replace(/^\/en(?=\/|[?#]|$)/, '');
+    return finalPath.startsWith('/') ? finalPath : `/${finalPath}`;
   }
 
   // Absolute URL with an allow-listed scheme.
   try {
     const url = new URL(trimmed);
     if (SAFE_ABSOLUTE_SCHEMES.has(url.protocol)) {
+      if (url.protocol === 'http:' || url.protocol === 'https:') {
+        const hostname = url.hostname.replace(/^www\./, '');
+        const siteHostname = new URL(env.baseUrl).hostname.replace(
+          /^www\./,
+          ''
+        );
+        if (hostname === siteHostname || hostname === 'toddagriscience.com') {
+          url.pathname = url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+        }
+      }
       return url.href;
     }
   } catch {

@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { Metadata, Viewport } from 'next';
+import { getCanonicalUrl, getPageAlternates } from '@/lib/canonical-urls';
 
 /**
  * Site configuration
@@ -126,7 +127,10 @@ export function createMetadata({
   path?: string;
   ogImage?: string;
 }): Metadata {
-  const pageUrl = `${siteConfig.url}${path}`;
+  const pageUrl = getCanonicalUrl(
+    path,
+    /^\/es(?:\/|$)/.test(path) ? 'es' : 'en'
+  );
   const titleSuffix = getTitleSuffix(path);
   const fullTitle = title ? `${title} | ${titleSuffix}` : titleSuffix;
 
@@ -162,3 +166,21 @@ export function createMetadata({
 }
 
 export { siteConfig };
+
+/** Adds final URLs to metadata for a page with checked-in English and Spanish translations. */
+export function createLocalizedMetadata(
+  metadata: Metadata,
+  path: string,
+  locale: string
+): Metadata {
+  return {
+    ...metadata,
+    alternates: getPageAlternates(path, locale),
+    openGraph: {
+      ...defaultMetadata.openGraph,
+      ...metadata.openGraph,
+      url: getCanonicalUrl(path, locale),
+      locale,
+    },
+  };
+}

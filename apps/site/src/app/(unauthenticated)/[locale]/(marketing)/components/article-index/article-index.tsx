@@ -4,6 +4,8 @@ import { CURSOR_LABEL_ATTRIBUTE } from '@/components/common/cursor-follower/cons
 import { CursorFollower } from '@/components/common/cursor-follower/cursor-follower';
 import PageHeader from '@/components/common/page-header/page-header';
 import { Link } from '@/i18n/config';
+import NextLink from 'next/link';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import {
   ARTICLE_INDEX_TOPIC_TYPES,
@@ -328,11 +330,22 @@ export function ArticleIndex({
                   </div>
 
                   <div className="max-w-[600px]">
-                    <h2 className="text-[18px] font-normal leading-[26px] text-black">
+                    {isEnglishArticleFallback(article, locale ?? 'en') ? (
+                      <p className="mb-1 text-sm text-muted-foreground">
+                        {t('availableInEnglish')}
+                      </p>
+                    ) : null}
+                    <h2
+                      lang={article.language ?? 'en'}
+                      className="text-[18px] font-normal leading-[26px] text-black"
+                    >
                       {article.title}
                     </h2>
                     {summary ? (
-                      <p className="mt-2 text-[14px] font-normal leading-[27px] text-black">
+                      <p
+                        lang={article.language ?? 'en'}
+                        className="mt-2 text-[14px] font-normal leading-[27px] text-black"
+                      >
                         {summary}
                       </p>
                     ) : null}
@@ -358,9 +371,13 @@ export function ArticleIndex({
                 );
               } else {
                 row = (
-                  <Link href={safeHref} className="block" {...cursorAttributes}>
+                  <NextLink
+                    href={safeHref}
+                    className="block"
+                    {...cursorAttributes}
+                  >
                     {rowInner}
-                  </Link>
+                  </NextLink>
                 );
               }
 

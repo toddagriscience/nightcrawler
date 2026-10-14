@@ -13,6 +13,7 @@ import {
 } from '@/lib/sanity/article-types';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { FilteredResponseQueryOptions } from 'next-sanity';
+import { selectArticlesForLocale } from '@/lib/sanity/article-locales';
 
 /** GROQ `_type` values that share the article detail template and projections. */
 const ARTICLE_GROQ_TYPES = '["news", "career"]';
@@ -22,6 +23,27 @@ const ARTICLE_GROQ_TYPES = '["news", "career"]';
  */
 const GROQ_IS_CAREERS_DOC = `_type == "career"`;
 
+/** Only published documents can create public routes or language alternates. */
+const GROQ_PUBLISHED =
+  '!(_id in path("drafts.**")) && coalesce(language, "en") in ["en", "es"]';
+
+/** Published language variants linked by a stable translation group (legacy rows are English). */
+const GROQ_LANGUAGE_FIELDS = `
+  "language": coalesce(language, "en"),
+  "translationGroup": coalesce(translationGroup, _id),
+  "publishedTranslations": *[${GROQ_PUBLISHED} && _type == ^._type && defined(slug.current) && (!defined(offSiteUrl) || offSiteUrl == "") && coalesce(translationGroup, _id) == coalesce(^.translationGroup, ^._id)]{
+    _id, _type, "language": coalesce(language, "en"), slug, excludeFromSitemap
+  }
+`;
+
+/** One publication per group on a listing, with English fallback only when Spanish is unpublished. */
+const GROQ_FOR_LIST_LOCALE = `coalesce(language, "en") == $language || (
+  $language == "es" && coalesce(language, "en") == "en" && !defined(*[
+    ${GROQ_PUBLISHED} && _type == ^._type && language == "es" &&
+    coalesce(translationGroup, _id) == coalesce(^.translationGroup, ^._id)
+  ][0]._id)
+)`;
+
 /**
  * GROQ field set for standalone `career` job documents (slim; see `career` schema in Sanity).
  */
@@ -29,6 +51,7 @@ const GROQ_CAREER_BODY = `
   _id,
   _type,
   _updatedAt,
+  ${GROQ_LANGUAGE_FIELDS},
   title,
   slug,
   jobTeam,
@@ -46,6 +69,7 @@ const GROQ_NEWS_BODY = `
   _id,
   _type,
   _updatedAt,
+  ${GROQ_LANGUAGE_FIELDS},
   title,
   subtitle,
   slug,
@@ -144,13 +168,14 @@ function collectionParam(collection: ArticleCollection): string {
  */
 export async function getArticleBySlug(
   slug: string,
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle | null> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug] | order(_type asc)[0] ${GROQ_BY_DOCUMENT_TYPE}`;
+    const query = `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug && coalesce(language, "en") == $language] | order(_type asc)[0] ${GROQ_BY_DOCUMENT_TYPE}`;
     const article = await client.fetch<SanityArticle | null>(
       query,
-      { slug },
+      { slug, language: locale },
       options ?? defaultSanityFetchOptions
     );
     return article ?? null;
@@ -158,6 +183,48 @@ export async function getArticleBySlug(
     logger.error('Sanity getArticleBySlug failed', error);
     return null;
   }
+}
+
+/** Minimal published routing record, checked before rendering can stream a successful response. */
+export async function getArticleRoutingInfo(
+  slug: string,
+  locale: string
+): Promise<Pick<SanityArticle, '_id' | '_type' | 'language' | 'slug'> | null> {
+  return client.fetch(
+    `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && slug.current == $slug && coalesce(language, "en") == $language] | order(_type asc)[0]{_id, _type, slug, "language": coalesce(language, "en")}`,
+    { slug, language: locale },
+    defaultSanityFetchOptions
+  );
+}
+
+/** Existence check for public CMS forms and governance profiles before rendering starts. */
+export async function getPublicDocumentId(
+  type: 'form' | 'governance-profiles',
+  slug: string
+): Promise<string | null> {
+  return client.fetch(
+    '*[!(_id in path("drafts.**")) && _type == $type && slug.current == $slug][0]._id',
+    { type, slug },
+    defaultSanityFetchOptions
+  );
+}
+
+/** Static article routes are generated only for documents published in that language. */
+export async function getPublishedArticleRouteParams(
+  type: 'news' | 'career',
+  locale?: string
+): Promise<Array<{ locale: string; slug: string }>> {
+  const articles = await client.fetch<
+    Array<{ slug: { current: string }; language: string }>
+  >(
+    `*[${GROQ_PUBLISHED} && _type == $type && defined(slug.current) && (!defined($language) || coalesce(language, "en") == $language) && (!defined(offSiteUrl) || offSiteUrl == "")]{slug, "language": coalesce(language, "en")}`,
+    { type, language: locale ?? null },
+    defaultSanityFetchOptions
+  );
+  return articles.map((article) => ({
+    locale: article.language,
+    slug: article.slug.current,
+  }));
 }
 
 /**
@@ -169,23 +236,28 @@ export async function getArticleBySlug(
  */
 export async function getArticlesByCollection(
   collection: ArticleCollection,
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle[]> {
   const c = collectionParam(collection);
   try {
     const query =
       collection === 'careers'
-        ? `*[_type in ${ARTICLE_GROQ_TYPES} && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`
-        : `*[_type == "news" && (
+        ? `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type in ${ARTICLE_GROQ_TYPES} && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`
+        : `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type == "news" && (
           coalesce(contentType, "news") == $collection ||
           $collection in coalesce(collections, [])
         )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
-      collection === 'careers' ? {} : { collection: c },
+      collection === 'careers'
+        ? { language: locale }
+        : { collection: c, language: locale },
       options ?? defaultSanityFetchOptions
     );
-    return Array.isArray(articles) ? articles : [];
+    return Array.isArray(articles)
+      ? selectArticlesForLocale(articles, locale)
+      : [];
   } catch (error) {
     logger.error('Sanity getArticlesByCollection failed', error);
     return [];
@@ -205,19 +277,22 @@ export async function getArticlesByCollection(
  * @returns Article list sorted by date descending
  */
 export async function getResearchIndexArticles(
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type == "news" && (
+    const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type == "news" && (
       coalesce(contentType, "news") in $types ||
       "research" in coalesce(collections, [])
     )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
-      { types: [...ARTICLE_INDEX_TOPIC_TYPES, 'research'] },
+      { language: locale, types: [...ARTICLE_INDEX_TOPIC_TYPES, 'research'] },
       options ?? defaultSanityFetchOptions
     );
-    return Array.isArray(articles) ? articles : [];
+    return Array.isArray(articles)
+      ? selectArticlesForLocale(articles, locale)
+      : [];
   } catch (error) {
     logger.error('Sanity getResearchIndexArticles failed', error);
     return [];
@@ -237,16 +312,18 @@ export async function getResearchIndexArticles(
  * @returns Article list sorted by date descending
  */
 export async function getNewsIndexArticles(
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type == "news" && (
+    const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type == "news" && (
       coalesce(contentType, "news") in $types ||
       "news" in coalesce(collections, [])
     )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {
+        language: locale,
         types: [
           ...NEWS_TOPIC_TYPES,
           'news',
@@ -257,7 +334,9 @@ export async function getNewsIndexArticles(
       },
       options ?? defaultSanityFetchOptions
     );
-    return Array.isArray(articles) ? articles : [];
+    return Array.isArray(articles)
+      ? selectArticlesForLocale(articles, locale)
+      : [];
   } catch (error) {
     logger.error('Sanity getNewsIndexArticles failed', error);
     return [];
@@ -280,20 +359,23 @@ export async function getNewsIndexArticles(
 export async function getHighlightedArticlesForPage(
   page: ArticleHighlightPage,
   limit: number = ARTICLE_HIGHLIGHT_TILE_COUNT,
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle[]> {
   // The slice bound is interpolated rather than passed as a `$param`: GROQ range
   // syntax takes a literal here. `limit` is caller-supplied code, never user
   // input, and is coerced to a non-negative integer before it reaches the query.
   const size = Math.max(0, Math.trunc(limit));
   try {
-    const query = `*[_type == "news" && $page in coalesce(highlightPages, [])] | order(coalesce(date, _updatedAt) desc)[0...${size}] ${GROQ_NEWS_ONLY}`;
+    const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type == "news" && $page in coalesce(highlightPages, [])] | order(coalesce(date, _updatedAt) desc)[0...${size}] ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
-      { page },
+      { page, language: locale },
       options ?? defaultSanityFetchOptions
     );
-    return Array.isArray(articles) ? articles : [];
+    return Array.isArray(articles)
+      ? selectArticlesForLocale(articles, locale)
+      : [];
   } catch (error) {
     logger.error('Sanity getHighlightedArticlesForPage failed', error);
     return [];
@@ -309,17 +391,20 @@ export async function getHighlightedArticlesForPage(
  */
 export async function getFeaturedArticles(
   collection?: ArticleCollection,
-  options?: FilteredResponseQueryOptions
+  options?: FilteredResponseQueryOptions,
+  locale = 'en'
 ): Promise<SanityArticle[]> {
   if (collection === undefined) {
     try {
-      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
+      const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type in ${ARTICLE_GROQ_TYPES} && isFeatured == true] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
       const articles = await client.fetch<SanityArticle[]>(
         query,
-        {},
+        { language: locale },
         options ?? defaultSanityFetchOptions
       );
-      return Array.isArray(articles) ? articles : [];
+      return Array.isArray(articles)
+        ? selectArticlesForLocale(articles, locale)
+        : [];
     } catch (error) {
       logger.error('Sanity getFeaturedArticles (global) failed', error);
       return [];
@@ -329,24 +414,28 @@ export async function getFeaturedArticles(
   try {
     const c = collectionParam(collection);
     if (collection === 'careers') {
-      const query = `*[_type in ${ARTICLE_GROQ_TYPES} && isFeatured == true && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
+      const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type in ${ARTICLE_GROQ_TYPES} && isFeatured == true && (${GROQ_IS_CAREERS_DOC})] | order(coalesce(date, _updatedAt) desc) ${GROQ_BY_DOCUMENT_TYPE}`;
       const articles = await client.fetch<SanityArticle[]>(
         query,
-        {},
+        { language: locale },
         options ?? defaultSanityFetchOptions
       );
-      return Array.isArray(articles) ? articles : [];
+      return Array.isArray(articles)
+        ? selectArticlesForLocale(articles, locale)
+        : [];
     }
-    const query = `*[_type == "news" && isFeatured == true && (
+    const query = `*[${GROQ_PUBLISHED} && (${GROQ_FOR_LIST_LOCALE}) && _type == "news" && isFeatured == true && (
       coalesce(contentType, "news") == $collection ||
       $collection in coalesce(collections, [])
     )] | order(date desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
-      { collection: c },
+      { collection: c, language: locale },
       options ?? defaultSanityFetchOptions
     );
-    return Array.isArray(articles) ? articles : [];
+    return Array.isArray(articles)
+      ? selectArticlesForLocale(articles, locale)
+      : [];
   } catch (error) {
     logger.error('Sanity getFeaturedArticles (collection) failed', error);
     return [];
@@ -363,7 +452,7 @@ export async function getMainSitemapArticles(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && !(${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_NEWS_ONLY}`;
+    const query = `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && !(${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_NEWS_ONLY}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {},
@@ -387,7 +476,7 @@ export async function getCareersSitemapArticles(
   options?: FilteredResponseQueryOptions
 ): Promise<SanityArticle[]> {
   try {
-    const query = `*[_type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && (${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_BY_DOCUMENT_TYPE}`;
+    const query = `*[${GROQ_PUBLISHED} && _type in ${ARTICLE_GROQ_TYPES} && (!defined(offSiteUrl) || offSiteUrl == "") && (${GROQ_IS_CAREERS_DOC})] | order(_updatedAt desc) ${GROQ_BY_DOCUMENT_TYPE}`;
     const articles = await client.fetch<SanityArticle[]>(
       query,
       {},

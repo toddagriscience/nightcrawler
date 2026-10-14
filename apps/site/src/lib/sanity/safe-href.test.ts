@@ -29,6 +29,26 @@ describe('toSafeHref', () => {
     expect(toSafeHref('http://ok.com/path')).toBe('http://ok.com/path');
   });
 
+  it('normalizes legacy English CMS links without losing parameters or anchors', () => {
+    expect(toSafeHref('/en/forms/iris-access?source=article#form')).toBe(
+      '/forms/iris-access?source=article#form'
+    );
+    expect(toSafeHref('/en#section')).toBe('/#section');
+    expect(
+      toSafeHref('https://toddagriscience.com/en/research?topic=soil#article')
+    ).toBe('https://toddagriscience.com/research?topic=soil#article');
+    expect(
+      toSafeHref('https://www.toddagriscience.com/en/forms/iris-access')
+    ).toBe('https://www.toddagriscience.com/forms/iris-access');
+  });
+
+  it('preserves Spanish and unrelated third-party language prefixes', () => {
+    expect(toSafeHref('/es/research')).toBe('/es/research');
+    expect(toSafeHref('https://example.com/en/research')).toBe(
+      'https://example.com/en/research'
+    );
+  });
+
   it('allows root-relative paths, fragments, mailto and tel', () => {
     expect(toSafeHref('/index/my-article')).toBe('/index/my-article');
     expect(toSafeHref('#section')).toBe('#section');

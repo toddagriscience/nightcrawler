@@ -1,7 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { env } from '@/lib/env';
-import { siteConfig } from '@/lib/metadata';
+import { siteConfig, createLocalizedMetadata } from '@/lib/metadata';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
@@ -14,37 +14,41 @@ export async function generateMetadata({
   const locale = (await params).locale;
   const t = await getTranslations({ locale, namespace: 'careers.metadata' });
 
-  return {
-    metadataBase: new URL('https://toddagriscience.com'),
-    title: {
-      absolute: `${t('shortTitle')} | ${siteConfig.name}`,
-    },
-    description: t('description'),
-    openGraph: {
-      title: t('title'),
+  return createLocalizedMetadata(
+    {
+      metadataBase: new URL('https://toddagriscience.com'),
+      title: {
+        absolute: `${t('shortTitle')} | ${siteConfig.name}`,
+      },
       description: t('description'),
-      url: `${env.baseUrl}/${locale}/careers`,
-      siteName: siteConfig.name,
-      locale: locale,
-      type: 'website',
-      images: [
-        {
-          url: '/career-opengraph-image.png',
-          width: 2796,
-          height: 1460,
-          type: 'image/png',
-          alt: 'Todd - Join Todd.',
-        },
-      ],
+      openGraph: {
+        title: t('title'),
+        description: t('description'),
+        url: `${env.baseUrl}/${locale}/careers`,
+        siteName: siteConfig.name,
+        locale: locale,
+        type: 'website',
+        images: [
+          {
+            url: '/career-opengraph-image.png',
+            width: 2796,
+            height: 1460,
+            type: 'image/png',
+            alt: 'Todd - Join Todd.',
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        site: siteConfig.social.twitter,
+        title: t('title'),
+        description: t('description'),
+        images: ['/career-opengraph-image.png'],
+      },
     },
-    twitter: {
-      card: 'summary_large_image',
-      site: siteConfig.social.twitter,
-      title: t('title'),
-      description: t('description'),
-      images: ['/career-opengraph-image.png'],
-    },
-  };
+    '/careers',
+    locale
+  );
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -6,6 +6,7 @@ import { Carousel, NewsCard } from '@/components/common';
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import { urlFor } from '@/lib/sanity/utils';
 import { useLocale } from 'next-intl';
 
@@ -46,6 +47,8 @@ export function FeaturedNewsCarousel({
           source={article.source ?? ''}
           date={formatArticleListDate(article.date, locale)}
           excerpt={article.summary ?? ''}
+          language={article.language}
+          availableInEnglish={isEnglishArticleFallback(article, locale)}
           link={getArticleCardHref(article)}
         />
       ))}

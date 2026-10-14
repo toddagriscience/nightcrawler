@@ -30,3 +30,26 @@ Some variables have overlapping names. The differences should be extremely clear
 
 - article = news article = Sanity Document
 - excerpt = summary
+
+## Published article languages
+
+`news` and `career` documents have a `language` (`en` or `es`) and an optional
+`translationGroup`. The website treats existing documents without `language`
+as English. This change does not modify production content or require a bulk
+backfill.
+
+To publish a Spanish translation:
+
+1. Use the English document's published `_id` as the translation group, or set
+   the same stable group identifier on both documents.
+2. Create a separate Spanish document with `language: es`, that group, its own
+   content, and its desired slug. Slugs are unique within a language, so the
+   two documents may use the same slug.
+3. Review and publish the Spanish document. A draft does not create a Spanish
+   public route, hreflang alternate, or sitemap entry.
+
+English-only articles remain visible on Spanish lists with an availability
+notice and a final English link. Missing Spanish article URLs deliberately
+redirect to the English publication. Existing legacy documents can receive
+`language: en` when next edited; review any proposed bulk backfill before
+writing to production.

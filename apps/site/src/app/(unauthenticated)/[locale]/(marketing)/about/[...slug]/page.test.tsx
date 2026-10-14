@@ -103,7 +103,7 @@ describe('GovernancePage', () => {
     vi.mocked(sanityQuery).mockResolvedValueOnce(mockProfile);
 
     const page = await GovernancePage({
-      params: Promise.resolve({ slug: 'vincent-todd' }),
+      params: Promise.resolve({ locale: 'en', slug: 'vincent-todd' }),
     });
     renderWithNextIntl(page);
 
@@ -125,7 +125,7 @@ describe('GovernancePage', () => {
     vi.mocked(sanityQuery).mockResolvedValueOnce(mockProfile);
 
     const page = await GovernancePage({
-      params: Promise.resolve({ slug: ['vincent-todd'] }),
+      params: Promise.resolve({ locale: 'en', slug: ['vincent-todd'] }),
     });
     renderWithNextIntl(page);
 

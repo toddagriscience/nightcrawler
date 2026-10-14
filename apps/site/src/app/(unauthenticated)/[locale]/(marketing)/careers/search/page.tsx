@@ -21,7 +21,11 @@ export default async function CareersIndexPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'careers' });
 
-  const careerArticles = await getArticlesByCollection('careers');
+  const careerArticles = await getArticlesByCollection(
+    'careers',
+    undefined,
+    locale
+  );
 
   return (
     <section

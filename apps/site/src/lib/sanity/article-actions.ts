@@ -11,6 +11,8 @@ import type { SanityArticle } from '@/lib/sanity/article-types';
  *
  * @returns Article documents from the news taxonomy
  */
-export async function loadArticlesForHighlights(): Promise<SanityArticle[]> {
-  return getNewsIndexArticles();
+export async function loadArticlesForHighlights(
+  locale = 'en'
+): Promise<SanityArticle[]> {
+  return getNewsIndexArticles(undefined, locale);
 }

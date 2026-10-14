@@ -1,5 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { createLocalizedMetadata } from '@/lib/metadata';
+
 import { siteConfig } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import Homepage from './components/homepage/homepage';
@@ -8,7 +10,7 @@ import { NewsHighlightTilesSection } from './components/news-highlight-tiles/new
 /**
  * Homepage metadata for SEO and social media
  */
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     absolute: siteConfig.homeTitle,
@@ -42,6 +44,16 @@ export const metadata: Metadata = {
     images: [siteConfig.ogImage],
   },
 };
+
+/** Metadata URLs for the route's actual language and final public path. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createLocalizedMetadata(pageMetadata, '/', locale);
+}
 
 /**
  * Marketing homepage. The highlight strip is server-rendered here and handed to

@@ -4,7 +4,7 @@ import { Button } from '@/components/common';
 import SanityBodyText from '@/components/sanity/governance-profile/sanity-body-text';
 import SanityImage from '@/components/sanity/governance-profile/sanity-image';
 import SanityQuote from '@/components/sanity/governance-profile/sanity-quote';
-import { createMetadata } from '@/lib/metadata';
+import { createMetadata, createLocalizedMetadata } from '@/lib/metadata';
 import sanityQuery from '@/lib/sanity/query';
 import { urlFor } from '@/lib/sanity/utils';
 import type { Metadata } from 'next';
@@ -20,9 +20,10 @@ import { notFound } from 'next/navigation';
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string | string[] }>;
+  params: Promise<{ locale: string; slug: string | string[] }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  if (Array.isArray(slug) && slug.length !== 1) return {};
   const resolvedSlug = Array.isArray(slug) ? slug[0] : slug;
   const profile = await sanityQuery(
     'governance-profiles',
@@ -33,14 +34,18 @@ export async function generateMetadata({
   if (!profile || typeof profile.name !== 'string') {
     return {};
   }
-  return createMetadata({
-    title: profile.name,
-    description:
-      typeof profile.title === 'string' && profile.title.length > 0
-        ? `${profile.name} — ${profile.title} at Todd Agriscience.`
-        : `${profile.name} at Todd Agriscience.`,
-    path: `/about/${resolvedSlug}`,
-  });
+  return createLocalizedMetadata(
+    createMetadata({
+      title: profile.name,
+      description:
+        typeof profile.title === 'string' && profile.title.length > 0
+          ? `${profile.name} — ${profile.title} at Todd Agriscience.`
+          : `${profile.name} at Todd Agriscience.`,
+      path: `/about/${resolvedSlug}`,
+    }),
+    `/about/${resolvedSlug}`,
+    locale
+  );
 }
 
 /**
@@ -51,9 +56,10 @@ export async function generateMetadata({
 export default async function GovernancePage({
   params,
 }: {
-  params: Promise<{ slug: string | string[] }>;
+  params: Promise<{ locale: string; slug: string | string[] }>;
 }) {
   const { slug } = await params;
+  if (Array.isArray(slug) && slug.length !== 1) notFound();
   const resolvedSlug = Array.isArray(slug) ? slug[0] : slug;
   const profile = await sanityQuery(
     'governance-profiles',

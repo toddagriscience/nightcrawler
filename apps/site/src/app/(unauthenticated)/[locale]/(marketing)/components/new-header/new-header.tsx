@@ -24,9 +24,10 @@ import { NewHeaderProps } from './types';
 export default function NewHeader({
   menu,
   auth,
+  productHref,
   className,
 }: NewHeaderProps): React.ReactNode {
-  const { menuItems, authLinks } = useMenuItems({ menu, auth });
+  const { menuItems, authLinks } = useMenuItems({ menu, auth, productHref });
 
   return (
     <header

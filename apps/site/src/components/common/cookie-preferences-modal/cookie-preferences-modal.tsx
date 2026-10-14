@@ -68,7 +68,6 @@ export default function CookiePreferencesModal({
           <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row md:gap-0">
             <Link
               onClick={() => setIsOpen(false)}
-              locale="en"
               href={'/privacy'}
               className="underline"
             >

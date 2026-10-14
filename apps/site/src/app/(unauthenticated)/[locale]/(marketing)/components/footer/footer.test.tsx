@@ -115,6 +115,9 @@ describe('Footer', () => {
     };
 
     afterEach(() => {
+      document.head
+        .querySelectorAll('link[data-test-alternate]')
+        .forEach((link) => link.remove());
       vi.unstubAllGlobals();
       vi.mocked(usePathname).mockReturnValue('/');
     });
@@ -144,6 +147,30 @@ describe('Footer', () => {
       await chooseLanguage('Español');
 
       expect(assign).toHaveBeenCalledWith('/es');
+    });
+
+    it('uses a published translation alternate with its own slug', async () => {
+      const assign = stubLocation('/index/english-article');
+      const alternate = document.createElement('link');
+      alternate.rel = 'alternate';
+      alternate.hreflang = 'es';
+      alternate.href = 'https://toddagriscience.com/es/index/articulo-espanol';
+      alternate.dataset.testAlternate = 'true';
+      document.head.append(alternate);
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('Español');
+
+      expect(assign).toHaveBeenCalledWith(alternate.href);
+    });
+
+    it('keeps an English-only article when no Spanish translation is published', async () => {
+      const assign = stubLocation('/index/english-article');
+
+      renderWithNextIntl(<Footer />);
+      await chooseLanguage('Español');
+
+      expect(assign).not.toHaveBeenCalled();
     });
 
     it('does not navigate when the chosen locale is already active', async () => {

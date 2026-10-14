@@ -5,10 +5,11 @@
 import { formatArticleListDate } from '@/lib/sanity/article-display-dates';
 import type { SanityArticle } from '@/lib/sanity/article-types';
 import { getArticleCardHref } from '@/lib/sanity/article-urls';
-import { Link } from '@/i18n/config';
+import Link from 'next/link';
+import { isEnglishArticleFallback } from '@/lib/sanity/article-locales';
 import clsx from 'clsx';
 import { ExternalLink } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { HiArrowLongDown } from 'react-icons/hi2';
 
@@ -18,6 +19,7 @@ interface LatestNewsTableProps {
 
 export function LatestNewsTable({ items }: LatestNewsTableProps) {
   const locale = useLocale();
+  const t = useTranslations('articleIndex');
   const [visibleCount, setVisibleCount] = useState(3); // Show first 3 items initially
   const isAllShown = visibleCount >= items.length;
 
@@ -43,7 +45,12 @@ export function LatestNewsTable({ items }: LatestNewsTableProps) {
               'border-b border-[#555555]'
           )}
         >
-          <div>{item.title}</div>
+          <div>
+            <span lang={item.language ?? 'en'}>{item.title}</span>
+            {isEnglishArticleFallback(item, locale) ? (
+              <p className="text-sm">{t('availableInEnglish')}</p>
+            ) : null}
+          </div>
 
           <Link
             href={getArticleCardHref(item)}
