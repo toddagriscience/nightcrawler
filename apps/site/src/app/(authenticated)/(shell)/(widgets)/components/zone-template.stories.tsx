@@ -49,7 +49,9 @@ function ZoneTemplatePreview({
   return (
     <SearchPanelProvider>
       <ZoneActiveTemplate
+        zoneId={1}
         zoneName="North block"
+        observations={[]}
         sampleLabel="September 15, 2025"
         nextLabel="March 15, 2026"
         charts={[{ label: 'Calcium', props: calciumProps }]}

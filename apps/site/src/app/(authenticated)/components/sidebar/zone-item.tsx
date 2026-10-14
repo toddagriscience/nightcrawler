@@ -1,9 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-'use client';
-
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
 interface ZoneItemProps {
   id: number;
@@ -12,6 +9,8 @@ interface ZoneItemProps {
   index: number;
   /** When true, shows a yellow dot marking the zone as pending review. */
   isPending?: boolean;
+  /** Whether this zone is the current dashboard selection. */
+  isActive?: boolean;
 }
 
 /**
@@ -26,22 +25,18 @@ export default function ZoneItem({
   name,
   index,
   isPending = false,
+  isActive = false,
 }: ZoneItemProps) {
-  const searchParams = useSearchParams();
-  const currentZoneParam = searchParams.get('zone');
-  const isActive = currentZoneParam
-    ? currentZoneParam === String(id)
-    : id === 1;
-
   return (
     <Link
       href={`/?zone=${id}`}
+      aria-current={isActive ? 'page' : undefined}
       className={`
         flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors w-full text-left
         ${
           isActive
             ? 'bg-accent/85 text-foreground font-semibold'
-            : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground'
+            : 'text-foreground/70 hover:bg-accent/60 hover:text-foreground'
         }
       `}
     >
@@ -53,7 +48,7 @@ export default function ZoneItem({
         />
       ) : null}
       <span className="min-w-0 flex-1 truncate">{name}</span>
-      <kbd className="text-foreground/40 shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px]">
+      <kbd className="text-foreground/70 shrink-0 rounded bg-[#D9D9D9]/40 px-1.5 py-0.5 text-[10px]">
         Alt {index + 1}
       </kbd>
     </Link>

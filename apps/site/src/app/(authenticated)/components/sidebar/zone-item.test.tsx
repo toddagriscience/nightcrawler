@@ -1,14 +1,8 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import ZoneItem from './zone-item';
-
-vi.mock('next/navigation', () => ({
-  useSearchParams: vi.fn(() => ({
-    get: vi.fn((key: string) => null),
-  })),
-}));
 
 describe('ZoneItem', () => {
   it('renders the zone name linking to its zone view', () => {
@@ -42,15 +36,17 @@ describe('ZoneItem', () => {
       screen.queryByRole('button', { name: /delete/i })
     ).not.toBeInTheDocument();
   });
-  it('applies active styling to zone 1 by default when search params are empty', () => {
-    render(<ZoneItem id={1} name="North Field" index={0} />);
+  it('announces the selected dashboard zone', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} isActive />);
     const link = screen.getByRole('link', { name: /North Field/i });
     expect(link).toHaveClass('bg-accent/85');
+    expect(link).toHaveAttribute('aria-current', 'page');
   });
 
-  it('keeps normal styling for other zones when search params are empty', () => {
+  it('does not announce an inactive zone as the current page', () => {
     render(<ZoneItem id={7} name="North Field" index={0} />);
     const link = screen.getByRole('link', { name: /North Field/i });
-    expect(link).toHaveClass('text-muted-foreground');
+    expect(link).toHaveClass('text-foreground/70');
+    expect(link).not.toHaveAttribute('aria-current');
   });
 });

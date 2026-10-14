@@ -9,7 +9,7 @@ import { Button } from '../../ui';
  * Outline pill classes for {@link PageHeader} CTAs (also used by marketing pill links).
  */
 export const PAGE_HEADER_BUTTON_CLASSNAME =
-  'h-[44px] w-fit rounded-full border-[0.75px] border-[#848484] px-[20px] text-sm';
+  'h-[42px] w-fit rounded-full border-[0.75px] border-[#848484] px-[20px] text-sm';
 
 /**
  * PageHeader component for displaying a page header

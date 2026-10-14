@@ -2,16 +2,16 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { LuSearch } from 'react-icons/lu';
-import IrisIcon from '../sidebar/iris-icon';
-import { useSearchPanel } from './search-panel-context';
-import { resultHref } from './search-display';
 import {
   searchImps,
   type ImpHit,
 } from '@/app/(authenticated)/actions/search-imps';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { LuSearch } from 'react-icons/lu';
+import IrisIcon from '../sidebar/iris-icon';
+import { resultHref } from './search-display';
+import { useSearchPanel } from './search-panel-context';
 
 /**
  * Command-palette search popup. Keyword IMP matches appear as the user types

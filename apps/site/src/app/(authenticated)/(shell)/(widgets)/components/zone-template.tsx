@@ -4,10 +4,15 @@ import {
   createFarmDefaultSettings,
   getStandardValues,
 } from '@nightcrawler/db/queries';
-import { analysis, mineral } from '@nightcrawler/db/schema';
+import {
+  analysis,
+  managementZone,
+  managementZoneObservation,
+  mineral,
+} from '@nightcrawler/db/schema';
 import { db } from '@nightcrawler/db/schema/connection';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray } from 'drizzle-orm';
 import { toMineralChartProps } from './to-mineral-chart';
 import { toPhRange } from './to-ph-range';
 import { ZoneActiveTemplate } from './zone-active-template';
@@ -69,24 +74,49 @@ export default async function ZoneTemplate({
 
   const currentUser = await getAuthenticatedInfo();
 
-  const [readings, initialCalciumThresholds, initialPhThresholds] =
-    await Promise.all([
-      db
-        .select({
-          name: mineral.name,
-          realValue: mineral.realValue,
-          units: mineral.units,
-        })
-        .from(mineral)
-        .where(
-          and(
-            eq(mineral.analysisId, latest.id),
-            inArray(mineral.name, [...ZONE_READING_MINERALS])
-          )
-        ),
-      getStandardValues(currentUser.farmId, 'Calcium'),
-      getStandardValues(currentUser.farmId, 'PH'),
-    ]);
+  const [
+    readings,
+    initialCalciumThresholds,
+    initialPhThresholds,
+    observations,
+  ] = await Promise.all([
+    db
+      .select({
+        name: mineral.name,
+        realValue: mineral.realValue,
+        units: mineral.units,
+      })
+      .from(mineral)
+      .where(
+        and(
+          eq(mineral.analysisId, latest.id),
+          inArray(mineral.name, [...ZONE_READING_MINERALS])
+        )
+      ),
+    getStandardValues(currentUser.farmId, 'Calcium'),
+    getStandardValues(currentUser.farmId, 'PH'),
+    db
+      .select({
+        id: managementZoneObservation.id,
+        body: managementZoneObservation.body,
+        observedOn: managementZoneObservation.observedOn,
+      })
+      .from(managementZoneObservation)
+      .innerJoin(
+        managementZone,
+        eq(managementZoneObservation.managementZoneId, managementZone.id)
+      )
+      .where(
+        and(
+          eq(managementZoneObservation.managementZoneId, zoneId),
+          eq(managementZone.farmId, currentUser.farmId)
+        )
+      )
+      .orderBy(
+        asc(managementZoneObservation.observedOn),
+        asc(managementZoneObservation.createdAt)
+      ),
+  ]);
 
   let calciumThresholds = initialCalciumThresholds;
   let phThresholds = initialPhThresholds;
@@ -127,7 +157,9 @@ export default async function ZoneTemplate({
 
   return (
     <ZoneActiveTemplate
+      zoneId={zoneId}
       zoneName={zoneName}
+      observations={observations}
       sampleLabel={formatDate(sampleDate)}
       nextLabel={formatDate(nextDate)}
       charts={charts}
