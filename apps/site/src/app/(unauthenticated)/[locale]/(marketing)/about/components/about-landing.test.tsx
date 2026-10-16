@@ -62,7 +62,7 @@ describe('AboutLanding', () => {
       screen.getByText(
         'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
-    ).toHaveClass('max-w-[37rem]');
+    ).toHaveClass('max-w-[35rem]');
   });
 
   it('renders vision section with image and CTA', () => {

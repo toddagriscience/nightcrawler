@@ -44,7 +44,7 @@ export default function AboutLanding({
               caption={t('eyebrow')}
               title={t('title')}
               subtitle={t('subtitle')}
-              subtitleClassName="max-w-[37rem]"
+              subtitleClassName="max-w-[35rem]"
             />
           </section>
           <div className="mx-auto mt-5 flex w-[85%] flex-col justify-center gap-10 md:mt-43 md:flex-row md:justify-center lg:gap-40">
