@@ -19,6 +19,7 @@ export const messageFiles = [
   'privacy',
   'terms',
   'careers',
+  'varieties',
   'cookie-preferences',
   'forms',
 ];
