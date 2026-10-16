@@ -202,8 +202,21 @@ export async function updateManagementZone(
 ) {
   await requireInternalAccount();
   try {
-    const updateData: Record<string, unknown> = { ...data };
-    if (data.npkLastUsed) updateData.npkLastUsed = new Date(data.npkLastUsed);
+    if (!Number.isInteger(id) || id <= 0) return null;
+    const npkLastUsed = data.npkLastUsed
+      ? new Date(data.npkLastUsed)
+      : undefined;
+    if (npkLastUsed && Number.isNaN(npkLastUsed.getTime())) return null;
+    // Pick staff-editable columns explicitly; server-action payloads are untrusted
+    // even when their TypeScript type omits ids, timestamps, and analysis state.
+    const updateData = {
+      farmId: data.farmId,
+      name: data.name,
+      npk: data.npk,
+      npkLastUsed,
+      irrigation: data.irrigation,
+      waterConservation: data.waterConservation,
+    };
     const [result] = await db
       .update(managementZone)
       .set(updateData)

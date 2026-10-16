@@ -39,6 +39,7 @@ const navItems: NavItem[] = [
   { label: 'Applications', href: '/applications', icon: ClipboardList },
   { label: 'Users', href: '/users', icon: Users },
   { label: 'Farms', href: '/farms', icon: Tractor },
+  { label: 'Zone Requests', href: '/zone-requests', icon: ClipboardList },
   { label: 'Analyses', href: '/analyses', icon: FlaskConical },
   { label: 'IMPs', href: '/imps', icon: FileText },
   { label: 'Seed Products', href: '/seed-products', icon: Sprout },

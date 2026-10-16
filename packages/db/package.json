@@ -13,6 +13,7 @@
     "./utils/get-embedding": "./src/utils/get-embedding.ts",
     "./utils/extract-applicant-prefill": "./src/utils/extract-applicant-prefill.ts",
     "./utils/normalize-phone": "./src/utils/normalize-phone.ts",
+    "./utils/management-zone-request": "./src/utils/management-zone-request.ts",
     "./utils/send-approved-applicant-invite": "./src/utils/send-approved-applicant-invite.ts",
     "./utils/format-application-answers-as-notes": "./src/utils/format-application-answers-as-notes.ts",
     "./utils/iris-access-allowlists-manifest": "./src/utils/iris-access-allowlists-manifest.ts",
