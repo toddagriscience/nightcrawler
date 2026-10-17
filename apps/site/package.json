@@ -33,9 +33,7 @@
     "build-storybook": "storybook build",
     "ci": "bun run type-check && bun run lint && bun run test && bun run build",
     "validate": "bun run format:check && bun run ci",
-    "generate-icons": "tsx scripts/generate-icons.ts",
-    "verify:articles": "bun scripts/verify-public-articles.ts",
-    "audit:publications": "bun scripts/audit-publications.ts"
+    "generate-icons": "tsx scripts/generate-icons.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.16",

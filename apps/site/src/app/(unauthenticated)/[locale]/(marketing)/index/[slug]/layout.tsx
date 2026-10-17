@@ -1,9 +1,14 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { createArticleMetadata } from '@/lib/sanity/article-presentation';
+import { createMetadata } from '@/lib/metadata';
+import { getArticleAlternates } from '@/lib/sanity/article-locales';
 import { isSelfReferentialArticleUrl } from '@/lib/sanity/article-urls';
 import { env } from '@/lib/env';
-import { getArticleBySlug, isInternalArticle } from '@/lib/sanity/articles';
+import {
+  getArticleBySlug,
+  isCareerArticle,
+  isInternalArticle,
+} from '@/lib/sanity/articles';
 import type { Metadata } from 'next';
 
 /**
@@ -32,7 +37,22 @@ export async function generateMetadata({
   ) {
     return {};
   }
-  return createArticleMetadata(article);
+  const path = isCareerArticle(article)
+    ? `/${locale}/careers/${slug}`
+    : `/${locale}/index/${slug}`;
+  const summary = article.summary;
+  const description =
+    summary !== undefined && summary !== null && summary.length > 0
+      ? summary
+      : 'Todd Agriscience articles and announcements.';
+  return {
+    ...createMetadata({
+      title: article.title,
+      description,
+      path,
+    }),
+    alternates: getArticleAlternates(article),
+  };
 }
 
 /**

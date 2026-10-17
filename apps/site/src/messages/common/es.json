@@ -10,11 +10,6 @@
       "title": "404",
       "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
       "homeButton": "Inicio"
-    },
-    "article": {
-      "author": "Autor",
-      "editorialOwner": "Responsable editorial",
-      "updated": "Actualizado"
     }
   },
   "metadata": {
