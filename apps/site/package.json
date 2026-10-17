@@ -19,6 +19,7 @@
     "build": "next build",
     "start": "next start",
     "verify:routes": "bun scripts/verify-public-routes.ts",
+    "verify:metadata": "bun scripts/verify-public-metadata.ts",
     "lint": "eslint .",
     "prelint:fix": "tsx ./scripts/prep-for-license.ts",
     "lint:fix": "bun run prelint:fix && eslint . --fix && bun run format",
@@ -32,7 +33,9 @@
     "build-storybook": "storybook build",
     "ci": "bun run type-check && bun run lint && bun run test && bun run build",
     "validate": "bun run format:check && bun run ci",
-    "generate-icons": "tsx scripts/generate-icons.ts"
+    "generate-icons": "tsx scripts/generate-icons.ts",
+    "verify:articles": "bun scripts/verify-public-articles.ts",
+    "audit:publications": "bun scripts/audit-publications.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.16",

@@ -10,9 +10,84 @@
       "title": "404",
       "message": "La página que buscas no se pudo encontrar. Por favor verifica la URL e inténtalo de nuevo.",
       "homeButton": "Inicio"
+    },
+    "article": {
+      "author": "Autor",
+      "editorialOwner": "Responsable editorial",
+      "updated": "Actualizado"
     }
   },
   "metadata": {
-    "description": "Todd Agriscience es una firma de agricultura generativa de primera generación."
+    "description": "Todd Agriscience es una firma de agricultura generativa de primera generación.",
+    "pages": {
+      "home": {
+        "title": "Todd | Agricultura sostenible",
+        "description": "Todd impulsa la agricultura sostenible mediante la investigación, la gestión de granjas y la genética de cultivos."
+      },
+      "research": {
+        "title": "Investigación | Todd",
+        "description": "Explora el enfoque de Todd sobre la salud del suelo, la producción de cultivos y la gestión de granjas para una agricultura sostenible."
+      },
+      "researchIndex": {
+        "title": "Índice de investigación | Todd",
+        "description": "Lee las publicaciones, los experimentos y los conocimientos técnicos de Todd sobre agricultura sostenible."
+      },
+      "news": {
+        "title": "Noticias | Todd",
+        "description": "Lee los últimos anuncios, las novedades de la empresa y las publicaciones de Todd Agriscience."
+      },
+      "careers": {
+        "title": "Carreras | Todd",
+        "description": "Explora las oportunidades en Todd y únete a nuestros científicos, ingenieros y creadores que trabajan en la agricultura sostenible."
+      },
+      "careerSearch": {
+        "title": "Puestos disponibles | Todd",
+        "description": "Consulta las oportunidades actuales en los equipos de investigación, ingeniería y otras áreas de Todd."
+      },
+      "about": {
+        "title": "Acerca de | Todd",
+        "description": "Conoce la misión, el enfoque y las alianzas de Todd para crear granjas sostenibles y apoyar a comunidades prósperas."
+      },
+      "contact": {
+        "title": "Contacto | Todd",
+        "description": "Ponte en contacto con Todd Agriscience para consultas sobre investigación, servicios agrícolas y preguntas generales."
+      },
+      "investors": {
+        "title": "Inversionistas | Todd",
+        "description": "Conoce las oportunidades de inversión, la gobernanza y el liderazgo de Todd Agriscience."
+      },
+      "esg": {
+        "title": "Medioambiente, sociedad y gobernanza | Todd Investors",
+        "description": "Explora los compromisos ambientales, sociales y de gobernanza de Todd con la naturaleza, los empleados, los socios y las partes interesadas."
+      },
+      "brand": {
+        "title": "Recursos de marca | Todd",
+        "description": "Accede a los logotipos, la identidad visual y las pautas de marca de Todd Agriscience."
+      },
+      "legal": {
+        "title": "Información legal | Todd",
+        "description": "Lee los avisos legales y las divulgaciones de Todd Agriscience."
+      },
+      "privacy": {
+        "title": "Política de privacidad | Todd",
+        "description": "Conoce cómo Todd Agriscience trata la información personal y protege tu privacidad."
+      },
+      "terms": {
+        "title": "Términos de uso | Todd",
+        "description": "Lee los términos que rigen el uso del sitio web y los servicios de Todd Agriscience."
+      },
+      "accessibility": {
+        "title": "Accesibilidad | Todd",
+        "description": "Lee los compromisos de accesibilidad de Todd Agriscience y conoce cómo solicitar asistencia."
+      },
+      "login": {
+        "title": "Inicio de sesión | Todd",
+        "description": "Inicia sesión en tu cuenta de Todd para gestionar tu granja y acceder a la plataforma Iris."
+      },
+      "forgotPassword": {
+        "title": "Restablecer contraseña | Todd",
+        "description": "Restablece la contraseña de tu cuenta de Todd."
+      }
+    }
   }
 }

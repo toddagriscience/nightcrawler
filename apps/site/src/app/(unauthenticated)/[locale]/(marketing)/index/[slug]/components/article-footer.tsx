@@ -1,5 +1,6 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
+import { useTranslations } from 'next-intl';
 import type { ArticleUiSubscript } from '../types';
 
 /**
@@ -9,13 +10,16 @@ import type { ArticleUiSubscript } from '../types';
  */
 export function ArticleFooter({
   author,
+  hasNamedAuthor,
   footerSubtitle,
   subscripts,
 }: {
   author?: string;
+  hasNamedAuthor?: boolean;
   footerSubtitle?: string;
   subscripts: ArticleUiSubscript[];
 }) {
+  const t = useTranslations('common.article');
   if (!author && subscripts.length === 0) return null;
 
   return (
@@ -23,7 +27,7 @@ export function ArticleFooter({
       {author !== undefined && author !== null && author.length > 0 ? (
         <>
           <p className="text-[14px] font-normal leading-[32px] tracking-normal text-[#848484]">
-            Author
+            {t(hasNamedAuthor ? 'author' : 'editorialOwner')}
           </p>
           <p className="text-[14px] font-normal leading-[32px] tracking-normal text-foreground">
             {author}

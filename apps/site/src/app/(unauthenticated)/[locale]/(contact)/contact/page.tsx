@@ -2,7 +2,6 @@
 
 import { DynamicForm } from '@/app/(unauthenticated)/[locale]/(marketing)/forms/[slug]/components/dynamic-form';
 import { getFormBySlug } from '@/lib/sanity/forms';
-import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
@@ -31,8 +30,3 @@ export default async function Contact() {
     />
   );
 }
-
-/** Metadata for the public contact page. */
-export const metadata: Metadata = {
-  title: 'Contact',
-};

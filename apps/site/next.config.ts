@@ -119,6 +119,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Every crawler and browser receives one complete metadata set in the HTML head.
+  htmlLimitedBots: /.*/,
   experimental: { globalNotFound: true },
 
   transpilePackages: ['@nightcrawler/db'],

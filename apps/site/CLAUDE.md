@@ -139,6 +139,8 @@ Run these from `apps/site` — they do not exist at the repository root.
 - `bun run validate` — `format:check` → `ci`
 - `bun run lint:fix` — applies license headers, ESLint `--fix`, then formats
 - `bun run test:watch` / `bun run test:coverage`
+- `bun run verify:metadata <base-url> [canonical-origin]` — raw HTML metadata checks
+  for a browser, Googlebot, Bingbot, and OAI-SearchBot against a production server
 - `bun run verify:routes <base-url>` — HTTP checks against a running production
   server for locale canonicals, missing CMS resources, and XML sitemaps
 - `bun run storybook` — component explorer on port 6006
@@ -188,3 +190,33 @@ the matching JSON file to every namespace directory.
 Global styles and CSS variables live in `src/app/globals.css`. Marketing and
 platform routes read their background from `--background` and
 `--background-platform` respectively.
+
+## Public metadata
+
+`htmlLimitedBots: /.*/` disables metadata streaming so every caller receives
+the final metadata in the HTML head. Core public pages use
+`src/lib/public-page-metadata.ts` and translated copy in `metadata.pages` within
+the common message files. Search and social titles/descriptions use the same
+route-specific copy. Global WebSite and Organization JSON-LD stays in the root
+head; the regular Metadata API owns title, meta, and canonical/link elements.
+
+Build cache inputs include workspace `.env*` files so cached bundles cannot
+reuse a previous environment’s compiled canonical origin or public configuration.
+
+## Publications
+
+CMS articles render one semantic article with one H1. `article-presentation.ts`
+provides the shared excerpt, author/editorial owner, genuine publication date,
+optional editorial update date, canonical URL and main/share image. Only explicitly
+set `dateModified` describes editorial changes; `_updatedAt` is CMS bookkeeping.
+Legacy blank summaries use an excerpt from the published body, unsigned Todd
+publications display Todd Agriscience as editorial owner, and records without a
+CMS image use a title cover from `/api/articles/[slug]/image?locale=en`.
+
+Run `bun run verify:articles <base-url> [canonical-origin]` from `apps/site` against
+a production server to check raw browser and search-crawler responses and images.
+`bun run audit:publications` prints read-only CMS backfill proposals for editorial
+review. It never writes to Sanity. Editors should approve the suggested excerpt
+and owner and add genuine main images; do not fabricate dates or named authors.
+Article JSON-LD follows the supported native script pattern inside the article;
+it must receive a nonce when the CSP nonce foundation is integrated.

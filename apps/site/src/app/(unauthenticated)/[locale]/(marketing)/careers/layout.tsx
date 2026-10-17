@@ -1,56 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { env } from '@/lib/env';
-import { siteConfig, createLocalizedMetadata } from '@/lib/metadata';
-import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { createPublicPageMetadata } from '@/lib/public-page-metadata';
+import type { Metadata } from 'next';
 
+/** Complete translated metadata for the final public page URL. */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  // /{locale}/careers
-  const locale = (await params).locale;
-  const t = await getTranslations({ locale, namespace: 'careers.metadata' });
-
-  return createLocalizedMetadata(
-    {
-      metadataBase: new URL('https://toddagriscience.com'),
-      title: {
-        absolute: `${t('shortTitle')} | ${siteConfig.name}`,
-      },
-      description: t('description'),
-      openGraph: {
-        title: t('title'),
-        description: t('description'),
-        url: `${env.baseUrl}/${locale}/careers`,
-        siteName: siteConfig.name,
-        locale: locale,
-        type: 'website',
-        images: [
-          {
-            url: '/career-opengraph-image.png',
-            width: 2796,
-            height: 1460,
-            type: 'image/png',
-            alt: 'Todd - Join Todd.',
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        site: siteConfig.social.twitter,
-        title: t('title'),
-        description: t('description'),
-        images: ['/career-opengraph-image.png'],
-      },
-    },
-    '/careers',
-    locale
-  );
+  const { locale } = await params;
+  return createPublicPageMetadata('careers', locale);
 }
 
+/** Preserves the page's presentation around its children. */
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

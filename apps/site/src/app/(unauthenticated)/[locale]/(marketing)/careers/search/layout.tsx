@@ -1,65 +1,19 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
-import { env } from '@/lib/env';
-import { siteConfig, createLocalizedMetadata } from '@/lib/metadata';
+import { createPublicPageMetadata } from '@/lib/public-page-metadata';
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 
-/**
- * Metadata for **`/{locale}/careers/search`** (job listings index).
- *
- * @param params - Route params with locale
- */
+/** Complete translated metadata for the final public page URL. */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const locale = (await params).locale;
-  const t = await getTranslations({ locale, namespace: 'careers.metadata' });
-
-  return createLocalizedMetadata(
-    {
-      metadataBase: new URL(env.baseUrl),
-      title: {
-        absolute: `${t('shortTitle')} | ${siteConfig.name}`,
-      },
-      description: t('description'),
-      openGraph: {
-        title: t('title'),
-        description: t('description'),
-        url: `${env.baseUrl}/${locale}/careers/search`,
-        siteName: siteConfig.name,
-        locale: locale,
-        type: 'website',
-        images: [
-          {
-            url: '/career-opengraph-image.png',
-            width: 2796,
-            height: 1460,
-            type: 'image/png',
-            alt: 'Todd - Join Todd.',
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        site: siteConfig.social.twitter,
-        title: t('title'),
-        description: t('description'),
-        images: ['/career-opengraph-image.png'],
-      },
-    },
-    '/careers/search',
-    locale
-  );
+  const { locale } = await params;
+  return createPublicPageMetadata('careerSearch', locale);
 }
 
-/**
- * Passthrough layout for the careers **`/search`** subtree.
- *
- * @param props - Layout children slot
- */
+/** Preserves the page's presentation around its children. */
 export default function CareersIndexLayout({
   children,
 }: {

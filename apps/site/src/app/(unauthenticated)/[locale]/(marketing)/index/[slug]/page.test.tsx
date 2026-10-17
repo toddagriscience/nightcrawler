@@ -108,6 +108,7 @@ vi.mock('../../components/news-highlight-tiles/news-highlight-tiles', () => ({
 const builder = {
   width: vi.fn().mockReturnThis(),
   height: vi.fn().mockReturnThis(),
+  fit: vi.fn().mockReturnThis(),
   src: vi.fn().mockReturnValue('mocked-url'),
   url: vi.fn().mockReturnValue('https://google.com/test.png'),
 };
@@ -137,10 +138,27 @@ describe('Article index Page', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByText(item.title)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: item.title })
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(document.querySelectorAll('article')).toHaveLength(1);
+    expect(document.querySelectorAll('[data-article-body]')).toHaveLength(1);
+    const schema = JSON.parse(
+      document.querySelector('article script[type="application/ld+json"]')
+        ?.textContent ?? '{}'
+    );
+    expect(schema.headline).toBe(item.title);
+    expect(schema.description).toBe(item.summary);
+    expect(schema.author).toEqual({
+      '@type': 'Organization',
+      name: 'Todd Agriscience',
+    });
+    expect(screen.getByText('Todd Agriscience')).toBeInTheDocument();
 
     const formattedDate = new Date(item.date)
       .toLocaleDateString('en-GB', {
+        timeZone: 'UTC',
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -152,5 +170,28 @@ describe('Article index Page', () => {
     expect(
       screen.getByText(item.content[0].children[0].text)
     ).toBeInTheDocument();
+  });
+  it('keeps body headings below the title and safely serializes hostile CMS text', async () => {
+    const hostileTitle = '</script><script>alert(1)</script>';
+    getArticleBySlugMock.mockResolvedValue({
+      ...item,
+      title: hostileTitle,
+      content: [{ ...item.content[0], style: 'h1' }],
+    });
+    renderWithNextIntl(
+      <TooltipProvider>
+        {await ArticleIndexPage({
+          params: Promise.resolve({ slug: 'new-ai', locale: 'en' }),
+        })}
+      </TooltipProvider>
+    );
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Test content.' })
+    ).toBeInTheDocument();
+    expect(document.querySelectorAll('article script')).toHaveLength(1);
+    const json = document.querySelector('article script')?.textContent ?? '';
+    expect(json).not.toContain('</script>');
+    expect(JSON.parse(json).headline).toBe(hostileTitle);
   });
 });
