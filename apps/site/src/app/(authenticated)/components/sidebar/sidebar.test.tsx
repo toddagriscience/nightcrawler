@@ -2,18 +2,29 @@
 
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { SearchPanelProvider } from '../search-panel/search-panel-context';
 import Sidebar from './sidebar';
 import { SidebarCollapseProvider } from './sidebar-collapse-context';
-import { SearchPanelProvider } from '../search-panel/search-panel-context';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
   useRouter: vi.fn(() => ({ push: vi.fn() })),
+  useSearchParams: vi.fn(() => new URLSearchParams()),
 }));
 
 const getSidebarManagementZones = vi.fn(async () => [
-  { id: 1, name: 'North Field', isPending: false },
-  { id: 2, name: 'South Field', isPending: true },
+  {
+    id: 1,
+    name: 'North Field',
+    isPending: false,
+    createdAt: new Date('2026-10-02T00:00:00Z'),
+  },
+  {
+    id: 2,
+    name: 'South Field',
+    isPending: true,
+    createdAt: new Date('2026-10-01T00:00:00Z'),
+  },
 ]);
 
 vi.mock('@/app/(authenticated)/(no-sidebar)/account/db', () => ({
@@ -79,6 +90,35 @@ describe('Sidebar', () => {
     const dots = screen.getAllByRole('img', { name: /pending review/i });
     // Only the pending zone (South Field) shows the dot.
     expect(dots).toHaveLength(1);
+  });
+
+  it('defaults to the oldest zone even when it is not first alphabetically or id 1', async () => {
+    await renderSidebar();
+    expect(screen.getByRole('link', { name: /South Field/i })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(
+      screen.getByRole('link', { name: /North Field/i })
+    ).not.toHaveAttribute('aria-current');
+  });
+
+  it('uses the dashboard id tie-breaker for zones created at the same time', async () => {
+    const createdAt = new Date('2026-10-01T00:00:00Z');
+    getSidebarManagementZones.mockResolvedValueOnce([
+      { id: 90, name: 'North Field', isPending: false, createdAt },
+      { id: 27, name: 'South Field', isPending: false, createdAt },
+    ]);
+
+    await renderSidebar();
+
+    expect(screen.getByRole('link', { name: /South Field/i })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(
+      screen.getByRole('link', { name: /North Field/i })
+    ).not.toHaveAttribute('aria-current');
   });
 
   it('does not render add or delete zone controls', async () => {

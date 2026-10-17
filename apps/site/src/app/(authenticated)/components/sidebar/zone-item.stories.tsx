@@ -13,6 +13,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Active: Story = {
+  args: { id: 7, name: 'North Block', index: 0, isActive: true },
+};
+
+export const Inactive: Story = {
   args: { id: 7, name: 'North Block', index: 0 },
 };
 

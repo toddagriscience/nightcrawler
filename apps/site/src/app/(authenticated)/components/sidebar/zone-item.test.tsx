@@ -36,4 +36,17 @@ describe('ZoneItem', () => {
       screen.queryByRole('button', { name: /delete/i })
     ).not.toBeInTheDocument();
   });
+  it('announces the selected dashboard zone', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} isActive />);
+    const link = screen.getByRole('link', { name: /North Field/i });
+    expect(link).toHaveClass('bg-accent/85');
+    expect(link).toHaveAttribute('aria-current', 'page');
+  });
+
+  it('does not announce an inactive zone as the current page', () => {
+    render(<ZoneItem id={7} name="North Field" index={0} />);
+    const link = screen.getByRole('link', { name: /North Field/i });
+    expect(link).toHaveClass('text-foreground/70');
+    expect(link).not.toHaveAttribute('aria-current');
+  });
 });

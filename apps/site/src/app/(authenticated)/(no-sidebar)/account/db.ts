@@ -147,6 +147,8 @@ export interface SidebarManagementZone {
   id: number;
   /** Display name, or `null` when unset. */
   name: string | null;
+  /** Creation time used to match the dashboard's default zone. */
+  createdAt: Date;
   /** True when the zone has no analysis yet (rendered as an "Under Review" placeholder). */
   isPending: boolean;
 }
@@ -168,6 +170,7 @@ export async function getSidebarManagementZones(): Promise<
     .select({
       id: managementZone.id,
       name: managementZone.name,
+      createdAt: managementZone.createdAt,
       isPending: sql<boolean>`${notExists(
         db
           .select({ id: analysis.id })

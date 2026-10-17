@@ -34,7 +34,7 @@ export default async function DashboardPage({
     .select()
     .from(managementZone)
     .where(eq(managementZone.farmId, currentUser.farmId))
-    .orderBy(asc(managementZone.createdAt));
+    .orderBy(asc(managementZone.createdAt), asc(managementZone.id));
 
   // No zones at all — show empty state for onboarded farms without zones yet
   if (allManagementZones.length === 0) {
