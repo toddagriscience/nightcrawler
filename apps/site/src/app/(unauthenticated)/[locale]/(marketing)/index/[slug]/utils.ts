@@ -18,10 +18,13 @@ export function formatArticleHeroDate(
 ): string {
   if (isoDate == null) return '';
 
+  if (Number.isNaN(Date.parse(String(isoDate)))) return '';
+
   const displayLocale = resolveArticleDisplayDateLocale(locale);
   const formatted = new Date(isoDate as string).toLocaleDateString(
     displayLocale,
     {
+      timeZone: 'UTC',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
