@@ -76,7 +76,7 @@ export default function PageHeader({
       {subtitle ? (
         <p
           className={cn(
-            'w-[80%] max-w-[37rem] text-[clamp(1rem,calc(1rem+0.0625*((100vw-23.4375rem)/66.5625)),1.0625rem)] leading-[1.65] whitespace-pre-line',
+            'w-[80%] max-w-[37rem] text-base leading-[1.65] whitespace-pre-line',
             subtitleClassName
           )}
         >

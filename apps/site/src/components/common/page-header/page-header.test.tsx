@@ -55,7 +55,7 @@ describe('PageHeader', () => {
     // <h2> produced h1 -> h3 -> h2 — an outline that goes backwards.
     expect(subtitle.tagName).toBe('P');
     expect(subtitle).toHaveClass('max-w-[37rem]');
-    expect(subtitle.className).toContain('clamp(');
+    expect(subtitle).toHaveClass('text-base');
 
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toHaveClass(

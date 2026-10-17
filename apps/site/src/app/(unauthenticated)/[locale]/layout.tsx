@@ -19,6 +19,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  'use cache';
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
