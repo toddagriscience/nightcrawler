@@ -90,4 +90,8 @@ To check for dead code and unused dependencies:
 
 ```bash
 bun run knip
+# Blocking CI check for undeclared dependencies and unresolved imports
+bun run knip:check
 ```
+
+`knip:check` also runs in full validation and Code Quality CI. The broader `knip` report remains available for reviewing unused files and exports; those findings require individual review before removal.
