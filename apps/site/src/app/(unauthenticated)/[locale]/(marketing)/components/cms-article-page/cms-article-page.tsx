@@ -5,10 +5,7 @@ import SanityNormal from '@/components/sanity/news/sanity-normal';
 import SanityLink from '@/components/sanity/sanity-link';
 import { getArticleCtasForPlacement } from '@/lib/sanity/article-cta-utils';
 import type { SanityArticle } from '@/lib/sanity/article-types';
-import {
-  createArticleStructuredData,
-  getArticlePresentation,
-} from '@/lib/sanity/article-presentation';
+import { urlFor } from '@/lib/sanity/utils';
 import { PortableTextReactComponents } from 'next-sanity';
 
 import { ArticleBody } from '../../index/[slug]/components/article-body';
@@ -35,7 +32,10 @@ export function CmsArticlePage({
   article: SanityArticle;
   locale?: string;
 }) {
-  const facts = getArticlePresentation(article);
+  const headerImageUrl = article.headerImage
+    ? urlFor(article.headerImage)?.url()
+    : undefined;
+
   const formattedDate = formatArticleHeroDate(article.date, locale);
   const subscripts = parseArticleSubscripts(article);
   const underHeaderCtas = getArticleCtasForPlacement(article, 'under-header');
@@ -43,12 +43,12 @@ export function CmsArticlePage({
 
   const portableTextComponents: Partial<PortableTextReactComponents> = {
     block: {
-      normal: (props) => <SanityNormal {...props} />,
+      normal: (props) => <SanityNormal {...props} summary={article.summary} />,
 
       h1: ({ children }) => (
-        <h2 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug mb-2">
+        <h1 className="mt-[53px] text-3xl md:text-4xl lg:text-5xl font-normal leading-snug mb-2">
           {children}
-        </h2>
+        </h1>
       ),
       h2: ({ children }) => (
         <h2 className="mt-[53px] text-2xl md:text-3xl lg:text-[30px]/[41px] font-normal leading-snug mb-2">
@@ -79,52 +79,32 @@ export function CmsArticlePage({
     },
   };
 
-  const dateIso = facts.datePublished;
+  const dateIso = article.date != null ? String(article.date) : '';
 
   return (
     <div className="max-w-[80%] mx-auto">
       <main className="container mx-auto flex min-h-screen flex-col gap-10 pt-16 md:gap-4 md:pt-20 lg:pt-24">
-        <article
-          className="flex flex-col gap-10 md:gap-4"
-          aria-labelledby="article-title"
-        >
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(
-                createArticleStructuredData(article)
-              ).replace(/</g, '\\u003c'),
-            }}
-          />
-          <ArticleHeader
-            company={article.company}
-            subtitle={article.subtitle}
-            summary={facts.description}
-            modifiedDateTime={facts.dateModified}
-            formattedModifiedDate={formatArticleHeroDate(
-              facts.dateModified,
-              locale
-            )}
-            title={article.title}
-            dateTime={dateIso}
-            formattedDate={formattedDate !== '' ? formattedDate : undefined}
-            ctaButtons={<ArticleCtaButtons ctas={underHeaderCtas} />}
-          />
-          <ArticleBody
-            portableTextComponents={portableTextComponents}
-            headerImageAsset={facts.imageAsset}
-            headerImageUrl={facts.imageSrc}
-            headerImageAlt={facts.imageAlt}
-            content={article.content}
-          />
-          <ArticleFooter
-            author={facts.owner}
-            hasNamedAuthor={facts.hasNamedAuthor}
-            footerSubtitle={article.subtitle}
-            subscripts={subscripts}
-          />
-          <ArticleCtaButtons ctas={footerCtas} className="mb-16" />
-        </article>
+        <ArticleHeader
+          company={article.company}
+          subtitle={article.subtitle}
+          title={article.title}
+          dateTime={dateIso !== '' ? dateIso : undefined}
+          formattedDate={formattedDate !== '' ? formattedDate : undefined}
+          ctaButtons={<ArticleCtaButtons ctas={underHeaderCtas} />}
+        />
+        <ArticleBody
+          portableTextComponents={portableTextComponents}
+          headerImageAsset={article.headerImage}
+          headerImageUrl={headerImageUrl}
+          headerImageAlt={article.headerImage?.alt ?? article.title}
+          content={article.content}
+        />
+        <ArticleFooter
+          author={article.author}
+          footerSubtitle={article.subtitle}
+          subscripts={subscripts}
+        />
+        <ArticleCtaButtons ctas={footerCtas} className="mb-16" />
         <NewsHighlightTilesSection
           locale={locale}
           page="article"

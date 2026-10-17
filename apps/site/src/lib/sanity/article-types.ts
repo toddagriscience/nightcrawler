@@ -171,10 +171,6 @@ export interface SanityArticle {
   slug: { current: string };
   date?: string;
   author?: string;
-  /** Explicit organizational editorial owner when there is no named author. */
-  editorialOwner?: string;
-  /** Editorial content update date, separate from CMS bookkeeping. */
-  dateModified?: string;
   company?: string;
   /** Job location (`career` documents); listings and `/careers/[slug]` hero. */
   jobLocation?: string;
