@@ -42,6 +42,12 @@ Only available from within `packages/db`:
 
 This workspace defines no `build` or `format:check` script, so the root `bun run build` does not cover it.
 
+### Reminders release readiness
+
+From `packages/db`, run `bunx tsx scripts/verify-reminder-schema.ts --env local` to check the table, every application column, and required `reminder_type` values in a read-only transaction. `--env staging` or `--env prod` selects the existing TLS-verified remote configuration; the check never applies migrations or modifies records.
+
+The release compatibility workflow runs this check against its validation database and again before production deployment. Passing locally does not confirm production readiness: an operator must verify the production check and complete a reminder create/edit smoke test after the release.
+
 ## Variety inventory import
 
 The `seed_crop` / `seed_variety` tables are a regenerable mirror of the "Variety Inventory" Google Sheet (the Sheet is the source of truth). To rebuild after a Sheet edit:

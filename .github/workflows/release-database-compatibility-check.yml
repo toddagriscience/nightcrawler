@@ -94,6 +94,14 @@ jobs:
         working-directory: ./packages/db
         run: bun run db:local:migrate
 
+      - name: Verify reminders schema in validation DB
+        working-directory: ./packages/db
+        run: bunx tsx scripts/verify-reminder-schema.ts --env local
+
       - name: Migrate production
         working-directory: ./packages/db
         run: bunx tsx scripts/migrate-remote-db.ts --env prod
+
+      - name: Verify reminders schema before production deployment
+        working-directory: ./packages/db
+        run: bunx tsx scripts/verify-reminder-schema.ts --env prod
