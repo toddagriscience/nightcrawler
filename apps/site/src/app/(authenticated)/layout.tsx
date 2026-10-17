@@ -1,6 +1,7 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import DesktopGate from '@/components/common/desktop-gate/desktop-gate';
+import { logger } from '@/lib/logger';
 import { hasAcceptedAccountAgreement } from '@/lib/utils/account-agreement';
 import { getAuthenticatedInfo } from '@/lib/utils/get-authenticated-info';
 import { redirect } from 'next/navigation';
@@ -26,9 +27,16 @@ async function ViewerAgreementGate({
   }
 
   if (currentUser.role === 'Viewer') {
-    const hasAcceptedAgreement = await hasAcceptedAccountAgreement(
-      currentUser.id
-    );
+    let hasAcceptedAgreement;
+    try {
+      hasAcceptedAgreement = await hasAcceptedAccountAgreement(currentUser.id);
+    } catch (error) {
+      logger.error('Error checking account agreement', {
+        error,
+        userId: currentUser.id,
+      });
+      return <AuthErrorFallback />;
+    }
     if (!hasAcceptedAgreement) {
       redirect('/account/agreement');
     }

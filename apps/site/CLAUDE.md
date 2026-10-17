@@ -20,7 +20,7 @@ when you bump them.
 
 ### Core
 
-- Next.js `16.3.0-canary.37`, App Router, Turbopack
+- Next.js `16.3.8`, App Router, Turbopack
 - React `19.2`, TypeScript `5.9` (strict)
 - Tailwind CSS `4.2`
 - Drizzle ORM `0.45` over PostgreSQL, via `@nightcrawler/db`
