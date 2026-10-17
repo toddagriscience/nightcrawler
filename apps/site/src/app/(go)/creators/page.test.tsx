@@ -16,6 +16,18 @@ describe('CreatorsPage', () => {
     expect(applyLinks.length).toBeGreaterThanOrEqual(1);
   });
 
+  it('offers both application actions as safe, accessible links', () => {
+    renderWithNextIntl(<CreatorsPage />);
+    const links = screen.getAllByRole('link', { name: /^apply(?: now)?$/i });
+    expect(links).toHaveLength(2);
+    for (const link of links) {
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      expect(link).toHaveAttribute('href', links[0].getAttribute('href'));
+      expect(link.querySelector('svg')).toBeNull();
+    }
+  });
+
   it('renders the Creator Program section', () => {
     renderWithNextIntl(<CreatorsPage />);
     expect(screen.getByText('Creator Program')).toBeInTheDocument();

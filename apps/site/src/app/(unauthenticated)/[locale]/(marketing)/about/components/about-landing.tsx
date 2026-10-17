@@ -4,14 +4,14 @@
 
 import HeaderImg from '@/components/common/header-img/header-img';
 import PageHeader from '@/components/common/page-header/page-header';
-import { Button } from '@/components/ui';
-import { Link } from '@/i18n/config';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
-import { HiArrowLongRight } from 'react-icons/hi2';
-import { MarketingCenteredPageCta } from '../../components/marketing-blocks';
+import {
+  MarketingCenteredPageCta,
+  MarketingPillLink,
+} from '../../components/marketing-blocks';
 import CompetenciesSection from './competencies-section/competencies-section';
 import Partners from './partners';
 import ResponsibilitiesSection from './responsibilities-section/responsibilities-section';
@@ -55,17 +55,12 @@ export default function AboutLanding({
               <p className="mt-6 whitespace-pre-line text-base md:text[17px]/[28px] font-normal leading-relaxed">
                 {t('vision.description')}
               </p>
-              <Button
-                asChild
-                variant="outline"
-                className="mt-16 md:mt-26 mb-16 h-[47px] min-w-[159px] rounded-full border-[0.75px] border-[#848484] px-5 text-[14px]/[40px] [&_svg]:size-4"
-                size="lg"
+              <MarketingPillLink
+                href="/research"
+                className="mt-16 md:mt-26 mb-16"
               >
-                <Link href="/research">
-                  {t('vision.cta')}
-                  <HiArrowLongRight aria-hidden="true" />
-                </Link>
-              </Button>
+                {t('vision.cta')}
+              </MarketingPillLink>
             </div>
             <figure className="flex w-full max-w-[580px] flex-col">
               <Image

@@ -77,7 +77,7 @@ describe('AboutLanding', () => {
     // Exact match: the closing CTA label also contains "our research".
     const cta = screen.getByRole('link', { name: 'Our research' });
     expect(cta).toBeInTheDocument();
-    expect(cta.querySelector('svg')).not.toBeNull();
+    expect(cta.querySelector('svg')).toBeNull();
   });
 
   it('renders the vision image from the kebab-case asset at the slot it occupies', () => {

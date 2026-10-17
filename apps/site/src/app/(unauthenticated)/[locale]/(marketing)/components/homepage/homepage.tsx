@@ -5,8 +5,7 @@
 import HeaderImg from '@/components/common/header-img/header-img';
 import PageHeader from '@/components/common/page-header/page-header';
 import SectionContent from '@/components/common/section-content/section-content';
-import { Button } from '@/components/ui';
-import { Link } from '@/i18n/config';
+import { MarketingPillLink } from '@/app/(unauthenticated)/[locale]/(marketing)/components/marketing-blocks/marketing-pill-link';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
@@ -45,16 +44,9 @@ export default function Homepage({ highlights }: { highlights?: ReactNode }) {
         <h2 className="text-3xl lg:text-5xl/[24px]">
           {t('sectionContent.explore.title')}
         </h2>
-        <Button
-          asChild
-          variant="outline"
-          className="rounded-full border-[0.75px] border-[#848484] text-sm w-[168px] h-[47px]"
-          size="lg"
-        >
-          <Link href="/research/index">
-            {t('sectionContent.explore.button')}
-          </Link>
-        </Button>
+        <MarketingPillLink href="/research/index">
+          {t('sectionContent.explore.button')}
+        </MarketingPillLink>
       </div>
     </section>
   );

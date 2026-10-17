@@ -3,10 +3,9 @@
 'use client';
 
 import HeaderVideo from '@/components/common/header-video/header-video';
-import { Button } from '@/components/ui';
+import { OutlinePillButton } from '@/components/common/outline-pill-button/outline-pill-button';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { HiArrowLongRight } from 'react-icons/hi2';
 import Faq from './components/faq/faq';
 
 /**
@@ -62,18 +61,11 @@ export default function CreatorsPage() {
                     Join the Todd Creator Program to monetize your content and
                     connect with the broader Todd community.
                   </p>
-                  <Button
-                    variant="brand"
-                    size="lg"
-                    onClick={() => window.open(url, '_blank')}
-                    className="h-12 w-[154px] lg:h-13 lg:w-[180px] font-thin mt-12 md:mt-16 rounded-full text-base lg:text-normal lg:text-lg"
-                  >
-                    Apply Now
-                    <HiArrowLongRight
-                      className="text-background"
-                      style={{ width: 28, height: 28 }}
-                    />
-                  </Button>
+                  <OutlinePillButton asChild className="mt-12 md:mt-16">
+                    <Link href={url} target="_blank" rel="noopener noreferrer">
+                      Apply Now
+                    </Link>
+                  </OutlinePillButton>
                 </div>
               </div>
             </section>
@@ -218,16 +210,13 @@ export default function CreatorsPage() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-thin flex justify-center items-center">
               Help us make an impact on society.
             </h2>
-            <Link
-              href={url}
-              target="_blank"
-              className="text-3xl md:text-4xl lg:text-5xl leading-tight font-thin flex justify-center items-center gap-5"
-            >
-              Apply
-              <span className="mt-1">
-                <HiArrowLongRight className="size-12" />
-              </span>
-            </Link>
+            <div className="flex justify-center">
+              <OutlinePillButton asChild>
+                <Link href={url} target="_blank" rel="noopener noreferrer">
+                  Apply
+                </Link>
+              </OutlinePillButton>
+            </div>
           </div>
         </div>
       </div>
