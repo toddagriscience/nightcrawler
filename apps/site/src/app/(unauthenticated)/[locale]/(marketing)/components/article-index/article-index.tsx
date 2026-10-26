@@ -107,6 +107,11 @@ export interface ArticleIndexProps {
   title: string;
   /** Optional eyebrow above a centered {@link PageHeader}; omit for the listing `h1`. */
   caption?: string;
+  /**
+   * Label shown in the cursor follower over article rows. When set, the rows
+   * are tagged and the follower is mounted for fine-pointer devices.
+   */
+  cursorLabel?: string;
   /** `next-intl` translator bound to the `articleIndex` namespace. */
   t: ArticleIndexTranslate;
   /** Site locale segment used to present row dates. Falls back to English when omitted. */
@@ -115,18 +120,16 @@ export interface ArticleIndexProps {
   countParam?: string;
   /** Render the topic tab bar. Disable on surfaces whose dynamic segment is taken (e.g. `/news/[slug]`). */
   showTopicTabs?: boolean;
+  /** Render article summaries below titles. Defaults to `true`. */
+  showSummaries?: boolean;
   /**
    * How the active topic is encoded: `'path'` uses `${basePath}/${type}`
    * segments (research routes); `'query'` uses `${basePath}?topic=${type}`
    * (news, whose dynamic segment is owned by `/news/[slug]`). Defaults to `'path'`.
    */
   topicHrefMode?: ArticleIndexTopicHrefMode;
-  /**
-   * Label shown inside the hover cursor over article rows (e.g. "Read"). When
-   * set, rows are tagged for the {@link CursorFollower} and it is mounted on
-   * fine-pointer devices; omit to keep the native pointer (the research index does).
-   */
-  cursorLabel?: string;
+  /** Animate an underline beneath each article title when its row is hovered. */
+  rowHoverUnderline?: boolean;
 }
 
 /**
@@ -153,12 +156,14 @@ export function ArticleIndex({
   basePath,
   title,
   caption,
+  cursorLabel,
   t,
   locale,
   countParam,
   showTopicTabs = true,
+  showSummaries = true,
   topicHrefMode = 'path',
-  cursorLabel,
+  rowHoverUnderline = false,
 }: ArticleIndexProps) {
   // Tabs: 'all' + each offered topic present in the full set (fixed order).
   const presentTypes = topics.filter((type) =>
@@ -210,8 +215,6 @@ export function ArticleIndex({
     })),
   ];
 
-  // Rows carry the label as a data attribute so the client-side follower can
-  // resolve hover targets from server-rendered markup.
   const cursorAttributes = cursorLabel
     ? { [CURSOR_LABEL_ATTRIBUTE]: cursorLabel }
     : undefined;
@@ -329,9 +332,15 @@ export function ArticleIndex({
 
                   <div className="max-w-[600px]">
                     <h2 className="text-[18px] font-normal leading-[26px] text-black">
-                      {article.title}
+                      {rowHoverUnderline ? (
+                        <span className="text-underline-left-on-parent-hover text-underline-left-on-parent-hover-black">
+                          {article.title}
+                        </span>
+                      ) : (
+                        article.title
+                      )}
                     </h2>
-                    {summary ? (
+                    {showSummaries && summary ? (
                       <p className="mt-2 text-[14px] font-normal leading-[27px] text-black">
                         {summary}
                       </p>
@@ -350,7 +359,7 @@ export function ArticleIndex({
                     href={safeHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block"
+                    className={rowHoverUnderline ? 'group block' : 'block'}
                     {...cursorAttributes}
                   >
                     {rowInner}
@@ -358,7 +367,11 @@ export function ArticleIndex({
                 );
               } else {
                 row = (
-                  <Link href={safeHref} className="block" {...cursorAttributes}>
+                  <Link
+                    href={safeHref}
+                    className={rowHoverUnderline ? 'group block' : 'block'}
+                    {...cursorAttributes}
+                  >
                     {rowInner}
                   </Link>
                 );

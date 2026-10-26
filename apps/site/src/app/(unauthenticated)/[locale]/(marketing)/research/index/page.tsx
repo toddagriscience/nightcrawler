@@ -39,6 +39,7 @@ export default async function ResearchIndexPage({
       t={t}
       locale={locale}
       countParam={count}
+      rowHoverUnderline
     />
   );
 }

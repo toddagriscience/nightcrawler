@@ -6,10 +6,9 @@ import {
   RESEARCH_CONTENT_TYPES,
   type SanityArticle,
 } from '@/lib/sanity/article-types';
-import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   ArticleIndex,
   type ArticleIndexProps,
@@ -89,6 +88,14 @@ describe('ArticleIndex', () => {
     ).toBeInTheDocument();
   });
 
+  it('preserves the existing row hover opacity behavior', async () => {
+    const { container } = renderWithNextIntl(await render());
+    expect(container.querySelector('a > div')).toHaveClass(
+      'transition-opacity',
+      'hover:opacity-70'
+    );
+  });
+
   it('normalizes legacy contentType values onto the new taxonomy', async () => {
     renderWithNextIntl(
       await render({
@@ -164,6 +171,15 @@ describe('ArticleIndex', () => {
     expect(screen.queryByText('n/a')).not.toBeInTheDocument();
   });
 
+  it('can hide summaries while preserving them by default', async () => {
+    const defaultRender = renderWithNextIntl(await render());
+    expect(screen.getByText('Summary')).toBeInTheDocument();
+
+    defaultRender.unmount();
+    renderWithNextIntl(await render({ showSummaries: false }));
+    expect(screen.queryByText('Summary')).not.toBeInTheDocument();
+  });
+
   it('drops dangerous hrefs entirely', async () => {
     const { container } = renderWithNextIntl(
       await render({
@@ -182,29 +198,27 @@ describe('ArticleIndex', () => {
   });
 });
 
-describe('ArticleIndex cursor follower', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
+describe('ArticleIndex row hover underline', () => {
+  it('underlines article titles when the row is hovered if enabled', async () => {
+    renderWithNextIntl(await render({ rowHoverUnderline: true }));
 
-  it('tags rows with the label and mounts the follower when cursorLabel is set', async () => {
-    stubMatchMedia(true);
-    renderWithNextIntl(await render({ cursorLabel: 'Read' }));
-
-    expect(screen.getByRole('link', { name: /Research Row/ })).toHaveAttribute(
-      'data-cursor-label',
-      'Read'
+    expect(screen.getByRole('link', { name: /Research Row/ })).toHaveClass(
+      'group'
     );
-    expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
+    expect(screen.getByText('Research Row')).toHaveClass(
+      'text-underline-left-on-parent-hover',
+      'text-underline-left-on-parent-hover-black'
+    );
   });
 
-  it('keeps the native pointer when cursorLabel is omitted', async () => {
-    stubMatchMedia(true);
+  it('does not add hover underline styles by default', async () => {
     renderWithNextIntl(await render());
 
-    expect(
-      screen.getByRole('link', { name: /Research Row/ })
-    ).not.toHaveAttribute('data-cursor-label');
-    expect(screen.queryByTestId('cursor-follower')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Research Row/ })).not.toHaveClass(
+      'group'
+    );
+    expect(screen.getByText('Research Row')).not.toHaveClass(
+      'text-underline-left-on-parent-hover'
+    );
   });
 });

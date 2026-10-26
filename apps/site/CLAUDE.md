@@ -181,3 +181,16 @@ the matching JSON file to every namespace directory.
 Global styles and CSS variables live in `src/app/globals.css`. Marketing and
 platform routes read their background from `--background` and
 `--background-platform` respectively.
+
+### Marketing article index
+
+- Preview frontend changes with `bun run dev:site` from the repo root, then open
+  `http://localhost:3000`; edits hot-reload.
+- News and Research listings share `components/article-index/article-index.tsx`.
+  Set `rowHoverUnderline` on a route to enable the article-title underline.
+- The left-to-right animation and black color are
+  `.text-underline-left-on-parent-hover` and
+  `.text-underline-left-on-parent-hover-black` in `src/app/globals.css`.
+- The underline replaces the cursor pill: the pill added visual bulk and felt
+  unnecessary; the underline keeps the interaction minimal and matches the
+  footer links. Related route tests are beside each page.

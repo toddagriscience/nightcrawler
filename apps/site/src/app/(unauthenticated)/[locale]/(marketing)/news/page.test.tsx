@@ -1,10 +1,9 @@
 // Copyright © Todd Agriscience, Inc. All rights reserved.
 
 import type { SanityArticle } from '@/lib/sanity/article-types';
-import { stubMatchMedia } from '@/test/stub-match-media';
 import { renderWithNextIntl, screen } from '@/test/test-utils';
 import '@testing-library/jest-dom';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import News from './page';
 
 const { getNewsIndexArticlesMock } = vi.hoisted(() => ({
@@ -63,6 +62,11 @@ describe('News Page', () => {
     expect(
       screen.getByText('New AI Model Sets Performance Record')
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        'A breakthrough AI model has surpassed previous benchmarks.'
+      )
+    ).not.toBeInTheDocument();
     expect(getNewsIndexArticlesMock).toHaveBeenCalled();
   });
 
@@ -107,24 +111,18 @@ describe('News Page', () => {
   });
 });
 
-// The newsroom mounts the cursor follower, which reads `window.matchMedia`;
-// jsdom has none, so stub it for every test in this file.
-beforeEach(() => {
-  stubMatchMedia(true);
-});
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
-describe('News Page cursor follower', () => {
-  it('tags article rows with the localized "View" label and mounts the follower', async () => {
+describe('News Page article hover', () => {
+  it('shows an animated underline on article titles instead of the cursor pill', async () => {
     getNewsIndexArticlesMock.mockResolvedValueOnce(NEWS_ITEMS);
     renderWithNextIntl(await renderPage());
 
+    const articleLink = screen.getByRole('link', {
+      name: /New AI Model Sets Performance Record/,
+    });
+    expect(articleLink).toHaveClass('group');
     expect(
-      screen.getByRole('link', { name: /New AI Model Sets Performance Record/ })
-    ).toHaveAttribute('data-cursor-label', 'Read');
-    expect(screen.getByTestId('cursor-follower')).toBeInTheDocument();
+      screen.getByText('New AI Model Sets Performance Record')
+    ).toHaveClass('text-underline-left-on-parent-hover');
+    expect(screen.queryByTestId('cursor-follower')).not.toBeInTheDocument();
   });
 });

@@ -55,7 +55,8 @@ export default async function News({
       countParam={count}
       topicHrefMode="query"
       showTopicTabs
-      cursorLabel={t('cursor.read')}
+      showSummaries={false}
+      rowHoverUnderline
     />
   );
 }
