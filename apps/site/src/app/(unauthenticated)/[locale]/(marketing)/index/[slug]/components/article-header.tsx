@@ -2,6 +2,7 @@
 
 import ArticleShareCopyLink from '@/components/common/news/article-share-copy-link';
 import type { ReactNode } from 'react';
+import { HiArrowLongLeft } from 'react-icons/hi2';
 
 /**
  * Hero block for CMS article titles and metadata lines.
@@ -15,6 +16,8 @@ export function ArticleHeader({
   dateTime,
   formattedDate,
   ctaButtons,
+  backHref,
+  backLabel,
 }: {
   /** Article headline */
   title: string;
@@ -28,9 +31,20 @@ export function ArticleHeader({
   formattedDate?: string;
   /** Optional CTA pills rendered above the share link */
   ctaButtons?: ReactNode;
+  /** Listing path to return to */
+  backHref: string;
+  /** Localized label for the listing link */
+  backLabel: string;
 }) {
   return (
     <header className="flex w-full max-w-[686px] flex-col items-center mx-auto lg:mb-6">
+      <a
+        href={backHref}
+        className="mb-6 inline-flex self-start items-center gap-2 text-[14px] text-[#666666] transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+      >
+        <HiArrowLongLeft aria-hidden className="size-5" />
+        {backLabel}
+      </a>
       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center text-[14px] font-normal leading-[28px] tracking-normal">
         {formattedDate !== undefined && formattedDate.length > 0 ? (
           <time

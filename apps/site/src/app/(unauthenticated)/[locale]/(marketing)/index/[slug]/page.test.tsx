@@ -137,6 +137,10 @@ describe('Article index Page', () => {
       </TooltipProvider>
     );
 
+    expect(screen.getByRole('link', { name: 'Back to News' })).toHaveAttribute(
+      'href',
+      '/news'
+    );
     expect(screen.getByText(item.title)).toBeInTheDocument();
 
     const formattedDate = new Date(item.date)
@@ -152,5 +156,24 @@ describe('Article index Page', () => {
     expect(
       screen.getByText(item.content[0].children[0].text)
     ).toBeInTheDocument();
+  });
+
+  it('links research articles back to the research index', async () => {
+    getArticleBySlugMock.mockResolvedValueOnce({
+      ...item,
+      contentType: 'research-publication',
+    });
+
+    renderWithNextIntl(
+      <TooltipProvider>
+        {await ArticleIndexPage({
+          params: Promise.resolve({ slug: 'research-article', locale: 'en' }),
+        })}
+      </TooltipProvider>
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Back to Research' })
+    ).toHaveAttribute('href', '/research/index');
   });
 });
