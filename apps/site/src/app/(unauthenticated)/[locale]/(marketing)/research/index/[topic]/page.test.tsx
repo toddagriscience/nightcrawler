@@ -73,6 +73,9 @@ describe('ResearchTopicPage', () => {
     renderWithNextIntl(await renderPage('research-conclusion'));
 
     expect(screen.getByText('Conclusion Row One')).toBeInTheDocument();
+    expect(screen.getByText('Conclusion Row One')).toHaveClass(
+      'text-underline-left-on-parent-hover'
+    );
     expect(screen.queryByText('Research Row One')).not.toBeInTheDocument();
 
     const conclusionTab = screen.getByRole('link', { name: 'Conclusion' });

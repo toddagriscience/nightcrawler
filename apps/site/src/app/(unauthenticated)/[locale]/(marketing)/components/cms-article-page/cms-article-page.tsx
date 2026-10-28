@@ -28,9 +28,13 @@ import { ArticleCtaButtons } from './article-cta-buttons';
 export function CmsArticlePage({
   article,
   locale,
+  backHref,
+  backLabel,
 }: {
   article: SanityArticle;
   locale?: string;
+  backHref: string;
+  backLabel: string;
 }) {
   const headerImageUrl = article.headerImage
     ? urlFor(article.headerImage)?.url()
@@ -85,6 +89,8 @@ export function CmsArticlePage({
     <div className="max-w-[80%] mx-auto">
       <main className="container mx-auto flex min-h-screen flex-col gap-10 pt-16 md:gap-4 md:pt-20 lg:pt-24">
         <ArticleHeader
+          backHref={backHref}
+          backLabel={backLabel}
           company={article.company}
           subtitle={article.subtitle}
           title={article.title}

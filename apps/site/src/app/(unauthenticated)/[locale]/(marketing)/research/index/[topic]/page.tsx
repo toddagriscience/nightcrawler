@@ -74,6 +74,7 @@ export default async function ResearchTopicPage({
       t={t}
       locale={locale}
       countParam={count}
+      rowHoverUnderline
     />
   );
 }

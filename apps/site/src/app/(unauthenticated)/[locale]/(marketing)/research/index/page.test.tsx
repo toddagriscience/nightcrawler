@@ -85,6 +85,9 @@ describe('ResearchIndexPage', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Research Row 1')).toBeInTheDocument();
     expect(screen.getByText('Research Row 9')).toBeInTheDocument();
+    expect(screen.getByText('Research Row 1')).toHaveClass(
+      'text-underline-left-on-parent-hover'
+    );
     expect(getResearchIndexArticlesMock).toHaveBeenCalled();
   });
 
