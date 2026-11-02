@@ -145,25 +145,44 @@ describe('CookiePreferencesModal', () => {
     }
   );
 
-  test('clicking the associated label enables capturing and turns the switch on', async () => {
-    const user = userEvent.setup();
-    renderWithNextIntl(<CookiePreferencesModal />, 'es');
+  test.each([
+    {
+      locale: 'en' as const,
+      trigger: 'Cookie Settings',
+      toggleLabel: 'Enable Cookies',
+    },
+    {
+      locale: 'es' as const,
+      trigger: 'Configuración de cookies',
+      toggleLabel: 'Habilitar cookies',
+    },
+  ])(
+    'the affirmative $locale label enables capturing when checked and disables it when unchecked',
+    async ({ locale, trigger, toggleLabel }) => {
+      const user = userEvent.setup();
+      renderWithNextIntl(<CookiePreferencesModal />, locale);
 
-    await user.click(
-      screen.getByRole('button', { name: 'Configuración de cookies' })
-    );
-    expect(
-      screen.getByRole('switch', { name: 'Habilitar cookies' })
-    ).not.toBeChecked();
+      await user.click(screen.getByRole('button', { name: trigger }));
+      const uiSwitch = screen.getByRole('switch', { name: toggleLabel });
+      expect(uiSwitch).not.toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'unchecked');
+      expect(uiSwitch).toHaveClass('data-[state=checked]:bg-green-700');
 
-    await user.click(screen.getByText('Habilitar cookies'));
+      await user.click(screen.getByText(toggleLabel));
 
-    expect(
-      screen.getByRole('switch', { name: 'Habilitar cookies' })
-    ).toBeChecked();
-    expect(optInCapturingMock).toHaveBeenCalledTimes(1);
-    expect(optOutCapturingMock).not.toHaveBeenCalled();
-  });
+      expect(uiSwitch).toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'checked');
+      expect(optInCapturingMock).toHaveBeenCalledTimes(1);
+      expect(optOutCapturingMock).not.toHaveBeenCalled();
+
+      await user.click(screen.getByText(toggleLabel));
+
+      expect(uiSwitch).not.toBeChecked();
+      expect(uiSwitch).toHaveAttribute('data-state', 'unchecked');
+      expect(optOutCapturingMock).toHaveBeenCalledTimes(1);
+      expect(optInCapturingMock).toHaveBeenCalledTimes(1);
+    }
+  );
 
   test('uses distinct label targets when multiple modal instances are mounted', async () => {
     const user = userEvent.setup();

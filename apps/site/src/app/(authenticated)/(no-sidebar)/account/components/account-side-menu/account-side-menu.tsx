@@ -59,6 +59,7 @@ export default function AccountSideMenu() {
 
         <Button
           type="button"
+          variant="ghost"
           onClick={handleLogout}
           className="text-foreground text-sm font-normal hover:cursor-pointer hover:opacity-70 translate-x-[-13px]"
         >

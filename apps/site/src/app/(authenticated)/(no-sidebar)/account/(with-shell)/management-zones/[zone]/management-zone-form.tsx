@@ -25,7 +25,7 @@ import { toDisplayDate } from '../../../util';
 import { updateManagementZone } from './actions';
 
 const FIELD_CLASSES =
-  'w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground/70 font-thin';
+  'w-full rounded-md border-[#848484]/80 border-1 bg-transparent text-muted-foreground font-thin';
 
 const JANUARY = 0;
 const DECEMBER = 11;
