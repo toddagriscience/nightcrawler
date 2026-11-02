@@ -120,6 +120,13 @@
       "when": 1791340705700,
       "tag": "0016_add-management-zone-observation",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1791996969537,
+      "tag": "0017_rename-mineral-to-metric",
+      "breakpoints": true
     }
   ]
 }

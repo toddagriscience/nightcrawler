@@ -12,7 +12,13 @@ export { farmInfoInternalApplication } from './internal-application';
 export { knowledgeArticle } from './knowledge';
 export { managementZone } from './management-zone';
 export { managementZoneObservation } from './management-zone-observation';
-export { mineral, mineralTag, mineralTypes, units } from './mineral';
+export { metric, metricTag, metricTypes, units } from './metric';
+// Legacy consumer names retain the same table and enum objects during rollout.
+export {
+  metric as mineral,
+  metricTag as mineralTag,
+  metricTypes as mineralTypes,
+} from './metric';
 export { oxidationRate } from './oxidation-rate';
 export { reminder, reminderTypeEnum } from './reminder';
 export { solubility } from './solubility';
