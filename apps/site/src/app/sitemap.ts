@@ -51,6 +51,7 @@ function getStaticSitemap(): MetadataRoute.Sitemap {
     '/careers/search',
     '/about',
     '/research',
+    '/varieties',
     '/news',
     '/terms',
     '/privacy',

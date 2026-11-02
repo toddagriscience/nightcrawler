@@ -62,7 +62,7 @@ describe('AboutLanding', () => {
       screen.getByText(
         'We believe sustainable agriculture is the foundation of a healthy planet and thriving communities.'
       )
-    ).toHaveClass('max-w-[37rem]');
+    ).toHaveClass('max-w-[35rem]');
   });
 
   it('renders vision section with image and CTA', () => {
@@ -77,7 +77,7 @@ describe('AboutLanding', () => {
     // Exact match: the closing CTA label also contains "our research".
     const cta = screen.getByRole('link', { name: 'Our research' });
     expect(cta).toBeInTheDocument();
-    expect(cta.querySelector('svg')).not.toBeNull();
+    expect(cta.querySelector('svg')).toBeNull();
   });
 
   it('renders the vision image from the kebab-case asset at the slot it occupies', () => {

@@ -13,6 +13,15 @@ function mockNextRequest(pathname: string): Partial<NextRequest> {
 }
 
 describe('isAllUserRoute', () => {
+  it.each(['/varieties', '/en/varieties', '/es/varieties'])(
+    'keeps %s internationalized for signed-in inventory visitors',
+    async (pathname) => {
+      expect(
+        await isAllUserRoute(mockNextRequest(pathname) as NextRequest)
+      ).toBe(true);
+    }
+  );
+
   it('returns true for /en/contact', async () => {
     const req = mockNextRequest('/en/contact');
     const result = await isAllUserRoute(req as NextRequest);
